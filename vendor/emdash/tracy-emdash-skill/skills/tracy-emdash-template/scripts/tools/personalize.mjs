@@ -269,6 +269,9 @@ export function factsFrom(answers, questions = null, now = new Date()) {
     if (tel) facts.tel = tel
     const address = addressIn(contact, phone)
     if (address) facts.address = address
+    // The same address as a map link (a Google Maps search, as `factHref` builds it): a template's own map field takes it.
+    const mapLink = address ? factHref('address', { address }) : null
+    if (mapLink) facts.map = mapLink
   }
   // 🔒 A JUNK EMAIL IS NOT A FACT. It lands on the top bar and on the enquiry form of a live site,
   // so a value that is not an address (a phone typed in the wrong box, "n/a") is dropped like a
@@ -380,7 +383,12 @@ const ANSWER_OF = {
   sector: 'sector',
   sectorLabel: 'sector'
 }
-const noAnswer = (fact) => `no ${ANSWER_OF[fact] ?? fact} in the answers`
+const noAnswer = (fact) =>
+  fact === 'phone' || fact === 'tel'
+    ? 'no phone in the contact answer'
+    : fact === 'address' || fact === 'map'
+      ? 'no address in the contact answer'
+      : `no ${ANSWER_OF[fact] ?? fact} in the answers`
 
 // ───────────────────────── plan ─────────────────────────
 const SKIP_KEYS = new Set(['id', 'slug', 'url', 'href', 'form', 'locale', 'status', 'type'])
@@ -910,6 +918,46 @@ export function planFrom(
       // through the chat. A rule with `requires` is written only when every fact it names is given (the demo's second
       // address line goes once the customer's address takes the first); one marked `"unanswered": "keep-demo"` leaves the
       // demo's value standing when its fact is missing, and the report names it.
+      // 🔒 A ROW LIST OF CONTACT LINES (`rows`, by `label`) FOLLOWS THE CONTACT CARD'S RULES (second independent review of JA
+      // Restaurant 1.0.3, owner decision of 16/11/2026: a phone in the brief replaces the demo phone everywhere). Each demo row
+      // whose label the rule names takes `value`/`href` filled from the facts; a row whose fact is missing keeps the demo's
+      // (`unanswered: keep-demo`), or goes once any fact of `dropWhen` is given (a second demo number beside the customer's
+      // phone, as the card's mobile line); a row the rule does not name stays as it is.
+      if (rule.rows && typeof rule.rows === 'object') {
+        const e = seedEntries.find(
+          (x) => x.collection === rule.collection && x.slug === rule.slug && x.locale === locale
+        )
+        const demo = e?.data?.[rule.field]
+        if (!Array.isArray(demo)) continue
+        let changed = false
+        const out = []
+        for (const row of demo) {
+          const spec = rule.rows[String(row?.label ?? '')]
+          if (!spec) {
+            out.push(row)
+            continue
+          }
+          const value = spec.value === undefined ? { missing: null } : fill(String(spec.value), facts)
+          if (!('missing' in value)) {
+            const href = spec.href === undefined ? null : fill(String(spec.href), facts)
+            out.push({ ...row, value: value.value, ...(href && !('missing' in href) ? { href: href.value } : {}) })
+            changed = true
+            continue
+          }
+          if ((spec.dropWhen ?? []).some((f) => facts[f] !== undefined)) {
+            changed = true
+            continue
+          }
+          out.push(row)
+          if (value.missing !== null)
+            unanswered.push({
+            rule: `${rule.collection}.${rule.slug}.${rule.field} ${String(row.label)}`,
+            why: `${noAnswer(value.missing)}: the template's value stays as a placeholder`
+          })
+        }
+        if (changed) set(rule.collection, rule.slug, locale, rule.field, out, 'customer')
+        continue
+      }
       const lacking = (Array.isArray(rule.requires) ? rule.requires : []).find(
         (/** @type {string} */ f) => facts[f] === undefined
       )
@@ -2153,6 +2201,10 @@ export function demoPlaceWordsOf(map, seedEntries) {
       if (typeof demo !== 'string') continue
       for (const m of demo.matchAll(/\p{Lu}\p{Ll}{2,}/gu))
         if (!isStreetWord(m[0].toLowerCase())) words.add(m[0])
+      // A numbered street ("5th Avenue", "42nd Street") has no proper name of its own: the phrase is the demo's place
+      // (independent review of JA Restaurant 1.0.3, 17/11/2026: "Four decades on 5th Avenue" stayed on a renamed site).
+      for (const m of demo.matchAll(/(?<![\p{L}\p{N}])\d+(?:st|nd|rd|th)\s+(\p{Lu}\p{Ll}+)/gu))
+        if (isStreetWord(m[1].toLowerCase())) words.add(m[0].replace(/\s+/g, ' '))
     }
   }
   return words
@@ -2170,8 +2222,489 @@ const STREET_WORDS = new Set(
 const isStreetWord = (word) =>
   STREET_WORDS.has(word) || ADDRESS_NOUNS.has(word) || ABBREVIATIONS.has(word)
 
-/** Whether a text names one of `places` as a whole word. */
-const holdsPlace = (text, places) => (String(text).match(/\p{L}+/gu) ?? []).some((w) => places.has(w))
+/**
+ * 🔒 A PLACE WORD INSIDE THE CUSTOMER'S OWN VALUES IS THE CUSTOMER'S, NEVER THE DEMO'S (code review, 18/11/2026). With the name
+ * "Brooklyn Bistro" and an address elsewhere, the renamed "Welcome to Brooklyn Bistro" was emptied and "Come to Brooklyn
+ * Bistro for dinner." went whole. The brief's values (`customerSpansOf`) are protected as whole spans: masked before any
+ * place is looked for, so a place word inside one of them never counts, and a cut never runs through one.
+ */
+const CUSTOMER_KEYS = ['name', 'NAME', 'address', 'phone', 'email', 'hours', 'about', 'sectorLabel', 'social']
+
+/**
+ * The brief's own values a text may hold: the name (and its capitals), the contact lines, the e-mail, the hours, the
+ * description and the social links; longest first.
+ * @param {Record<string, unknown> | null} facts @returns {string[]}
+ */
+export function customerSpansOf(facts) {
+  const out = new Set()
+  const add = (v) => {
+    if (typeof v === 'string') {
+      if (/\p{L}/u.test(v) && v.trim().length >= 2) out.add(v.trim())
+    } else if (Array.isArray(v)) v.forEach(add)
+    else if (v && typeof v === 'object') Object.values(v).forEach(add)
+  }
+  for (const key of CUSTOMER_KEYS) add(facts?.[key])
+  return [...out].sort((a, b) => b.length - a.length)
+}
+
+/** The character ranges of `text` one of the customer's values covers (`spans`), whole word to whole word, any case. */
+const customerRanges = (text, spans) => {
+  const out = []
+  for (const span of spans) {
+    const body = span.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+')
+    for (const m of String(text).matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${body}(?![\\p{L}\\p{N}])`, 'giu')))
+      out.push([m.index, m.index + m[0].length])
+  }
+  return out
+}
+
+/** `text` with every customer value blanked out, character for character (positions hold). */
+const maskCustomer = (text, spans) => {
+  const str = String(text)
+  const ranges = spans.length > 0 ? customerRanges(str, spans) : []
+  if (ranges.length === 0) return { masked: str, guards: [] }
+  const chars = str.split('')
+  for (const [a, z] of ranges) for (let i = a; i < z; i += 1) chars[i] = ' '
+  return { masked: chars.join(''), guards: ranges }
+}
+
+/** Whether a text names one of `places` as a whole word, outside the customer's own values (`protect`). */
+const holdsPlace = (text, places, protect = []) => {
+  const s = maskCustomer(text, protect).masked
+  if ((s.match(/\p{L}+/gu) ?? []).some((w) => places.has(w))) return true
+  for (const place of places)
+    if (
+      place.includes(' ') &&
+      new RegExp(
+        `(?<![\\p{L}\\p{N}])${place.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s+')}(?![\\p{L}\\p{N}])`,
+        'u'
+      ).test(s)
+    )
+      return true
+  return false
+}
+
+/**
+ * The demo's place words that are not also the customer's own: a word or phrase the brief's address holds too ("Brooklyn"
+ * for a customer in Brooklyn) is the customer's place, never removed.
+ * @param {Set<string>} places @param {Record<string, unknown> | null} facts @returns {Set<string>}
+ */
+export function demoPlacesBesides(places, facts) {
+  const own = String(facts?.address ?? '')
+  return new Set([...places].filter((place) => !holdsPlace(own, new Set([place]))))
+}
+
+/** A word that ties a place to its sentence and goes with it ("on 5th Avenue", "of Brooklyn", "for Brooklyn"). */
+const PLACE_LEAD = new Set(['at', 'on', 'in', 'of', 'for', 'from', 'near'])
+
+/**
+ * The spans of `text` that name the demo's place, each grown over the address around it: the numbers, street words,
+ * state codes, zip and other place words next to it ("4 5th Avenue at St. Marks Place, Cathedral District Brooklyn, NY
+ * 11217" is one span), and one word before it that ties it to the sentence ("on", "of", "for"). Each span says whether
+ * it is DETACHABLE: a preposition and the place ("at 4 5th Avenue", "in Brooklyn"), or the place set off by commas or
+ * brackets (", Brooklyn,"); otherwise the place is a core argument of its sentence ("has welcomed Brooklyn to …") or a
+ * word inside a phrase ("a Brooklyn favourite"), and the sentence does not read without it. Sorted, merged.
+ * @param {string} text @param {Set<string>} places @returns {Array<[number, number, boolean]>}
+ */
+export function placeRanges(text, places, protect = []) {
+  const { masked, guards } = maskCustomer(text, protect)
+  if (guards.length > 0)
+    // a range never runs into a customer value: one that would is dropped, and the words stay as written
+    return placeRanges(masked, places).filter(([a, z]) => !guards.some(([g, h]) => a < h && z > g))
+  const tokens = [...String(text).matchAll(/[\p{L}\p{N}][\p{L}\p{N}.'’-]*|,/gu)].map((m) => ({
+    t: m[0],
+    from: m.index,
+    to: m.index + m[0].length
+  }))
+  const bare = (t) => t.replace(/[.'’]+$/, '')
+  const isPlace = (k) => {
+    for (const place of places)
+      if (place.includes(' ')) {
+        const words = place.split(' ')
+        if (words.every((w, n) => bare(tokens[k + n]?.t ?? '') === w)) return words.length
+      } else if (bare(tokens[k].t) === place) return 1
+    return 0
+  }
+  const addressy = (k) => {
+    const t = bare(tokens[k]?.t ?? '')
+    if (t === '') return false
+    return (
+      /^\d+(?:st|nd|rd|th)?$/i.test(t) ||
+      /^\d{5}(?:-\d{4})?$/.test(t) ||
+      /^[A-Z]{2}$/.test(t) ||
+      isStreetWord(t.toLowerCase()) ||
+      isPlace(k) > 0
+    )
+  }
+  const str = String(text)
+  const before = (at) => {
+    let n = at - 1
+    while (n >= 0 && /\s/.test(str[n])) n -= 1
+    return n < 0 ? '' : str[n]
+  }
+  const after = (at) => {
+    let n = at
+    while (n < str.length && /\s/.test(str[n])) n += 1
+    return n >= str.length ? '' : str[n]
+  }
+  const ranges = []
+  for (let k = 0; k < tokens.length; k += 1) {
+    const n = isPlace(k)
+    if (n === 0) continue
+    let a = k
+    let z = k + n - 1
+    for (;;) {
+      const next = z + 1
+      if (next >= tokens.length) break
+      if (tokens[next].t === ',' && addressy(next + 1)) z = next + 1
+      else if (/^at$/i.test(tokens[next].t) && addressy(next + 1)) z = next + 1
+      else if (addressy(next)) z = next + Math.max(1, isPlace(next)) - 1
+      else break
+    }
+    while (a > 0 && tokens[a - 1].t !== ',' && addressy(a - 1)) a -= 1
+    let led = false
+    if (a > 0 && PLACE_LEAD.has(tokens[a - 1].t.toLowerCase())) {
+      a -= 1
+      led = true
+    }
+    // a full stop that ends the span ends its sentence too: it stays ("the people of Brooklyn." → "the people.")
+    const from = tokens[a].from
+    const to = tokens[z].to - (/[.]$/.test(tokens[z].t) ? 1 : 0)
+    const setOff = /^[,(]$/.test(before(from)) && /^(?:[,).!?;]|)$/.test(after(to))
+    // a span set off by commas or brackets goes with them (", Brooklyn," → nothing; "(Brooklyn)" → nothing; ", Brooklyn." → ".")
+    let [cutFrom, cutTo] = [from, to]
+    if (!led && setOff) {
+      cutFrom = str.lastIndexOf(before(from), from - 1)
+      const closer = after(to)
+      if (closer === ',' || closer === ')') cutTo = str.indexOf(closer, to) + 1
+    }
+    ranges.push([cutFrom, cutTo, led || setOff])
+    k = z
+  }
+  const merged = []
+  for (const r of ranges.sort((x, y) => x[0] - y[0]))
+    if (merged.length > 0 && r[0] <= merged.at(-1)[1] + 1) {
+      merged.at(-1)[1] = Math.max(merged.at(-1)[1], r[1])
+      merged.at(-1)[2] = merged.at(-1)[2] && r[2]
+    } else merged.push([...r])
+  return merged
+}
+
+/**
+ * What to cut from `text` so it no longer names the demo's place (third round of the independent review of JA Restaurant
+ * 1.0.3: "has welcomed Brooklyn to one of the neighborhood's oldest buildings" lost only "Brooklyn" and read "has welcomed
+ * to one of …", a broken sentence on the home page). Sentence by sentence: when every span naming the place in it is
+ * detachable (`placeRanges`), only those spans go; when one is a core argument, the whole sentence goes. No word is ever
+ * put in the place's stead. Sorted, merged character ranges, each `[from, to, whole]` (`whole`: a whole sentence).
+ * @param {string} text @param {Set<string>} places @returns {Array<[number, number, boolean]>}
+ */
+export function placeCuts(text, places, protect = []) {
+  const str = String(text)
+  const ranges = placeRanges(str, places, protect)
+  if (ranges.length === 0) return []
+  const bounds = [0, ...sentenceEnds(str).filter((at) => at < str.length), str.length]
+  const cuts = []
+  for (let k = 0; k < bounds.length - 1; k += 1) {
+    const [from, to] = [bounds[k], bounds[k + 1]]
+    const inside = ranges.filter(([a, z]) => a < to && z > from)
+    if (inside.length === 0) continue
+    if (inside.every(([, , detachable]) => detachable)) for (const [a, z] of inside) cuts.push([a, z, false])
+    else cuts.push([from, to, true])
+  }
+  return cuts
+}
+
+/** The words that read as a sentence: at least one word of two letters or more. */
+const readable = (text) => /\p{L}{2,}/u.test(String(text))
+
+/**
+ * Tidies a text a cut went through: a space before punctuation, two spaces, a comma or colon left at an end, an empty
+ * bracket, blank ends.
+ * @param {string} text
+ */
+const tidyCut = (text) =>
+  text
+    .replace(/\(\s*\)/g, '')
+    .replace(/[ \t]+(?=[,.;:!?])/g, '')
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/,(\s*[,.;:!?])/g, '$1')
+    .replace(/^[\s,;:]+|[\s,;:]+$/g, '')
+
+/**
+ * One line of plain text without the demo's place (`placeCuts`): a detachable place phrase goes and the words around it
+ * stay, tidied; a sentence where the place is a core argument goes whole, and so does one with nothing readable left.
+ * Null when the line names no place.
+ * @param {string} line @param {Set<string>} places @returns {string | null}
+ */
+function lineWithoutDemoPlace(line, places, protect = []) {
+  const cuts = placeCuts(line, places, protect)
+  if (cuts.length === 0) return null
+  let out = line
+  for (const [from, to] of [...cuts].reverse()) out = out.slice(0, from) + out.slice(to)
+  const bounds = [0, ...sentenceEnds(out).filter((at) => at < out.length), out.length]
+  let kept = ''
+  for (let k = 0; k < bounds.length - 1; k += 1) {
+    const part = out.slice(bounds[k], bounds[k + 1])
+    if (readable(part)) kept += part
+  }
+  return tidyCut(kept)
+}
+
+/** The keys of a card row or an entry that a visitor reads as its heading or a picture's words: never left empty. */
+const HEADING_KEYS = /^(?:title|name|heading|label|alt|caption|lead_title)$/
+/** A year a row carries in a date-like field ("1982-05-14" → "1982"): the neutral title of a milestone. */
+const yearOf = (row) => {
+  for (const [key, v] of Object.entries(row ?? {}))
+    if (/date|year/i.test(key) && typeof v === 'string') {
+      const m = /\b(1[89]\d{2}|20\d{2})\b/.exec(v)
+      if (m) return m[1]
+    }
+  return null
+}
+
+/** The site's name from the brief: the last value of a heading's fallback chain; null when the brief gives none. */
+const nameFallbackOf = (facts) => (typeof facts?.name === 'string' && facts.name.trim() !== '' ? facts.name.trim() : null)
+
+/** The digits of a phone number as written ("(084) 555-0110" → "0845550110", "tel:+10845550110" → "10845550110"). */
+const phoneDigits = (text) => String(text).replace(/\D/g, '')
+/** A phone-like run of a text: digits with the separators people write between them. */
+const PHONE_RUN = /\+?\(?\d[\d (). -]{5,}\d/g
+/** An e-mail address. */
+const EMAIL_RUN = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g
+/**
+ * 🔒 THE DEMO'S DOMAIN IS A WHOLE HOST (code review, 18/11/2026): "res.example" matched inside "https://notres.example" and
+ * took the customer's sentence with it. A domain counts only as the whole host or a subdomain of it, on label boundaries, in
+ * a URL, an e-mail address or bare text.
+ * @param {string} text @param {Iterable<string>} domains @returns {string[]} the hosts found
+ */
+export function demoDomainsIn(text, domains) {
+  const found = []
+  for (const d of domains) {
+    const body = String(d).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const host = new RegExp(`(?<![\\p{L}\\p{N}_.-])(?:[\\p{L}\\p{N}](?:[\\p{L}\\p{N}-]*[\\p{L}\\p{N}])?\\.)*${body}(?![\\p{L}\\p{N}_-]|\\.[\\p{L}\\p{N}])`, 'giu')
+    for (const m of String(text).matchAll(host)) found.push(m[0])
+  }
+  return found
+}
+
+/** Whether `digits` is one of the demo's numbers, with or without a country code in front (up to three digits). */
+const isDemoPhone = (digits, phones) =>
+  digits.length >= 7 &&
+  [...phones].some(
+    (p) =>
+      digits === p ||
+      (digits.length > p.length && digits.length - p.length <= 3 && digits.endsWith(p)) ||
+      (p.length > digits.length && p.length - digits.length <= 3 && p.endsWith(digits))
+  )
+
+/**
+ * The demo's own contacts, read from the template's rules (never guessed from the words): the numbers its `identity` rules
+ * write `{phone}` or `{tel}` over, in any format, and the e-mail addresses they write `{email}` over, with their domains.
+ * @param {any} map @param {Array<{collection: string, slug: string, data: any}>} seedEntries
+ * @returns {{ phones: Set<string>, emails: Set<string>, domains: Set<string> }}
+ */
+export function demoContactsOf(map, seedEntries) {
+  const phones = new Set()
+  const emails = new Set()
+  const domains = new Set()
+  const take = (template, demo) => {
+    const t = String(template ?? '')
+    if (/\{(?:phone|tel)\}/.test(t)) {
+      const d = phoneDigits(demo ?? '')
+      if (d.length >= 7) phones.add(d)
+    }
+    if (/\{email\}/.test(t))
+      for (const m of String(demo ?? '').matchAll(EMAIL_RUN)) {
+        emails.add(m[0])
+        domains.add(m[0].split('@')[1].toLowerCase())
+      }
+  }
+  for (const rule of Array.isArray(map?.identity) ? map.identity : [])
+    for (const e of seedEntries) {
+      if (e.collection !== rule.collection || e.slug !== rule.slug) continue
+      const demo = e.data?.[rule.field]
+      if (rule.rows && typeof rule.rows === 'object') {
+        for (const row of Array.isArray(demo) ? demo : []) {
+          const spec = rule.rows[String(row?.label ?? '')]
+          if (!spec) continue
+          take(spec.value, row.value)
+          take(spec.href, row.href)
+        }
+        continue
+      }
+      const raw = rule.value
+      take(typeof raw === 'string' ? raw : raw && typeof raw === 'object' && !Array.isArray(raw) ? raw.en : '', demo)
+    }
+  return { phones, emails, domains }
+}
+
+/** Keys whose value is never a visitor's text or link. */
+const CONTACT_SKIP = new Set(['_key', '_type', '_ref', 'id', 'slug', 'locale', 'status', 'type', 'style', 'listItem'])
+
+/**
+ * One text with the demo's contacts replaced by the brief's: a run whose digits are the demo's number takes the brief's
+ * phone (a `tel:` link takes `{tel}`), the demo's e-mail address takes the brief's; once the brief gives any contact, a
+ * sentence (or line) that still holds the demo's own domain (its web address, or its e-mail when the brief has none) goes.
+ * @param {string} text @param {{ phones: Set<string>, emails: Set<string>, domains: Set<string> }} demo
+ * @param {Record<string, unknown>} facts @returns {string}
+ */
+function textWithCustomerContacts(text, demo, facts) {
+  let out = String(text)
+  if (facts.phone) {
+    if (/^tel:/i.test(out.trim())) {
+      if (isDemoPhone(phoneDigits(out), demo.phones) && typeof facts.tel === 'string') return facts.tel
+    } else out = out.replace(PHONE_RUN, (run) => (isDemoPhone(phoneDigits(run), demo.phones) ? String(facts.phone) : run))
+  }
+  if (facts.email) out = out.replace(EMAIL_RUN, (m) => (demo.emails.has(m) ? String(facts.email) : m))
+  if ((facts.phone || facts.address || facts.email) && demo.domains.size > 0) {
+    const holds = (part) => demoDomainsIn(part, demo.domains).length > 0
+    if (holds(out)) {
+      if (/^mailto:/i.test(out.trim())) return ''
+      const lines = []
+      for (const line of out.split('\n')) {
+        if (!holds(line)) {
+          lines.push(line)
+          continue
+        }
+        const bounds = [0, ...sentenceEnds(line).filter((at) => at < line.length), line.length]
+        let kept = ''
+        for (let k = 0; k < bounds.length - 1; k += 1) {
+          const part = line.slice(bounds[k], bounds[k + 1])
+          if (!holds(part)) kept += part
+        }
+        if (readable(kept)) lines.push(tidyCut(kept))
+      }
+      out = lines.join('\n')
+    }
+  }
+  return out
+}
+
+/**
+ * 🔒 A PHONE IN THE BRIEF REPLACES THE DEMO'S EVERYWHERE (owner's hard rule, third review round of JA Restaurant 1.0.3): with
+ * a phone only, the contact page and the phone reservation kept "call us at (084) 555-0110" and its `tel:` link, and
+ * /offers kept the demo's number and web address beside the customer's. By value, not by field: every text and link of
+ * `value` that holds one of the demo's numbers or e-mail addresses (`demoContactsOf`) takes the brief's. Null when nothing
+ * changes.
+ * @param {unknown} value @param {{ phones: Set<string>, emails: Set<string>, domains: Set<string> }} demo
+ * @param {Record<string, unknown>} facts @param {string} [key]
+ * @returns {any}
+ */
+export function withCustomerContacts(value, demo, facts, key = '') {
+  if (typeof value === 'string') {
+    if (CONTACT_SKIP.has(key)) return null
+    const next = textWithCustomerContacts(value, demo, facts)
+    return next === value ? null : next
+  }
+  if (Array.isArray(value)) {
+    let changed = false
+    const out = value.map((v) => {
+      const next = withCustomerContacts(v, demo, facts, key)
+      if (next === null) return v
+      changed = true
+      return next
+    })
+    return changed ? out : null
+  }
+  if (value && typeof value === 'object') {
+    let changed = false
+    const out = { ...value }
+    for (const [k, v] of Object.entries(value)) {
+      const next = withCustomerContacts(v, demo, facts, k)
+      if (next !== null) {
+        out[k] = next
+        changed = true
+      }
+    }
+    return changed ? out : null
+  }
+  return null
+}
+
+/**
+ * The check after every lane: the demo's number left anywhere in `value` while the brief gives a phone, or the demo's
+ * e-mail domain while the brief gives an e-mail. Empty when the value is clean.
+ * @param {unknown} value @param {{ phones: Set<string>, domains: Set<string> }} demo @param {Record<string, unknown>} facts
+ * @returns {string[]}
+ */
+export function demoContactsLeft(value, demo, facts) {
+  const text = JSON.stringify(value ?? '')
+  const found = []
+  if (facts.phone)
+    for (const run of text.match(PHONE_RUN) ?? []) if (isDemoPhone(phoneDigits(run), demo.phones)) found.push(run)
+  if (facts.email) found.push(...demoDomainsIn(text, demo.domains))
+  return found
+}
+
+/**
+ * 🔒 WITH THE CUSTOMER'S ADDRESS, NO DEMO STREET IS LEFT (independent review of JA Restaurant 1.0.3, 17/11/2026). Applied with
+ * an address and no model, a renamed site still told every visitor "Since 1982, … welcomed Brooklyn …, at 4 5th Avenue at St.
+ * Marks Place" and "Four decades on 5th Avenue": the words the model would have rewritten stayed the demo's. A value without
+ * the sentences that name the demo's place (`places`, `demoPlaceWordsOf`): plain text sentence by sentence and line by line
+ * (a line left empty goes), rich text as `withoutDemoFacts` does it (the demo's linked facts take the customer's; nothing
+ * readable left empties the field), card rows field by field. Null when nothing names the place.
+ * @param {unknown} value @param {Set<string>} places @param {Record<string, unknown> | null} [facts]
+ * @returns {any}
+ */
+export function withoutDemoPlace(value, places, facts = null, { fallback = null, required = false, unresolved = null } = {}) {
+  if (places.size === 0) return null
+  const protect = customerSpansOf(facts)
+  if (typeof value === 'string') {
+    let changed = false
+    const kept = []
+    for (const line of value.split('\n')) {
+      const left = lineWithoutDemoPlace(line, places, protect)
+      if (left === null) kept.push(line)
+      else {
+        changed = true
+        if (left !== '') kept.push(left)
+      }
+    }
+    if (!changed) return null
+    // a line that went leaves no blank at the end of the one before it
+    const text = kept.join('\n').replace(/[ \t]+$/, '')
+    // 🔒 A HEADING, AN ALT TEXT OR A REQUIRED FIELD IS NEVER LEFT EMPTY (second independent review of JA Restaurant 1.0.3; code
+    // review, 18/11/2026): the neutral value the caller names (the row's year, the entry's title, the site's name), never the
+    // demo's place; with none of them, the text stays as written and is reported, never emptied.
+    if (text !== '' || !(required || (typeof fallback === 'string' && fallback !== ''))) return text
+    if (typeof fallback === 'string' && fallback !== '') return fallback
+    unresolved?.push(value)
+    return null
+  }
+  if (Array.isArray(value)) {
+    if (value.some((b) => b && typeof b === 'object' && b._type === 'block')) {
+      const left = withoutDemoFacts(value, { ...facts, address: facts?.address || ' ' }, { places, fallback, unresolved })
+      // a heading block kept as written (no fallback) leaves the value as it was: nothing changed
+      if (left === null || JSON.stringify(left.value) === JSON.stringify(value)) return null
+      return left.readable ? left.value : []
+    }
+    let changed = false
+    const out = value.map((row) => {
+      const next = withoutDemoPlace(row, places, facts, { fallback, required, unresolved })
+      if (next === null) return row
+      changed = true
+      return next
+    })
+    return changed ? out : null
+  }
+  if (value && typeof value === 'object') {
+    let changed = false
+    const out = { ...value }
+    for (const [key, v] of Object.entries(value)) {
+      if (key.startsWith('_')) continue
+      // A row's heading falls back to the row's year, else the caller's, else the site's name; its other words have none.
+      const heading = HEADING_KEYS.test(key)
+      const own = heading ? (yearOf(value) ?? fallback ?? nameFallbackOf(facts)) : null
+      const next = withoutDemoPlace(v, places, facts, { fallback: own, required: heading, unresolved })
+      if (next !== null) {
+        out[key] = next
+        changed = true
+      }
+    }
+    return changed ? out : null
+  }
+  return null
+}
 
 /**
  * 🔒 A ROW KEPT AS THE DEMO'S NEVER KEEPS THE DEMO'S PLACE ONCE THE CUSTOMER GAVE AN ADDRESS (QA on dev, 16/11/2026). Both
@@ -2189,9 +2722,18 @@ export function rowsWithoutDemoPlace({ rule, rows, left, places, facts }) {
   for (const i of left) {
     const row = out[i]
     if (!row || typeof row !== 'object') continue
-    const naming = rule.itemFields.filter((f) => typeof row[f] === 'string' && holdsPlace(row[f], places))
+    const protect = customerSpansOf(facts)
+    const naming = rule.itemFields.filter((f) => typeof row[f] === 'string' && holdsPlace(row[f], places, protect))
     if (naming.length === 0) continue
-    out[i] = { ...row, ...Object.fromEntries(naming.map((f) => [f, ''])) }
+    // Only the place phrase goes ("The Best Bar & Restaurant in Brooklyn" → "The Best Bar & Restaurant"); a field emptied
+    // only when nothing readable is left of it (second independent review of JA Restaurant 1.0.3), a heading never: it takes
+    // the row's year or the site's name, else keeps its words (code review, 18/11/2026).
+    const cut = (f) => {
+      const left = lineWithoutDemoPlace(row[f], places, protect) ?? row[f]
+      if (left !== '' || !HEADING_KEYS.test(f)) return left
+      return yearOf(row) ?? nameFallbackOf(facts) ?? row[f]
+    }
+    out[i] = { ...row, ...Object.fromEntries(naming.map((f) => [f, cut(f)])) }
     emptied.push(i)
   }
   return { rows: out, left: left.filter((i) => !emptied.includes(i)), emptied }
@@ -2222,33 +2764,39 @@ const LEAD_IN =
  * @param {{ places?: Set<string> }} [opts]
  * @returns {{ value: any[], readable: boolean } | null}
  */
-export function withoutDemoFacts(value, facts = null, { places = new Set() } = {}) {
+export function withoutDemoFacts(value, facts = null, { places = new Set(), fallback = null, unresolved = null } = {}) {
   if (!Array.isArray(value)) return null
   let changed = false
+  const protect = customerSpansOf(facts)
   const placesOn = String(facts?.address ?? '').trim() !== '' && places.size > 0
   const out = value.map((b) => {
     if (markedTextOf(b) === null) return b
     const facted = new Map(
       [...outsideLinksOf(b, facts)].filter(([mark]) => factOfLink(hrefOf(b, mark)) !== null)
     )
-    const placed = placesOn && holdsPlace(b.children.map((c) => String(c?.text ?? '')).join(''), places)
+    const placed = placesOn && holdsPlace(b.children.map((c) => String(c?.text ?? '')).join(''), places, protect)
     if (facted.size === 0 && !placed) return b
     /** One entry per character: the span it belongs to and its marks. */
     let chars = b.children.flatMap((c, s) =>
       [...String(c.text ?? '')].map((ch) => ({ ch, s, marks: (c.marks ?? []).map(String) }))
     )
     if (placed) {
-      // Each sentence that names the demo's place, last first so the earlier ranges hold.
+      // `placeCuts`, read across every span (an emphasised "Brooklyn" is the demo's place all the same): a detachable place
+      // phrase goes, last first so the earlier ranges hold, and a detachable run that links to a demo fact is left to the
+      // loop below, which gives it the customer's; a sentence where the place is a core argument goes whole, its links
+      // with it. A sentence with nothing readable left goes too, and a paragraph left empty goes (third round of the
+      // independent review of JA Restaurant 1.0.3).
       const text = chars.map((x) => x.ch).join('')
-      const bounds = [0, ...sentenceEnds(text).filter((p) => p < text.length), text.length]
-      for (let k = bounds.length - 2; k >= 0; k -= 1) {
-        const [from, to] = [bounds[k], bounds[k + 1]]
-        if (!holdsPlace(text.slice(from, to), places)) continue
-        // Read across every span, emphasis and link included: an emphasised "Brooklyn" is the demo's place all the same,
-        // and the sentence goes whole with the marks it carries.
+      for (const [from, to, whole] of [...placeCuts(text, places, protect)].reverse()) {
+        if (!whole && chars.slice(from, to).some((x) => x.marks.some((m) => facted.has(m)))) continue
         chars.splice(from, to - from)
         changed = true
       }
+      const left = chars.map((x) => x.ch).join('')
+      const bounds = [0, ...sentenceEnds(left).filter((p) => p < left.length), left.length]
+      for (let k = bounds.length - 2; k >= 0; k -= 1)
+        if (!readable(left.slice(bounds[k], bounds[k + 1])) && /\S/.test(left.slice(bounds[k], bounds[k + 1])))
+          chars.splice(bounds[k], bounds[k + 1] - bounds[k])
     }
     const factMark = (x) => x.marks.find((mark) => facted.has(mark))
     for (;;) {
@@ -2299,11 +2847,11 @@ export function withoutDemoFacts(value, facts = null, { places = new Set() } = {
     // Tidy what a cut leaves: a space before punctuation, two spaces, blank ends.
     let text = chars.map((x) => x.ch).join('')
     const drop = new Set()
-    for (const m of text.matchAll(/ +(?=[,.;:!?])| (?= )/g))
+    for (const m of text.matchAll(/ +(?=[,.;:!?])| (?= )|,(?=\s*[,.;:!?])/g))
       for (let i = 0; i < m[0].length; i += 1) drop.add(m.index + i)
     chars = chars.filter((_, i) => !drop.has(i))
-    while (chars.length > 0 && /\s/.test(chars[0].ch)) chars.shift()
-    while (chars.length > 0 && /\s/.test(chars.at(-1).ch)) chars.pop()
+    while (chars.length > 0 && /[\s,;:]/.test(chars[0].ch)) chars.shift()
+    while (chars.length > 0 && /[\s,;:]/.test(chars.at(-1).ch)) chars.pop()
     text = chars.map((x) => x.ch).join('')
     const children = []
     for (const x of chars) {
@@ -2326,7 +2874,20 @@ export function withoutDemoFacts(value, facts = null, { places = new Set() } = {
       .map((d) =>
         typeof facted.get(String(d._key)) === 'string' ? { ...d, href: facted.get(String(d._key)) } : d
       )
-    return /\p{L}/u.test(text) ? { ...b, markDefs, children: spans } : null
+    if (/\p{L}/u.test(text)) return { ...b, markDefs, children: spans }
+    // A heading is never left empty: the caller's neutral value (the entry's title), never the demo's place.
+    if (/^h[1-6]$/.test(String(b.style)) && typeof fallback === 'string' && fallback !== '')
+      return {
+        ...b,
+        markDefs: [],
+        children: [{ ...b.children[0], _key: String(b.children[0]?._key ?? `${String(b._key)}s0`), text: fallback, marks: [] }]
+      }
+    // a heading with no fallback keeps its words and is reported, never dropped (code review, 18/11/2026)
+    if (/^h[1-6]$/.test(String(b.style))) {
+      unresolved?.push(b.children.map((c) => String(c?.text ?? '')).join(''))
+      return b
+    }
+    return null
   })
   if (!changed) return null
   const kept = out.filter((b) => b !== null)
@@ -6133,6 +6694,153 @@ async function main() {
     }
   }
   await lane('words', demoWordsWork)
+
+  // ── 2c. With the customer's address, the demo's place leaves the words too (`withoutDemoPlace`) ──
+  // Every field a copy, rewrite, card-list or claims rule owns, as it stands after the lanes above (the model's, the
+  // template's renamed, or the demo's): a sentence naming the demo's place goes, a demo address link takes the customer's.
+  // With no address in the brief the demo's address stays on the site (`unanswered: keep-demo`), and so do these words.
+  /** `<collection>/<slug>/<locale>.<field>` the demo's place was taken out of. */
+  const placesTaken = []
+  /** Each field the demo's place left, with its words before and after, for a person to read (`skipped`, rule `places`). */
+  const placesChanges = []
+  /** Texts the demo's place stays in: a heading with no fallback, or a sentence that holds a customer value too. */
+  const placesUnresolved = []
+  /** The visible words of a value: a text, the paragraphs of a rich text, the texts of card rows. */
+  const plainOf = (v) =>
+    typeof v === 'string'
+      ? v
+      : Array.isArray(v)
+        ? v
+            .map((x) =>
+              x?._type === 'block' ? (x.children ?? []).map((c) => String(c?.text ?? '')).join('') : plainOf(x)
+            )
+            .filter((t) => t !== '')
+            .join(' | ')
+        : v && typeof v === 'object'
+          ? Object.entries(v)
+              .filter(([key]) => !key.startsWith('_') && !CONTACT_SKIP.has(key))
+              .map(([, x]) => plainOf(x))
+              .filter((t) => t !== '')
+              .join(' | ')
+          : ''
+  const placesWork = async () => {
+    if (redrawOnly || String(facts.address ?? '').trim() === '') return
+    const places = demoPlacesBesides(demoPlaces, facts)
+    if (places.size === 0) return
+    const protect = customerSpansOf(facts)
+    const owned = [
+      ...(map.copy ?? []).map((r) => ({ collection: r.collection, slugs: [r.slug], fields: [r.field] })),
+      ...(map.rewrite ?? []).map((r) => ({
+        collection: r.collection,
+        slugs: Array.isArray(r.slugs) ? r.slugs : r.slug ? [r.slug] : null,
+        fields: Array.isArray(r.fields) ? r.fields : []
+      })),
+      ...(map.blocks ?? []).map((r) => ({ collection: r.collection, slugs: [r.slug], fields: [r.field] })),
+      ...(map.facts ?? []).map((r) => ({ collection: r.collection, slugs: [r.slug], fields: [r.field] }))
+    ]
+    const keys = new Set()
+    for (const e of seedEntries) {
+      if (!locales.includes(e.locale)) continue
+      const k = `${e.collection}/${e.slug}/${e.locale}`
+      if (hiddenByRule.has(k)) continue
+      const fields = new Set(
+        owned
+          .filter((r) => r.collection === e.collection && (r.slugs === null || r.slugs.includes(e.slug)))
+          .flatMap((r) => r.fields)
+      )
+      for (const f of fields) {
+        const now = patches.get(k)?.fields?.[f]
+        // the fallback chain of a heading: the entry's title as this run leaves it (renamed), else the site's name
+        const current = patches.get(k)?.fields?.title ?? e.data?.title
+        const title = typeof current === 'string' && !holdsPlace(current, places, protect) ? current : null
+        const stayed = []
+        const next = withoutDemoPlace(now !== undefined ? now : e.data?.[f], places, facts, {
+          fallback: HEADING_KEYS.test(f) || f === 'body' ? (title ?? nameFallbackOf(facts)) : null,
+          required: HEADING_KEYS.test(f),
+          unresolved: stayed
+        })
+        for (const text of stayed) placesUnresolved.push(`${k}.${f}: ${plainOf(text)}`)
+        if (next === null) continue
+        const before = now !== undefined ? now : e.data?.[f]
+        const p = patchOf(e.collection, e.slug, e.locale)
+        p.fields[f] = next
+        if (p.origins[f] === undefined) p.origins[f] = 'replaced'
+        keys.add(k)
+        // Named in the report only when the field held the demo's place: a rich text where only a linked demo phone took
+        // the brief's (the contact card, the reservation intro) lost no place (third review round, report item 5).
+        if (holdsPlace(plainOf(before), places, protect)) {
+          placesTaken.push(`${k}.${f}`)
+          placesChanges.push({ field: `${k}.${f}`, before: plainOf(before), after: plainOf(next) })
+        }
+      }
+    }
+    if (placesUnresolved.length > 0)
+      skipped.push({
+        rule: 'places-kept',
+        why: `the demo's place stays where taking it would empty a heading with no fallback or cut the customer's own words: ${placesUnresolved.join(' · ')}`
+      })
+    if (keys.size === 0) return
+    await flush([...keys])
+    if (placesTaken.length > 0)
+      skipped.push({
+        rule: 'places',
+        why: `the brief gives an address: the demo's place (${[...places].join(', ')}) left ${String(placesTaken.length)} field(s), the words around it kept: ${placesTaken.join(', ')}`,
+        changes: placesChanges
+      })
+  }
+  await lane('places', placesWork)
+
+  // ── 2d. The brief's phone and e-mail replace the demo's everywhere (`withCustomerContacts`), then the check ──────────
+  /** `<collection>/<slug>/<locale>.<field>` where a demo contact took the brief's. */
+  const contactsTaken = []
+  const demoContacts = demoContactsOf(map, seedEntries)
+  const contactsWork = async () => {
+    if (redrawOnly || !(facts.phone || facts.email || facts.address)) return
+    if (demoContacts.phones.size + demoContacts.emails.size === 0) return
+    const keys = new Set()
+    for (const e of seedEntries) {
+      if (!locales.includes(e.locale)) continue
+      const k = `${e.collection}/${e.slug}/${e.locale}`
+      if (hiddenByRule.has(k)) continue
+      for (const f of Object.keys(e.data ?? {})) {
+        if (CONTACT_SKIP.has(f)) continue
+        const now = patches.get(k)?.fields?.[f]
+        const next = withCustomerContacts(now !== undefined ? now : e.data[f], demoContacts, facts, f)
+        if (next === null) continue
+        const p = patchOf(e.collection, e.slug, e.locale)
+        p.fields[f] = next
+        if (p.origins[f] === undefined) p.origins[f] = 'customer'
+        keys.add(k)
+        contactsTaken.push(`${k}.${f}`)
+      }
+    }
+    if (keys.size === 0) return
+    await flush([...keys])
+    skipped.push({
+      rule: 'contacts',
+      why: `the brief's contact replaced the demo's wherever it stood: ${contactsTaken.join(', ')}`
+    })
+  }
+  await lane('contacts', contactsWork)
+  // 🔒 THE CHECK: the demo's phone left anywhere while the brief gives one, or its e-mail domain while the brief gives an
+  // e-mail, fails the run (exit 4), field by field.
+  if (!redrawOnly)
+    for (const e of seedEntries) {
+      if (!locales.includes(e.locale)) continue
+      const k = `${e.collection}/${e.slug}/${e.locale}`
+      if (hiddenByRule.has(k)) continue
+      for (const f of Object.keys(e.data ?? {})) {
+        if (CONTACT_SKIP.has(f)) continue
+        const now = patches.get(k)?.fields?.[f]
+        const left = demoContactsLeft(now !== undefined ? now : e.data[f], demoContacts, facts)
+        if (left.length > 0)
+          report.errors.push({
+            rule: 'contacts-left',
+            entry: `${k}.${f}`,
+            why: `the demo's ${left.join(', ')} is still on the site although the brief gives its own`
+          })
+      }
+    }
 
   // ── 3. What needed the words: settings copied from the copy, and the receipts ────────────────
   for (const [k, spec] of Object.entries(map.copySettings ?? {})) {

@@ -86,7 +86,8 @@ import {
   pageHash,
   scanOffSystem,
   pngRows,
-  cutPng
+  cutPng,
+  keepSourceOffline
 } from './visual-lib.mjs'
 const execFileP = promisify(execFile)
 const HERE = path.dirname(new URL(import.meta.url).pathname)
@@ -570,6 +571,10 @@ async function measureAxis(spec, variant) {
         srcImages = prior.srcImages
       } else {
         const ref = await context.newPage()
+        // The source is captured offline: requests to any other origin but the font hosts are aborted and listed
+        // (keepSourceOffline, SOURCE_FONT_HOSTS).
+        const blocked = new Set()
+        await keepSourceOffline(ref, sourceSite, blocked)
         try {
           const srcHook = contract.design.parity.sourceTheme
           const sourceUrl = new URL(spec.source[0].split('/').map(encodeURIComponent).join('/'), sourceSite)
@@ -704,6 +709,7 @@ async function measureAxis(spec, variant) {
               keys: new Set(shareable)
             })
         } finally {
+          axis.sourceBlocked = [...blocked].sort()
           await ref.close()
         }
       }
@@ -1221,6 +1227,12 @@ try {
 const pages = [...pageReports.values()].filter((p) => p.axes.length)
 summary.pages = pages.length
 summary.failedPages = pages.filter((p) => p.findings.length).map((p) => p.id)
+// Every request a source capture aborted (keepSourceOffline): URL → the axes that asked for it.
+const sourceBlocked = {}
+for (const p of pages)
+  for (const a of p.axes)
+    for (const u of a.sourceBlocked ?? []) (sourceBlocked[u] ??= []).push(`${p.id} ${a.variant}`)
+summary.sourceBlocked = Object.keys(sourceBlocked).length
 summary.stages = Object.fromEntries(stageReports.map((s) => [s.id, s.status]))
 // Settle `distinct` BEFORE the report object is serialised: `report.summary` is this same object by
 // reference and visual.json is written below — assigning after that write leaves the artifact saying
@@ -1386,6 +1398,12 @@ for (const p of pages)
         `- \`${p.id}\` ${a.variant} — ${f.kind} ${f.element ?? f.rule ?? ''}: ${f.exception.reason} (${f.exception.decision})`
       )
 if (!pages.some((p) => p.axes.some((a) => a.accepted?.length))) md.push('none')
+md.push('', '## Source requests blocked (the source is captured offline)', '')
+for (const [u, axes] of Object.entries(sourceBlocked).sort())
+  md.push(
+    `- \`${u}\` — ${axes.length} axis(es): ${axes.slice(0, 6).join(', ')}${axes.length > 6 ? ', …' : ''}`
+  )
+if (!summary.sourceBlocked) md.push('none')
 md.push('', '## Findings', '')
 for (const p of pages)
   for (const f of p.findings)
@@ -1541,6 +1559,7 @@ console.log(
       findings: summary.findings,
       distinct: summary.distinct,
       unclassified: summary.unclassified,
+      sourceBlocked: summary.sourceBlocked,
       stages: summary.stages
     },
     path.join(out, 'VISUAL.md')
