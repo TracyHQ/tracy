@@ -322,6 +322,7 @@ function leftOutOf(leftOut, plan) {
   const byKey = /* @__PURE__ */ new Map();
   for (const l of listOr(leftOut)) {
     if (l?.kind === "block") continue;
+    if (l?.code === "owner_removed") continue;
     const code = typeof l?.code === "string" && l.code !== "" ? l.code : null;
     if (code !== null && TEMPLATE_SPOT_CODES.has(code)) continue;
     const params = code && isPlainObject(l.params) ? l.params : null;
@@ -366,17 +367,319 @@ function leftOutOf(leftOut, plan) {
   });
 }
 
+// ../../core/tracy-core/src/build-chat/plan-card-review.mjs
+var listOr2 = (value) => Array.isArray(value) ? value : [];
+var isPlainObject2 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var CHANNEL_KINDS = /* @__PURE__ */ new Set([
+  "contact.phone",
+  "contact.email",
+  "contact.address",
+  "contact.cta_url",
+  "contact.social_url"
+]);
+var CHROME_TYPES = /* @__PURE__ */ new Set(["header", "footer"]);
+var NAMED_KINDS = /* @__PURE__ */ new Set(["service", "person", "quote", "gallery"]);
+var GROUP_OF = Object.freeze({
+  no_place_in_design: "no_place",
+  no_place_for_whatsapp: "no_place",
+  no_place_for_other_phones: "no_place",
+  no_place_for_google_rating: "no_place",
+  no_gallery_room: "no_place",
+  no_fitting_video: "no_place",
+  no_email_for_form: "no_info",
+  no_booking_link: "no_info",
+  no_items_to_show: "no_info",
+  not_collected: "no_info",
+  sources_disagree: "held",
+  kept_off_site: "held",
+  hours_unconfirmed: "held",
+  hours_sources_disagree: "held",
+  owner_withheld: "held",
+  page_nothing_to_show: "pages",
+  page_not_planned: "pages",
+  no_generated_people: "people_spots"
+});
+var NOT_ON_SITE_GROUPS = Object.freeze([
+  "removed",
+  "no_place",
+  "no_info",
+  "held",
+  "reviews",
+  "pages",
+  "people_spots",
+  "other"
+]);
+var factById = (plan) => new Map(listOr2(plan.facts).map((f) => [f.id, f]));
+var itemById = (plan) => new Map(listOr2(plan.items).map((i) => [i.id, i]));
+var factOf = (fact) => ({
+  id: fact.id,
+  kind: typeof fact.kind === "string" ? fact.kind : null,
+  label: plainTextOf(fact.label),
+  value: plainTextOf(fact.value)
+});
+function shownOf(plan) {
+  const where = /* @__PURE__ */ new Map();
+  const add = (id, page, block) => {
+    if (typeof id !== "string") return;
+    if (!where.has(id)) where.set(id, []);
+    where.get(id).push({ page, block });
+  };
+  const rows = (lists, page, block) => {
+    for (const l of listOr2(lists))
+      for (const r of listOr2(l?.rows)) {
+        add(r?.data, page, block);
+        rows(r?.lists, page, block);
+      }
+  };
+  for (const page of plan.pages)
+    for (const block of page.blocks) {
+      for (const id of listOr2(block.data)) add(id, page, block);
+      rows(block.lists, page, block);
+    }
+  return where;
+}
+var sectionOf = (block) => ({
+  id: block.id,
+  label: plainTextOf(block.label),
+  ...typeof block.labelCode === "string" && block.labelCode !== "" ? { labelCode: block.labelCode } : {}
+});
+function locksOf(review) {
+  const locks = review?.locks;
+  if (!isPlainObject2(locks)) return null;
+  return {
+    pages: isPlainObject2(locks.pages) ? locks.pages : {},
+    blocks: isPlainObject2(locks.blocks) ? locks.blocks : {},
+    facts: isPlainObject2(locks.facts) ? locks.facts : {},
+    minItems: isPlainObject2(locks.minItems) ? locks.minItems : {}
+  };
+}
+function itemRemovable(block, items, locks) {
+  if (!locks) return false;
+  const data = listOr2(block.data);
+  const count = data.filter((id) => items.has(id)).length;
+  const min = Number.isSafeInteger(locks.minItems[block.id]) ? locks.minItems[block.id] : 0;
+  return data.length > 1 && count - 1 >= min;
+}
+function keyMessagesOf(plan) {
+  return listOr2(plan.keyMessages).map((m) => {
+    const carriedBy = [];
+    for (const page of plan.pages) {
+      const blocks = page.blocks.filter((b) => listOr2(b.carries).includes(m.id)).map(sectionOf);
+      if (blocks.length) carriedBy.push({ page: page.id, pageName: plainTextOf(page.name), blocks });
+    }
+    return { id: m.id, label: plainTextOf(m.label), field: `keyMessages[${m.id}].label`, carriedBy };
+  });
+}
+var placesOf = (where, id) => listOr2(where.get(id)).map(({ page, block }) => ({
+  page: page.id,
+  pageName: plainTextOf(page.name),
+  section: sectionOf(block),
+  footer: block.type === "footer"
+}));
+function reachOf(plan, where, locks) {
+  const facts = factById(plan);
+  const primary = listOr2(plan.primaryAction?.factIds).map((id) => facts.get(id)).filter(Boolean);
+  const ends = plan.pages.filter((p) => p.endAction && p.blocks.some((b) => b.id === p.endAction.block)).map((p) => ({
+    page: p.id,
+    pageName: plainTextOf(p.name),
+    section: sectionOf(p.blocks.find((b) => b.id === p.endAction.block)),
+    facts: listOr2(p.endAction.factIds).map((id) => facts.get(id)).filter(Boolean).map(factOf)
+  }));
+  const channels = listOr2(plan.facts).filter((f) => CHANNEL_KINDS.has(f.kind) && where.has(f.id)).map((f) => {
+    const places = placesOf(where, f.id);
+    const footers = places.filter((p) => p.footer);
+    const footerBlocks = plan.pages.flatMap(
+      (p) => p.blocks.filter((b) => b.type === "footer" && listOr2(b.data).includes(f.id))
+    );
+    const removable = Boolean(locks) && footers.length > 0 && !locks.facts[f.id] && footerBlocks.every((b) => listOr2(b.data).length > 1);
+    return { ...factOf(f), places, footerPages: footers.length, removable };
+  });
+  return {
+    primary: primary.map((f) => ({ ...factOf(f), places: placesOf(where, f.id) })),
+    ends,
+    channels
+  };
+}
+function siteOf(plan) {
+  const facts = factById(plan);
+  const pages = new Map(plan.pages.map((p) => [p.id, plainTextOf(p.name)]));
+  const chrome = (type) => {
+    const ids = [];
+    for (const page of plan.pages)
+      for (const b of page.blocks)
+        if (b.type === type) {
+          for (const id of listOr2(b.data)) if (facts.has(id) && !ids.includes(id)) ids.push(id);
+        }
+    return ids.map((id) => factOf(facts.get(id)));
+  };
+  const menu = [];
+  for (const page of plan.pages)
+    for (const b of page.blocks) {
+      if (b.type !== "header") continue;
+      for (const l of listOr2(b.lists))
+        for (const r of listOr2(l?.rows))
+          if (typeof r?.page === "string" && pages.has(r.page) && !menu.includes(pages.get(r.page)))
+            menu.push(pages.get(r.page));
+    }
+  return {
+    menu,
+    header: chrome("header"),
+    footer: chrome("footer"),
+    privacyLink: listOr2(plan.legalPages).length > 0
+  };
+}
+function pageOf(plan, page, index, { items, locks, facts }) {
+  const messages = new Map(listOr2(plan.keyMessages).map((m) => [m.id, plainTextOf(m.label)]));
+  const end = page.endAction?.block ?? null;
+  const seo = isPlainObject2(page.seo) ? {
+    searchTerms: listOr2(page.seo.searchTerms).map(plainTextOf),
+    ...typeof page.seo.titleIntent === "string" ? { titleIntent: plainTextOf(page.seo.titleIntent) } : {},
+    ...typeof page.seo.descriptionIntent === "string" ? { descriptionIntent: plainTextOf(page.seo.descriptionIntent) } : {},
+    ownerAdded: listOr2(page.seo.ownerAdded).map(plainTextOf)
+  } : null;
+  return {
+    id: page.id,
+    name: plainTextOf(page.name),
+    removable: Boolean(locks) && index > 0 && !locks.pages[page.id],
+    lock: locks?.pages[page.id] ?? null,
+    ...typeof page.keyMessage === "string" ? { keyMessage: plainTextOf(page.keyMessage) } : {},
+    ...typeof page.visitorQuestion === "string" ? { visitorQuestion: plainTextOf(page.visitorQuestion) } : {},
+    seo,
+    sections: page.blocks.filter((b) => !CHROME_TYPES.has(b.type)).map((b) => {
+      const named = listOr2(b.data).filter((id) => NAMED_KINDS.has(items.get(id)?.kind));
+      const canTakeItem = itemRemovable(b, items, locks);
+      return {
+        ...sectionOf(b),
+        type: b.type,
+        ...b.source === "library" ? { library: true } : {},
+        ...typeof b.message === "string" ? { message: plainTextOf(b.message) } : {},
+        carries: listOr2(b.carries).filter((id) => messages.has(id)).map((id) => ({ id, label: messages.get(id) })),
+        end: b.id === end,
+        removable: Boolean(locks) && !locks.blocks[b.id],
+        items: named.map((id) => {
+          const item = items.get(id);
+          return { id, kind: item.kind, label: plainTextOf(item.label), removable: canTakeItem };
+        }),
+        facts: listOr2(b.data).filter((id) => facts.has(id)).map((id) => factOf(facts.get(id)))
+      };
+    })
+  };
+}
+function standardOf(plan) {
+  const facts = factById(plan);
+  const names = new Map(plan.pages.map((p) => [p.id, plainTextOf(p.name)]));
+  const privacy = listOr2(plan.legalPages).find((l) => l?.kind === "privacy");
+  return {
+    privacy: privacy ? {
+      page: privacy.use === "create" ? null : names.get(privacy.use) ?? null,
+      facts: listOr2(privacy.factIds).map((id) => facts.get(id)).filter(Boolean).map(factOf)
+    } : null,
+    notFound: isPlainObject2(plan.notFound) ? {
+      leadsTo: listOr2(plan.notFound.leadsTo).map((id) => names.get(id)).filter(Boolean)
+    } : null
+  };
+}
+function removedOf(plan, removals) {
+  const restorable = new Set(listOr2(removals).map((r) => r?.id));
+  const byRemoval = /* @__PURE__ */ new Map();
+  for (const e of listOr2(plan.leftOut)) {
+    if (e?.code !== "owner_removed" || typeof e.params?.removal !== "string") continue;
+    const id = e.params.removal;
+    if (!byRemoval.has(id)) byRemoval.set(id, { removal: id, part: null, details: 0 });
+    const line = byRemoval.get(id);
+    if (typeof e.item === "string") line.details += 1;
+    else line.part = { what: plainTextOf(e.what), kind: e.kind };
+  }
+  const items = itemById(plan);
+  const facts = factById(plan);
+  return [...byRemoval.values()].map((line) => {
+    const firstDetail = listOr2(plan.leftOut).find(
+      (e) => e?.params?.removal === line.removal && typeof e.item === "string"
+    );
+    const what = line.part?.what ?? plainTextOf(
+      items.get(firstDetail?.item)?.label ?? facts.get(firstDetail?.item)?.label ?? firstDetail?.what ?? ""
+    );
+    const detailKind = items.get(firstDetail?.item)?.kind ?? null;
+    return {
+      removal: line.removal,
+      what,
+      kind: line.part?.kind ?? "item",
+      ...line.part ? {} : { dataKind: detailKind },
+      details: line.part ? line.details : Math.max(line.details - 1, 0),
+      restorable: restorable.has(line.removal)
+    };
+  });
+}
+function groupsOf(cardLeftOut, plan, removals) {
+  const groups = new Map(NOT_ON_SITE_GROUPS.map((g) => [g, []]));
+  cardLeftOut.forEach((line, i) => {
+    if (line.code === "owner_removed") return;
+    const group = line.dataKind === "quote" ? "reviews" : GROUP_OF[line.code] ?? "other";
+    groups.get(group).push(i);
+  });
+  const peopleSpots = listOr2(plan.leftOut).filter((e) => e?.code === "no_generated_people").reduce((n, e) => n + (Number.isSafeInteger(e.params?.count) ? e.params.count : 1), 0);
+  return {
+    removed: removedOf(plan, removals),
+    groups: NOT_ON_SITE_GROUPS.filter((g) => g !== "removed" && g !== "people_spots").map((g) => ({ group: g, lines: groups.get(g) })).filter((g) => g.lines.length > 0),
+    peopleSpots
+  };
+}
+var SOURCE_KINDS = ["website", "google", "listing", "social", "answer"];
+var COUNTED = ["service", "person", "gallery", "quote"];
+function sourcesOf(plan, where) {
+  const rows = [];
+  for (const kind of SOURCE_KINDS) {
+    const from = (x) => listOr2(x.sources).some((s) => s?.kind === kind);
+    const facts = listOr2(plan.facts).filter(from);
+    const items = COUNTED.map((k) => {
+      const of = listOr2(plan.items).filter((i) => i.kind === k && from(i));
+      const n = (list) => list.reduce((c, i) => c + (Number.isSafeInteger(i.count) && i.count > 0 ? i.count : 1), 0);
+      return { kind: k, got: n(of), shown: n(of.filter((i) => where.has(i.id))) };
+    }).filter((c) => c.got > 0);
+    if (facts.length === 0 && items.length === 0) continue;
+    rows.push({
+      kind,
+      facts: facts.map(factOf),
+      shownFacts: facts.filter((f) => where.has(f.id)).map(factOf),
+      items
+    });
+  }
+  return rows;
+}
+function planReviewPartsOf(plan, cardLeftOut, review) {
+  const where = shownOf(plan);
+  const locks = locksOf(review);
+  const items = itemById(plan);
+  const facts = factById(plan);
+  return {
+    keyMessages: keyMessagesOf(plan),
+    reach: reachOf(plan, where, locks),
+    site: siteOf(plan),
+    sitePages: plan.pages.map((p, i) => pageOf(plan, p, i, { items, locks, facts })),
+    standard: standardOf(plan),
+    notOnSite: groupsOf(cardLeftOut, plan, review?.removals),
+    sources: sourcesOf(plan, where),
+    later: listOr2(plan.later).map((e) => ({
+      code: e.code,
+      what: plainTextOf(e.what),
+      reason: plainTextOf(e.reason),
+      params: isPlainObject2(e.params) ? e.params : {}
+    })),
+    locked: locks === null
+  };
+}
+
 // ../../core/tracy-core/src/build-chat/plan-look-brand.mjs
 var PLAIN_ID = /^[A-Za-z0-9-]{1,64}$/;
-var isPlainObject2 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var isPlainObject3 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 function pictureOf(value) {
-  if (!isPlainObject2(value) || typeof value.picture !== "string" || !PLAIN_ID.test(value.picture)) return null;
+  if (!isPlainObject3(value) || typeof value.picture !== "string" || !PLAIN_ID.test(value.picture)) return null;
   return { picture: value.picture, ...typeof value.mime === "string" ? { mime: value.mime } : {} };
 }
 function lookBrandOf(plan, lookSources) {
-  const pictures = isPlainObject2(lookSources?.pictures) ? lookSources.pictures : {};
-  const accent = isPlainObject2(lookSources?.accent) ? lookSources.accent : {};
-  const logo = isPlainObject2(lookSources?.logo) ? lookSources.logo : {};
+  const pictures = isPlainObject3(lookSources?.pictures) ? lookSources.pictures : {};
+  const accent = isPlainObject3(lookSources?.accent) ? lookSources.accent : {};
+  const logo = isPlainObject3(lookSources?.logo) ? lookSources.logo : {};
   const said = (Array.isArray(plan?.assumptions) ? plan.assumptions : []).find(
     (a) => a?.field === "look.accent"
   );
@@ -392,7 +695,7 @@ function lookBrandOf(plan, lookSources) {
       from: typeof accent.from === "string" ? accent.from : null,
       name: typeof accent.name === "string" ? plainTextOf(accent.name) : null,
       said: typeof said?.said === "string" ? plainTextOf(said.said) : null,
-      ...typeof said?.code === "string" && said.code !== "" ? { code: said.code, params: isPlainObject2(said.params) ? said.params : {} } : {}
+      ...typeof said?.code === "string" && said.code !== "" ? { code: said.code, params: isPlainObject3(said.params) ? said.params : {} } : {}
     }
   };
 }
@@ -475,23 +778,23 @@ function ownPhotosOf(plan) {
   const photos = plan.items.filter((i) => i.kind === "gallery").reduce((n, i) => n + (Number.isSafeInteger(i.count) && i.count > 0 ? i.count : 1), 0);
   return photos;
 }
-var listOr2 = (value) => Array.isArray(value) ? value : [];
-var countsOf = (entries) => listOr2(entries).filter((e) => typeof e?.code === "string" && Number.isSafeInteger(e.count) && e.count > 0).map((e) => ({ code: e.code, count: e.count }));
+var listOr3 = (value) => Array.isArray(value) ? value : [];
+var countsOf = (entries) => listOr3(entries).filter((e) => typeof e?.code === "string" && Number.isSafeInteger(e.count) && e.count > 0).map((e) => ({ code: e.code, count: e.count }));
 function ownCountsOf(own, galleryPhotos) {
   const tallied = Number.isSafeInteger(own.placed) && Number.isSafeInteger(own.photos);
   if (!tallied) return { frames: own.frames, photos: galleryPhotos };
   return { frames: own.placed, photos: own.photos, spots: own.frames, unused: countsOf(own.unused) };
 }
-var isPlainObject3 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-var codeOf = (part) => typeof part?.code === "string" && part.code !== "" ? { code: part.code, params: isPlainObject3(part.params) ? part.params : {} } : {};
+var isPlainObject4 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+var codeOf = (part) => typeof part?.code === "string" && part.code !== "" ? { code: part.code, params: isPlainObject4(part.params) ? part.params : {} } : {};
 function wholePlanOf(plan) {
   const look = plan?.look ?? {};
   const pictures = plan?.pictures ?? {};
   return {
     ...plan,
-    facts: listOr2(plan?.facts),
-    items: listOr2(plan?.items),
-    pages: listOr2(plan?.pages).map((p) => ({ ...p, blocks: listOr2(p?.blocks) })),
+    facts: listOr3(plan?.facts),
+    items: listOr3(plan?.items),
+    pages: listOr3(plan?.pages).map((p) => ({ ...p, blocks: listOr3(p?.blocks) })),
     look: { ...look, template: look.template ?? {}, logo: look.logo ?? {} },
     pictures: {
       own: { frames: 0, ...pictures.own },
@@ -501,8 +804,8 @@ function wholePlanOf(plan) {
   };
 }
 function rowDataOf(lists, out = /* @__PURE__ */ new Set()) {
-  for (const list of listOr2(lists))
-    for (const row of listOr2(list?.rows)) {
+  for (const list of listOr3(lists))
+    for (const row of listOr3(list?.rows)) {
       if (typeof row?.data === "string") out.add(row.data);
       rowDataOf(row?.lists, out);
     }
@@ -512,7 +815,7 @@ function shownOnPagesOf(plan) {
   const shown = /* @__PURE__ */ new Set();
   for (const page of plan.pages)
     for (const block of page.blocks) {
-      for (const id of listOr2(block.data)) shown.add(id);
+      for (const id of listOr3(block.data)) shown.add(id);
       rowDataOf(block.lists, shown);
     }
   return shown;
@@ -524,8 +827,8 @@ var KEPT_FACT_KINDS = /* @__PURE__ */ new Set([
   "contact.cta_label",
   "contact.hours"
 ]);
-var keptOnCard = (fact) => KEPT_FACT_KINDS.has(fact.kind) || listOr2(fact.sources).some((s) => s?.kind === "answer");
-function planCardOf(contractPlan, { lookSources = null } = {}) {
+var keptOnCard = (fact) => KEPT_FACT_KINDS.has(fact.kind) || listOr3(fact.sources).some((s) => s?.kind === "answer");
+function planCardOf(contractPlan, { lookSources = null, review = null } = {}) {
   const plan = wholePlanOf(contractPlan);
   const disputed = new Map(
     (plan.assumptions ?? []).filter((a) => Array.isArray(a.alternatives) && /^facts\[[^\]]+\]\.value$/.test(a.field)).map((a) => [a.field, a])
@@ -535,8 +838,9 @@ function planCardOf(contractPlan, { lookSources = null } = {}) {
   const serviceIds = services.map((s) => s.id);
   const name2 = plainTextOf(plan.facts.find((f) => f.kind === "business.name")?.value ?? "");
   const leftOutFacts = new Set(
-    listOr2(plan.leftOut).map((l) => l?.item).filter((id) => typeof id === "string" && !shown.has(id))
+    listOr3(plan.leftOut).map((l) => l?.item).filter((id) => typeof id === "string" && !shown.has(id))
   );
+  const leftOut = leftOutOf(plan.leftOut, plan);
   return {
     planId: plan.id,
     revision: plan.revision,
@@ -557,7 +861,9 @@ function planCardOf(contractPlan, { lookSources = null } = {}) {
         ...codeOf(f),
         source: firstSource(sourcesOfFact(f)),
         sourceKind: firstSourceKind(sourcesOfFact(f)),
-        choice: assumption ? choiceOf(f, assumption) : null
+        choice: assumption ? choiceOf(f, assumption) : null,
+        // Kept on the card although no page shows it: the card marks it as not on the site (#575 C3).
+        ...leftOutFacts.has(f.id) ? { offSite: true } : {}
       };
     }),
     language: plan.language,
@@ -620,8 +926,9 @@ function planCardOf(contractPlan, { lookSources = null } = {}) {
     },
     // A disputed fact is settled at the fact itself; every other assumption is listed, with its code when it has one.
     assumptions: (plan.assumptions ?? []).filter((a) => !disputed.has(a.field)).map((a) => ({ id: a.id, said: plainTextOf(a.said), ...codeOf(a) })),
-    leftOut: leftOutOf(plan.leftOut, plan),
-    counts: { pages: plan.pages.length, services: services.length }
+    leftOut,
+    counts: { pages: plan.pages.length, services: services.length },
+    ...planReviewPartsOf(plan, leftOut, review)
   };
 }
 var PLAN_REVIEW_APPROVE = "Approve";
@@ -1224,7 +1531,134 @@ var tracy_build_chat_default = {
   "plan.assumption.accent_unreadable.white": "Die Farbe Ihres Logos ist auf Schaltfl\xE4chen schwer lesbar, daher sind Schaltfl\xE4chen und Links wei\xDF.",
   "plan.assumption.accent_unreadable.both": "Die Farbe Ihres Logos ist auf Schaltfl\xE4chen schwer lesbar, daher sind Schaltfl\xE4chen und Links auf hellen Seiten schwarz und auf dunklen Seiten wei\xDF.",
   "plan.assumption.accent_kept_unmeasured": "Die Farben Ihres Logos konnten nicht gelesen werden, daher behalten Schaltfl\xE4chen und Links die Hauptfarbe des Designs.",
-  "plan.assumption.accent_kept_template": "Die Farben Ihres Logos w\xE4ren in diesem Design nicht lesbar, daher behalten Schaltfl\xE4chen und Links die Hauptfarbe des Designs."
+  "plan.assumption.accent_kept_template": "Die Farben Ihres Logos w\xE4ren in diesem Design nicht lesbar, daher behalten Schaltfl\xE4chen und Links die Hauptfarbe des Designs.",
+  "plan.edits.count.one": "{count} \xC4nderung",
+  "plan.edits.count.other": "{count} \xC4nderungen",
+  "plan.edits.revert": "Zur\xFCck zum Original",
+  "plan.edits.revertAsk.one": "Ihre \xC4nderung verwerfen?",
+  "plan.edits.revertAsk.other": "Alle {count} \xC4nderungen verwerfen?",
+  "plan.edits.keep": "Behalten",
+  "plan.edits.discard": "Alle verwerfen",
+  "plan.remove": "{what} entfernen",
+  "plan.get": "Das erhalten Sie",
+  "plan.get.lead": "Eine Site auf {language} mit {pages}: {names}.",
+  "plan.get.pages.one": "{count} Seite",
+  "plan.get.pages.other": "{count} Seiten",
+  "plan.keyMessages": "Was Ihre Site zuerst sagt",
+  "plan.keyMessages.where": "Seite {page}: {sections}",
+  "plan.keyMessages.nowhere": "Noch kein Abschnitt enth\xE4lt dies.",
+  "plan.keyMessage.n": "Kernbotschaft {n}",
+  "plan.tile.pages": "Seiten",
+  "plan.tile.privacy": "und eine Datenschutzseite",
+  "plan.tile.services": "Leistungen",
+  "plan.tile.people": "Personen",
+  "plan.tile.reviews": "Bewertungen",
+  "plan.tile.reviewsOf": "von {count} Bewertungen",
+  "plan.tile.photos": "Ihrer Fotos verwendet",
+  "plan.tile.drawn.one": "etwa {count} weiteres Bild, das Tracy erstellt",
+  "plan.tile.drawn.other": "etwa {count} weitere Bilder, die Tracy erstellt",
+  "plan.look.logoOnLight": "Ihr Logo auf hellem Hintergrund",
+  "plan.look.logoOnDark": "Ihr Logo auf dunklem Hintergrund",
+  "plan.reach": "Wie Kunden Sie erreichen",
+  "plan.reach.main": "Hauptschaltfl\xE4che",
+  "plan.reach.where": "Angezeigt in {places}.",
+  "plan.reach.place": "{section} auf {pages}",
+  "plan.reach.nowhere": "Noch kein Abschnitt zeigt es.",
+  "plan.reach.end": "Seitenende",
+  "plan.reach.endLine": "Seite {page}: {section}",
+  "plan.reach.footerAll": "In der Fu\xDFzeile jeder Seite.",
+  "plan.reach.footerSome": "In der Fu\xDFzeile von {pages}.",
+  "plan.reach.on": "Auf {pages}.",
+  "plan.pages.every": "Jede Seite",
+  "plan.pages.menu": "Men\xFC",
+  "plan.pages.header": "Der Seitenkopf zeigt {facts}.",
+  "plan.pages.footer": "Die Fu\xDFzeile zeigt {facts}.",
+  "plan.pages.privacyLink": "einen Link zur Datenschutzseite",
+  "plan.page.keyMessage": "Kernaussage der Seite",
+  "plan.page.notes": "Hinweise f\xFCr den Texter",
+  "plan.page.visitorQuestion": "Ein Besucher kommt, um zu erfahren",
+  "plan.tag.end": "Seitenende",
+  "plan.tag.library": "Von Tracy hinzugef\xFCgt",
+  "plan.standard": "Standardseiten",
+  "plan.standard.sum": "Datenschutzerkl\xE4rung, Seite nicht gefunden",
+  "plan.standard.privacy": "Datenschutzerkl\xE4rung",
+  "plan.standard.privacyFrom": "Verfasst aus {facts}. In der Fu\xDFzeile verlinkt, nicht im Men\xFC.",
+  "plan.standard.notFound": "Seite nicht gefunden",
+  "plan.standard.notFoundLine": "Sagt, dass die Seite nicht existiert, und f\xFChrt den Besucher zu {pages}.",
+  "plan.writtenAfter": "Die \xDCberschriften und Texte jedes Abschnitts werden nach Ihrer Freigabe geschrieben, nur aus dem, was dieser Plan enth\xE4lt.",
+  "plan.fact.offSite": "Nicht auf der Site",
+  "plan.notOnSite": "Nicht auf der Site",
+  "plan.notOnSite.group.removed": "Von Ihnen entfernt",
+  "plan.notOnSite.group.no_place": "Ihr Design hat keinen Platz daf\xFCr",
+  "plan.notOnSite.group.no_info": "Noch keine Informationen",
+  "plan.notOnSite.group.held": "Zur\xFCckgehalten, bis Sie best\xE4tigen",
+  "plan.notOnSite.group.reviews": "Nicht verwendete Bewertungen",
+  "plan.notOnSite.group.pages": "Nicht erstellte Template-Seiten",
+  "plan.notOnSite.group.people_spots": "Leer gelassene Bildpl\xE4tze f\xFCr Personen",
+  "plan.notOnSite.group.other": "Sonstiges",
+  "plan.notOnSite.lines.one": "{count} Zeile",
+  "plan.notOnSite.lines.other": "{count} Zeilen",
+  "plan.notOnSite.details.one": "Damit ist {count} Detail entfallen, das sonst nirgends gezeigt wird.",
+  "plan.notOnSite.details.other": "Damit sind {count} Details entfallen, die sonst nirgends gezeigt werden.",
+  "plan.notOnSite.restore": "Wiederherstellen",
+  "plan.notOnSite.restoreLabel": "{what} wiederherstellen",
+  "plan.notOnSite.cannotRestore": "Um dies wiederherzustellen, bitten Sie im Chat darum.",
+  "plan.notOnSite.peopleSpots.one": "{count} Bildplatz f\xFCr eine Person",
+  "plan.notOnSite.peopleSpots.other": "{count} Bildpl\xE4tze f\xFCr Personen",
+  "plan.notOnSite.peopleSpots.reason": "Tracy erstellt nie Bilder von Personen, daher bleiben diese Pl\xE4tze leer, bis Sie Ihr eigenes Foto hinzuf\xFCgen.",
+  "plan.leftOut.reason.owner_removed": "Sie haben dies aus dem Plan genommen.",
+  "plan.leftOut.what.videos.one": "{count} Video",
+  "plan.leftOut.what.videos.other": "{count} Videos",
+  "plan.sources": "Von Ihren Links zur Site",
+  "plan.sources.source": "Quelle",
+  "plan.sources.got": "Was Tracy gefunden hat",
+  "plan.sources.shown": "Auf der Site",
+  "plan.sources.none": "Nichts",
+  "plan.sources.shownOf": "{shown} von {what}",
+  "plan.search": "Suche bei Google",
+  "plan.search.title": "Was der Titel sagt",
+  "plan.search.description": "Was die Beschreibung sagt",
+  "plan.search.terms": "Suchbegriffe",
+  "plan.search.add": "Suchbegriff hinzuf\xFCgen",
+  "plan.search.addLabel": "Neuer Suchbegriff f\xFCr die Seite {page}",
+  "plan.search.removeTerm": "Suchbegriff {term} entfernen",
+  "plan.later": "Das k\xF6nnen Sie sp\xE4ter senden",
+  "plan.later.what.later_prices": "Ihre Preise",
+  "plan.later.reason.later_prices": "Senden Sie Ihre Preise, dann k\xF6nnen sie zusammen mit Ihrem Angebot gezeigt werden.",
+  "plan.later.what.later_services": "Ihre Leistungsliste",
+  "plan.later.reason.later_services": "Senden Sie die Leistungen, die Sie anbieten, dann kann jede einen eigenen Platz auf Ihrer Site erhalten.",
+  "plan.later.what.later_menu": "Ihre Speisekarte",
+  "plan.later.reason.later_menu": "Senden Sie Ihre Speisekarte, dann k\xF6nnen Ihre Gerichte auf Ihrer Site gezeigt werden.",
+  "plan.later.what.later_hours": "Ihre \xD6ffnungszeiten",
+  "plan.later.reason.later_hours": "Best\xE4tigen Sie Ihre \xD6ffnungszeiten, dann k\xF6nnen sie auf Ihrer Site gezeigt werden.",
+  "plan.later.what.later_email": "Ihre E-Mail-Adresse",
+  "plan.later.reason.later_email": "Senden Sie eine E-Mail-Adresse, dann k\xF6nnen Besucher Ihnen schreiben und ein Formular kann seine Antworten dorthin senden.",
+  "plan.later.what.later_booking_link": "Ihr Buchungslink",
+  "plan.later.reason.later_booking_link": "Senden Sie Ihren Buchungslink, dann k\xF6nnen Ihre Schaltfl\xE4chen Besucher direkt dorthin f\xFChren.",
+  "plan.later.what.later_portraits": "Fotos Ihres Teams",
+  "plan.later.reason.later_portraits": "Senden Sie ein Foto jeder Person, dann kann es neben dem Namen gezeigt werden.",
+  "plan.later.what.later_logo": "Ihre Logo-Datei",
+  "plan.later.reason.later_logo": "Senden Sie Ihre Logo-Datei, dann kann sie anstelle des Logos gezeigt werden, das Ihr Plan vorerst verwendet.",
+  "plan.refused.first_page": "Die erste Seite Ihrer Site bleibt: Jede andere Seite f\xFChrt zu ihr zur\xFCck.",
+  "plan.refused.privacy_page": "Diese Seite ist Ihre Datenschutzseite, daher bleibt sie.",
+  "plan.refused.main_block": "Dieser Abschnitt ist der Hauptabschnitt seiner Seite, daher bleibt er, solange die Seite bleibt.",
+  "plan.refused.site_chrome": "Dieser Abschnitt wird von jeder Seite Ihrer Site gemeinsam genutzt, daher kann er nicht von einer einzelnen Seite entfernt werden.",
+  "plan.refused.end_action": "Ihre Seite endet mit diesem Abschnitt, daher bleibt er.",
+  "plan.refused.main_button": "Ihre Hauptschaltfl\xE4che verwendet dies, daher bleibt es.",
+  "plan.refused.too_few_items": "Dieser Abschnitt braucht mindestens {min} davon, daher bleibt dieser Eintrag.",
+  "plan.refused.block_empty": "Dies ist das Letzte, was dieser Abschnitt zeigt. Entfernen Sie stattdessen den ganzen Abschnitt.",
+  "plan.refused.not_in_footer": "Dies wird nicht in der Fu\xDFzeile Ihrer Seiten gezeigt.",
+  "plan.refused.not_a_channel": "Nur eine Kontaktm\xF6glichkeit kann aus der Fu\xDFzeile entfernt werden.",
+  "plan.refused.not_an_item": "Nur eine Leistung, eine Person, ein Foto oder eine Bewertung kann aus einem Abschnitt entfernt werden.",
+  "plan.refused.needed_by_privacy_page": "Ihre Datenschutzseite braucht dies, daher bleibt es.",
+  "plan.refused.needed_by_end_action": "Das Ende einer Seite f\xFChrt hierher, daher bleibt es.",
+  "plan.refused.not_found": "Dies ist nicht mehr in Ihrem Plan.",
+  "plan.refused.removal_unknown": "Hier gibt es nichts wiederherzustellen.",
+  "plan.refused.restore_target_gone": "Dies geh\xF6rt in etwas, das Sie danach entfernt haben. Stellen Sie zuerst jenes wieder her.",
+  "plan.refused.search_terms_empty": "Eine Seite beh\xE4lt mindestens einen Suchbegriff.",
+  "plan.refused.search_term_too_long": "Ein Suchbegriff hat h\xF6chstens 60 Zeichen.",
+  "plan.refused.search_term_twice": "Dieser Suchbegriff steht bereits auf der Seite.",
+  "plan.refused.too_many_search_terms": "Eine Seite hat h\xF6chstens 10 Suchbegriffe."
 };
 
 // ../../locale/tracy-locales/es/tracy-build-chat.json
@@ -1638,7 +2072,134 @@ var tracy_build_chat_default2 = {
   "plan.assumption.accent_unreadable.white": "El color de su logotipo se lee mal en los botones, as\xED que los botones y enlaces son blancos.",
   "plan.assumption.accent_unreadable.both": "El color de su logotipo se lee mal en los botones, as\xED que los botones y enlaces son negros en las p\xE1ginas claras y blancos en las oscuras.",
   "plan.assumption.accent_kept_unmeasured": "No se pudieron leer los colores de su logotipo, as\xED que los botones y enlaces mantienen el color principal del dise\xF1o.",
-  "plan.assumption.accent_kept_template": "Los colores de su logotipo no se leer\xEDan en este dise\xF1o, as\xED que los botones y enlaces mantienen el color principal del dise\xF1o."
+  "plan.assumption.accent_kept_template": "Los colores de su logotipo no se leer\xEDan en este dise\xF1o, as\xED que los botones y enlaces mantienen el color principal del dise\xF1o.",
+  "plan.edits.count.one": "{count} cambio",
+  "plan.edits.count.other": "{count} cambios",
+  "plan.edits.revert": "Volver al original",
+  "plan.edits.revertAsk.one": "\xBFDescartar su cambio?",
+  "plan.edits.revertAsk.other": "\xBFDescartar los {count} cambios?",
+  "plan.edits.keep": "Conservar",
+  "plan.edits.discard": "Descartar todo",
+  "plan.remove": "Quitar {what}",
+  "plan.get": "Lo que obtiene",
+  "plan.get.lead": "Un sitio en {language} con {pages}: {names}.",
+  "plan.get.pages.one": "{count} p\xE1gina",
+  "plan.get.pages.other": "{count} p\xE1ginas",
+  "plan.keyMessages": "Lo que dice primero su sitio",
+  "plan.keyMessages.where": "P\xE1gina {page}: {sections}",
+  "plan.keyMessages.nowhere": "Todav\xEDa ninguna secci\xF3n lo incluye.",
+  "plan.keyMessage.n": "Mensaje clave {n}",
+  "plan.tile.pages": "p\xE1ginas",
+  "plan.tile.privacy": "y una p\xE1gina de privacidad",
+  "plan.tile.services": "servicios",
+  "plan.tile.people": "personas",
+  "plan.tile.reviews": "rese\xF1as",
+  "plan.tile.reviewsOf": "de {count} rese\xF1as",
+  "plan.tile.photos": "de sus fotos usadas",
+  "plan.tile.drawn.one": "unas {count} imagen m\xE1s que crea Tracy",
+  "plan.tile.drawn.other": "unas {count} im\xE1genes m\xE1s que crea Tracy",
+  "plan.look.logoOnLight": "Su logo sobre fondo claro",
+  "plan.look.logoOnDark": "Su logo sobre fondo oscuro",
+  "plan.reach": "C\xF3mo le contactan los clientes",
+  "plan.reach.main": "Bot\xF3n principal",
+  "plan.reach.where": "Se muestra en {places}.",
+  "plan.reach.place": "{section} en {pages}",
+  "plan.reach.nowhere": "Todav\xEDa ninguna secci\xF3n lo muestra.",
+  "plan.reach.end": "Final de p\xE1gina",
+  "plan.reach.endLine": "P\xE1gina {page}: {section}",
+  "plan.reach.footerAll": "En el pie de p\xE1gina de todas las p\xE1ginas.",
+  "plan.reach.footerSome": "En el pie de p\xE1gina de {pages}.",
+  "plan.reach.on": "En {pages}.",
+  "plan.pages.every": "Todas las p\xE1ginas",
+  "plan.pages.menu": "Men\xFA",
+  "plan.pages.header": "La cabecera muestra {facts}.",
+  "plan.pages.footer": "El pie de p\xE1gina muestra {facts}.",
+  "plan.pages.privacyLink": "un enlace a la p\xE1gina de privacidad",
+  "plan.page.keyMessage": "Idea principal de la p\xE1gina",
+  "plan.page.notes": "Notas para el redactor",
+  "plan.page.visitorQuestion": "Un visitante viene para saber",
+  "plan.tag.end": "Final de p\xE1gina",
+  "plan.tag.library": "A\xF1adido por Tracy",
+  "plan.standard": "P\xE1ginas est\xE1ndar",
+  "plan.standard.sum": "Pol\xEDtica de privacidad, p\xE1gina no encontrada",
+  "plan.standard.privacy": "Pol\xEDtica de privacidad",
+  "plan.standard.privacyFrom": "Redactada a partir de {facts}. Enlazada en el pie de p\xE1gina, no en el men\xFA.",
+  "plan.standard.notFound": "P\xE1gina no encontrada",
+  "plan.standard.notFoundLine": "Indica que la p\xE1gina no existe y lleva al visitante a {pages}.",
+  "plan.writtenAfter": "Los t\xEDtulos y textos de cada secci\xF3n se redactan despu\xE9s de que usted apruebe, solo a partir de lo que contiene este plan.",
+  "plan.fact.offSite": "No est\xE1 en el sitio",
+  "plan.notOnSite": "No est\xE1 en el sitio",
+  "plan.notOnSite.group.removed": "Usted quit\xF3",
+  "plan.notOnSite.group.no_place": "Su dise\xF1o no tiene lugar para esto",
+  "plan.notOnSite.group.no_info": "A\xFAn no hay informaci\xF3n",
+  "plan.notOnSite.group.held": "En espera hasta que usted confirme",
+  "plan.notOnSite.group.reviews": "Rese\xF1as no usadas",
+  "plan.notOnSite.group.pages": "P\xE1ginas de la plantilla sin crear",
+  "plan.notOnSite.group.people_spots": "Espacios de im\xE1genes de personas que quedan vac\xEDos",
+  "plan.notOnSite.group.other": "Otros",
+  "plan.notOnSite.lines.one": "{count} l\xEDnea",
+  "plan.notOnSite.lines.other": "{count} l\xEDneas",
+  "plan.notOnSite.details.one": "Con ello se fue {count} detalle que no se muestra en ning\xFAn otro lugar.",
+  "plan.notOnSite.details.other": "Con ello se fueron {count} detalles que no se muestran en ning\xFAn otro lugar.",
+  "plan.notOnSite.restore": "Restaurar",
+  "plan.notOnSite.restoreLabel": "Restaurar {what}",
+  "plan.notOnSite.cannotRestore": "Para restaurarlo, p\xEDdalo en el chat.",
+  "plan.notOnSite.peopleSpots.one": "{count} espacio de imagen de una persona",
+  "plan.notOnSite.peopleSpots.other": "{count} espacios de im\xE1genes de personas",
+  "plan.notOnSite.peopleSpots.reason": "Tracy nunca crea im\xE1genes de personas, as\xED que estos espacios quedan vac\xEDos hasta que usted a\xF1ada su propia foto.",
+  "plan.leftOut.reason.owner_removed": "Usted quit\xF3 esto del plan.",
+  "plan.leftOut.what.videos.one": "{count} v\xEDdeo",
+  "plan.leftOut.what.videos.other": "{count} v\xEDdeos",
+  "plan.sources": "De sus enlaces al sitio",
+  "plan.sources.source": "Fuente",
+  "plan.sources.got": "Lo que encontr\xF3 Tracy",
+  "plan.sources.shown": "En el sitio",
+  "plan.sources.none": "Nada",
+  "plan.sources.shownOf": "{shown} de {what}",
+  "plan.search": "B\xFAsqueda en Google",
+  "plan.search.title": "Lo que dice el t\xEDtulo",
+  "plan.search.description": "Lo que dice la descripci\xF3n",
+  "plan.search.terms": "T\xE9rminos de b\xFAsqueda",
+  "plan.search.add": "A\xF1adir un t\xE9rmino de b\xFAsqueda",
+  "plan.search.addLabel": "Nuevo t\xE9rmino de b\xFAsqueda para la p\xE1gina {page}",
+  "plan.search.removeTerm": "Quitar el t\xE9rmino de b\xFAsqueda {term}",
+  "plan.later": "Puede enviar m\xE1s adelante",
+  "plan.later.what.later_prices": "Sus precios",
+  "plan.later.reason.later_prices": "Env\xEDe sus precios y podr\xE1n mostrarse junto con lo que ofrece.",
+  "plan.later.what.later_services": "Su lista de servicios",
+  "plan.later.reason.later_services": "Env\xEDe los servicios que ofrece y cada uno podr\xE1 tener su propio lugar en su sitio.",
+  "plan.later.what.later_menu": "Su carta",
+  "plan.later.reason.later_menu": "Env\xEDe su carta y sus platos podr\xE1n mostrarse en su sitio.",
+  "plan.later.what.later_hours": "Su horario",
+  "plan.later.reason.later_hours": "Confirme su horario y podr\xE1 mostrarse en su sitio.",
+  "plan.later.what.later_email": "Su direcci\xF3n de email",
+  "plan.later.reason.later_email": "Env\xEDe una direcci\xF3n de email y los visitantes podr\xE1n escribirle, y un formulario podr\xE1 enviar sus respuestas all\xED.",
+  "plan.later.what.later_booking_link": "Su enlace de reservas",
+  "plan.later.reason.later_booking_link": "Env\xEDe su enlace de reservas y sus botones podr\xE1n llevar a los visitantes directamente all\xED.",
+  "plan.later.what.later_portraits": "Fotos de su equipo",
+  "plan.later.reason.later_portraits": "Env\xEDe una foto de cada persona y podr\xE1 mostrarse junto a su nombre.",
+  "plan.later.what.later_logo": "El archivo de su logo",
+  "plan.later.reason.later_logo": "Env\xEDe el archivo de su logo y podr\xE1 mostrarse en lugar del que su plan usa por ahora.",
+  "plan.refused.first_page": "La primera p\xE1gina de su sitio se mantiene: todas las dem\xE1s p\xE1ginas llevan de vuelta a ella.",
+  "plan.refused.privacy_page": "Esta p\xE1gina es su p\xE1gina de privacidad, as\xED que se mantiene.",
+  "plan.refused.main_block": "Esta secci\xF3n es la secci\xF3n principal de su p\xE1gina, as\xED que se mantiene mientras la p\xE1gina se mantenga.",
+  "plan.refused.site_chrome": "Esta secci\xF3n la comparten todas las p\xE1ginas de su sitio, as\xED que no se puede quitar de una sola p\xE1gina.",
+  "plan.refused.end_action": "Su p\xE1gina termina con esta secci\xF3n, as\xED que se mantiene.",
+  "plan.refused.main_button": "Su bot\xF3n principal lo usa, as\xED que se mantiene.",
+  "plan.refused.too_few_items": "Esta secci\xF3n necesita al menos {min} de estos, as\xED que este se mantiene.",
+  "plan.refused.block_empty": "Es lo \xFAltimo que muestra esta secci\xF3n. Quite en su lugar la secci\xF3n completa.",
+  "plan.refused.not_in_footer": "Esto no se muestra en el pie de p\xE1gina de sus p\xE1ginas.",
+  "plan.refused.not_a_channel": "Del pie de p\xE1gina solo se puede quitar una v\xEDa de contacto.",
+  "plan.refused.not_an_item": "De una secci\xF3n solo se puede quitar un servicio, una persona, una foto o una rese\xF1a.",
+  "plan.refused.needed_by_privacy_page": "Su p\xE1gina de privacidad lo necesita, as\xED que se mantiene.",
+  "plan.refused.needed_by_end_action": "El final de una p\xE1gina lleva a esto, as\xED que se mantiene.",
+  "plan.refused.not_found": "Esto ya no est\xE1 en su plan.",
+  "plan.refused.removal_unknown": "Aqu\xED no hay nada que restaurar.",
+  "plan.refused.restore_target_gone": "Esto vuelve a algo que usted quit\xF3 despu\xE9s. Restaure primero eso.",
+  "plan.refused.search_terms_empty": "Una p\xE1gina conserva al menos un t\xE9rmino de b\xFAsqueda.",
+  "plan.refused.search_term_too_long": "Un t\xE9rmino de b\xFAsqueda tiene como m\xE1ximo 60 caracteres.",
+  "plan.refused.search_term_twice": "Este t\xE9rmino de b\xFAsqueda ya est\xE1 en la p\xE1gina.",
+  "plan.refused.too_many_search_terms": "Una p\xE1gina tiene como m\xE1ximo 10 t\xE9rminos de b\xFAsqueda."
 };
 
 // ../../locale/tracy-locales/fr/tracy-build-chat.json
@@ -2052,7 +2613,134 @@ var tracy_build_chat_default3 = {
   "plan.assumption.accent_unreadable.white": "La couleur de votre logo est difficile \xE0 lire sur les boutons, donc les boutons et les liens sont blancs.",
   "plan.assumption.accent_unreadable.both": "La couleur de votre logo est difficile \xE0 lire sur les boutons, donc les boutons et les liens sont noirs sur les pages claires et blancs sur les pages sombres.",
   "plan.assumption.accent_kept_unmeasured": "Les couleurs de votre logo n\u2019ont pas pu \xEAtre lues, donc les boutons et les liens gardent la couleur principale du design.",
-  "plan.assumption.accent_kept_template": "Les couleurs de votre logo ne seraient pas lisibles sur ce design, donc les boutons et les liens gardent la couleur principale du design."
+  "plan.assumption.accent_kept_template": "Les couleurs de votre logo ne seraient pas lisibles sur ce design, donc les boutons et les liens gardent la couleur principale du design.",
+  "plan.edits.count.one": "{count} modification",
+  "plan.edits.count.other": "{count} modifications",
+  "plan.edits.revert": "Revenir \xE0 l\u2019original",
+  "plan.edits.revertAsk.one": "Annuler votre modification ?",
+  "plan.edits.revertAsk.other": "Annuler les {count} modifications ?",
+  "plan.edits.keep": "Conserver",
+  "plan.edits.discard": "Tout annuler",
+  "plan.remove": "Retirer {what}",
+  "plan.get": "Ce que vous obtenez",
+  "plan.get.lead": "Un site en {language} avec {pages} : {names}.",
+  "plan.get.pages.one": "{count} page",
+  "plan.get.pages.other": "{count} pages",
+  "plan.keyMessages": "Ce que votre site dit en premier",
+  "plan.keyMessages.where": "Page {page} : {sections}",
+  "plan.keyMessages.nowhere": "Aucune section ne le porte encore.",
+  "plan.keyMessage.n": "Message cl\xE9 {n}",
+  "plan.tile.pages": "pages",
+  "plan.tile.privacy": "et une page de confidentialit\xE9",
+  "plan.tile.services": "services",
+  "plan.tile.people": "personnes",
+  "plan.tile.reviews": "avis",
+  "plan.tile.reviewsOf": "sur {count} avis",
+  "plan.tile.photos": "de vos photos utilis\xE9es",
+  "plan.tile.drawn.one": "environ {count} image de plus cr\xE9\xE9e par Tracy",
+  "plan.tile.drawn.other": "environ {count} images de plus cr\xE9\xE9es par Tracy",
+  "plan.look.logoOnLight": "Votre logo sur fond clair",
+  "plan.look.logoOnDark": "Votre logo sur fond sombre",
+  "plan.reach": "Comment les clients vous joignent",
+  "plan.reach.main": "Bouton principal",
+  "plan.reach.where": "Affich\xE9 dans {places}.",
+  "plan.reach.place": "{section} sur {pages}",
+  "plan.reach.nowhere": "Aucune section ne l\u2019affiche encore.",
+  "plan.reach.end": "Fin de page",
+  "plan.reach.endLine": "Page {page} : {section}",
+  "plan.reach.footerAll": "Dans le pied de page de chaque page.",
+  "plan.reach.footerSome": "Dans le pied de page de {pages}.",
+  "plan.reach.on": "Sur {pages}.",
+  "plan.pages.every": "Toutes les pages",
+  "plan.pages.menu": "Menu",
+  "plan.pages.header": "L\u2019en-t\xEAte affiche {facts}.",
+  "plan.pages.footer": "Le pied de page affiche {facts}.",
+  "plan.pages.privacyLink": "un lien vers la page de confidentialit\xE9",
+  "plan.page.keyMessage": "Id\xE9e principale de la page",
+  "plan.page.notes": "Notes pour le r\xE9dacteur",
+  "plan.page.visitorQuestion": "Un visiteur vient pour savoir",
+  "plan.tag.end": "Fin de page",
+  "plan.tag.library": "Ajout\xE9 par Tracy",
+  "plan.standard": "Pages standard",
+  "plan.standard.sum": "Politique de confidentialit\xE9, page introuvable",
+  "plan.standard.privacy": "Politique de confidentialit\xE9",
+  "plan.standard.privacyFrom": "R\xE9dig\xE9e \xE0 partir de {facts}. Li\xE9e dans le pied de page, pas dans le menu.",
+  "plan.standard.notFound": "Page introuvable",
+  "plan.standard.notFoundLine": "Indique que la page n\u2019existe pas et dirige le visiteur vers {pages}.",
+  "plan.writtenAfter": "Les titres et les textes de chaque section sont r\xE9dig\xE9s apr\xE8s votre validation, uniquement \xE0 partir de ce que contient ce plan.",
+  "plan.fact.offSite": "Pas sur le site",
+  "plan.notOnSite": "Pas sur le site",
+  "plan.notOnSite.group.removed": "Vous avez retir\xE9",
+  "plan.notOnSite.group.no_place": "Votre design n\u2019a pas d\u2019emplacement pour cela",
+  "plan.notOnSite.group.no_info": "Pas encore d\u2019informations",
+  "plan.notOnSite.group.held": "Mis en attente jusqu\u2019\xE0 votre confirmation",
+  "plan.notOnSite.group.reviews": "Avis non utilis\xE9s",
+  "plan.notOnSite.group.pages": "Pages du mod\xE8le non cr\xE9\xE9es",
+  "plan.notOnSite.group.people_spots": "Emplacements d\u2019images de personnes laiss\xE9s vides",
+  "plan.notOnSite.group.other": "Autres",
+  "plan.notOnSite.lines.one": "{count} ligne",
+  "plan.notOnSite.lines.other": "{count} lignes",
+  "plan.notOnSite.details.one": "{count} d\xE9tail affich\xE9 nulle part ailleurs est parti avec.",
+  "plan.notOnSite.details.other": "{count} d\xE9tails affich\xE9s nulle part ailleurs sont partis avec.",
+  "plan.notOnSite.restore": "R\xE9tablir",
+  "plan.notOnSite.restoreLabel": "R\xE9tablir {what}",
+  "plan.notOnSite.cannotRestore": "Pour le r\xE9tablir, demandez-le dans le chat.",
+  "plan.notOnSite.peopleSpots.one": "{count} emplacement d\u2019image d\u2019une personne",
+  "plan.notOnSite.peopleSpots.other": "{count} emplacements d\u2019images de personnes",
+  "plan.notOnSite.peopleSpots.reason": "Tracy ne cr\xE9e jamais d\u2019images de personnes, ces emplacements restent donc vides jusqu\u2019\xE0 ce que vous ajoutiez votre propre photo.",
+  "plan.leftOut.reason.owner_removed": "Vous avez retir\xE9 ceci du plan.",
+  "plan.leftOut.what.videos.one": "{count} vid\xE9o",
+  "plan.leftOut.what.videos.other": "{count} vid\xE9os",
+  "plan.sources": "De vos liens vers le site",
+  "plan.sources.source": "Source",
+  "plan.sources.got": "Ce que Tracy a trouv\xE9",
+  "plan.sources.shown": "Sur le site",
+  "plan.sources.none": "Rien",
+  "plan.sources.shownOf": "{shown} sur {what}",
+  "plan.search": "Recherche sur Google",
+  "plan.search.title": "Ce que dit le titre",
+  "plan.search.description": "Ce que dit la description",
+  "plan.search.terms": "Termes de recherche",
+  "plan.search.add": "Ajouter un terme de recherche",
+  "plan.search.addLabel": "Nouveau terme de recherche pour la page {page}",
+  "plan.search.removeTerm": "Retirer le terme de recherche {term}",
+  "plan.later": "Ce que vous pouvez envoyer plus tard",
+  "plan.later.what.later_prices": "Vos tarifs",
+  "plan.later.reason.later_prices": "Envoyez vos tarifs et ils pourront \xEAtre affich\xE9s avec ce que vous proposez.",
+  "plan.later.what.later_services": "Votre liste de services",
+  "plan.later.reason.later_services": "Envoyez les services que vous proposez et chacun pourra avoir sa propre place sur votre site.",
+  "plan.later.what.later_menu": "Votre carte",
+  "plan.later.reason.later_menu": "Envoyez votre carte et vos plats pourront \xEAtre pr\xE9sent\xE9s sur votre site.",
+  "plan.later.what.later_hours": "Vos horaires d\u2019ouverture",
+  "plan.later.reason.later_hours": "Confirmez vos horaires d\u2019ouverture et ils pourront \xEAtre affich\xE9s sur votre site.",
+  "plan.later.what.later_email": "Votre adresse email",
+  "plan.later.reason.later_email": "Envoyez une adresse email pour que les visiteurs puissent vous \xE9crire et qu\u2019un formulaire puisse y envoyer ses r\xE9ponses.",
+  "plan.later.what.later_booking_link": "Votre lien de r\xE9servation",
+  "plan.later.reason.later_booking_link": "Envoyez votre lien de r\xE9servation et vos boutons pourront y mener directement les visiteurs.",
+  "plan.later.what.later_portraits": "Photos de votre \xE9quipe",
+  "plan.later.reason.later_portraits": "Envoyez une photo de chaque personne et elle pourra \xEAtre affich\xE9e \xE0 c\xF4t\xE9 de son nom.",
+  "plan.later.what.later_logo": "Votre fichier de logo",
+  "plan.later.reason.later_logo": "Envoyez votre fichier de logo et il pourra remplacer celui que votre plan utilise pour l\u2019instant.",
+  "plan.refused.first_page": "La premi\xE8re page de votre site est conserv\xE9e : toutes les autres pages y ram\xE8nent.",
+  "plan.refused.privacy_page": "Cette page est votre page de confidentialit\xE9, elle est donc conserv\xE9e.",
+  "plan.refused.main_block": "Cette section est la section principale de sa page, elle est donc conserv\xE9e tant que la page l\u2019est.",
+  "plan.refused.site_chrome": "Cette section est partag\xE9e par toutes les pages de votre site, elle ne peut donc pas \xEAtre retir\xE9e d\u2019une seule page.",
+  "plan.refused.end_action": "Votre page se termine par cette section, elle est donc conserv\xE9e.",
+  "plan.refused.main_button": "Votre bouton principal l\u2019utilise, il est donc conserv\xE9.",
+  "plan.refused.too_few_items": "Cette section en demande au moins {min}, celui-ci est donc conserv\xE9.",
+  "plan.refused.block_empty": "C\u2019est la derni\xE8re chose que cette section affiche. Retirez plut\xF4t la section enti\xE8re.",
+  "plan.refused.not_in_footer": "Ceci n\u2019est pas affich\xE9 dans le pied de page de vos pages.",
+  "plan.refused.not_a_channel": "Seul un moyen de vous contacter peut \xEAtre retir\xE9 du pied de page.",
+  "plan.refused.not_an_item": "Seul un service, une personne, une photo ou un avis peut \xEAtre retir\xE9 d\u2019une section.",
+  "plan.refused.needed_by_privacy_page": "Votre page de confidentialit\xE9 en a besoin, il est donc conserv\xE9.",
+  "plan.refused.needed_by_end_action": "La fin d\u2019une page m\xE8ne \xE0 ceci, il est donc conserv\xE9.",
+  "plan.refused.not_found": "Ceci ne figure plus dans votre plan.",
+  "plan.refused.removal_unknown": "Il n\u2019y a rien \xE0 r\xE9tablir ici.",
+  "plan.refused.restore_target_gone": "Ceci retourne dans un \xE9l\xE9ment que vous avez retir\xE9 ensuite. R\xE9tablissez-le d\u2019abord.",
+  "plan.refused.search_terms_empty": "Une page conserve au moins un terme de recherche.",
+  "plan.refused.search_term_too_long": "Un terme de recherche compte au plus 60 caract\xE8res.",
+  "plan.refused.search_term_twice": "Ce terme de recherche figure d\xE9j\xE0 sur la page.",
+  "plan.refused.too_many_search_terms": "Une page compte au plus 10 termes de recherche."
 };
 
 // ../../locale/tracy-locales/it/tracy-build-chat.json
@@ -2466,7 +3154,134 @@ var tracy_build_chat_default4 = {
   "plan.assumption.accent_unreadable.white": "Il colore del tuo logo \xE8 difficile da leggere sui pulsanti, quindi pulsanti e link sono bianchi.",
   "plan.assumption.accent_unreadable.both": "Il colore del tuo logo \xE8 difficile da leggere sui pulsanti, quindi pulsanti e link sono neri sulle pagine chiare e bianchi su quelle scure.",
   "plan.assumption.accent_kept_unmeasured": "Non \xE8 stato possibile leggere i colori del tuo logo, quindi pulsanti e link mantengono il colore principale del design.",
-  "plan.assumption.accent_kept_template": "I colori del tuo logo non si leggerebbero su questo design, quindi pulsanti e link mantengono il colore principale del design."
+  "plan.assumption.accent_kept_template": "I colori del tuo logo non si leggerebbero su questo design, quindi pulsanti e link mantengono il colore principale del design.",
+  "plan.edits.count.one": "{count} modifica",
+  "plan.edits.count.other": "{count} modifiche",
+  "plan.edits.revert": "Torna all\u2019originale",
+  "plan.edits.revertAsk.one": "Annullare la sua modifica?",
+  "plan.edits.revertAsk.other": "Annullare tutte le {count} modifiche?",
+  "plan.edits.keep": "Mantieni",
+  "plan.edits.discard": "Annulla tutto",
+  "plan.remove": "Rimuovi {what}",
+  "plan.get": "Cosa ottiene",
+  "plan.get.lead": "Un sito in {language} con {pages}: {names}.",
+  "plan.get.pages.one": "{count} pagina",
+  "plan.get.pages.other": "{count} pagine",
+  "plan.keyMessages": "Cosa dice per prima il suo sito",
+  "plan.keyMessages.where": "Pagina {page}: {sections}",
+  "plan.keyMessages.nowhere": "Nessuna sezione lo riporta ancora.",
+  "plan.keyMessage.n": "Messaggio chiave {n}",
+  "plan.tile.pages": "pagine",
+  "plan.tile.privacy": "e una pagina sulla privacy",
+  "plan.tile.services": "servizi",
+  "plan.tile.people": "persone",
+  "plan.tile.reviews": "recensioni",
+  "plan.tile.reviewsOf": "su {count} recensioni",
+  "plan.tile.photos": "delle sue foto utilizzate",
+  "plan.tile.drawn.one": "circa {count} immagine in pi\xF9 creata da Tracy",
+  "plan.tile.drawn.other": "circa {count} immagini in pi\xF9 create da Tracy",
+  "plan.look.logoOnLight": "Il suo logo su sfondo chiaro",
+  "plan.look.logoOnDark": "Il suo logo su sfondo scuro",
+  "plan.reach": "Come i clienti la raggiungono",
+  "plan.reach.main": "Pulsante principale",
+  "plan.reach.where": "Mostrato in {places}.",
+  "plan.reach.place": "{section} su {pages}",
+  "plan.reach.nowhere": "Nessuna sezione lo mostra ancora.",
+  "plan.reach.end": "Fine pagina",
+  "plan.reach.endLine": "Pagina {page}: {section}",
+  "plan.reach.footerAll": "Nel pi\xE8 di pagina di ogni pagina.",
+  "plan.reach.footerSome": "Nel pi\xE8 di pagina di {pages}.",
+  "plan.reach.on": "Su {pages}.",
+  "plan.pages.every": "Ogni pagina",
+  "plan.pages.menu": "Menu",
+  "plan.pages.header": "L\u2019intestazione mostra {facts}.",
+  "plan.pages.footer": "Il pi\xE8 di pagina mostra {facts}.",
+  "plan.pages.privacyLink": "un link alla pagina sulla privacy",
+  "plan.page.keyMessage": "Punto principale della pagina",
+  "plan.page.notes": "Note per chi scrive",
+  "plan.page.visitorQuestion": "Un visitatore viene per sapere",
+  "plan.tag.end": "Fine pagina",
+  "plan.tag.library": "Aggiunto da Tracy",
+  "plan.standard": "Pagine standard",
+  "plan.standard.sum": "Informativa sulla privacy, pagina non trovata",
+  "plan.standard.privacy": "Informativa sulla privacy",
+  "plan.standard.privacyFrom": "Scritta a partire da {facts}. Collegata nel pi\xE8 di pagina, non nel menu.",
+  "plan.standard.notFound": "Pagina non trovata",
+  "plan.standard.notFoundLine": "Indica che la pagina non esiste e porta il visitatore a {pages}.",
+  "plan.writtenAfter": "I titoli e i testi di ogni sezione vengono scritti dopo la sua approvazione, solo a partire da ci\xF2 che contiene questo piano.",
+  "plan.fact.offSite": "Non presente sul sito",
+  "plan.notOnSite": "Non presente sul sito",
+  "plan.notOnSite.group.removed": "Rimosso da lei",
+  "plan.notOnSite.group.no_place": "Il suo design non ha posto per questo",
+  "plan.notOnSite.group.no_info": "Ancora nessuna informazione",
+  "plan.notOnSite.group.held": "In attesa della sua conferma",
+  "plan.notOnSite.group.reviews": "Recensioni non utilizzate",
+  "plan.notOnSite.group.pages": "Pagine del template non create",
+  "plan.notOnSite.group.people_spots": "Spazi per immagini di persone lasciati vuoti",
+  "plan.notOnSite.group.other": "Altro",
+  "plan.notOnSite.lines.one": "{count} riga",
+  "plan.notOnSite.lines.other": "{count} righe",
+  "plan.notOnSite.details.one": "Con esso \xE8 stato rimosso {count} dettaglio non mostrato altrove.",
+  "plan.notOnSite.details.other": "Con esso sono stati rimossi {count} dettagli non mostrati altrove.",
+  "plan.notOnSite.restore": "Ripristina",
+  "plan.notOnSite.restoreLabel": "Ripristina {what}",
+  "plan.notOnSite.cannotRestore": "Per ripristinarlo, lo chieda nella chat.",
+  "plan.notOnSite.peopleSpots.one": "{count} spazio per l\u2019immagine di una persona",
+  "plan.notOnSite.peopleSpots.other": "{count} spazi per immagini di persone",
+  "plan.notOnSite.peopleSpots.reason": "Tracy non crea mai immagini di persone, quindi questi spazi restano vuoti finch\xE9 non aggiunge una sua foto.",
+  "plan.leftOut.reason.owner_removed": "Lei ha tolto questo dal piano.",
+  "plan.leftOut.what.videos.one": "{count} video",
+  "plan.leftOut.what.videos.other": "{count} video",
+  "plan.sources": "Dai suoi link al sito",
+  "plan.sources.source": "Fonte",
+  "plan.sources.got": "Cosa ha trovato Tracy",
+  "plan.sources.shown": "Sul sito",
+  "plan.sources.none": "Niente",
+  "plan.sources.shownOf": "{shown} su {what}",
+  "plan.search": "Ricerca su Google",
+  "plan.search.title": "Cosa dice il titolo",
+  "plan.search.description": "Cosa dice la descrizione",
+  "plan.search.terms": "Termini di ricerca",
+  "plan.search.add": "Aggiungi un termine di ricerca",
+  "plan.search.addLabel": "Nuovo termine di ricerca per la pagina {page}",
+  "plan.search.removeTerm": "Rimuovi il termine di ricerca {term}",
+  "plan.later": "Pu\xF2 inviare pi\xF9 tardi",
+  "plan.later.what.later_prices": "I suoi prezzi",
+  "plan.later.reason.later_prices": "Invii i suoi prezzi e potranno essere mostrati insieme a ci\xF2 che offre.",
+  "plan.later.what.later_services": "L\u2019elenco dei suoi servizi",
+  "plan.later.reason.later_services": "Invii i servizi che offre e ciascuno potr\xE0 avere il proprio spazio sul suo sito.",
+  "plan.later.what.later_menu": "Il suo menu",
+  "plan.later.reason.later_menu": "Invii il suo menu e i suoi piatti potranno essere mostrati sul suo sito.",
+  "plan.later.what.later_hours": "I suoi orari di apertura",
+  "plan.later.reason.later_hours": "Confermi i suoi orari di apertura e potranno essere mostrati sul suo sito.",
+  "plan.later.what.later_email": "Il suo indirizzo email",
+  "plan.later.reason.later_email": "Invii un indirizzo email e i visitatori potranno scriverle, e un modulo potr\xE0 inviarvi le risposte.",
+  "plan.later.what.later_booking_link": "Il suo link di prenotazione",
+  "plan.later.reason.later_booking_link": "Invii il suo link di prenotazione e i suoi pulsanti potranno portare i visitatori direttamente l\xEC.",
+  "plan.later.what.later_portraits": "Foto del suo team",
+  "plan.later.reason.later_portraits": "Invii una foto di ogni persona e potr\xE0 essere mostrata accanto al suo nome.",
+  "plan.later.what.later_logo": "Il file del suo logo",
+  "plan.later.reason.later_logo": "Invii il file del suo logo e potr\xE0 essere mostrato al posto di quello che il suo piano usa per ora.",
+  "plan.refused.first_page": "La prima pagina del suo sito resta: tutte le altre pagine riportano a essa.",
+  "plan.refused.privacy_page": "Questa pagina \xE8 la sua pagina sulla privacy, quindi resta.",
+  "plan.refused.main_block": "Questa sezione \xE8 la sezione principale della sua pagina, quindi resta finch\xE9 resta la pagina.",
+  "plan.refused.site_chrome": "Questa sezione \xE8 condivisa da tutte le pagine del suo sito, quindi non pu\xF2 essere tolta da una sola pagina.",
+  "plan.refused.end_action": "La sua pagina termina con questa sezione, quindi resta.",
+  "plan.refused.main_button": "Il suo pulsante principale lo usa, quindi resta.",
+  "plan.refused.too_few_items": "Questa sezione ne richiede almeno {min}, quindi questo resta.",
+  "plan.refused.block_empty": "Questo \xE8 l\u2019ultimo elemento che questa sezione mostra. Rimuova invece l\u2019intera sezione.",
+  "plan.refused.not_in_footer": "Questo non \xE8 mostrato nel pi\xE8 di pagina delle sue pagine.",
+  "plan.refused.not_a_channel": "Dal pi\xE8 di pagina si pu\xF2 togliere solo un modo per contattarla.",
+  "plan.refused.not_an_item": "Da una sezione si pu\xF2 togliere solo un servizio, una persona, una foto o una recensione.",
+  "plan.refused.needed_by_privacy_page": "La sua pagina sulla privacy ne ha bisogno, quindi resta.",
+  "plan.refused.needed_by_end_action": "La fine di una pagina porta a questo, quindi resta.",
+  "plan.refused.not_found": "Questo non \xE8 pi\xF9 nel suo piano.",
+  "plan.refused.removal_unknown": "Qui non c\u2019\xE8 nulla da ripristinare.",
+  "plan.refused.restore_target_gone": "Questo torna in qualcosa che lei ha rimosso in seguito. Ripristini prima quello.",
+  "plan.refused.search_terms_empty": "Una pagina mantiene almeno un termine di ricerca.",
+  "plan.refused.search_term_too_long": "Un termine di ricerca ha al massimo 60 caratteri.",
+  "plan.refused.search_term_twice": "Questo termine di ricerca \xE8 gi\xE0 presente nella pagina.",
+  "plan.refused.too_many_search_terms": "Una pagina ha al massimo 10 termini di ricerca."
 };
 
 // ../../locale/tracy-locales/nl/tracy-build-chat.json
@@ -2880,7 +3695,134 @@ var tracy_build_chat_default5 = {
   "plan.assumption.accent_unreadable.white": "De kleur van uw logo is slecht leesbaar op knoppen, dus knoppen en links zijn wit.",
   "plan.assumption.accent_unreadable.both": "De kleur van uw logo is slecht leesbaar op knoppen, dus knoppen en links zijn zwart op lichte pagina\u2019s en wit op donkere pagina\u2019s.",
   "plan.assumption.accent_kept_unmeasured": "De kleuren van uw logo konden niet worden gelezen, dus knoppen en links houden de hoofdkleur van het ontwerp.",
-  "plan.assumption.accent_kept_template": "De kleuren van uw logo zouden in dit ontwerp niet leesbaar zijn, dus knoppen en links houden de hoofdkleur van het ontwerp."
+  "plan.assumption.accent_kept_template": "De kleuren van uw logo zouden in dit ontwerp niet leesbaar zijn, dus knoppen en links houden de hoofdkleur van het ontwerp.",
+  "plan.edits.count.one": "{count} wijziging",
+  "plan.edits.count.other": "{count} wijzigingen",
+  "plan.edits.revert": "Terug naar het origineel",
+  "plan.edits.revertAsk.one": "Uw wijziging verwerpen?",
+  "plan.edits.revertAsk.other": "Alle {count} wijzigingen verwerpen?",
+  "plan.edits.keep": "Behouden",
+  "plan.edits.discard": "Alles verwerpen",
+  "plan.remove": "{what} verwijderen",
+  "plan.get": "Dit krijgt u",
+  "plan.get.lead": "Een site in het {language} met {pages}: {names}.",
+  "plan.get.pages.one": "{count} pagina",
+  "plan.get.pages.other": "{count} pagina\u2019s",
+  "plan.keyMessages": "Wat uw site als eerste zegt",
+  "plan.keyMessages.where": "Pagina {page}: {sections}",
+  "plan.keyMessages.nowhere": "Nog geen sectie bevat dit.",
+  "plan.keyMessage.n": "Kernboodschap {n}",
+  "plan.tile.pages": "pagina\u2019s",
+  "plan.tile.privacy": "en een privacypagina",
+  "plan.tile.services": "diensten",
+  "plan.tile.people": "personen",
+  "plan.tile.reviews": "beoordelingen",
+  "plan.tile.reviewsOf": "van {count} beoordelingen",
+  "plan.tile.photos": "van uw foto\u2019s gebruikt",
+  "plan.tile.drawn.one": "ongeveer {count} extra afbeelding die Tracy maakt",
+  "plan.tile.drawn.other": "ongeveer {count} extra afbeeldingen die Tracy maakt",
+  "plan.look.logoOnLight": "Uw logo op een lichte achtergrond",
+  "plan.look.logoOnDark": "Uw logo op een donkere achtergrond",
+  "plan.reach": "Hoe klanten u bereiken",
+  "plan.reach.main": "Hoofdknop",
+  "plan.reach.where": "Getoond in {places}.",
+  "plan.reach.place": "{section} op {pages}",
+  "plan.reach.nowhere": "Nog geen sectie toont het.",
+  "plan.reach.end": "Einde van de pagina",
+  "plan.reach.endLine": "Pagina {page}: {section}",
+  "plan.reach.footerAll": "In de voettekst van elke pagina.",
+  "plan.reach.footerSome": "In de voettekst van {pages}.",
+  "plan.reach.on": "Op {pages}.",
+  "plan.pages.every": "Elke pagina",
+  "plan.pages.menu": "Menu",
+  "plan.pages.header": "De koptekst toont {facts}.",
+  "plan.pages.footer": "De voettekst toont {facts}.",
+  "plan.pages.privacyLink": "een link naar de privacypagina",
+  "plan.page.keyMessage": "Hoofdpunt van de pagina",
+  "plan.page.notes": "Notities voor de schrijver",
+  "plan.page.visitorQuestion": "Een bezoeker komt om te weten",
+  "plan.tag.end": "Einde van de pagina",
+  "plan.tag.library": "Toegevoegd door Tracy",
+  "plan.standard": "Standaardpagina\u2019s",
+  "plan.standard.sum": "Privacybeleid, pagina niet gevonden",
+  "plan.standard.privacy": "Privacybeleid",
+  "plan.standard.privacyFrom": "Geschreven op basis van {facts}. Gelinkt in de voettekst, niet in het menu.",
+  "plan.standard.notFound": "Pagina niet gevonden",
+  "plan.standard.notFoundLine": "Meldt dat de pagina er niet is en leidt de bezoeker naar {pages}.",
+  "plan.writtenAfter": "De koppen en teksten van elke sectie worden geschreven nadat u akkoord bent gegaan, alleen op basis van wat dit plan bevat.",
+  "plan.fact.offSite": "Niet op de site",
+  "plan.notOnSite": "Niet op de site",
+  "plan.notOnSite.group.removed": "U heeft verwijderd",
+  "plan.notOnSite.group.no_place": "Uw ontwerp heeft er geen plek voor",
+  "plan.notOnSite.group.no_info": "Nog geen informatie",
+  "plan.notOnSite.group.held": "In afwachting van uw bevestiging",
+  "plan.notOnSite.group.reviews": "Niet gebruikte beoordelingen",
+  "plan.notOnSite.group.pages": "Niet gebouwde sjabloonpagina\u2019s",
+  "plan.notOnSite.group.people_spots": "Leeggelaten plekken voor foto\u2019s van personen",
+  "plan.notOnSite.group.other": "Overig",
+  "plan.notOnSite.lines.one": "{count} regel",
+  "plan.notOnSite.lines.other": "{count} regels",
+  "plan.notOnSite.details.one": "Daarmee verdween {count} detail dat nergens anders wordt getoond.",
+  "plan.notOnSite.details.other": "Daarmee verdwenen {count} details die nergens anders worden getoond.",
+  "plan.notOnSite.restore": "Herstellen",
+  "plan.notOnSite.restoreLabel": "{what} herstellen",
+  "plan.notOnSite.cannotRestore": "Om dit te herstellen, vraagt u erom in de chat.",
+  "plan.notOnSite.peopleSpots.one": "{count} plek voor een foto van een persoon",
+  "plan.notOnSite.peopleSpots.other": "{count} plekken voor foto\u2019s van personen",
+  "plan.notOnSite.peopleSpots.reason": "Tracy maakt nooit afbeeldingen van personen, dus deze plekken blijven leeg totdat u uw eigen foto toevoegt.",
+  "plan.leftOut.reason.owner_removed": "U heeft dit uit het plan gehaald.",
+  "plan.leftOut.what.videos.one": "{count} video",
+  "plan.leftOut.what.videos.other": "{count} video\u2019s",
+  "plan.sources": "Van uw links naar de site",
+  "plan.sources.source": "Bron",
+  "plan.sources.got": "Wat Tracy heeft gevonden",
+  "plan.sources.shown": "Op de site",
+  "plan.sources.none": "Niets",
+  "plan.sources.shownOf": "{shown} van {what}",
+  "plan.search": "Zoeken in Google",
+  "plan.search.title": "Wat de titel zegt",
+  "plan.search.description": "Wat de beschrijving zegt",
+  "plan.search.terms": "Zoektermen",
+  "plan.search.add": "Zoekterm toevoegen",
+  "plan.search.addLabel": "Nieuwe zoekterm voor de pagina {page}",
+  "plan.search.removeTerm": "Zoekterm {term} verwijderen",
+  "plan.later": "Dit kunt u later sturen",
+  "plan.later.what.later_prices": "Uw prijzen",
+  "plan.later.reason.later_prices": "Stuur uw prijzen en ze kunnen samen met uw aanbod worden getoond.",
+  "plan.later.what.later_services": "Uw lijst met diensten",
+  "plan.later.reason.later_services": "Stuur de diensten die u aanbiedt en elk kan een eigen plek op uw site krijgen.",
+  "plan.later.what.later_menu": "Uw menukaart",
+  "plan.later.reason.later_menu": "Stuur uw menukaart en uw gerechten kunnen op uw site worden getoond.",
+  "plan.later.what.later_hours": "Uw openingstijden",
+  "plan.later.reason.later_hours": "Bevestig uw openingstijden en ze kunnen op uw site worden getoond.",
+  "plan.later.what.later_email": "Uw e-mailadres",
+  "plan.later.reason.later_email": "Stuur een e-mailadres en bezoekers kunnen u schrijven, en een formulier kan de antwoorden daarheen sturen.",
+  "plan.later.what.later_booking_link": "Uw boekingslink",
+  "plan.later.reason.later_booking_link": "Stuur uw boekingslink en uw knoppen kunnen bezoekers er rechtstreeks naartoe leiden.",
+  "plan.later.what.later_portraits": "Foto\u2019s van uw team",
+  "plan.later.reason.later_portraits": "Stuur een foto van elke persoon en die kan naast de naam worden getoond.",
+  "plan.later.what.later_logo": "Uw logobestand",
+  "plan.later.reason.later_logo": "Stuur uw logobestand en het kan worden getoond in plaats van het logo dat uw plan voorlopig gebruikt.",
+  "plan.refused.first_page": "De eerste pagina van uw site blijft: elke andere pagina leidt ernaar terug.",
+  "plan.refused.privacy_page": "Deze pagina is uw privacypagina, dus ze blijft.",
+  "plan.refused.main_block": "Deze sectie is de hoofdsectie van haar pagina, dus ze blijft zolang de pagina blijft.",
+  "plan.refused.site_chrome": "Deze sectie wordt door elke pagina van uw site gedeeld, dus ze kan niet van \xE9\xE9n pagina worden verwijderd.",
+  "plan.refused.end_action": "Uw pagina eindigt met deze sectie, dus ze blijft.",
+  "plan.refused.main_button": "Uw hoofdknop gebruikt dit, dus het blijft.",
+  "plan.refused.too_few_items": "Deze sectie heeft er minstens {min} nodig, dus deze blijft.",
+  "plan.refused.block_empty": "Dit is het laatste wat deze sectie toont. Verwijder in plaats daarvan de hele sectie.",
+  "plan.refused.not_in_footer": "Dit wordt niet getoond in de voettekst van uw pagina\u2019s.",
+  "plan.refused.not_a_channel": "Alleen een manier om contact met u op te nemen kan uit de voettekst worden verwijderd.",
+  "plan.refused.not_an_item": "Alleen een dienst, een persoon, een foto of een beoordeling kan uit een sectie worden verwijderd.",
+  "plan.refused.needed_by_privacy_page": "Uw privacypagina heeft dit nodig, dus het blijft.",
+  "plan.refused.needed_by_end_action": "Het einde van een pagina leidt hiernaartoe, dus het blijft.",
+  "plan.refused.not_found": "Dit staat niet meer in uw plan.",
+  "plan.refused.removal_unknown": "Er is hier niets om te herstellen.",
+  "plan.refused.restore_target_gone": "Dit hoort terug in iets wat u daarna heeft verwijderd. Herstel eerst dat.",
+  "plan.refused.search_terms_empty": "Een pagina behoudt minstens \xE9\xE9n zoekterm.",
+  "plan.refused.search_term_too_long": "Een zoekterm heeft maximaal 60 tekens.",
+  "plan.refused.search_term_twice": "Deze zoekterm staat al op de pagina.",
+  "plan.refused.too_many_search_terms": "Een pagina heeft maximaal 10 zoektermen."
 };
 
 // ../../locale/tracy-locales/zh/tracy-build-chat.json
@@ -3294,7 +4236,134 @@ var tracy_build_chat_default6 = {
   "plan.assumption.accent_unreadable.white": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5728\u6309\u94AE\u4E0A\u96BE\u4EE5\u8FA8\u8BA4\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u4E3A\u767D\u8272\u3002",
   "plan.assumption.accent_unreadable.both": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5728\u6309\u94AE\u4E0A\u96BE\u4EE5\u8FA8\u8BA4\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u5728\u6D45\u8272\u9875\u9762\u4E0A\u4E3A\u9ED1\u8272\uFF0C\u5728\u6DF1\u8272\u9875\u9762\u4E0A\u4E3A\u767D\u8272\u3002",
   "plan.assumption.accent_kept_unmeasured": "\u65E0\u6CD5\u8BFB\u53D6\u60A8\u7684\u6807\u5FD7\u989C\u8272\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u4FDD\u7559\u8BBE\u8BA1\u7684\u4E3B\u8272\u3002",
-  "plan.assumption.accent_kept_template": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5728\u6B64\u8BBE\u8BA1\u4E0A\u4E0D\u6613\u8FA8\u8BA4\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u4FDD\u7559\u8BBE\u8BA1\u7684\u4E3B\u8272\u3002"
+  "plan.assumption.accent_kept_template": "\u60A8\u7684\u6807\u5FD7\u989C\u8272\u5728\u6B64\u8BBE\u8BA1\u4E0A\u4E0D\u6613\u8FA8\u8BA4\uFF0C\u56E0\u6B64\u6309\u94AE\u548C\u94FE\u63A5\u4FDD\u7559\u8BBE\u8BA1\u7684\u4E3B\u8272\u3002",
+  "plan.edits.count.one": "{count} \u5904\u4FEE\u6539",
+  "plan.edits.count.other": "{count} \u5904\u4FEE\u6539",
+  "plan.edits.revert": "\u6062\u590D\u539F\u6837",
+  "plan.edits.revertAsk.one": "\u653E\u5F03\u4F60\u7684\u4FEE\u6539\uFF1F",
+  "plan.edits.revertAsk.other": "\u653E\u5F03\u5168\u90E8 {count} \u5904\u4FEE\u6539\uFF1F",
+  "plan.edits.keep": "\u4FDD\u7559",
+  "plan.edits.discard": "\u5168\u90E8\u653E\u5F03",
+  "plan.remove": "\u5220\u9664 {what}",
+  "plan.get": "\u4F60\u5C06\u83B7\u5F97",
+  "plan.get.lead": "\u4E00\u4E2A {language} \u7F51\u7AD9\uFF0C\u5171 {pages}\uFF1A{names}\u3002",
+  "plan.get.pages.one": "{count} \u4E2A\u9875\u9762",
+  "plan.get.pages.other": "{count} \u4E2A\u9875\u9762",
+  "plan.keyMessages": "\u4F60\u7684\u7F51\u7AD9\u6700\u5148\u4F20\u8FBE\u7684\u5185\u5BB9",
+  "plan.keyMessages.where": "{page} \u9875\u9762\uFF1A{sections}",
+  "plan.keyMessages.nowhere": "\u76EE\u524D\u8FD8\u6CA1\u6709\u677F\u5757\u5305\u542B\u8FD9\u4E00\u70B9\u3002",
+  "plan.keyMessage.n": "\u6838\u5FC3\u4FE1\u606F {n}",
+  "plan.tile.pages": "\u9875\u9762",
+  "plan.tile.privacy": "\u4EE5\u53CA\u4E00\u4E2A\u9690\u79C1\u9875\u9762",
+  "plan.tile.services": "\u670D\u52A1",
+  "plan.tile.people": "\u4EBA\u5458",
+  "plan.tile.reviews": "\u8BC4\u4EF7",
+  "plan.tile.reviewsOf": "\u5171 {count} \u6761\u8BC4\u4EF7",
+  "plan.tile.photos": "\u4F60\u7684\u7167\u7247\u5DF2\u4F7F\u7528",
+  "plan.tile.drawn.one": "Tracy \u8FD8\u5C06\u521B\u5EFA\u7EA6 {count} \u5F20\u56FE\u7247",
+  "plan.tile.drawn.other": "Tracy \u8FD8\u5C06\u521B\u5EFA\u7EA6 {count} \u5F20\u56FE\u7247",
+  "plan.look.logoOnLight": "\u4F60\u7684 logo \u5728\u6D45\u8272\u80CC\u666F\u4E0A",
+  "plan.look.logoOnDark": "\u4F60\u7684 logo \u5728\u6DF1\u8272\u80CC\u666F\u4E0A",
+  "plan.reach": "\u5BA2\u6237\u5982\u4F55\u8054\u7CFB\u4F60",
+  "plan.reach.main": "\u4E3B\u6309\u94AE",
+  "plan.reach.where": "\u663E\u793A\u4F4D\u7F6E\uFF1A{places}\u3002",
+  "plan.reach.place": "{pages}\u4E0A\u7684{section}",
+  "plan.reach.nowhere": "\u76EE\u524D\u8FD8\u6CA1\u6709\u677F\u5757\u663E\u793A\u5B83\u3002",
+  "plan.reach.end": "\u9875\u9762\u672B\u5C3E",
+  "plan.reach.endLine": "{page} \u9875\u9762\uFF1A{section}",
+  "plan.reach.footerAll": "\u5728\u6BCF\u4E2A\u9875\u9762\u7684\u9875\u811A\u3002",
+  "plan.reach.footerSome": "\u5728{pages}\u7684\u9875\u811A\u3002",
+  "plan.reach.on": "\u5728{pages}\u3002",
+  "plan.pages.every": "\u6240\u6709\u9875\u9762",
+  "plan.pages.menu": "\u83DC\u5355",
+  "plan.pages.header": "\u9875\u5934\u663E\u793A{facts}\u3002",
+  "plan.pages.footer": "\u9875\u811A\u663E\u793A{facts}\u3002",
+  "plan.pages.privacyLink": "\u9690\u79C1\u9875\u9762\u94FE\u63A5",
+  "plan.page.keyMessage": "\u9875\u9762\u8981\u70B9",
+  "plan.page.notes": "\u7ED9\u64B0\u7A3F\u4EBA\u7684\u8BF4\u660E",
+  "plan.page.visitorQuestion": "\u8BBF\u5BA2\u6765\u8FD9\u91CC\u662F\u60F3\u4E86\u89E3",
+  "plan.tag.end": "\u9875\u9762\u672B\u5C3E",
+  "plan.tag.library": "\u7531 Tracy \u6DFB\u52A0",
+  "plan.standard": "\u6807\u51C6\u9875\u9762",
+  "plan.standard.sum": "\u9690\u79C1\u653F\u7B56\u3001\u9875\u9762\u672A\u627E\u5230",
+  "plan.standard.privacy": "\u9690\u79C1\u653F\u7B56",
+  "plan.standard.privacyFrom": "\u6839\u636E{facts}\u64B0\u5199\u3002\u94FE\u63A5\u653E\u5728\u9875\u811A\uFF0C\u4E0D\u5728\u83DC\u5355\u4E2D\u3002",
+  "plan.standard.notFound": "\u9875\u9762\u672A\u627E\u5230",
+  "plan.standard.notFoundLine": "\u8BF4\u660E\u8BE5\u9875\u9762\u4E0D\u5B58\u5728\uFF0C\u5E76\u5F15\u5BFC\u8BBF\u5BA2\u524D\u5F80{pages}\u3002",
+  "plan.writtenAfter": "\u6BCF\u4E2A\u677F\u5757\u7684\u6807\u9898\u548C\u6587\u5B57\u4F1A\u5728\u4F60\u786E\u8BA4\u540E\u64B0\u5199\uFF0C\u4EC5\u4F9D\u636E\u6B64\u8BA1\u5212\u4E2D\u7684\u5185\u5BB9\u3002",
+  "plan.fact.offSite": "\u4E0D\u5728\u7F51\u7AD9\u4E0A",
+  "plan.notOnSite": "\u4E0D\u5728\u7F51\u7AD9\u4E0A",
+  "plan.notOnSite.group.removed": "\u4F60\u5DF2\u5220\u9664",
+  "plan.notOnSite.group.no_place": "\u4F60\u7684\u8BBE\u8BA1\u6CA1\u6709\u4F4D\u7F6E\u653E\u7F6E",
+  "plan.notOnSite.group.no_info": "\u6682\u65E0\u4FE1\u606F",
+  "plan.notOnSite.group.held": "\u5F85\u4F60\u786E\u8BA4\u540E\u518D\u4F7F\u7528",
+  "plan.notOnSite.group.reviews": "\u672A\u4F7F\u7528\u7684\u8BC4\u4EF7",
+  "plan.notOnSite.group.pages": "\u672A\u521B\u5EFA\u7684\u6A21\u677F\u9875\u9762",
+  "plan.notOnSite.group.people_spots": "\u7559\u7A7A\u7684\u4EBA\u7269\u56FE\u7247\u4F4D\u7F6E",
+  "plan.notOnSite.group.other": "\u5176\u4ED6",
+  "plan.notOnSite.lines.one": "{count} \u884C",
+  "plan.notOnSite.lines.other": "{count} \u884C",
+  "plan.notOnSite.details.one": "\u968F\u4E4B\u79FB\u9664\u7684\u8FD8\u6709 {count} \u9879\u4E0D\u5728\u5176\u4ED6\u5730\u65B9\u663E\u793A\u7684\u7EC6\u8282\u3002",
+  "plan.notOnSite.details.other": "\u968F\u4E4B\u79FB\u9664\u7684\u8FD8\u6709 {count} \u9879\u4E0D\u5728\u5176\u4ED6\u5730\u65B9\u663E\u793A\u7684\u7EC6\u8282\u3002",
+  "plan.notOnSite.restore": "\u6062\u590D",
+  "plan.notOnSite.restoreLabel": "\u6062\u590D {what}",
+  "plan.notOnSite.cannotRestore": "\u5982\u9700\u6062\u590D\uFF0C\u8BF7\u5728\u804A\u5929\u4E2D\u63D0\u51FA\u3002",
+  "plan.notOnSite.peopleSpots.one": "{count} \u4E2A\u4EBA\u7269\u56FE\u7247\u4F4D\u7F6E",
+  "plan.notOnSite.peopleSpots.other": "{count} \u4E2A\u4EBA\u7269\u56FE\u7247\u4F4D\u7F6E",
+  "plan.notOnSite.peopleSpots.reason": "Tracy \u4ECE\u4E0D\u751F\u6210\u4EBA\u7269\u56FE\u7247\uFF0C\u56E0\u6B64\u8FD9\u4E9B\u4F4D\u7F6E\u4F1A\u4FDD\u6301\u7A7A\u767D\uFF0C\u76F4\u5230\u4F60\u6DFB\u52A0\u81EA\u5DF1\u7684\u7167\u7247\u3002",
+  "plan.leftOut.reason.owner_removed": "\u4F60\u5DF2\u5C06\u6B64\u9879\u4ECE\u8BA1\u5212\u4E2D\u79FB\u9664\u3002",
+  "plan.leftOut.what.videos.one": "{count} \u4E2A\u89C6\u9891",
+  "plan.leftOut.what.videos.other": "{count} \u4E2A\u89C6\u9891",
+  "plan.sources": "\u4ECE\u4F60\u7684\u94FE\u63A5\u5230\u7F51\u7AD9",
+  "plan.sources.source": "\u6765\u6E90",
+  "plan.sources.got": "Tracy \u627E\u5230\u7684\u5185\u5BB9",
+  "plan.sources.shown": "\u7F51\u7AD9\u4E0A\u4F7F\u7528",
+  "plan.sources.none": "\u65E0",
+  "plan.sources.shownOf": "{what}\u4E2D\u7684 {shown}",
+  "plan.search": "Google \u641C\u7D22",
+  "plan.search.title": "\u6807\u9898\u5185\u5BB9",
+  "plan.search.description": "\u63CF\u8FF0\u5185\u5BB9",
+  "plan.search.terms": "\u641C\u7D22\u8BCD",
+  "plan.search.add": "\u6DFB\u52A0\u641C\u7D22\u8BCD",
+  "plan.search.addLabel": "{page} \u9875\u9762\u7684\u65B0\u641C\u7D22\u8BCD",
+  "plan.search.removeTerm": "\u5220\u9664\u641C\u7D22\u8BCD {term}",
+  "plan.later": "\u4F60\u53EF\u4EE5\u7A0D\u540E\u63D0\u4F9B",
+  "plan.later.what.later_prices": "\u4F60\u7684\u4EF7\u683C",
+  "plan.later.reason.later_prices": "\u53D1\u9001\u4F60\u7684\u4EF7\u683C\u540E\uFF0C\u5B83\u4EEC\u53EF\u4EE5\u4E0E\u4F60\u7684\u670D\u52A1\u4E00\u8D77\u663E\u793A\u3002",
+  "plan.later.what.later_services": "\u4F60\u7684\u670D\u52A1\u5217\u8868",
+  "plan.later.reason.later_services": "\u53D1\u9001\u4F60\u63D0\u4F9B\u7684\u670D\u52A1\u540E\uFF0C\u6BCF\u9879\u670D\u52A1\u90FD\u53EF\u4EE5\u5728\u7F51\u7AD9\u4E0A\u62E5\u6709\u81EA\u5DF1\u7684\u4F4D\u7F6E\u3002",
+  "plan.later.what.later_menu": "\u4F60\u7684\u83DC\u5355",
+  "plan.later.reason.later_menu": "\u53D1\u9001\u4F60\u7684\u83DC\u5355\u540E\uFF0C\u4F60\u7684\u83DC\u54C1\u53EF\u4EE5\u663E\u793A\u5728\u7F51\u7AD9\u4E0A\u3002",
+  "plan.later.what.later_hours": "\u4F60\u7684\u8425\u4E1A\u65F6\u95F4",
+  "plan.later.reason.later_hours": "\u786E\u8BA4\u4F60\u7684\u8425\u4E1A\u65F6\u95F4\u540E\uFF0C\u5B83\u4EEC\u53EF\u4EE5\u663E\u793A\u5728\u7F51\u7AD9\u4E0A\u3002",
+  "plan.later.what.later_email": "\u4F60\u7684 email \u5730\u5740",
+  "plan.later.reason.later_email": "\u53D1\u9001\u4E00\u4E2A email \u5730\u5740\u540E\uFF0C\u8BBF\u5BA2\u53EF\u4EE5\u7ED9\u4F60\u5199\u4FE1\uFF0C\u8868\u5355\u4E5F\u53EF\u4EE5\u628A\u56DE\u7B54\u53D1\u9001\u5230\u8BE5\u5730\u5740\u3002",
+  "plan.later.what.later_booking_link": "\u4F60\u7684\u9884\u8BA2\u94FE\u63A5",
+  "plan.later.reason.later_booking_link": "\u53D1\u9001\u4F60\u7684\u9884\u8BA2\u94FE\u63A5\u540E\uFF0C\u4F60\u7684\u6309\u94AE\u53EF\u4EE5\u76F4\u63A5\u628A\u8BBF\u5BA2\u5E26\u5230\u90A3\u91CC\u3002",
+  "plan.later.what.later_portraits": "\u56E2\u961F\u6210\u5458\u7684\u7167\u7247",
+  "plan.later.reason.later_portraits": "\u53D1\u9001\u6BCF\u4E2A\u4EBA\u7684\u7167\u7247\u540E\uFF0C\u7167\u7247\u53EF\u4EE5\u663E\u793A\u5728\u5176\u59D3\u540D\u65C1\u8FB9\u3002",
+  "plan.later.what.later_logo": "\u4F60\u7684 logo \u6587\u4EF6",
+  "plan.later.reason.later_logo": "\u53D1\u9001\u4F60\u7684 logo \u6587\u4EF6\u540E\uFF0C\u5B83\u53EF\u4EE5\u66FF\u6362\u8BA1\u5212\u6682\u65F6\u4F7F\u7528\u7684 logo\u3002",
+  "plan.refused.first_page": "\u7F51\u7AD9\u7684\u9996\u9875\u4F1A\u4FDD\u7559\uFF1A\u5176\u4ED6\u6240\u6709\u9875\u9762\u90FD\u4F1A\u94FE\u63A5\u56DE\u9996\u9875\u3002",
+  "plan.refused.privacy_page": "\u6B64\u9875\u9762\u662F\u4F60\u7684\u9690\u79C1\u9875\u9762\uFF0C\u56E0\u6B64\u4F1A\u4FDD\u7559\u3002",
+  "plan.refused.main_block": "\u6B64\u677F\u5757\u662F\u6240\u5728\u9875\u9762\u7684\u4E3B\u677F\u5757\uFF0C\u53EA\u8981\u8BE5\u9875\u9762\u5B58\u5728\u5C31\u4F1A\u4FDD\u7559\u3002",
+  "plan.refused.site_chrome": "\u6B64\u677F\u5757\u7531\u7F51\u7AD9\u7684\u6240\u6709\u9875\u9762\u5171\u7528\uFF0C\u56E0\u6B64\u4E0D\u80FD\u53EA\u4ECE\u67D0\u4E00\u4E2A\u9875\u9762\u4E2D\u5220\u9664\u3002",
+  "plan.refused.end_action": "\u4F60\u7684\u9875\u9762\u4EE5\u6B64\u677F\u5757\u7ED3\u5C3E\uFF0C\u56E0\u6B64\u4F1A\u4FDD\u7559\u3002",
+  "plan.refused.main_button": "\u4F60\u7684\u4E3B\u6309\u94AE\u4F7F\u7528\u4E86\u6B64\u9879\uFF0C\u56E0\u6B64\u4F1A\u4FDD\u7559\u3002",
+  "plan.refused.too_few_items": "\u6B64\u677F\u5757\u81F3\u5C11\u9700\u8981 {min} \u9879\u8FD9\u6837\u7684\u5185\u5BB9\uFF0C\u56E0\u6B64\u8FD9\u4E00\u9879\u4F1A\u4FDD\u7559\u3002",
+  "plan.refused.block_empty": "\u8FD9\u662F\u6B64\u677F\u5757\u663E\u793A\u7684\u6700\u540E\u4E00\u9879\u5185\u5BB9\u3002\u8BF7\u6539\u4E3A\u5220\u9664\u6574\u4E2A\u677F\u5757\u3002",
+  "plan.refused.not_in_footer": "\u6B64\u9879\u6CA1\u6709\u663E\u793A\u5728\u4F60\u9875\u9762\u7684\u9875\u811A\u4E2D\u3002",
+  "plan.refused.not_a_channel": "\u53EA\u6709\u8054\u7CFB\u65B9\u5F0F\u53EF\u4EE5\u4ECE\u9875\u811A\u4E2D\u5220\u9664\u3002",
+  "plan.refused.not_an_item": "\u53EA\u6709\u670D\u52A1\u3001\u4EBA\u5458\u3001\u7167\u7247\u6216\u8BC4\u4EF7\u53EF\u4EE5\u4ECE\u677F\u5757\u4E2D\u5220\u9664\u3002",
+  "plan.refused.needed_by_privacy_page": "\u4F60\u7684\u9690\u79C1\u9875\u9762\u9700\u8981\u6B64\u9879\uFF0C\u56E0\u6B64\u4F1A\u4FDD\u7559\u3002",
+  "plan.refused.needed_by_end_action": "\u9875\u9762\u672B\u5C3E\u4F1A\u94FE\u63A5\u5230\u6B64\u9879\uFF0C\u56E0\u6B64\u4F1A\u4FDD\u7559\u3002",
+  "plan.refused.not_found": "\u6B64\u9879\u5DF2\u4E0D\u5728\u4F60\u7684\u8BA1\u5212\u4E2D\u3002",
+  "plan.refused.removal_unknown": "\u8FD9\u91CC\u6CA1\u6709\u53EF\u6062\u590D\u7684\u5185\u5BB9\u3002",
+  "plan.refused.restore_target_gone": "\u6B64\u9879\u8981\u653E\u56DE\u4F60\u4E4B\u540E\u5220\u9664\u7684\u5185\u5BB9\u4E2D\u3002\u8BF7\u5148\u6062\u590D\u90A3\u4E00\u9879\u3002",
+  "plan.refused.search_terms_empty": "\u6BCF\u4E2A\u9875\u9762\u81F3\u5C11\u4FDD\u7559\u4E00\u4E2A\u641C\u7D22\u8BCD\u3002",
+  "plan.refused.search_term_too_long": "\u6BCF\u4E2A\u641C\u7D22\u8BCD\u6700\u591A 60 \u4E2A\u5B57\u7B26\u3002",
+  "plan.refused.search_term_twice": "\u6B64\u641C\u7D22\u8BCD\u5DF2\u5728\u8BE5\u9875\u9762\u4E0A\u3002",
+  "plan.refused.too_many_search_terms": "\u6BCF\u4E2A\u9875\u9762\u6700\u591A 10 \u4E2A\u641C\u7D22\u8BCD\u3002"
 };
 
 // ../../locale/tracy-locale-vi/vi/tracy-build-chat.json
@@ -3708,7 +4777,134 @@ var tracy_build_chat_default7 = {
   "plan.assumption.accent_unreadable.white": "M\xE0u logo c\u1EE7a b\u1EA1n kh\xF3 \u0111\u1ECDc tr\xEAn n\xFAt b\u1EA5m, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn c\xF3 m\xE0u tr\u1EAFng.",
   "plan.assumption.accent_unreadable.both": "M\xE0u logo c\u1EE7a b\u1EA1n kh\xF3 \u0111\u1ECDc tr\xEAn n\xFAt b\u1EA5m, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn m\xE0u \u0111en tr\xEAn trang n\u1EC1n s\xE1ng v\xE0 m\xE0u tr\u1EAFng tr\xEAn trang n\u1EC1n t\u1ED1i.",
   "plan.assumption.accent_kept_unmeasured": "M\xECnh kh\xF4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c m\xE0u logo c\u1EE7a b\u1EA1n, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn gi\u1EEF m\xE0u ch\xEDnh c\u1EE7a m\u1EABu thi\u1EBFt k\u1EBF.",
-  "plan.assumption.accent_kept_template": "M\xE0u logo c\u1EE7a b\u1EA1n kh\xF4ng \u0111\u1ECDc r\xF5 tr\xEAn m\u1EABu thi\u1EBFt k\u1EBF n\xE0y, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn gi\u1EEF m\xE0u ch\xEDnh c\u1EE7a m\u1EABu thi\u1EBFt k\u1EBF."
+  "plan.assumption.accent_kept_template": "M\xE0u logo c\u1EE7a b\u1EA1n kh\xF4ng \u0111\u1ECDc r\xF5 tr\xEAn m\u1EABu thi\u1EBFt k\u1EBF n\xE0y, n\xEAn n\xFAt b\u1EA5m v\xE0 \u0111\u01B0\u1EDDng d\u1EABn gi\u1EEF m\xE0u ch\xEDnh c\u1EE7a m\u1EABu thi\u1EBFt k\u1EBF.",
+  "plan.edits.count.one": "{count} thay \u0111\u1ED5i",
+  "plan.edits.count.other": "{count} thay \u0111\u1ED5i",
+  "plan.edits.revert": "Quay v\u1EC1 b\u1EA3n g\u1ED1c",
+  "plan.edits.revertAsk.one": "Hu\u1EF7 thay \u0111\u1ED5i c\u1EE7a b\u1EA1n?",
+  "plan.edits.revertAsk.other": "Hu\u1EF7 c\u1EA3 {count} thay \u0111\u1ED5i?",
+  "plan.edits.keep": "Gi\u1EEF l\u1EA1i",
+  "plan.edits.discard": "Hu\u1EF7 t\u1EA5t c\u1EA3",
+  "plan.remove": "B\u1ECF {what}",
+  "plan.get": "B\u1EA1n nh\u1EADn \u0111\u01B0\u1EE3c",
+  "plan.get.lead": "M\u1ED9t site b\u1EB1ng {language} v\u1EDBi {pages}: {names}.",
+  "plan.get.pages.one": "{count} trang",
+  "plan.get.pages.other": "{count} trang",
+  "plan.keyMessages": "\u0110i\u1EC1u site c\u1EE7a b\u1EA1n n\xF3i \u0111\u1EA7u ti\xEAn",
+  "plan.keyMessages.where": "Trang {page}: {sections}",
+  "plan.keyMessages.nowhere": "Ch\u01B0a c\xF3 ph\u1EA7n n\xE0o n\xEAu \u0111i\u1EC1u n\xE0y.",
+  "plan.keyMessage.n": "Th\xF4ng \u0111i\u1EC7p ch\xEDnh {n}",
+  "plan.tile.pages": "trang",
+  "plan.tile.privacy": "v\xE0 m\u1ED9t trang ch\xEDnh s\xE1ch b\u1EA3o m\u1EADt",
+  "plan.tile.services": "d\u1ECBch v\u1EE5",
+  "plan.tile.people": "ng\u01B0\u1EDDi",
+  "plan.tile.reviews": "\u0111\xE1nh gi\xE1",
+  "plan.tile.reviewsOf": "tr\xEAn {count} \u0111\xE1nh gi\xE1",
+  "plan.tile.photos": "\u1EA3nh c\u1EE7a b\u1EA1n \u0111\u01B0\u1EE3c d\xF9ng",
+  "plan.tile.drawn.one": "kho\u1EA3ng {count} \u1EA3nh n\u1EEFa do Tracy t\u1EA1o",
+  "plan.tile.drawn.other": "kho\u1EA3ng {count} \u1EA3nh n\u1EEFa do Tracy t\u1EA1o",
+  "plan.look.logoOnLight": "Logo c\u1EE7a b\u1EA1n tr\xEAn n\u1EC1n s\xE1ng",
+  "plan.look.logoOnDark": "Logo c\u1EE7a b\u1EA1n tr\xEAn n\u1EC1n t\u1ED1i",
+  "plan.reach": "Kh\xE1ch h\xE0ng li\xEAn h\u1EC7 b\u1EA1n b\u1EB1ng c\xE1ch n\xE0o",
+  "plan.reach.main": "N\xFAt ch\xEDnh",
+  "plan.reach.where": "Hi\u1EC3n th\u1ECB \u1EDF {places}.",
+  "plan.reach.place": "Ph\u1EA7n {section} tr\xEAn {pages}",
+  "plan.reach.nowhere": "Ch\u01B0a c\xF3 ph\u1EA7n n\xE0o hi\u1EC3n th\u1ECB n\xFAt n\xE0y.",
+  "plan.reach.end": "Cu\u1ED1i trang",
+  "plan.reach.endLine": "Trang {page}: {section}",
+  "plan.reach.footerAll": "\u1EDE ch\xE2n trang c\u1EE7a m\u1ECDi trang.",
+  "plan.reach.footerSome": "\u1EDE ch\xE2n trang c\u1EE7a {pages}.",
+  "plan.reach.on": "Tr\xEAn {pages}.",
+  "plan.pages.every": "M\u1ECDi trang",
+  "plan.pages.menu": "Thanh \u0111i\u1EC1u h\u01B0\u1EDBng",
+  "plan.pages.header": "Ph\u1EA7n \u0111\u1EA7u trang hi\u1EC3n th\u1ECB {facts}.",
+  "plan.pages.footer": "Ch\xE2n trang hi\u1EC3n th\u1ECB {facts}.",
+  "plan.pages.privacyLink": "link \u0111\u1EBFn trang ch\xEDnh s\xE1ch b\u1EA3o m\u1EADt",
+  "plan.page.keyMessage": "\xDD ch\xEDnh c\u1EE7a trang",
+  "plan.page.notes": "Ghi ch\xFA cho ng\u01B0\u1EDDi vi\u1EBFt",
+  "plan.page.visitorQuestion": "Kh\xE1ch truy c\u1EADp \u0111\u1EBFn \u0111\u1EC3 t\xECm hi\u1EC3u",
+  "plan.tag.end": "Cu\u1ED1i trang",
+  "plan.tag.library": "Tracy th\xEAm v\xE0o",
+  "plan.standard": "C\xE1c trang ti\xEAu chu\u1EA9n",
+  "plan.standard.sum": "Ch\xEDnh s\xE1ch b\u1EA3o m\u1EADt, kh\xF4ng t\xECm th\u1EA5y trang",
+  "plan.standard.privacy": "Ch\xEDnh s\xE1ch b\u1EA3o m\u1EADt",
+  "plan.standard.privacyFrom": "\u0110\u01B0\u1EE3c vi\u1EBFt t\u1EEB {facts}. C\xF3 link \u1EDF ch\xE2n trang, kh\xF4ng n\u1EB1m trong menu.",
+  "plan.standard.notFound": "Kh\xF4ng t\xECm th\u1EA5y trang",
+  "plan.standard.notFoundLine": "Cho bi\u1EBFt trang kh\xF4ng t\u1ED3n t\u1EA1i v\xE0 d\u1EABn kh\xE1ch truy c\u1EADp \u0111\u1EBFn {pages}.",
+  "plan.writtenAfter": "Ti\xEAu \u0111\u1EC1 v\xE0 n\u1ED9i dung c\u1EE7a t\u1EEBng ph\u1EA7n \u0111\u01B0\u1EE3c vi\u1EBFt sau khi b\u1EA1n duy\u1EC7t, ch\u1EC9 d\u1EF1a tr\xEAn nh\u1EEFng g\xEC c\xF3 trong k\u1EBF ho\u1EA1ch n\xE0y.",
+  "plan.fact.offSite": "Kh\xF4ng c\xF3 tr\xEAn site",
+  "plan.notOnSite": "Kh\xF4ng c\xF3 tr\xEAn site",
+  "plan.notOnSite.group.removed": "B\u1EA1n \u0111\xE3 b\u1ECF",
+  "plan.notOnSite.group.no_place": "M\u1EABu thi\u1EBFt k\u1EBF c\u1EE7a b\u1EA1n kh\xF4ng c\xF3 ch\u1ED7 cho m\u1EE5c n\xE0y",
+  "plan.notOnSite.group.no_info": "Ch\u01B0a c\xF3 th\xF4ng tin",
+  "plan.notOnSite.group.held": "Gi\u1EEF l\u1EA1i cho \u0111\u1EBFn khi b\u1EA1n x\xE1c nh\u1EADn",
+  "plan.notOnSite.group.reviews": "\u0110\xE1nh gi\xE1 kh\xF4ng \u0111\u01B0\u1EE3c d\xF9ng",
+  "plan.notOnSite.group.pages": "C\xE1c trang c\u1EE7a template ch\u01B0a \u0111\u01B0\u1EE3c d\u1EF1ng",
+  "plan.notOnSite.group.people_spots": "Ch\u1ED7 \u0111\u1EB7t \u1EA3nh ng\u01B0\u1EDDi c\xF2n \u0111\u1EC3 tr\u1ED1ng",
+  "plan.notOnSite.group.other": "Kh\xE1c",
+  "plan.notOnSite.lines.one": "{count} d\xF2ng",
+  "plan.notOnSite.lines.other": "{count} d\xF2ng",
+  "plan.notOnSite.details.one": "K\xE8m theo \u0111\xF3 l\xE0 {count} chi ti\u1EBFt kh\xF4ng hi\u1EC3n th\u1ECB \u1EDF n\u01A1i n\xE0o kh\xE1c.",
+  "plan.notOnSite.details.other": "K\xE8m theo \u0111\xF3 l\xE0 {count} chi ti\u1EBFt kh\xF4ng hi\u1EC3n th\u1ECB \u1EDF n\u01A1i n\xE0o kh\xE1c.",
+  "plan.notOnSite.restore": "Kh\xF4i ph\u1EE5c",
+  "plan.notOnSite.restoreLabel": "Kh\xF4i ph\u1EE5c {what}",
+  "plan.notOnSite.cannotRestore": "\u0110\u1EC3 kh\xF4i ph\u1EE5c m\u1EE5c n\xE0y, h\xE3y nh\u1EDD trong chat.",
+  "plan.notOnSite.peopleSpots.one": "{count} ch\u1ED7 \u0111\u1EB7t \u1EA3nh ng\u01B0\u1EDDi",
+  "plan.notOnSite.peopleSpots.other": "{count} ch\u1ED7 \u0111\u1EB7t \u1EA3nh ng\u01B0\u1EDDi",
+  "plan.notOnSite.peopleSpots.reason": "Tracy kh\xF4ng bao gi\u1EDD t\u1EA1o \u1EA3nh ng\u01B0\u1EDDi, n\xEAn nh\u1EEFng ch\u1ED7 n\xE0y \u0111\u1EC3 tr\u1ED1ng cho \u0111\u1EBFn khi b\u1EA1n th\xEAm \u1EA3nh c\u1EE7a ch\xEDnh m\xECnh.",
+  "plan.leftOut.reason.owner_removed": "B\u1EA1n \u0111\xE3 b\u1ECF m\u1EE5c n\xE0y kh\u1ECFi k\u1EBF ho\u1EA1ch.",
+  "plan.leftOut.what.videos.one": "{count} \u0111o\u1EA1n video",
+  "plan.leftOut.what.videos.other": "{count} \u0111o\u1EA1n video",
+  "plan.sources": "T\u1EEB c\xE1c link c\u1EE7a b\u1EA1n \u0111\u1EBFn site",
+  "plan.sources.source": "Ngu\u1ED3n",
+  "plan.sources.got": "Tracy t\xECm th\u1EA5y g\xEC",
+  "plan.sources.shown": "Tr\xEAn site",
+  "plan.sources.none": "Kh\xF4ng c\xF3 g\xEC",
+  "plan.sources.shownOf": "{shown} tr\xEAn {what}",
+  "plan.search": "T\xECm ki\u1EBFm tr\xEAn Google",
+  "plan.search.title": "Ti\xEAu \u0111\u1EC1 n\xF3i g\xEC",
+  "plan.search.description": "M\xF4 t\u1EA3 n\xF3i g\xEC",
+  "plan.search.terms": "T\u1EEB kho\xE1 t\xECm ki\u1EBFm",
+  "plan.search.add": "Th\xEAm t\u1EEB kho\xE1 t\xECm ki\u1EBFm",
+  "plan.search.addLabel": "T\u1EEB kho\xE1 t\xECm ki\u1EBFm m\u1EDBi cho trang {page}",
+  "plan.search.removeTerm": "B\u1ECF t\u1EEB kho\xE1 t\xECm ki\u1EBFm {term}",
+  "plan.later": "B\u1EA1n c\xF3 th\u1EC3 g\u1EEDi sau",
+  "plan.later.what.later_prices": "B\u1EA3ng gi\xE1 c\u1EE7a b\u1EA1n",
+  "plan.later.reason.later_prices": "H\xE3y g\u1EEDi b\u1EA3ng gi\xE1 v\xE0 ch\xFAng c\xF3 th\u1EC3 \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB c\xF9ng v\u1EDBi nh\u1EEFng g\xEC b\u1EA1n cung c\u1EA5p.",
+  "plan.later.what.later_services": "Danh s\xE1ch d\u1ECBch v\u1EE5 c\u1EE7a b\u1EA1n",
+  "plan.later.reason.later_services": "H\xE3y g\u1EEDi c\xE1c d\u1ECBch v\u1EE5 b\u1EA1n cung c\u1EA5p v\xE0 m\u1ED7i d\u1ECBch v\u1EE5 c\xF3 th\u1EC3 c\xF3 ch\u1ED7 ri\xEAng tr\xEAn site c\u1EE7a b\u1EA1n.",
+  "plan.later.what.later_menu": "Th\u1EF1c \u0111\u01A1n c\u1EE7a b\u1EA1n",
+  "plan.later.reason.later_menu": "H\xE3y g\u1EEDi th\u1EF1c \u0111\u01A1n v\xE0 c\xE1c m\xF3n c\u1EE7a b\u1EA1n c\xF3 th\u1EC3 \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB tr\xEAn site.",
+  "plan.later.what.later_hours": "Gi\u1EDD m\u1EDF c\u1EEDa c\u1EE7a b\u1EA1n",
+  "plan.later.reason.later_hours": "H\xE3y x\xE1c nh\u1EADn gi\u1EDD m\u1EDF c\u1EEDa v\xE0 ch\xFAng c\xF3 th\u1EC3 \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB tr\xEAn site.",
+  "plan.later.what.later_email": "\u0110\u1ECBa ch\u1EC9 email c\u1EE7a b\u1EA1n",
+  "plan.later.reason.later_email": "H\xE3y g\u1EEDi m\u1ED9t \u0111\u1ECBa ch\u1EC9 email \u0111\u1EC3 kh\xE1ch truy c\u1EADp c\xF3 th\u1EC3 vi\u1EBFt cho b\u1EA1n, v\xE0 bi\u1EC3u m\u1EABu c\xF3 th\u1EC3 g\u1EEDi c\xE2u tr\u1EA3 l\u1EDDi \u0111\u1EBFn \u0111\xF3.",
+  "plan.later.what.later_booking_link": "Link \u0111\u1EB7t l\u1ECBch c\u1EE7a b\u1EA1n",
+  "plan.later.reason.later_booking_link": "H\xE3y g\u1EEDi link \u0111\u1EB7t l\u1ECBch v\xE0 c\xE1c n\xFAt c\u1EE7a b\u1EA1n c\xF3 th\u1EC3 \u0111\u01B0a kh\xE1ch truy c\u1EADp th\u1EB3ng \u0111\u1EBFn \u0111\xF3.",
+  "plan.later.what.later_portraits": "\u1EA2nh c\u1EE7a \u0111\u1ED9i ng\u0169",
+  "plan.later.reason.later_portraits": "H\xE3y g\u1EEDi \u1EA3nh c\u1EE7a t\u1EEBng ng\u01B0\u1EDDi v\xE0 \u1EA3nh c\xF3 th\u1EC3 \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB b\xEAn c\u1EA1nh t\xEAn c\u1EE7a h\u1ECD.",
+  "plan.later.what.later_logo": "File logo c\u1EE7a b\u1EA1n",
+  "plan.later.reason.later_logo": "H\xE3y g\u1EEDi file logo v\xE0 n\xF3 c\xF3 th\u1EC3 \u0111\u01B0\u1EE3c d\xF9ng thay cho logo m\xE0 k\u1EBF ho\u1EA1ch \u0111ang t\u1EA1m d\xF9ng.",
+  "plan.refused.first_page": "Trang \u0111\u1EA7u ti\xEAn c\u1EE7a site \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i: m\u1ECDi trang kh\xE1c \u0111\u1EC1u d\u1EABn v\u1EC1 trang n\xE0y.",
+  "plan.refused.privacy_page": "Trang n\xE0y l\xE0 trang ch\xEDnh s\xE1ch b\u1EA3o m\u1EADt c\u1EE7a b\u1EA1n, n\xEAn \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.",
+  "plan.refused.main_block": "Ph\u1EA7n n\xE0y l\xE0 ph\u1EA7n ch\xEDnh c\u1EE7a trang, n\xEAn \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i ch\u1EEBng n\xE0o trang c\xF2n t\u1ED3n t\u1EA1i.",
+  "plan.refused.site_chrome": "Ph\u1EA7n n\xE0y d\xF9ng chung cho m\u1ECDi trang c\u1EE7a site, n\xEAn kh\xF4ng th\u1EC3 ch\u1EC9 b\u1ECF kh\u1ECFi m\u1ED9t trang.",
+  "plan.refused.end_action": "Trang c\u1EE7a b\u1EA1n k\u1EBFt th\xFAc b\u1EB1ng ph\u1EA7n n\xE0y, n\xEAn \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.",
+  "plan.refused.main_button": "N\xFAt ch\xEDnh c\u1EE7a b\u1EA1n \u0111ang d\xF9ng m\u1EE5c n\xE0y, n\xEAn \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.",
+  "plan.refused.too_few_items": "Ph\u1EA7n n\xE0y c\u1EA7n \xEDt nh\u1EA5t {min} m\u1EE5c nh\u01B0 v\u1EADy, n\xEAn m\u1EE5c n\xE0y \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.",
+  "plan.refused.block_empty": "\u0110\xE2y l\xE0 m\u1EE5c cu\u1ED1i c\xF9ng m\xE0 ph\u1EA7n n\xE0y hi\u1EC3n th\u1ECB. H\xE3y b\u1ECF c\u1EA3 ph\u1EA7n thay v\xEC b\u1ECF ri\xEAng m\u1EE5c n\xE0y.",
+  "plan.refused.not_in_footer": "M\u1EE5c n\xE0y kh\xF4ng \u0111\u01B0\u1EE3c hi\u1EC3n th\u1ECB \u1EDF ch\xE2n trang c\u1EE7a c\xE1c trang.",
+  "plan.refused.not_a_channel": "Ch\u1EC9 c\xF3 th\u1EC3 b\u1ECF kh\u1ECFi ch\xE2n trang m\u1ED9t c\xE1ch li\xEAn h\u1EC7 v\u1EDBi b\u1EA1n.",
+  "plan.refused.not_an_item": "Ch\u1EC9 m\u1ED9t d\u1ECBch v\u1EE5, m\u1ED9t ng\u01B0\u1EDDi, m\u1ED9t \u1EA3nh ho\u1EB7c m\u1ED9t \u0111\xE1nh gi\xE1 m\u1EDBi c\xF3 th\u1EC3 b\u1ECF kh\u1ECFi m\u1ED9t ph\u1EA7n.",
+  "plan.refused.needed_by_privacy_page": "Trang ch\xEDnh s\xE1ch b\u1EA3o m\u1EADt c\u1EE7a b\u1EA1n c\u1EA7n m\u1EE5c n\xE0y, n\xEAn \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.",
+  "plan.refused.needed_by_end_action": "Ph\u1EA7n cu\u1ED1i trang d\u1EABn \u0111\u1EBFn m\u1EE5c n\xE0y, n\xEAn \u0111\u01B0\u1EE3c gi\u1EEF l\u1EA1i.",
+  "plan.refused.not_found": "M\u1EE5c n\xE0y kh\xF4ng c\xF2n trong k\u1EBF ho\u1EA1ch c\u1EE7a b\u1EA1n.",
+  "plan.refused.removal_unknown": "\u1EDE \u0111\xE2y kh\xF4ng c\xF3 g\xEC \u0111\u1EC3 kh\xF4i ph\u1EE5c.",
+  "plan.refused.restore_target_gone": "M\u1EE5c n\xE0y s\u1EBD quay l\u1EA1i v\xE0o m\u1ED9t th\u1EE9 b\u1EA1n \u0111\xE3 b\u1ECF sau \u0111\xF3. H\xE3y kh\xF4i ph\u1EE5c th\u1EE9 \u0111\xF3 tr\u01B0\u1EDBc.",
+  "plan.refused.search_terms_empty": "M\u1ED7i trang gi\u1EEF l\u1EA1i \xEDt nh\u1EA5t m\u1ED9t t\u1EEB kho\xE1 t\xECm ki\u1EBFm.",
+  "plan.refused.search_term_too_long": "M\u1ED9t t\u1EEB kho\xE1 t\xECm ki\u1EBFm d\xE0i t\u1ED1i \u0111a 60 k\xFD t\u1EF1.",
+  "plan.refused.search_term_twice": "T\u1EEB kho\xE1 t\xECm ki\u1EBFm n\xE0y \u0111\xE3 c\xF3 tr\xEAn trang.",
+  "plan.refused.too_many_search_terms": "M\u1ED7i trang c\xF3 t\u1ED1i \u0111a 10 t\u1EEB kho\xE1 t\xECm ki\u1EBFm."
 };
 
 // src/host/chat-tables.mjs

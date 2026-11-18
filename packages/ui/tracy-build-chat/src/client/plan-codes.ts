@@ -6,7 +6,7 @@
  * not know, or parameters that do not fit its sentence, keep the plan's own text: never a made up sentence.
  * Site content (a page name, the owner's own values, a service name) is never translated: it follows the site.
  */
-import { en, type StringKey, type Translate } from './strings'
+import { en, languageOf, type StringKey, type Translate } from './strings'
 
 const known = (key: string): key is StringKey => Object.hasOwn(en, key)
 type Params = Record<string, unknown> | null | undefined
@@ -22,14 +22,19 @@ export function sectionNameOf(t: Translate, code: unknown): string | null {
 }
 
 /**
- * A section as the card names it: by its code in another interface language, its own label otherwise. In English the
- * label stays (a design may name its section "Our classes" where the code's name is "Services"), so an English card
- * reads as the plan does; a language with no translation of the code keeps the label too.
+ * A section as the card names it: by its code in another language, its own label otherwise. In English the label
+ * stays (a design may name its section "Our classes" where the code's name is "Services"), so an English card reads as
+ * the plan does. A translator that says its language (`languageOf`) is decided by that language, never by comparing
+ * words: Vietnamese "Menu" is the same word as the English one and is still the Vietnamese name (#575 C2). A translator
+ * that does not say keeps the label when its word is the English one.
  */
 export function sectionLabelOf(t: Translate, code: unknown, label: string): string {
   const key = `plan.section.${String(code)}`
   if (typeof code !== 'string' || !known(key)) return label
+  const language = languageOf(t)
+  if (language === 'en') return label
   const said = t(key)
+  if (language !== null) return said
   return said !== en[key] ? said : label
 }
 
@@ -76,6 +81,22 @@ function whyOf(t: Translate, params: Params): string | null {
 }
 
 /** Codes of left out lines that name no fact or item of the plan and have a name of their own. */
+/**
+ * The count of a left out line that is a number of things of one sort, each said by its count in the interface
+ * language: videos with no place in the design (`no_place_in_design` with the videos the plan knows, `params.known`) and the picture
+ * spots of people nothing fills (`no_generated_people`). Their plan text ("3 videos") is English only.
+ */
+function countedWhatOf(t: Translate, line: { code?: string | null; params?: Params }): string | null {
+  const n = count(line.params)
+  if (n === null || n === 0) return null
+  const form = n === 1 ? 'one' : 'other'
+  if (line.code === 'no_place_in_design' && count(line.params, 'known') !== null)
+    return t(`plan.leftOut.what.videos.${form}` as StringKey, { count: n })
+  if (line.code === 'no_generated_people')
+    return t(`plan.notOnSite.peopleSpots.${form}` as StringKey, { count: n })
+  return null
+}
+
 const NAMED_LEFT_OUT = new Set([
   'no_place_for_whatsapp',
   'no_place_for_other_phones',
@@ -108,6 +129,8 @@ export function leftOutWhatOf(
     return t(`plan.count.${kind}.${line.count === 1 ? 'one' : 'other'}` as StringKey, { count: line.count })
   }
   if (typeof line.factKind === 'string') return factLabel(line.factKind, line.what)
+  const counted = countedWhatOf(t, line)
+  if (counted !== null) return counted
   if (typeof line.code === 'string' && NAMED_LEFT_OUT.has(line.code))
     return t(`plan.leftOut.what.${line.code}` as StringKey)
   if (line.code === 'no_fitting_video') {

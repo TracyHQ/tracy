@@ -471,27 +471,21 @@ test('a change refused while the site is built says so in the card words, never 
     }
 })
 
-test('left out: six lines and Show all, expanded in place, with its state exposed', async () => {
+test('not on the site: every line in a fold of its group with a count, opened from the keyboard (#575 C4)', async () => {
   const { page } = await open(browser, VIEWPORTS[1], 'light', code)
   await mount(page, 'plan', { plan: manyLeftOut })
   const card = page.getByRole('article', { name: 'Sunrise Tennis Club site plan' })
-  const lines = card.locator('.tv-bc-dropped li')
-  // 12 photos collapse to one line, so 8 lines in all: six show first.
-  assert.equal(await lines.count(), 6)
-  const more = card.getByRole('button', { name: 'Show all (8)' })
-  assert.equal(await more.getAttribute('aria-expanded'), 'false')
-  assert.match(await lines.first().innerText(), /12 photos/)
-  await more.focus()
+  const section = card.getByRole('region', { name: 'Not on the site' })
+  // 12 photos collapse to one line, so 8 lines in all, none behind a show all button.
+  assert.equal(await section.locator('.tv-bc-dropped li').count(), 8)
+  assert.equal(await card.getByRole('button', { name: /Show all/ }).count(), 0)
+  const fold = section.locator('details').first()
+  assert.match(await fold.locator('summary').innerText(), /\d+ lines?/)
+  assert.equal(await fold.evaluate((d) => d.open), false)
+  await fold.locator('summary').focus()
   await page.keyboard.press('Enter')
-  assert.equal(await lines.count(), 8)
-  const fewer = card.getByRole('button', { name: 'Show fewer' })
-  assert.equal(await fewer.getAttribute('aria-expanded'), 'true')
-  assert.equal(await focused(page), 'Show fewer', 'focus stays on the control')
-  await page.keyboard.press('Space')
-  assert.equal(await lines.count(), 6)
-  // Six or fewer lines: no control.
-  await mount(page, 'plan', { plan: PLAN })
-  assert.equal(await page.getByRole('button', { name: /Show all/ }).count(), 0)
+  assert.equal(await fold.evaluate((d) => d.open), true)
+  assert.ok(await fold.locator('.tv-bc-dropped li').first().isVisible())
   await page.close()
 })
 

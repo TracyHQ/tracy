@@ -183,6 +183,7 @@ export function LivePlan({
       lastEdit={draft.lastEdit ?? null}
       canUndo={draft.canUndo === true}
       lookSources={draft.lookSources ?? null}
+      review={draft.review ?? null}
       t={deps.t(sessionId, language)}
       onEdit={(edit) => follow(savePlanEdit(edit, deps.fetch))}
       onUndo={() => follow(undoPlanEdit(deps.fetch))}

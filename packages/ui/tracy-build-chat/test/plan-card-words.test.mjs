@@ -54,7 +54,7 @@ before(async () => {
           }))
           b.onLoad({ filter: /.*/, namespace: 'stub' }, () => ({
             contents:
-              'export const IconCloseOutlineRegular = () => null; export const IconEditOutlineRegular = () => null',
+              'export const IconCloseOutlineRegular = () => null; export const IconEditOutlineRegular = () => null; export const IconTrashOutlineRegular = () => null',
             loader: 'js'
           }))
         }
@@ -104,8 +104,9 @@ test('a source the plan names more exactly than its kind keeps the plan text, in
     // The tagline came from the social profile's bio, the address from a Google Maps listing named "Google Maps".
     assert.ok(html.includes('>Instagram bio<'), 'the plan says which part of the social profile')
     assert.ok(html.includes('>Google Maps<'), 'the plan names the listing its own way')
-    assert.equal(html.includes(`>${viTable['plan.source.social']}<`), false)
-    assert.equal(html.includes(`>${lib.en['plan.source.social']}<`), false)
+    // Only beside a fact: the sources table names each kind of source by its generic word on purpose (#575).
+    assert.equal(html.includes(`tv-bc-src">${viTable['plan.source.social']}<`), false)
+    assert.equal(html.includes(`tv-bc-src">${lib.en['plan.source.social']}<`), false)
   }
   // A source the plan gives no name is said in the card's words.
   const p = plan()
@@ -355,7 +356,7 @@ test('a section that holds the same kind twice lists it once, with its count (ru
   }
 })
 
-test('a section kept from general knowledge of the trade says so, and that Change the plan removes it', () => {
+test('a section kept from general knowledge of the trade says so; the section reason is not repeated (#575 C10)', () => {
   const p = plan()
   p.pages[0].blocks.splice(1, 0, {
     id: 'home-trade',
@@ -371,7 +372,7 @@ test('a section kept from general knowledge of the trade says so, and that Chang
   for (const t of [vi, lib.english]) {
     const html = draw({ plan: p, t })
     assert.equal(html.split(`>${t('plan.trade')}<`).length, 2, 'one note, under the trade section only')
-    assert.ok(html.includes('>New players know what to bring to a first lesson.<'))
+    assert.equal(html.includes('New players know what to bring to a first lesson.'), false)
   }
   assert.equal(draw({ plan: plan() }).includes(lib.en['plan.trade']), false)
   assert.notEqual(viTable['plan.trade'], undefined)

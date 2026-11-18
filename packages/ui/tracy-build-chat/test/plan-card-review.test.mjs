@@ -1,0 +1,200 @@
+// The plan card the owner reviewed (#575): the review parts drawn from the plan, a trash button only where the kit's
+// locks let a part go, what the owner removed with Bring back, the edits bar, the logo pictures through the owner's
+// picture door, no "show all" behind the not on the site list, a Vietnamese card that names a section by its code even
+// where the word equals the English one (C2), the video and people spot lines said by their counts, and a refused
+// plan operation said by its code. Rendered with `react-dom/server`; every business here is invented.
+//
+//   node --test --test-concurrency=1 packages/ui/tracy-build-chat/test/plan-card-review.test.mjs
+import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+import { after, before, test } from 'node:test'
+import { STAGES, stageDocuments } from '../../../core/tracy-core/test/fixtures/build-chat/stages.mjs'
+import { bundleClient, viTablePath } from './bundle-client.mjs'
+
+const viTable = JSON.parse(readFileSync(viTablePath, 'utf8'))
+let lib
+let done
+before(async () => {
+  ;({ lib, done } = await bundleClient(`
+    import { createElement } from 'react'
+    import { renderToStaticMarkup } from 'react-dom/server'
+    import { PlanCard } from './PlanCard'
+    export { english, en, inLanguage } from './strings'
+    export { refusalOf } from './save-plan-edit'
+    export { sectionLabelOf, leftOutWhatOf } from './plan-codes'
+    export { planOperationOf } from '@tracy/core/build-chat'
+    export const card = (props) => renderToStaticMarkup(createElement(PlanCard, props))`))
+})
+after(() => done?.())
+
+const vi = (key, vars = {}) =>
+  (viTable[key] ?? lib.en[key]).replace(/\{(\w+)\}/g, (_, name) => String(vars[name] ?? ''))
+const draw = (props) =>
+  lib.card({ t: lib.english, onEdit: async () => ({}), onUndo: async () => ({}), ...props })
+
+function plan() {
+  const p = stageDocuments(STAGES.find((s) => s.name === 'plan')).scenario.plan
+  p.keyMessages = [
+    { id: 'km-coaching', label: 'Coaching for every level' },
+    { id: 'km-courts', label: 'Courts to hire by the hour' }
+  ]
+  p.pages[0].blocks[1].carries = ['km-coaching']
+  p.pages[0].blocks.unshift({
+    id: 'h0',
+    type: 'header',
+    block: 'header-main',
+    source: 'template',
+    label: 'Contact Us',
+    labelCode: 'header',
+    data: ['name'],
+    reason: 'Every page starts here.',
+    lists: [{ head: 'Menu', rows: p.pages.map((pg) => ({ label: pg.name, page: pg.id })) }]
+  })
+  p.pages[0].seo = { searchTerms: ['tennis lessons', 'court hire'] }
+  p.later = [
+    {
+      code: 'later_prices',
+      what: 'Your prices',
+      reason: 'Send your prices and they can be shown with what you offer.'
+    }
+  ]
+  p.leftOut.push(
+    {
+      what: '3 videos',
+      kind: 'feature',
+      reason: 'Your design has no place for it.',
+      code: 'no_place_in_design',
+      params: { count: 3, known: 4 }
+    },
+    {
+      what: '2 picture spots of people',
+      kind: 'feature',
+      reason: 'No people pictures are created.',
+      code: 'no_generated_people',
+      params: { count: 2 }
+    },
+    {
+      what: 'Coaches',
+      kind: 'page',
+      reason: 'You took this off the plan.',
+      code: 'owner_removed',
+      params: { removal: 'removal-5' }
+    }
+  )
+  return p
+}
+const LOCKS = { pages: {}, blocks: { h1: 'main_block' }, facts: {}, minItems: { h2: 4, v1: 4 } }
+const REVIEW = {
+  count: 2,
+  canRevert: true,
+  removals: [{ id: 'removal-5', op: 'remove-page', target: { page: 'coaches' } }],
+  locks: LOCKS
+}
+
+test('trash buttons follow the locks: none on the first page, the main section or an item at its minimum', () => {
+  const html = draw({ plan: plan(), review: REVIEW })
+  const remove = (what) => html.includes(`aria-label="${lib.english('plan.remove', { what })}"`)
+  assert.equal(remove('About'), true)
+  assert.equal(remove('Home'), false)
+  assert.equal(remove('Adult coaching'), false, 'four services at a minimum of four')
+  assert.equal(remove('Courts to hire by the hour'), true)
+  assert.equal(remove('Your prices'), true)
+  // Without locks no page or section is offered.
+  const bare = draw({ plan: plan() })
+  assert.equal(bare.includes(`aria-label="${lib.english('plan.remove', { what: 'About' })}"`), false)
+})
+
+test('what the owner removed is listed with Bring back, and is no line of the other groups', () => {
+  const html = draw({ plan: plan(), review: REVIEW })
+  assert.ok(html.includes(`>${lib.english('plan.notOnSite.group.removed')}<`))
+  assert.ok(html.includes(lib.english('plan.notOnSite.restoreLabel', { what: 'Coaches' })))
+  assert.equal(html.split(lib.en['plan.leftOut.reason.owner_removed']).length, 1)
+  // Every group is its own fold; nothing waits behind a show all button (#575 C4).
+  assert.equal(html.includes(lib.en['plan.leftOut.showAll'].replace(' ({count})', '')), false)
+  assert.ok(html.includes('data-group="no_place"'))
+})
+
+test('the edits bar counts the changes and offers back to the original, no browser dialog', () => {
+  const html = draw({ plan: plan(), review: REVIEW })
+  assert.ok(html.includes(lib.english('plan.edits.count.other', { count: 2 })))
+  assert.ok(html.includes(`>${lib.english('plan.edits.revert')}<`))
+  assert.equal(draw({ plan: plan() }).includes(lib.english('plan.edits.revert')), false)
+})
+
+test('the menu and the header are said once for every page, not as sections of a page (#575 C10)', () => {
+  const html = draw({ plan: plan(), review: REVIEW })
+  assert.ok(html.includes(`>${lib.english('plan.pages.every')}<`))
+  assert.equal(html.includes('data-block="h0"'), false)
+  for (const name of ['Home', 'About', 'Contact']) assert.ok(html.includes(`>${name}</li>`), name)
+})
+
+test('a Vietnamese card names a section by its code even where its word is the English one (#575 C2)', () => {
+  const t = lib.inLanguage(vi, 'vi')
+  assert.equal(lib.sectionLabelOf(t, 'header', 'Contact Us'), viTable['plan.section.header'])
+  assert.equal(lib.sectionLabelOf(lib.english, 'header', 'Contact Us'), 'Contact Us')
+})
+
+test('the video and people spot lines are said by their counts in the card language', () => {
+  const t = lib.inLanguage(vi, 'vi')
+  const words = (line) => lib.leftOutWhatOf(t, line, (_k, label) => label)
+  assert.equal(
+    words({ what: '3 videos', code: 'no_place_in_design', params: { count: 3, known: 4 } }),
+    vi('plan.leftOut.what.videos.other', { count: 3 })
+  )
+  assert.equal(
+    words({ what: '1 videos', code: 'no_place_in_design', params: { count: 1, known: 1 } }),
+    vi('plan.leftOut.what.videos.one', { count: 1 })
+  )
+  assert.equal(
+    words({ what: '2 picture spots', code: 'no_generated_people', params: { count: 2 } }),
+    vi('plan.notOnSite.peopleSpots.other', { count: 2 })
+  )
+  // A no place line without a count of videos keeps the plan's words.
+  assert.equal(words({ what: 'Map', code: 'no_place_in_design' }), 'Map')
+  const html = draw({ plan: plan(), review: REVIEW })
+  assert.ok(html.includes(lib.english('plan.leftOut.what.videos.other', { count: 3 })))
+  assert.ok(html.includes(lib.english('plan.notOnSite.peopleSpots.other', { count: 2 })))
+})
+
+test('the logo is shown on a light and a dark ground through the owner picture door (#575 C9)', () => {
+  const id = '0f8fad5b-d9cb-469f-a165-70867728950e'
+  const lookSources = { pictures: { logoLight: { picture: id }, logoDark: { picture: id } } }
+  const html = draw({ plan: plan(), lookSources })
+  assert.equal(html.split(`src="/api/build-draft/pictures/${id}"`).length, 3)
+  assert.ok(html.includes('data-ground="light"') && html.includes('data-ground="dark"'))
+})
+
+test('a plan operation is one plan edit; a refused one is said by its code with its numbers', () => {
+  const p = plan()
+  assert.deepEqual(lib.planOperationOf(p, { op: 'remove-page', page: 'about' }, 'edit-9'), {
+    schema: 'tracy-build-plan-edit/v1',
+    id: 'edit-9',
+    plan: { id: p.id, revision: p.revision },
+    operation: { op: 'remove-page', page: 'about' }
+  })
+  const refused = Object.assign(new Error('INVALID_EDIT'), {
+    code: 'INVALID_EDIT',
+    problems: [{ code: 'too_few_items', at: 'operation.item', message: 'x', params: { min: 3 } }]
+  })
+  assert.deepEqual(lib.refusalOf(refused), {
+    key: 'plan.refused.too_few_items',
+    reload: false,
+    vars: { min: 3 }
+  })
+  const unknown = Object.assign(new Error('INVALID_EDIT'), {
+    code: 'INVALID_EDIT',
+    problems: [{ code: 'other' }]
+  })
+  assert.deepEqual(lib.refusalOf(unknown), { key: 'plan.saveFailed', reload: false })
+})
+
+test('every refusal code of the operation gate has the gate sentence word for word', async () => {
+  const { OPERATION_REFUSALS } = await import('../../../wo/website-opportunities/domain/plan-operations.mjs')
+  for (const [code, sentence] of Object.entries(OPERATION_REFUSALS))
+    assert.equal(lib.en[`plan.refused.${code}`], sentence, code)
+  const { LATER } = await import('../../../wo/website-opportunities/domain/plan-later.mjs')
+  for (const [code, entry] of Object.entries(LATER)) {
+    assert.equal(lib.en[`plan.later.what.${code}`], entry.what, code)
+    assert.equal(lib.en[`plan.later.reason.${code}`], entry.reason, code)
+  }
+})

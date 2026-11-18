@@ -5,6 +5,7 @@
  * its plan, its last edit and whether an undo is still offered.
  */
 import type { PlanDraft, PlanEdit } from '@tracy/core/build-chat'
+import { en, type StringKey } from './strings'
 
 export const BUILD_DRAFT_PLAN_EDITS_PATH = '/api/build-draft/plan-edits'
 export const BUILD_DRAFT_PLAN_UNDO_PATH = '/api/build-draft/plan-undo'
@@ -18,12 +19,33 @@ async function post(path: string, body: unknown, fetchImpl: typeof fetch): Promi
   })
   const answer = await response.json().catch(() => null)
   if (!response.ok || !answer?.draft?.plan) {
-    const refusal = new Error(String(answer?.code ?? response.status)) as Error & { code?: string }
+    const refusal = new Error(String(answer?.code ?? response.status)) as Error & {
+      code?: string
+      problems?: unknown[]
+    }
     if (typeof answer?.code === 'string') refusal.code = answer.code
+    if (Array.isArray(answer?.problems)) refusal.problems = answer.problems
     throw refusal
   }
-  const { plan, lastEdit = null, canUndo = false, lookSources = null } = answer.draft
-  return { plan, lastEdit, canUndo, lookSources }
+  const { plan, lastEdit = null, canUndo = false, lookSources = null, review = null } = answer.draft
+  return { plan, lastEdit, canUndo, lookSources, review }
+}
+
+/** A refusal of the plan operation gate the card can say in its own words: a code of `plan.refused.*`. */
+function operationRefusalOf(
+  error: unknown
+): { key: StringKey; vars: Record<string, string | number> } | null {
+  const problems = (error as { problems?: unknown } | null)?.problems
+  if (!Array.isArray(problems)) return null
+  for (const p of problems as { code?: unknown; params?: Record<string, unknown> }[]) {
+    const key = `plan.refused.${String(p?.code)}`
+    if (typeof p?.code !== 'string' || !Object.hasOwn(en, key)) continue
+    const vars: Record<string, string | number> = {}
+    for (const [k, v] of Object.entries(p.params ?? {}))
+      if (typeof v === 'string' || typeof v === 'number') vars[k] = v
+    return { key: key as StringKey, vars }
+  }
+  return null
 }
 
 /**
@@ -31,14 +53,20 @@ async function post(path: string, body: unknown, fetchImpl: typeof fetch): Promi
  * whether the draft is read again: while the site is built the plan is locked; while a build chat step works on the
  * plan (`ENGINE_BUSY`, whose `say` is the same sentence in English) it cannot change yet; a body past the door's bound
  * (`BODY_TOO_LARGE`) is too long to save; a plan that moved meanwhile (another tab, a change request) is read again so
- * the owner sees the latest one; anything else is a plain retry. The card keeps the plan it shows in every case.
+ * the owner sees the latest one; a part the plan operation gate keeps (`INVALID_EDIT` with a known problem code, #575)
+ * is said by that code with its parameters; anything else is a plain retry. The card keeps the plan it shows.
  * @param error - what `savePlanEdit` or `undoPlanEdit` threw
  */
 export function refusalOf(error: unknown): {
-  key: 'plan.locked' | 'plan.busy' | 'plan.tooLarge' | 'plan.stale' | 'plan.saveFailed'
+  key: StringKey
   reload: boolean
+  vars?: Record<string, string | number>
 } {
   const code = (error as { code?: unknown } | null)?.code
+  if (code === 'INVALID_EDIT') {
+    const said = operationRefusalOf(error)
+    if (said) return { key: said.key, reload: false, vars: said.vars }
+  }
   if (code === 'BUILD_RUNNING') return { key: 'plan.locked', reload: false }
   if (code === 'ENGINE_BUSY') return { key: 'plan.busy', reload: false }
   if (code === 'BODY_TOO_LARGE') return { key: 'plan.tooLarge', reload: false }

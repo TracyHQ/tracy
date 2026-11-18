@@ -1,7 +1,15 @@
 /**
- * The plan card (TracyHQ/tracy#606, #607): the Contract B plan as labelled values, read before approval. Business
- * facts with their source, the look section, services, pages and the data each block will hold with its reason, the
- * pictures summary, the assumptions and what was left out. It shows no written copy: copy is written after approval.
+ * The plan card (TracyHQ/tracy#606, #607, #575): the Contract B plan as labelled values, read before approval. What
+ * the owner gets, what the site says first, the business facts with their source, the look with the logo on a light
+ * and a dark ground, the services, how customers reach the business, the pages (what every page shares said once,
+ * then each page's sections with what they hold and carry), the pictures, the assumptions, what is not on the site in
+ * groups by why, what came from each source, each page's search intent and what the owner can send later. It shows
+ * no written copy: copy is written after approval.
+ *
+ * A part the kit lets the owner take off (a page, a section, a service or photo in a section, a key message, a way
+ * to contact the business in the footers, a later entry) has a trash button: it sends one plan operation through the
+ * same plan edit door (`planOperationOf`), and what was taken off is listed with Bring back. The edits bar counts the
+ * changes of this review and goes back to the original plan after a confirm inside the card.
  *
  * A value a Contract B plan edit can change (a fact, a service name, the accent colour)
  * is a button: pressed, it turns into an editor; Enter or Save sends one structured plan edit (`onEdit`), Escape or
@@ -19,30 +27,28 @@
  */
 import { IconCloseOutlineRegular } from '@deepseek-ai/dsh-client-ui-primitives'
 import {
-  type BlockHolds,
-  type BlockList,
   type PlanCard as Card,
   changedFieldsOf,
   type PlanDraft,
+  type PlanEdit,
   type PlanFact,
+  type PlanOperation,
+  type PlanReview,
   plainTextOf,
   planCardOf,
   planChangeOf,
   planEditOf,
+  planOperationOf,
   type RevisionNote
 } from '@tracy/core/build-chat'
-import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { type EditContext, EditableValue, UndoIcon } from './EditableValue'
+import { Conflict, languageName, listOf, plural, Row, Section, Value } from './plan-card-parts'
+import { assumptionOf, factShownOf, logoSourceOf, picturesEstimateOf } from './plan-codes'
+import { Later, NotOnSite, Sources } from './plan-review-bottom'
+import { PagesView, SearchView } from './plan-review-pages'
+import { EditsBar, KeyMessages, Reach, type ReviewContext, YouGet } from './plan-review-top'
 import { factLabelOf, sentenceOf, sourceNameOf } from './plan-words'
-import {
-  assumptionOf,
-  factShownOf,
-  leftOutReasonsOf,
-  leftOutWhatOf,
-  logoSourceOf,
-  picturesEstimateOf,
-  sectionLabelOf
-} from './plan-codes'
 import { changedLineOf, type LineContext, notDoneLineOf } from './revision-lines'
 import { refusalOf } from './save-plan-edit'
 import type { StringKey, Translate } from './strings'
@@ -58,8 +64,10 @@ export interface PlanCardProps {
   /** Where the plan's accent and logo came from (`lookSources` of the draft): a drawn logo is said as drawn. */
   lookSources?: PlanDraft['lookSources']
   t: Translate
-  /** Sends a structured plan edit and resolves to the draft tracy-web answered with. */
-  onEdit: (edit: ReturnType<typeof planEditOf>) => Promise<PlanDraft>
+  /** The draft's plan review (#575): changes counted, what can come back, the kit's locks. */
+  review?: PlanReview | null
+  /** Sends a structured plan edit or plan operation and resolves to the draft tracy-web answered with. */
+  onEdit: (edit: PlanEdit) => Promise<PlanDraft>
   /** Takes the last plan edit back and resolves to the draft tracy-web answered with. */
   onUndo: () => Promise<PlanDraft>
   /** The interface language, for the site language's name. */
@@ -73,9 +81,6 @@ export interface PlanCardProps {
   /** A change was refused because the plan moved meanwhile: read the draft again. */
   onStale?: () => void
 }
-
-/** How many Left out lines show before "Show all". */
-const LEFT_OUT_SHOWN = 6
 
 /** The same line said again and again becomes one line with a count, in the order it first came. */
 function grouped<T>(items: T[], keyOf: (item: T) => string): { item: T; count: number }[] {
@@ -212,11 +217,6 @@ function RevisionNoteView({
 
 const randomEditId = () => `edit-${globalThis.crypto.randomUUID()}`
 
-/** One key of a pair of plural keys (`<base>.one` / `<base>.other`). */
-const plural = (t: Translate, base: string, count: number, vars: Record<string, string | number> = {}) =>
-  t(`${base}.${count === 1 ? 'one' : 'other'}` as StringKey, { count, ...vars })
-
-/** "A, B and C" with the dictionary's "and". */
 /**
  * The names of the sources of the owner's photos in the card's words: by their kinds (`fromKinds`) when the plan gives
  * one kind per name, each name as the plan has it otherwise.
@@ -227,151 +227,15 @@ function ownPhotoSourcesOf(t: Translate, own: { from: string[]; fromKinds?: stri
   return own.from.map((name, i) => sourceNameOf(t, kinds?.[i], name))
 }
 
-function listOf(t: Translate, parts: string[]): string {
-  if (parts.length <= 1) return parts[0] ?? ''
-  return t('plan.and', { first: parts.slice(0, -1).join(', '), last: parts[parts.length - 1] as string })
-}
-
-const COUNT_KINDS = new Set(['service', 'person', 'quote', 'gallery'])
-
-/** A block's line, built from the data it will hold: "Business name, tagline, main button", "6 quotes". */
-function holdsText(t: Translate, holds: BlockHolds): string {
-  if ('services' in holds) return holds.services.join(', ')
-  // "Business name, tagline, main button": the English labels go lower case after the first. A translated label keeps
-  // its own case, since a language like German writes its nouns with a capital.
-  const said = holds.facts.map((label, i) => {
-    const word = factLabelOf(t, holds.factKinds?.[i], label)
-    return i === 0 || word !== label ? word : word.toLowerCase()
-  })
-  // Each kind once, in the order it first comes, with a count when it comes more than once: "Social link (2)", never
-  // "Social link, Social link" (run 6). The count is said the way a repeated line is (`sentenceOf`).
-  const seen = new Map<string, number>()
-  for (const word of said) seen.set(word.toLowerCase(), (seen.get(word.toLowerCase()) ?? 0) + 1)
-  const facts = said
-    .filter((word, i) => said.findIndex((w) => w.toLowerCase() === word.toLowerCase()) === i)
-    .map((word) => {
-      const n = seen.get(word.toLowerCase()) ?? 1
-      return n === 1 ? word : `${word} (${n})`
-    })
-  const counts = holds.counts.map((c) =>
-    plural(t, `plan.count.${COUNT_KINDS.has(c.kind) ? c.kind : 'item'}`, c.count)
-  )
-  const text = [...facts, ...counts].join(', ')
-  return text.charAt(0).toUpperCase() + text.slice(1)
-}
-
-/** The child lists of a block, each with its rows in the plan's order; a row's own lists follow it, indented. */
-function BlockLists({ lists }: { lists: BlockList[] }) {
-  return (
-    <div className="tv-bc-lists">
-      {lists.map((l, i) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: lists come in the plan's order and have no id
-        <section key={i} className="tv-bc-list">
-          {l.head && <div className="tv-bc-lh">{l.head}</div>}
-          <ul className="tv-bc-rows">
-            {l.rows.map((r, j) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: two rows may read the same
-              <li key={j}>
-                {r.label}
-                {r.lists && <BlockLists lists={r.lists} />}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
-    </div>
-  )
-}
-
-function languageName(tag: string, locale: string): string {
-  try {
-    return new Intl.DisplayNames([locale], { type: 'language' }).of(tag) ?? tag
-  } catch {
-    return tag
-  }
-}
-
-/** One plan value, shown as it is. `field` names the plan field it shows. */
-function Value({
-  field,
-  source,
-  note,
-  children
-}: {
-  field?: string
-  source?: string
-  note?: string
-  children: ReactNode
-}) {
-  return (
-    <div className="tv-bc-val" data-field={field}>
-      <div className="tv-bc-val-row">
-        <span className="tv-bc-v">{children}</span>
-        {source && <span className="tv-bc-src">{source}</span>}
-      </div>
-      {note && <div className="tv-bc-note">{note}</div>}
-    </div>
-  )
-}
-
-/** A fact the sources disagree on: its values as a radio group, the plan's current value checked. */
-function Conflict({
-  fact,
-  label,
-  t,
-  busy,
-  changed,
-  onPick
-}: {
-  fact: PlanFact & { choice: NonNullable<PlanFact['choice']> }
-  label: string
-  t: Translate
-  busy: boolean
-  changed: boolean
-  onPick: (value: string) => void
-}) {
-  const name = useId()
-  return (
-    <div className="tv-bc-val" data-field={fact.field} data-changed={changed || undefined}>
-      <div className="tv-bc-choice" role="radiogroup" aria-label={label} aria-busy={busy}>
-        {fact.choice.options.map((o) => (
-          <label key={o.value} className="tv-bc-opt" data-checked={o.selected || undefined}>
-            <input
-              type="radio"
-              name={name}
-              value={o.value}
-              checked={o.selected}
-              // Not disabled while a pick is saved: a disabled radio drops the focus the arrow key just put on it.
-              aria-disabled={busy || undefined}
-              onChange={() => {
-                if (!busy) onPick(o.value)
-              }}
-            />
-            <span className="tv-bc-v">{o.text ?? o.value}</span>
-            <span className="tv-bc-src">{sourceNameOf(t, o.sourceKind, o.source)}</span>
-          </label>
-        ))}
-      </div>
-      {/* What was assumed holds only while the default (first) value stands; once another is picked it is stale. */}
-      {fact.choice.options[0]?.selected && <div className="tv-bc-note">{fact.choice.said}</div>}
-    </div>
-  )
-}
-
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="tv-bc-plan-sec" aria-label={title}>
-      <h4>{title}</h4>
-      {children}
-    </section>
-  )
-}
+/** The address of a draft picture (`GET /api/build-draft/pictures/:id`), the owner's own picture door. */
+export const draftPictureUrl = (picture: string) => `/api/build-draft/pictures/${encodeURIComponent(picture)}`
 
 export function PlanCard({
   plan,
   lastEdit = null,
   canUndo = false,
   lookSources = null,
+  review = null,
   t,
   onEdit,
   onUndo,
@@ -381,21 +245,23 @@ export function PlanCard({
   onDismissRevised,
   onStale
 }: PlanCardProps) {
-  const [draft, setDraft] = useState<PlanDraft>({ plan, lastEdit, canUndo, lookSources })
+  const [draft, setDraft] = useState<PlanDraft>({ plan, lastEdit, canUndo, lookSources, review })
   const [busy, setBusy] = useState(false)
   /** A refused change, said in the card's own words (`refusalOf`); false while nothing was refused. */
-  const [failed, setFailed] = useState<StringKey | false>(false)
+  const [failed, setFailed] = useState<{ key: StringKey; vars?: Record<string, string | number> } | false>(
+    false
+  )
   const [editing, setEditing] = useState<string | null>(null)
   /** The value focus goes back to once its editor closes, or its change is taken back. */
   const [refocus, setRefocus] = useState<string | null>(null)
-  /** Whether the whole Left out list shows, not only its first lines. */
-  const [allLeftOut, setAllLeftOut] = useState(false)
-  const leftOutId = useId()
   const undoHintId = useId()
   const ref = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   // A newer draft from outside (a plan the chat composed, the draft read again) replaces what the card holds.
-  useEffect(() => setDraft({ plan, lastEdit, canUndo, lookSources }), [plan, lastEdit, canUndo, lookSources])
+  useEffect(
+    () => setDraft({ plan, lastEdit, canUndo, lookSources, review }),
+    [plan, lastEdit, canUndo, lookSources, review]
+  )
   useEffect(() => {
     if (refocus === null || editing !== null) return
     const field = `[data-field="${CSS.escape(refocus)}"]`
@@ -403,7 +269,10 @@ export function PlanCard({
     setRefocus(null)
   })
   const current = draft.plan
-  const card: Card = planCardOf(current)
+  const card: Card = planCardOf(current, {
+    lookSources: draft.lookSources ?? null,
+    review: draft.review ?? null
+  })
 
   /** Every change to the plan: one structured plan edit, then the card follows the draft tracy-web answers with. */
   const follow = async (request: () => Promise<PlanDraft>) => {
@@ -413,7 +282,7 @@ export function PlanCard({
       setDraft(await request())
     } catch (error) {
       const refused = refusalOf(error)
-      setFailed(refused.key)
+      setFailed({ key: refused.key, ...(refused.vars ? { vars: refused.vars } : {}) })
       // The plan moved meanwhile: the latest one is read, so the owner edits what is really there.
       if (refused.reload) onStale?.()
     } finally {
@@ -422,6 +291,12 @@ export function PlanCard({
   }
   const send = (changes: { field: string; value: unknown }[]) =>
     follow(() => onEdit(planEditOf(current, changes, newEditId())))
+  /** One plan operation (#575): a part taken off, brought back, or the original plan back. Focus goes to the title. */
+  const operate = (operation: PlanOperation) => {
+    setEditing(null)
+    titleRef.current?.focus()
+    void follow(() => onEdit(planOperationOf(current, operation, newEditId())))
+  }
 
   const ctx: EditContext = {
     t,
@@ -441,6 +316,7 @@ export function PlanCard({
     }
   }
 
+  const r: ReviewContext = { t, card, ctx, busy, locale, operate, send: (changes) => void send(changes) }
   // A dark theme accent (#616) is shown beside the light one, each labelled; the owner cannot edit it yet.
   const accentDark = card.look.accentDark
   const logo =
@@ -497,9 +373,10 @@ export function PlanCard({
           {t('plan.undo')}
         </button>
       </div>
+      <EditsBar t={t} review={draft.review ?? null} busy={busy} onRevert={() => operate({ op: 'revert' })} />
       {failed && (
         <p className="tv-bc-plan-err tv-bc-error" role="alert">
-          {t(failed)}
+          {t(failed.key, failed.vars)}
         </p>
       )}
 
@@ -517,6 +394,9 @@ export function PlanCard({
           }}
         />
       )}
+
+      <YouGet r={r} />
+      <KeyMessages r={r} />
 
       <Section title={t('plan.facts')}>
         <div className="tv-bc-kv">
@@ -540,7 +420,7 @@ export function PlanCard({
                   label={factLabelOf(t, f.kind, f.label)}
                   current={f.value}
                   text={factShownOf(t, f, locale)}
-                  source={sourceNameOf(t, f.sourceKind, f.source)}
+                  source={f.offSite ? t('plan.fact.offSite') : sourceNameOf(t, f.sourceKind, f.source)}
                 />
               )}
             </Row>
@@ -579,10 +459,14 @@ export function PlanCard({
             </Row>
           )}
           <Row label={t('plan.look.logoLight')}>
-            <Value field="look.logo">{logo}</Value>
+            <LogoOn ground="light" picture={card.look.brand?.logo.light ?? null} t={t}>
+              {logo}
+            </LogoOn>
           </Row>
           <Row label={t('plan.look.logoDark')}>
-            <Value field="look.logo">{logo}</Value>
+            <LogoOn ground="dark" picture={card.look.brand?.logo.dark ?? null} t={t}>
+              {logo}
+            </LogoOn>
           </Row>
         </div>
       </Section>
@@ -604,32 +488,8 @@ export function PlanCard({
         </div>
       </Section>
 
-      <Section title={t('plan.pages', { count: card.pages.length })}>
-        {card.pages.map((p) => (
-          <div key={p.id} className="tv-bc-page" data-page={p.id}>
-            <div className="tv-bc-ph">
-              {p.name}
-              <span className="tv-bc-n">{plural(t, 'plan.sections', p.blocks.length)}</span>
-            </div>
-            <ol>
-              {p.blocks.map((b) => (
-                <li key={b.id}>
-                  <span className="tv-bc-bn">{sectionLabelOf(t, b.labelCode, b.label)}</span>
-                  <Value
-                    field={`pages[${p.id}].blocks[${b.id}].data`}
-                    {...('services' in b.holds ? { source: t('plan.fromServices') } : {})}
-                    note={b.reason}
-                  >
-                    {holdsText(t, b.holds)}
-                  </Value>
-                  {b.trade && <div className="tv-bc-trade tv-bc-note">{t('plan.trade')}</div>}
-                  {b.lists && <BlockLists lists={b.lists} />}
-                </li>
-              ))}
-            </ol>
-          </div>
-        ))}
-      </Section>
+      <Reach r={r} />
+      <PagesView r={r} />
 
       <Section title={t('plan.pictures')}>
         <div className="tv-bc-kv">
@@ -674,48 +534,37 @@ export function PlanCard({
         </Section>
       )}
 
-      {card.leftOut.length > 0 && (
-        <Section title={t('plan.leftOut')}>
-          <ul id={leftOutId} className="tv-bc-dropped">
-            {(allLeftOut ? card.leftOut : card.leftOut.slice(0, LEFT_OUT_SHOWN)).map((l) => (
-              <li key={`${l.what}\n${l.reason}`} data-count={l.count}>
-                <span className="tv-bc-x">
-                  <IconCloseOutlineRegular aria-hidden />
-                </span>
-                <span>
-                  <span className="tv-bc-what">
-                    {sentenceOf(leftOutWhatOf(t, l, (kind, label) => factLabelOf(t, kind, label)))}
-                  </span>{' '}
-                  <span className="tv-bc-muted">{leftOutReasonsOf(t, l)}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
-          {card.leftOut.length > LEFT_OUT_SHOWN && (
-            <button
-              type="button"
-              className="tv-bc-btn tv-bc-more"
-              data-ghost=""
-              aria-expanded={allLeftOut}
-              aria-controls={leftOutId}
-              onClick={() => setAllLeftOut(!allLeftOut)}
-            >
-              {allLeftOut
-                ? t('plan.leftOut.showFewer')
-                : t('plan.leftOut.showAll', { count: card.leftOut.length })}
-            </button>
-          )}
-        </Section>
-      )}
+      <NotOnSite r={r} />
+      <Sources r={r} />
+      <SearchView r={r} />
+      <Later r={r} />
     </article>
   )
 }
 
-function Row({ label, children }: { label: string; children: ReactNode }) {
+/**
+ * The logo as the site shows it on a light or a dark ground (#575 C9): the brand step's picture through the owner's
+ * picture door, on that ground; without a picture, the sentence of where the logo comes from.
+ */
+function LogoOn({
+  ground,
+  picture,
+  t,
+  children
+}: {
+  ground: 'light' | 'dark'
+  picture: { picture: string } | null
+  t: Translate
+  children: string
+}) {
+  if (!picture) return <Value field="look.logo">{children}</Value>
   return (
-    <>
-      <div className="tv-bc-k">{label}</div>
-      <div className="tv-bc-cell">{children}</div>
-    </>
+    <figure className="tv-bc-logo" data-ground={ground} data-field="look.logo">
+      <img
+        src={draftPictureUrl(picture.picture)}
+        alt={t(ground === 'light' ? 'plan.look.logoOnLight' : 'plan.look.logoOnDark')}
+      />
+      <figcaption className="tv-bc-note">{children}</figcaption>
+    </figure>
   )
 }

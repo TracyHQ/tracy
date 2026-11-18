@@ -11,7 +11,7 @@
  * the working line, the Try again button) speaks the same language as the cards around it.
  */
 import { wordsOver } from '../chat-words.mjs'
-import { en, type StringKey, type Translate } from './strings'
+import { en, inLanguage, type StringKey, type Translate } from './strings'
 
 /** One language's `tracy-build-chat` table, or null when none can be read. */
 export type TableSource = (language: string) => Readonly<Record<string, string>> | null
@@ -32,7 +32,10 @@ export function translatorIn(language: unknown, tables: TableSource): Translate 
   const table = language === 'en' ? {} : tables(language)
   if (table === null) return null
   const words = wordsOver(table, en)
-  return (key: StringKey, vars?: Record<string, string | number>) => words(key, vars) ?? key
+  return inLanguage(
+    (key: StringKey, vars?: Record<string, string | number>) => words(key, vars) ?? key,
+    language
+  )
 }
 
 /**

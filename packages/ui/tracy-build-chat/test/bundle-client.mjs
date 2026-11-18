@@ -42,7 +42,7 @@ export async function bundleClient(contents) {
           }))
           b.onLoad({ filter: /.*/, namespace: 'stub' }, () => ({
             contents:
-              'export const IconCloseOutlineRegular = () => null; export const IconEditOutlineRegular = () => null',
+              'export const IconCloseOutlineRegular = () => null; export const IconEditOutlineRegular = () => null; export const IconTrashOutlineRegular = () => null',
             loader: 'js'
           }))
         }

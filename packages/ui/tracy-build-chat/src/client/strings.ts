@@ -3,6 +3,7 @@
  * `check-dsh-locale` can find the owner. Wording follows the build chat mock the product owner approved.
  */
 import { ASK_STRINGS, LINK_FOUND_STRINGS, LINK_READ_STRINGS, SAY_STRINGS } from '@tracy/core/build-chat'
+import { planReviewEn } from './plan-review-strings'
 import { rebuildEn } from './rebuild-strings'
 
 export const NS = 'tracy-build-chat'
@@ -361,6 +362,7 @@ export const en = {
   'handoff.tooLong':
     'Your site is ready, but this conversation is too long to move to the site chat. Open your site from your list of sites.',
   ...rebuildEn,
+  ...planReviewEn,
   // The question card's words (#609): the host says a question in the interface language by these keys
   // (`src/host/ask-words.mjs`); English is the engine's own wording, kept with the code in `@tracy/core/build-chat`.
   ...ASK_STRINGS,
@@ -374,6 +376,18 @@ export const en = {
 export type StringKey = keyof typeof en
 export type Translate = (key: StringKey, vars?: Record<string, string | number>) => string
 
+/** A translator that says which language it speaks (`translatorIn`), so a word equal to the English one is still known. */
+export function inLanguage(t: Translate, language: string): Translate {
+  return Object.assign(t, { language })
+}
+/** The language a translator speaks, or null when it does not say (dsh's bound one). */
+export function languageOf(t: Translate): string | null {
+  const language = (t as { language?: unknown }).language
+  return typeof language === 'string' ? language : null
+}
+
 /** Translate with the English source; the plugin passes its bound locale instead. */
-export const english: Translate = (key, vars = {}) =>
-  en[key].replace(/\{(\w+)\}/g, (_, name: string) => String(vars[name] ?? ''))
+export const english: Translate = inLanguage(
+  (key, vars = {}) => en[key].replace(/\{(\w+)\}/g, (_, name: string) => String(vars[name] ?? '')),
+  'en'
+)

@@ -234,6 +234,77 @@ export const CSS = `
 .tv-bc-plan-rev p.tv-bc-note { margin: 8px 0 0; }
 .tv-bc-plan-t:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
 .tv-bc-x { color: var(--muted-foreground); margin-top: 2px; display: grid; place-items: center; }
+/* The review parts of the plan card (#575): edits bar, counts, key messages, folds, trash buttons, logo grounds */
+.tv-bc-edits {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 8px 14px; font-size: 13px;
+  border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--primary) 8%, var(--card));
+}
+.tv-bc-edits-n { font-weight: 500; flex: 1 1 auto; }
+.tv-bc-edits-ask { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.tv-bc-lead { margin: 0 0 8px; font-size: 13.5px; line-height: 1.45; }
+.tv-bc-tiles {
+  list-style: none; margin: 0; padding: 0; display: grid; gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+}
+.tv-bc-tile {
+  display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.tv-bc-tile-n { font-size: 18px; font-weight: 600; }
+.tv-bc-tile-l { font-size: 12px; color: var(--muted-foreground); line-height: 1.35; }
+.tv-bc-msgs { margin: 0; padding: 0 0 0 18px; display: flex; flex-direction: column; gap: 6px; }
+.tv-bc-msg-row { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.tv-bc-msg-row > .tv-bc-val, .tv-bc-msg-row > .tv-bc-bn { flex: 1 1 auto; min-width: 0; }
+.tv-bc-where { list-style: none; margin: 0; padding: 0; font-size: 12.5px; color: var(--muted-foreground); }
+.tv-bc-trash { flex: none; padding: 2px 6px; color: var(--muted-foreground); }
+.tv-bc-trash:hover:not([aria-disabled]) { color: var(--destructive); }
+.tv-bc-chips, .tv-bc-tags { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+.tv-bc-chips .tv-bc-chip, .tv-bc-tags .tv-bc-chip { display: inline-flex; align-items: center; gap: 2px; }
+.tv-bc-chips .tv-bc-chip { white-space: normal; overflow-wrap: anywhere; max-width: 100%; }
+.tv-bc-chips .tv-bc-trash { height: 18px; padding: 0 2px; }
+.tv-bc-every { padding: 4px 0 6px; }
+.tv-bc-every .tv-bc-ph { padding: 4px 0; }
+.tv-bc-menu { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+.tv-bc-menu .tv-bc-k { padding: 0; }
+.tv-bc-page-h { display: flex; align-items: flex-start; gap: 4px; }
+.tv-bc-page-h > .tv-bc-fold { flex: 1 1 auto; min-width: 0; border: 0; margin: 0; }
+.tv-bc-page-h > .tv-bc-trash { margin: 6px 6px 0 0; }
+.tv-bc-page ol.tv-bc-secs > li { display: block; position: relative; padding: 2px 0 6px 22px; }
+.tv-bc-page ol.tv-bc-secs > li::before { position: absolute; left: 0; top: 0; width: 16px; }
+.tv-bc-page ol.tv-bc-secs .tv-bc-lists { padding-bottom: 0; }
+.tv-bc-fold { border: 1px solid var(--border); border-radius: 10px; margin-top: 6px; }
+.tv-bc-fold > summary {
+  display: flex; align-items: center; gap: 8px; padding: 7px 10px; cursor: pointer; list-style: none;
+  font-size: 13px; font-weight: 500;
+}
+.tv-bc-fold > summary::-webkit-details-marker { display: none; }
+.tv-bc-fold > summary::before {
+  content: ''; flex: none; width: 6px; height: 6px; border-right: 1.5px solid var(--muted-foreground);
+  border-bottom: 1.5px solid var(--muted-foreground); transform: rotate(-45deg); transition: transform .12s;
+}
+.tv-bc-fold[open] > summary::before { transform: rotate(45deg); }
+.tv-bc-fold > summary:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; border-radius: 10px; }
+.tv-bc-fold-t { flex: 1 1 auto; min-width: 0; }
+.tv-bc-fold-b { padding: 0 10px 8px; }
+.tv-bc-fold .tv-bc-fold { margin-top: 4px; }
+.tv-bc-dropped li .tv-bc-btn { margin-left: auto; flex: none; }
+.tv-bc-later { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.tv-bc-later li { display: flex; align-items: flex-start; gap: 8px; justify-content: space-between; }
+.tv-bc-table { width: 100%; border-collapse: collapse; font-size: 12.5px; table-layout: fixed; }
+.tv-bc-table th, .tv-bc-table td {
+  text-align: left; vertical-align: top; padding: 5px 6px; border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.tv-bc-table thead th { color: var(--muted-foreground); font-weight: 500; }
+.tv-bc-table tbody th { font-weight: 500; }
+.tv-bc-logo { margin: 4px 0; }
+.tv-bc-logo img {
+  display: block; max-width: 100%; max-height: 64px; padding: 10px 14px; border-radius: 10px;
+  border: 1px solid var(--border); box-sizing: border-box;
+}
+/* The light ground stays light and the dark ground stays dark in both themes: they show the site's own grounds */
+.tv-bc-logo[data-ground="light"] img { background: var(--primary-foreground); }
+.tv-bc-logo[data-ground="dark"] img { background: color-mix(in oklab, var(--primary-foreground) 12%, black); }
 @container (max-width: 560px) {
   .tv-bc-kv { grid-template-columns: 1fr; gap: 0; }
   .tv-bc-kv .tv-bc-k { padding-top: 6px; padding-bottom: 0; }
@@ -294,8 +365,8 @@ export const CSS = `
 }
 .tv-bc-review-say input:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; border-color: var(--ring); }
 @container (max-width: 560px) { .tv-bc-review-say input { height: 40px; } }
-/* The living plan card above the bar while the review waits: it scrolls in its own box, the chat keeps its room */
-.tv-bc-review-plan { max-height: 50vh; overflow-y: auto; overscroll-behavior: contain; border-radius: 16px; }
+/* The living plan card above the bar while the review waits: it grows with the chat, no scroll box of its own (#575 C5) */
+.tv-bc-review-plan { border-radius: 16px; }
 .tv-bc-review {
   box-sizing: border-box; display: flex; flex-direction: column; width: 100%; overflow: hidden;
   border: 1px solid var(--border); border-radius: 16px; background: var(--card); color: var(--card-foreground);
