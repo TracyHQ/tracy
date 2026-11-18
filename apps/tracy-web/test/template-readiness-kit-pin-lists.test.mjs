@@ -59,8 +59,9 @@ test('kit tool: a T3 kit stamped 3.0.0 (JA Diner 1.0.5 before #439) is outdated;
   assert.deepEqual([old.state, old.code], ['todo', 'kit-tool-outdated'])
   assert.deepEqual([old.params.built, old.params.required], ['3.0.0', '3.1.0'])
   assert.equal(doc.tool, 'template-kit 3.1.0')
+  // The rebuilt 1.0.8 kit (#667) is settled by the current tool; its piece stops on the gallery gaps (kit-gaps), not here.
   const d = pieceOf(diner, [KIT_TOOL_CHECK], 'template-kit')
-  assert.equal(d.state, 'done')
+  assert.notEqual(d.code, 'kit-tool-outdated')
   assert.notEqual(d.step, 'kit-tool-version')
   assert.equal(pieceOf(boxing, [KIT_TOOL_CHECK], 'template-kit').state, 'done')
   assert.notEqual(pieceOf(boxing, [KIT_TOOL_CHECK], 'template-kit').step, 'kit-tool-version')

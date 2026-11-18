@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-667-kit-rebuild-keeps-declared-fields",
+  "kind": "fix",
+  "title": "A template kit rebuilt in a folder holding only the committed kit keeps its declared site fields and the looks of unchanged shots",
+  "pr": 667,
+  "area": "quickstart-tools/template-kit",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok, none skipped."
+  ],
+  "expect": [
+    "An assemble with no site.json (a build's first one) writes the kit with the declared fields of the kit it replaces under declaredSite; the next assemble with site.json puts every declared field and noneWhy back under site, unchanged, and keeps no declaredSite.",
+    "keepLooks on a kit with no shot keeps the previous looks under looksWaiting; the next kit with the shots takes each look whose shot sha256 did not change, and keeps no looksWaiting."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-declared-site-fields.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-looks.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a build into a folder holding only the committed kit keeps its declared fields through the assemble before the site part",
+      "a rebuild in its own folder keeps the looks through the assemble that runs before any shot is taken"
+    ]
+  }
+}

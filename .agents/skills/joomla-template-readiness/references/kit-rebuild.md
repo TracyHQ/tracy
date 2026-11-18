@@ -15,7 +15,16 @@ the save/replay script all read it.
 
 When `--out` already holds a `template-kit.json`, `build` and `assemble` carry every declared field forward from it, as
 written, never recomputed. The settle commands (`samples`, `slot-roles`, `relabel`, `setting-slots`) and `pack` keep them
-too.
+too. A folder holding only the committed kit (no `site.json` yet) works the same since template-kit 3.1.4: the build's
+first assemble, which runs before the site part, keeps the fields beside the kit (`declaredSite`) and the looks
+(`looksWaiting`) until an assemble with the site part and the shots puts them back. A tool older than 3.1.4 lost them
+there (JA Diner 1.0.8 rebuild, 16/11/2026): use the save and replay below with it.
+
+After a rebuild, the person files the kit folder held are not in the committed kit: `reach-accepts.json` (from
+`checkAccepts`), `gap-accepts.json` (from the accepted `templateGaps`) and `field-drives.json` (from `storedFields[].drives`)
+are written back from it before the build, or their reasons and measurements are gone. Then measure the fields of the
+blocks the rebuild added (`measure-fields --slots <prefix,...> --scratch-site` on the throwaway stand) and run
+`slot-roles` before `pack`.
 
 ## A build into an empty folder: save and replay
 

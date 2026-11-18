@@ -167,6 +167,9 @@ export function applyLooks(kit, entries) {
 /**
  * After a rebuild, keep each look whose shot did not change: the previous kit's look of a page or block carries over
  * when the new kit names a 1440 shot with the same sha256. Returns how many were kept.
+ * A kit with no shot yet (a `build` assembles once after its read pass, before any shot is taken) keeps the previous
+ * looks beside it (`looksWaiting`, `[{sha256, text}]`) for the next assemble, which has the shots; without it every look
+ * of a kit rebuilt in its own folder was lost, unchanged shots included.
  */
 export function keepLooks(kit, previous) {
   if (!previous) return 0
@@ -174,6 +177,13 @@ export function keepLooks(kit, previous) {
   for (const item of [...(previous.pages ?? []), ...(previous.blocks ?? [])])
     if (item?.look?.sha256 && typeof item.look.text === 'string')
       old.set(String(item.look.sha256).toLowerCase(), item.look.text)
+  for (const w of Array.isArray(previous.looksWaiting) ? previous.looksWaiting : [])
+    if (typeof w?.sha256 === 'string' && typeof w.text === 'string' && !old.has(w.sha256.toLowerCase()))
+      old.set(w.sha256.toLowerCase(), w.text)
+  if (!(kit.images ?? []).length) {
+    if (old.size) kit.looksWaiting = [...old].map(([sha256, text]) => ({ sha256, text }))
+    return 0
+  }
   const entries = []
   const records = recordsOf(kit)
   const done = new Set()

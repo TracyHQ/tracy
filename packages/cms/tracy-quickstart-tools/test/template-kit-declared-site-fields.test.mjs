@@ -61,6 +61,36 @@ test('assemble keeps every hand-declared site field of the kit already in --out,
   }
 })
 
+test('a build into a folder holding only the committed kit keeps its declared fields through the assemble before the site part', async () => {
+  // `build` assembles once after the read pass, before the site part writes site.json: that kit has no site part, and
+  // the next assemble reads it as the kit already in the folder.
+  const { root, contract, out } = fixture()
+  try {
+    const opts = { contract, site: 'http://site.example', 'template-version': '1.0.0' }
+    const file = join(out, 'template-kit.json')
+    const siteJson = join(out, 'site.json')
+    const site = readFileSync(siteJson, 'utf8')
+    await assembleKit(opts, out, 'test')
+    const committed = JSON.parse(readFileSync(file, 'utf8'))
+    committed.site = { ...committed.site, ...structuredClone(DECLARED) }
+    write(file, committed)
+
+    rmSync(siteJson)
+    const before = await assembleKit(opts, out, 'test')
+    assert.ok(
+      before.errors.some((e) => e.field === 'site'),
+      'the kit says its site part did not run'
+    )
+    writeFileSync(siteJson, site)
+    const after = await assembleKit(opts, out, 'test')
+    for (const [field, value] of Object.entries(DECLARED))
+      assert.deepEqual(after.site[field], value, `site.${field} is lost or changed`)
+    assert.equal(after.declaredSite, undefined, 'nothing waits once the site part is back')
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
 test('a build into an empty folder has nothing to keep', async () => {
   const { root, contract, out } = fixture()
   try {
