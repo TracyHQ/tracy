@@ -131,6 +131,7 @@ Template: JA Essence (tracy-essence). Default locale: en. Locales: en.
 | tags_title | string | no | Tags title |
 | follow_title | string | no | Follow title |
 | more_read_title | string | no | More read title |
+| more_read_list_title | string | no | More read list title |
 | author_articles_title | string | no | Author articles title |
 | written_by | string | no | Written by |
 | share_label | string | no | Share label |

@@ -90,7 +90,7 @@
 	.es-body-pic figcaption { margin-top: 8px; font-size: 14px; text-align: center; }
 	.es-body-row { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 18px; margin: 24px 0 48px; }
 	.es-body-row .es-body-pic { margin: 0; }
-	@media (max-width: 991px) { .es-body-row { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-bottom: 24px; } }
+	@media (max-width: 991px) { .es-body-row { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-bottom: 48px; } }
 
 	/* ---- Prev / Next, share, tags ---- */
 	.es-pn { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }

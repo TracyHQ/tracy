@@ -76,9 +76,11 @@ const photo = profile ? mediaUrl(profile.avatar) : null
 			<div class="es-wrap">
 				{style === 'sidebar' ? <h1 class="sr-only">{title}</h1> : (
 					<header class:list={['es-cat-head', profile && 'is-profile']}>
-						{photo && <img class="es-cat-photo" src={photo} alt="" width="120" height="120" {...$a('avatar')} />}
-						<h1 class="es-cat-title"><span style={by === 'category' ? `--dot:${categoryDot(slug)}` : undefined}>{title}</span></h1>
-						{profile?.jobTitle && <p class="es-cat-role" {...$a('job_title')}>{profile.jobTitle}</p>}
+						<div class="es-cat-who">
+							{photo && <img class="es-cat-photo" src={photo} alt="" width="120" height="120" {...$a('avatar')} />}
+							<h1 class="es-cat-title"><span style={by === 'category' ? `--dot:${categoryDot(slug)}` : undefined}>{title}</span></h1>
+							{profile?.jobTitle && <p class="es-cat-role" {...$a('job_title')}>{profile.jobTitle}</p>}
+						</div>
 						{profile?.bio && <p class="es-cat-desc" {...$a('bio')}>{profile.bio}</p>}
 						{!profile && <p class="es-cat-count">{count}</p>}
 						{description && <p class="es-cat-desc">{description}</p>}

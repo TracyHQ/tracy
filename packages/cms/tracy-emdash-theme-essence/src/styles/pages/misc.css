@@ -82,7 +82,8 @@
 	.es-newsletter .es-btn.is-dark:hover { background: var(--color-accent-hover); border-color: #fff; }
 	.es-newsletter .es-btn:disabled { opacity: .6; cursor: not-allowed; }
 	.es-newsletter-terms { display: flex; align-items: flex-start; gap: 6px; font-size: 14px; line-height: 21px; color: rgba(255, 255, 255, .7); }
-	.es-newsletter-terms strong { font-weight: 700; color: #fff; }
+	.es-newsletter-terms span { text-wrap: balance; }
+	.es-newsletter-terms strong { font-weight: 700; color: #fff; white-space: nowrap; }
 	.es-newsletter-terms input { flex: none; width: 13px; height: 13px; margin: 4px 4px 0 0; accent-color: #fff; }
 	.es-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 	.es-newsletter-status { margin: 0; font-size: 14px; }
