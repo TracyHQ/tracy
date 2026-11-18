@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-686-skipped-dirs-second-run",
+  "kind": "fix",
+  "title": "A second own_webroot over Akeeba 7.x guard files exits 0, so an import does not die after the access verifier",
+  "pr": 686,
+  "area": "fleet/provision",
+  "cms": ["jo"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/webroot-skipped-dirs.test.mjs",
+    "S2: Record the exit code, the '# tests', '# pass', '# fail' lines and the result of the case named: \"a second run over guard files already there exits 0, whichever rule comes last\"."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0' and '# pass' equal to '# tests' (at least 11).",
+    "The named case is 'ok' (not 'not ok', not '# SKIP'): a second tracy_webroot_restore_skipped_dirs over a webroot whose com_akeeba/backup already holds .htaccess and index.html exits 0, prints nothing, and does not stop a caller running under set -euo pipefail."
+  ],
+  "selectors": {
+    "script": "tracy_webroot_restore_skipped_dirs in packages/fleet/tracy-fleet-operation/scripts/lib/webroot-skipped-dirs.sh",
+    "caller": "own_webroot in packages/fleet/tracy-fleet-operation/scripts/provision/provision.sh (called twice)"
+  },
+  "evidence": "Production 17/11/2026 22:07 UTC: import of logatel.com (label logatel-com-5ab21324) ended failed, exit code 1, log ending at 'installing the signed access verifier' with no error; the site has administrator/components/com_akeeba/backup with .htaccess and index.html written by the first own_webroot call. Red on 8b82f4bc5 test file before the fix line (not ok 4), green with it.",
+  "fence": "The function's exit status never depends on whether a guard file already existed; only stdout reports what was made.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/webroot-skipped-dirs.test.mjs"
+    ],
+    "tests": ["a second run over guard files already there exits 0, whichever rule comes last"]
+  }
+}
