@@ -740,6 +740,76 @@ test('code review of D-K14, P1 (D-K16): places-kept names the text that stayed b
   assert.deepEqual(kept, [{ at: '[0].description', value: 'Brooklyn loves us.\nBrooklyn serves you.' }])
 })
 
+test('last code review of D-K14, item 1 (D-K17): a one-word place the seed starts a sentence with is no place ("12 Main Road, View")', async () => {
+  const { placeWordConflicts } = await import('../tools/personalize.mjs')
+  const viewMap = { identity: [{ collection: 'c', slug: 'c', field: 'a', value: '{address}' }] }
+  const viewSeed = [
+    { collection: 'c', slug: 'c', data: { a: '12 Main Road, View' } },
+    { collection: 'cards', slug: 'home', data: { items: [{ description: 'View our menu.' }] } }
+  ]
+  const words = demoPlaceWordsOf(viewMap, viewSeed)
+  assert.ok(!words.has('View'), [...words].join(', '))
+  const rows = rowsWithoutDemoPlace({
+    rule: { itemFields: ['description'] },
+    rows: [{ description: 'View our menu.' }],
+    left: [0],
+    places: words,
+    facts: CR.facts
+  })
+  assert.equal(rows.rows[0].description, 'View our menu.')
+  // the template-level check names it, so a template's author sees it
+  assert.deepEqual(placeWordConflicts(viewMap, viewSeed), [
+    { word: 'View', where: ['cards/home.items[0].description: View our menu.'] }
+  ])
+  // a place the seed also capitalises inside a sentence is a proper noun, so it stays a place
+  const town = [
+    { collection: 'c', slug: 'c', data: { a: '12 Main Road, Oldtown' } },
+    { collection: 'p', slug: 'p', data: { body: 'Oldtown cares. We cook in Oldtown every day.' } }
+  ]
+  assert.ok(demoPlaceWordsOf(viewMap, town).has('Oldtown'))
+  // this file's own fixture is safe
+  assert.deepEqual(placeWordConflicts(map, entries), [])
+})
+
+test("last code review of D-K14, item 2 (D-K17): the row pass takes the entry's title before the brief's name", () => {
+  const r = rowsWithoutDemoPlace({
+    rule: { itemFields: ['description'] },
+    rows: [{ description: 'Brooklyn loves us.' }],
+    left: [0],
+    places: new Set(['Brooklyn']),
+    facts: { address: '1 Main St, Springfield', name: 'Test Cafe' },
+    title: 'Our Story'
+  })
+  assert.equal(r.rows[0].description, 'Our Story')
+  // the place pass's rows take the same chain (one function)
+  const v = withoutDemoPlace(
+    [{ description: 'Brooklyn loves us.' }],
+    new Set(['Brooklyn']),
+    { address: '1 Main St', name: 'Test Cafe' },
+    { title: 'Our Story' }
+  )
+  assert.equal(v[0].description, 'Our Story')
+})
+
+test('last code review of D-K14, item 3 (D-K17): a kept rich-text block is named by its block, not the field the pass changed', () => {
+  const card = [
+    { _type: 'block', _key: 'h', style: 'h3', markDefs: [], children: [span('Brooklyn')] },
+    { _type: 'block', _key: 'p', style: 'normal', markDefs: [], children: [span('Welcome in Brooklyn.')] }
+  ]
+  const kept = []
+  const next = withoutDemoPlace(
+    card,
+    new Set(['Brooklyn']),
+    { address: '1 Main St, Springfield' },
+    { unresolved: kept, at: '.card_text' }
+  )
+  assert.deepEqual(
+    next.map((b) => b.children.map((c) => c.text).join('')),
+    ['Brooklyn', 'Welcome.']
+  )
+  assert.deepEqual(kept, [{ at: '.card_text[0]', value: 'Brooklyn' }])
+})
+
 test('the address is a map link a template field can take ({map})', () => {
   assert.equal(
     factsFrom({ contact: '1 Main St, Springfield · +1 555 0100' }).map,

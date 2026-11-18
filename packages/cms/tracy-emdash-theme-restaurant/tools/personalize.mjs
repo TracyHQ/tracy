@@ -2216,7 +2216,11 @@ export function sentenceEnds(text) {
  * @param {any} map the personalize map @param {Array<{collection: string, slug: string, data: any}>} seedEntries
  * @returns {Set<string>}
  */
-export function demoPlaceWordsOf(map, seedEntries, { ordinary = ordinaryWordsOf(seedEntries) } = {}) {
+export function demoPlaceWordsOf(
+  map,
+  seedEntries,
+  { ordinary = ordinaryWordsOf(seedEntries), guard = true, addressValues = [] } = {}
+) {
   const words = new Set()
   /** The demo values a rule fills with `{address}`: the field itself, or the fields of the rows a `rows` rule names. */
   const sources = (rule, e) => {
@@ -2241,6 +2245,7 @@ export function demoPlaceWordsOf(map, seedEntries, { ordinary = ordinaryWordsOf(
     for (const e of seedEntries) {
       if (e.collection !== rule.collection || e.slug !== rule.slug) continue
       for (const demo of sources(rule, e)) {
+        addressValues.push(demo)
         // 🔒 A PLACE IS A NAME, NOT A WORD (independent review of JA Diner 0.1.3, 18/11/2026, D-K14): "Mountain View" made
         // "View" a place, and both slides lost their "View full menu" button. The address is read segment by segment (its
         // commas, lines and line breaks); in each, a run of capitalised words that are not street or address nouns is ONE
@@ -2284,7 +2289,91 @@ export function demoPlaceWordsOf(map, seedEntries, { ordinary = ordinaryWordsOf(
       }
     }
   }
+  // the guard: a one-word place the seed also uses as an ordinary word is refused (`placeWordConflictsIn`, D-K17)
+  if (guard) for (const w of placeWordConflictsIn(words, seedEntries, addressValues).keys()) words.delete(w)
   return words
+}
+
+/**
+ * 🔒 A ONE-WORD PLACE THE TEMPLATE ALSO USES AS AN ORDINARY WORD IS NO PLACE (last code review of D-K14, D-K17): with the
+ * demo address "12 Main Road, View", "View" became a place and a row's "View our menu." took the brief's name. The demo's
+ * place words come from the template's own fixed address, so the guard reads the seed the run personalizes: a one-word
+ * place that starts a sentence, a line or a label there as an ordinary word is refused. An ordinary use is the word
+ * followed by a lower-case word that is neither a street or address noun nor a word of the template's own demo address
+ * values ("View our", "Park your"), or the word alone in a button's or a link's label; a place use is the word followed
+ * by an address word ("Hogsmeade Village", "Kalugan alue"), a list (a comma), a number, an inflection glued to it
+ * ("Kaluga'da", "Kaluga-வில்"), or a capitalised word. A word the seed also capitalises inside a sentence, outside the
+ * demo address values, is a proper noun there and stays a place ("Vorsino tehas" beside "… parc industriel de Vorsino").
+ * `placeWordConflicts` is the same check for a template's tests.
+ * @param {Set<string>} words @param {Array<{collection?: string, slug?: string, data: any}>} seedEntries
+ * @param {string[]} addressValues the demo address values the words came from
+ * @returns {Map<string, string[]>} each refused word, with where the seed uses it as an ordinary word
+ */
+function placeWordConflictsIn(words, seedEntries, addressValues) {
+  const single = [...words].filter((w) => !w.includes(' '))
+  const out = new Map()
+  if (single.length === 0) return out
+  const vocabulary = new Set()
+  for (const a of addressValues)
+    for (const m of String(a)
+      .toLowerCase()
+      .matchAll(/\p{L}+/gu))
+      vocabulary.add(m[0])
+  const continues = (next) => isStreetWord(next.toLowerCase()) || vocabulary.has(next.toLowerCase())
+  /** The one-word places the seed also capitalises inside a sentence: proper nouns, so places. */
+  const proper = new Set()
+  const sources = new Set(addressValues.map((a) => String(a)))
+  const walk = (v, key, where) => {
+    if (typeof v === 'string') {
+      if (
+        /^_|(?:^|_)(?:slug|id|url|href|link|path|src)$/i.test(key) ||
+        /:\/\/|^\/|^[\w./@-]+$/.test(v.trim())
+      )
+        return
+      for (const line of v.replace(/<[^>]*>/g, '\n').split('\n')) {
+        const starts = [0, ...sentenceEnds(line).filter((x) => x < line.length)]
+        // a capitalised use after a sentence's first word, outside the demo address values: a proper noun
+        if (!sources.has(v))
+          for (const m of line.matchAll(/(?<![\p{L}\p{N}])\p{Lu}\p{L}*/gu))
+            if (
+              single.includes(m[0]) &&
+              !starts.some((at) => /^\s*["'“‘(«]?$/u.test(line.slice(at, m.index)))
+            )
+              proper.add(m[0])
+        for (const at of starts) {
+          const m = /^\s*["'“‘(«]?(\p{L}+)/u.exec(line.slice(at))
+          if (!m || !single.includes(m[1])) continue
+          const rest = line.slice(at + m[0].length)
+          if (/^['’\-\p{L}]/u.test(rest) || /^\s*[,;:(]/.test(rest)) continue
+          const next = /^\s+([\p{L}\p{N}]+)/u.exec(rest)?.[1]
+          const ordinaryUse =
+            next === undefined ? LABEL_KEY.test(key) : /^\p{Ll}/u.test(next) && !continues(next)
+          if (ordinaryUse)
+            out.set(m[1], [...(out.get(m[1]) ?? []), `${where}: ${line.slice(at).trim().slice(0, 60)}`])
+        }
+      }
+    } else if (Array.isArray(v)) v.forEach((x, i) => walk(x, key, `${where}[${String(i)}]`))
+    else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) walk(x, k, `${where}.${k}`)
+  }
+  for (const e of seedEntries ?? []) walk(e?.data, '', `${String(e?.collection)}/${String(e?.slug)}`)
+  for (const w of proper) out.delete(w)
+  return out
+}
+
+/**
+ * The template-level check of the place-word guard (D-K17, a test of every template and the kit's docs for a new one):
+ * the demo's one-word places, derived from the real seed and content map by `demoPlaceWordsOf` itself, that the same seed
+ * also uses as ordinary words. Empty when the template's demo address is safe.
+ * @param {any} map @param {Array<{collection?: string, slug?: string, data: any}>} seedEntries
+ * @returns {Array<{word: string, where: string[]}>}
+ */
+export function placeWordConflicts(map, seedEntries) {
+  const addressValues = []
+  const words = demoPlaceWordsOf(map, seedEntries, { guard: false, addressValues })
+  return [...placeWordConflictsIn(words, seedEntries, addressValues)].map(([word, where]) => ({
+    word,
+    where
+  }))
 }
 
 /**
@@ -2630,6 +2719,40 @@ const yearOf = (row) => {
 const nameFallbackOf = (facts) =>
   typeof facts?.name === 'string' && facts.name.trim() !== '' ? facts.name.trim() : null
 
+/**
+ * 🔒 ONE FALLBACK CHAIN FOR EVERY PASS (last code review of D-K14, D-K17: the row pass skipped the entry's title and wrote
+ * the brief's name where "Our Story" was due). A heading, the body or a field of one short sentence whose words a place
+ * took falls back to the row's year, else the entry's title, else the brief's name; an entry's own title has none (it
+ * keeps its words, D-K14); any other field has none (it keeps its words and is reported).
+ * @param {{ key: string, value: unknown, row?: any, title?: string | null, facts?: Record<string, unknown> | null, ownTitle?: boolean }} at
+ * @returns {string | null}
+ */
+export function neutralFallbackOf({ key, value, row = null, title = null, facts = null, ownTitle = false }) {
+  if (ownTitle) return null
+  if (!(HEADING_KEYS.test(key) || key === 'body' || shortText(value))) return null
+  return (
+    (row ? yearOf(row) : null) ??
+    (typeof title === 'string' && title !== '' ? title : null) ??
+    nameFallbackOf(facts)
+  )
+}
+
+/**
+ * The entry's title as a fallback: its title as the run leaves it (renamed), unless it names the demo's place or is its
+ * collection's own label ("Site chrome": a record's name for editors, D-K14).
+ * @param {unknown} title @param {string} collection @param {any[]} collections @param {Set<string>} places
+ * @param {Record<string, unknown> | null} facts @returns {string | null}
+ */
+export function entryTitleFallbackOf(title, collection, collections, places, facts) {
+  if (typeof title !== 'string' || title.trim() === '') return null
+  if (holdsPlace(title, places, customerSpansOf(facts))) return null
+  const c = (Array.isArray(collections) ? collections : []).find((x) => x?.slug === collection)
+  const labels = [c?.label, c?.labelSingular]
+    .filter((l) => typeof l === 'string')
+    .map((l) => l.trim().toLowerCase())
+  return labels.includes(title.trim().toLowerCase()) ? null : title
+}
+
 /** The digits of a phone number as written ("(084) 555-0110" → "0845550110", "tel:+10845550110" → "10845550110"). */
 const phoneDigits = (text) => String(text).replace(/\D/g, '')
 /** A phone-like run of a text: digits with the separators people write between them. */
@@ -2840,7 +2963,7 @@ export function withoutDemoPlace(
   value,
   places,
   facts = null,
-  { fallback = null, required = false, unresolved = null, only = null, at = '' } = {}
+  { fallback = null, required = false, unresolved = null, only = null, at = '', title = null } = {}
 ) {
   if (places.size === 0) return null
   const protect = customerSpansOf(facts)
@@ -2876,7 +2999,7 @@ export function withoutDemoPlace(
         { ...facts, address: facts?.address || ' ' },
         { places, fallback, unresolved: inner }
       )
-      for (const u of inner) unresolved?.push({ at, value: u?.value ?? u })
+      for (const u of inner) unresolved?.push({ at: `${at}${u?.at ?? ''}`, value: u?.value ?? u })
       // a heading block kept as written (no fallback) leaves the value as it was: nothing changed
       if (left === null || JSON.stringify(left.value) === JSON.stringify(value)) return null
       // a rich text with nothing readable left keeps its words and is reported, never emptied (D-K14)
@@ -2893,6 +3016,7 @@ export function withoutDemoPlace(
         required,
         unresolved,
         only,
+        title,
         at: `${at}[${String(n)}]`
       })
       if (next === null) return row
@@ -2908,14 +3032,13 @@ export function withoutDemoPlace(
       if (key.startsWith('_')) continue
       // only the row fields the rule names, and never a button's or a link's label (D-K14)
       if ((Array.isArray(only) && !only.includes(key)) || LABEL_KEY.test(key)) continue
-      // A row's heading, or a field of one short sentence, falls back to the row's year, else the caller's, else the site's
-      // name; its other words have none.
-      const heading = HEADING_KEYS.test(key) || shortText(v)
-      const own = heading ? (yearOf(value) ?? fallback ?? nameFallbackOf(facts)) : null
+      // the one chain (`neutralFallbackOf`): the row's year, the entry's title (or the caller's value), the brief's name
+      const own = neutralFallbackOf({ key, value: v, row: value, title: title ?? fallback, facts })
       const next = withoutDemoPlace(v, places, facts, {
         fallback: own,
-        required: heading,
+        required: own !== null,
         unresolved,
+        title,
         at: `${at}.${key}`
       })
       if (next !== null) {
@@ -2937,7 +3060,7 @@ export function withoutDemoPlace(
  * @param {{ rule: { itemFields: string[] }, rows: any[], left: number[], places: Set<string>, facts: Record<string, unknown> }} input
  * @returns {{ rows: any[], left: number[], emptied: number[] }}
  */
-export function rowsWithoutDemoPlace({ rule, rows, left, places, facts }) {
+export function rowsWithoutDemoPlace({ rule, rows, left, places, facts, title = null }) {
   if (String(facts?.address ?? '').trim() === '' || places.size === 0)
     return { rows, left, emptied: [], kept: [] }
   const out = [...rows]
@@ -2958,10 +3081,10 @@ export function rowsWithoutDemoPlace({ rule, rows, left, places, facts }) {
     if (naming.length === 0) continue
     const changes = {}
     for (const f of naming) {
-      const chained = HEADING_KEYS.test(f) || shortText(row[f])
       const stayed = []
+      // the one chain (`neutralFallbackOf`): the row's year, the entry's title, the brief's name (D-K17)
       const next = withoutDemoPlace(row[f], places, facts, {
-        fallback: chained ? (yearOf(row) ?? nameFallbackOf(facts)) : null,
+        fallback: neutralFallbackOf({ key: f, value: row[f], row, title, facts }),
         unresolved: stayed
       })
       if (next !== null) changes[f] = next
@@ -3008,7 +3131,7 @@ export function withoutDemoFacts(
   let changed = false
   const protect = customerSpansOf(facts)
   const placesOn = String(facts?.address ?? '').trim() !== '' && places.size > 0
-  const out = value.map((b) => {
+  const out = value.map((b, n) => {
     if (markedTextOf(b) === null) return b
     const facted = new Map(
       [...outsideLinksOf(b, facts)].filter(([mark]) => factOfLink(hrefOf(b, mark)) !== null)
@@ -3135,7 +3258,8 @@ export function withoutDemoFacts(
       }
     // a heading with no fallback keeps its words and is reported, never dropped (code review, 18/11/2026)
     if (/^h[1-6]$/.test(String(b.style))) {
-      unresolved?.push(b.children.map((c) => String(c?.text ?? '')).join(''))
+      // named by its block (`[0]`), so a field the pass changed elsewhere is never reported as kept (D-K17)
+      unresolved?.push({ at: `[${String(n)}]`, value: b.children.map((c) => String(c?.text ?? '')).join('') })
       return b
     }
     return null
@@ -6340,7 +6464,20 @@ async function main() {
             if (sig(retry.rows[j]) !== sig(demoRows[at])) out.rows[at] = retry.rows[j]
           })
       }
-      const placed = rowsWithoutDemoPlace({ rule, rows: out.rows, left: echoed(), places: demoPlaces, facts })
+      const placed = rowsWithoutDemoPlace({
+        rule,
+        rows: out.rows,
+        left: echoed(),
+        places: demoPlaces,
+        facts,
+        title: entryTitleFallbackOf(
+          patches.get(key)?.fields?.title ?? e.data?.title,
+          rule.collection,
+          seed.collections,
+          demoPlaces,
+          facts
+        )
+      })
       out.rows = placed.rows
       if (placed.emptied.length > 0)
         rewritten.skipped.push({
@@ -7010,15 +7147,6 @@ async function main() {
     const places = demoPlacesBesides(demoPlaces, facts)
     if (places.size === 0) return
     const protect = customerSpansOf(facts)
-    /** Each collection's own labels, lower case: an entry titled with one is a record, not a visitor's heading. */
-    const recordLabels = new Map(
-      (Array.isArray(seed.collections) ? seed.collections : []).map((c) => [
-        c.slug,
-        new Set(
-          [c.label, c.labelSingular].filter((l) => typeof l === 'string').map((l) => l.trim().toLowerCase())
-        )
-      ])
-    )
     const owned = [
       ...(map.copy ?? []).map((r) => ({ collection: r.collection, slugs: [r.slug], fields: [r.field] })),
       ...(map.rewrite ?? []).map((r) => ({
@@ -7054,24 +7182,18 @@ async function main() {
         const now = patches.get(k)?.fields?.[f]
         // the fallback chain of a heading: the entry's title as this run leaves it (renamed), else the site's name
         const current = patches.get(k)?.fields?.title ?? e.data?.title
-        // an entry title that is its collection's own label ("Site chrome") names the record for editors, not for
-        // visitors: no fallback (D-K14: `news_title` read "Site chrome")
-        const title =
-          typeof current === 'string' &&
-          !holdsPlace(current, places, protect) &&
-          !recordLabels.get(e.collection)?.has(current.trim().toLowerCase())
-            ? current
-            : null
+        // the entry's title step of the chain, shared with the row pass (`entryTitleFallbackOf`, D-K14, D-K17)
+        const title = entryTitleFallbackOf(current, e.collection, seed.collections, places, facts)
         const stayed = []
         const value = now !== undefined ? now : e.data?.[f]
         // 🔒 AN ENTRY'S OWN TITLE NEVER BECOMES THE BRAND (D-K14): a post's title is editorial content; with its place a core
-        // word and nothing left, it keeps its words and is reported. A heading or a one-sentence field takes the chain.
-        const chained = f !== 'title' && (HEADING_KEYS.test(f) || f === 'body' || shortText(value))
+        // word and nothing left, it keeps its words and is reported. The chain is the shared one (`neutralFallbackOf`).
         const next = withoutDemoPlace(value, places, facts, {
-          fallback: chained ? (title ?? nameFallbackOf(facts)) : null,
+          fallback: neutralFallbackOf({ key: f, value, title, facts, ownTitle: f === 'title' }),
           required: HEADING_KEYS.test(f),
           unresolved: stayed,
-          only
+          only,
+          title
         })
         for (const u of stayed) placesUnresolved.push(`${k}.${f}${u?.at ?? ''}: ${plainOf(u?.value ?? u)}`)
         if (next === null) continue
