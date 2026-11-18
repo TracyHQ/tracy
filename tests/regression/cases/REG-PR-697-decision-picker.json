@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-697-decision-picker",
+  "kind": "feat",
+  "title": "The picture picker answers through Gemini Decision 1 when its door is assigned that model",
+  "pr": 697,
+  "area": "website-opportunities/pictures",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Each frame is one choice question among its own photos and other; each photo is sent once at low resolution.",
+    "A fix round asks only the frames its failure list names, without the photos picked for them before.",
+    "A 429 is waited out; a refusal is a failed turn; any other door model keeps the chat picker."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-pictures-decision-picker.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "each frame is one choice among its own photos and \"other\"; the photos follow once each, after their code",
+      "a fix round asks only the frames its failure list names, without the photos picked for them before",
+      "a rate limit is waited out and asked again; a refusal fails the turn with the endpoint status",
+      "the picture step answers through Decision 1 only when its door is assigned that model"
+    ]
+  }
+}

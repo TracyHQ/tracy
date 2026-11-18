@@ -2522,6 +2522,13 @@ picture check grades. It builds no site, writes nothing to one and has **no scre
   shortlist per specific frame, never a demo picture of the kit. A run whose plan has no specific frame needs no door
   and calls no model. Fix rounds send back only the picker's failing frames (at most two); the DeepSeek balance is read
   before and after, as on the other benches. Migration 199 adds the door to the door check.
+  The door may also be assigned `gemini-decision-1` on a `google` provider (18/11/2026,
+  [`site-pictures/decision-picker.js`](apps/tracy-web/src/site-pictures/decision-picker.js)): each round is then one
+  call to Google's decisions endpoint (the provider's base address without `/openai`, its key in `x-goog-api-key`), one
+  `choice` question per frame among its shortlist and "other", with the same thumbnails at low resolution (280 tokens
+  each); the answer is written as the picks the chat picker gives and a fix round asks again only for its failing frames
+  without the photos picked before. The owner photos then go to Google; on its free tier Google may use what is sent to
+  improve its products, so assigning the door is the operator's decision about that data.
 - **Icons** (#345): icon frames get a Phosphor icon; the names code shortlists are ranked by one text call through the
   `pictureIconRanker` door (`openai/gpt-6-luna`; unset, the shortlist order decides, migration 200), and the weight,
   colour and plate are measured from the kit's demo icons, read once per kit release from the release's webroot tar.gz

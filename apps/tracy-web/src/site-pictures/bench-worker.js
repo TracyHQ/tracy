@@ -43,6 +43,7 @@ import { joinSurface } from './frame-surface/surface.js'
 import { surfaceFor } from './frame-surface/surface-cache.js'
 import { iconStepFor } from './icon-step.js'
 import { openKitWithMap } from './kit-with-map.js'
+import { decisionAgent, isDecisionDoor } from './decision-picker.js'
 import { createDrawing } from './ladder-draw.js'
 import { createFinisher } from './ladder-step.js'
 import { runLookerDoor } from './looker-door.js'
@@ -120,7 +121,10 @@ export const SITE_PICTURES_STEP = Object.freeze({
     firstUser: ready.firstUser,
     tools: [],
     resolveImage: ready.picker ? thumbnailResolver(ready.picker) : undefined
-  })
+  }),
+  // The "Picture picker" door assigned Gemini Decision 1: each round is one decisions call (decision-picker.js).
+  runAgentFor: ({ ready }) =>
+    isDecisionDoor(ready.door) && ready.picker ? decisionAgent(ready.picker) : null
 })
 
 /**
