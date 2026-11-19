@@ -315,11 +315,13 @@ export function createStepChainSteps(deps) {
         '--brief-revision',
         revisionOf(ctx),
         '--require-visual-review',
-        // The first draft in three parts written at once (site-writer/writer-parts.js). Local stand, run13's plan
-        // (15/11/2026): 509 s against 594 s, 27 first-draft failures against 79 (repeats 18 against 66), 3 standing
-        // against 11; the copy step's spend doubles (0.19 against 0.09 USD).
+        // The first draft in five parts written at once (site-writer/writer-parts.js). Local stand, run13's plan
+        // (15/11/2026), three parts: 509 s against 594 s, 27 first-draft failures against 79 (repeats 18 against 66), 3
+        // standing against 11; the copy step's spend doubles (0.19 against 0.09 USD). Five since 19/11/2026: on dev the
+        // copy step became BXR London's longest (8.9 to 10.2 minutes) and its round 0 waited on its heaviest of three
+        // parts (367 s against 177 s for the lightest); each part's first message is the same cached fixed part.
         '--parallel-pages',
-        '3',
+        '5',
         ...NO_CAPS
       ]
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
