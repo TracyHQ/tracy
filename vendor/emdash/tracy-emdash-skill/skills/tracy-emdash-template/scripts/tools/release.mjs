@@ -469,7 +469,7 @@ docker build -t ${slug}:${version} . && docker run -d -p 4321:4321 -v "$PWD/data
 tools/bootstrap-site.sh http://127.0.0.1:4321 ./data   # seeds when the state was not restored; mints the agent token either way
 \`\`\`
 
-Without Docker: \`pnpm install --frozen-lockfile && pnpm build && node dist/server/entry.mjs\` (Node ≥ 22.16).
+Without Docker: \`pnpm install --frozen-lockfile && pnpm build && node dist/server/entry.mjs\` (Node ≥ 22.23.4).
 
 ### Files
 

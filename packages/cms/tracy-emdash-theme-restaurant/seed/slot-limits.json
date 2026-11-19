@@ -35,6 +35,11 @@
 			"slot": "chrome.chrome.appearance_label",
 			"nonVisual": true,
 			"from": "the label is the accessible name (`aria-label`) of the light/dark icon button in the header (Header.astro): no page draws it in a box, and the field declares no maxLength, so it has no limit"
+		},
+		{
+			"slot": "chrome.chrome.copyright",
+			"maxCharacters": 92,
+			"from": "the footer copyright line (Footer.astro, the `copyright` field with `{year}` and `{name}` filled in): the paragraph was filled in the page, on a clean install of this theme (Playwright, Chromium), with longer text until it gained a row: 170 characters at 1440 px and 110 at 768 px (one row), 92 at 390 px (two rows); counted as printed, with the demo year and business name (2026-11-17, release 1.0.3)"
 		}
 	]
 }

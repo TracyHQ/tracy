@@ -156,5 +156,11 @@ try {
   }
   await browser.close()
 }
-writeFileSync(out, JSON.stringify(report, null, 2) + '\n')
-process.exitCode = report.steps.every((s) => s.pass) ? 0 : 1
+// One verdict at the top (second independent review of JA Restaurant 1.0.3: the pass had to be read from every step):
+// `status` pass or fail, and `failed` names the steps that did not pass. The exit code says the same.
+const failed = report.steps.filter((s) => !s.pass).map((s) => s.name)
+writeFileSync(
+  out,
+  JSON.stringify({ status: failed.length === 0 ? 'pass' : 'fail', failed, ...report }, null, 2) + '\n'
+)
+process.exitCode = failed.length === 0 ? 0 : 1

@@ -5,9 +5,9 @@
     "tracy-diner/emdash-0.x": "0.1.0"
   },
   "maxVersion": {
-    "tracy-diner/emdash-0.x": "0.1.2"
+    "tracy-diner/emdash-0.x": "0.1.4"
   },
-  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-size-*, --ds-leading-display, --ds-tracking-display, --ds-btn-radius, --ds-card-radius, --ds-input-radius) in the rules of the roles this contract declares, and every colour role systems define (styles/tokens.css and global.css; the roles the site has no place for are declared ds-not-used); src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base. 0.1.1 changes no rule that reads a --ds-* value (one footer rule for its tel: links, colour inherit) and reads the same tokens. 0.1.2 changes no stylesheet: only the blog list's masonry script and the home news slider fit run again when fonts and pictures settle.",
+  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-size-*, --ds-leading-display, --ds-tracking-display, --ds-btn-radius, --ds-card-radius, --ds-input-radius) in the rules of the roles this contract declares, and every colour role systems define (styles/tokens.css and global.css; the roles the site has no place for are declared ds-not-used); src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base. 0.1.1 changes no rule that reads a --ds-* value (one footer rule for its tel: links, colour inherit) and reads the same tokens. 0.1.2 changes no stylesheet: only the blog list's masonry script and the home news slider fit run again when fonts and pictures settle. 0.1.3 is 0.1.2 with the picomatch patch (GHSA-fc5q-39xc-vjpf) and the version only: src/ and every stylesheet byte-identical to 0.1.2, the same reader (contracts/0.1.3 carries the 0.1.2 measurement). 0.1.4 changes no stylesheet and no file under src/ or public/ (the content map, Personalize and the release tool only); measured again on the released site of the candidate cut as 0.1.3 before the renumber, flow 64/64.",
   "release": "tracy-diner/emdash-0.x@0.1.0",
   "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
   "readsComponents": true,

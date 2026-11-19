@@ -7,12 +7,13 @@
 // The schema is the one the Joomla and WordPress coverage and flow-reads already consume (`entities`, `slots`, `pages`),
 // with `target` naming the EmDash field instead of a database column:
 //
-//   slot    { key, entity, target: {collection, entry, field[, item, sub]}, type, sample, label, role?, group? }
+//   slot    { key, entity, target: {collection, entry, field[, item, sub]}, type, sample, label, role?, group?, customize? }
 //           type: text (a string/text field) · image · url (a link field) · richtext (a Portable Text field) · date ·
 //           term (a category or tag label, entity `taxonomy.<name>`)
 //           key: `<collection>.<entry slug>.<field>`, `...<field>[<i>].<sub>` in a repeater row, `settings.<field>`.
 //           The keys, roles and groups of the copy fields are the ones `contentMapOfFieldMap` derives, so the roles the
-//           Road to live reads from the field map and from this file are one and the same.
+//           Road to live reads from the field map and from this file are one and the same. In a place-content-roles/3
+//           map a link, a date, a rich text and a term have a role too, and `customize: "keep"` follows from the role.
 //   entity  { key: "<collection>.<slug>", kind: "entry", identity: {collection, slug} }
 //   page    { entity, route, openAs, title, view }: an entry with a public path of its own.
 //
@@ -22,6 +23,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 import {
+  LINK_FIELD,
   contentMapOfFieldMap,
   defaultLocaleEntries,
   isCopylessField,
@@ -34,7 +36,16 @@ export const EMDASH_MAP_SCHEMA = 'tracy-quickstart-content-map/emdash/v1'
 export const MEASURED_MAP_KEYS = Object.freeze(['slotFitVersion', 'fitGroups'])
 
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
-const LINK_FIELD = /(^|_)(url|href|webpage)\d*$|link\d*$|^link(_|$)/
+
+/** The role, card and keep flag the field map gives a slot (`customize` only in a version 3 map, ADR 0040). */
+const declaredOf = (declared) =>
+  declared
+    ? {
+        role: declared.role,
+        ...(declared.group ? { group: declared.group } : {}),
+        ...(declared.customize ? { customize: declared.customize } : {})
+      }
+    : {}
 
 /** An address as an HTML attribute value. */
 const attr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;')
@@ -169,23 +180,19 @@ export function emdashContentMapOf({
   version
 }) {
   const fieldMap = normalizeFieldMap(rawFieldMap, seed)
-  const roleSlots = new Map(contentMapOfFieldMap({ seed, fieldMap }).slots.map((s) => [s.key, s]))
+  const roles = contentMapOfFieldMap({ seed, fieldMap })
+  if (roles.errors?.length) throw new Error(`field-map.json: ${roles.errors.join('; ')}`)
+  const roleSlots = new Map(roles.slots.map((s) => [s.key, s]))
   const locale = seed?.defaultLocale ?? 'en'
   const slots = []
   const entities = []
   const pages = []
 
   const push = (key, entity, target, type, sample, label) => {
-    const declared = roleSlots.get(key)
-    const slot = { key, entity, target, type, sample, label }
-    // A link with nothing in it is no slot. A link slot has no role: the vocabulary of these themes (place-content-roles/2)
-    // has no link role (R3, which asks for one, applies to place-content-roles/3 only).
+    // A link with nothing in it is no slot. A link slot takes its role from a version 3 field map
+    // (`editorial.navigation_url`, `contact.cta_url`, ...); version 2 has no link role.
     if (type === 'url' && (!sample.trim() || sample.trim().startsWith('<'))) return
-    if (declared) {
-      slot.role = declared.role
-      if (declared.group) slot.group = declared.group
-    }
-    slots.push(slot)
+    slots.push({ key, entity, target, type, sample, label, ...declaredOf(roleSlots.get(key)) })
   }
 
   for (const name of ['title', 'tagline']) {
@@ -198,8 +205,7 @@ export function emdashContentMapOf({
       sample: String(seed?.settings?.[name] ?? ''),
       label: name === 'title' ? 'Site title' : 'Tagline'
     }
-    if (declared)
-      Object.assign(slot, { role: declared.role, ...(declared.group ? { group: declared.group } : {}) })
+    Object.assign(slot, declaredOf(declared))
     slots.push(slot)
   }
   entities.push({ key: 'settings', kind: 'settings', identity: {} })
@@ -288,7 +294,8 @@ export function emdashContentMapOf({
         target: { taxonomy: taxonomy.name, term: term.slug },
         type: 'term',
         sample: String(term.label ?? term.slug),
-        label: `${taxonomy.labelSingular ?? taxonomy.name}: ${term.label ?? term.slug}`
+        label: `${taxonomy.labelSingular ?? taxonomy.name}: ${term.label ?? term.slug}`,
+        ...declaredOf(roleSlots.get(`${entity}.${term.slug}`))
       })
     }
   }

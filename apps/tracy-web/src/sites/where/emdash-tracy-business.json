@@ -32,7 +32,8 @@
     "1.7.21",
     "1.7.22",
     "1.7.23",
-    "1.7.25"
+    "1.7.25",
+    "1.7.26"
   ],
   "verifiedReleases": [
     {
@@ -202,6 +203,12 @@
       "zipSha256": "01973cb90881c6f84918e7fd3d9ae36453fda3dd5d6b0cf961fa203199111f6a",
       "checked": "2026-11-01",
       "note": "Release zip tracy-business-emdash-quickstart-1.7.23.zip (sha256 matched its SHA256SUMS on the rolling release tracy-business/emdash-0.x, downloaded 31/10/2026). The source moved to 1.7.25 (#271, the cached Content API reader); its other files changed since the release as well (language menu, form words, tools, tests, version stamps). Each of the 46 proofs of this map that names a file of the template holds on the zip's own bytes; the other 22 name vendor files outside the release."
+    },
+    {
+      "version": "1.7.26",
+      "zipSha256": "c8d990fc377d81f83f8c0f1610d90b60310e9b0e88799b77e57ecf4adf5448a9",
+      "checked": "2026-11-18",
+      "note": "Release zip tracy-business-emdash-quickstart-1.7.26.zip, the security patch release of 1.7.23 (picomatch GHSA-fc5q-39xc-vjpf) cut by scripts/emdash-patch-release.mjs from the published 1.7.23 zip (01973cb9…, matched its SHA256SUMS on 18/11/2026). Compared file by file with the 1.7.23 zip: only patches/ (added), pnpm-workspace.yaml, pnpm-lock.yaml (the patch entries), Dockerfile (COPY patches, version label), package.json, template.config.json, docs/generated/inventory.json and distribution.json differ; every file under src/ and seed/ and astro.config.mjs is byte-identical, so each proof that held on 1.7.23 holds on 1.7.26. The sha256 is the zip of that cut; the cut is deterministic (the same published zip and the same patches give the same bytes), so a re-cut gives this sha256 again."
     }
   ],
   "topics": {

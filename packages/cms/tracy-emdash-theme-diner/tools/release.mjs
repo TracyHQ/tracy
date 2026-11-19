@@ -32,10 +32,11 @@ import net from 'node:net'
 import os from 'node:os'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
+import Database from 'better-sqlite3'
 import { isRouteField, localPathProblems, shownOrigin, verifyDistribution } from './distribution.mjs'
 import { personalizeProblems, questionProblems } from './personalize-gate.mjs'
 import { contentApiProblems } from './content-api-gate.mjs'
-import { stateResidue } from './state-residue.mjs'
+import { sqlText, stateResidue } from './state-residue.mjs'
 
 // The rule that decides which pages a customer may keep or hide is the one Tracy's readiness check
 // holds the file to (REL-2): it is read from the tracy checkout TRACY_CHECKOUT names (the folder
@@ -340,9 +341,15 @@ mkdirSync(path.join(stage, 'data'), { recursive: true })
 const dbSrc = path.join(seeded, 'data', 'data.db')
 if (!existsSync(dbSrc)) fail(`no ${dbSrc}; the fresh seed wrote no database`)
 const db = path.join(stage, 'data', 'data.db')
-// `.backup` gives a consistent copy even if the site is still serving; a plain cp would not.
-execFileSync('sqlite3', [dbSrc, `.backup '${db}'`])
-const sql = (q) => execFileSync('sqlite3', [db, q], { encoding: 'utf8' }).trim()
+// A backup gives a consistent copy even if the site is still serving; a plain cp would not. Through
+// better-sqlite3 (a dependency of the template), not the sqlite3 CLI, which a machine may not have (G5).
+{
+  const source = new Database(dbSrc, { readonly: true, fileMustExist: true })
+  await source.backup(db)
+  source.close()
+}
+const stateDb = new Database(db)
+const sql = sqlText(stateDb)
 // `users` stays: the agent account (email + role, no credential) is what keeps EmDash's setup
 // marked complete — without a user the site reports `needsSetup` and bootstrap would seed twice.
 // mint-admin.cjs reuses that user by email and mints a fresh token for it.
@@ -435,6 +442,7 @@ const collections = Object.fromEntries(
     .map((t) => [t.slice(3), Number(sql(`select count(*) from ${t}`))])
 )
 const media = Number(sql('select count(*) from media'))
+stateDb.close()
 copyFileSync(path.join(seeded, 'data', 'seed-receipts.json'), path.join(stage, 'data', 'seed-receipts.json'))
 const uploads = walk(path.join(seeded, 'uploads'))
 if (uploads.length !== media) console.warn(`?? ${uploads.length} files in uploads/ vs ${media} media rows`)
@@ -540,7 +548,7 @@ docker exec -u www-data -w /app ${slug} tools/bootstrap-site.sh http://127.0.0.1
 
 Run the bootstrap inside the container, as above: the unzipped folder on the host has no \`node_modules\`, so \`tools/mint-admin.cjs\` cannot load \`better-sqlite3\` there. The container owns the mounted \`data/\` (user \`www-data\`): read \`data/tracy-agent.token\` with \`docker exec ${slug} cat /app/data/tracy-agent.token\`.
 
-Without Docker: \`pnpm install --frozen-lockfile && pnpm build && node dist/server/entry.mjs\` (Node ≥ 22.16).
+Without Docker: \`pnpm install --frozen-lockfile && pnpm build && node dist/server/entry.mjs\` (Node ≥ 22.23.4).
 
 ### Files
 

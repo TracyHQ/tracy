@@ -58,10 +58,19 @@ rsync -a \
   --exclude '*.before-restore-*' --exclude '*.log' --exclude .git \
   "$SRC/" "$DEST/"
 cd "$DEST"
-echo "==> pnpm install --frozen-lockfile"
-pnpm install --frozen-lockfile --reporter=append-only 2>&1 | tail -3
-echo "==> astro build"
-pnpm exec astro build 2>&1 | tail -5
+# The whole output of each step stays in the target (install.log, build.log); the terminal shows its end, and a
+# failure shows the last 40 lines and how to go on (second independent review of JA Restaurant 1.0.3: a build that
+# failed on a font download showed only a stack tail, and the used target then refused a rerun).
+step_failed() {
+  tail -n 40 "$DEST/$2"
+  die "$1 failed (whole log: $DEST/$2). The target now holds this copy: finish it in place (cd $DEST && $3, then start the server and run tools/bootstrap-site.sh as the README's built steps say), or remove $DEST and run clean-install again"
+}
+echo "==> pnpm install --frozen-lockfile (log: $DEST/install.log)"
+pnpm install --frozen-lockfile --reporter=append-only > install.log 2>&1 || step_failed "pnpm install" install.log "pnpm install --frozen-lockfile"
+tail -n 3 install.log
+echo "==> astro build (log: $DEST/build.log; the build downloads the web fonts, so it needs network access)"
+pnpm exec astro build > build.log 2>&1 || step_failed "astro build" build.log "pnpm exec astro build"
+tail -n 5 build.log
 mkdir -p data uploads
 echo "==> starting on :$PORT (log: $DEST/server.log)"
 # EmDash 1.0 refuses production setup without a site URL (SITE_URL_REQUIRED); the fleet sets one.

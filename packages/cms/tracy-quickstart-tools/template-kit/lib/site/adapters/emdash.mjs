@@ -149,7 +149,8 @@ export function emdashAdapter(
     /**
      * The logo settings the theme's spots print. A themed spot prints the core logo (`settings.logo`) in the light
      * theme and the chrome entry's `logo_dark` field in the dark one; with no picture it prints the template's own
-     * lockup (the slot of `BrandLogo.astro`), never nothing.
+     * lockup (the slot of `BrandLogo.astro`), never nothing. Both are written through a door of their own, never a
+     * content map frame (`frameless`, apps/tracy-web logo-write-path.js `emdash-setting`).
      */
     logoSettings() {
       if (!readFile) return []
@@ -159,9 +160,16 @@ export function emdashAdapter(
         {
           key: 'settings.logo',
           value: mediaOf(settings?.logo),
-          prints: prints(places.filter((p) => !p.dark))
+          prints: prints(places.filter((p) => !p.dark)),
+          frameless: 'the site settings door writes core settings.logo (tools/personalize.mjs writeBrand)'
         },
-        { key: 'chrome.logo_dark', value: '', prints: prints(places) }
+        {
+          key: 'chrome.logo_dark',
+          value: '',
+          prints: prints(places),
+          frameless:
+            "the entry door writes the chrome entry's logo_dark field (tools/personalize.mjs writeBrand)"
+        }
       ].filter((s) => s.prints.length)
     },
     /**

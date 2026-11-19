@@ -22,7 +22,7 @@ through SQL. Document seed receipt/adopt/conflict behavior without automatic for
 type `article` (neither carries a URL pattern: the router decides, `src/pages/[...path].astro`); the section collections
 (`slideshow`, `hero`, `features_intro`, `menu`, `tabs`, `testimonials`, `statistics`, `teams`, `timeline`, `opentime`,
 `opentable`, `happyhours`, `masthead`, `banner`, `category_info`, `contact`, `reservation`, `subscribe`) are `generic`; the
-`chrome` entry is the shared header/footer entry. `tools/content-api-gate.mjs` refuses a collection without a row. The image
+`chrome` entry is the shared header/footer entry. `tools/content-api-gate.mjs` refuses a collection without a row. Run it on a package folder (the unzipped package or an installed site): `node tools/content-api-gate.mjs <package dir>` prints one line that the package answers the Content API and prints provenance stamps (exit 0), or one line per problem (exit 1); it takes no other option (`--help` is read as a folder). The image
 builds the reader on `TRACY_CONTENT_API_SCALARS` (the Dockerfile sets it to 1): it reads entry scalars, not rich blocks.
 
 Provenance stamps (`src/lib/stamps.ts`, `PageOwner.astro`, the `Prose*` renderers) mark which entry and field printed an

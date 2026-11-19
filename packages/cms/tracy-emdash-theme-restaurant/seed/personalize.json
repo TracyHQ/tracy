@@ -1,6 +1,6 @@
 {
   "schemaVersion": "tracy-personalize/v1",
-  "note": "What tools/personalize.mjs changes on a customer's copy of THIS template from their questionnaire answers (seed/questions.json). Five kinds, and the difference between them is what may be INVENTED: `identity` is the customer's own words, written exactly (an answer they did not give EMPTIES the field — it never keeps the demo value); `replace` rewrites the demo brand everywhere it appears; `copy` is prose a model writes for their sector, with the demo text as the length-and-register reference; `rewrite` does the same for whole demo entries; `facts` are CLAIMS about a real business — counts, founding years, certifications, named clients, prices — and those are REMOVED, never written, because a made-up \"380 projects since 2004\" is a lie in the customer's name. `hide` unpublishes pages that are nothing but claims and drops their menu items. Values use {name} {NAME} {initials} {phone} {address} {year} {sector}; a rule whose value needs an answer the customer did not give is skipped and reported, never guessed. Fill every list for this template's own collections, slugs and fields — an empty map means a customer's site keeps the demo words.",
+  "note": "What tools/personalize.mjs changes on a customer's copy of THIS template from their questionnaire answers (seed/questions.json). Five kinds, and the difference between them is what may be INVENTED: `identity` is the customer's own words, written exactly (an answer they did not give keeps the template's value as a placeholder, named in the report under `unanswered`: the rules marked `unanswered: keep-demo` — the address, the phone, the footer contact lines — say so; only a rule with an `empty` value empties its field); `replace` rewrites the demo brand everywhere it appears; `copy` is prose a model writes for their sector, with the demo text as the length-and-register reference; `rewrite` does the same for whole demo entries; `facts` are CLAIMS about a real business — counts, founding years, certifications, named clients, prices — and those are REMOVED, never written, because a made-up \"380 projects since 2004\" is a lie in the customer's name. `hide` unpublishes pages that are nothing but claims and drops their menu items. Values use {name} {NAME} {initials} {phone} {tel} {address} {map} {year} {sector} ({tel} is the phone as a `tel:` link, {map} the address as a Google Maps search link); a rule whose value needs an answer the customer did not give is skipped and reported, never guessed. A contact line marked `\"unanswered\": \"keep-demo\"` keeps the template's value as a placeholder when the answer is missing; a rule with `requires` is written only when every fact it names is given (the demo's mobile line goes once the customer's phone takes the first: the questions ask for one hotline). Fill every list for this template's own collections, slugs and fields — an empty map means a customer's site keeps the demo words.",
   "settings": {
     "title": "{name}"
   },
@@ -34,10 +34,51 @@
       "unanswered": "keep-demo"
     },
     {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_map_url",
+      "value": "{map}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_contact",
+      "rows": {
+        "Phone": { "value": "{phone}", "href": "{tel}" },
+        "Fax": { "dropWhen": ["phone"] },
+        "Email": { "value": "{email}", "href": "mailto:{email}", "dropWhen": ["phone", "address"] }
+      },
+      "unanswered": "keep-demo"
+    },
+    {
       "collection": "contact",
       "slug": "contact",
       "field": "address",
       "value": "{address}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "phone",
+      "value": "{phone}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact",
+      "field": "mobile",
+      "value": "",
+      "requires": [
+        "phone"
+      ]
+    },
+    {
+      "collection": "reservation",
+      "slug": "reservation",
+      "field": "online_link",
+      "value": "{tel}",
       "unanswered": "keep-demo"
     }
   ],
@@ -55,12 +96,9 @@
       "with": "{name}"
     },
     {
-      "find": " RES ",
-      "with": " {name} "
-    },
-    {
-      "find": "RES opened",
-      "with": "{name} opened"
+      "find": "RES",
+      "with": "{name}",
+      "word": true
     }
   ],
   "copy": [
@@ -467,7 +505,7 @@
       "maxCharacters": {
         "slide_title": 39
       },
-      "maxCharactersFrom": "contracts/1.0.2/template-kit.json, slideshow.slideshow.items[*].slide_title: kit frame (390px 47, 1440px 39); the title is 100 px capitals in a 720 px box that cuts what overflows"
+      "maxCharactersFrom": "contracts/1.0.4/template-kit.json (the same in 1.0.2), slideshow.slideshow.items[*].slide_title: kit frame (390px 47, 1440px 39); the title is 100 px capitals in a 720 px box that cuts what overflows"
     },
     {
       "collection": "features_intro",

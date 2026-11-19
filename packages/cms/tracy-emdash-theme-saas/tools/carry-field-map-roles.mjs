@@ -13,7 +13,9 @@
 import { existsSync, readFileSync } from 'node:fs'
 
 const ROLE_KEYS = ['role', 'group', 'subRoles']
-const TOP_LEVEL_KEYS = ['roleVocabularyVersion', 'settings']
+// `taxonomyRoles` and `slotRoles` (place-content-roles/3): a role for every term of a taxonomy, and one entry's slot that
+// holds another fact than its field's other entries. A slot role whose slot is gone is reported by the contract check.
+const TOP_LEVEL_KEYS = ['roleVocabularyVersion', 'settings', 'taxonomyRoles', 'slotRoles']
 
 /** The previous field map at `file`, or null when there is none or it is unreadable. */
 export function readPreviousFieldMap(file) {

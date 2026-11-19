@@ -8,7 +8,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
-import { readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -77,8 +77,14 @@ for (const dir of copies) {
   })
 }
 
-test('the release pack carries the patch files pnpm-workspace.yaml names', () => {
-  const contract = JSON.parse(readFileSync(path.join(root, 'qa.contract.json'), 'utf8'))
+// qa.contract.json is kept in the template's repository and not shipped (README, Checks): in an installed package the
+// case that reads it skips and says why, as tests/personalize-row-limits.test.mjs does (sixth independent review of
+// JA Restaurant 1.0.3: it failed with ENOENT, so `pnpm test` exited 1 in every installed site).
+const CONTRACT = path.join(root, 'qa.contract.json')
+const inRepo = { skip: existsSync(CONTRACT) ? false : 'qa.contract.json is not shipped: a repository test' }
+
+test('the release pack carries the patch files pnpm-workspace.yaml names', inRepo, () => {
+  const contract = JSON.parse(readFileSync(CONTRACT, 'utf8'))
   const named = patchFilesOf(readFileSync(path.join(root, 'pnpm-workspace.yaml'), 'utf8'))
   assert.deepEqual(named, ['patches/picomatch@2.3.2.patch', 'patches/picomatch@4.0.7.patch'])
   const files = distributionFiles(root, contract)

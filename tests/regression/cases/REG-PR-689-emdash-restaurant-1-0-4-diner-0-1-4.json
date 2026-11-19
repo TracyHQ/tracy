@@ -1,0 +1,63 @@
+{
+  "id": "REG-PR-689-emdash-restaurant-1-0-4-diner-0-1-4",
+  "kind": "feat",
+  "title": "EmDash personalize leaves no demo place, phone or web domain on the site, keeps the customer's own words, never empties a field and keeps button labels, post titles and the vendor's credit; the design source is captured offline except its webfonts",
+  "pr": 689,
+  "area": "templates/emdash/personalize",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout, install the JA Restaurant and JA Diner themes' own dependencies: `pnpm install --frozen-lockfile` in packages/cms/tracy-emdash-theme-restaurant and in packages/cms/tracy-emdash-theme-diner (they are not workspace members; no database, no stand, no model).",
+    "S2: Run run.cmd from run.cwd. The personalize cases start each theme's tool against a mock EmDash with --no-model and that theme's real seed (Diner: the three briefs of the independent review of pack.5: an address and a phone, no contact, a phone only); the release cases read Restaurant's seed and map; the source cases call tools/visual-lib.mjs directly.",
+    "S3: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "With an address and a phone (\"1 Main St, Springfield · +1 555 0100\"), no field the template owns names the demo's place or its street, the footer map leads to the brief's address, and the demo phone, its tel: link and the demo web domain are gone from every seed field.",
+    "With a phone only (\"+1 555 0100\"), the demo address and its map stay (keep-demo) and the phone is the brief's everywhere, the /offers line and the linked phone of the contact card included; the whole-seed scan finds no demo phone or domain.",
+    "With the name \"Brooklyn Bistro\" and an address elsewhere, \"Welcome to Brooklyn Bistro\" and \"Come to Brooklyn Bistro for dinner.\" stay whole, no \"Bistro\" is left without its \"Brooklyn\", and the demo's own \"Brooklyn\" outside the name still goes.",
+    "A heading, caption or alt text is never left empty: it takes the row's year, the title or the brief's name, else keeps its words; a host such as notres.example is not the demo domain res.example.",
+    "On JA Diner's real seed, with the address brief no field that held text is empty or gone (the two home headings take a fallback), the Location card shows the brief's address and keeps the demo's without one, both slides keep \"View full menu\" and no button or link label loses a word, the award post keeps its title, and \"Designed by JoomlArt.com.\" stays on every brief; keep-demo with no address, the footer address with a phone only and the emptied demo social links behave as the README says.",
+    "The source capture blocks every request to another origin and lists it, and lets fonts.googleapis.com and fonts.gstatic.com through (SOURCE_FONT_HOSTS)."
+  ],
+  "selectors": {
+    "personalize": "tools/personalize.mjs --no-model --json",
+    "source capture": "tools/visual-lib.mjs keepSourceOffline / SOURCE_FONT_HOSTS"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "tracy-emdash-theme-restaurant/tests/personalize-demo-street.test.mjs",
+      "tracy-emdash-theme-restaurant/tests/release-1-0-4.test.mjs",
+      "tracy-emdash-theme-restaurant/tests/source-offline.test.mjs",
+      "tracy-emdash-theme-diner/tests/personalize-diner-briefs.test.mjs"
+    ],
+    "cwd": "packages/cms",
+    "needs": [],
+    "tests": [
+      "the demo contacts come from the rules; a phone, a tel link and an e-mail take the brief's by value",
+      "code review 1: a place word inside the customer's own values is never the demo's place",
+      "code review 2: a heading, caption or alt text is never left empty",
+      "code review 3: the demo domain is a whole host or a subdomain of it",
+      "with an address and no model: the footer map follows the brief and no field names the demo place",
+      "with no address: the demo address, its map and the words stay (keep-demo); the phone is the brief's",
+      "independent review of 1.0.3, item 2: with an address, the footer map follows the brief",
+      "third independent review of 1.0.3: a phone in the brief replaces the demo phone in every seed field",
+      "code review of 1.0.3: with a name that holds the demo place (\"Brooklyn Bistro\")",
+      "offSourceOrigin",
+      "blockedForSource",
+      "keepSourceOffline",
+      "visual-qa.mjs routes the source page offline before it opens it, and reports what it blocked",
+      "a field that held text before still holds text after, with an address (empty home headings",
+      "the Location card shows the brief's address, and keeps the demo's without one",
+      "\"Mountain View\" is one place and no button or link label loses a word",
+      "an award post keeps its title: a country is not the demo's place, and no title becomes the brief's name",
+      "the template vendor's domain is never a demo domain: the credit line stays",
+      "kept as the owner decided: no address keeps the demo contacts"
+    ],
+    "timeout_s": 600
+  }
+}

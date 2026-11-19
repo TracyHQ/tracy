@@ -1,7 +1,8 @@
 {
   "id": "tracy-diner",
   "label": "JA Diner",
-  "version": "0.1.2",
+  "version": "0.1.4",
+  "vendor": { "name": "JoomlArt", "domains": ["joomlart.com"] },
   "locales": ["en"],
   "defaultLocale": "en",
   "site": {
