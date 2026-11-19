@@ -119,17 +119,20 @@
     "posts.kind": {
       "source": "text",
       "target": "string",
-      "label": "Kind"
+      "label": "Kind",
+      "role": "editorial.design_element"
     },
     "posts.layout": {
       "source": "text",
       "target": "string",
-      "label": "Layout"
+      "label": "Layout",
+      "role": "editorial.design_element"
     },
     "posts.video_source": {
       "source": "text",
       "target": "string",
-      "label": "Video source"
+      "label": "Video source",
+      "role": "editorial.design_element"
     },
     "posts.video_id": {
       "source": "text",
@@ -160,12 +163,14 @@
     "gallery.auto_play": {
       "source": "text",
       "target": "string",
-      "label": "Auto play"
+      "label": "Auto play",
+      "role": "editorial.design_element"
     },
     "gallery.auto_time": {
       "source": "text",
       "target": "string",
-      "label": "Auto time"
+      "label": "Auto time",
+      "role": "editorial.design_element"
     },
     "gallery.gallery_title": {
       "source": "text",

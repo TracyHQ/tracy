@@ -30,6 +30,7 @@ const RELEASES = [
   ['tracy-diner', '0.1.2', 'tracy-emdash-theme-diner'],
   ['tracy-diner', '0.1.3', 'tracy-emdash-theme-diner'],
   ['tracy-diner', '0.1.4', 'tracy-emdash-theme-diner'],
+  ['tracy-essence', '0.1.0', 'tracy-emdash-theme-essence'],
   ['tracy-restaurant', '1.0.1', 'tracy-emdash-theme-restaurant'],
   ['tracy-restaurant', '1.0.2', 'tracy-emdash-theme-restaurant'],
   ['tracy-restaurant', '1.0.3', 'tracy-emdash-theme-restaurant'],
