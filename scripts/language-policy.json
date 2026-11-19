@@ -25112,6 +25112,11 @@
       "path": "packages/ui/tracy-chat-input/lib/client.js",
       "oid": "9c83adf15533eb0d20b51e581ef5639cefa70196",
       "reason": "Exact generated chat input bundle for PR #636 (See another look on a shared Website Opportunities demo). Rebuilt only because the UI switch catalogue it embeds gained `wo-demo-looks`; the changed minified line keeps the existing language-detection character ranges (Vietnamese and Cyrillic letters in regular expressions). Authored source is English and the bundles gate verifies these exact bytes."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/media/images/joomlart/category/item-5.jpg",
+      "oid": "507ff3bad7499ffc5da99ee70a423b0ead7896f1",
+      "reason": "A PNG picture the JoomlArt Essence demo ships under a .jpg name (checked with file(1): PNG image data 683 x 682); reviewed picture, not text."
     }
   ]
 }
