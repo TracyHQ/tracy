@@ -156,7 +156,8 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
   }
   for (;;) {
     const result =
-      written ?? (await ctx.ask({ row, ready: ctx.ready, round, history, followUp, leaseToken, must, from }))
+      written ??
+      (await ctx.ask({ row, ready: ctx.ready, round, history, followUp, leaseToken, must, from, base }))
     if (result.ended) return ended(result)
     const parsed = written ? written.parsed : objectOf(result.answer, step)
     written = null

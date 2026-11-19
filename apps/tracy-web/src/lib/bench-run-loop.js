@@ -209,6 +209,28 @@ async function nextRound(step, pool, runId, harness = null) {
   return { round: last.round + 1, base: baseOf(last.round + 1), followUp: followUpAfter(last), opening: true }
 }
 
+/** What opens a fix round whose conversation has no turn yet, before the document written so far. */
+export const BASE_DOCUMENT_INTRO =
+  'This is your answer so far, written before this conversation began, as one JSON object:'
+
+/**
+ * The first message and follow-up of one call. A fix round continues its conversation, and runAgent sends the follow-up
+ * after the conversation's last answer; a conversation with no turn yet has no answer to follow, and runAgent opens it
+ * with its first message alone, so the follow-up (the failure list) was never sent. That is a fix round whose round 0
+ * was written by code (the copy step's base copy, #705): on dev (BXR London, lat18, 19/11/2026) its fix round 1 wrote
+ * the whole site copy again from the first message in one conversation, 6.5 minutes, and dropped the base copy. Such a
+ * round opens with its first message, the document so far and the follow-up, in one user message, so the next round
+ * continues that conversation as any other.
+ * @param {{ firstUser: unknown, followUp?: string, base?: unknown, conversation: object[] }} input
+ */
+export function fixOpening({ firstUser, followUp, base, conversation }) {
+  if (followUp === undefined || conversation.length > 0 || base === undefined || base === null)
+    return { firstUser, followUp }
+  const tail = `${BASE_DOCUMENT_INTRO}\n\n${JSON.stringify(base)}\n\n${followUp}`
+  if (Array.isArray(firstUser)) return { firstUser: [...firstUser, { type: 'text', text: `\n\n${tail}` }] }
+  return { firstUser: typeof firstUser === 'string' ? `${firstUser}\n\n${tail}` : tail }
+}
+
 // One runAgent call over the saved conversation: `{ answer, turns }`, or `{ ended }` with the run's verdict. The
 // conversation is the run's turns numbered from `from` up to `to` (not included): a writing turn opens a new one at the
 // next free number, a parallel part owns a range of numbers of its own (bench-run-parts.js). It is numbered from 0 for
@@ -218,7 +240,7 @@ async function nextRound(step, pool, runId, harness = null) {
 async function ask(
   step,
   deps,
-  { row, ready, round, history, followUp, leaseToken, must, firstUser, from = 0, to = Infinity, signal }
+  { row, ready, round, history, followUp, leaseToken, must, firstUser, from = 0, to = Infinity, signal, base }
 ) {
   const { pool } = deps
   const { store } = step
@@ -239,15 +261,21 @@ async function ask(
   const bounded = Number.isFinite(to) ? { maxTurns: Math.min(harness.maxTurns ?? to - from, to - from) } : {}
   // A step may answer some doors without a chat call (site-pictures: the picker on Gemini Decision 1); the same
   // arguments, the same result, each call saved as a turn through onTurn.
-  const agent = step.runAgentFor?.({ ready }) ?? runAgent
+  const custom = step.runAgentFor?.({ ready }) ?? null
+  const agent = custom ?? runAgent
+  const request = step.agentRequest({ row, ready, history })
+  const conversation = history.filter(inside)
+  const opening = custom
+    ? { firstUser, followUp }
+    : fixOpening({ firstUser: firstUser ?? request.firstUser, followUp, base, conversation })
   try {
     const result = await agent({
       door: ready.door,
       system: withCmsLine(ready.prompt.text, ready.kit?.platform),
-      ...step.agentRequest({ row, ready, history }),
-      ...(firstUser !== undefined ? { firstUser } : {}),
-      history: history.filter(inside).map((t) => shift(t, -from)),
-      followUp,
+      ...request,
+      ...(opening.firstUser !== undefined ? { firstUser: opening.firstUser } : {}),
+      history: conversation.map((t) => shift(t, -from)),
+      followUp: opening.followUp,
       fetchImpl: deps.fetchImpl,
       signal: stop.signal,
       ...harness,
