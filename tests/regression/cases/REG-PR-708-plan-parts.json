@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-708-plan-parts",
+  "kind": "feat",
+  "title": "A chain build plans its first draft in three parts at once, still with the visual review",
+  "pr": 708,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The chain's planner run is started with --parallel-pages 3 and the visual review, without the whole kit in its first message.",
+    "3 is a value the planner bench takes; a kit with fewer groups gets fewer parts."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-plan-parts.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the chain's planner run plans its first draft in parts, with the visual review, reading the kit by tools",
+      "the number of parts is one the planner bench takes and plans in parts; a kit with fewer groups gets fewer parts"
+    ]
+  }
+}

@@ -56,6 +56,31 @@ const stepError = (message, usd = 0) => Object.assign(new Error(message), { usd 
  *   benchCli?: Partial<Record<'brand' | 'plan' | 'copy' | 'pictures', Function>> }} deps `keepFiles`: leave a
  *   run's files on disk after it ends
  */
+/** How many parts the planner's first draft is planned in at once (site-planner/plan-parts.js). */
+export const PLAN_PARTS = 3
+
+/**
+ * The chain's planner run arguments, without the budget flag.
+ *
+ * - `--parallel-pages`: the first draft in PLAN_PARTS parts planned at the same time, by page groups (#645). On dev
+ *   (16/11/2026) round 0 took 357 to 753 s, of which one writing turn took 158 to 495 s; and from lat13 to lat17
+ *   (17–19/11/2026) the plan step was 7 to 14.5 minutes, the longest of every build. In parts, each part writes its own
+ *   page groups (the first part the whole-site fields too), so round 0 waits on its heaviest part. Each part's first
+ *   message is the run's own, so the provider's cache reuses it. The merged plan is checked once, as before.
+ * - Not `--kit-in-first-message`: with the whole kit in its first message the planner put all its reasoning into the
+ *   turn that writes the plan, and on the local stand (run15, 15/11/2026) that turn hit the 128k output cap (104k of
+ *   reasoning) and the build lost its plan; read part by part, the reasoning is spread over turns.
+ */
+export const planArgs = (kitRef, revisionId) => [
+  '--kit',
+  kitRef,
+  '--brief-revision',
+  revisionId,
+  '--require-visual-review',
+  '--parallel-pages',
+  String(PLAN_PARTS)
+]
+
 export function createStepChainSteps(deps) {
   const { pool, config, secret, kitImages, brandWiring, picturesStoreDir } = deps
   const { fetchImpl = fetch, sleep = realSleep, log = console } = deps
@@ -324,17 +349,7 @@ export function createStepChainSteps(deps) {
         : null
       const ran = await benchRun(
         'plan',
-        [
-          '--kit',
-          kit.ref,
-          '--brief-revision',
-          revisionOf(ctx),
-          '--require-visual-review',
-          // Not --kit-in-first-message: with the whole kit in its first message the planner put all its reasoning into
-          // the turn that writes the plan, and on the local stand (run15, 15/11/2026) that turn hit the 128k output cap
-          // (104k of reasoning) and the build lost its plan; read part by part, the reasoning is spread over turns.
-          ...NO_CAPS
-        ],
+        [...planArgs(kit.ref, revisionOf(ctx)), ...NO_CAPS],
         dir,
         signal,
         { revisionId: revisionOf(ctx), kitRef: kit.ref },
