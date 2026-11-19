@@ -13,13 +13,22 @@ interface Props {
 }
 const { c, stamp: $c } = Astro.props
 const html = Astro.slots.has('default') ? await Astro.slots.render('default') : ''
-const esc = (s: unknown) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const esc = (s: unknown) =>
+  String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
 const attrs = (field: string) =>
   Object.entries($c(field))
     .map(([k, v]) => ` ${k}="${esc(v).replace(/"/g, '&quot;')}"`)
     .join('')
 let out = html
-for (const [name, key] of [['name', 'name_label'], ['email', 'email_label'], ['subject', 'subject_label'], ['message', 'message_label']] as const) {
+for (const [name, key] of [
+  ['name', 'name_label'],
+  ['email', 'email_label'],
+  ['subject', 'subject_label'],
+  ['message', 'message_label']
+] as const) {
   if (!c[key]) continue
   out = out.replace(
     new RegExp(`<label\\b([^>]*\\bfor="[^"]*-${name}"[^>]*)>\\s*[^<]*`),

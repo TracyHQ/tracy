@@ -9,10 +9,18 @@ import { ui } from '@/lib/ui'
 import type { Chrome } from '@/lib/chrome'
 import ListPill from '@/components/site/ListPill.astro'
 
-interface Props { posts: PostRow[]; chrome: Chrome; authors: Record<string, AuthorRow> }
+interface Props {
+  posts: PostRow[]
+  chrome: Chrome
+  authors: Record<string, AuthorRow>
+}
 const { posts, chrome, authors } = Astro.props
 const { tag, w } = ui(chrome.locale)
-const liveAuthor = await liveLinks(Astro.request, chrome.locale, Object.values(authors).map((a) => authorPath(a.slug)))
+const liveAuthor = await liveLinks(
+  Astro.request,
+  chrome.locale,
+  Object.values(authors).map((a) => authorPath(a.slug))
+)
 const stamps = (p: PostRow) => stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })
 ---
 

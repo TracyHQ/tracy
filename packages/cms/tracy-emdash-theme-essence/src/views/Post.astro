@@ -23,7 +23,11 @@ import { liveBlocks, liveLinks, livePosts } from '@/lib/link-gate'
 import { mediaUrl } from '@/lib/media'
 import { stampBlocks, stampFor } from '@/lib/stamps'
 
-interface Props { chrome: Chrome; locale: Locale; slug: string }
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug: string
+}
 const { chrome, locale, slug } = Astro.props
 const all = await loadPosts(locale)
 const post = all.find((p) => p.slug === slug) ?? null
@@ -44,7 +48,10 @@ if (post) {
   const [authors, posts] = await Promise.all([loadAuthors(locale), livePosts(Astro.request, locale, all)])
   visible = posts
   authorRow = authors.find((a) => a.slug === post.author) ?? null
-  const live = await liveLinks(Astro.request, locale, [authorPath(post.author), post.category ? categoryPath(post.category.slug) : ''])
+  const live = await liveLinks(Astro.request, locale, [
+    authorPath(post.author),
+    post.category ? categoryPath(post.category.slug) : ''
+  ])
   authorHref = authorRow && live(authorPath(post.author)) ? href(locale, authorPath(post.author)) : null
   categoryLive = !post.category || live(categoryPath(post.category.slug))
   author = authorRow ? { name: authorRow.name, href: authorHref } : null
@@ -55,7 +62,9 @@ if (post) {
   next = i > 0 ? sameCategory[i - 1] : null
   const wide = post.layout === 'default' && post.kind === 'standard'
   // the demo repeats titles across categories: the article being read never lists itself under another slug
-  byAuthor = visible.filter((p) => p.author === post.author && p.id !== post.id && p.title !== post.title).slice(0, post.layout === 'default' ? 2 : 3)
+  byAuthor = visible
+    .filter((p) => p.author === post.author && p.id !== post.id && p.title !== post.title)
+    .slice(0, post.layout === 'default' ? 2 : 3)
   related = relatedPosts(visible, post, wide ? 4 : 3)
   body = await liveBlocks(Astro.request, locale, stampBlocks($p, 'body', post.body as any[]))
 }

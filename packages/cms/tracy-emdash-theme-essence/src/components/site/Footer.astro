@@ -21,7 +21,10 @@ const live = await liveLinks(Astro.request, locale, [...menuUrls(chrome.footer),
 const links = pruneMenu(chrome.footer, live)
 const settings = await getSiteSettings()
 const logos = brandLogos(settings, site.logo_dark, site.brand_name)
-const ctaUrl = site.subscribe_link && live(site.subscribe_link) ? dataHref(site.subscribe_link, (p) => href(locale, p)) : ''
+const ctaUrl =
+  site.subscribe_link && live(site.subscribe_link)
+    ? dataHref(site.subscribe_link, (p) => href(locale, p))
+    : ''
 ---
 
 <footer class="es-footer">

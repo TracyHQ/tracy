@@ -19,12 +19,12 @@ const at = (n: number) => (n <= 1 ? path : `${path}${path.includes('?') ? '&' : 
 const from = Math.max(1, Math.min(page - 2, pages - 4))
 const nums = Array.from({ length: Math.min(5, pages) }, (_, i) => from + i)
 const ends = [
-	{ icon: 'first', label: w.firstPage, to: 1, off: page <= 1 },
-	{ icon: 'prev', label: w.previousPage, to: page - 1, off: page <= 1 }
+  { icon: 'first', label: w.firstPage, to: 1, off: page <= 1 },
+  { icon: 'prev', label: w.previousPage, to: page - 1, off: page <= 1 }
 ]
 const tail = [
-	{ icon: 'next', label: w.nextPage, to: page + 1, off: page >= pages },
-	{ icon: 'last', label: w.lastPage, to: pages, off: page >= pages }
+  { icon: 'next', label: w.nextPage, to: page + 1, off: page >= pages },
+  { icon: 'last', label: w.lastPage, to: pages, off: page >= pages }
 ]
 ---
 

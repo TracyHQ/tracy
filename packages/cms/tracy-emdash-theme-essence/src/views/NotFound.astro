@@ -3,7 +3,10 @@ import Base from '@/layouts/Base.astro'
 import { href, type Locale } from '@/lib/i18n'
 import type { Chrome } from '@/lib/chrome'
 import { ui } from '@/lib/ui'
-interface Props { chrome: Chrome; locale: Locale }
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
 const { chrome, locale } = Astro.props
 const { w } = ui(locale)
 ---

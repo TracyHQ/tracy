@@ -4674,10 +4674,34 @@
       "kind": "placeholder",
       "reason": "Demo contact address in the captured 40-language replacement test name; copied verbatim from a repository test, not a customer account or private credential."
     },
-    {"path": "packages/cms/tracy-emdash-theme-essence/pnpm-workspace.yaml", "category": "email", "match": "^picomatch@(2\\.3\\.2|4\\.0\\.7)\\.patch$", "kind": "false-positive", "reason": "pnpm patchedDependencies key (package, version and the .patch suffix), not an address (checked 18/11/2026)"},
-    {"path": "packages/cms/tracy-emdash-theme-essence/tests/*.test.mjs", "category": "email", "match": "^(picomatch@(2\\.3\\.2|4\\.0\\.7)|scope__pkg@1\\.0\\.0)\\.patch$", "kind": "false-positive", "reason": "patch file names (package, version and the .patch suffix) in the pack tests, not addresses (checked 18/11/2026)"},
-    {"path": "packages/cms/tracy-emdash-theme-essence/tools/distribution.mjs", "category": "machine-path", "match": "^/Volumes/[x]$", "kind": "placeholder", "reason": "a made-up macOS volume path in a comment explaining which paths the packer refuses; no real machine (checked 18/11/2026)"},
-    {"path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-demo-street.test.mjs", "category": "email", "match": "^Info@joomlart\\.com$", "kind": "third-party-content", "reason": "the demo contact address printed on the JoomlArt JA Essence demo site this template is ported from, used as the fixture the personalization test replaces; a public business address, not a private mailbox"}
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/pnpm-workspace.yaml",
+      "category": "email",
+      "match": "^picomatch@(2\\.3\\.2|4\\.0\\.7)\\.patch$",
+      "kind": "false-positive",
+      "reason": "pnpm patchedDependencies key (package, version and the .patch suffix), not an address (checked 18/11/2026)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/*.test.mjs",
+      "category": "email",
+      "match": "^(picomatch@(2\\.3\\.2|4\\.0\\.7)|scope__pkg@1\\.0\\.0)\\.patch$",
+      "kind": "false-positive",
+      "reason": "patch file names (package, version and the .patch suffix) in the pack tests, not addresses (checked 18/11/2026)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/distribution.mjs",
+      "category": "machine-path",
+      "match": "^/Volumes/[x]$",
+      "kind": "placeholder",
+      "reason": "a made-up macOS volume path in a comment explaining which paths the packer refuses; no real machine (checked 18/11/2026)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-demo-street.test.mjs",
+      "category": "email",
+      "match": "^Info@joomlart\\.com$",
+      "kind": "third-party-content",
+      "reason": "the demo contact address printed on the JoomlArt JA Essence demo site this template is ported from, used as the fixture the personalization test replaces; a public business address, not a private mailbox"
+    }
   ],
   "excludeReasons": {
     "tests/regression/results/": "run history of regression cases (machine paths, internal commit ids); the gate only reads results a PR adds, so a public checkout needs none (27/10/2026); the history up to 28/10/2026 is deleted, each PR still commits its own PASS records here",

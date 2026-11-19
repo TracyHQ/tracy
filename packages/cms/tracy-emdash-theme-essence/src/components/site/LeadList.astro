@@ -7,7 +7,10 @@ import { stampFor } from '@/lib/stamps'
 import { ui } from '@/lib/ui'
 import type { Chrome } from '@/lib/chrome'
 
-interface Props { posts: PostRow[]; chrome: Chrome }
+interface Props {
+  posts: PostRow[]
+  chrome: Chrome
+}
 const { posts, chrome } = Astro.props
 const { tag } = ui(chrome.locale)
 ---

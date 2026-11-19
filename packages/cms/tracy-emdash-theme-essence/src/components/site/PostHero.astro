@@ -6,15 +6,31 @@ import { stampFor } from '@/lib/stamps'
 import { ui } from '@/lib/ui'
 import Icon from '@/components/site/Icon.astro'
 
-interface Props { post: PostRow; locale: string; /** a taller crop (layout type-2) */ tall?: boolean }
+interface Props {
+  post: PostRow
+  locale: string /** a taller crop (layout type-2) */
+  tall?: boolean
+}
 const { post, locale, tall = false } = Astro.props
 const { w } = ui(locale)
 const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
 const hero = mediaUrl(post.hero)
 const hw = Number(post.hero?.width) || 1128
 const hh = Number(post.hero?.height) || 752
-const video = post.kind === 'video' && post.videoSource === 'youtube' && /^[\w-]{6,20}$/.test(post.videoId) ? post.videoId : ''
-const pics = post.kind === 'gallery' ? post.gallery.map((g) => ({ src: mediaUrl(g.image), w: Number(g.image?.width) || hw, h: Number(g.image?.height) || hh })).filter((g) => g.src) : []
+const video =
+  post.kind === 'video' && post.videoSource === 'youtube' && /^[\w-]{6,20}$/.test(post.videoId)
+    ? post.videoId
+    : ''
+const pics =
+  post.kind === 'gallery'
+    ? post.gallery
+        .map((g) => ({
+          src: mediaUrl(g.image),
+          w: Number(g.image?.width) || hw,
+          h: Number(g.image?.height) || hh
+        }))
+        .filter((g) => g.src)
+    : []
 ---
 
 {video

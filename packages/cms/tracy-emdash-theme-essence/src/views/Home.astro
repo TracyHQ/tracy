@@ -12,7 +12,11 @@ import { livePosts } from '@/lib/link-gate'
 import { ui } from '@/lib/ui'
 import { stampFor } from '@/lib/stamps'
 
-interface Props { chrome: Chrome; locale: Locale; path?: string }
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path?: string
+}
 const { chrome, locale } = Astro.props
 const PER_PAGE = 6
 const [all, authorRows] = await Promise.all([loadPosts(locale), loadAuthors(locale)])

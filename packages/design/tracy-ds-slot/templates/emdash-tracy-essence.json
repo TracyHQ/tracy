@@ -41,9 +41,6 @@
   "measureStill": true,
   "discovered": {},
   "measureNote": "Carousels (the home slideshow) are stopped on their first slide before each measure",
-  "paletteKeep": [
-    ".es-strip-item::before",
-    ".is-highlight"
-  ],
+  "paletteKeep": [".es-strip-item::before", ".is-highlight"],
   "paletteKeepNote": "The scrim over the Home strip pictures and the highlighted card is a neutral black layer over a photograph: a system does not repaint it (a light scrim under light words would make them unreadable)."
 }

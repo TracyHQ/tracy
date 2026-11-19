@@ -17,7 +17,14 @@ import PostMeta from '@/components/site/PostMeta.astro'
 import PostPill from '@/components/site/PostPill.astro'
 import FollowItem from '@/components/site/FollowItem.astro'
 
-interface Props { chrome: Chrome; locale: Locale | string; posts: PostRow[]; current?: PostRow | null; prefer?: PostRow[]; features?: boolean }
+interface Props {
+  chrome: Chrome
+  locale: Locale | string
+  posts: PostRow[]
+  current?: PostRow | null
+  prefer?: PostRow[]
+  features?: boolean
+}
 const { chrome, posts, current = null, prefer = [], features: showFeatures = true } = Astro.props
 const locale = Astro.props.locale as Locale
 const { site } = chrome
@@ -36,7 +43,11 @@ const own = (url: string | undefined) => {
   const h = url ? dataHref(url, (p) => href(locale, p)) : null
   return h && h !== '#' ? h : null
 }
-const followItems = (follow?.items ?? []).map((it) => ({ net: networkOf(it.font_icon, it.title), url: own(it.link), title: it.title }))
+const followItems = (follow?.items ?? []).map((it) => ({
+  net: networkOf(it.font_icon, it.title),
+  url: own(it.link),
+  title: it.title
+}))
 ---
 
 <aside class="es-sidebar">

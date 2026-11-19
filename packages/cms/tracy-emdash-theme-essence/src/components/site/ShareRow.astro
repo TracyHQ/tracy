@@ -5,7 +5,10 @@ import { publicOrigin } from '@/lib/public-origin'
 import { stampFor } from '@/lib/stamps'
 import Icon from '@/components/site/Icon.astro'
 
-interface Props { chrome: Chrome; title: string }
+interface Props {
+  chrome: Chrome
+  title: string
+}
 const { chrome, title } = Astro.props
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const url = encodeURIComponent(`${publicOrigin(Astro.url)}${Astro.url.pathname}`)

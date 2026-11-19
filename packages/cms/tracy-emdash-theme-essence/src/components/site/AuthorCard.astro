@@ -24,9 +24,17 @@ const to = href(locale, authorPath(author.slug))
 const NETWORKS = ['facebook', 'instagram', 'twitter']
 const row = chrome.social['follow-me']
 const wanted = (row?.items ?? [])
-  .map((it) => ({ net: networkOf(it.font_icon, it.title), title: it.title ?? '', link: String(it.link ?? '').trim() }))
+  .map((it) => ({
+    net: networkOf(it.font_icon, it.title),
+    title: it.title ?? '',
+    link: String(it.link ?? '').trim()
+  }))
   .filter((it) => NETWORKS.includes(it.net) && it.link && it.link !== '#')
-const live = await liveLinks(Astro.request, locale, wanted.map((it) => it.link))
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  wanted.map((it) => it.link)
+)
 const socials = wanted
   .filter((it) => live(it.link))
   .map((it) => ({ ...it, to: dataHref(it.link, (p) => href(locale, p)) }))

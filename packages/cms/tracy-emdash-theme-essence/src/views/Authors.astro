@@ -19,7 +19,10 @@ interface Props {
 const { chrome, locale } = Astro.props
 const { w } = ui(locale)
 const PER_PAGE = 6
-const [authors, { entry: pageEntry }] = await Promise.all([loadAuthors(locale), getEmDashEntry('pages', 'our-authors', { locale })])
+const [authors, { entry: pageEntry }] = await Promise.all([
+  loadAuthors(locale),
+  getEmDashEntry('pages', 'our-authors', { locale })
+])
 const page = (pageEntry?.data ?? {}) as Record<string, any>
 const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'our-authors' } : null)
 const pages = Math.max(1, Math.ceil(authors.length / PER_PAGE))

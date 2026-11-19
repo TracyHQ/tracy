@@ -6,7 +6,12 @@ import type { PostRow } from '@/lib/posts'
 import { stampFor } from '@/lib/stamps'
 import PostMini from '@/components/site/PostMini.astro'
 
-interface Props { chrome: Chrome; locale: Locale; posts: PostRow[]; variant: 'cards' | 'list' }
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  posts: PostRow[]
+  variant: 'cards' | 'list'
+}
 const { chrome, locale, posts, variant } = Astro.props
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 ---

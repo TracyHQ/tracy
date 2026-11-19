@@ -20,7 +20,12 @@ interface Props {
 const { locale, c, stamp: $c } = Astro.props
 const FormEmbed = (blockComponents as any)['emdash-form']
 const formId = String(c.form_id ?? '').trim()
-const LABELS: [string, string][] = [['name', c.name_label], ['email', c.email_label], ['subject', c.subject_label], ['message', c.message_label]]
+const LABELS: [string, string][] = [
+  ['name', c.name_label],
+  ['email', c.email_label],
+  ['subject', c.subject_label],
+  ['message', c.message_label]
+]
 ---
 
 <div class="es-contact-form">

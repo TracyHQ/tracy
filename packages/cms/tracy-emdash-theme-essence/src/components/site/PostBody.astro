@@ -11,7 +11,9 @@ import PostQuote from '@/components/site/PostQuote.astro'
 import PostImage from '@/components/site/PostImage.astro'
 import PostImageRow from '@/components/site/PostImageRow.astro'
 
-interface Props { value: any[] }
+interface Props {
+  value: any[]
+}
 const { value } = Astro.props
 const blocks: any[] = Array.isArray(value) ? value : []
 const textOf = (b: any) => (b?.children ?? []).map((c: any) => c?.text ?? '').join('')
@@ -36,10 +38,13 @@ for (let i = 0; i < kept.length; i++) {
   while (kept[i]?._type === 'image') run.push(kept[i++])
   i--
   if (run.length === 1) prepared.push(run[0])
-  else for (let k = 0; k < run.length; k += 3) {
-    const part = run.slice(k, k + 3)
-    prepared.push(part.length === 1 ? part[0] : { _type: 'essenceRow', _key: `row-${part[0]._key ?? k}`, images: part })
-  }
+  else
+    for (let k = 0; k < run.length; k += 3) {
+      const part = run.slice(k, k + 3)
+      prepared.push(
+        part.length === 1 ? part[0] : { _type: 'essenceRow', _key: `row-${part[0]._key ?? k}`, images: part }
+      )
+    }
 }
 const stamped = prepared.some((b) => b?._tracySrc)
 const components = {

@@ -2,7 +2,11 @@
 /** One round social glyph of the sidebar's Follow me box: a link when the editor gave a real address, else the glyph alone. */
 import Icon from '@/components/site/Icon.astro'
 
-interface Props { net: string; url: string | null; title: string }
+interface Props {
+  net: string
+  url: string | null
+  title: string
+}
 const { net, url, title } = Astro.props
 ---
 

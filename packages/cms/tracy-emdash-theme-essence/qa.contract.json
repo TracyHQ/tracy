@@ -3,9 +3,7 @@
   "id": "tracy-essence",
   "revision": 56,
   "pending": [],
-  "locales": [
-    "en"
-  ],
+  "locales": ["en"],
   "defaultLocale": "en",
   "source": {
     "reference": "source/snapshot",
@@ -5413,35 +5411,22 @@
           "source": ".module-title"
         }
       },
-      "properties": [
-        "font-size",
-        "font-weight",
-        "letter-spacing",
-        "padding-top",
-        "padding-left"
-      ],
+      "properties": ["font-size", "font-weight", "letter-spacing", "padding-top", "padding-left"],
       "hexTolerance": 8,
       "pxTolerance": 1
     },
     "coverage": [
       {
         "selector": "main h1, main h2, main h3",
-        "properties": [
-          "font-family",
-          "font-weight"
-        ]
+        "properties": ["font-family", "font-weight"]
       },
       {
         "selector": "main p",
-        "properties": [
-          "font-family"
-        ]
+        "properties": ["font-family"]
       },
       {
         "selector": ".es-nav li > a",
-        "properties": [
-          "font-size"
-        ]
+        "properties": ["font-size"]
       }
     ],
     "images": {
@@ -5468,9 +5453,7 @@
         "decision": "DECISIONS D27"
       }
     ],
-    "accentBorders": [
-      "rgb(77, 107, 255)"
-    ]
+    "accentBorders": ["rgb(77, 107, 255)"]
   },
   "interactions": {
     "offcanvas": {
@@ -5482,22 +5465,10 @@
     }
   },
   "fonts": {
-    "selectors": [
-      "h1",
-      "h2",
-      "h3",
-      "p",
-      "a",
-      "button",
-      "span",
-      "li"
-    ],
+    "selectors": ["h1", "h2", "h3", "p", "a", "button", "span", "li"],
     "platform": "Chromium (Playwright). Local files served by Astro (src/fonts.json): Jost (display) and Noto Serif (body); Be Vietnam Pro only under :lang(vi).",
     "allowed": {
-      "en": [
-        "Jost",
-        "Noto Serif"
-      ]
+      "en": ["Jost", "Noto Serif"]
     }
   },
   "pages": [
@@ -5505,32 +5476,14 @@
       "id": "en-home",
       "path": "/",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default",
-        "offcanvas"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default", "offcanvas"],
       "status": 200,
       "identity": ".es-strip",
-      "source": [
-        "index.html"
-      ],
+      "source": ["index.html"],
       "render": {
         "view": "src/views/Home.astro",
-        "collections": [
-          "chrome",
-          "pages",
-          "posts",
-          "gallery",
-          "social"
-        ]
+        "collections": ["chrome", "pages", "posts", "gallery", "social"]
       },
       "images": "placeholders",
       "rules": [
@@ -5550,13 +5503,7 @@
         "page-count",
         "strip-meta"
       ],
-      "parity": [
-        "nav",
-        "stripTitle",
-        "cardTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "stripTitle", "cardTitle", "footerButton", "ground"],
       "content": [
         {
           "id": "strip-1",
@@ -5600,27 +5547,14 @@
       "id": "en-not-found",
       "path": "/404",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 404,
       "identity": ".es-404",
-      "source": [
-        "nope-404/index.html"
-      ],
+      "source": ["nope-404/index.html"],
       "render": {
         "view": "src/views/NotFound.astro",
-        "collections": [
-          "chrome"
-        ]
+        "collections": ["chrome"]
       },
       "rules": [
         "body-type",
@@ -5634,9 +5568,7 @@
         "nf-text",
         "nf-button"
       ],
-      "parity": [
-        "nfTitle"
-      ],
+      "parity": ["nfTitle"],
       "content": [
         {
           "id": "code",
@@ -5680,30 +5612,14 @@
       "id": "en-authors",
       "path": "/our-authors",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-authors",
-      "source": [
-        "pages/j-content/author-listting/index.html"
-      ],
+      "source": ["pages/j-content/author-listting/index.html"],
       "render": {
         "view": "src/views/Authors.astro",
-        "collections": [
-          "chrome",
-          "pages",
-          "authors",
-          "social"
-        ]
+        "collections": ["chrome", "pages", "authors", "social"]
       },
       "rules": [
         "body-type",
@@ -5717,13 +5633,7 @@
         "author-job",
         "author-bio"
       ],
-      "parity": [
-        "nav",
-        "authorName",
-        "authorJob",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "authorName", "authorJob", "footerButton", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -5759,28 +5669,14 @@
       "id": "en-contact",
       "path": "/contact",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-contact",
-      "source": [
-        "contact/index.html"
-      ],
+      "source": ["contact/index.html"],
       "render": {
         "view": "src/views/Contact.astro",
-        "collections": [
-          "chrome",
-          "contact"
-        ]
+        "collections": ["chrome", "contact"]
       },
       "rules": [
         "body-type",
@@ -5792,13 +5688,7 @@
         "contact-title",
         "contact-intro"
       ],
-      "parity": [
-        "nav",
-        "contactTitle",
-        "contactSubmit",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "contactTitle", "contactSubmit", "footerButton", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -5834,31 +5724,14 @@
       "id": "en-home-2",
       "path": "/?page=2",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-strip",
-      "source": [
-        "index~start=6.html"
-      ],
+      "source": ["index~start=6.html"],
       "render": {
         "view": "src/views/Home.astro",
-        "collections": [
-          "chrome",
-          "pages",
-          "posts",
-          "gallery",
-          "social"
-        ]
+        "collections": ["chrome", "pages", "posts", "gallery", "social"]
       },
       "rules": [
         "body-type",
@@ -5875,13 +5748,7 @@
         "page-count",
         "page-h1"
       ],
-      "parity": [
-        "nav",
-        "stripTitle",
-        "cardTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "stripTitle", "cardTitle", "footerButton", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -5917,31 +5784,14 @@
       "id": "en-cat-grid",
       "path": "/category/blog-health",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-cat-title",
-      "source": [
-        "category/category-style-1/index.html"
-      ],
+      "source": ["category/category-style-1/index.html"],
       "render": {
         "view": "src/views/Category.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "pages",
-          "authors",
-          "social"
-        ]
+        "collections": ["chrome", "posts", "pages", "authors", "social"]
       },
       "rules": [
         "body-type",
@@ -5957,12 +5807,7 @@
         "page-count",
         "cat-more"
       ],
-      "parity": [
-        "nav",
-        "catTitle",
-        "catCard",
-        "ground"
-      ],
+      "parity": ["nav", "catTitle", "catCard", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -5998,31 +5843,14 @@
       "id": "en-cat-stack",
       "path": "/category/blog-design",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-cat-title",
-      "source": [
-        "category/category-style-2/index.html"
-      ],
+      "source": ["category/category-style-2/index.html"],
       "render": {
         "view": "src/views/Category.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "pages",
-          "authors",
-          "social"
-        ]
+        "collections": ["chrome", "posts", "pages", "authors", "social"]
       },
       "rules": [
         "body-type",
@@ -6041,12 +5869,7 @@
         "hl-title",
         "hl-intro"
       ],
-      "parity": [
-        "nav",
-        "catTitle",
-        "catCard",
-        "ground"
-      ],
+      "parity": ["nav", "catTitle", "catCard", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -6082,31 +5905,14 @@
       "id": "en-cat-fashion",
       "path": "/category/blog-fashion",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-cat-title",
-      "source": [
-        "category/category-style-3/index.html"
-      ],
+      "source": ["category/category-style-3/index.html"],
       "render": {
         "view": "src/views/Category.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "pages",
-          "authors",
-          "social"
-        ]
+        "collections": ["chrome", "posts", "pages", "authors", "social"]
       },
       "rules": [
         "body-type",
@@ -6123,12 +5929,7 @@
         "hl-title",
         "hl-intro"
       ],
-      "parity": [
-        "nav",
-        "catTitle",
-        "catCard",
-        "ground"
-      ],
+      "parity": ["nav", "catTitle", "catCard", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -6155,31 +5956,14 @@
       "id": "en-cat-sidebar",
       "path": "/category/blog-normal-health",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-card-intro",
-      "source": [
-        "category/category-style-4/index.html"
-      ],
+      "source": ["category/category-style-4/index.html"],
       "render": {
         "view": "src/views/Category.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "pages",
-          "authors",
-          "social"
-        ]
+        "collections": ["chrome", "posts", "pages", "authors", "social"]
       },
       "rules": [
         "body-type",
@@ -6196,12 +5980,7 @@
         "newsletter-text",
         "cat-more"
       ],
-      "parity": [
-        "nav",
-        "catCard",
-        "sideTitle",
-        "ground"
-      ],
+      "parity": ["nav", "catCard", "sideTitle", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -6228,31 +6007,14 @@
       "id": "en-tag",
       "path": "/tag/health",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-cat-count",
-      "source": [
-        "component/tags/tag/health/index.html"
-      ],
+      "source": ["component/tags/tag/health/index.html"],
       "render": {
         "view": "src/views/Category.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "pages",
-          "authors",
-          "social"
-        ]
+        "collections": ["chrome", "posts", "pages", "authors", "social"]
       },
       "rules": [
         "body-type",
@@ -6267,10 +6029,7 @@
         "page-count",
         "cat-more"
       ],
-      "parity": [
-        "nav",
-        "ground"
-      ],
+      "parity": ["nav", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -6297,31 +6056,14 @@
       "id": "en-author",
       "path": "/author/eula-ward",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-cat-title",
-      "source": [
-        "pages/j-content/author-listting/author/Eula%20Ward/index.html"
-      ],
+      "source": ["pages/j-content/author-listting/author/Eula%20Ward/index.html"],
       "render": {
         "view": "src/views/Category.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "pages",
-          "authors",
-          "social"
-        ]
+        "collections": ["chrome", "posts", "pages", "authors", "social"]
       },
       "rules": [
         "body-type",
@@ -6337,14 +6079,7 @@
         "profile-bio",
         "page-count"
       ],
-      "parity": [
-        "nav",
-        "authorHeading",
-        "catCard",
-        "ground",
-        "authorRole",
-        "authorBio"
-      ],
+      "parity": ["nav", "authorHeading", "catCard", "ground", "authorRole", "authorBio"],
       "images": "placeholders",
       "content": [
         {
@@ -6371,31 +6106,14 @@
       "id": "en-post-type1",
       "path": "/blog/mental-health-and-well-being-strategies-blog-health",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-article",
-      "source": [
-        "detail/layout-2/index.html"
-      ],
+      "source": ["detail/layout-2/index.html"],
       "render": {
         "view": "src/views/Post.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "authors",
-          "social",
-          "gallery"
-        ]
+        "collections": ["chrome", "posts", "authors", "social", "gallery"]
       },
       "rules": [
         "body-type",
@@ -6414,12 +6132,7 @@
         "sec-title-type1",
         "mini-thumb-title"
       ],
-      "parity": [
-        "nav",
-        "postTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "postTitle", "footerButton", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -6455,31 +6168,14 @@
       "id": "en-post-type2",
       "path": "/blog/essential-nutrients-for-optimal-health-blog-health",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-article",
-      "source": [
-        "detail/layout-3/index.html"
-      ],
+      "source": ["detail/layout-3/index.html"],
       "render": {
         "view": "src/views/Post.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "authors",
-          "social",
-          "gallery"
-        ]
+        "collections": ["chrome", "posts", "authors", "social", "gallery"]
       },
       "rules": [
         "body-type",
@@ -6502,12 +6198,7 @@
         "sec-title-small",
         "mini-thumb-title"
       ],
-      "parity": [
-        "nav",
-        "postTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "postTitle", "footerButton", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -6552,31 +6243,14 @@
       "id": "en-post-video",
       "path": "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-article",
-      "source": [
-        "detail/video/index.html"
-      ],
+      "source": ["detail/video/index.html"],
       "render": {
         "view": "src/views/Post.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "authors",
-          "social",
-          "gallery"
-        ]
+        "collections": ["chrome", "posts", "authors", "social", "gallery"]
       },
       "rules": [
         "body-type",
@@ -6598,13 +6272,7 @@
         "sec-title-small",
         "mini-thumb-title"
       ],
-      "parity": [
-        "nav",
-        "postTitle",
-        "sideTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "postTitle", "sideTitle", "footerButton", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -6649,31 +6317,14 @@
       "id": "en-post-gallery",
       "path": "/blog/natural-remedies-for-common-ailments-blog-fashion",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-article",
-      "source": [
-        "detail/gallery/index.html"
-      ],
+      "source": ["detail/gallery/index.html"],
       "render": {
         "view": "src/views/Post.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "authors",
-          "social",
-          "gallery"
-        ]
+        "collections": ["chrome", "posts", "authors", "social", "gallery"]
       },
       "rules": [
         "body-type",
@@ -6695,13 +6346,7 @@
         "sec-title-small",
         "mini-thumb-title"
       ],
-      "parity": [
-        "nav",
-        "postTitle",
-        "sideTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "postTitle", "sideTitle", "footerButton", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -6746,31 +6391,14 @@
       "id": "en-post",
       "path": "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-article",
-      "source": [
-        "detail/layout-1/index.html"
-      ],
+      "source": ["detail/layout-1/index.html"],
       "render": {
         "view": "src/views/Post.astro",
-        "collections": [
-          "chrome",
-          "posts",
-          "authors",
-          "social",
-          "gallery"
-        ]
+        "collections": ["chrome", "posts", "authors", "social", "gallery"]
       },
       "rules": [
         "body-type",
@@ -6791,13 +6419,7 @@
         "newsletter-text",
         "sec-title-small"
       ],
-      "parity": [
-        "nav",
-        "postTitle",
-        "sideTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "postTitle", "sideTitle", "footerButton", "ground"],
       "images": "placeholders",
       "content": [
         {
@@ -6833,28 +6455,14 @@
       "id": "en-search",
       "path": "/search?q=line",
       "locale": "en",
-      "variants": [
-        "1440-light",
-        "1440-dark",
-        "768-light",
-        "768-dark",
-        "390-light",
-        "390-dark"
-      ],
-      "states": [
-        "default"
-      ],
+      "variants": ["1440-light", "1440-dark", "768-light", "768-dark", "390-light", "390-dark"],
+      "states": ["default"],
       "status": 200,
       "identity": ".es-search-form",
-      "source": [
-        "index.html"
-      ],
+      "source": ["index.html"],
       "render": {
         "view": "src/views/Search.astro",
-        "collections": [
-          "chrome",
-          "posts"
-        ]
+        "collections": ["chrome", "posts"]
       },
       "rules": [
         "body-type",
@@ -6868,9 +6476,7 @@
         "pager",
         "page-count"
       ],
-      "parity": [
-        "ground"
-      ],
+      "parity": ["ground"],
       "images": "placeholders",
       "content": [
         {
@@ -6917,12 +6523,7 @@
       "mode": "required"
     }
   },
-  "capabilities": [
-    "audit-log",
-    "seo",
-    "media",
-    "forms"
-  ],
+  "capabilities": ["audit-log", "seo", "media", "forms"],
   "distribution": {
     "include": [
       "package.json",
@@ -6974,37 +6575,24 @@
       "id": "Home",
       "view": "src/views/Home.astro",
       "representative": "en-home",
-      "pages": [
-        "en-home"
-      ],
-      "states": [
-        "default",
-        "offcanvas"
-      ],
+      "pages": ["en-home"],
+      "states": ["default", "offcanvas"],
       "hasSource": true
     },
     {
       "id": "NotFound",
       "view": "src/views/NotFound.astro",
       "representative": "en-not-found",
-      "pages": [
-        "en-not-found"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-not-found"],
+      "states": ["default"],
       "hasSource": true
     },
     {
       "id": "Authors",
       "view": "src/views/Authors.astro",
       "representative": "en-authors",
-      "pages": [
-        "en-authors"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-authors"],
+      "states": ["default"],
       "family": "page",
       "hasSource": true
     },
@@ -7012,12 +6600,8 @@
       "id": "Contact",
       "view": "src/views/Contact.astro",
       "representative": "en-contact",
-      "pages": [
-        "en-contact"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-contact"],
+      "states": ["default"],
       "family": "page",
       "hasSource": true
     },
@@ -7025,12 +6609,8 @@
       "id": "HomeList",
       "view": "src/views/Home.astro",
       "representative": "en-home-2",
-      "pages": [
-        "en-home-2"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-home-2"],
+      "states": ["default"],
       "family": "list",
       "hasSource": true
     },
@@ -7038,13 +6618,8 @@
       "id": "Category",
       "view": "src/views/Category.astro",
       "representative": "en-cat-grid",
-      "pages": [
-        "en-cat-grid",
-        "en-cat-fashion"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-cat-grid", "en-cat-fashion"],
+      "states": ["default"],
       "family": "list",
       "hasSource": true
     },
@@ -7052,12 +6627,8 @@
       "id": "PostVariants",
       "view": "src/views/Post.astro",
       "representative": "en-post-type1",
-      "pages": [
-        "en-post-type1"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-post-type1"],
+      "states": ["default"],
       "family": "detail",
       "hasSource": true
     },
@@ -7065,12 +6636,8 @@
       "id": "Post",
       "view": "src/views/Post.astro",
       "representative": "en-post",
-      "pages": [
-        "en-post"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-post"],
+      "states": ["default"],
       "family": "detail",
       "hasSource": true
     },
@@ -7078,12 +6645,8 @@
       "id": "Search",
       "view": "src/views/Search.astro",
       "representative": "en-search",
-      "pages": [
-        "en-search"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-search"],
+      "states": ["default"],
       "family": "page",
       "hasSource": false
     },
@@ -7091,12 +6654,8 @@
       "id": "CategoryStack",
       "view": "src/views/Category.astro",
       "representative": "en-cat-stack",
-      "pages": [
-        "en-cat-stack"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-cat-stack"],
+      "states": ["default"],
       "family": "list",
       "hasSource": true
     },
@@ -7104,12 +6663,8 @@
       "id": "CategorySidebar",
       "view": "src/views/Category.astro",
       "representative": "en-cat-sidebar",
-      "pages": [
-        "en-cat-sidebar"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-cat-sidebar"],
+      "states": ["default"],
       "family": "list",
       "hasSource": true
     },
@@ -7117,12 +6672,8 @@
       "id": "TagList",
       "view": "src/views/Category.astro",
       "representative": "en-tag",
-      "pages": [
-        "en-tag"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-tag"],
+      "states": ["default"],
       "family": "list",
       "hasSource": true
     },
@@ -7130,12 +6681,8 @@
       "id": "AuthorList",
       "view": "src/views/Category.astro",
       "representative": "en-author",
-      "pages": [
-        "en-author"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-author"],
+      "states": ["default"],
       "family": "list",
       "hasSource": true
     },
@@ -7143,12 +6690,8 @@
       "id": "PostType2",
       "view": "src/views/Post.astro",
       "representative": "en-post-type2",
-      "pages": [
-        "en-post-type2"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-post-type2"],
+      "states": ["default"],
       "family": "detail",
       "hasSource": true
     },
@@ -7156,12 +6699,8 @@
       "id": "PostVideo",
       "view": "src/views/Post.astro",
       "representative": "en-post-video",
-      "pages": [
-        "en-post-video"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-post-video"],
+      "states": ["default"],
       "family": "detail",
       "hasSource": true
     },
@@ -7169,12 +6708,8 @@
       "id": "PostGallery",
       "view": "src/views/Post.astro",
       "representative": "en-post-gallery",
-      "pages": [
-        "en-post-gallery"
-      ],
-      "states": [
-        "default"
-      ],
+      "pages": ["en-post-gallery"],
+      "states": ["default"],
       "family": "detail",
       "hasSource": true
     }
@@ -7183,102 +6718,51 @@
     "stages": [
       {
         "id": "light-desktop",
-        "variants": [
-          "1440-light"
-        ]
+        "variants": ["1440-light"]
       },
       {
         "id": "light-responsive",
-        "variants": [
-          "768-light",
-          "390-light"
-        ]
+        "variants": ["768-light", "390-light"]
       },
       {
         "id": "dark-desktop",
-        "variants": [
-          "1440-dark"
-        ]
+        "variants": ["1440-dark"]
       },
       {
         "id": "dark-responsive",
-        "variants": [
-          "768-dark",
-          "390-dark"
-        ]
+        "variants": ["768-dark", "390-dark"]
       }
     ],
     "shots": [
       {
-        "stages": [
-          "light-desktop"
-        ],
+        "stages": ["light-desktop"],
         "side": "site",
-        "locales": [
-          "en"
-        ],
-        "consumers": [
-          "layout",
-          "typography",
-          "color",
-          "images",
-          "interaction"
-        ]
+        "locales": ["en"],
+        "consumers": ["layout", "typography", "color", "images", "interaction"]
       },
       {
-        "stages": [
-          "light-responsive"
-        ],
+        "stages": ["light-responsive"],
         "side": "site",
-        "locales": [
-          "en"
-        ],
-        "consumers": [
-          "layout",
-          "typography",
-          "images"
-        ]
+        "locales": ["en"],
+        "consumers": ["layout", "typography", "images"]
       },
       {
-        "stages": [
-          "dark-desktop"
-        ],
+        "stages": ["dark-desktop"],
         "side": "site",
-        "locales": [
-          "en"
-        ],
-        "consumers": [
-          "color",
-          "layout"
-        ]
+        "locales": ["en"],
+        "consumers": ["color", "layout"]
       },
       {
-        "stages": [
-          "dark-responsive"
-        ],
+        "stages": ["dark-responsive"],
         "side": "site",
-        "locales": [
-          "en"
-        ],
-        "consumers": [
-          "layout",
-          "color"
-        ]
+        "locales": ["en"],
+        "consumers": ["layout", "color"]
       },
       {
-        "stages": [
-          "light-desktop",
-          "light-responsive"
-        ],
+        "stages": ["light-desktop", "light-responsive"],
         "side": "source",
-        "locales": [
-          "en"
-        ],
-        "consumers": [
-          "layout",
-          "typography",
-          "images"
-        ],
+        "locales": ["en"],
+        "consumers": ["layout", "typography", "images"],
         "ownSourceOnly": true
       }
     ],

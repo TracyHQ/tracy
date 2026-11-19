@@ -5,7 +5,11 @@ import type { AuthorRow } from '@/lib/posts'
 import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 
-interface Props { chrome: Chrome; author: AuthorRow | null; href: string | null }
+interface Props {
+  chrome: Chrome
+  author: AuthorRow | null
+  href: string | null
+}
 const { chrome, author, href } = Astro.props
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const $a = stampFor(Astro.request, 'authors', author ? { id: author.id, slug: author.slug } : null)

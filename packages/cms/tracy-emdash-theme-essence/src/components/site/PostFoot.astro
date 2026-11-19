@@ -8,7 +8,13 @@ import Icon from '@/components/site/Icon.astro'
 import PostPill from '@/components/site/PostPill.astro'
 import ShareRow from '@/components/site/ShareRow.astro'
 
-interface Props { post: PostRow; chrome: Chrome; locale: Locale; prev: PostRow | null; next: PostRow | null }
+interface Props {
+  post: PostRow
+  chrome: Chrome
+  locale: Locale
+  prev: PostRow | null
+  next: PostRow | null
+}
 const { post, chrome, locale, prev, next } = Astro.props
 const { site } = chrome
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)

@@ -15,7 +15,9 @@ const { chrome } = Astro.props
 const g = chrome.gallery
 const $g = g ? stampFor(Astro.request, 'gallery', g.entry) : null
 const live = g ? await liveLinks(Astro.request, chrome.locale, [g.buttonLink]) : () => false
-const pics = (g?.items ?? []).map((it) => ({ src: mediaUrl(it.gallery_image), alt: it.gallery_alt ?? '' })).filter((p) => p.src)
+const pics = (g?.items ?? [])
+  .map((it) => ({ src: mediaUrl(it.gallery_image), alt: it.gallery_alt ?? '' }))
+  .filter((p) => p.src)
 ---
 
 {g && pics.length > 0 && (

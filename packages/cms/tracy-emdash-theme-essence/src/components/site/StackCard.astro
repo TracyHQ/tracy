@@ -9,7 +9,14 @@ import ListPic from '@/components/site/ListPic.astro'
 import ListMeta from '@/components/site/ListMeta.astro'
 import ListPill from '@/components/site/ListPill.astro'
 
-interface Props { post: PostRow; chrome: Chrome; authors: Record<string, AuthorRow>; eager?: boolean; /** the source's `item-highlight`: the picture fills the card, the text lies over it */ highlight?: boolean; /** the Home's highlighted article: the picture runs full width above the text */ cover?: boolean }
+interface Props {
+  post: PostRow
+  chrome: Chrome
+  authors: Record<string, AuthorRow>
+  eager?: boolean /** the source's `item-highlight`: the picture fills the card, the text lies over it */
+  highlight?: boolean /** the Home's highlighted article: the picture runs full width above the text */
+  cover?: boolean
+}
 const { post, chrome, authors, eager = false, highlight = false, cover = false } = Astro.props
 const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
