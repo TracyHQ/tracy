@@ -29,8 +29,8 @@ const RULES = [
   ['nav-font', '.es-nav li > a', HOME_SRC, true, ['font-size']],
   ['strip-title', '.es-strip-item h3', HOME_SRC],
   ['lead-title', '.es-lead-item h3', HOME_SRC],
-  ['card-title', '.es-stack .es-card-title', HOME_SRC],
-  ['card-intro', '.es-card-intro', HOME_SRC],
+  ['card-title', '.es-stack:not(.is-highlight) .es-card-title', HOME_SRC],
+  ['card-intro', '.es-card:not(.is-highlight) .es-card-intro', HOME_SRC],
   ['pill', '.es-card .es-pill', HOME_SRC],
   ['page-h1', 'main h1', HOME_SRC, true],
   ['pager', '.es-pagination a', HOME_SRC],
@@ -275,6 +275,20 @@ contract.design.exceptions = [
     reason:
       "The category pill on the Home strip sits on a photograph and stays light in dark mode, as the source's own dark stylesheet keeps it (css/darkmode.css, 'OVER-IMAGE badges')",
     decision: 'DECISIONS D21'
+  },
+  {
+    kind: 'scan:white-surface',
+    match: 'a.es-pill',
+    reason:
+      "The category pill on the highlighted list card sits on a photograph and stays light in dark mode, as the source's own dark stylesheet keeps it (css/darkmode.css, '.item-highlight .category-name a')",
+    decision: 'DECISIONS D27'
+  },
+  {
+    kind: 'scan:white-surface',
+    match: 'es-video-badge',
+    reason:
+      "The play badge of the video facade sits on the article's own picture and stays light in dark mode, like the badge of a video card (DECISIONS D21)",
+    decision: 'DECISIONS D27'
   }
 ]
 // the active menu item and the page buttons are the accent in both themes

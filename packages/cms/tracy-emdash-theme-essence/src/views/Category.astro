@@ -55,7 +55,7 @@ if (by === 'category') {
 const missing = !title
 if (missing) Astro.response.status = 404
 const posts = missing ? [] : await livePosts(Astro.request, locale, found)
-const perPage = style === 'grid' ? 9 : 6
+const perPage = by === 'author' ? 4 : style === 'grid' ? 9 : 6
 const pages = Math.max(1, Math.ceil(posts.length / perPage))
 const page = Math.min(pages, Math.max(1, parseInt(Astro.url.searchParams.get('page') ?? '1', 10) || 1))
 const shown = posts.slice((page - 1) * perPage, page * perPage)
@@ -89,14 +89,17 @@ const photo = profile ? mediaUrl(profile.avatar) : null
 				{posts.length === 0 && <p class="es-cat-empty">{w.noArticles}</p>}
 				<div class="es-cat-body">
 					<div class="es-cat-list">
-						{style === 'grid' && <div class="es-cat-grid">{shown.map((p, i) => p.highlight ? <StackCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i < 3} /> : <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i < 3} />)}</div>}
-						{style === 'stack' && shown.map((p, i) => <StackCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i === 0} />)}
-						{style === 'sidebar' && shown.map((p, i) => p.highlight ? <StackCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i === 0} /> : <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} wide eager={i === 0} />)}
+						{style === 'grid' && <div class="es-cat-grid">{shown.map((p, i) => p.highlight && by === 'category' ? <StackCard post={p} chrome={chrome} authors={authors} eager={i < 3} highlight /> : <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i < 3} />)}</div>}
+						{style === 'stack' && shown.map((p, i) => <StackCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i === 0} highlight={p.highlight && by === 'category'} />)}
+						{style === 'sidebar' && shown.map((p, i) => p.highlight && by === 'category' ? <StackCard post={p} chrome={chrome} authors={authors} eager={i === 0} highlight /> : <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} wide eager={i === 0} />)}
 						<Pager path={href(locale, basePath)} page={page} pages={pages} locale={locale} />
 					</div>
 					{style === 'sidebar' && <Sidebar chrome={chrome} locale={locale} posts={all} current={null} />}
 				</div>
 			</div>
+			{by === 'category' && style === 'grid' && chrome.site.more_read_list_title && (
+				<div class="es-wrap"><h2 class="es-sec-title es-cat-more" {...$c('more_read_list_title')}>{chrome.site.more_read_list_title}</h2></div>
+			)}
 		</main>
 	</Base>
 )}

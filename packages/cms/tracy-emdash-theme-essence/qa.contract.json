@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 33,
+  "revision": 37,
   "pending": [],
   "locales": [
     "en"
@@ -2119,7 +2119,7 @@
       },
       {
         "id": "card-title",
-        "selector": ".es-stack .es-card-title",
+        "selector": ".es-stack:not(.is-highlight) .es-card-title",
         "source": "index.html",
         "styles": {
           "1440-light": {
@@ -2186,7 +2186,7 @@
       },
       {
         "id": "card-intro",
-        "selector": ".es-card-intro",
+        "selector": ".es-card:not(.is-highlight) .es-card-intro",
         "source": "index.html",
         "styles": {
           "1440-light": {
@@ -4069,7 +4069,68 @@
         "id": "cat-more",
         "selector": ".es-cat-more",
         "source": "category/category-style-1/index.html",
-        "styles": {},
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "400",
+            "line-height": "52px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
         "optional": true
       },
       {
@@ -4205,6 +4266,142 @@
             "background-color": "rgba(0, 0, 0, 0)"
           }
         }
+      },
+      {
+        "id": "hl-title",
+        "selector": ".es-card.is-highlight .es-card-title",
+        "source": "category/category-style-2/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "400",
+            "line-height": "31.2px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
+        "id": "hl-intro",
+        "selector": ".es-card.is-highlight .es-card-intro",
+        "source": "category/category-style-2/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Noto Serif-2180373abe5ded91\", Georgia, \"Times New Roman\", serif, \"Noto Serif\", Georgia, \"Times New Roman\", serif",
+            "font-size": "16px",
+            "font-weight": "400",
+            "line-height": "24px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.7)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
       },
       {
         "id": "mini-title",
@@ -5189,6 +5386,18 @@
         "match": "es-strip-pill",
         "reason": "The category pill on the Home strip sits on a photograph and stays light in dark mode, as the source's own dark stylesheet keeps it (css/darkmode.css, 'OVER-IMAGE badges')",
         "decision": "DECISIONS D21"
+      },
+      {
+        "kind": "scan:white-surface",
+        "match": "a.es-pill",
+        "reason": "The category pill on the highlighted list card sits on a photograph and stays light in dark mode, as the source's own dark stylesheet keeps it (css/darkmode.css, '.item-highlight .category-name a')",
+        "decision": "DECISIONS D27"
+      },
+      {
+        "kind": "scan:white-surface",
+        "match": "es-video-badge",
+        "reason": "The play badge of the video facade sits on the article's own picture and stays light in dark mode, like the badge of a video card (DECISIONS D21)",
+        "decision": "DECISIONS D27"
       }
     ],
     "accentBorders": [
@@ -5760,7 +5969,9 @@
         "card-title",
         "card-intro",
         "page-count",
-        "cat-more"
+        "cat-more",
+        "hl-title",
+        "hl-intro"
       ],
       "parity": [
         "nav",
@@ -5840,7 +6051,9 @@
         "cat-count",
         "cat-desc",
         "grid-card-title",
-        "cat-more"
+        "cat-more",
+        "hl-title",
+        "hl-intro"
       ],
       "parity": [
         "nav",
@@ -6053,7 +6266,8 @@
         "author-card-title",
         "cat-more",
         "profile-role",
-        "profile-bio"
+        "profile-bio",
+        "page-count"
       ],
       "parity": [
         "nav",

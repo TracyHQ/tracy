@@ -141,11 +141,12 @@ export const latestPosts = (all: PostRow[], n = 4) => oneEach(all).slice(0, n)
 export const featuresPosts = (all: PostRow[], n = 4) => oneEach([...all].sort((a, b) => a.title.localeCompare(b.title))).slice(0, n)
 /** "Trending": the least-hit posts first, as the source's module orders them (`a.hits ASC`). */
 export const trendingPosts = (all: PostRow[], n = 3) => oneEach([...all].sort((a, b) => a.hits - b.hits)).slice(0, n)
-/** Tags by use, most used first. */
-export function tagCloud(all: PostRow[], n = 6): (TermRef & { count: number })[] {
+/** Tags by use, most used first; tags used as often keep the order of the tag list (`order`: slugs as the taxonomy lists them). */
+export function tagCloud(all: PostRow[], n = 6, order: string[] = []): (TermRef & { count: number })[] {
+  const rank = (slug: string) => { const i = order.indexOf(slug); return i < 0 ? order.length : i }
   const m = new Map<string, TermRef & { count: number }>()
   for (const p of all) for (const t of p.tags) m.set(t.slug, { ...t, count: (m.get(t.slug)?.count ?? 0) + 1 })
-  return [...m.values()].sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)).slice(0, n)
+  return [...m.values()].sort((a, b) => b.count - a.count || rank(a.slug) - rank(b.slug) || a.label.localeCompare(b.label)).slice(0, n)
 }
 /** "More read": posts that share a tag with this one, newest first. */
 export function relatedPosts(all: PostRow[], post: PostRow, n = 4): PostRow[] {

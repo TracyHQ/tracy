@@ -8,11 +8,13 @@ interface Props {
   slug: string
   /** `bare`: no grey ground (the pill sits on a white card). */
   tone?: 'grey' | 'white'
+  /** a tag chip: its dot colour comes from its place in the list (CSS), not from its name */
+  tag?: boolean
 }
-const { href, label, slug, tone = 'grey' } = Astro.props
-const dot = categoryDot(slug)
+const { href, label, slug, tone = 'grey', tag = false } = Astro.props
+const dotStyle = tag ? undefined : `--dot:${categoryDot(slug)}`
 ---
 
 {href
-	? <a class:list={['es-pill-cat', tone === 'white' && 'is-white']} href={href} style={`--dot:${dot}`}>{label}</a>
-	: <span class:list={['es-pill-cat', tone === 'white' && 'is-white']} style={`--dot:${dot}`}>{label}</span>}
+	? <a class:list={['es-pill-cat', tone === 'white' && 'is-white']} href={href} style={dotStyle}>{label}</a>
+	: <span class:list={['es-pill-cat', tone === 'white' && 'is-white']} style={dotStyle}>{label}</span>}

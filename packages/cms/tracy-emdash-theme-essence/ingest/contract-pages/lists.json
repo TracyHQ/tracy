@@ -74,6 +74,18 @@
       "profile-bio",
       ".es-cat[data-by=\"author\"] .es-cat-desc",
       "pages/j-content/author-listting/author/Eula%20Ward/index.html"
+    ],
+    [
+      "hl-title",
+      ".es-card.is-highlight .es-card-title",
+      "category/category-style-2/index.html",
+      true
+    ],
+    [
+      "hl-intro",
+      ".es-card.is-highlight .es-card-intro",
+      "category/category-style-2/index.html",
+      true
     ]
   ],
   "parity": {
@@ -176,7 +188,9 @@
         "card-title",
         "card-intro",
         "page-count",
-        "cat-more"
+        "cat-more",
+        "hl-title",
+        "hl-intro"
       ],
       "parity": [
         "nav",
@@ -231,7 +245,9 @@
         "cat-count",
         "cat-desc",
         "grid-card-title",
-        "cat-more"
+        "cat-more",
+        "hl-title",
+        "hl-intro"
       ],
       "parity": [
         "nav",
@@ -372,7 +388,8 @@
         "author-card-title",
         "cat-more",
         "profile-role",
-        "profile-bio"
+        "profile-bio",
+        "page-count"
       ],
       "parity": [
         "nav",
