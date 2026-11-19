@@ -4,10 +4,10 @@
   "cms": "emdash",
   "tag": "tracy-essence/emdash-0.x",
   "version": "0.1.0",
-  "measuredAt": "2026-11-19T06:42:48.930Z",
+  "measuredAt": "2026-11-19T07:52:17.033Z",
   "machine": "linux-arm64",
   "measuredBy": "tdsr flow.mjs --cms emdash --template emdash-tracy-essence",
-  "flowVersion": "f5fbfe9c6",
+  "flowVersion": "074f2a02c",
   "modes": [
     "native",
     "derived"
@@ -38,8 +38,8 @@
       "match": 1,
       "margin": 0.6,
       "apart": true,
-      "follows": 0.784,
-      "followsSamples": 139,
+      "follows": 0.834,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -64,8 +64,8 @@
       "match": 1,
       "margin": 0.6,
       "apart": true,
-      "follows": 0.773,
-      "followsSamples": 132,
+      "follows": 0.826,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -91,7 +91,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -117,7 +117,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.011,
@@ -143,7 +143,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -169,7 +169,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.004,
@@ -195,7 +195,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -221,10 +221,10 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.013,
+        "first": 0.012,
         "page": 0.01
       },
       "lowContrast": 0,
@@ -247,7 +247,7 @@
       "margin": 0.6,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -273,7 +273,7 @@
       "margin": 0.6,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.015,
@@ -299,7 +299,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -325,7 +325,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.008,
@@ -351,7 +351,7 @@
       "margin": 0.2,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -377,7 +377,7 @@
       "margin": 0.2,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.001,
@@ -403,7 +403,7 @@
       "margin": 0.2,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -429,10 +429,10 @@
       "margin": 0.2,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.012,
+        "first": 0.011,
         "page": 0.005
       },
       "lowContrast": 0,
@@ -455,7 +455,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -481,7 +481,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.001,
@@ -507,7 +507,7 @@
       "margin": 0.2,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -533,7 +533,7 @@
       "margin": 0.2,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.008,
@@ -559,7 +559,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -585,7 +585,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -611,7 +611,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -637,7 +637,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.01,
@@ -663,7 +663,7 @@
       "margin": 0.6,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0.002,
@@ -689,7 +689,7 @@
       "margin": 0.6,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.012,
@@ -715,7 +715,7 @@
       "margin": 0.2,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -741,7 +741,7 @@
       "margin": 0.2,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.015,
@@ -767,7 +767,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 139,
+      "followsSamples": 145,
       "followsKept": 0,
       "left": {
         "first": 0,
@@ -793,7 +793,7 @@
       "margin": 0.4,
       "apart": true,
       "follows": 1,
-      "followsSamples": 132,
+      "followsSamples": 138,
       "followsKept": 0,
       "left": {
         "first": 0.001,
@@ -1616,15 +1616,12 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 7,
-          "unique": 7,
+          "count": 4,
+          "unique": 4,
           "where": [
             "a.es-pill.es-strip-pill::before fill #6f42c1",
             "a.es-pill.es-strip-pill::before fill #4d6bff",
             "a.es-pill.es-strip-pill::before fill #20c997",
-            "span.es-card-badge svg words #4d6bff",
-            "span.es-card-badge svg fill #4d6bff",
-            "span.es-card-badge path fill #4d6bff",
             "a.es-pill::before fill #6f42c1"
           ],
           "bySystem": 0
@@ -1840,9 +1837,10 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 1,
+          "count": 10,
+          "unique": 2,
           "where": [
+            "a.es-pill.es-strip-pill::before",
             "a.es-pill::before"
           ],
           "bySystem": 0
@@ -2171,9 +2169,10 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 1,
+          "count": 8,
+          "unique": 2,
           "where": [
+            "a.es-pill.es-strip-pill::before",
             "a.es-pill::before"
           ],
           "bySystem": 0
@@ -3576,15 +3575,12 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
+          "count": 5,
+          "unique": 5,
           "where": [
             "a.es-pill.es-strip-pill::before fill #6f42c1",
             "a.es-pill.es-strip-pill::before fill #4d6bff",
             "a.es-pill.es-strip-pill::before fill #20c997",
-            "span.es-card-badge svg words #4d6bff",
-            "span.es-card-badge svg fill #4d6bff",
-            "span.es-card-badge path fill #4d6bff",
             "a.es-pill::before fill #4d6bff",
             "a.es-pill::before fill #20c997"
           ],
@@ -3801,9 +3797,10 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 1,
+          "count": 10,
+          "unique": 2,
           "where": [
+            "a.es-pill.es-strip-pill::before",
             "a.es-pill::before"
           ],
           "bySystem": 0
@@ -4132,9 +4129,10 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 4,
-          "unique": 1,
+          "count": 6,
+          "unique": 2,
           "where": [
+            "a.es-pill.es-strip-pill::before",
             "a.es-pill::before"
           ],
           "bySystem": 0
@@ -4241,13 +4239,10 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 5,
-          "unique": 5,
+          "count": 2,
+          "unique": 2,
           "where": [
             "h1.es-cat-title span::before fill #6f42c1",
-            "span.es-card-badge svg words #4d6bff",
-            "span.es-card-badge svg fill #4d6bff",
-            "span.es-card-badge path fill #4d6bff",
             "a.es-pill::before fill #6f42c1"
           ],
           "bySystem": 0
@@ -4902,13 +4897,10 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 5,
-          "unique": 5,
+          "count": 2,
+          "unique": 2,
           "where": [
             "h1.es-cat-title span::before fill #4d6bff",
-            "span.es-card-badge svg words #4d6bff",
-            "span.es-card-badge svg fill #4d6bff",
-            "span.es-card-badge path fill #4d6bff",
             "a.es-pill::before fill #4d6bff"
           ],
           "bySystem": 0
@@ -5112,11 +5104,9 @@
           "bySystem": 0
         },
         "off-ground": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "article.es-card.es-stack.is-highlight"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "photo-text": {
@@ -5126,7 +5116,7 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
+          "count": 7,
           "unique": 2,
           "where": [
             "span::before",
@@ -5442,11 +5432,9 @@
           "bySystem": 0
         },
         "off-ground": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "article.es-card.es-stack.is-highlight"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "photo-text": {
@@ -5563,13 +5551,10 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 5,
-          "unique": 5,
+          "count": 2,
+          "unique": 2,
           "where": [
             "h1.es-cat-title span::before fill #20c997",
-            "span.es-card-badge svg words #4d6bff",
-            "span.es-card-badge svg fill #4d6bff",
-            "span.es-card-badge path fill #4d6bff",
             "a.es-pill::before fill #20c997"
           ],
           "bySystem": 0
@@ -5773,11 +5758,9 @@
           "bySystem": 0
         },
         "off-ground": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "article.es-card.es-stack.is-highlight"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "photo-text": {
@@ -5787,7 +5770,7 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 9,
+          "count": 10,
           "unique": 2,
           "where": [
             "span::before",
@@ -6106,11 +6089,9 @@
           "bySystem": 0
         },
         "off-ground": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "article.es-card.es-stack.is-highlight"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "photo-text": {
@@ -6120,7 +6101,7 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 9,
+          "count": 10,
           "unique": 2,
           "where": [
             "span::before",
@@ -6230,12 +6211,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 13,
-          "unique": 13,
+          "count": 10,
+          "unique": 10,
           "where": [
-            "span.es-card-badge svg words #4d6bff",
-            "span.es-card-badge svg fill #4d6bff",
-            "span.es-card-badge path fill #4d6bff",
             "a.es-pill::before fill #6f42c1",
             "a.es-pill::before fill #dc3545",
             "a.es-pill::before fill #4d6bff",
@@ -6535,11 +6513,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=email]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -6907,12 +6883,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 6,
-          "unique": 6,
+          "count": 3,
+          "unique": 3,
           "where": [
-            "span.es-card-badge svg words #4d6bff",
-            "span.es-card-badge svg fill #4d6bff",
-            "span.es-card-badge path fill #4d6bff",
             "a.es-pill::before fill #6f42c1",
             "a.es-pill::before fill #4d6bff",
             "a.es-pill::before fill #20c997"
@@ -7567,12 +7540,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 5,
-          "unique": 5,
+          "count": 2,
+          "unique": 2,
           "where": [
-            "span.es-card-badge svg words #4d6bff",
-            "span.es-card-badge svg fill #4d6bff",
-            "span.es-card-badge path fill #4d6bff",
             "a.es-pill::before fill #6f42c1",
             "a.es-pill::before fill #20c997"
           ],
@@ -9182,11 +9152,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=email]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -9550,19 +9518,14 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 13,
-          "unique": 13,
+          "count": 8,
+          "unique": 8,
           "where": [
-            "span.es-video-badge svg words #4d6bff",
-            "span.es-video-badge svg fill #4d6bff",
-            "span.es-video-badge path fill #4d6bff",
             "a.es-pill-cat::before fill #20c997",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #6f42c1",
             "a.es-pill-cat::before fill #4d6bff",
-            "div.es-side-num words #4d6bff",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -9854,11 +9817,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=email]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -9891,14 +9852,13 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
+          "count": 7,
+          "unique": 7,
           "where": [
             "a.es-pill-cat::before fill #20c997",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #6f42c1",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -10225,16 +10185,14 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 10,
-          "unique": 10,
+          "count": 8,
+          "unique": 8,
           "where": [
             "a.es-pill-cat::before fill #20c997",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #6f42c1",
             "a.es-pill-cat::before fill #4d6bff",
-            "div.es-side-num words #4d6bff",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -10526,11 +10484,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=email]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -10563,14 +10519,13 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
+          "count": 7,
+          "unique": 7,
           "where": [
             "a.es-pill-cat::before fill #20c997",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #6f42c1",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -10897,16 +10852,14 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 10,
-          "unique": 10,
+          "count": 8,
+          "unique": 8,
           "where": [
             "a.es-pill-cat::before fill #6f42c1",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #4d6bff",
             "a.es-pill-cat::before fill #20c997",
-            "div.es-side-num words #4d6bff",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -11198,11 +11151,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=email]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -11235,14 +11186,13 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
+          "count": 7,
+          "unique": 7,
           "where": [
             "a.es-pill-cat::before fill #6f42c1",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #20c997",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -12436,9 +12386,10 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 1,
+          "count": 10,
+          "unique": 2,
           "where": [
+            "a.es-pill.es-strip-pill::before",
             "a.es-pill::before"
           ],
           "bySystem": 0
@@ -12765,9 +12716,10 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 1,
+          "count": 8,
+          "unique": 2,
           "where": [
+            "a.es-pill.es-strip-pill::before",
             "a.es-pill::before"
           ],
           "bySystem": 0
@@ -14396,9 +14348,10 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 1,
+          "count": 10,
+          "unique": 2,
           "where": [
+            "a.es-pill.es-strip-pill::before",
             "a.es-pill::before"
           ],
           "bySystem": 0
@@ -14725,9 +14678,10 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 4,
-          "unique": 1,
+          "count": 6,
+          "unique": 2,
           "where": [
+            "a.es-pill.es-strip-pill::before",
             "a.es-pill::before"
           ],
           "bySystem": 0
@@ -15703,11 +15657,9 @@
           "bySystem": 0
         },
         "off-ground": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "article.es-card.es-stack.is-highlight"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "photo-text": {
@@ -15717,7 +15669,7 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
+          "count": 7,
           "unique": 2,
           "where": [
             "span::before",
@@ -16031,11 +15983,9 @@
           "bySystem": 0
         },
         "off-ground": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "article.es-card.es-stack.is-highlight"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "photo-text": {
@@ -16361,11 +16311,9 @@
           "bySystem": 0
         },
         "off-ground": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "article.es-card.es-stack.is-highlight"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "photo-text": {
@@ -16375,7 +16323,7 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 9,
+          "count": 10,
           "unique": 2,
           "where": [
             "span::before",
@@ -16692,11 +16640,9 @@
           "bySystem": 0
         },
         "off-ground": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "article.es-card.es-stack.is-highlight"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "photo-text": {
@@ -16706,7 +16652,7 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 9,
+          "count": 10,
           "unique": 2,
           "where": [
             "span::before",
@@ -20133,19 +20079,14 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 13,
-          "unique": 13,
+          "count": 8,
+          "unique": 8,
           "where": [
-            "span.es-video-badge svg words #4d6bff",
-            "span.es-video-badge svg fill #4d6bff",
-            "span.es-video-badge path fill #4d6bff",
             "a.es-pill-cat::before fill #20c997",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #6f42c1",
             "a.es-pill-cat::before fill #4d6bff",
-            "div.es-side-num words #4d6bff",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -20468,20 +20409,19 @@
       "glare": 0,
       "keptText": 0,
       "lowText": 0,
-      "lostButtons": 0,
+      "lostButtons": 1,
       "failedFonts": 0,
       "empty": 0,
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
+          "count": 7,
+          "unique": 7,
           "where": [
             "a.es-pill-cat::before fill #20c997",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #6f42c1",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -20808,16 +20748,14 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 10,
-          "unique": 10,
+          "count": 8,
+          "unique": 8,
           "where": [
             "a.es-pill-cat::before fill #20c997",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #6f42c1",
             "a.es-pill-cat::before fill #4d6bff",
-            "div.es-side-num words #4d6bff",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -21146,14 +21084,13 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
+          "count": 7,
+          "unique": 7,
           "where": [
             "a.es-pill-cat::before fill #20c997",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #6f42c1",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -21480,16 +21417,14 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 10,
-          "unique": 10,
+          "count": 8,
+          "unique": 8,
           "where": [
             "a.es-pill-cat::before fill #6f42c1",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #4d6bff",
             "a.es-pill-cat::before fill #20c997",
-            "div.es-side-num words #4d6bff",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -21818,14 +21753,13 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
+          "count": 7,
+          "unique": 7,
           "where": [
             "a.es-pill-cat::before fill #6f42c1",
             "a.es-pill-cat::before fill #dc3545",
             "a.es-pill-cat::before fill #20c997",
             "div.es-side-num words #20c997",
-            "div.es-side-num words #fd7e14",
             "div.es-side-num words #6f42c1",
             "a.es-pill-cat::before fill #fd7e14",
             "span.es-round.is-rss fill #f9b439"
@@ -22785,6 +22719,7 @@
       }
     }
   ],
+  "previewMeasuredAt": "2026-11-19T07:55:07.318Z",
   "previewPages": [
     "/",
     "/our-authors",
@@ -22802,6 +22737,5 @@
     "/blog/natural-remedies-for-common-ailments-blog-fashion",
     "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
     "/search?q=line"
-  ],
-  "previewMeasuredAt": "2026-11-19T07:05:03.205Z"
+  ]
 }
