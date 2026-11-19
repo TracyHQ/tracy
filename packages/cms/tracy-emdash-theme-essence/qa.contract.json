@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 43,
+  "revision": 44,
   "pending": [],
   "locales": [
     "en"
@@ -4092,9 +4092,9 @@
           },
           "768-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "38px",
             "font-weight": "400",
-            "line-height": "52px",
+            "line-height": "49.4px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(33, 37, 41)",
@@ -4102,9 +4102,9 @@
           },
           "768-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "38px",
             "font-weight": "400",
-            "line-height": "52px",
+            "line-height": "49.4px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(238, 241, 246)",
@@ -4967,9 +4967,9 @@
           },
           "768-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "38px",
             "font-weight": "400",
-            "line-height": "52px",
+            "line-height": "49.4px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(33, 37, 41)",
@@ -4977,9 +4977,9 @@
           },
           "768-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "38px",
             "font-weight": "400",
-            "line-height": "52px",
+            "line-height": "49.4px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(238, 241, 246)",
@@ -5148,9 +5148,9 @@
         "styles": {
           "1440-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
+            "font-size": "32px",
             "font-weight": "400",
-            "line-height": "31.2px",
+            "line-height": "41.6px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(33, 37, 41)",
@@ -5158,9 +5158,9 @@
           },
           "1440-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
+            "font-size": "32px",
             "font-weight": "400",
-            "line-height": "31.2px",
+            "line-height": "41.6px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(238, 241, 246)",
@@ -5168,9 +5168,9 @@
           },
           "768-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
+            "font-size": "32px",
             "font-weight": "400",
-            "line-height": "31.2px",
+            "line-height": "41.6px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(33, 37, 41)",
@@ -5178,9 +5178,9 @@
           },
           "768-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "24px",
+            "font-size": "32px",
             "font-weight": "400",
-            "line-height": "31.2px",
+            "line-height": "41.6px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(238, 241, 246)",
