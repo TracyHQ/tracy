@@ -22726,6 +22726,2046 @@
       "sha256": "3b40c34366eb2e8360cf930bf77b05356936af547c4ce876a41319de0a942f18",
       "count": 1,
       "reason": "Doc comment of the shared personalize tool: a place name with a Tamil case ending, an example of an inflection glued to a demo place word."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/contract/validate.mjs",
+      "sha256": "b516c59bbba1be674862706a56103067252b40ed87f65b7077c97f596408e3d3",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/ingest/detect-source.mjs",
+      "sha256": "2940a538c1b52044138e12bb06371e394defa812dc6475a38127aee78530bec3",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/ingest/from-wp-spec.mjs",
+      "sha256": "69902bb4c3b61db631b7d7aeab80b95c221a8d7ab5a6886af02c09d9301b6eff",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "1a27226ea9925a5c211d34a4b8b70b0f6b2d8c1061fdb225a2e6d371eef82231",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "5f594a8424e1a20ac70c37c037f598f5fcc1b9ff403d8dae39a6b70db38820e9",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "af5cc20fd4b4e74077918b050407c50d873bef9a328d0ee09a761ac0a07683df",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "abe8302fa84a01a395b2abf4e47e50e7e29b60c57e76f3f7edb6ef52ba452bc0",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "ba202e4e8f020688e41aaa4e8927f58a5e5a2ed1126bf35f69e6e714681f1a16",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "2feda2cba41d3c54258e47fa35f43685bb04ad59117719ba7ff26c3a399f1b4d",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "0839706f30b4185ac8ee4945eb51d92d1d7c8433c72bd0e08080d56ab1519065",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "6e080a9a93243b9b95d38094a18634c4ad2ad58c8ea2e2498245ea9420c77197",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "09e725c9432856bbf03c8346cb30bf388419660a3bb7e19502f197574dfb9efc",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "8f381fbe142190656d82035a857ad1ee5c2063f5bca98b2bfc731216631403c3",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "77d3b8608e6051702003050a078bfa88c28d744076a887fc28a477896c69fcd6",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "caef94b426ecc244ba14082cb19e92866dd66c962a6c5e59a4ad1c4edf324f31",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "af27fc18d2891c700d4ba91e465e4a24d864b33fb48f8c401f769fe6ccc7a842",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "b13c3934328c00145612491e7d3b2938f7f7cbebb36a2e5390f25129f48a0ecb",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "85190b315780aa9fcf218ee32ec14bd7f38275119e28e447487dd07933886102",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "86dc06b6140f6a16966daf68fccf88f058767666aeb5290a52117b4b3a33dd61",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "41ce454ca1c717635dbe67465bb064c7bce9aa6042be565c19ecc72c009ada1c",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "af36136b6570cbc3f4d6ecf8dfcf4045ce4e39d27fab3b4a046f2466e14f8cf8",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "989b90753d0dcc2112cd121dc4eb0bdd80b8e4a03c25a2f4fd38e4de28dbd7e7",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "94bb9c75011e051325e1af4613ccad9eb9c17f80553f5c4953fe166532125da7",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "5526dfbe93638924bd56a9161d272c809b8ff54d3656d5e28a47a81a48575c8c",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "dd90afc1a7814871a8fdb86f4739ba8a1c52fd1f964e85751341675f884c7dee",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "e2a23093e3ba47fddda71e8e1910d388b8880a70d46c5e6158954b4c62407387",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "f0c2019f8289a4081c1a9cb917fe2ae6c01db4306151526041c0c7859542e0ad",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "256279186889b2422c9489084863a6b471cc6195652a4e61baa64ad42999f109",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "cbc479c6d0fa444590c29e07b968a1b661e200595a5826ca0b77f1f375a899d7",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "3a489c57717d3a8118d74aed125235e8165c4879938e020e3cd2f919187c9ca2",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "3d651e01dbefc7aa43f81b66c1cd452fe3827bdb8ba22f87b3765605f91286de",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "58cf3d2a9352d5e718a6bdb25247caa6b16102f38b311e60ea881de3c25d58bf",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "6f0d79ad3805ca8db7b8271bd8331666209768969baef33e8a360b775a7302cd",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "eb232f5bf5d177b99932b8d6e45391d2424df51560d145c5c9e74fee07d2772e",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "70136abc41583cba7a379cc77285c63fcfa8c89697d02482edf22cceb22e224c",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "eadef5b9fdf22c3f6d0222e3ce791d8103471256b791f7995fd4b1cf6ef2a926",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "5d040227b4eb7b0d75d353ed1c5d228f47dda2a1af55a2bed84555af190b5714",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "261969c819658f4c1de316f21915a4b2e83a10274ec5e5a2a0a982652526ba19",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "be759f32203ddc2b3da9494299de846928ae931e3efd4e94511bf7ee475cb744",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "dcf7c657ac25c14c7b6b40c150809df927893bc40a15e82aea3223bd2d7b6775",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "221cc8af33965def8c2bfe556971c579f0751ad7b323aa3966d3c590de54e9e2",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "bc8dbaff5505096be8dc4b2ed18860332cea0dd362aeffcffaf84bf386937095",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "79658b9a72fd1674a1c4125de07536f41073322ab8d5b37742470c3d90d4a076",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "5c8bba02ff2a8b8df4fbc75ae1cf601845f3240c747f3a145e6085c4b9e08925",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "66861b631a0d239f62b4c73a2d5d7362ba452e110b00a57248160ffbad30b23a",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "e017be8bfe3d12deec3747a45545e6c253b823a4df06bb676b28119fca28c169",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "615753c76e29cbfdefc8d7bd38806dd5f786527a90c75d0cc8296ca75b71d441",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "0ae1360da1a77a42c73d07f53c700baf40edb512559bf7c598310ff115b0c8c7",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "f5bd942048a017f39006473ec2b5bb44f0d95012ae7878a413b11936431d51d8",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "c14284f6a994a0a6d06b547ad4d091c9a4f93a869d03d2808d87c307dac13814",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "3d70569be08a9a9a11efb98164d2c48dbc8210107fd4f92ee148d3d24a838321",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "9e995966941feea8d3210b2365fcfb48dabda7bbcc39b58ccaa6fbce4cad523f",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "95509e43c540d797b4f05b04ff3789177a5f13bd31d34d2716a587de48c564dd",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "97ff16bb1b4f9e1f3c120d7d20f3b6f26ce694334d5571db6487b0d9130d4fe8",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "260a81a15af2b69f455b837fda5be133d9ef765e178accf0f6c5bf50bc88cc4a",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "67cf1b1b49d1c79f8bb1c21c7e343ee8a1fdbc877fc8b52e49b71d64d7014235",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "5814df19922dcac9dbcce3107b3412ab378fddf42a0a215e77aeb4a0fae70b58",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "9461cf443751857ad7955c252b674e0bb37ee70a00b9dffc2cfbfff6b13937a0",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "cb65f6f1114ee0fc901a6d90166af9782f515326aa734d83b3b61b3352664601",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "43be45ae813b139e6500d5da43b36fc82c4bb424b16af310fa7a2c81b852f110",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "035f3fd35456df80b32d798735da57c8e9f94321a81de75196f785447a5370e3",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "ab623330f548d46e24ee8f376381b0d1d917cbd2e3ffffced038051dda426ca3",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "59552076cf49bee5e617e34b7e2151211f50345f76ec0ada710cc762a87366b0",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "7659d1cc0600baceddc82a7027ea61b4e92bc042e71ab454bfcba0ee3d273607",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "6020d6e7a96e69c1c0f186fe030e603dd98f8abf356c5104d0e19b6802ccd01c",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "2915aeee43de4d5fca0599cb015922498dadae059de59232967aa815268372ee",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "8b5b58f071c5cf77fc0eaf4ebdb1d7bd0c3e8e6e9f0e399c42699bc64b61250c",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "6824ad08a37fb23ec202bfabee1f8bdd9ed0821453b7d381f93a561c19e93aae",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "8c98de205bf6a5be4983364b75e10407dc45a0ddcf297a1b635d810722cfec98",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "550d8d47aa694286499e8f8b6ceab960549b9806d9ed71d134fae56c57aebecb",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "26760bfcf5d28395e36f76092504e2ec526f60129c50d1344f1b82e29da3375c",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "d45c34321c4f5ed1fffb732de1cf3ad6de6df0313fd717c1741bba9b813454c7",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "85def17cf77134d9a9a697c0d89182174e275f16eccfcf1b98fe5e9977f517f6",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "8012fe62be48f9822b4f65084a984d52b600d7b7bd620cb191e380f842117c61",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "73105b07743f004e00f251ce3101ef228fae15999970eeaa015627dc759c4319",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "b413ee10ba7be5048d80fa5f7d1afe28e1d01d9aeade0e1f7aee7aa5db14d43a",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "4dd8866467173b4b78955f7bf0ecb4d3eafb26505fc3fe4e3cf3cc4c8e0b7cda",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "8b2ec67ab9b79ba441b0510fcc9abab111e20ad2666f01440cddd39484bd5466",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "1d94b42a7760ad7cba952a7a1fa021604d9d2dd72b0a902fc79a9a2f575f415a",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "ce49476bc19b95bda9b7fa38dc167c9f86ddcccfd2f894fb163225284dbd54f3",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "092be9f493d66f161d7c4077ffbbfe14c73a207137f089b2f8dd399c1f07248d",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "cbdc03c2030c3bff2a63f1526030b89fe067bda0b249bddf288af6a4834a3a76",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "576acd70ff3c7fa742844696f8203180a9cdd4c402fbe2186ca493cd014f4d66",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "ab390c27eea631102a3ccc960ad03c74f8d119b0547a473b9518d94c1343526a",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "33be4f092bd1c2d83123998cee9a493c845762925b280f990ac97e69fbd10c09",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "0a7a4bec1ec1a96dcfadc3e7cee1a9437de8f91ae038b989a9ba569244107f9a",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "d17d8d83df18d744135c6da5398c764f736bb6a7824c6dec35d0f792b93bb279",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "81aeba996d068efb063ce70518a55a72036ee863378ce18fb9426c5e5f02e71d",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "20cf0597c485622997a4d4d49d13897a2ad0becbe500b8ae5928a65f33801792",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "9f4bde2cda858c10493917001e84f4b4fd84cd7c5af5bc0febc8094f822d3168",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "9fb5f3873968eb1f47561cb35d19fb4b017cc533ef4a33b6b8a0e3de91caebfd",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "e54561aeb3ceace1bc2b7f377b70c1122607a6f3d978207962cb628e2e2acb3e",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "8185d43626674f5870a09897fc09b11891810878f5ab55b0d54c7616222a76e8",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "3da717c54147e5345c778a69d8742229ba082764389e879d4617a717368f309a",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "3a1eb5629021805e08a2f3629594b4d3b09b04995f3680c8d30679865aa94485",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "c2f9448dc95bdce70ae30caeb32928c4bafcc0ad2682771c20a545d2a72027bf",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "dec3c6ea0bf7baabd4d01ea52f6f30ce0ecb3a9a942bd35e0fde0fc1b938e7c1",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "a76e62905a1f21c86c21ee519fcaf4633d0876dc4ec0b1359bc86cb65bbec439",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "92e034946e4edcfa003b63a408b70051f2c79648106f89f8178997709aa99618",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "35a7b6178b10d512f97937614f1bba7127419c303f30f4fe9d28a905913dd225",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "8f87029a2c94e01e4b9bd4b1f0f546240efeeb08201a7ac2e97a2a440cf89c82",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "3edb4282612366d814b547fad5dad9cbed9f5317d6526b0d16aa72b687337a05",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "08335dd65ebddbce75d885e46540da1996994e7de76b9609ef3faaf8e674c024",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "78857e16bb29147c2766ce0be2d716c9864624e364574a345a9bede16793c8ea",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "c9a5f5ba40aab268107dd2c83af166130d0b93ce53217513645f3242b34e6db1",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "de5a68aef5bc5c23267066b8e20d7cccf9133b0f9a4ac2e9fc88c1fbb4e9b378",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "7b1f73bf294d55015ef68e72e80d2913e0203faa3d3e65801045d7ee8cd537e8",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "edb992520dfed2b050ad3857fa21219a5033f6065d3067b3a5bf9dcc5151886a",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "329a32e9116763e40aa761a6a21150ef82125fceefc155b118221a33516e0119",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "73d9da7d12e995243ce422fd1263ef9054ec8d1f0252ccc91136fcce93a8b1f9",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "27063f71fc79d7f2bdbd9d911ac0b5ce089a7581a361730d3d1a4e4140e62e9e",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "cfed235049d29c778c28f28ac9e7b2865bae8028590bf5fd9ee9c1ebe450b0d8",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "11b627fe8c4707f1698c82c13365cf2573a4ab9842d6b176edd788f86fbe59f9",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "524caeeaa9d138227b53d4f6a286062807f6b805efdefb00217ea5fe24d98716",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "429d0ca65f1553beffe7635d75a5b0cf79ef90d08d52d991c4e949cedb04f944",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "643279beb37036830bdbae8427f78de4b0acd3d18813a733cd78f2cb42509d7b",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "26ed53e8ba05d5db4fb1258224488b91a624c99c86c22b88419535577f8065f6",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "7da026782ad073e0a75f6c539cc8417ebc0098b13b02589f9920ffee9d36d8f1",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "4a19563cc0cfc375f2572b4b7c849521224230861ab4ca8ffe1ceeaf6d0238b4",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "02ec21a1a1cdb83bb35967f15d47627e4d373220771879ec0a492abf7ccc2e16",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "629dd0aee59f6a6d980dbf62431dc4adfda4f72605551ec6a1e8339e19ae0348",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "a123292a5594ed9612c843e95ca418e663287bff017970ca3ae5d1772de0ce0b",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "f235ba9837a56a5611136adbfce46a4468c92e2808fabd659a6b8cc799d26c4c",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "445236e2f75a01ea18cddc8ab8bf7c949f655559f9a2a8f57eeff2e98f64de94",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "e0bc5d0d2183986315c3d851f46f66d51e8b6078a9089b66ae85ef98cebd07ca",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "e21faac71adb358a002616077d3fbfe5a092221a17ec63dbdd9a8e1383ce740c",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "0db3bcb114f8f6aa969dec6d425fa22ba111b3ed3f2bdc10c087989017b68285",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "d928e8c9adfad8e6157edf1fe4067716d61b3833e3463ebdec85948aebe72d10",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "bc6395038ff69290ff5b2bf6f106e30da29eeea8bdaf9e63fed9ba9d2cd6b67b",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "ab54d789bd162004475e7b0f6c10ec4196cd6b01fa5cb3c629c3e9ed56fd2a23",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "d526ab344aac70be31673c93f65b812e84779fc62a1f92d218449b0572791543",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "3691b1d461f1357a83f78b7cb59ed40f4cbc28324b543ac7d9191866bade64d1",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "3115e742f476ae30eb045bbd9c29307b97793209f9d9adb7042ea0001c9628d1",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "92ccbfe4e7342027e0d5bc8f69d560ff117dc1e01e53d195c167204f8d87f2d3",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "e942d6bafc7bfd572a8c464f65a662fcdee4606060f6949892e98756f0bce39c",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "211c08aa4e0bfb50529a4c369a98a29befde213b9ba641a7f7bb28ed6d2e7abd",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "f292f4c52b5b8bdd16c951ab44aa4da4d403d1206d7d575f7965752775b004ea",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "3c6b4e29bd810564cdbfaad7e1ca42b9d0a786528a39454ad4277c05fe4a0042",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "d2a2eb423794d618c7bf6302115c8bbfe7bd64c96aacff62519c3a87e4a9e371",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "75b6ac81c016e952f6212aefc800f319bd27b3d60415787d21ce8a87ce8ccb7a",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "bc75f5b85244e4822f44ae8d30dbf9ea32bed3325579609b90415fb4676ce228",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "8c02058799899154b1d4dbc04a62dc68c8566c89fa2d774011a69542a065b672",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "338a7a162585daa19610bc5c10d400c77bc18caadec928b5b07714f29a1ac534",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "16cf5338afffb98e2d523fa0f925b84d6a8279323f37d6c864bb19db8471d680",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "0362a8d11682f35d9e26106ebbbe359cd67f45fae9ad251df07a0248b836ee4c",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "500cada5c4a71b9b7b7d5454c9ab1773c8df7a1f1658665f0db14684ae85244e",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "65b8374e3e3e44122e617822e14b7c4a55ed6f8cf4f6cc066a6c120caca4a5c1",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "d3d09c0e9550c3618ce24f1b1e5919dcd4911da54862260e6bc579733364515a",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "124b151d0fb8b368bf3d742dd7f719c84bd0b81ca5a176de112cdb7882296c44",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "a853df7fca41f3f1ef776fc15580c9ea6df7670df585bcedaa83dcbd71b37ef5",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "1b8e85690f31237c1644781e09fed240047670472dd72d467b98e022e8e11289",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "8f252b762e0bd3bfd3c6f04b62ba7e5428e6ba0099657a7fb664257858fa35af",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "13fb83d84337445598cc3251f467ea2be2d90d9f97c97eea14a321cbc9dafef0",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "0731b78f1849b4f3f90588cc750d4775b9970f97fe8b88b6fbae0ff2bd14b71b",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "ec604724a70e519e1a4c6bf73abadb6b89a7583e22ade3b0985a0df5eda39d41",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "d1b64bf3151a2d79e326dea4148b3fbe6380cd41759fb0e1c132fe3896207a60",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "c2905a866fce68fd0058c65677c9b358ddbceca845ead46abdf52bcc50d32882",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "4e57dcc29618d1d0644bde636b3d3b4b3b58d1d7dd112de4a7c61be559dfd3d0",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/questions.json",
+      "sha256": "8310007df176c015312dc498a0f2097848201640d6119c387e076450ec012edd",
+      "count": 1,
+      "reason": "Customer questionnaire labels of the JA Essence template in several languages (seed/questions.json): localized product text shown to the customer, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/font-subsets.mjs",
+      "sha256": "a51ddf73bcc847577bdd2a2203e3a287c95fde509e962a6510db967f28094c84",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "4c6afdafaaf9b244fecbe9a0b1d5777405747cd9d187b026632ddadafc3d1bf6",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "4d59e98cca6ec46d477ab05f42fc5ef22c5a040c523c98056c124146cb5510d2",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "a0a5c3ac4bdeefc8177dfe1d29b4ceae486cbfb320f5101d4e8ac9ce2fa518ab",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "1bec21364ec04c64698b995e1e7608ba632c8d05014a8a6fc0d0c2b75a558c10",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "032c1ea312b3d46e13897420d1f7fadba4cc9abd5daa9f99ba8e00c4d04e0fcd",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "2dc24e66a4bc9996a7fd217ff27b51f07d6406c054f7307b04d31acda91b4282",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "74d1eed003eec4e91f2cf6f9b4d3557bbf47481c148714c6c58ea1b0c43dc1e3",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "fdb4219091ed80df18f486946161228fdc735da8b2a9e2508563495470443735",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "3be2d99a43d891bd05128523be95911c139f15816073ba912364284ff6413715",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "13cbc34b7887241d0e02959bc43c9dd24b0931e78b2475f657cf8b06dc694a4c",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "649e69f0afc60aecf85fb9de7f093efe3648896bfd53ce99c59a2899718c6224",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "32e95bd62777fd2f17894e33f95cb9f894689ddcb0161b84ec5db7bdfa7191b1",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "7c9c2b78ad5be033f2b0661b354ba1334f283fe0b89c9ce10c72f15cac5482ed",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "313781cfb414fbad65ff7a74258318a47207270d5c12205ae01116800e3902f1",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "17c596ad9a9e5db952262ca2548230394a3d1975bb0ca12c65f1a53cd9e9ec59",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "d2935fb90c2fef473e30c9b297af74883030b3cd4dcd0d5f40eb2f084c229e01",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "b910ede15cd1cd53038b2fa9a63c6ae69f37cc822d8bdcf3dad72041ee0f6000",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "de078d25f2dc11f0f3d467e952e82fc2b252cb02904bd6dcdea6c7e94a689eff",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "2591997b275a68cd5a338974f8472ebc587229db77e402875f7367c16b126d43",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "c26b44095dcf7ce1e7a3c761d561dd727253f9f16ca0b3bdd374a366c32c88eb",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "246cf21bcf53646569e0cf21785d9271be4f25042fabe393f6f68c30efe3f355",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "806d40d46ae6b606c3c5d6dae2f088f532daf8d679221b0fe7322d1c23174ab2",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "aa495c5961b4379e594fd9e07d72cf32e1032b4fd5f438fb9663cf63fec401dd",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "8c16f59d7c77e6f6818cccf021c660c3f96153180028577977d39e90cc8b6377",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "4530e293a540160965c32e98d86a8dac0a7de09e4d884b021d0624d2704ffd55",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "b645d79c4c8d168363a203f675c23ecbdcabcaea8a7ee75fe8d754a8913cb65a",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "4999e6c05bc583026ce30c1334a4555bdb059346053465a42aa237a622438791",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "f90eb955f3c6eb377ae6eb13b2637cca4118c64a754aeacd8d983e41254c38bd",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "5ec9725e2a5bc87fb0fd580bad2fe74ab113d4c62f047992323aacdcb7cd9e9d",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "1c70e8fca0d84f42b520c3a2693edf76c5205911189f7b5dc296ac6fe95e9070",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "984585221c5badb2134e4a5ea89121ed0995975669734e5928c476d169db85d3",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "cf96e83c1e194c711d2a5f51814a55df3cae62abbf94c338509ae07ee8060009",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/src/lib/form-embed-words.ts",
+      "sha256": "efcbb1642b2c4a3daea99b2696b9dfdf75bd27c901e6812155b0c38e4782485f",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/compile-seed.test.mjs",
+      "sha256": "c4ce1077c48aca9e79a44598e7c79bccd8e5e3aa458d37f5a9067399d69ee1ed",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/compile-seed.test.mjs",
+      "sha256": "63125a21753c6cf67463fb711e556d5dd7c06289374c64d834cfa9a201ffb6d7",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/compile-seed.test.mjs",
+      "sha256": "384266a388f9d36ac805040b3e64c73969bbff067d33388dc13b7dd6a5aa3c6f",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/detect-source.test.mjs",
+      "sha256": "4d4ef5e7104502a8c78f93a208e803d5024b53d55d779e78fc76fcd11a6e45ed",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/display-locale.test.mjs",
+      "sha256": "fd4db24095fcd807255654223289fcb4c6e6b96d4d9b83e8dc9244ced24e4bb1",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/display-locale.test.mjs",
+      "sha256": "a54b3c6e9c1e29a8cd253cdba6fcea1880a8250c247a72ad5ad7870d13e1af2f",
+      "count": 2,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/fast-gate.test.mjs",
+      "sha256": "ae6627284f9cd303fe471e2a5e7c2798a4bf9141574d404b564fade11659291c",
+      "count": 2,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/fast-gate.test.mjs",
+      "sha256": "a5c49006057a9b159c8653a595f0565c28fd2880f5f59be24562eb0f773a3524",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/fast-gate.test.mjs",
+      "sha256": "3b8926bc161bfc25f7f0a9d0a232e984c950c8a72752cbaa96997146f3762085",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/fixtures/mini-html/de/index.html",
+      "sha256": "d00369f462fde4c505ee81ce317a0ffd0440c1dde03452094eef567f6944b2eb",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/fixtures/mini/qa-contract.mjs",
+      "sha256": "75122f6e005d65c61c1d4e4bc1201d702778381e7f6e81e68e5a594103d628d6",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/fixtures/mini/seed/seed.json",
+      "sha256": "c6eb6950462f2cd5195af8152fe05d607d36930829b2c95f89fd12a2c4c1581e",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/fixtures/mini/seed/seed.json",
+      "sha256": "849173c3c09992f00b0e3b6e9aa632b1d7a31cdb1b8241689e6d2223f64d3b83",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/fixtures/mini/template.config.json",
+      "sha256": "83069484ecfc6b8d163c93f07ccb9d9f2caf0ba3799665ac14df2a7378be0613",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/form-embed-words.test.mjs",
+      "sha256": "be1a062ba9dd7a73825e24a90f8947a98c722725a5d18e02e9e4a288693e3635",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/form-embed-words.test.mjs",
+      "sha256": "57787eae18424960aa42c8196c010765ad0ae2d5a47224eb71d85349c399aee9",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/form-embed-words.test.mjs",
+      "sha256": "8bcc5933aa1d8deea647e14cda799988e0f89a5b82d6938c6843d1334b13119a",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/form-embed-words.test.mjs",
+      "sha256": "375c0340aa66882ea3a80eafb0c58902f101347ae62e1e9fc6001b8cbd202564",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/form-embed-words.test.mjs",
+      "sha256": "946487affc6cf177e613e9bb736a79e9bf811bb9b2689564a511fb0fb38f8c18",
+      "count": 1,
+      "reason": "Word tables of the Forms plugin embed in the languages the template supports: localized interface text, as in the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-apply.test.mjs",
+      "sha256": "81d30145d586800cf5abdfa1410bd7e9271092cb5801410e8cce8f250a092242",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-apply.test.mjs",
+      "sha256": "daa86f537537cae7f1251a7ce8fa9f7c5f7c9e3b7bf71c3d0e3898c03927a7fe",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "aaec2e873ff5f14ee47020830332e64c5353b63af4b64733694a9d9d4fc9a172",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "9c2fd2e9ca4949322a27bdb8a02e57636aef144b504eca5c9b8380719ea36020",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "66b9123278f9855f8c32ba52c56b75f1a3a7864a5b7fa716a6a0c70458ad6215",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "6dc59a028985b14a9c630d18b47c5341ec45be3646d840c884e649c560688ca8",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "47f25598e91d4f43458ba8c8b4356b7ec756484df92987dc9f5b644841314c25",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "22178e9a46a36820d7a88276d107e24d2ce4b59b09570e10c61afeece13f9825",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "2b6ea3e19da77b1f7e41631ccc83dad54b14f53d9b6a205bc3eecadccab7d0e7",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "9ca58c75e07ab6c293db86a19db3a05d1ebe810be515df21eaa73a717b314ca8",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "5e9f47ef2bc5533bfc68228f742c2adadd2c6fbb46f6581db8d3ec9be6bc870c",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "da0086b575a7d5fd962192d760690e072f37a73e554a04039f9bb6ef32242b98",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "7881691a4cd9d03789fdf45c17b2b5aec518b729fd64c453fa3ede29db7e082b",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "e48656a9a85e43834d64ee527f327b400126e8f8f645e990e48e110797e90e60",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "2484f333ae5c702c53c88ce6bd1cd98fc210b44eda0100f1e5ec63f705f56a8c",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "b767bcb7da073e644456f106065ab518c7e54d0ee7d1da5e820a6ca8a73579d9",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "0976a2a0d4532663706e7a644989cfdfdfd40aba8bff754027327dc5ee0195c0",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "bcaaf4ffe3d94a12fc8055c5ab0f6692fbd1d8ac9b74d685d01a3f81fbc38e4c",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "34561057e2c06150a645dd2b0f1d2d30fbed9be6aaca50b1fdbb549a2ec9889a",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "7b0dc0d9d9ee874afa9f9e109935caa352ec86b55b075ad8fd2f8421071495a9",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "3b422212bf11d3860890486a621e137f52bdc729b640ea1cf545c96a61deff56",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "cbac8bf7609316509bea379dedb431f46d7033208325883ded710dbd626380fc",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "f904d8d182299da11d6a7366256de21f67c8881c6da4b2ea6fae0ce0028a98a7",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-fallback-gate.test.mjs",
+      "sha256": "c3cdac418b4e311f20cde041195752e7c7729b68de0571bb7f21d70730e6f815",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-gate.test.mjs",
+      "sha256": "80aa1762f5f21c05c798c7e8a708d5fa6596e1838f4ba12db9e4de7ce2b6ac73",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-gate.test.mjs",
+      "sha256": "2d4e1a53dc20fe7c0ab968b92395452e0ced092dc7528c3d50581c4fc8af945c",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-journal.test.mjs",
+      "sha256": "9bfa02b8e50359a3ec92add4d889ca33fb4ccea2f4d8184a5bbade06d981dcdc",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-journal.test.mjs",
+      "sha256": "bc19f3e1530171d056755e6578649b2390d344fbf7c4bd0984f2ad67388caa13",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "c0d1e44a6fb01b47f5a9eebea8cf908149878d53602d7c3938269e01adf7364e",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "2a1ca1e921b7e5fd59010ac1a8b83e71b3e4bc6358b4194a9ef30f531e7c5feb",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "56fa383c8a46ab1116762b667092ca73c7964793872e031ba2e5045953e5c95a",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "6fc6a596b1d05b599868241a8bf8c883913df134776ff760c6b5df133843771f",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "29c8bc6e91263526d1155df21915a918f08397be8527a42e18b66fb83c371932",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "12310d85eb6ef8b4f0859048e19c11318bd5bab4b2ba7368b731bf0624cacc12",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "0ab569df08757e1e82993cb9d71ec3d871334ea9b535186a579c3832263e5d90",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "922e21ab9206d2887ee936b65a730ab7451a2bc618dd2f7ad9f205a5084fe62d",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "175e816d3fc264cc4fd07a5076f7bd813d0a012776a0a5ea77d746bb05a625aa",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "a184b1d95fc985a6fc26037bc00d59e78d4cadde0c4d90ca53a502a52801e556",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "db80d9efa90ae1f6812eb2d397455b6c1d2460d8e78cbd5749247ccfdb42fcfb",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "5825208b5166c294c2b425abf724d1338ba97e09a15a963eecfe33b00473a51c",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "57261605eb5ab9e7bfe4ebc662c09ed9266b358f29b14a05718fb2280244a7bf",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "90214e401afb8b4df037b2193707fcfb1e86e61419a42ffd55e4051689cf8a90",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-destination.test.mjs",
+      "sha256": "d716063d1cd9c91e20f76344c7e155456a712d6775d6bb50a10b492247e866c2",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "3f667532be1a782e0b537fd102d2aa269e27db519c73915398fc86ac99c06f48",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "71c8b02f346bafb686858f6b36fa706f19eca265a3f00a15a2bdf9d9a054574c",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "d9ce72cd6e18e58138d7357f1a1034fbb2fe745e1bbc372f97549f42b9900f92",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "2105d1604aef3f1a2844e2b032db731f93903c0b3f9979d4d8f58e2d5f0e939b",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "e7da679d6b6980670f526764c6f701789fad79749ff65b0c39edaaef6b6e59e9",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "b9e6e6c3bb27455f8dcf648c43dd61dc90cd698b018bd1d21c89db55efe6fbd9",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "f64ef0259376f8b43c34a9bfb981ebddd9b49ba2afe575e8f6bcc3ea45fa205d",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "cb82127ec1faa20094fe74c5bda9009e45bab13c98111d7cfe5d8a268d64d862",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "dcbe0985e006e8587e62e1dba9e8887ba2ffa78d0a81f385f6b4f9b52a0eb30b",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "79be83e952088f73d8773cceb995d521da727aee197672b855a83cdf103f2d17",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "0bdf302e8d08b191934c796098e7f8ca2fdb09a65d79361b465823f77a64a9fa",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "7f59db78c8d7cf5dc7c38556899b0b7d4aa39a27badd728cb085c1d005ff8205",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "137ead45aafbb0382b60f5b34cf7071536cd57182c259536d319f2112a35f6a5",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "df58cfc670d120e81754210bb5c9d24b8e52fad97c32245bda5e6d39a4d0be9f",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "4da098524767b6cd0a8af13ce97af40d4e831a9768aa99038a87e19a83c4ea7b",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "c36a35f8ea379fc2fbff1e1eb950bd1ba3aae0691ad536b81500bd63e156b9e6",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels-echoed.test.mjs",
+      "sha256": "1859cf59e5f5d3d06ed0ae5b160ff9b621c34f28d508a21a12c6f48b7f4bc71a",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "e26e0eb1dd39dce3bb9a37371a49b761c1fdd55cfd2e50455a03c48a9cc15365",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "c9b3e4eaaa50cbc46efa32bfcd9aa3f8f25964d95e3d2aa21347b11ae8760e58",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "ed7435d2d00fdfcbbd22030771ab357f23dab11abfe5d2b3a72c99a72177b19b",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "4936e280261ccf2b6c8a815bfb204c7490dd90fecf0d1a3ff8e71db967e0a8ae",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "7dd0d3602f31ea556d1123cb626f19794f989f046f616050c62f2653219660f4",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "3521be287cde4e269c5ab2bc9d7fb0e5464493b72575fc34236d479996c815ad",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "e96b21332f9d3233f2535ad4083edba854157756f6eb6a19b935409d1440fce4",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "51288eb5d329e2cbfb885ba24184edfcf7053517b96ed475bf51e6f6f52e2a1d",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "1989e203535c010dc344d7086911067961ea3baee0606ca1d8955b412cf69b6b",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "da1922cb3c95b1a8bb8a831f9e18ac7029c11bef7fe5e20978946a1ddafb74a7",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "53676871f2f247471f405ccf9c6f404dc1cc83fce5c8e408fbe2568286c06288",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "e78764e60a3418ad3c8c1e4c3c6e6147a530f73486d1a2f55b15e133a4946f00",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-labels.test.mjs",
+      "sha256": "bfbaff96cb5d3a734df235ecfcce5a94099a59167d6e528010cd2a18f4eba0de",
+      "count": 2,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-rewrite-trade.test.mjs",
+      "sha256": "53f90b05c698c35fd2db75832d0d3aea8f92c7d72c7cadfa2b7eb0b562c05fcd",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-rewrite-trade.test.mjs",
+      "sha256": "6c2b3261ecdbb0c1b84e3cd620a1a7cbfe19186c1007008dfa46e14eebdf4e62",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-rewrite-trade.test.mjs",
+      "sha256": "680cf63bb25449edd14844d06c2afc3ff1c23b3b05c21197444c7971bfde227a",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-rewrite-trade.test.mjs",
+      "sha256": "fdd64ed1a0109914a352b35e1f0ffe76def8cc925306179293e700afbe2eeaf5",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-rewrite-trade.test.mjs",
+      "sha256": "320aebb372688d236912c326f8d48560aabf4e706d524f981e2bec95abaeb853",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-rewrite-trade.test.mjs",
+      "sha256": "013c2d43b48c9d044d44b5f12d5c1c0a5cd475bc23c97067ce4bed8d4c3ae2b8",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-rewrite-trade.test.mjs",
+      "sha256": "79d6a3df994813fda18b2f641a76c2d1a4dcdb81175a3b10e5afde2f87e00c5c",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-rewrite-trade.test.mjs",
+      "sha256": "04435a6a5d1dce1d5f53515ea9271f399bf99d748f7f01b016b2966e99202d2a",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-rewrite-trade.test.mjs",
+      "sha256": "cfa6faf5e313dfbdc710aefa1493409626eece6d29288813134278b697894158",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-written-language.test.mjs",
+      "sha256": "cd68f02e684b43fb36920e961cd3be7f3308994ef583bdf728c869d30b9dee4d",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-written-language.test.mjs",
+      "sha256": "59fd4dd21b04eede7b1b795e73ddeb91dec2edf1ea106018b349e46af39c1857",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-written-language.test.mjs",
+      "sha256": "8dc35e7a1c0f2360e6e8effbb5242897a01882a7060691ad74e3cfb862e82874",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-written-language.test.mjs",
+      "sha256": "72298929445bfadbedafdc26cf95b3c1dc371669cf541a6a178f5da9af3fac52",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-written-language.test.mjs",
+      "sha256": "70d63fd283c6ecb78b297be212580dc34bc2eb29d26c2348afbacf68d998a03b",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-written-language.test.mjs",
+      "sha256": "f60d4e8375e92b2cfe31b35be8f23c7b0b23045466f5b4f621e54c1abc91599f",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-written-language.test.mjs",
+      "sha256": "1c2204c11dd2ea3436c0f513eef290231fbbda73c86959e4d90857f56ea0db13",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/qa.test.mjs",
+      "sha256": "f94be68c2ca577f16d62d9988d591e9cc5e55b9b85fd520d932a3f39291b8b1f",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/qa.test.mjs",
+      "sha256": "617c9754049ef3a87d61d3c255d44c648c3a088400ebdb6bc4bdf1f21e7296e5",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/release-site-pages.test.mjs",
+      "sha256": "62d190b8f4b7dee0ad040175fe4ea21e659f3d43875384e93011e66baaa99626",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/seed-apply.test.mjs",
+      "sha256": "52e00a6ee4ec50fa381e61721f0110314f3fb7afe7666ac5e652da95df0eb7c1",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/seed-apply.test.mjs",
+      "sha256": "1bada2cc9418d375ab744a26ec0611fb9a2e50751c42bb31ef658b78539660a6",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/seed-apply.test.mjs",
+      "sha256": "47c79e93c272dbafa9a4f104faa29c0a7cfde93f2bacceaca2dbea2443239699",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/site-model.test.mjs",
+      "sha256": "f4fdf22992c37c4eb8478dcbe1dc55d16738b92969a5b3afa346923cab8b2fda",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/site-model.test.mjs",
+      "sha256": "15ed6dba7990e294c85290179cf0176f184c97286da25634dcebba5d884e8289",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/site-model.test.mjs",
+      "sha256": "88cd88d50c039f2fce53a60f6cde9a386a811c40a30935f7daa5907fe3171f40",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/site-model.test.mjs",
+      "sha256": "88a601d2727a1d266ef59169851221bf74cae85bd173eb2359a0a649189222b0",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/visual.test.mjs",
+      "sha256": "2c4e7705a87bbe003997af2db3f0888daec4f598804300ed466d77879e252322",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/visual.test.mjs",
+      "sha256": "a0ae160e8f9b4fe0893feb9aaef98bff934c7340aec8dd7f42ff7bc8a5e1fac4",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/build-qa-contract.mjs",
+      "sha256": "5b4bdf3974aa66e4def38bea4b5bdc53d0db1eb39f4cceecb4333e274c669d7a",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/fast-gate.mjs",
+      "sha256": "faacaf1320c7dc43decdeb4066ef152d53dcf5bcf5a7ba04a5c95445006383f4",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/fast-gate.mjs",
+      "sha256": "9a943de1313e47201644837ab4938e94693116d13bce6a7003853653804ec4bb",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/fast-gate.mjs",
+      "sha256": "ddf99440aa5ee8f0e7efc5f4fb345c8adc3d55e4637e67c559f4bdd9c77f7a78",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/fast-gate.mjs",
+      "sha256": "79f371a7ecff96230f80e605abd41b5fb3d285be08acb3b56bb4dad77726c938",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/fast-gate.mjs",
+      "sha256": "2fd9f0973bd6741066d38c2486303d5da78505e8b6907738156881a325a160f1",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "ed82c83ebcb87963a95020b4b8cdeed9ac155e1cd6bfa84a06e122b4df131fbc",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "f0889b74e1d68a7e40506f93c7deaa51e37665a73600e4ef84a66f4a03bb3bd2",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "595e6bb81452e2572d3f41a27c9a9cdab5ee755e194b8581b334361c77016479",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "3d7d872d3ea0d24aaa1b9e58e22bf652819b4bf297e2ccddac9dba9ee9707004",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "67788a6453a0e87d2f03c28c4ff99d581e4f087aa763a39944115a17f965adf0",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "f03b4cd9ba6133a9cd1b5bb49ae86c260cc369fcf58535642e1d757eb36f276f",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "b04e35461512c061d1d485c923a2b24f290d7f7e6e4697ac6aaf85ad405c5514",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "ce07d15675270eb56877ebdfca032703ae6debaaad44e28e275ed32a39d999c5",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "e0fdf615f18b88e63f899bf434c03fc4116ce41b2a0f20ea2cea6a3cb33e8aa7",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "702b92b56abd56069657e4187d16852515b76cf47fd449179e4c4fb867c6697f",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "aca7fd448a1e1ec0e1fa03587edd83646d24850a6808d4ed9364a5f239f418b2",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "4a2d0f2627ba296ce7bdf4e19c839c40a4a087de82267cbe131b0c5400beb8ea",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "6aebb19361abaed54d3e28d9ef415d9f7636caa39ded2bd8ec771c371bb87045",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "ae774835c896661a713d25a66d9f579bea54219419c7015ca66b13cc4d325dbf",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "8ae6671b013813a3078a688a20196f452febb87a731744a6ad1a969ced64dd81",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "25185ebe73335f06f4b01971c96b4c33b5e7c30908357187b381009b378f0863",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/personalize.json",
+      "sha256": "e1c05456b6ffbb4c65cf3356c6c7b151f4210fc638d37cb1146538d7e3dc4b7f",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/personalize.json",
+      "sha256": "eedd374ad122a584c57bdcbeb0a70ee9c524ec838007662ea624780d9f89544f",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/personalize.json",
+      "sha256": "d67242667b8e6c69832a6a2661f8fc0a67c4989e3d3f32e1178d22fe807169e6",
+      "count": 1,
+      "reason": "Demo or localized text of the JA Essence template carried verbatim from its source design or kit (non-English letters in data, not in contributor prose)"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tools/personalize.mjs",
+      "sha256": "3b40c34366eb2e8360cf930bf77b05356936af547c4ce876a41319de0a942f18",
+      "count": 1,
+      "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-gate.test.mjs",
+      "sha256": "47551043a5ee62a76759b56cca0c12f69f9c2af7ba08253efc1a111b96c49484",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
     }
   ],
   "objects": [
@@ -23078,6 +25118,11 @@
       "path": "packages/ui/tracy-chat-input/lib/client.js",
       "oid": "9c83adf15533eb0d20b51e581ef5639cefa70196",
       "reason": "Exact generated chat input bundle for PR #636 (See another look on a shared Website Opportunities demo). Rebuilt only because the UI switch catalogue it embeds gained `wo-demo-looks`; the changed minified line keeps the existing language-detection character ranges (Vietnamese and Cyrillic letters in regular expressions). Authored source is English and the bundles gate verifies these exact bytes."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/seed/media/images/joomlart/category/item-5.jpg",
+      "oid": "507ff3bad7499ffc5da99ee70a423b0ead7896f1",
+      "reason": "A PNG picture the JoomlArt Essence demo ships under a .jpg name (checked with file(1): PNG image data 683 x 682); reviewed picture, not text."
     }
   ]
 }
