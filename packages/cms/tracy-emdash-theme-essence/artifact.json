@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Essence",
-	"generatedAt": "2026-11-19T02:49:07.936Z",
+	"generatedAt": "2026-11-19T03:08:24.901Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,7 +75,7 @@
 		"docs/content-model.md": "sha256:e9a3b53a72a33ec4bfba69c0d328c7570338db7bbd0d1e8f6dd4b89adf687793",
 		"docs/content-rules.md": "sha256:b9d236568f6f33ff31252f4d3cd2d8dec7f079a499be318282f9188e44468b27",
 		"docs/design-system.md": "sha256:02039b1b3b4ddff6e0c519f66ee90b3fdc02661d7f0bc4f674ddd45a0cb306b6",
-		"docs/generated/inventory.json": "sha256:3c9fdab8a058b5b2b9f94320ac0006cd4d08b9b65599321880d6d4b5e02e029f",
+		"docs/generated/inventory.json": "sha256:8962154d39ca13ca853d06ee977e2ecef6680176266af9e09d74bfe4f6c461e9",
 		"docs/generated/inventory.md": "sha256:34a8057b44a7eb59ea966ad23510113c4b492deef0b8d6c704b5878cd750908c",
 		"docs/install.md": "sha256:e2343b4ae26c341d1e467b6a9a26085cbb9013c02ec291d6ceaa44cfd1fec201",
 		"docs/languages.md": "sha256:2d404f1b996cbde1965276643ed278167e2d923db49b8fc11530ffb2662c9f5e",
