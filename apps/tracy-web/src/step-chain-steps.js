@@ -119,7 +119,7 @@ export function createStepChainSteps(deps) {
    * going, else started (waiting while the bench is full), followed on its row until it ends, its files taken out.
    * Cancelled when the chain no longer needs it.
    */
-  async function benchRun(name, argv, dir, signal, same = null) {
+  async function benchRun(name, argv, dir, signal, same = null, { onPoll = null } = {}) {
     let runId = null
     for (;;) {
       if (signal.aborted) throw signal.reason ?? new Error('stopped')
@@ -159,6 +159,8 @@ export function createStepChainSteps(deps) {
         if (!row) throw stepError(`the ${name} run ${runId} is gone`)
         if (row.status !== 'queued') break
         if (signal.aborted) throw signal.reason ?? new Error('stopped')
+        // A look at the run while it goes on (the plan step hands on its checked first draft); never stops the wait.
+        if (onPoll) await onPoll(runId).catch(() => {})
         await sleep(POLL_MS)
       }
       const usd = Number(row.cost_usd ?? 0)
@@ -202,6 +204,26 @@ export function createStepChainSteps(deps) {
       (f) => f.isFile() && f.size > 0,
       () => false
     )
+  /** The copy step's writer run arguments on a plan file, without the budget flag. */
+  function copyArgs(ctx, kit, plan) {
+    return [
+      '--plan-file',
+      plan.file,
+      '--kit',
+      kit.ref,
+      '--brief-revision',
+      revisionOf(ctx),
+      '--require-visual-review',
+      // The first draft in five parts written at once (site-writer/writer-parts.js). Local stand, run13's plan
+      // (15/11/2026), three parts: 509 s against 594 s, 27 first-draft failures against 79 (repeats 18 against 66), 3
+      // standing against 11; the copy step's spend doubles (0.19 against 0.09 USD). Five since 19/11/2026: on dev the
+      // copy step became BXR London's longest (8.9 to 10.2 minutes) and its round 0 waited on its heaviest of three
+      // parts (367 s against 177 s for the lightest); each part's first message is the same cached fixed part.
+      '--parallel-pages',
+      '5'
+    ]
+  }
+
   /**
    * A bench step's answer: its output when the run succeeded; when it failed, an error that still carries the output it
    * made (if any), so the chain uses the best version rather than nothing.
@@ -275,8 +297,27 @@ export function createStepChainSteps(deps) {
       return answerOf(ran, { file }, exists(file))
     },
 
-    async plan(ctx, { kit }, { signal }) {
+    async plan(ctx, { kit, onDraft = null }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'plan')
+      // The first draft, once checked with failures (so fix rounds follow): handed on once, so the copy step's first
+      // draft is written while the planner fixes its own (copyDraft). A draft that passes needs no fix round, and the
+      // plan step ends with it anyway.
+      let drafted = false
+      const onPoll = onDraft
+        ? async (runId) => {
+            if (drafted) return
+            const { rows } = await pool.query(
+              `select plan, failure_list from site_planner_round where run_id = $1 and round = 0 and state = 'checked'`,
+              [runId]
+            )
+            if (!rows[0]?.plan || !String(rows[0].failure_list ?? '').trim()) return
+            drafted = true
+            await mkdir(dir, { recursive: true })
+            const file = path.join(dir, 'plan-draft.json')
+            await writeFile(file, `${JSON.stringify(rows[0].plan, null, 2)}\n`)
+            onDraft({ file })
+          }
+        : null
       const ran = await benchRun(
         'plan',
         [
@@ -292,7 +333,8 @@ export function createStepChainSteps(deps) {
         ],
         dir,
         signal,
-        { revisionId: revisionOf(ctx), kitRef: kit.ref }
+        { revisionId: revisionOf(ctx), kitRef: kit.ref },
+        { onPoll }
       )
       // The plan the run ended with: the last round that has one, as `get` writes it (plan-vN.json).
       const { rows } = await pool.query(
@@ -305,25 +347,40 @@ export function createStepChainSteps(deps) {
       return answerOf(ran, { file }, true)
     },
 
-    async copy(ctx, { kit, plan }, { signal }) {
+    // The copy step's first draft on the plan's checked first draft, written while the planner fixes its plan: one
+    // round, no fix round (the copy step on the final plan takes it as its base copy, checks it and fixes it). Its file
+    // and spend, or null when it made no copy.
+    async copyDraft(ctx, { kit, plan }, { signal }) {
+      const dir = path.join(await folderOf(ctx), 'copy-draft')
+      const argv = [...copyArgs(ctx, kit, plan), '--max-fix-rounds', '0', ...NO_CAPS]
+      const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
+      const ran = await benchRun('copy', argv, dir, signal, same)
+      const file = path.join(dir, 'site-copy.json')
+      return (await exists(file)) ? { file, usd: ran.usd } : null
+    },
+
+    async copy(ctx, { kit, plan, base = null }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'copy')
-      const argv = [
-        '--plan-file',
-        plan.file,
-        '--kit',
-        kit.ref,
-        '--brief-revision',
-        revisionOf(ctx),
-        '--require-visual-review',
-        // The first draft in five parts written at once (site-writer/writer-parts.js). Local stand, run13's plan
-        // (15/11/2026), three parts: 509 s against 594 s, 27 first-draft failures against 79 (repeats 18 against 66), 3
-        // standing against 11; the copy step's spend doubles (0.19 against 0.09 USD). Five since 19/11/2026: on dev the
-        // copy step became BXR London's longest (8.9 to 10.2 minutes) and its round 0 waited on its heaviest of three
-        // parts (367 s against 177 s for the lightest); each part's first message is the same cached fixed part.
-        '--parallel-pages',
-        '5',
-        ...NO_CAPS
-      ]
+      // With a draft copy (copyDraft) the run takes it as round 0 and only checks and fixes it against the final plan;
+      // its spend is the copy step's too.
+      if (base?.file) {
+        const argv = [
+          '--plan-file',
+          plan.file,
+          '--kit',
+          kit.ref,
+          '--brief-revision',
+          revisionOf(ctx),
+          '--base-copy',
+          base.file,
+          ...NO_CAPS
+        ]
+        const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
+        const ran = await benchRun('copy', argv, dir, signal, same)
+        const file = path.join(dir, 'site-copy.json')
+        return answerOf({ ...ran, usd: Number(ran.usd ?? 0) + Number(base.usd ?? 0) }, { file }, exists(file))
+      }
+      const argv = [...copyArgs(ctx, kit, plan), ...NO_CAPS]
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
       const ran = await benchRun('copy', argv, dir, signal, same)
       const file = path.join(dir, 'site-copy.json')

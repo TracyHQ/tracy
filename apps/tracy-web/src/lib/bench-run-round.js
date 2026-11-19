@@ -92,7 +92,7 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
       const answers = done.map((d) => objectOf(d.answer, step).value)
       const firstUser = step.nextTurn({ row, ready: ctx.ready, answers })
       if (firstUser === null) {
-        const value = step.mergeTurns(answers)
+        const value = step.mergeTurns(answers, { row, ready: ctx.ready })
         const droppedText = done
           .map((d) => d.droppedText)
           .filter(Boolean)

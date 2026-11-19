@@ -155,7 +155,7 @@ export async function runBenchRun(step, deps, row, lease) {
     if (!row.balance?.before) await balance('before')
     const ctx = { step, deps, row, ready, leaseToken, must, ask: (args) => ask(step, deps, args) }
     for (;;) {
-      const next = await nextRound(step, pool, runId)
+      const next = await nextRound(step, pool, runId, row.harness)
       if (next.end) return ended(...next.end)
       const { round, followUp, base, reading } = next
       // A cancel asked during the last call of a round ends the run before the next round opens.
@@ -176,7 +176,7 @@ export async function runBenchRun(step, deps, row, lease) {
 // Where the run stands, from its saved rounds: the round to play (and the message to send first, when a fix round has
 // sent nothing yet), the document a change list applies to and what the round already recorded, or the verdict when
 // the last round left nothing to do.
-async function nextRound(step, pool, runId) {
+async function nextRound(step, pool, runId, harness = null) {
   const { store } = step
   const doc = store.tables.docColumn
   const rounds = await store.roundsOf(pool, runId)
@@ -197,7 +197,7 @@ async function nextRound(step, pool, runId) {
   if (last.state === 'cancelled') return { end: ['cancelled'] }
   if (last.state === 'failed') return { end: ['failed', last.error] }
   if (!last.failureList) return { end: ['succeeded'] }
-  if (last.round >= step.maxFixRounds)
+  if (last.round >= fixRoundsOf(step, harness))
     return { end: ['succeeded', null, { standing_failures: last.failureList }] }
   return { round: last.round + 1, base: baseOf(last.round + 1), followUp: followUpAfter(last), opening: true }
 }
@@ -288,6 +288,16 @@ async function prepare(step, deps, row) {
   const ready = await step.prepare(deps, row)
   if (!ready.ok) return ready
   return platformRefusal(ready.kit, step.codePrefix) ?? { ...ready, prompt }
+}
+
+/**
+ * How many fix rounds a run may play: the step's, or fewer when the run was started asking for fewer
+ * (`harness.maxFixRounds`, a whole number from 0; site-writer: a chain build's first draft on a draft plan, which the
+ * patch run on the final plan checks and fixes).
+ */
+export function fixRoundsOf(step, harness) {
+  const asked = harness?.maxFixRounds
+  return Number.isInteger(asked) && asked >= 0 ? Math.min(asked, step.maxFixRounds) : step.maxFixRounds
 }
 
 /**
