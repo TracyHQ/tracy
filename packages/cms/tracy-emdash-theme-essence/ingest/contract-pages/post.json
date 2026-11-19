@@ -57,8 +57,8 @@
     ],
     [
       "sec-title-small",
-      ".es-sec-title.is-small",
-      "detail/layout-1/index.html",
+      ".es-post[data-layout=\"type-2\"] .es-sec-title.is-small",
+      "detail/layout-3/index.html",
       true
     ]
   ],

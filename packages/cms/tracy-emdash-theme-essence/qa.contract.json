@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 44,
+  "revision": 45,
   "pending": [],
   "locales": [
     "en"
@@ -4673,6 +4673,74 @@
         "optional": true
       },
       {
+        "id": "sec-title-type1",
+        "selector": ".es-post[data-layout=\"type-1\"] .es-sec-title.is-small",
+        "source": "detail/layout-2/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "32px",
+            "font-weight": "400",
+            "line-height": "41.6px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(33, 37, 41)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36.4px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
         "id": "post-title",
         "selector": ".es-post-title",
         "source": "detail/layout-1/index.html",
@@ -5143,14 +5211,14 @@
       },
       {
         "id": "sec-title-small",
-        "selector": ".es-sec-title.is-small",
-        "source": "detail/layout-1/index.html",
+        "selector": ".es-post[data-layout=\"type-2\"] .es-sec-title.is-small",
+        "source": "detail/layout-3/index.html",
         "styles": {
           "1440-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "32px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "41.6px",
+            "line-height": "31.2px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(33, 37, 41)",
@@ -5158,9 +5226,9 @@
           },
           "1440-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "32px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "41.6px",
+            "line-height": "31.2px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(238, 241, 246)",
@@ -5168,9 +5236,9 @@
           },
           "768-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "32px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "41.6px",
+            "line-height": "31.2px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(33, 37, 41)",
@@ -5178,9 +5246,9 @@
           },
           "768-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "32px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "41.6px",
+            "line-height": "31.2px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(238, 241, 246)",
@@ -6343,7 +6411,7 @@
         "body-h2",
         "sec-title",
         "mini-title",
-        "sec-title-small",
+        "sec-title-type1",
         "mini-thumb-title"
       ],
       "parity": [
