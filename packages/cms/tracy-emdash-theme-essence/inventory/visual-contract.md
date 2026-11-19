@@ -1,6 +1,6 @@
 # Visual contract — tracy-essence (P1, measured on the stand render)
 
-Reference: `/home/agent/out/essence/render/` (80 renders: 20 pages × 1440/390 × light/dark, `render-manifest.json`: 0 failed,
+Reference: `<evidence-dir>/render/` (80 renders: 20 pages × 1440/390 × light/dark, `render-manifest.json`: 0 failed,
 0 horizontal overflow, console errors only the expected 404 resource on `/nope-404`). Design values: `docs/design-system.md` of the
 product repo (file and line evidence there).
 

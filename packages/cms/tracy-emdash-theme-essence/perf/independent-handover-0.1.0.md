@@ -4,7 +4,7 @@
 ## What I ran
 Only README.md, AGENTS.md and docs/*.md of the pack were used as instructions.
 1. `node tools/distribution.mjs verify .` from the pack: exit 0.
-2. `tools/clean-install.sh /home/agent/out/essence/p18/independent/site2 4441` (new, empty target): exit 0, about 28 s. It ran install, build, start, seed, media, forms and the search index.
+2. `tools/clean-install.sh <evidence-dir>/p18/independent/site2 4441` (new, empty target): exit 0, about 28 s. It ran install, build, start, seed, media, forms and the search index.
 3. Content API reads with the agent token (`/_emdash/api/content/{posts,pages,authors,category_info}`, `/_emdash/api/taxonomies/tag/terms`) to find real slugs.
 4. `curl` smoke test of 14 public paths.
 5. `node tools/configure-smtp.mjs --site http://127.0.0.1:4441 --token-file data/tracy-agent.token --host 127.0.0.1 --port 1025`: exit 0. I used the existing Mailpit and did not start another.
@@ -21,7 +21,7 @@ Only README.md, AGENTS.md and docs/*.md of the pack were used as instructions.
   - 200: `/`, `/blog/natural-remedies-for-common-ailments-blog-fashion`, `/blog/essential-nutrients-for-optimal-health-blog-health`, `/category/blog-fashion`, `/category/resources`, `/category/blog-health?page=2`, `/tag/health`, `/author/shelia-ortiz`, `/our-authors`, `/contact`, `/search?q=health`.
   - 404 with the 404 view ("Page not found"): `/nope-xyz`. Also `/category/fashion` and `/tag/fashion`, which were guessed terms and not real slugs.
 - Admin round trip: all 7 steps PASS (open editor, save and publish an edit, see it on the public page, restore, confirm the original). The post title was restored to "Natural Remedies for Common Ailments".
-- Audit: complete. 108 pages, 108 ok (all indexable), 91 assets with 0 broken, 0 findings. The 404 probes `/does-not-exist`, `/404` and `/blog/nope` returned 404 as expected. Output is in `/home/agent/out/essence/p18/independent/audit-out/audit.json` and `audit.md`.
+- Audit: complete. 108 pages, 108 ok (all indexable), 91 assets with 0 broken, 0 findings. The 404 probes `/does-not-exist`, `/404` and `/blog/nope` returned 404 as expected. Output is in `<evidence-dir>/p18/independent/audit-out/audit.json` and `audit.md`.
 - Server stopped, port 4441 free.
 
 ## Where the docs fell short

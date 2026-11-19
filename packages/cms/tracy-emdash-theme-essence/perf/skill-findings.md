@@ -1,6 +1,6 @@
 # Skill findings — JA Essence port, sessions 1–2 (P0–P5)
 
-Evidence is from this run (`evidence/`, `/home/agent/out/essence/`). "Diner SF" = `../tracy-emdash-theme-diner/perf/skill-findings.md`.
+Evidence is from this run (`evidence/`, `<evidence-dir>/`). "Diner SF" = `../tracy-emdash-theme-diner/perf/skill-findings.md`.
 
 | ID | Where | Defect (evidence) | Diner SF? | Worked around by |
 |---|---|---|---|---|
