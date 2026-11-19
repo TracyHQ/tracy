@@ -41,7 +41,7 @@
 
 html[data-theme="dark"] {
 	--color-bg: var(--ds-c-bg, #11151f);
-	--color-band: var(--ds-c-surface, #161b27);
+	--color-band: var(--ds-c-surface-warm, #161b27);
 	--color-surface: var(--ds-c-surface, #1a2130);
 	--color-fg: var(--ds-c-fg, #c2c9d6);
 	--color-heading: var(--ds-c-heading, #eef1f6);

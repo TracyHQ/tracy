@@ -12,8 +12,8 @@
 	.es-contact .ec-form-label:has(.ec-form-required) { font-family: var(--font-display); font-size: 18px; color: var(--color-heading); }
 	/* dark: the source draws every label in the body colour, "Your message" included (measured rgb(194, 201, 214)) */
 	html[data-theme="dark"] .es-contact .ec-form-label { color: var(--color-fg); }
-	.es-contact .ec-form-required { margin-left: 6px; color: #e03131; } /* ds-keep: status colour: the contact form keeps its red required mark and error line under every system */
-	html[data-theme="dark"] .es-contact .ec-form-required { color: #ff8787; } /* ds-keep: status colour: the contact form keeps its red required mark and error line under every system */
+	.es-contact .ec-form-required { margin-left: 6px; color: var(--ds-c-danger, #e03131); }
+	html[data-theme="dark"] .es-contact .ec-form-required { color: var(--ds-c-danger, #ff8787); } /* ds-keep: status colour: the contact form keeps its red required mark and error line under every system */
 	.es-contact .ec-form-input:not([type="checkbox"]) { display: block; width: 100%; box-sizing: border-box; padding: 12.8px 18px; font-family: var(--font-body); font-size: 14px; line-height: 20.3px; color: var(--color-heading); background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--ds-input-radius, 8px); }
 	.es-contact .ec-form-input::placeholder { color: var(--color-meta); opacity: 1; }
 	.es-contact textarea.ec-form-input { height: 231px; resize: vertical; }
@@ -31,7 +31,7 @@
 	.es-contact .ec-form-submit:disabled { opacity: .6; cursor: progress; }
 	.es-contact .ec-form-status { margin-top: 24px; padding: 12px 18px; border-radius: var(--ds-card-radius, 8px); border: 1px solid var(--color-line); font-family: var(--font-display); font-size: 16px; color: var(--color-heading); }
 	.es-contact .ec-form-status--success { border-color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
-	.es-contact .ec-form-status--error { border-color: var(--ds-c-danger, #e03131); background: color-mix(in srgb, #e03131 10%, transparent); } /* ds-keep: status colour: the contact form keeps its red required mark and error line under every system */
+	.es-contact .ec-form-status--error { border-color: var(--ds-c-danger, #e03131); background: color-mix(in srgb, var(--ds-c-danger, #e03131) 10%, transparent); } /* ds-keep: status colour: the contact form keeps its red required mark and error line under every system */
 	.es-contact .ec-form.is-disabled .ec-form-input { opacity: .6; cursor: not-allowed; }
 	@media (max-width: 767px) { .es-contact-intro { margin-bottom: 36px; } .es-contact .ec-form-page { gap: 35px; } }
 
@@ -84,9 +84,9 @@
 	.es-newsletter-form input[type="email"]:focus { outline: 1px solid var(--ds-c-border-soft, #fff); outline-offset: 2px; }
 	.es-newsletter .es-btn.is-dark:hover { background: var(--color-accent-hover); border-color: var(--ds-c-border-soft, #fff); }
 	.es-newsletter .es-btn:disabled { opacity: .6; cursor: not-allowed; }
-	.es-newsletter-terms { display: block; font-size: 14px; line-height: 21px; color: rgba(255, 255, 255, .7); } /* ds-keep: white text on a photograph or on the accent box (the pair is kept under every system, as the source draws it) */
+		.es-newsletter-terms { display: block; font-size: 14px; line-height: 21px; color: color-mix(in srgb, var(--ds-c-accent-on, #fff) 70%, transparent); }
 	.es-newsletter-terms span { display: inline; }
-	.es-newsletter-terms strong { font-weight: 400; color: #fff; } /* ds-keep: white text on a photograph or on the accent box (the pair is kept under every system, as the source draws it) */
+		.es-newsletter-terms strong { font-weight: 400; color: var(--ds-c-accent-on, #fff); }
 	.es-newsletter-terms input { display: inline-block; vertical-align: -1px; width: 13px; height: 13px; margin: 0 4px 0 0; accent-color: var(--ds-c-surface, #fff); }
 	.es-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 	.es-newsletter-status { margin: 0; font-size: 14px; }

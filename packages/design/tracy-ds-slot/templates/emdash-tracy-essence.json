@@ -40,5 +40,10 @@
   "readyNote": "measured 19/11/2026 with flow.mjs --cms emdash on a site built from the 0.1.0 release (Docker image of the release zip, the release state): the 15 featured systems at 1440 and 390, 64 of 64 checks pass. With no system worn the site is the template (baseline snapshot, 4 roles matched). Measurement: contracts/0.1.0/design-system-measurement.json",
   "measureStill": true,
   "discovered": {},
-  "measureNote": "Carousels (the home slideshow) are stopped on their first slide before each measure"
+  "measureNote": "Carousels (the home slideshow) are stopped on their first slide before each measure",
+  "paletteKeep": [
+    ".es-strip-item::before",
+    ".is-highlight"
+  ],
+  "paletteKeepNote": "The scrim over the Home strip pictures and the highlighted card is a neutral black layer over a photograph: a system does not repaint it (a light scrim under light words would make them unreadable)."
 }

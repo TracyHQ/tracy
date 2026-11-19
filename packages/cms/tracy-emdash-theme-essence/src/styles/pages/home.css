@@ -6,15 +6,15 @@
 	.es-strip-track::-webkit-scrollbar { display: none; }
 	.es-strip-item { position: relative; flex: 0 0 calc((100% - 18px * (var(--per) - 1)) / var(--per)); height: 362px; scroll-snap-align: start; border-radius: var(--ds-card-radius, 8px); overflow: hidden; background: var(--color-ink); isolation: isolate; }
 	.es-strip-item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
-	.es-strip-item::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(33, 37, 41, .5); }
-	.es-strip-content { position: absolute; inset: 31px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 36px; text-align: center; color: rgba(255, 255, 255, .7); } /* ds-keep: white text on a photograph or on the accent box (the pair is kept under every system, as the source draws it) */
+	.es-strip-item::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(0, 0, 0, .5); } /* ds-keep: text and scrim over a photograph keep the template colours: the picture is not repainted, the block is kept by keepScopes of the contract */
+	.es-strip-content { position: absolute; inset: 31px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 36px; text-align: center; color: color-mix(in srgb, color-mix(in srgb, var(--ds-c-on-ink, #fff) 50%, #fff) 70%, transparent); }
 	.es-strip-content .es-pill.es-strip-pill { position: relative; z-index: 2; margin-bottom: 12px; padding: 6px 16px; font-size: 16px; background: var(--ds-c-surface, #fff); color: var(--ds-c-fg, #212529); border-radius: var(--ds-pill-radius, 8px); }
-	.es-strip-content h3 { margin: 0 0 8px; font-size: 24px; line-height: 31.2px; color: #fff; } /* ds-keep: white text on a photograph or on the accent box (the pair is kept under every system, as the source draws it) */
+	.es-strip-content h3 { margin: 0 0 8px; font-size: 24px; line-height: 31.2px; color: color-mix(in srgb, var(--ds-c-on-ink, #fff) 50%, #fff); } /* ds-keep: words over a photograph: the on-ink role pulled toward white so they read on the neutral scrim, the picture is not repainted by a system */
 	.es-strip-content h3 a { color: inherit; }
 	.es-strip-content h3 a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-	.es-strip-content h3 a:hover { color: #fff; } /* ds-keep: white text on a photograph or on the accent box (the pair is kept under every system, as the source draws it) */
+	.es-strip-content h3 a:hover { color: color-mix(in srgb, var(--ds-c-on-ink, #fff) 50%, #fff); } /* ds-keep: words over a photograph: the on-ink role pulled toward white so they read on the neutral scrim, the picture is not repainted by a system */
 	.es-strip-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 8px; margin: 0; font-size: 14px; line-height: 21px; }
-	.es-strip-meta a, .es-strip-meta b { position: relative; z-index: 2; color: #fff; font-weight: 700; } /* ds-keep: white text on a photograph or on the accent box (the pair is kept under every system, as the source draws it) */
+	.es-strip-meta a, .es-strip-meta b { position: relative; z-index: 2; color: color-mix(in srgb, var(--ds-c-on-ink, #fff) 50%, #fff); font-weight: 700; } /* ds-keep: words over a photograph: the on-ink role pulled toward white so they read on the neutral scrim, the picture is not repainted by a system */
 	.es-strip-meta > :not(:last-child)::after { content: "-"; margin-left: 8px; }
 	.es-dots { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 36px; min-height: 12px; }
 	.es-dots[hidden] { display: none; }
