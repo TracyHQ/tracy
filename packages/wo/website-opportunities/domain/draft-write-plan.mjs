@@ -26,6 +26,7 @@ import { pairsOf } from './draft-write-plan-pairs.mjs'
 import { mainMenuOf, planMenuItems, planPages } from './draft-write-plan-pages.mjs'
 import { consume, recordOf, sinkOf } from './draft-write-sink.mjs'
 import { siteOf } from './draft-write-site.mjs'
+import { withDefaultItem } from './draft-write-skip.mjs'
 import { systemPagesNotBuiltOf } from './draft-write-system-pages.mjs'
 import { blockRecordOf } from './draft-write-targets.mjs'
 import { checkWriteOrder } from './write-order-check.mjs'
@@ -210,5 +211,8 @@ export function writePlanOf(order, aiq, options = {}) {
   plan.pairs = pairsOf(state)
   guardPlan(plan, { order, kit, ...options })
   delete plan.pairs
+  // Never a plan with no default menu item (#575).
+  if (!plan.skippedItems) plan.ops = withDefaultItem(plan.ops, plan.mainMenu, (plan.skippedItems = []))
+  if (!plan.skippedItems.length) delete plan.skippedItems
   return plan
 }

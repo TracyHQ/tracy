@@ -153,6 +153,10 @@ export function siteWriteOf(deps, ctx, how, inputs, records) {
         records.set(runId, deps.runRecords ? await durableRunRecord(deps.runRecords, runId, ctx) : {})
       return records.get(runId)
     },
+    // The status a page of the site answers a visitor (the after-write check, `step-chain-draft-serving.js`).
+    ...(typeof site.pageStatus === 'function'
+      ? { pageStatus: (path) => site.pageStatus(ctx.siteKey, path) }
+      : {}),
     stored: async (order) => pictures.stored(order),
     openStored: (id) => pictures.openStored(id),
     ...(site.now ? { now: site.now } : {}),

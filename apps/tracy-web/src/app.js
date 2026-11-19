@@ -2235,6 +2235,16 @@ export function buildApp(deps) {
           const response = await get(url)
           return response.ok ? new Uint8Array(await response.arrayBuffer()) : null
         },
+        // The status a page answers, or null when it could not be read (the after-write check of a draft build).
+        status: async (/** @type {string} */ url) => {
+          try {
+            const response = await get(url)
+            await response.body?.cancel?.().catch(() => {})
+            return response.status
+          } catch {
+            return null
+          }
+        },
         // Whether a public file is there, three valued for the draft doors (`step-chain-draft-media-delete.js`): only a
         // 404 or 410 says absent, a 200 present; any other answer (a redirect, a 403, a 5xx, a network error) is
         // unread, never taken for absent.
@@ -2403,6 +2413,8 @@ export function buildApp(deps) {
       // The stylesheets the template serves on the home page and every page the site lists, as a visitor reads
       // them, bounded and typed (the accent module, #597, `step-chain-draft-sheets.js`).
       templateSheets: draftTemplateSheets({ siteReader }),
+      // The status a page answers a visitor: the after-write check (#575, `step-chain-draft-serving.js`).
+      pageStatus: async (siteKey, path) => (await siteReader(siteKey))?.status(path) ?? null,
       blankContract: blankContractReader(AI_QUICKSTARTS_DIR)
     }
     // `deps.buildEngine.site`: a test's own site wiring in place of the real one.

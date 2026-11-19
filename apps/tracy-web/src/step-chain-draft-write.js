@@ -25,7 +25,7 @@
 import { createHash } from 'node:crypto'
 import { planCountsOf } from 'website-opportunities/domain/draft-write-coverage.mjs'
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
-import { withoutGone } from 'website-opportunities/domain/draft-write-skip.mjs'
+import { isMainItem, withoutGone } from 'website-opportunities/domain/draft-write-skip.mjs'
 import { runOf } from './step-chain-draft-write-kinds.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -168,13 +168,26 @@ export async function runDraftWrite({
   }
   // The operations the doors failed on in this run: what names one loses that value only (`withoutGone`).
   const gone = new Set()
+  let defaultLost = false
   for (const planned of plan.ops) {
     if (state.done.includes(planned.key) || kept.has(planned.key)) continue
     const run = runOf(planned)
     if (!run) throw new DraftWriteError('op_unknown', `no way to run ${planned.kind}`, { op: planned.key })
     const live = skipFailed ? withoutGone(planned, gone, plan, 'door') : { op: planned, skipped: [] }
     for (const { value: _v, ...item } of live.skipped) report.skippedItems.push(item)
-    const op = live.op
+    // The default menu item failed at the door: the next page item of the main menu takes the flag (#575).
+    const promoted = defaultLost && isMainItem(live.op, plan.mainMenu)
+    if (promoted) {
+      defaultLost = false
+      report.skippedItems.push({
+        code: 'default_page_moved',
+        op: live.op.key,
+        place: null,
+        reason: null,
+        at: 'door'
+      })
+    }
+    const op = promoted ? { ...live.op, fields: { ...live.op.fields, home: 1 } } : live.op
     for (let attempt = 1; ; attempt++) {
       try {
         await run(op, ctx)
@@ -198,6 +211,7 @@ export async function runDraftWrite({
           if (skipFailed) {
             report.skippedItems.push(failedItemOf(op, error))
             gone.add(op.key)
+            if (isMainItem(op, plan.mainMenu) && op.fields.home) defaultLost = true
             break
           }
           const code = error?.code === 'read_back_mismatch' ? 'read_back_mismatch' : 'redo_failed'

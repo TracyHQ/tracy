@@ -109,8 +109,25 @@ export function skipItems(plan, items) {
     const key = JSON.stringify(s)
     return seen.has(key) ? false : seen.add(key)
   })
+  plan.ops = withDefaultItem(plan.ops, plan.mainMenu, plan.skippedItems)
   if (pages > 0 && !plan.ops.some((op) => PAGE_KINDS.has(op.kind)))
     throw new DraftWriteError('no_page_writable', 'every page of the plan was refused before any door call', {
       skipped: plan.skippedItems.length
     })
+}
+
+/** Whether an operation creates a page item of the main menu. */
+export const isMainItem = (op, mainMenu) => op?.kind === 'menuItem.create' && op.fields?.menutype === mainMenu
+
+/**
+ * The write plan always yields a default menu item (#575: a written site with none answers 404 at its root and 500 on
+ * every page). When no operation creates one, the first page item of the main menu takes the default flag; listed as
+ * `default_page_moved`. Returns the operations (the moved one a copy).
+ */
+export function withDefaultItem(ops, mainMenu, skipped = []) {
+  if (ops.some((op) => isMainItem(op, mainMenu) && op.fields.home)) return ops
+  const next = ops.find((op) => isMainItem(op, mainMenu))
+  if (!next) return ops
+  skipped.push({ code: 'default_page_moved', op: next.key, place: null, reason: null, at: 'plan' })
+  return ops.map((op) => (op === next ? { ...op, fields: { ...op.fields, home: 1 } } : op))
 }

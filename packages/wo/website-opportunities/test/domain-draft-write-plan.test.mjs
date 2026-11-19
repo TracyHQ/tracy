@@ -50,10 +50,16 @@ test('every operation names the entries it writes and the rules it follows; ever
   }
 })
 
-test('the home page is created before every other record, a container copy before the copies it holds', () => {
-  const firstRecord = plan.ops.findIndex((op) => op.kind !== 'picture.upload')
-  assert.equal(plan.ops[firstRecord].key, `menuItem:${plan.mainMenu}:home`)
+test('the home item comes after the records it can link to and before every other menu item and copy', () => {
+  // #575: a plan whose first page is a list page links its home item to a category, which must exist first.
   const keys = plan.ops.map((op) => op.key)
+  const home = keys.indexOf(`menuItem:${plan.mainMenu}:home`)
+  const created = plan.ops.filter((op) =>
+    ['category.create', 'article.create', 'contact.create'].includes(op.kind)
+  )
+  assert.ok(created.length > 0 && created.every((op) => keys.indexOf(op.key) < home))
+  assert.ok(plan.ops.every((op, i) => !(op.kind === 'menuItem.create' && i < home)))
+  assert.ok(plan.ops.every((op, i) => !(op.kind === 'module.copy' && i < home)))
   const container = keys.indexOf('copy:plans.plans-b3')
   assert.ok(container >= 0 && container < keys.indexOf('copy:plans.plans-b4'))
   assert.ok(container < keys.indexOf('copy:plans.plans-b5'))

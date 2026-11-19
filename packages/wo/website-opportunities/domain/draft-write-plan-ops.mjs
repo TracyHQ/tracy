@@ -1,6 +1,6 @@
 // The door operations of the draft write in the order they run (ticket #597): the pictures (stored bytes, no page
-// needed), the home page before every other record (a blank site answers a server error until a home page exists),
-// the categories, the created records, the other menu items, the copies (a container before the copies it holds),
+// needed), the categories and the created records (the home item can link to one, #575), the home page before every
+// other menu item and copy (a blank site answers a server error until a home page exists), the other menu items, the copies (a container before the copies it holds),
 // their assignment, the container positions, the in-place writes through the blank site contract (one apply per
 // record, so a module title the blank site emptied goes with that module's first other value), the site identity and
 // the look. Pure; part of `writePlanOf`. One record's operation:
@@ -104,10 +104,13 @@ export function opsOf(state) {
   // Each created article's rank in its list: one order wherever the list is shown (`draft-write-item-order.mjs`).
   const orders = listOrdersOf(state)
   const listed = (r) => ({ ...createOp(r), ...(orders.has(r.key) ? { listOrder: orders.get(r.key) } : {}) })
+  // The created records (categories, articles, contacts) go before the home item: the first page of a plan that keeps
+  // no page of the home type is a page whose item links to its category or record (#575, a classes page first:
+  // `ref_unresolved` at `category:class`, and no default menu item on the site).
   const ops = [
     ...pictures,
-    ...home.map(createOp),
     ...others.map(listed),
+    ...home.map(createOp),
     ...main.map(createOp),
     ...rest.map(createOp),
     ...copies.map(copyOp),

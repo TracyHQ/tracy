@@ -26,6 +26,10 @@ function wiringOf(memory, record = {}) {
   }
 }
 const writeOf = (draftWrite) => createDraftSteps({ draftWrite }).write
+/** The alias of the florist plan's default menu item. */
+const floristHomeAlias = () =>
+  floristPlan.ops.find((op) => op.kind === 'menuItem.create' && op.fields?.home === 1)?.fields?.alias
+
 const failure = (promise) =>
   promise.then(
     () => assert.fail('the step passed'),
@@ -97,6 +101,21 @@ test('an operation the doors fail on twice is left out and listed, the rest is w
   assert.equal(again.value.report.status, 'done')
   assert.deepEqual(again.value.recorded.skippedItems, [])
   assert.equal(again.value.report.ran.length, floristPlan.ops.length)
+})
+
+test('the default menu item failing at the door moves to the next page of the main menu: a site never has none', async () => {
+  const memory = blankSite()
+  const update = memory.doors.update
+  memory.doors.update = async (input) => {
+    if (input.kind === 'menuItem' && input.fields?.home === 1 && input.fields?.alias === floristHomeAlias())
+      throw Object.assign(new Error('refused'), { code: 'scripted_refusal' })
+    return update(input)
+  }
+  const done = await writeOf(wiringOf(memory))({ runId: 'r10' }, inputs())
+  const moved = done.value.recorded.skippedItems.find((s) => s.code === 'default_page_moved')
+  assert.ok(moved, JSON.stringify(done.value.recorded.skippedItems))
+  const homes = [...memory.site.records.menuItem.values()].filter((r) => Number(r.home) === 1)
+  assert.equal(homes.length, 1)
 })
 
 test('a run whose doors write no page at all stops typed: no site is no site', async () => {

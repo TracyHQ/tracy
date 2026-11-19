@@ -29,6 +29,7 @@ import { buildResultOf } from 'website-opportunities/domain/build-result.mjs'
 import { opsRecordOf } from 'website-opportunities/domain/revision-write-delta.mjs'
 import { accentShiftsOf } from './step-chain-draft-brand-pictures.js'
 import { draftError } from './step-chain-draft-source.js'
+import { servingCheck } from './step-chain-draft-serving.js'
 import { runDraftWrite } from './step-chain-draft-write.js'
 import { runRevisionWrite } from './step-chain-draft-write-revision.js'
 
@@ -100,6 +101,8 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
       ? await runRevisionWrite({ ...run, previous: previous.write, beforeDoors })
       : { report: await runDraftWrite(run) }
     const state = record.state
+    // The site the write made is read back as a visitor: a root that does not serve stops the build (#575).
+    const serving = await servingCheck(wiring.pageStatus, plan, state, report)
     const build = buildResultOf({
       // One ref per write on the site: a run id reused, or a revision run again after a restore, keeps its own.
       ref: `${ctx.runId ?? 'draft'}:r${plan.order?.plan?.revision ?? 'none'}:w${state.seq ?? 1}`,
@@ -143,6 +146,8 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
           })),
           // The created legal pages and the not-found page the write does not build, with the reason (#575).
           notBuilt: report.notBuilt ?? [],
+          // Whether the written site was read back as a visitor, and how many pages (#575).
+          serving,
           // The items left out, each a code with ids (#575): kept out of the owner's screen for now.
           skippedItems: skippedOf(inputs, report),
           // Two entries with other words for one place: how many lost a place, and which (entry ids, never the words).
