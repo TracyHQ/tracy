@@ -1,0 +1,40 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "emdash/tracy-essence",
+  "minVersion": "0.1.0",
+  "maxVersion": "0.1.0",
+  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-btn-radius, --ds-card-radius, --ds-input-radius, --ds-media-radius) and every colour role systems define in src/styles/tokens.css and global.css, with the template value as the fallback; src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base.",
+  "release": "tracy-essence/emdash-0.x@0.1.0",
+  "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
+  "readsComponents": true,
+  "readsRoles": true,
+  "readsRolesNote": "src/styles/tokens.css and global.css read every standard role variable, or declare it unused with a reason; the type and shape tokens are read with the template's own value as the fallback",
+  "modes": true,
+  "modesNote": "the light/dark switch (data-theme on html, [data-theme-toggle] in Header.astro)",
+  "selectors": {
+    "themeToggle": "[data-theme-toggle]"
+  },
+  "roles": {
+    "page": "body",
+    "display": ".es-post-title",
+    "heading": "main .es-card-title",
+    "body": "main .es-body p",
+    "button-primary": "main a.es-btn",
+    "card": "main .es-card",
+    "container": "main .es-wrap",
+    "input": ".es-newsletter-form input[type=\"email\"]"
+  },
+  "contrast": {
+    "accent-text": "main .es-pill, main .es-sec-title",
+    "muted": "main .es-card-meta",
+    "body": "main p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": false,
+  "readyNote": "draft: not measured yet",
+  "measureStill": true,
+  "discovered": {},
+  "measureNote": "Carousels (the home slideshow) are stopped on their first slide before each measure"
+}

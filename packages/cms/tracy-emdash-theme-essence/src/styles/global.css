@@ -62,6 +62,8 @@
 	.es-btn.is-dark { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-ink); }
 	.es-btn.is-dark:hover { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-on); }
 	.es-btn.is-block { display: flex; width: 100%; }
+	/* the footer button on a phone is inset 13px each side and 12px lower than the tagline's gap (measured at 390: x 31-360) */
+	@media (max-width: 575px) { .es-footer-right .es-btn.is-block { width: auto; margin: 12px 13px 0; } }
 
 	/* the white rounded box every list item and sidebar block sits in */
 	.es-box { background: var(--color-surface); border-radius: var(--ds-card-radius, 16px); padding: 36px; }
