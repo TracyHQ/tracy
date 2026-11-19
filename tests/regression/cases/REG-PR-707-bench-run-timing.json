@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-707-bench-run-timing",
+  "kind": "feat",
+  "title": "Staff read a bench run's rounds and turns with durations, tokens and tools, never their text",
+  "pr": 707,
+  "area": "website-opportunities/ops",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A planner run's rounds and turns come back with durations, tokens and tool names and no text.",
+    "An unknown bench, a malformed id and a missing run are refused."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-bench-run-timing.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a planner run's rounds and turns: durations, tokens, tool names, never the text",
+      "an unknown bench, a malformed id and a missing run are refused"
+    ]
+  }
+}
