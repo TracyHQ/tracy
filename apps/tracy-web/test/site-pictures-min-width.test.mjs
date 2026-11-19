@@ -53,6 +53,36 @@ test('an owner photo whose usable region is narrower than the frame minimum widt
   assert.ok(cut.width >= 672, `${cut.width}`)
 })
 
+test('a full-width background band the template darkens or that carries text may be enlarged to its minimum width, within 1.5 times and through the gate', async () => {
+  // BXR London on JA Boxing (dev, 17–18/11/2026): the shared call-to-action band asked for 1920 px and no owner photo was
+  // that wide, so the template picture stayed on every page.
+  const band = (extra = {}) =>
+    frame({ id: 'block-c.0', width: 1440, height: 600, shownAs: 'background', minWidth: 1920, ...extra })
+  const demo = { width: 1920, height: 800 }
+  const wide = { ...asset, subjectBox: [0.1, 0.1, 0.8, 0.8] }
+  // 1700 px across: past the background bar's 1600 real pixels, short of the 1920 minimum (1.13 times).
+  const photo = await scene('bakery', 1700, 1133, 4)
+  const withText = await cutPhoto(photo, wide, band({ textOver: true }), demo)
+  assert.equal(withText.ok, true, JSON.stringify(withText))
+  assert.ok(withText.width >= 1920, `${withText.width}`)
+  assert.ok(withText.enlarge > 1 && withText.enlarge <= 1.5, `${withText.enlarge}`)
+  assert.equal(withText.sharpness?.passed, true, 'the enlargement went through the sharpness gate')
+  const darkened = await cutPhoto(photo, wide, band({ templateOverlay: { strength: 0.6 } }), demo)
+  assert.equal(darkened.ok, true, JSON.stringify(darkened))
+  // A band with neither keeps the lock, and a photo that would need more than 1.5 times is too small.
+  assert.deepEqual(await cutPhoto(photo, wide, band(), demo), {
+    ok: false,
+    refused: 'narrower-than-min-width'
+  })
+  const narrow = await scene('bakery', 1100, 733, 4)
+  assert.equal((await cutPhoto(narrow, wide, band({ textOver: true }), demo)).refused, 'too-small')
+  // Within 1.5 times but under the background bar's 1600 real pixels: the gate still refuses it.
+  const short = await scene('bakery', 1400, 933, 4)
+  const gated = await cutPhoto(short, wide, band({ textOver: true }), demo)
+  assert.equal(gated.refused, 'unsharp')
+  assert.equal(gated.sharpness.reason, 'too-narrow')
+})
+
 const hex = (c) => c.repeat(64)
 function manifest(width) {
   return {
