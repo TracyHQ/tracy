@@ -68,9 +68,9 @@ function scripted(privacy) {
   return Object.assign(model, { calls })
 }
 
-const run = async (model, legal = true) => {
+const run = async (model, legal = true, degrade = false) => {
   const { plan, profile } = await approved()
-  return writePages({ plan, profile, blockStore: blockStore(), library: library(), model, legal })
+  return writePages({ plan, profile, blockStore: blockStore(), library: library(), model, legal, degrade })
 }
 
 test('the plan creates a Privacy page: its text is written last, from its facts, with the site before it', async () => {
@@ -110,6 +110,22 @@ test('a thin policy, a browser title or an unknown theme is sent back once, then
     assert.ok(error.details.failing.some((f) => f.key === 'body' && f.problems[0].code === 'privacy_thin'))
     return true
   })
+})
+
+test('with the build policy a Privacy page still failing its check is left out and listed; the pages are kept', async () => {
+  const stubborn = scripted(() => ({ title: 'Privacy', body: POLICY.slice(0, 2) }))
+  const out = await run(stubborn, true, true)
+  assert.equal(out.systemPages, undefined)
+  assert.ok(out.pages.length > 0)
+  assert.deepEqual(out.skippedItems, [
+    {
+      code: 'system_page_left_out',
+      op: null,
+      place: 'legal:privacy',
+      reason: 'copy_check_failed',
+      at: 'copy'
+    }
+  ])
 })
 
 test('four themes named in five paragraphs pass; a paragraph with a long dash or an invented phone does not', () => {

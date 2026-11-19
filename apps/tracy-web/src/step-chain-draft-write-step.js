@@ -48,7 +48,11 @@ async function drawInitials(draw) {
  *   check and mark, run by the revision write after its checks that write nothing
  */
 /** Every item the build left out: the writer's fields (#575) before the write's own. */
-const skippedOf = (inputs, report) => [...(inputs?.copy?.skippedItems ?? []), ...(report?.skippedItems ?? [])]
+const skippedOf = (inputs, report) => [
+  ...(inputs?.copy?.skippedItems ?? []),
+  ...(inputs?.order?.skippedItems ?? []),
+  ...(report?.skippedItems ?? [])
+]
 
 export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds, beforeDoors } = {}) {
   if (typeof wiring?.doors !== 'function')

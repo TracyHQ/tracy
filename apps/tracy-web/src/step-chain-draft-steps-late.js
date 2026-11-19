@@ -15,6 +15,7 @@ import { withoutWithheld } from 'website-opportunities/domain/plan-withheld.mjs'
 import { heldFormsOf, namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
 import { buildWriteOrder } from 'website-opportunities/domain/write-order.mjs'
 import { checkWriteOrder } from 'website-opportunities/domain/write-order-check.mjs'
+import { degradeOrder } from 'website-opportunities/domain/write-order-degrade.mjs'
 import { altCountsOf, altProblemsOf, withAltTexts } from './step-chain-draft-alt.js'
 import { wroteDoors } from './step-chain-draft-journal.js'
 import { restorePlanOf } from './step-chain-draft-restore-plan.js'
@@ -44,6 +45,10 @@ export async function orderStep(ctx, { kit, plan, copy, pictures, icons }) {
     pictures: { ...pictures, frames },
     icons
   })
+  // The build's policy (#575): an item the order or alt check refuses is left out and listed (`degradeOrder`); only a
+  // problem of no single item still stops the build.
+  const first = degradeOrder(order, checkWriteOrder(order), 'order')
+  const alt = degradeOrder(order, altProblemsOf(order, withheld), 'alt')
   const problems = checkWriteOrder(order)
   if (problems.length)
     throw draftError(
@@ -51,19 +56,20 @@ export async function orderStep(ctx, { kit, plan, copy, pictures, icons }) {
       `${problems.length} problem(s) in the write order: ${[...new Set(problems.map((p) => p.code))].join(', ')}`,
       { problems: problems.slice(0, ORDER_PROBLEMS_KEPT), problemsCount: problems.length }
     )
-  const alt = altProblemsOf(order, withheld)
-  if (alt.length)
-    throw draftError('alt_text_unusable', `${alt.length} placed picture(s) have no usable alt text`, {
-      problems: alt.slice(0, ORDER_PROBLEMS_KEPT),
-      problemsCount: alt.length
+  if (alt.kept.length)
+    throw draftError('alt_text_unusable', `${alt.kept.length} placed picture(s) have no usable alt text`, {
+      problems: alt.kept.slice(0, ORDER_PROBLEMS_KEPT),
+      problemsCount: alt.kept.length
     })
+  const skippedItems = [...first.skipped, ...alt.skipped]
   const recorded = {
     pages: order.pages.length,
     pictures: order.pictures.length,
     icons: order.icons.length,
-    alts: altCountsOf(frames)
+    alts: altCountsOf(frames),
+    ...(skippedItems.length ? { skippedItems } : {})
   }
-  return { value: { order, recorded }, usd: 0 }
+  return { value: { order, recorded, ...(skippedItems.length ? { skippedItems } : {}) }, usd: 0 }
 }
 
 /** What a revision holds: the held texts (people with their short forms), and the ids of the items it keeps off the site. */

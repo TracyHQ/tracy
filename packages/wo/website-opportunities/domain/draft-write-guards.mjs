@@ -200,10 +200,29 @@ export function guardPlan(plan, ctx) {
     }
     if (held(textsOf({ ops: [{ ...op, values: [] }] }))) opReport('held_text_in_value', { op: op.key })
   }
+  // A half written pair: with the build's policy its written half is left out, so neither half shows (#575).
   for (const c of list(plan.controls))
-    if (c.written.some(Boolean) && !c.written.every(Boolean))
-      report('pair_incomplete', { record: c.record, fields: c.fields })
-  for (const pair of list(plan.pairs)) report('pair_incomplete', pair)
+    if (c.written.some(Boolean) && !c.written.every(Boolean)) {
+      const op = plan.ops.find((o) => o.key === c.record)
+      const halves = list(op?.values).filter((v) =>
+        list(c.fields).some((f) => String(v.entry ?? '').endsWith(`.${f}`))
+      )
+      if (ctx.skipItems && halves.length)
+        for (const v of halves) of({ op, value: v })('pair_incomplete', { op: op.key, entry: v.entry })
+      else report('pair_incomplete', { record: c.record, fields: c.fields })
+    }
+  for (const pair of list(plan.pairs)) {
+    const halves = plan.ops.flatMap((op) =>
+      op.key === `picture:${pair.written}`
+        ? [{ op }]
+        : list(op.values)
+            .filter((v) => pair.written && v.entry === pair.written)
+            .map((value) => ({ op, value }))
+    )
+    if (ctx.skipItems && halves.length)
+      for (const h of halves) of(h)('pair_incomplete', { op: h.op.key, entry: pair.written })
+    else report('pair_incomplete', { entry: pair.entry, fields: pair.fields })
+  }
   if (!problems.length) return
   if (ctx.skipItems && problems.length === items.length) return skipItems(plan, items)
   throw new DraftWriteError(problems[0].code, `${problems.length} problem(s) before any door call`, {

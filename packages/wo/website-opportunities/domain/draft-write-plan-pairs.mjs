@@ -24,7 +24,13 @@ export function pairsOf(state) {
       if (!d.variantOf || !ids.has(d.name) || !ids.has(d.variantOf)) continue
       const a = state.sink.consumed.has(ids.get(d.name))
       const b = state.sink.consumed.has(ids.get(d.variantOf))
-      if (a !== b) out.push({ entry: ids.get(a ? d.variantOf : d.name), fields: [d.variantOf, d.name] })
+      if (a !== b)
+        out.push({
+          entry: ids.get(a ? d.variantOf : d.name),
+          fields: [d.variantOf, d.name],
+          // The half that is written: the build's policy leaves it out with its partner (#575).
+          written: ids.get(a ? d.name : d.variantOf)
+        })
     }
   }
   return out

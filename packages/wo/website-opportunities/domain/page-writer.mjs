@@ -170,7 +170,9 @@ export async function writePages({
     data: context.data
   })
   const over = dataOverLimit(fieldsByPage)
-  if (over.length > 0)
+  // The build's policy (#575): a data value longer than its field is left out by the block's no data rule, and listed.
+  const overSkipped = degrade ? leaveOutOver(fieldsByPage, over) : []
+  if (!degrade && over.length > 0)
     throw new PageWriterError(
       'data_over_limit',
       `${over.length} data value(s) are longer than their field holds: ${over.map((f) => `${f.key} (${f.length} of ${f.limit})`).join(', ')}`,
@@ -203,7 +205,7 @@ export async function writePages({
   // The build's policy (#575): a field still failing after the rewrite never stops the build. An emphasis problem is
   // repaired with no judgement of the words (the emphasis is dropped, the words kept); any other field is given back,
   // as a field the writer returns: the block's no data rule takes it (hidden, never the demo's words), and it is listed.
-  const skippedItems = degrade ? degradeFailing(states) : []
+  const skippedItems = [...overSkipped, ...(degrade ? degradeFailing(states) : [])]
   const pages = states.map((s) => ({
     id: s.page.id,
     fields: pageOut(s),
@@ -231,15 +233,17 @@ export async function writePages({
   // The created Privacy page, after every other page (the step chain's writing order), when the call writes the whole
   // plan (`legal`): a call that writes some pages only leaves it to the call that writes them all.
   const privacy = legal
-    ? await writePrivacyPage({
-        plan,
-        context,
-        model,
-        signal,
-        others: [...before, ...states.map(writtenOf)],
-        rewrite,
-        kept: reuse?.get(PRIVACY_PAGE_ID)?.systemPage
-      })
+    ? await privacyOrLeftOut(degrade, skippedItems, () =>
+        writePrivacyPage({
+          plan,
+          context,
+          model,
+          signal,
+          others: [...before, ...states.map(writtenOf)],
+          rewrite,
+          kept: reuse?.get(PRIVACY_PAGE_ID)?.systemPage
+        })
+      )
     : null
   const ownerFacts = ownerFactsRecordOf(placement)
   return {
@@ -287,4 +291,42 @@ export function degradeFailing(states) {
     s.failing = []
   }
   return skipped
+}
+
+/** The data fields longer than their field, given to their block's no data rule; the skipped items. */
+function leaveOutOver(fieldsByPage, over) {
+  const keys = new Set(over.map((f) => f.key))
+  for (const fields of fieldsByPage)
+    fields.forEach((f, i) => {
+      if (!keys.has(f.key)) return
+      const { value: _v, data: _d, ...rest } = f
+      fields[i] = { ...rest, from: 'no-data', action: f.noData?.action ?? 'hide' }
+    })
+  return over.map((f) => ({
+    code: 'data_over_limit',
+    op: null,
+    place: `${f.page}:${f.key}`,
+    reason: null,
+    at: 'copy'
+  }))
+}
+
+/**
+ * The created Privacy page, or, with the build's policy, null when it still fails its copy check: the page is left
+ * out (the write does not build it yet) and listed, the build goes on.
+ */
+async function privacyOrLeftOut(degrade, skipped, write) {
+  try {
+    return await write()
+  } catch (error) {
+    if (!degrade || error?.code !== 'copy_check_failed') throw error
+    skipped.push({
+      code: 'system_page_left_out',
+      op: null,
+      place: PRIVACY_PAGE_ID,
+      reason: 'copy_check_failed',
+      at: 'copy'
+    })
+    return null
+  }
 }

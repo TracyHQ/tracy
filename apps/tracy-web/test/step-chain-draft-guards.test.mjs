@@ -61,13 +61,16 @@ test('a write order that fails its check stops the order step with the problems 
   )
 })
 
-test('a placed picture left with no alt text stops the order step with alt_text_unusable', async () => {
+test('a placed picture left with no alt text is left out as a hidden frame and listed; the order goes on (#575)', async () => {
   const { steps, ctx, inputs } = await finished()
   inputs.pictures.profile.facts['business.name'] = []
   for (const g of inputs.pictures.profile.items.gallery) g.label = null
   for (const f of inputs.pictures.frames) f.label = null
-  const error = await steps.order(ctx, inputs, {}).catch((e) => e)
-  assert.equal(error.code, 'alt_text_unusable')
-  assert.equal(error.noRerun, true)
-  assert.ok(error.details.problems.every((p) => p.code === 'alt_text_missing'))
+  const { value } = await steps.order(ctx, inputs, {})
+  assert.ok(value.skippedItems.length > 0)
+  assert.ok(value.skippedItems.every((s) => s.code === 'alt_text_missing' && s.at === 'alt'))
+  for (const s of value.skippedItems) {
+    const picture = value.order.pictures.find((p) => p.frame === s.place)
+    assert.deepEqual([picture.source, picture.state], ['none', 'hidden'])
+  }
 })

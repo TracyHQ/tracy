@@ -44,11 +44,28 @@ function recording(write) {
   return Object.assign(model, { calls })
 }
 
-const run = async (model, store = blockStore()) => {
+const run = async (model, store = blockStore(), degrade = false) => {
   const { plan, profile } = await approvedPlan()
-  return writePages({ plan, profile, blockStore: store, library: library(), model })
+  return writePages({ plan, profile, blockStore: store, library: library(), model, degrade })
 }
 const fieldOf = (pages, key) => pages.flatMap((p) => p.fields).find((f) => f.key === key)
+
+test('with the build policy a data value longer than its field is hidden and listed; the pages are written', async () => {
+  const store = blockStore()
+  store.blocks.find((b) => b.id === 'contact-strip').fields.find((f) => f.name === 'address').limit = 10
+  const out = await run(
+    recording(() => 'Fine'),
+    store,
+    true
+  )
+  assert.deepEqual(
+    out.skippedItems.filter((s) => s.code === 'data_over_limit').map((s) => s.place),
+    ['home:home-b5/address', 'contact:contact-b1/address']
+  )
+  const field = fieldOf(out.pages, 'home-b5/address')
+  assert.equal(field.from, 'no-data')
+  assert.equal(field.value, undefined)
+})
 
 test('a model that invents names, reviews and a phone number cannot place one of them', async () => {
   const model = recording((f) =>
