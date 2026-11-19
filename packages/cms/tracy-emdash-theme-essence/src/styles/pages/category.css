@@ -162,4 +162,6 @@
 	@media (min-width: 1200px) { .es-cat-grid { align-items: stretch; } }
 	/* an author's page on a phone starts 68px under the header (measured: 32px more than the other lists) */
 	@media (max-width: 575px) { .es-cat[data-by="author"] { padding-top: 68px; } }
+	/* the author bio is 476px wide on a tablet (measured at 768) */
+	@media (min-width: 576px) and (max-width: 991px) { .es-cat-head.is-profile .es-cat-desc { max-width: 476px; } }
 }

@@ -134,6 +134,9 @@
 	.es-header.is-inner .es-nav { margin-left: auto; }
 	.es-bar-left, .es-bar-right { display: flex; align-items: center; gap: 12px; }
 	.es-bar-right { justify-content: flex-end; }
+	/* below 992px the source's header icons are 24px wide, 46px apart (33px on a phone): measured */
+	@media (max-width: 991px) { .es-header .es-icon-btn { width: 24px; } .es-header .es-bar-left, .es-header .es-bar-right { gap: 22px; } }
+	@media (max-width: 575px) { .es-header .es-bar-left, .es-header .es-bar-right { gap: 9px; } }
 	.es-burger { display: none; }
 	.es-header.is-home .es-burger { display: inline-flex; }
 	.es-searchbox { display: flex; gap: 8px; padding: 12px 0 24px; }
