@@ -5,6 +5,7 @@ import { test } from 'node:test'
 import {
   benchRunTiming,
   benchRunsBetween,
+  failureCodesIn,
   failuresIn,
   LIST_LIMIT,
   phasesOf,
@@ -72,7 +73,8 @@ test("a planner run's rounds and turns: durations, tokens, tool names, never the
       startedAt: '2026-11-19T10:00:05.000Z',
       ms: 420_000,
       costUsd: 0.18,
-      failures: 2
+      failures: 2,
+      failureCodes: { R07: 1, R10b: 1 }
     }
   ])
   assert.deepEqual(out.turns[0], {
@@ -188,4 +190,9 @@ test('tool names and failure counts are read defensively', () => {
   assert.deepEqual(toolsOf('not json'), [])
   assert.equal(failuresIn(null), 0)
   assert.equal(failuresIn('W06 | No sentence repeats | block-1 | x\nW03 | Text | block-2 | y'), 2)
+  assert.deepEqual(failureCodesIn('R01 | a | b | c\nR01 | a | d | e\nR10b | f | g | h\nnot a rule line'), {
+    R01: 2,
+    R10b: 1
+  })
+  assert.deepEqual(failureCodesIn(null), {})
 })

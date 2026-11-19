@@ -52,11 +52,23 @@ export function toolsOf(message) {
     .filter((n) => typeof n === 'string' && /^[A-Za-z0-9_.-]{1,64}$/.test(n))
 }
 
+const RULE_LINE = /^([A-Z][0-9]{2}[a-z]?) \|/
+
 /** How many failures a round's failure list names: one per line that starts with a rule code. */
 export const failuresIn = (list) =>
   String(list ?? '')
     .split('\n')
-    .filter((line) => /^[A-Z][0-9]{2}[a-z]? \|/.test(line)).length
+    .filter((line) => RULE_LINE.test(line)).length
+
+/** How many failures of each rule a round's failure list names, by rule code (only the code, never the line). */
+export function failureCodesIn(list) {
+  const out = {}
+  for (const line of String(list ?? '').split('\n')) {
+    const code = RULE_LINE.exec(line)?.[1]
+    if (code) out[code] = (out[code] ?? 0) + 1
+  }
+  return out
+}
 
 /** The harness settings that change a run's timing, and nothing else of the harness. */
 export function timingHarness(value) {
@@ -159,6 +171,7 @@ export async function benchRunTiming(pool, bench, runId) {
       ms: ms(r.started_at, r.finished_at),
       costUsd: count(r.cost_usd),
       failures: failuresIn(r.failure_list),
+      failureCodes: failureCodesIn(r.failure_list),
       ...(phasesOf(r.phases) ? { phases: phasesOf(r.phases) } : {})
     })),
     turns: turns.map((x) => {
