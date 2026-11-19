@@ -1,0 +1,3 @@
+{"id":"REG-PR-645-plan-parallel-parts","verdict":"PASS","commit":"d84a3da65649bad44a546933394b6203ac3d5e55","ran_at":"2026-11-19T19:14:27.748Z","evidence":"tests/regression/.runs/2026-11-19-d84a3da65/REG-PR-645-plan-parallel-parts.log"}
+{"id":"REG-PR-708-plan-parts","verdict":"PASS","commit":"d84a3da65649bad44a546933394b6203ac3d5e55","ran_at":"2026-11-19T19:14:28.276Z","evidence":"tests/regression/.runs/2026-11-19-d84a3da65/REG-PR-708-plan-parts.log"}
+{"id":"REG-PR-710-copy-parts-picture-laps","verdict":"PASS","commit":"d84a3da65649bad44a546933394b6203ac3d5e55","ran_at":"2026-11-19T19:14:32.995Z","evidence":"tests/regression/.runs/2026-11-19-d84a3da65/REG-PR-710-copy-parts-picture-laps.log"}
