@@ -79,6 +79,7 @@ test('a run plans in turns only when it was started with planTurns', () => {
     SITE_PLANNER_STEP.writesInTurns({ row: { harness: { planTurns: true } }, ready: empty }),
     false
   )
+  // test-quality: contract the planner's turns are one conversation, so each group's turn sees the plan written before it (ADR 0045 stage 1)
   assert.equal(SITE_PLANNER_STEP.turnsInOneConversation, true)
 })
 
