@@ -5,6 +5,9 @@
  * Class prefix `es-` = JA Essence component.
  * Design-system roles: the stylesheet reads each role as `var(--ds-…, <the template's own value>)`.
  */
+/* ds-not-used: --ds-c-success, --ds-c-success-bg, --ds-c-success-text, --ds-c-warn, --ds-c-warn-bg, --ds-c-warn-text, --ds-c-info, --ds-c-info-bg, --ds-c-info-text, --ds-c-danger, --ds-c-danger-bg, --ds-c-danger-text — the site draws no state colours of its own but the contact form's red for a required mark and an error line, which keep their value under every system (ds-keep lines in misc.css) */
+/* ds-not-used: --ds-c-disabled-bg, --ds-c-disabled-fg — a disabled button or field is drawn at 60% opacity, it has no ground or text colour of its own */
+/* ds-not-used: --ds-c-border-soft — the template's hairlines read --ds-c-border; it has no second, softer line colour */
 @import "tailwindcss";
 @import "./tokens.css";
 @import "./pages/home.css";
@@ -74,11 +77,11 @@
 
 	/* pagination: round 48px items */
 	.es-pagination { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none; margin: 16px 0 0; padding: 0; }
-	.es-pagination a, .es-pagination span { display: block; min-width: 48px; height: 48px; padding: 0 12px; text-align: center; line-height: 48px; border-radius: 30px; background: color-mix(in srgb, var(--color-heading) 10%, transparent); color: var(--color-heading); }
+	.es-pagination a, .es-pagination span { display: block; min-width: 48px; height: 48px; padding: 0 12px; text-align: center; line-height: 48px; border-radius: var(--ds-pill-radius, 30px); background: color-mix(in srgb, var(--color-heading) 10%, transparent); color: var(--color-heading); }
 	.es-pagination .is-active span { background: var(--color-accent); color: var(--color-accent-on); }
 	.es-pagination .is-disabled span { opacity: .5; }
 	.es-pagination a:hover { background: var(--color-accent); color: var(--color-accent-on); }
-	.es-page-count { display: block; margin: 0 auto; width: fit-content; padding: 12px 18px; border-radius: 8px; background: color-mix(in srgb, var(--color-heading) 10%, transparent); color: var(--color-heading); font-family: var(--font-display); font-size: 16px; line-height: 24px; }
+	.es-page-count { display: block; margin: 0 auto; width: fit-content; padding: 12px 18px; border-radius: var(--ds-btn-radius, 8px); background: color-mix(in srgb, var(--color-heading) 10%, transparent); color: var(--color-heading); font-family: var(--font-display); font-size: 16px; line-height: 24px; }
 
 	/* header */
 	.es-header { width: 100%; }
@@ -89,7 +92,7 @@
 	.es-nav li { position: relative; }
 	.es-nav li > a, .es-nav li > span { display: inline-flex; align-items: center; gap: 4px; padding: 20px 18px; font-family: var(--font-display); font-size: 18px; line-height: 32px; color: var(--color-heading); cursor: pointer; }
 	.es-nav li > a:hover, .es-nav li.is-active > a, .es-nav li.is-active > span { color: var(--color-accent-text); }
-	.es-nav .es-sub { display: none; position: absolute; top: 100%; left: 0; min-width: 220px; margin: 0; padding: 12px 0; list-style: none; background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 8px; box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); z-index: 60; }
+	.es-nav .es-sub { display: none; position: absolute; top: 100%; left: 0; min-width: 220px; margin: 0; padding: 12px 0; list-style: none; background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--ds-card-radius, 8px); box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); z-index: 60; }
 	.es-nav li:hover > .es-sub, .es-nav li:focus-within > .es-sub { display: block; }
 	.es-nav .es-sub a { display: block; padding: 6px 24px; font-family: var(--font-display); font-size: 18px; color: var(--color-heading); }
 	.es-nav .es-sub a:hover { color: var(--color-accent-text); }
@@ -143,7 +146,7 @@
 	.es-header.is-home .es-burger { display: inline-flex; }
 	.es-searchbox { display: flex; gap: 8px; padding: 12px 0 24px; }
 	.es-searchbox[hidden] { display: none; }
-	.es-searchbox input { flex: 1; height: 48px; padding: 0 18px; background: var(--color-surface); color: var(--color-heading); border: 1px solid var(--color-line); border-radius: 8px; font: inherit; }
+	.es-searchbox input { flex: 1; height: 48px; padding: 0 18px; background: var(--color-surface); color: var(--color-heading); border: 1px solid var(--color-line); border-radius: var(--ds-input-radius, 8px); font: inherit; }
 	.es-offcanvas { position: fixed; inset: 0 auto auto 0; max-height: 100vh; width: min(320px, 86vw); z-index: 90; padding: 18px 24px; overflow-y: auto; background: var(--color-surface); box-shadow: 0 1rem 3rem rgba(0, 0, 0, .3); }
 	.es-offcanvas[hidden] { display: none; }
 	.es-offcanvas ul { list-style: none; margin: 18px 0; padding: 0; font-family: var(--font-display); font-size: 18px; }
@@ -164,7 +167,7 @@
 	.es-gal-track { --per: var(--cols, 5); display: flex; gap: 9px; margin: 0; padding: 0; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
 	.es-gal-track::-webkit-scrollbar { display: none; }
 	.es-gal-item { flex: 0 0 calc((100% - 9px * (var(--per) - 1)) / var(--per)); scroll-snap-align: start; }
-	.es-gal-item img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; border-radius: 8px; }
+	.es-gal-item img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; border-radius: 8px; } /* ds-keep: picture corner: the template rounds its pictures by their own 8px (6px thumbnails), not by a role */
 	.es-gallery .es-dots { margin-top: 36px; }
 	@media (max-width: 575px) { .es-gallery .es-dots { margin-top: 18px; } }
 	.es-gallery-action { display: flex; justify-content: center; margin-top: 36px; }
@@ -182,7 +185,7 @@
 	@media (max-width: 767px) { .es-footer-info { grid-template-columns: 1fr; justify-items: center; text-align: center; } .es-footer-right { justify-self: stretch; width: 100%; } }
 
 	/* 404: the box of the source's error page (css/error.css), drawn between the site's header and footer (DECISIONS D20) */
-	.es-404 { width: 100%; max-width: 900px; margin: 0 auto; padding: 100px 36px; text-align: center; background: var(--color-surface); border-radius: 8px; }
+	.es-404 { width: 100%; max-width: 900px; margin: 0 auto; padding: 100px 36px; text-align: center; background: var(--color-surface); border-radius: var(--ds-card-radius, 8px); }
 	.es-404 h1.es-404-code { font-size: 240px; line-height: 240px; letter-spacing: -2.4px; }
 	.es-404 h2 { margin: 0 0 16px; font-size: 40px; line-height: 48px; letter-spacing: -0.4px; }
 	.es-404 p { margin: 0; }

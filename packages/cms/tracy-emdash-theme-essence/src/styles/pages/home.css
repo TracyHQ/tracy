@@ -4,28 +4,28 @@
 	.es-strip { padding-bottom: 0; }
 	.es-strip-track { --per: 3; display: flex; gap: 18px; list-style: none; margin: 0; padding: 0; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
 	.es-strip-track::-webkit-scrollbar { display: none; }
-	.es-strip-item { position: relative; flex: 0 0 calc((100% - 18px * (var(--per) - 1)) / var(--per)); height: 362px; scroll-snap-align: start; border-radius: 8px; overflow: hidden; background: var(--color-ink); isolation: isolate; }
+	.es-strip-item { position: relative; flex: 0 0 calc((100% - 18px * (var(--per) - 1)) / var(--per)); height: 362px; scroll-snap-align: start; border-radius: var(--ds-card-radius, 8px); overflow: hidden; background: var(--color-ink); isolation: isolate; }
 	.es-strip-item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
 	.es-strip-item::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(33, 37, 41, .5); }
-	.es-strip-content { position: absolute; inset: 31px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 36px; text-align: center; color: rgba(255, 255, 255, .7); }
-	.es-strip-content .es-pill.es-strip-pill { position: relative; z-index: 2; margin-bottom: 12px; padding: 6px 16px; font-size: 16px; background: #fff; color: #212529; border-radius: var(--ds-pill-radius, 8px); }
-	.es-strip-content h3 { margin: 0 0 8px; font-size: 24px; line-height: 31.2px; color: #fff; }
+	.es-strip-content { position: absolute; inset: 31px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 36px; text-align: center; color: rgba(255, 255, 255, .7); } /* ds-keep: white text on a photograph or on the accent box (the pair is kept under every system, as the source draws it) */
+	.es-strip-content .es-pill.es-strip-pill { position: relative; z-index: 2; margin-bottom: 12px; padding: 6px 16px; font-size: 16px; background: var(--ds-c-surface, #fff); color: var(--ds-c-fg, #212529); border-radius: var(--ds-pill-radius, 8px); }
+	.es-strip-content h3 { margin: 0 0 8px; font-size: 24px; line-height: 31.2px; color: #fff; } /* ds-keep: white text on a photograph or on the accent box (the pair is kept under every system, as the source draws it) */
 	.es-strip-content h3 a { color: inherit; }
 	.es-strip-content h3 a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-	.es-strip-content h3 a:hover { color: #fff; }
+	.es-strip-content h3 a:hover { color: #fff; } /* ds-keep: white text on a photograph or on the accent box (the pair is kept under every system, as the source draws it) */
 	.es-strip-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 8px; margin: 0; font-size: 14px; line-height: 21px; }
-	.es-strip-meta a, .es-strip-meta b { position: relative; z-index: 2; color: #fff; font-weight: 700; }
+	.es-strip-meta a, .es-strip-meta b { position: relative; z-index: 2; color: #fff; font-weight: 700; } /* ds-keep: white text on a photograph or on the accent box (the pair is kept under every system, as the source draws it) */
 	.es-strip-meta > :not(:last-child)::after { content: "-"; margin-left: 8px; }
 	.es-dots { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 36px; min-height: 12px; }
 	.es-dots[hidden] { display: none; }
-	.es-dot { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 30px; background: color-mix(in srgb, var(--color-heading) 20%, transparent); cursor: pointer;  }
+	.es-dot { width: 8px; height: 8px; padding: 0; border: 0; border-radius: var(--ds-pill-radius, 30px); background: color-mix(in srgb, var(--color-heading) 20%, transparent); cursor: pointer;  }
 	.es-dot.is-active { width: 24px; background: var(--color-accent); }
 
 	/* ── the small list under the strip ── */
 	.es-lead-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; list-style: none; margin: 54px -18px 0; padding: 0 0 18px; }
 	.es-lead-item { display: flex; gap: 18px; align-items: flex-start; padding: 18px; }
 	.es-lead-pic { flex: none; display: block; }
-	.es-lead-pic img { display: block; width: 105px; height: 105px; object-fit: cover; border-radius: 8px; }
+	.es-lead-pic img { display: block; width: 105px; height: 105px; object-fit: cover; border-radius: 8px; } /* ds-keep: picture corner: the template rounds its pictures by their own 8px (6px thumbnails), not by a role */
 	.es-lead-text { min-width: 0; padding-top: 0; }
 	.es-lead-text h3 { margin: 0 0 8px; font-size: 18px; line-height: 23.4px; }
 	.es-lead-text time { display: block; font-size: 14px; line-height: 21px; color: var(--color-meta); }
