@@ -2433,6 +2433,16 @@ approval or chain eligibility. Explicit custom indexes remain isolated from depl
   reuse the cache, checked again on use. A missing zip or any mismatch refuses `run` and fails a queued run with the reason,
   before any model call. Turn rows keep a reference to each opened image; the bytes are read back from the cache when a run
   resumes or a fix round replays the conversation. Images are never committed.
+- **Writing turns** (19/11/2026, stage 1 of the proposed ADR 0045, #703; off by
+  default; `--plan-turns`, frozen as `harness.planTurns`, refused beside `--parallel-pages` above 1): round 0 is
+  written in turns of one conversation instead of one answer
+  ([`plan-turns.js`](apps/tracy-web/src/site-planner/plan-turns.js)). Turn 1 is the run's own first message plus what
+  the turn decides (`site`, `mainMenu`, `sharedBlocks`); then one turn per page group in kit order, each the next user
+  message of the same conversation, so later turns keep the kit reading and the prefix cache of earlier ones. The
+  approved prompt is unchanged. The turns' plans are merged into one plan, checked once, and the fix rounds continue
+  the conversation. After each group's turn the page-local rules run on that group alone and the round records what
+  they found (`reading.turnChecks`), for measurement only. A restart resumes after the last recorded turn and never
+  sends a turn's message twice. The chain build does not pass it.
 - **WO visual review:** the WO chain starts new planner runs with `--require-visual-review`, freezing
   `harness.visualReview = "kit-images/1"`. The additional V01 rule requires desktop page-group representatives,
   mobile images of kept pages and desktop images of every printed block. Evidence is the exact kit image hash

@@ -32,8 +32,15 @@
 //   prepare(deps, row)            everything else the run needs before a call: { ok: true, door, ... } or a refusal
 //                                 { ok: false, code, reason }; checked after the prompt and the checker
 //   agentRequest({ row, ready, history })  { firstUser, tools, writeStep?, resolveImage? } for runAgent
-//   nextTurn({ row, ready, answers }), mergeTurns(answers)  optional: round 0 written in turns, each a request of its
-//                                 own (bench-run-round.js); nextTurn gives the next turn's user message or null
+//   nextTurn({ row, ready, answers }), mergeTurns(answers, { row, ready })  optional: round 0 written in turns, each a
+//                                 request of its own (bench-run-round.js); nextTurn gives the next turn's user message
+//                                 or null
+//   writesInTurns({ row, ready }) optional: whether this run writes round 0 in turns (every run of a step with
+//                                 nextTurn, unless the step says otherwise)
+//   turnsInOneConversation        optional: true when the turns are one conversation, each later turn's message the
+//                                 next user message after the turn before (the planner's), not a request of its own
+//   checkTurn({ row, ready, answers })  optional: a record of the step's own check of the turn just answered (the
+//                                 last of `answers`), or null; kept in the round's reading.turnChecks, informational
 //   parts({ row, ready }), mergeParts(values, { row, ready })  optional: round 0 written in parts at the same time, each a conversation
 //                                 of its own (bench-run-parts.js); parts gives [{ about, firstUser }], or null when the
 //                                 run writes round 0 as one conversation or in turns

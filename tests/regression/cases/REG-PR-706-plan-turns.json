@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-706-plan-turns",
+  "kind": "feat",
+  "title": "A planner run started with --plan-turns writes round 0 in turns of one conversation; without it nothing changes",
+  "pr": 706,
+  "area": "website-opportunities/plan",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Turn 1 is the run's own first message plus what the turn decides (site, mainMenu, sharedBlocks); each later turn plans one page group in kit order, as the next user message of the same conversation.",
+    "The turns merge into one plan in the shape of a whole answer, checked once; the fix round continues the same conversation.",
+    "After each group's turn, reading.turnChecks holds the page-local failures located in that group, and nothing of the whole site.",
+    "A resumed round never sends a turn's message twice.",
+    "Without planTurns the planner sends the same requests, byte for byte, as a step with no turn hooks; a writer-style step still opens a fresh conversation per turn.",
+    "--plan-turns beside --parallel-pages above 1 is refused with SITE_PLANNER_BAD_PLAN_TURNS."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-planner-plan-turns.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a run plans in turns only when it was started with planTurns",
+      "turn 1 starts from the run first message and plans the whole site",
+      "the turns merge into the plan a whole answer would hold",
+      "a group turn's check keeps the page-local failures located in that group",
+      "every way the check names a place is read",
+      "a run started with planTurns writes round 0 as turns of one conversation",
+      "a group turn that breaks a page-local rule is recorded",
+      "a round 0 resumed after a turn was answered but not recorded",
+      "a later turn dispatched and never answered",
+      "without planTurns round 0 sends the same requests, byte for byte",
+      "a step whose turns are requests of their own (the writer)",
+      "plan turns cannot start beside parallel pages above 1"
+    ]
+  }
+}

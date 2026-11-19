@@ -18,7 +18,15 @@
 // resumed round 0 starts its next turn after the last recorded one, from the saved turns past that count, so a turn
 // that was answered but not yet recorded is read back, never sent again. Once the hook answers null the parsed answers
 // are merged into one and read and checked as the round's only answer. A fix round continues the conversation of the
-// last turn (reading.conversationFrom of round 0). A step without the hooks (the planner) plays one conversation.
+// last turn (reading.conversationFrom of round 0). A step without the hooks plays one conversation, and so does a run
+// the step's writesInTurns({ row, ready }) leaves out (the planner's, unless the run asks for turns).
+//
+// Turns of one conversation (the planner's since 2026-11-19, ADR 0045 stage 1; step.turnsInOneConversation): the first
+// turn's message opens the conversation, and every later turn's message is the next user message of that same
+// conversation, after the answer of the turn before, so a later turn keeps what the earlier ones read. A resumed round
+// sends a later turn's message only when nothing was saved past the last recorded turn; otherwise the saved turns go
+// on as they are. The fix rounds continue the whole conversation. After each turn the round may record the step's own
+// check of that turn (step.checkTurn({ row, ready, answers }), reading.turnChecks); it changes nothing the round sends.
 //
 // Parts (optional, the writer's since 2026-11-15, off unless a run asks for it): a step with parts({ row, ready }) and
 // mergeParts(values) may write round 0 in parts at the same time instead (bench-run-parts.js); the merged answer is
@@ -75,6 +83,12 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
     from = (await store.roundsOf(pool, runId))[0]?.reading?.conversationFrom ?? 0
   // Round 0 in parts written at the same time (bench-run-parts.js), when the run asks for them.
   const parts = round === 0 ? (step.parts?.({ row, ready: ctx.ready }) ?? null) : null
+  // Round 0 in writing turns, when the step has the hooks and the run writes in turns.
+  const inTurns =
+    round === 0 &&
+    !parts &&
+    Boolean(step.nextTurn) &&
+    (step.writesInTurns?.({ row, ready: ctx.ready }) ?? true)
   // Round 0 in writing turns or in parts: the merged answer, read below as the round's only answer.
   let written = null
   if (parts) {
@@ -86,12 +100,13 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
     }
     history = out.history
     written = out.written
-  } else if (step.nextTurn && round === 0) {
+  } else if (inTurns) {
     const done = reading.writingTurns ?? []
+    const one = step.turnsInOneConversation === true
     for (;;) {
       const answers = done.map((d) => objectOf(d.answer, step).value)
-      const firstUser = step.nextTurn({ row, ready: ctx.ready, answers })
-      if (firstUser === null) {
+      const message = step.nextTurn({ row, ready: ctx.ready, answers })
+      if (message === null) {
         const value = step.mergeTurns(answers, { row, ready: ctx.ready })
         const droppedText = done
           .map((d) => d.droppedText)
@@ -104,8 +119,13 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
         }
         break
       }
-      from = done.at(-1)?.to ?? 0
+      const after = done.at(-1)?.to ?? 0
+      from = one ? 0 : after
       reading.conversationFrom = from
+      // A turn of its own conversation (or the first of one conversation) opens with its message; a later turn of one
+      // conversation sends its message after the last answer, unless a resumed round already saved turns past it.
+      const opens = !one || done.length === 0
+      const sent = history.some((t) => t.n >= after)
       const result = await ctx.ask({
         row,
         ready: ctx.ready,
@@ -113,8 +133,8 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
         history,
         leaseToken,
         must,
-        firstUser,
-        from
+        from,
+        ...(opens ? { firstUser: message } : sent ? {} : { followUp: message })
       })
       if (result.ended) return ended(result)
       const parsed = objectOf(result.answer, step)
@@ -129,6 +149,8 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
         ...(parsed.droppedText ? { droppedText: parsed.droppedText } : {})
       })
       reading.writingTurns = done
+      const checked = step.checkTurn?.({ row, ready: ctx.ready, answers: [...answers, parsed.value] })
+      if (checked) reading.turnChecks = [...(reading.turnChecks ?? []), checked]
       await save('planning', { reading })
     }
   }

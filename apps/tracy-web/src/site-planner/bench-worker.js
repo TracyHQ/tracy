@@ -14,6 +14,12 @@
 // the write step: after the harness's writeAfterToolTurns answers that called a tool, or an answer that only re-read
 // parts already sent, WRITE_STEP_MESSAGE goes out and every later request carries tool_choice "none". A run whose
 // answered calls cost at least the harness's budgetUsd stops before its next call with SITE_PLANNER_BUDGET.
+//
+// Writing turns (ADR 0045 stage 1, off by default): a run started with harness.planTurns writes round 0 in turns of
+// one conversation (plan-turns.js): turn 1 plans the whole site, then each page group of the kit has a turn of its own,
+// in kit order. The turns' plans are merged into one plan, read and checked once as before; after each group's turn
+// the page-local rules run on that group alone and the round records what they found (reading.turnChecks). Such a
+// run's write step asks for the turn's answer instead of the complete plan (WRITE_TURN_STEP_MESSAGE).
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { withStockScreensDropped } from '../lib/stock-screens.js'
 import { SITE_PLANNER_STORE } from './bench-store.js'
@@ -44,6 +50,14 @@ import { withDemoVideosHidden } from './plan-demo-videos.js'
 import { withWrittenRowFieldsShown } from './plan-row-fields.js'
 import { withKitCharacterLimits } from './plan-kit-limits.js'
 import { mergePlanParts, partFirstMessages, planningParts, plansInParts } from './plan-parts.js'
+import {
+  firstTurnMessage,
+  groupTurnCheck,
+  groupTurnMessage,
+  mergePlanTurns,
+  plansInTurns,
+  turnGroups
+} from './plan-turns.js'
 import { VISUAL_REVIEW_POLICY, visualReviewInstruction, withVisualReview } from './visual-review.js'
 
 export { BENCH_QUEUE }
@@ -57,6 +71,10 @@ export const NOT_A_PLAN_MESSAGE =
 
 /** What a run that reads with tools is told once it has read enough (the write step). */
 export const WRITE_STEP_MESSAGE = `You have read enough of the kit: everything you need is in this conversation, and no more tool calls are possible. ${WRITE_PLAN_INSTRUCTION}`
+
+/** The write step of a run that plans in turns (plan-turns.js): the answer the turn asks for, not the complete plan. */
+export const WRITE_TURN_STEP_MESSAGE =
+  'You have read enough of the kit: everything you need is in this conversation, and no more tool calls are possible. Write the answer this turn asks for now, as one JSON object in a single ```json fenced block; no tool calls.'
 
 /** The site planner as a bench step (lib/bench-run-loop.js). */
 export const SITE_PLANNER_STEP = Object.freeze({
@@ -116,6 +134,24 @@ export const SITE_PLANNER_STEP = Object.freeze({
       mergePlanParts(values, planningParts(ready.kit.doc, row.harness.parallelPages), ready.kit.doc),
       ready.kit.doc
     ),
+  // Writing turns of one conversation (plan-turns.js), only for a run started with harness.planTurns: turn 1's message
+  // (the run's own first message, then what the turn decides), each page group's, then the merge of the turns' plans
+  // (read like any answer by readAnswer), and the page-local check of each group's turn.
+  writesInTurns,
+  turnsInOneConversation: true,
+  nextTurn: ({ row, ready, answers }) =>
+    answers.length === 0
+      ? firstTurnMessage(agentRequest({ row, ready, history: [] }).firstUser, ready.kit.doc)
+      : groupTurnMessage(answers.length, ready.kit.doc),
+  mergeTurns: (answers, { ready }) => mergePlanTurns(answers, ready.kit.doc),
+  checkTurn: ({ row, ready, answers }) =>
+    groupTurnCheck({
+      answers,
+      kit: ready.kit.doc,
+      read: (plan) => normalizedPlan(plan, ready.kit.doc),
+      check: (plan) =>
+        checkPlan({ plan, kit: ready.kit.doc, brief: row.brief, briefRef: briefRefOf(row.brief_source) })
+    }),
   prepare,
   agentRequest
 })
@@ -180,7 +216,12 @@ function agentRequest({ row, ready, history }) {
           inFirstMessage: whole?.inFirstMessage ?? FIRST_MESSAGE_PARTS
         }),
     ...(!preloaded && writeAfter
-      ? { writeStep: { afterToolTurns: writeAfter, message: WRITE_STEP_MESSAGE } }
+      ? {
+          writeStep: {
+            afterToolTurns: writeAfter,
+            message: writesInTurns({ row, ready }) ? WRITE_TURN_STEP_MESSAGE : WRITE_STEP_MESSAGE
+          }
+        }
       : {}),
     resolveImage: ready.images?.resolve
   }
@@ -220,6 +261,11 @@ async function prepare({ pool, secret, index, kitImages }, row) {
 }
 
 const briefRefOf = (source) => String(source?.revisionId ?? source?.name ?? '')
+
+// Whether this run writes round 0 in turns: it was started with harness.planTurns, and its kit has a page group.
+function writesInTurns({ row, ready }) {
+  return plansInTurns(row.harness) && turnGroups(ready.kit.doc).length > 0
+}
 
 // What code settles in a plan without the model, after each answer and before the checker:
 // - every stock screen of the kit (site.stockScreens) is dropped, so no answer keeps one (lib/stock-screens.js); a kit
