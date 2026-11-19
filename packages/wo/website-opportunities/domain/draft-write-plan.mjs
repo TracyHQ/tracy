@@ -26,6 +26,7 @@ import { pairsOf } from './draft-write-plan-pairs.mjs'
 import { mainMenuOf, planMenuItems, planPages } from './draft-write-plan-pages.mjs'
 import { consume, recordOf, sinkOf } from './draft-write-sink.mjs'
 import { siteOf } from './draft-write-site.mjs'
+import { writableOrderOf } from './draft-write-page-types.mjs'
 import { withDefaultItem } from './draft-write-skip.mjs'
 import { systemPagesNotBuiltOf } from './draft-write-system-pages.mjs'
 import { blockRecordOf } from './draft-write-targets.mjs'
@@ -126,7 +127,11 @@ export function writePlanOf(order, aiq, options = {}) {
     })
   const kit = draftWriteKitOf(aiq)
   const sink = sinkOf()
+  // The blocks and pages the write leaves out, each listed with its code (#575): one item never stops the build.
+  const left = []
+  order = writableOrderOf(order, kit, left)
   const state = {
+    left,
     order,
     kit,
     sink,
@@ -213,6 +218,7 @@ export function writePlanOf(order, aiq, options = {}) {
   delete plan.pairs
   // Never a plan with no default menu item (#575).
   if (!plan.skippedItems) plan.ops = withDefaultItem(plan.ops, plan.mainMenu, (plan.skippedItems = []))
+  plan.skippedItems.unshift(...left)
   if (!plan.skippedItems.length) delete plan.skippedItems
   return plan
 }

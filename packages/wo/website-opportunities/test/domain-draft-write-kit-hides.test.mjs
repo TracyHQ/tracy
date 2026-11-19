@@ -106,14 +106,20 @@ const rowsWith = (filled, order) => {
   }
 }
 
-test('omit packed: rows after the last filled one are taken out; a gap before a filled row stops the plan', () => {
+test('omit packed: rows after the last filled one are taken out; a gap before a filled row is kept and listed', () => {
   const packed = rowsWith([1], 'packed')
   packed.run()
   assert.deepEqual(
     packed.record.removes.map((r) => r.xpath),
     ['/html/body/div/ul/li[3]', '/html/body/div/ul/li[2]']
   )
-  assert.equal(codeOf(rowsWith([1, 3], 'packed').run), 'omit_row_gap')
+  const gap = rowsWith([1, 3], 'packed')
+  gap.state.left = []
+  assert.equal(codeOf(gap.run), 'passed')
+  assert.deepEqual(
+    gap.state.left.map((l) => l.code),
+    ['omit_row_gap']
+  )
   const older = rowsWith([1, 3])
   older.run()
   assert.ok(older.state.sink.unproven.some((u) => u.code === 'omit_row_gap'))

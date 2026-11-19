@@ -61,7 +61,8 @@ export async function orderStep(ctx, { kit, plan, copy, pictures, icons }) {
       problems: alt.kept.slice(0, ORDER_PROBLEMS_KEPT),
       problemsCount: alt.kept.length
     })
-  const skippedItems = [...first.skipped, ...alt.skipped]
+  // What building the order left out (a page, a block, the answer: `order.leftOut`, #575), then what its checks did.
+  const skippedItems = [...(order.leftOut ?? []), ...first.skipped, ...alt.skipped]
   const recorded = {
     pages: order.pages.length,
     pictures: order.pictures.length,

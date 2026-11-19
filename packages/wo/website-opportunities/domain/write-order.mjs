@@ -7,7 +7,7 @@ import { blockPlacesOf } from './write-order-block.mjs'
 import { dataIndexOf } from './write-order-data.mjs'
 import { WriteOrderError } from './write-order-error.mjs'
 import { writerPlaceOf } from './write-order-fields.mjs'
-import { declarationsOf, positionOf, refuseInput, writtenPagesOf } from './write-order-input.mjs'
+import { declarationsOf, homePagesOf, positionOf, refuseInput, writtenPagesOf } from './write-order-input.mjs'
 import { hideEmptyPictures, settleBlock } from './write-order-hide.mjs'
 import { joinLibraryBlock } from './write-order-library.mjs'
 import { classedIcons, libraryPositionOf, lookOf } from './write-order-look.mjs'
@@ -40,20 +40,31 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
   if (!Array.isArray(pictures?.frames))
     throw new WriteOrderError('pictures_missing', 'the write order needs the frames of the pictures step')
   const declarations = declarationsOf(aiq)
-  const answer = refuseInput(approved, aiq, profile)
+  // What the order leaves out, each listed with its code (#575): one page, block or answer never stops the build.
+  const left = []
+  const answer = refuseInput(approved, aiq, profile, left)
   // A repeating block kept on trade basis shows the cards the page writer wrote (`trade-cards.mjs`, #575).
   // The channel facts the plan holds from the brief (WhatsApp, a second phone) are no fact of the profile: carried in
   // as the page writer carries them (`writerContextOf`), so a block that shows them is written to the site (#575).
-  const { plan, data } = shownPlanOf(profile, approved, declarations)
+  const shown = shownPlanOf(profile, homePagesOf(approved, left), declarations)
+  const { data } = shown
   const written = writtenPagesOf(writers)
-  const missing = plan.pages.filter((p) => !written.has(p.id)).map((p) => p.id)
-  if (missing.length)
+  // A page with no written copy is left out; with none left there is no site to write.
+  const missing = shown.plan.pages.filter((p) => !written.has(p.id)).map((p) => p.id)
+  for (const id of missing)
+    left.push({ code: 'writer_missing', op: `page:${id}`, place: null, reason: null, at: 'order' })
+  const plan = { ...shown.plan, pages: shown.plan.pages.filter((p) => written.has(p.id)) }
+  if (!plan.pages.length)
     throw new WriteOrderError('writer_missing', `no written copy for page(s) ${missing.join(', ')}`, {
       pages: missing
     })
   const writtenByPlace = new Map()
-  for (const [pageId, page] of written)
+  const kept = new Set(plan.pages.map((p) => p.id))
+  for (const [pageId, page] of written) {
+    // A page left out above takes its written words with it.
+    if (!kept.has(pageId)) continue
     for (const entry of list(page.fields)) writtenByPlace.set(writerPlaceOf(pageId, entry), entry)
+  }
   const frames = new Map(pictures.frames.map((f) => [f.id, f]))
   const iconEntries = classedIcons(list(icons?.icons ?? pictures.icons), aiq?.mapping)
   const iconsById = new Map(iconEntries.map((i) => [i.id, i]))
@@ -74,10 +85,22 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
   const hidden = []
   const used = new Set()
   const orderPages = pages.map((page, n) => {
-    const blocks = list(page.blocks).map((block, i) => {
+    // A block the kit does not declare is left out of the order, its written words with it (#575).
+    const known = list(page.blocks).filter((block) => {
+      if (declarations.has(block.block)) return true
+      left.push({
+        code: 'unknown_block',
+        op: `copy:${page.id}.${block.id}`,
+        place: block.block,
+        reason: null,
+        at: 'order'
+      })
+      for (const [place] of writtenByPlace)
+        if (place.startsWith(`${page.id}.${block.id}.`)) writtenByPlace.delete(place)
+      return false
+    })
+    const blocks = known.map((block, i) => {
       const description = declarations.get(block.block)
-      if (!description)
-        throw new WriteOrderError('unknown_block', `${block.block} of ${block.id} is not a declared block`)
       const places = blockPlacesOf(page, block, description, ctx)
       const out = {
         id: block.id,
@@ -87,7 +110,7 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
         order: i,
         position: positionOf(
           description,
-          page.blocks,
+          known,
           i,
           description.source === 'library' ? libraryPositionOf(aiq?.mapping, page.pageType) : undefined
         ),
@@ -184,6 +207,7 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
     derived,
     hidden,
     unplaced,
+    ...(left.length ? { leftOut: left } : {}),
     provenance: {
       prompts: {
         writer: list(writers)[0]?.prompt ?? null,

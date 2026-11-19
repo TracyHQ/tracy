@@ -66,7 +66,7 @@ test('holds.copies: a container none of whose held blocks the page keeps is drop
   )
 })
 
-test('holds.copies: a held block with no container is left out; two containers on one page stop the plan', () => {
+test('holds.copies: a held block with no container, or a container copy over perPage, is left out and listed', () => {
   const alone = () =>
     planWith(
       () => {},
@@ -76,14 +76,12 @@ test('holds.copies: a held block with no container is left out; two containers o
     )
   assert.equal(codeOf(alone), 'passed', 'a held block with no container is left out (#575)')
   assert.ok(alone().skipped.some((x) => x.reason === 'held_block_without_container'))
-  const twice = () =>
-    planWith(
-      (m) => {
-        m.placements['block-184'].holds.copies.perPage = 0
-      },
-      () => {}
-    )
-  assert.equal(codeOf(twice), 'container_copies_per_page')
+  // More copies than `perPage`: the extra ones are left out and listed (#575).
+  const twice = planWith((m) => {
+    m.placements['block-184'].holds.copies.perPage = 0
+  })
+  assert.ok(!twice.ops.some((op) => op.key === 'copy:plans.plans-b3'))
+  assert.ok(twice.skippedItems.some((s) => s.code === 'container_copies_per_page'))
 })
 
 test('menu.items from pages: a placed block with no items of its own lists the pages of the kit rule', () => {
@@ -97,11 +95,12 @@ test('menu.items from pages: a placed block with no items of its own lists the p
   assert.ok(items.length > 0 && items.length <= 4, `${items.length} items`)
   assert.ok(items.every((op) => op.link.form === 'address'))
   assert.ok(!items.some((op) => op.link.ref === 'page:home'), 'except: [home]')
-  const over = () =>
-    planWith((m) => {
-      m.placements['block-174'].menu.items.max = 2
-    })
-  assert.equal(codeOf(over), 'menu_items_over_max')
+  // More items than the block holds: that menu block is left out and listed, the plan goes on (#575).
+  const over = planWith((m) => {
+    m.placements['block-174'].menu.items.max = 2
+  })
+  assert.ok(!over.ops.some((op) => op.kind === 'menuItem.create' && op.fields.menutype === 'site-map'))
+  assert.ok(over.skippedItems.some((s) => s.code === 'menu_items_over_max' && s.place === 'block-174'))
 })
 
 test('menu.items from the main menu: the phone menu shows the page items, whatever menu it names', () => {

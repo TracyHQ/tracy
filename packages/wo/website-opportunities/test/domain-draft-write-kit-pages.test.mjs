@@ -74,25 +74,23 @@ test('an item page whose list page is not in the plan takes its own item (ownIte
   assert.deepEqual(own.link.refs.record, { ref: 'article:service-wild-meadow-bouquet', form: 'id' })
 })
 
-test('a page type the kit cannot make stops the plan, so it is never reported written', () => {
-  const stop = stopOf(() =>
-    planWith((m) => {
-      m.pages.plans = { unbuilt: { code: 'record_kind_unsupported', why: 'invented: no such record' } }
-    })
-  )
+test('a page type the kit cannot make is left out and listed, never reported written, and the build goes on', () => {
+  const p = planWith((m) => {
+    m.pages.plans = { unbuilt: { code: 'record_kind_unsupported', why: 'invented: no such record' } }
+  })
   assert.deepEqual(
-    [stop.code, stop.details.pageType, stop.details.code],
-    ['page_unbuilt', 'plans', 'record_kind_unsupported']
+    p.skippedItems.find((s) => s.op === 'page:plans'),
+    { code: 'page_unbuilt', op: 'page:plans', place: 'plans', reason: 'record_kind_unsupported', at: 'plan' }
   )
+  assert.ok(!p.ops.some((op) => op.key === `menuItem:${p.mainMenu}:plans`))
+  assert.ok(p.ops.some((op) => op.key === `menuItem:${p.mainMenu}:home`))
 })
 
-test('a page type the kit does not declare stops the plan; a kit with no pages keeps the featured view', () => {
-  const stop = stopOf(() =>
-    planWith((m) => {
-      delete m.pages.plans
-    })
-  )
-  assert.equal(stop.code, 'page_type_not_declared')
+test('a page type the kit does not declare is left out and listed; a kit with no pages keeps the featured view', () => {
+  const p = planWith((m) => {
+    delete m.pages.plans
+  })
+  assert.equal(p.skippedItems.find((s) => s.op === 'page:plans')?.code, 'page_type_not_declared')
   const older = planWith((m) => {
     delete m.pages
   })
@@ -122,7 +120,7 @@ test('a created record starts from the declared base columns, filed in the decla
   assert.equal(plan.ops.find((op) => op.key === 'category:contact').extension, 'com_contact')
 })
 
-test('a menu item of another menu linking to a page reached under its list page: its address, else a stop', () => {
+test('a menu item of another menu linking to a page reached under its list page: its address, else left out', () => {
   const toClass = (o) => {
     const foot = o.pages.find((p) => p.id === 'home').blocks.find((b) => b.block === 'block-174')
     const link = foot.items.find((i) => i.data === 'plans').fields.find((f) => f.field === 'link')
@@ -134,12 +132,20 @@ test('a menu item of another menu linking to a page reached under its list page:
   assert.deepEqual(op.link, { ref: 'page:class', form: 'address' })
   assert.ok(p.under.class, 'the class page is reached under its list page')
   // A kit with no menu.items declaration makes an alias item, which has nothing to name.
-  const stop = stopOf(() =>
-    planWith((m) => {
-      delete m.placements['block-174'].menu.items
-    }, toClass)
+  const alias = planWith((m) => {
+    delete m.placements['block-174'].menu.items
+  }, toClass)
+  assert.ok(!alias.ops.some((o) => o.key === 'menuItem:site-map:class'))
+  assert.deepEqual(
+    alias.skippedItems.find((s) => s.code === 'menu_item_to_under_page'),
+    {
+      code: 'menu_item_to_under_page',
+      op: 'menuItem:site-map:class',
+      place: 'block-174',
+      reason: null,
+      at: 'plan'
+    }
   )
-  assert.deepEqual([stop.code, stop.details.page], ['menu_item_to_under_page', 'class'])
 })
 
 test('a block assigned to a page reached under its list page prints there only at a declared detail position', () => {

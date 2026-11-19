@@ -73,15 +73,15 @@ export function omitRows(state, record, hide) {
       .sort(([a], [b]) => indexOf(b) - indexOf(a))
     if ([...group].some(([e, g]) => !g.filled && indexOf(e) < last)) {
       // `order: "packed"`: the plan's rows fill the first places in order, so a gap breaks the declaration.
+      // A packed list with a gap: the empty row stays (never removed in place), and it is listed (#575).
       if (hide.order === 'packed')
-        throw new DraftWriteError(
-          'omit_row_gap',
-          `${record.key} leaves a ${hide.rows} row empty before a filled one`,
-          {
-            record: record.key,
-            rows: hide.rows
-          }
-        )
+        state.left?.push({
+          code: 'omit_row_gap',
+          op: record.key,
+          place: hide.rows ?? null,
+          reason: null,
+          at: 'plan'
+        })
       unproven(state.sink, 'omit_row_gap', { record: record.key, rows: hide.rows })
     }
     for (const [, { piece }] of out) {

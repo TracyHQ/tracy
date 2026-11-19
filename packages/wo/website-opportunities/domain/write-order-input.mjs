@@ -3,7 +3,6 @@
 // it fills). Pure.
 import { visibleLength } from './draft-write-length.mjs'
 import { MAIN_BUTTON_LABEL, answerLimitOf } from './write-order-buttons.mjs'
-import { WriteOrderError } from './write-order-error.mjs'
 import { answeredLabelOf } from './write-order-fields.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -31,13 +30,12 @@ export const positionOf = (description, blocks, i, resolved) => ({
   beforeBlock: blocks[i + 1]?.id ?? null
 })
 
-/** Refuse a plan with more than one home page, and a customer answer longer than a field it fills. */
-export function refuseInput(plan, aiq, profile) {
-  const homes = plan.pages.filter((p) => p.pageType === 'home').map((p) => p.id)
-  if (homes.length > 1)
-    throw new WriteOrderError('home_repeated', `${homes.length} pages are home pages: ${homes.join(', ')}`, {
-      pages: homes
-    })
+/**
+ * The customer's answer to write, or null (#575: one item never stops the build): a plan with more than one home page
+ * keeps the first (`homePagesOf`); an answer longer than a field it fills is not written there, the writer's own words
+ * are, and it is listed in `left` (`answer_over_limit`).
+ */
+export function refuseInput(plan, aiq, profile, left = []) {
   const answer = answeredLabelOf(profile)
   if (answer === null) return answer
   const limit = answerLimitOf({
@@ -46,11 +44,24 @@ export function refuseInput(plan, aiq, profile) {
     kind: MAIN_BUTTON_LABEL,
     library: list(aiq?.library)
   })
-  if (limit !== null && visibleLength(answer) > limit)
-    throw new WriteOrderError(
-      'answer_over_limit',
-      `the main button answer has ${visibleLength(answer)} characters; the smallest field it fills holds ${limit}`,
-      { kind: MAIN_BUTTON_LABEL, limit, length: visibleLength(answer) }
-    )
+  if (limit !== null && visibleLength(answer) > limit) {
+    left.push({
+      code: 'answer_over_limit',
+      op: null,
+      place: MAIN_BUTTON_LABEL,
+      reason: String(limit),
+      at: 'order'
+    })
+    return null
+  }
   return answer
+}
+
+/** The plan without the home pages after its first one, each listed in `left` (`home_repeated`). */
+export function homePagesOf(plan, left) {
+  const homes = plan.pages.filter((p) => p.pageType === 'home')
+  if (homes.length < 2) return plan
+  for (const p of homes.slice(1))
+    left.push({ code: 'home_repeated', op: `page:${p.id}`, place: 'home', reason: null, at: 'order' })
+  return { ...plan, pages: plan.pages.filter((p) => !homes.slice(1).includes(p)) }
 }

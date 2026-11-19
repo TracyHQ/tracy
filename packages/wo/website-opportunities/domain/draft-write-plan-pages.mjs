@@ -2,7 +2,6 @@
 // title, description and share image of each page on the record `mapping.seo.pageTypes` names (a menu item, or the
 // article of an article page) and the items of the footer menus (the categories: `draft-write-plan-categories.mjs`).
 // Pure; part of `writePlanOf`. The page of each page type as the kit declares it: `draft-write-kit-pages.mjs`.
-import { DraftWriteError } from './draft-write-error.mjs'
 import { drawsMainMenu, menuLinkFormOf } from './draft-write-menu-items.mjs'
 import { pageDeclOf, pageItemOf } from './draft-write-kit-pages.mjs'
 import { conflict, consume, put, recordOf, skip, unproven } from './draft-write-sink.mjs'
@@ -150,16 +149,17 @@ export function planMenuItems(state) {
     // A page reached under its list page has no item: the main menu does not show it, and another menu's item links
     // its address only when the kit declares `link: "page-address"` (measured, fact K3); an alias has nothing to name.
     if (state.under?.[target] && (main || form !== 'address')) {
+      // Another menu's item to a page with no item of its own has nothing to link: left out and listed (#575).
       if (!main)
-        throw new DraftWriteError(
-          'menu_item_to_under_page',
-          `${at.block.block} links to a page with no menu item`,
-          {
-            block: at.block.block,
-            page: target
-          }
-        )
-      for (const g of group) skip(state.sink, g.entry.place, 'page_reached_under')
+        state.left?.push({
+          code: 'menu_item_to_under_page',
+          op: `menuItem:${menutype}:${target}`,
+          place: at.block.block,
+          reason: null,
+          at: 'plan'
+        })
+      for (const g of group)
+        skip(state.sink, g.entry.place, main ? 'page_reached_under' : 'menu_item_to_under_page')
       continue
     }
     const key = `menuItem:${menutype}:${target}`

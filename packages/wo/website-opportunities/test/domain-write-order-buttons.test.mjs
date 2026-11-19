@@ -107,7 +107,7 @@ test('a block field reads the one item its block shows when its data is that ite
   assert.equal(entry(order, 'class-2.class-2-b3.name').value, posy.fields['offering.name'].value)
 })
 
-test('an answer longer than the smallest field it fills is refused before the build, naming the limit', async () => {
+test('an answer longer than the smallest field it fills is not written there, and listed with the limit', async () => {
   const { plan } = saved.approval
   assert.equal(answerLimitOf({ blockStore: boxingStore, plan, kind: 'contact.cta_label' }), 35)
   // The composer itself takes no answer longer than the template's shortest main button field (32 characters).
@@ -115,11 +115,10 @@ test('an answer longer than the smallest field it fills is refused before the bu
   assert.equal(buildWriteOrder(values).facts.find((f) => f.kind === 'contact.cta_label').value.length, 31)
   const long = structuredClone(values)
   long.approval.profile.facts['contact.cta_label'][0].value = 'Order a hand tied seasonal bouquet today'
-  assert.throws(
-    () => buildWriteOrder(long),
-    (error) => {
-      assert.deepEqual([error.code, error.noRerun, error.details.limit], ['answer_over_limit', true, 35])
-      return true
-    }
-  )
+  // #575: the writer's own words are written, never the long answer, and the build goes on.
+  const order = buildWriteOrder(long)
+  assert.deepEqual(order.leftOut, [
+    { code: 'answer_over_limit', op: null, place: 'contact.cta_label', reason: '35', at: 'order' }
+  ])
+  assert.ok(!JSON.stringify(order.pages).includes('Order a hand tied seasonal bouquet today'))
 })

@@ -166,35 +166,40 @@ measured, or whose meaning the contract leaves open, is never acted on. When the
 | `pages.<type>.ownItem` | the item page's own item when the plan has no list page; a block only in a detail position is flagged `detail_position_not_printed` |
 | `pages.<type>.record` | the created article or contact starts from `base` and is filed in the declared category (`extension`, `params`, at the top level). A created article no page shows, listed by a list block, is of the page type reached under that list block's page (`pages.<type>.under.page` and the recipe's main block; a block that lists another block's records, `itemsOf.block`, is that block) |
 | `pages.<type>.record.category.title` | `{from: "page-name", pageType, fallback: "business-name"}`: the name of the first plan page of `pageType`, else the business name; another word stops `category_title_unknown`. A kit with no `title` keeps the list page's name |
-| `pages.<type>.unbuilt` | stops `page_unbuilt` (with the kit's code): the page is never planned, so never reported written |
+| `pages.<type>.unbuilt` | the page is left out of the write and listed (`page_unbuilt`, with the kit's code), so never reported written |
 | `placements.<id>.keyedRow` | a list row keyed to a page of `pageType` is cut (`row_keyed_to_page_type`): that page takes the keyed row only |
 | `placements.<id>.holds.copies` | one container per page; `keptWhen: "any-held-block-kept"`: a container holding none of the page's blocks is dropped (`container_without_held`); another `keptWhen` stops `kept_when_unknown` |
-| `placements.<id>.menu.items` | `from: "main-menu"`: the block shows the page items. `from: "pages"`: items the order gives are written, at most `max` (else `menu_items_over_max`); a block the order shows with none of its own lists the pages of the kit's rule (`menuItemPagesOf` of `ai-quickstart-menu-items.mjs`, imported, never copied), each labelled with its page's menu label. `link: "page-address"`: each item is a `url` menu item (component 0) to the page's address, `index.php?Itemid=<its page item>` or its `under.address` (so an item may link a page reached under its list page); another `link` stops `menu_items_link_unknown`. A menu block with no `items` keeps an alias item, written with link `index.php?Itemid=` (an empty link is refused, measured K3) |
+| `placements.<id>.menu.items` | `from: "main-menu"`: the block shows the page items. `from: "pages"`: items the order gives are written, at most `max` (more: that menu block is left out and listed, `menu_items_over_max`); a block the order shows with none of its own lists the pages of the kit's rule (`menuItemPagesOf` of `ai-quickstart-menu-items.mjs`, imported, never copied), each labelled with its page's menu label. `link: "page-address"`: each item is a `url` menu item (component 0) to the page's address, `index.php?Itemid=<its page item>` or its `under.address` (so an item may link a page reached under its list page); another `link` stops `menu_items_link_unknown`. A menu block with no `items` keeps an alias item, written with link `index.php?Itemid=` (an empty link is refused, measured K3) |
 | `createdFrames` | a created record's HTML value is written into its declared frame (measured, K1); a value with no declared frame stops (`created_frame_not_declared`). A kit with no `createdFrames` keeps the smallest frame (`created_record_frame`). Every row a created record writes (an object of a JSON list: `exer-features0`) carries every key the mapping declares on that row (block fields and frames), the keys the plan does not fill set to the base's value there or empty (`rowFillsOf`, `draft-write-row-keys.mjs`): a row with only some keys prints PHP warnings for the others (measured, K1) |
 | `seo.featuredView.article` | every created article of its page type is written with `set`; none in the plan: flagged `featured_article_none` |
 | `facts.<f>[i].notWritten` | the place is never sent; `plan.notWritten` and the run's report and recorded value list it (fact, entity, column, `by`), and a fact all of whose places are so is skipped `fact_not_written_by_decision` |
 | `look.accent.writtenAs`, `look.accent.sides` | one op `look.accent` writes the accent as declared (measured, L1): a `mod_custom` with the declared title, position, ordering, showtitle and style, assigned `[0]` (`assign: "every-page"`), its text built at write time by `accentModule` from the stylesheets the site serves (door `sheets`), the template's own accent read as the one colour the stylesheets give the declared variables on `:root`. `sides.values`: the light tone is the order's `accent`, the dark one its `accentDark` (the accent when it has none), under `sides.darkHook`. `look.accent` and `look.accentDark` are written by it. Another `kind`, `content`, `assign` or `sides.values` word stops `accent_written_as_unknown` |
 | `look.favicon` | one op `look.favicon` writes the site icon at `path` (its extension the format: `.ico`, `.png`), from the logo the plan uploads (`from: "logo"`), else the business initials on the accent (`fallback: "initials"`). `keptLiterals` and `dataFixes` are not the write's: the first is the release gate's leak exemption, the second the blank site step's |
 | hides `scope`, `from` | `scope: "item"`: each item prints its own control. `scope: "block"`, `from: "first-item"`: the first item's words are written into every item (`hides.from_first_item`); another item's own words never print, so they are not written and their entry is skipped (`control_printed_from_first_item`); an empty first item stops |
-| hides `order: "packed"` | a row left empty before a filled one stops (`omit_row_gap`) |
+| hides `order: "packed"` | a row left empty before a filled one stays and is listed (`omit_row_gap`) |
+
+Left out and listed in `skippedItems`, never a stopped build (#575): a page of a type the kit's `pages` does not name
+(`page_type_not_declared`) or says the write cannot make (`page_unbuilt`); a container copy beyond `perPage`
+(`container_copies_per_page`); a held block without its container (`held_block_without_container`; the build's plan step
+brings the container along); an alias item of another menu to a page reached under its list page
+(`menu_item_to_under_page`); a menu block with more items than `max` (`menu_items_over_max`); a gap in a `packed` omit
+list (`omit_row_gap`). The write order the same way (`order.leftOut`): a page with no written copy (`writer_missing`,
+a stop only when no page has copy), a block the kit does not declare (`unknown_block`), a home page after the first
+(`home_repeated`), and a main button answer longer than a field it fills (`answer_over_limit`: the writer's words are
+written there).
 
 Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
 
 | Code | Caught when |
 |---|---|
-| `page_type_not_declared` | a page of a type the kit's `pages` does not name |
-| `page_unbuilt` | a page of a type the kit says the write cannot make; `details.code` is the kit's code |
 | `page_link_unresolved` | a link placeholder names no record of the page, no declared category, no page of the plan or no kept record |
 | `page_style_unresolved` | a template style that is no kept record of the blank site |
-| `menu_item_to_under_page` | an alias item of another menu (a kit with no `menu.items`) links to a page reached under its list page: an alias has nothing to name |
-| `menu_items_link_unknown`, `menu_items_over_max` | see `menu.items` above |
+| `menu_items_link_unknown` | see `menu.items` above |
 | `kept_when_unknown`, `category_title_unknown`, `accent_written_as_unknown` | a word of `holds.copies.keptWhen`, `record.category.title` or `look.accent` the write does not know |
-| `container_copies_per_page` | a page places more containers than `perPage` (a held block without its container is left out, `held_block_without_container`, and the build plan step brings the container along) |
 | `created_frame_not_declared` | see `createdFrames` above |
 | `under_page_position_not_detail` | a block on a page reached under its list page sits outside the declared detail positions and no recipe of the page type places it (or it is a library block), or `assignTo` is not `list-page` |
 | `place_not_written` | a value at a place the kit's `escapes` declares `not-written` |
 | `control_first_item_empty` | a control printed from the first item: the first has no words while another item has some |
-| `omit_row_gap` | an `omit` list declared `packed` with a gap |
 
 ## Skip reasons (in `plan.skipped`)
 

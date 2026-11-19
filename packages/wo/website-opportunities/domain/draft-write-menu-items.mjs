@@ -43,12 +43,19 @@ export function checkMenuItems(state) {
           }
         )
       const own = list(block.items).filter((i) => i.state !== 'hidden')
-      if (Number.isInteger(items.max) && own.length > items.max)
-        throw new DraftWriteError('menu_items_over_max', `${block.block} holds at most ${items.max} items`, {
-          ...at,
-          max: items.max,
-          items: own.length
+      // More items than the block holds: the block is left out with its entries, and listed (#575).
+      if (Number.isInteger(items.max) && own.length > items.max) {
+        state.dropped.add(block.id)
+        state.dropReasons.set(block.id, 'menu_items_over_max')
+        state.left?.push({
+          code: 'menu_items_over_max',
+          op: `copy:${page.id}.${block.id}`,
+          place: block.block,
+          reason: String(own.length),
+          at: 'plan'
         })
+        continue
+      }
       if (own.length || state.ruleMenus.some((m) => m.block === block.block)) continue
       const pages = menuItemPagesOf(items, state.order.pages, state.kit.mapping)
       state.ruleMenus.push({ block: block.block, pages: pages.map((p) => p.id) })

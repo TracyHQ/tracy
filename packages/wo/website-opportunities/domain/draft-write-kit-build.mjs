@@ -9,12 +9,20 @@ import { unproven } from './draft-write-sink.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const shown = (block) => block.state !== 'hidden'
+/** One block the write plan leaves out, as the build lists it (`skippedItems`): ids only. */
+export const leftOf = (code, page, block, reason = null) => ({
+  code,
+  op: `copy:${page}.${block.id}`,
+  place: block.block ?? null,
+  reason,
+  at: 'plan'
+})
 
 /**
  * The container copies of every page (`holds.copies: {perPage: 1, keptWhen}`): one container per page holds every
  * held block the page places, and is kept only while one of them is (`keptWhen: "any-held-block-kept"`; any other
  * value stops the plan, `kept_when_unknown`). Returns the blocks to drop: a container none of whose held blocks is on
- * its page, and a held block whose page has no container; stops when a page places more containers than `perPage`.
+ * its page, a container copy beyond `perPage`, and a held block whose page has no container (the last two listed).
  */
 export function droppedContainersOf(state) {
   const dropped = new Set()
@@ -30,11 +38,13 @@ export function droppedContainersOf(state) {
         })
       const containers = page.blocks.filter((b) => b.block === id && shown(b))
       const held = page.blocks.filter((b) => list(p.holds.blocks).includes(b.block) && shown(b))
-      if (containers.length > copies.perPage)
-        throw new DraftWriteError('container_copies_per_page', `${page.id} places ${id} more than once`, {
-          page: page.id,
-          block: id
-        })
+      // More copies than `perPage`: the first are kept, the others left out and listed (#575).
+      state.dropReasons ??= new Map()
+      for (const extra of containers.slice(Math.max(0, copies.perPage))) {
+        dropped.add(extra.id)
+        state.dropReasons.set(extra.id, 'container_copies_per_page')
+        state.left?.push(leftOf('container_copies_per_page', page.id, extra))
+      }
       // A held block with no container prints nothing (the container draws it): left out and listed, never the whole
       // build (#575). The build's plan step brings the container along (`plan-held-containers.mjs`), so only an order
       // made before that repair reaches here.
@@ -43,6 +53,7 @@ export function droppedContainersOf(state) {
         for (const b of held) {
           dropped.add(b.id)
           state.dropReasons.set(b.id, 'held_block_without_container')
+          state.left?.push(leftOf('held_block_without_container', page.id, b))
         }
       }
       if (containers.length && !held.length) for (const c of containers) dropped.add(c.id)

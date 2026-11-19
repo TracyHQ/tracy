@@ -41,9 +41,7 @@ test('codes a re-run cannot fix carry noRerun; a failed write call does not', as
     ['plan_missing', (v) => (v.approval.plan.pages = [])],
     ['profile_missing', (v) => delete v.approval.profile],
     ['pictures_missing', (v) => delete v.pictures.frames],
-    ['writer_missing', (v) => (v.writers = v.writers.slice(1))],
-    ['unknown_block', (v) => (v.approval.plan.pages[0].blocks[0].block = 'no-such-block')],
-    ['home_repeated', (v) => (v.approval.plan.pages[2].pageType = 'home')]
+    ['writer_missing', (v) => (v.writers = [])]
   ]
   for (const [code, change] of cases) {
     const values = fresh()
@@ -51,6 +49,20 @@ test('codes a re-run cannot fix carry noRerun; a failed write call does not', as
     assert.throws(
       () => buildWriteOrder(values),
       (e) => e instanceof WriteOrderError && e.code === code && e.noRerun === true
+    )
+  }
+  // One page, block or repeated home page is left out and listed, never a stopped build (#575).
+  const left = [
+    ['writer_missing', (v) => (v.writers = v.writers.slice(1))],
+    ['unknown_block', (v) => (v.approval.plan.pages[0].blocks[0].block = 'no-such-block')],
+    ['home_repeated', (v) => (v.approval.plan.pages[2].pageType = 'home')]
+  ]
+  for (const [code, change] of left) {
+    const values = fresh()
+    change(values)
+    assert.deepEqual(
+      buildWriteOrder(values).leftOut.map((l) => l.code),
+      [code]
     )
   }
   const site = memorySite({ failOn: 1 })

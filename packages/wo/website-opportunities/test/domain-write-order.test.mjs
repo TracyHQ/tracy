@@ -254,7 +254,13 @@ test('a design field is never in the order', () => {
 test('a malformed input is a typed error with a code', () => {
   const values = fresh()
   values.writers = values.writers.filter((w) => w.page.id !== 'contact')
-  assert.throws(() => buildWriteOrder(values), { code: 'writer_missing' })
+  // A page with no written copy is left out and listed (#575); with no copy at all there is no site to write.
+  const order = buildWriteOrder(values)
+  assert.ok(!order.pages.some((p) => p.id === 'contact'))
+  assert.deepEqual(order.leftOut, [
+    { code: 'writer_missing', op: 'page:contact', place: null, reason: null, at: 'order' }
+  ])
+  assert.throws(() => buildWriteOrder({ ...fresh(), writers: [] }), { code: 'writer_missing' })
   assert.throws(() => buildWriteOrder({ ...fresh(), approval: { plan: { pages: [] } } }), {
     code: 'plan_missing'
   })
