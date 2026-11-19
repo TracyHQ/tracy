@@ -30,7 +30,7 @@
 	.es-contact .ec-form-status--success { border-color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
 	.es-contact .ec-form-status--error { border-color: #e03131; background: color-mix(in srgb, #e03131 10%, transparent); }
 	.es-contact .ec-form.is-disabled .ec-form-input { opacity: .6; cursor: not-allowed; }
-	@media (max-width: 767px) { .es-contact { padding: 18px; } .es-contact-intro { margin-bottom: 36px; } .es-contact .ec-form-page { gap: 30px; } }
+	@media (max-width: 767px) { .es-contact-intro { margin-bottom: 36px; } .es-contact .ec-form-page { gap: 30px; } }
 
 	/* ---- Authors: three columns of cards (card ~353px, portrait 314x260 radius 8) ---- */
 	.es-authors-main { max-width: 1164px; }
@@ -98,7 +98,7 @@
 
 @layer components {
 	/* tablet and phone measurements of the source: the contact card pads 18px, the Authors pager sits 105px under the last card on a phone */
-	@media (max-width: 991px) { .es-box.es-contact { padding: 18px; } }
+	@media (max-width: 991px) { .es-box.es-contact { padding: 36px 18px; } }
 	@media (max-width: 575px) { .es-authors-main .es-authors-pager { margin-top: 105px; } }
 }
 
