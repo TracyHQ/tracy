@@ -5,6 +5,7 @@
  *                                                   capability groups with their provider order and states
  *   GET  /api/ops/wo/demos/summary                → demo retention keys + live/frozen/expiring/deleted counts
  *   GET  /api/ops/wo/chain-builds                 → per-site step chain builds: minutes and USD per step, how each ended
+ *   GET  /api/ops/wo/bench-runs/:bench/:runId     → one bench run's rounds and model turns: time, tokens, tools (no text)
  *   PUT  /api/ops/wo/read                         { opportunityId, read } → mark row read/unread for viewer
  *   PUT  /api/ops/wo/settings                     { settings, uiEnabled? } → save deployment settings
  *   GET  /api/ops/wo/public-demos                 → `/v1/demos` live cap and model budget (Tracy's, not the package's)
@@ -42,6 +43,7 @@ import {
   socialOrigin
 } from 'website-opportunities/src/wo-social-auth.js'
 import { listChainBuilds } from '../lib/wo-chain-builds.js'
+import { benchRunTiming, benchRunsBetween } from '../lib/wo-bench-run-timing.js'
 import { admit, denied } from './admit.js'
 import {
   parsePublicDemoSettings,
@@ -111,6 +113,28 @@ export function woOpsRoutes({
     if (!pool) return c.json({ error: 'NO_DATABASE' }, 503)
     c.header('cache-control', 'no-store')
     return c.json(await listChainBuilds(pool, config))
+  })
+  app.get('/api/ops/wo/bench-runs/:bench', async (c) => {
+    const g = await guard(c)
+    if (g.deny) return g.deny
+    if (!pool) return c.json({ error: 'NO_DATABASE' }, 503)
+    c.header('cache-control', 'no-store')
+    const out = await benchRunsBetween(pool, c.req.param('bench'), {
+      since: c.req.query('since'),
+      until: c.req.query('until')
+    })
+    if (!out.ok) return c.json({ error: out.error }, 400)
+    return c.json({ runs: out.runs })
+  })
+  app.get('/api/ops/wo/bench-runs/:bench/:runId', async (c) => {
+    const g = await guard(c)
+    if (g.deny) return g.deny
+    if (!pool) return c.json({ error: 'NO_DATABASE' }, 503)
+    c.header('cache-control', 'no-store')
+    const out = await benchRunTiming(pool, c.req.param('bench'), c.req.param('runId'))
+    if (!out.ok) return c.json({ error: out.error }, out.error === 'NO_SUCH_RUN' ? 404 : 400)
+    const { ok: _ok, ...timing } = out
+    return c.json(timing)
   })
   app.get('/api/ops/wo/prefetch/dubai', async (c) => {
     const g = await guard(c)

@@ -180,6 +180,33 @@ export const OPS_B_ROUTES = [
   },
   {
     method: 'GET',
+    path: '/api/ops/wo/bench-runs/:bench',
+    summary: 'List the bench runs started in a time window',
+    description:
+      'The planner, writer or picture bench runs (`bench` is `plan`, `copy` or `pictures`) started between `since` and `until` (ISO dates; by default the last 24 hours, at most 7 days, at most 100 runs, oldest first): each with its status, duration, cost, kit, brief revision and the harness settings that change timing. For builds whose step records carry no run id. Staff seat required.',
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    params: {
+      path: { bench: '`plan`, `copy` or `pictures`' },
+      query: { since: 'Start of the window (ISO date)', until: 'End of the window (ISO date)' }
+    },
+    answers: '`{runs}`, or `error` (`UNKNOWN_BENCH`, `BAD_WINDOW`)'
+  },
+  {
+    method: 'GET',
+    path: '/api/ops/wo/bench-runs/:bench/:runId',
+    summary: 'Read where one bench run of a chain build spent its time',
+    description:
+      'One planner, writer or picture bench run (`bench` is `plan`, `copy` or `pictures`; a chain build step records its `runId`, and the copy step its `draftRunId`): the run, each round with its duration and failure count, in all and by rule code (a picture round also its phase times: code, icon ranking, looker, drawer), and each model turn with its duration, tokens and the names of the tools it called. Structural only: no prompt, answer, checker text or measured value. Staff seat required.',
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    params: { path: { bench: '`plan`, `copy` or `pictures`', runId: 'The bench run id' } },
+    answers: '`{run, rounds, turns}`, or `error` (`UNKNOWN_BENCH`, `BAD_RUN_ID`, `NO_SUCH_RUN`)'
+  },
+  {
+    method: 'GET',
     path: '/api/ops/wo/demos/summary',
     summary: 'Read the demo retention settings and how many demos each state holds',
     description:
