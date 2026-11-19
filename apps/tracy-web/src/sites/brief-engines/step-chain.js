@@ -125,7 +125,8 @@ export function createStepChainEngine({
   applyFor,
   now = Date.now,
   timer = realTimer,
-  deadlineMs = STEP_CHAIN_DEADLINE_MS
+  deadlineMs = STEP_CHAIN_DEADLINE_MS,
+  log = console
 }) {
   return {
     limits: STEP_CHAIN_LIMITS,
@@ -209,12 +210,30 @@ export function createStepChainEngine({
       try {
         const kit = await run('kit', {})
         if (!kit) return { runId: ctx.runId, t0, record, failed, inputs: null, snap, active }
+        // The copy step's first draft starts on the plan's checked first draft while the planner fixes its plan
+        // (steps.copyDraft); the copy step on the final plan then only checks and fixes it. A draft copy that fails
+        // leaves the copy step as before.
+        let draftCopy = null
+        const onDraft = steps.copyDraft
+          ? (draft) => {
+              draftCopy ??= steps
+                .copyDraft(ctx, { kit: kit.value, plan: draft }, { signal })
+                .catch((error) => {
+                  log.warn?.(`[step-chain] ${ctx.siteKey ?? ''}: the draft copy failed: ${messageOf(error)}`)
+                  return null
+                })
+            }
+          : null
         const [brand, planned] = await Promise.all([
           run('brand', { kit: kit.value }),
-          run('plan', { kit: kit.value }).then(async (plan) => {
+          run('plan', { kit: kit.value, ...(onDraft ? { onDraft } : {}) }).then(async (plan) => {
             if (!plan) return { plan: null, copy: skip('copy', 'plan'), pictures: skip('pictures', 'plan') }
+            const copyOnFinalPlan = async () => {
+              const base = draftCopy ? await draftCopy : null
+              return run('copy', { kit: kit.value, plan: plan.value, ...(base?.file ? { base } : {}) })
+            }
             const [copy, pictures] = await Promise.all([
-              run('copy', { kit: kit.value, plan: plan.value }),
+              copyOnFinalPlan(),
               run('pictures', { kit: kit.value, plan: plan.value })
             ])
             return { plan, copy, pictures }

@@ -103,15 +103,19 @@ export const SITE_WRITER_STEP = Object.freeze({
     notADoc: NOT_A_COPY_MESSAGE
   }),
   readAnswer,
-  // Writing turns: the user message of the next turn of round 0, or null once all are written; then the merge.
+  // Writing turns: the user message of the next turn of round 0, or null once all are written; then the merge. A run
+  // started on a base copy writes no turn: the base copy is round 0, read and checked against this run's plan, and the
+  // fix rounds write what it lacks (a chain build's draft copy on the final plan, step-chain-steps.js).
   nextTurn: ({ row, ready, answers }) => {
+    if (baseCopyOf(row)) return null
     const message = nextTurnMessage(ready.input, answers, row.harness?.pagesPerTurn)
     return message === null ? null : visualMessage(message, row, ready)
   },
-  mergeTurns: mergeTurnAnswers,
+  mergeTurns: (answers, ctx) =>
+    answers.length === 0 && baseCopyOf(ctx?.row) ? baseCopyOf(ctx.row) : mergeTurnAnswers(answers),
   // Parallel parts: each part's only user message, or null when the run writes round 0 as before.
   parts: ({ row, ready }) => {
-    if (!writesInParts(row.harness)) return null
+    if (!writesInParts(row.harness) || baseCopyOf(row)) return null
     const pages = writingParts(ready.input, row.harness.parallelPages)
     if (pages.length < 2) return null
     return partMessages(ready.input, pages).map((message, part) => ({
@@ -136,6 +140,12 @@ export function createSiteWriterQueue({ log = console, now, config, kitImages, .
     log,
     now
   })
+}
+
+/** The copy a run was started on (`--base-copy`), taken as its round 0; null for a run that writes its own. */
+export const baseCopyOf = (row) => {
+  const copy = row?.harness?.baseCopy
+  return copy && typeof copy === 'object' && Array.isArray(copy.slots) ? copy : null
 }
 
 /** The fingerprint a run's copy carries (ADR 0042 section 1): the kit id and the hashes of plan, brief and prompt. */

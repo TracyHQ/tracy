@@ -22,6 +22,9 @@ export const USAGE = `usage: node scripts/site-writer-bench.mjs <command>
       [--pages-per-turn <n|all>]          pages per writing turn, frozen with the run (default all: one turn)
       [--parallel-pages <n>]              write the first draft in n parts at the same time (1 to 8), frozen with
                                           the run (default: off, one conversation as before)
+      [--base-copy <path>]                a site-copy.json taken as round 0 with no model call: checked against this
+                                          plan, then fixed in the fix rounds (a chain's draft copy on a final plan)
+      [--max-fix-rounds <n>]              fewer fix rounds than the step's 2, frozen with the run (0: first draft only)
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, balance, duration, checker summary
   get <runId> --out <dir>                 write every copy version, the corrections, check and failure list of each
@@ -57,6 +60,8 @@ export async function runCli(argv, deps) {
         effort: { type: 'string' },
         'pages-per-turn': { type: 'string' },
         'parallel-pages': { type: 'string' },
+        'base-copy': { type: 'string' },
+        'max-fix-rounds': { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -147,8 +152,16 @@ async function startRun(d, values) {
   const parts = values['parallel-pages']
   if (parts !== undefined && !/^[1-8]$/.test(parts))
     throw new Usage('--parallel-pages takes a whole number from 1 to 8')
+  const fixRounds = values['max-fix-rounds']
+  if (fixRounds !== undefined && !/^[0-2]$/.test(fixRounds))
+    throw new Usage('--max-fix-rounds takes a whole number from 0 to 2')
   const plan = await readJsonFile(d, values['plan-file'], 'plan')
   if (plan.error) return refused(d, plan.error)
+  let baseCopy
+  if (values['base-copy'] !== undefined) {
+    baseCopy = await readJsonFile(d, values['base-copy'], 'base copy')
+    if (baseCopy.error) return refused(d, baseCopy.error)
+  }
   let brief
   if (file) {
     brief = await readJsonFile(d, file, 'brief')
@@ -172,6 +185,8 @@ async function startRun(d, values) {
     ...(values.effort !== undefined ? { effort: values.effort } : {}),
     ...(perTurn !== undefined ? { pagesPerTurn: perTurn === 'all' ? 'all' : Number(perTurn) } : {}),
     ...(parts !== undefined ? { parallelPages: Number(parts) } : {}),
+    ...(baseCopy ? { baseCopy: baseCopy.value } : {}),
+    ...(fixRounds !== undefined ? { maxFixRounds: Number(fixRounds) } : {}),
     ...(d.index ? { index: d.index } : {})
   })
   if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)

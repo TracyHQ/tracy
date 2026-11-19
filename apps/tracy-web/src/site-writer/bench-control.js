@@ -46,8 +46,23 @@ export async function startWriterRun({
   effort,
   index,
   noCaps = false,
-  requireVisualReview = false
+  requireVisualReview = false,
+  baseCopy,
+  maxFixRounds
 }) {
+  if (baseCopy !== undefined && !(isPlainObject(baseCopy) && Array.isArray(baseCopy.slots)))
+    return refuse(
+      'SITE_WRITER_HARNESS',
+      'The run cannot start: the base copy is not a site copy (no list of slots).'
+    )
+  if (
+    maxFixRounds !== undefined &&
+    !(Number.isInteger(maxFixRounds) && maxFixRounds >= 0 && maxFixRounds <= 2)
+  )
+    return refuse(
+      'SITE_WRITER_HARNESS',
+      'The run cannot start: max fix rounds is a whole number from 0 to 2.'
+    )
   const turnProblem = pagesPerTurnProblem(pagesPerTurn)
   if (turnProblem) return refuse('SITE_WRITER_HARNESS', `The run cannot start: ${turnProblem}.`)
   if (parallelPages !== undefined) {
@@ -110,12 +125,17 @@ export async function startWriterRun({
       ...harness,
       pagesPerTurn,
       ...(parallelPages > 1 ? { parallelPages } : {}),
-      ...(requireVisualReview ? { visualReview: WRITER_VISUAL_POLICY } : {})
+      ...(requireVisualReview ? { visualReview: WRITER_VISUAL_POLICY } : {}),
+      // A base copy is round 0 (site-writer/bench-worker.js baseCopyOf); fewer fix rounds end the run sooner.
+      ...(baseCopy !== undefined ? { baseCopy } : {}),
+      ...(maxFixRounds !== undefined ? { maxFixRounds } : {})
     }
   })
   if (created.error === SITE_WRITER_RUN_ACTIVE) return fullRefusal(created.activeRuns)
   return { ok: true, run: created.run }
 }
+
+const isPlainObject = (v) => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
 
 const fullRefusal = (running) => benchFullRefusal(SITE_WRITER_RUN_ACTIVE, 'writer runs', running)
 
