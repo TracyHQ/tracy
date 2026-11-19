@@ -1,8 +1,12 @@
 {
   "schema": "tracy-ds-template/v1",
   "template": "emdash/tracy-essence",
-  "minVersion": "0.1.0",
-  "maxVersion": "0.1.0",
+  "minVersion": {
+    "tracy-essence/emdash-0.x": "0.1.0"
+  },
+  "maxVersion": {
+    "tracy-essence/emdash-0.x": "0.1.0"
+  },
   "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-btn-radius, --ds-card-radius, --ds-input-radius, --ds-media-radius) and every colour role systems define in src/styles/tokens.css and global.css, with the template value as the fallback; src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base.",
   "release": "tracy-essence/emdash-0.x@0.1.0",
   "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
