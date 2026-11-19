@@ -7,10 +7,10 @@
   "platform": "emdash",
   "contract": {
     "id": "tracy-essence/emdash-0.x/0.1.0",
-    "contentMapSha256": "0edfc05754d2fc618eb3eef0e94f680be3a651d8f930dd55cbad36a4617e669d",
+    "contentMapSha256": "464139216bf583af444a281605434721c83f8501bf77715a85c8b24d804b9d88",
     "presentationLockSha256": null
   },
-  "measuredAt": "2026-11-19T06:00:09.877Z",
+  "measuredAt": "2026-11-19T07:17:27.892Z",
   "viewports": [
     "desktop",
     "phone"
@@ -2826,8 +2826,8 @@
     "applies": true,
     "r1": {
       "facts": 127,
-      "slots": 349,
-      "percent": 36.4
+      "slots": 504,
+      "percent": 25.2
     },
     "rules": {
       "R2": {

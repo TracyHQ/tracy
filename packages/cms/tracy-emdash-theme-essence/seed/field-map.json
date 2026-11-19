@@ -230,7 +230,8 @@
       "label": "Name",
       "role": "person.name",
       "group": {
-        "kind": "person"
+        "kind": "person",
+        "name": "person"
       }
     },
     "authors.avatar": {
@@ -239,7 +240,8 @@
       "label": "Avatar",
       "role": "person.image",
       "group": {
-        "kind": "person"
+        "kind": "person",
+        "name": "person"
       }
     },
     "authors.job_title": {
@@ -248,7 +250,8 @@
       "label": "Job title",
       "role": "person.role",
       "group": {
-        "kind": "person"
+        "kind": "person",
+        "name": "person"
       }
     },
     "authors.bio": {
@@ -257,7 +260,8 @@
       "label": "Bio",
       "role": "person.bio",
       "group": {
-        "kind": "person"
+        "kind": "person",
+        "name": "person"
       }
     },
     "category_info.title": {
