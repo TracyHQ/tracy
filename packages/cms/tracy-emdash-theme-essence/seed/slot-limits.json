@@ -1,0 +1,310 @@
+{
+ "$comment": "Limits of text slots that no visible box on the pages measures (read by packages/cms/tracy-quickstart-tools/content-coverage/emdash-content-map.mjs into the content map). A number comes from a measured box (how is said in `from`); a text no page draws in a box is declared `nonVisual` with where it is used, and the kit asks no limit of it.",
+ "limits": [
+  {
+   "slot": "contact.contact-layout.name_label",
+   "maxCharacters": 41,
+   "from": "the label is printed on one line above its field: 282 px wide at 390 px (Jost 18 px, 41 characters of running text), 84 characters at 768 px and 108 at 1440 px; measured with the canvas text width of the label's computed font on a clean install of this theme"
+  },
+  {
+   "slot": "contact.contact-layout.email_label",
+   "maxCharacters": 41,
+   "from": "the label is printed on one line above its field: 282 px wide at 390 px (Jost 18 px, 41 characters of running text), 84 characters at 768 px and 108 at 1440 px; measured with the canvas text width of the label's computed font on a clean install of this theme"
+  },
+  {
+   "slot": "contact.contact-layout.subject_label",
+   "maxCharacters": 41,
+   "from": "the label is printed on one line above its field: 282 px wide at 390 px (Jost 18 px, 41 characters of running text), 84 characters at 768 px and 108 at 1440 px; measured with the canvas text width of the label's computed font on a clean install of this theme"
+  },
+  {
+   "slot": "chrome.chrome.newsletter_email",
+   "maxCharacters": 31,
+   "from": "the placeholder is drawn on one line inside the e-mail field of the newsletter box: the field is 282 px wide inside its 16 px padding at 390 px (Noto Serif 16 px, about 31 characters of running text), more at 768 and 1440 px"
+  },
+  {
+   "slot": "chrome.chrome.copyright",
+   "maxCharacters": 100,
+   "from": "the footer copyright line is centred and may take two rows: 50 characters per row at 390 px (Noto Serif 14 px on 354 px), 104 at 768 px and 161 at 1440 px; two rows at the narrowest width"
+  },
+  {
+   "slot": "chrome.chrome.brand_name",
+   "maxCharacters": 60,
+   "from": "the business name is printed as words in the footer copyright line (`{name}` of `copyright`, about 40 fixed characters around it) and as the logo's text when no logo picture is set: 60 characters keep the line within its two rows at 390 px"
+  },
+  {
+   "slot": "chrome.chrome.menu_label",
+   "nonVisual": true,
+   "from": "the label is the accessible name (`aria-label`) of the menu icon button in the header (Header.astro): no page draws it in a box and the field declares no maxLength, so it has no limit"
+  },
+  {
+   "slot": "chrome.chrome.theme_label",
+   "nonVisual": true,
+   "from": "the label is the accessible name (`aria-label`) and tooltip of the light/dark icon button in the header (Header.astro): no page draws it in a box and the field declares no maxLength, so it has no limit"
+  },
+  {
+   "slot": "chrome.chrome.search_label",
+   "nonVisual": true,
+   "from": "the label is the accessible name (`aria-label`) of the search icon button and field (Header.astro): no page draws it in a box and the field declares no maxLength, so it has no limit"
+  },
+  {
+   "slot": "social.follow-me.items[0].title",
+   "nonVisual": true,
+   "from": "the title is the tooltip and accessible name of a round social glyph (Sidebar.astro, FollowItem.astro): no page draws it as words and the field declares no maxLength, so it has no limit"
+  },
+  {
+   "slot": "posts.vintage-inspired-martini-cocktail-glasses.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.healthy-eating-tips-for-busy-professionals.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.mindful-eating-for-weight-management-blog-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.exercise-routines-for-overall-fitness.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.beauty-in-simplicity-exploring-line-art.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.drawing-with-elegance-the-art-of-line-work-blog-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.embracing-minimalism-line-art-creations-blog-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.capturing-essence-expressive-line-art-techniques-blog-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.from-lines-to-life-mastering-the-art-of-line-drawing.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.the-power-of-lines-creating-impactful-line-art.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.fluid-lines-infinite-possibilities-line-art-inspirations-blog-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.dancing-with-lines-dynamic-line-art-expressions-blog-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.harmony-in-lines-balancing-elements-in-line-art-blog-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.the-beauty-of-symmetry-symmetrical-line-art-designs.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.beyond-black-and-white-adding-colors-to-line-art-blog-design.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.sketching-stories-narrative-elements-in-line-art-blog-design.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.organic-geometry-exploring-geometric-line-art-blog-design.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.line-art-portraits-capturing-emotions-with-lines.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.nature-s-intricacy-botanical-line-art-explorations-blog-design.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.architectural-wonders-line-art-in-buildings-and-landscapes-blog-design.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.outlining-creativity-line-art-for-illustrations-and-designs.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.whimsical-wonders-imaginative-line-art-creations-blog-design.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.harmony-in-lines-balancing-elements-in-line-art-blog-fashion.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.dancing-with-lines-dynamic-line-art-expressions-blog-fashion.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.harmony-in-lines-balancing-elements-in-line-art-blog-normal-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.capturing-essence-expressive-line-art-techniques-blog-normal-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.embracing-minimalism-line-art-creations-blog-normal-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.drawing-with-elegance-the-art-of-line-work-blog-normal-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.organic-geometry-exploring-geometric-line-art-blog-normal-design.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.beyond-black-and-white-adding-colors-to-line-art-blog-normal-design.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.fluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.dancing-with-lines-dynamic-line-art-expressions-blog-normal-fashion.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.harmony-in-lines-balancing-elements-in-line-art-blog-normal-fashion.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.whimsical-wonders-imaginative-line-art-creations-resources.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.architectural-wonders-line-art-in-buildings-and-landscapes-resources.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.nature-s-intricacy-botanical-line-art-explorations-resources.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.sketching-stories-narrative-elements-in-line-art-resources.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.abstract-wonders-exploring-line-art-composition-resources.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.capturing-essence-expressive-line-art-techniques-resources.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.mindful-eating-for-weight-management-resources-2.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.essential-nutrients-for-optimal-health-resources-2.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.mental-health-and-well-being-strategies-resources-2.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.natural-remedies-for-common-ailments-resources-2.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.fitness-tips-for-a-healthy-lifestyle-resources-2.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.abstract-wonders-exploring-line-art-composition-blog-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.mental-health-and-well-being-strategies-blog-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.essential-nutrients-for-optimal-health-blog-health.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.fitness-tips-for-a-healthy-lifestyle-blog-fashion.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  },
+  {
+   "slot": "posts.natural-remedies-for-common-ailments-blog-fashion.author",
+   "nonVisual": true,
+   "from": "the field holds the slug of an authors entry (a reference, not words): the page prints that author's name, which is the slot authors.<slug>.name, so this slot has no box and no limit"
+  }
+ ]
+}
