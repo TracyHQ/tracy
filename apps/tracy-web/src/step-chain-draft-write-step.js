@@ -47,6 +47,9 @@ async function drawInitials(draw) {
  *   icon picture of the order must be one of its names (no library wired: none is); `beforeDoors`: a revision's site
  *   check and mark, run by the revision write after its checks that write nothing
  */
+/** Every item the build left out: the writer's fields (#575) before the write's own. */
+const skippedOf = (inputs, report) => [...(inputs?.copy?.skippedItems ?? []), ...(report?.skippedItems ?? [])]
+
 export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds, beforeDoors } = {}) {
   if (typeof wiring?.doors !== 'function')
     throw draftError(
@@ -104,15 +107,15 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
       replies: [...(inputs.pictures?.replies ?? []), ...(inputs.icons?.replies ?? [])],
       state,
       ops: opsRecordOf(plan),
-      skipped: report.skippedItems
+      skipped: skippedOf(inputs, report)
     })
     // The items left out, for the logs: codes and ids only, never the owner's words.
-    if (report.skippedItems?.length)
+    if (skippedOf(inputs, report).length)
       console.warn(
         JSON.stringify({
           event: 'draft_write_items_skipped',
           run: ctx.runId ?? null,
-          items: report.skippedItems
+          items: skippedOf(inputs, report)
         })
       )
     await builds?.keep?.(build, ctx)
@@ -137,7 +140,7 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
           // The created legal pages and the not-found page the write does not build, with the reason (#575).
           notBuilt: report.notBuilt ?? [],
           // The items left out, each a code with ids (#575): kept out of the owner's screen for now.
-          skippedItems: report.skippedItems ?? [],
+          skippedItems: skippedOf(inputs, report),
           // Two entries with other words for one place: how many lost a place, and which (entry ids, never the words).
           conflicts: { count: report.counts.conflicts.length, entries: report.counts.conflicts },
           ...(report.delta ? { delta: report.delta } : {})

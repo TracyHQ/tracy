@@ -99,12 +99,13 @@ const ORDERS = [
   ['the first call of one page fails once', (page, n) => page === 'bouquet' && n === 1, undefined, 'built'],
   ['the first call of every page always fails', () => true, undefined, 'copy:writer_call_failed'],
   ['the rewrite call fails', (_p, _n, rewrite) => rewrite, repeating(false), 'copy:writer_call_failed'],
-  ['the check fails twice', () => false, repeating(true), 'copy:copy_check_failed'],
+  // A field still failing after the rewrite is given back and listed, never the build (#575).
+  ['the check fails twice', () => false, repeating(true), 'built'],
   [
     'a first call fails, then the second attempt fails its check',
     (page, n) => page === 'bouquet' && n === 1,
     repeating(true),
-    'copy:copy_check_failed'
+    'built'
   ],
   ['the check fails once, the rewrite passes', () => false, repeating(false), 'built']
 ]

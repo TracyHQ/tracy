@@ -38,18 +38,17 @@ async function revise(model) {
   return { out, writes: memory.calls - calls }
 }
 
-test('a rewritten block that copies the owner sentence is refused before any door', async () => {
+test('a rewritten block that copies the owner sentence is given back and listed; the owner words reach no door', async () => {
   const model = revisionModel({
     leak: (page, key) => (page === 'classes' && key === ECHOED ? STATEMENT : null)
   })
-  const { out, writes } = await revise(model)
-  assert.equal(out.error?.code, 'copy_check_failed')
-  const failing = out.error.details.failing.find((f) => f.key === ECHOED)
-  assert.ok(failing, 'the copying row is named')
-  assert.ok(failing.problems.some((p) => p.code === 'copies_owner'))
+  const { out } = await revise(model)
+  assert.equal(out.write?.report.status, 'done', out.error?.code)
+  const skipped = out.copy.skippedItems.find((f) => f.place === `classes:${ECHOED}`)
+  assert.ok(skipped, 'the copying row is named')
+  assert.equal(skipped.reason, 'copies_owner')
   assert.equal(model.pages.classes, 2, 'sent back once')
-  assert.equal(writes, 0)
-  assert.ok(!JSON.stringify(out.error.details).includes('hill behind'))
+  assert.ok(!JSON.stringify(out.write.plan.ops).includes('hill behind'))
 })
 
 test('the same revision with a writer that does not copy the owner runs', async () => {

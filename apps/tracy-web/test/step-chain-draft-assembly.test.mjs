@@ -100,26 +100,22 @@ test('a repeat across pages is found by the site check once and fixed by the one
   assert.deepEqual(checkWriteOrder(run.inputs.order.order), [])
 })
 
-test('a copy that still repeats after its one rewrite stops the build at copy, once, naming pages and codes', async () => {
+test('a copy that still repeats after its one rewrite is given back and listed; the build goes on (#575)', async () => {
   const { engine, ctx, model } = await setUp({ model: repeating(true) })
-  const error = await engine.prepare(ctx).catch((e) => e)
-  assert.equal(error.code, STEP_CHAIN_STOPPED)
-  assert.equal(error.stop.step, 'copy')
-  assert.equal(error.stop.code, 'copy_check_failed')
-  assert.equal(error.stop.attempts, 1)
+  const run = await engine.prepare(ctx)
   assert.deepEqual(
-    error.stop.details.failing.map((f) => [f.page, f.key.endsWith('copyright') || f.key, f.problems[0].code]),
+    run.inputs.copy.skippedItems.map((s) => [s.code, s.place.split(':')[0], s.reason]),
     [
-      ['bouquet', true, 'repeated_copy'],
-      ['contact', true, 'repeated_copy']
+      ['copy_check_failed', 'bouquet', 'repeated_copy'],
+      ['copy_check_failed', 'contact', 'repeated_copy']
     ]
   )
-  // Three first writings and two rewrites: no third call for any page, and nothing after the copy step.
+  // Three first writings and two rewrites: no third call for any page.
   assert.equal(
     model.requests.filter((r) => String(r.user ?? '{}').startsWith('{') && JSON.parse(r.user).blocks).length,
     5
   )
-  assert.ok(!error.chain || !JSON.stringify(error.chain).includes('"order"'))
+  assert.ok(!JSON.stringify(run.inputs.copy.skippedItems).includes('grown and tied'))
 })
 
 test('a draft run checks the build model and drawer doors before any work, and an empty door stops it up front', async () => {

@@ -3,7 +3,7 @@
 // failing fields are rewritten, once; a field that still fails throws a typed error. No test calls a real model.
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { PAGE_WRITER_PROMPT, PageWriterError, writePages } from '../domain/page-writer.mjs'
+import { PAGE_WRITER_PROMPT, PageWriterError, degradeFailing, writePages } from '../domain/page-writer.mjs'
 import { siteCopyError } from '../domain/page-writer-site-check.mjs'
 import { composePlan } from '../domain/plan-composer.mjs'
 import {
@@ -172,6 +172,42 @@ test('a field that still fails after the rewrite throws a typed error with the f
     }
   )
   assert.equal(model.calls.filter((c) => pageOf(c) === 'team').length, 2, 'rewritten at most once')
+})
+
+test('with the build policy a field still failing is given back to its no data rule and listed, never the build', async () => {
+  const { plan, profile } = await approvedPlan()
+  const model = overlappingModel(answer((f) => (f.key === 'team-b1/heading' ? 'y'.repeat(31) : undefined)))
+  const written = await writePages({
+    plan,
+    profile,
+    blockStore: blockStore(),
+    library: library(),
+    model,
+    degrade: true
+  })
+  const field = written.pages.find((p) => p.id === 'team').fields.find((f) => f.key === 'team-b1/heading')
+  assert.equal(field.from, 'no-data')
+  assert.equal(field.value, undefined)
+  assert.deepEqual(written.skippedItems, [
+    { code: 'copy_check_failed', op: null, place: 'team:team-b1/heading', reason: 'over_limit', at: 'copy' }
+  ])
+})
+
+test('with the build policy an emphasis still failing is dropped and the words kept', async () => {
+  const states = [
+    {
+      page: { id: 'zq' },
+      values: { 'zq-b1/heading': 'Zq words' },
+      emphasis: { 'zq-b1/heading': 'Zq words' },
+      failing: [{ key: 'zq-b1/heading', problems: [{ code: 'emphasis_whole' }] }]
+    }
+  ]
+  assert.deepEqual(degradeFailing(states), [
+    { code: 'emphasis_dropped', op: null, place: 'zq:zq-b1/heading', reason: 'emphasis_whole', at: 'copy' }
+  ])
+  assert.deepEqual(states[0].emphasis, {})
+  assert.equal(states[0].values['zq-b1/heading'], 'Zq words')
+  assert.deepEqual(states[0].failing, [])
 })
 
 test('an unreadable reply sends every field back once; a failing model call is a typed error', async () => {

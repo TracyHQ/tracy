@@ -153,7 +153,9 @@ export function createDraftSteps(deps) {
         // The template's own name, which no written word may carry (the step chain's W07 demo name check).
         template: kit.aiq.template ?? null,
         // The whole plan is written here, so the Privacy page the plan creates is written too (`systemPages`).
-        legal: true
+        legal: true,
+        // The build's policy (#575): a field still failing after the rewrite is repaired or given back and listed.
+        degrade: true
       })
       const spent = spendOf(usage)
       const recorded = {
@@ -163,6 +165,8 @@ export function createDraftSteps(deps) {
           ? { systemPages: written.systemPages.map((p) => ({ id: p.id, calls: p.attempts.length })) }
           : {}),
         usage: spent.calls,
+        // The fields the writer left out or repaired after its rewrite (#575): codes and ids, never the words.
+        ...(written.skippedItems ? { skippedItems: written.skippedItems } : {}),
         // Where each owner's fact is said, and the ones no block could say with why: ids, never a text.
         ...(written.ownerFacts ? { ownerFacts: written.ownerFacts } : {})
       }

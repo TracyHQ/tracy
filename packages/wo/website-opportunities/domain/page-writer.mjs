@@ -133,7 +133,8 @@ export async function writePages({
   reuse,
   ownerStatement,
   template,
-  legal = false
+  legal = false,
+  degrade = false
 }) {
   if (typeof model !== 'function') throw new PageWriterError('model_missing', 'no build model was given')
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
@@ -199,6 +200,10 @@ export async function writePages({
       others: earlier
     })
   }
+  // The build's policy (#575): a field still failing after the rewrite never stops the build. An emphasis problem is
+  // repaired with no judgement of the words (the emphasis is dropped, the words kept); any other field is given back,
+  // as a field the writer returns: the block's no data rule takes it (hidden, never the demo's words), and it is listed.
+  const skippedItems = degrade ? degradeFailing(states) : []
   const pages = states.map((s) => ({
     id: s.page.id,
     fields: pageOut(s),
@@ -239,8 +244,47 @@ export async function writePages({
   const ownerFacts = ownerFactsRecordOf(placement)
   return {
     pages: pages.map(({ id, fields, attempts, seo }) => ({ id, fields, attempts, ...(seo ? { seo } : {}) })),
+    ...(skippedItems.length ? { skippedItems } : {}),
     prompt: { file: PAGE_WRITER_PROMPT_FILE, sha256: PROMPT_SHA256 },
     ...(privacy ? { systemPages: [privacy] } : {}),
     ...(ownerFacts ? { ownerFacts } : {})
   }
+}
+
+/** The copy check codes a field is repaired from by dropping its emphasis, its words kept. */
+const EMPHASIS_ONLY = /^emphasis_/
+
+/**
+ * Every field still failing after the rewrite, degraded in place: its emphasis dropped when only the emphasis fails,
+ * else given back to the block's no data rule. Returns the skipped items, codes and ids only, never the words.
+ */
+export function degradeFailing(states) {
+  const skipped = []
+  for (const s of states) {
+    for (const f of s.failing) {
+      const codes = [...new Set(f.problems.map((p) => p.code))]
+      if (codes.length && codes.every((c) => EMPHASIS_ONLY.test(c))) {
+        if (s.emphasis) delete s.emphasis[f.key]
+        skipped.push({
+          code: 'emphasis_dropped',
+          op: null,
+          place: `${s.page.id}:${f.key}`,
+          reason: codes.join(','),
+          at: 'copy'
+        })
+        continue
+      }
+      s.returned = { ...s.returned, [f.key]: 'copy_check_failed' }
+      if (s.values) delete s.values[f.key]
+      skipped.push({
+        code: 'copy_check_failed',
+        op: null,
+        place: `${s.page.id}:${f.key}`,
+        reason: codes.join(','),
+        at: 'copy'
+      })
+    }
+    s.failing = []
+  }
+  return skipped
 }

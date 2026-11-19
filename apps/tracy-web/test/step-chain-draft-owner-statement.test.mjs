@@ -15,7 +15,7 @@ function draftWith(description) {
   return draft
 }
 
-test('a statement the writer copies is rewritten once, then stops the copy step typed; one it does not copy passes', async () => {
+test('a statement the writer copies is rewritten once, then given back and listed; one it does not copy passes', async () => {
   const first = await runBuild({
     steps: stepsOf({ draft: draftOf(), model: revisionModel(), memory: blankSite() }),
     plan: draftOf().approved.plan
@@ -32,20 +32,18 @@ test('a statement the writer copies is rewritten once, then stops the copy step 
     plan: draftOf().approved.plan
   })
   assert.equal(again.pages[long.key.split('-')[0]], 2, 'the first writing and one rewrite')
-  // A writer that keeps the owner's words: the run stops typed after that one rewrite.
+  // A writer that keeps the owner's words: after that one rewrite the field is given back and listed (#575), and the
+  // owner's words are written nowhere.
   const stuck = revisionModel({ fixed: new Map([[long.key, long.value]]) })
-  const error = await runBuild({
+  const built = await runBuild({
     steps: stepsOf({ draft: draftWith(statement), model: stuck, memory: blankSite() }),
     plan: draftOf().approved.plan
-  }).then(
-    () => null,
-    (e) => e
-  )
-  assert.equal(error?.code, 'copy_check_failed')
-  assert.equal(error.noRerun, true)
-  assert.deepEqual(error.details.failing, [
-    { page: 'home', key: long.key, problems: [{ code: 'copies_owner' }] }
+  })
+  assert.deepEqual(built.copy.skippedItems, [
+    { code: 'copy_check_failed', op: null, place: `home:${long.key}`, reason: 'copies_owner', at: 'copy' }
   ])
+  const field = built.copy.pages.flatMap((p) => p.fields).find((f) => f.key === long.key)
+  assert.equal(field.from, 'no-data')
   const quiet = await runBuild({
     steps: stepsOf({
       draft: draftWith('We tie flowers by hand in a small shop.'),
