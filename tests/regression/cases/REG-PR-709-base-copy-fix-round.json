@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-709-base-copy-fix-round",
+  "kind": "fix",
+  "title": "A fix round after a round 0 written by code (base copy) sends the document so far and its failure list",
+  "pr": 709,
+  "area": "website-opportunities/bench",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Fix round 1 opens with the first message, the base document and the failure list; fix round 2 continues that conversation; the changes land on the base document.",
+    "Calls with a conversation, first calls and calls without a document keep their first message and follow-up."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/bench-base-document-fix-round.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a fix round after a round 0 written by code opens with the document so far and its failure list; the next fix round continues it",
+      "a call with a conversation, a first call and a call with no document keep their first message and follow-up"
+    ]
+  }
+}
