@@ -1,430 +1,564 @@
 {
-	"generatedAt": "2026-11-19T05:16:38.089Z",
-	"fields": {
-		"pages.title": {
-			"source": "text",
-			"target": "string",
-			"label": "Title"
-		},
-		"pages.body": {
-			"source": "prose",
-			"target": "portableText",
-			"label": "Body"
-		},
-		"pages.view": {
-			"source": "text",
-			"target": "string",
-			"label": "View"
-		},
-		"pages.path": {
-			"source": "text",
-			"target": "string",
-			"label": "Path"
-		},
-		"posts.title": {
-			"source": "text",
-			"target": "string",
-			"label": "Title"
-		},
-		"posts.excerpt": {
-			"source": "prose",
-			"target": "portableText",
-			"label": "Excerpt"
-		},
-		"posts.body": {
-			"source": "prose",
-			"target": "portableText",
-			"label": "Body"
-		},
-		"posts.date": {
-			"source": "date",
-			"target": "datetime",
-			"label": "Date"
-		},
-		"posts.modified": {
-			"source": "date",
-			"target": "datetime",
-			"label": "Modified"
-		},
-		"posts.cover": {
-			"source": "image",
-			"target": "image",
-			"label": "Cover"
-		},
-		"posts.hero": {
-			"source": "image",
-			"target": "image",
-			"label": "Hero"
-		},
-		"posts.author": {
-			"source": "text",
-			"target": "string",
-			"label": "Author"
-		},
-		"posts.hits": {
-			"source": "number",
-			"target": "integer",
-			"label": "Hits"
-		},
-		"posts.featured": {
-			"source": "boolean",
-			"target": "boolean",
-			"label": "Featured"
-		},
-		"posts.featured_order": {
-			"source": "number",
-			"target": "integer",
-			"label": "Featured order"
-		},
-		"posts.home_lead": {
-			"source": "boolean",
-			"target": "boolean",
-			"label": "Home lead"
-		},
-		"posts.highlight": {
-			"source": "boolean",
-			"target": "boolean",
-			"label": "Highlight"
-		},
-		"posts.kind": {
-			"source": "text",
-			"target": "string",
-			"label": "Kind"
-		},
-		"posts.layout": {
-			"source": "text",
-			"target": "string",
-			"label": "Layout"
-		},
-		"posts.video_source": {
-			"source": "text",
-			"target": "string",
-			"label": "Video source"
-		},
-		"posts.video_id": {
-			"source": "text",
-			"target": "string",
-			"label": "Video id"
-		},
-		"posts.gallery": {
-			"source": "group",
-			"target": "repeater",
-			"label": "Gallery"
-		},
-		"posts.path": {
-			"source": "text",
-			"target": "string",
-			"label": "Path"
-		},
-		"gallery.number_col": {
-			"source": "text",
-			"target": "string",
-			"label": "Number col"
-		},
-		"gallery.auto_play": {
-			"source": "text",
-			"target": "string",
-			"label": "Auto play"
-		},
-		"gallery.auto_time": {
-			"source": "text",
-			"target": "string",
-			"label": "Auto time"
-		},
-		"gallery.gallery_title": {
-			"source": "text",
-			"target": "string",
-			"label": "Gallery title"
-		},
-		"gallery.gallery_link": {
-			"source": "url",
-			"target": "string",
-			"label": "Gallery link"
-		},
-		"gallery.title": {
-			"source": "text",
-			"target": "string",
-			"label": "Title"
-		},
-		"gallery.items": {
-			"source": "group",
-			"target": "repeater",
-			"label": "Items"
-		},
-		"social.social_style": {
-			"source": "text",
-			"target": "string",
-			"label": "Social style"
-		},
-		"social.title": {
-			"source": "text",
-			"target": "string",
-			"label": "Title"
-		},
-		"social.items": {
-			"source": "group",
-			"target": "repeater",
-			"label": "Items"
-		},
-		"authors.name": {
-			"source": "text",
-			"target": "string",
-			"label": "Name"
-		},
-		"authors.avatar": {
-			"source": "image",
-			"target": "image",
-			"label": "Avatar"
-		},
-		"authors.job_title": {
-			"source": "text",
-			"target": "string",
-			"label": "Job title"
-		},
-		"authors.bio": {
-			"source": "text",
-			"target": "string",
-			"label": "Bio"
-		},
-		"category_info.title": {
-			"source": "text",
-			"target": "string",
-			"label": "Title"
-		},
-		"category_info.description": {
-			"source": "text",
-			"target": "string",
-			"label": "Description"
-		},
-		"category_info.image": {
-			"source": "image",
-			"target": "image",
-			"label": "Image"
-		},
-		"category_info.list_style": {
-			"source": "text",
-			"target": "string",
-			"label": "List style"
-		},
-		"contact.title": {
-			"source": "text",
-			"target": "string",
-			"label": "Title"
-		},
-		"contact.intro": {
-			"source": "text",
-			"target": "string",
-			"label": "Intro"
-		},
-		"contact.name_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Name label"
-		},
-		"contact.email_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Email label"
-		},
-		"contact.subject_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Subject label"
-		},
-		"contact.message_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Message label"
-		},
-		"contact.copy_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Copy label"
-		},
-		"contact.send_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Send label"
-		},
-		"contact.form_id": {
-			"source": "text",
-			"target": "string",
-			"label": "Form id"
-		},
-		"chrome.brand_name": {
-			"source": "text",
-			"target": "string",
-			"label": "Brand name"
-		},
-		"chrome.logo_dark": {
-			"source": "image",
-			"target": "image",
-			"label": "Logo dark"
-		},
-		"chrome.skip_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Skip label"
-		},
-		"chrome.menu_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Menu label"
-		},
-		"chrome.theme_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Theme label"
-		},
-		"chrome.search_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Search label"
-		},
-		"chrome.subscribe_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Subscribe label"
-		},
-		"chrome.subscribe_link": {
-			"source": "text",
-			"target": "string",
-			"label": "Subscribe link"
-		},
-		"chrome.footer_text": {
-			"source": "text",
-			"target": "string",
-			"label": "Footer text"
-		},
-		"chrome.footer_cta_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Footer cta label"
-		},
-		"chrome.footer_cta_text": {
-			"source": "text",
-			"target": "string",
-			"label": "Footer cta text"
-		},
-		"chrome.copyright": {
-			"source": "text",
-			"target": "string",
-			"label": "Copyright"
-		},
-		"chrome.newsletter_title": {
-			"source": "text",
-			"target": "string",
-			"label": "Newsletter title"
-		},
-		"chrome.newsletter_text": {
-			"source": "text",
-			"target": "string",
-			"label": "Newsletter text"
-		},
-		"chrome.newsletter_email": {
-			"source": "text",
-			"target": "string",
-			"label": "Newsletter email"
-		},
-		"chrome.newsletter_button": {
-			"source": "text",
-			"target": "string",
-			"label": "Newsletter button"
-		},
-		"chrome.newsletter_terms": {
-			"source": "text",
-			"target": "string",
-			"label": "Newsletter terms"
-		},
-		"chrome.form_id": {
-			"source": "text",
-			"target": "string",
-			"label": "Form id"
-		},
-		"chrome.latest_title": {
-			"source": "text",
-			"target": "string",
-			"label": "Latest title"
-		},
-		"chrome.features_title": {
-			"source": "text",
-			"target": "string",
-			"label": "Features title"
-		},
-		"chrome.tags_title": {
-			"source": "text",
-			"target": "string",
-			"label": "Tags title"
-		},
-		"chrome.follow_title": {
-			"source": "text",
-			"target": "string",
-			"label": "Follow title"
-		},
-		"chrome.more_read_title": {
-			"source": "text",
-			"target": "string",
-			"label": "More read title"
-		},
-		"chrome.more_read_list_title": {
-			"source": "text",
-			"target": "string",
-			"label": "More read list title"
-		},
-		"chrome.author_articles_title": {
-			"source": "text",
-			"target": "string",
-			"label": "Author articles title"
-		},
-		"chrome.written_by": {
-			"source": "text",
-			"target": "string",
-			"label": "Written by"
-		},
-		"chrome.share_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Share label"
-		},
-		"chrome.tags_in_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Tags in label"
-		},
-		"chrome.read_more": {
-			"source": "text",
-			"target": "string",
-			"label": "Read more"
-		},
-		"chrome.prev_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Prev label"
-		},
-		"chrome.next_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Next label"
-		},
-		"chrome.by_label": {
-			"source": "text",
-			"target": "string",
-			"label": "By label"
-		},
-		"chrome.hits_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Hits label"
-		},
-		"chrome.search_placeholder": {
-			"source": "text",
-			"target": "string",
-			"label": "Search placeholder"
-		},
-		"chrome.articles_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Articles label"
-		}
-	}
+  "generatedAt": "2026-11-19T05:16:38.089Z",
+  "roleVocabularyVersion": "place-content-roles/3",
+  "settings": {
+    "title": {
+      "role": "business.name",
+      "group": {
+        "kind": "business",
+        "name": "identity"
+      }
+    },
+    "tagline": {
+      "role": "business.tagline",
+      "group": {
+        "kind": "business",
+        "name": "identity"
+      }
+    }
+  },
+  "fields": {
+    "pages.title": {
+      "source": "text",
+      "target": "string",
+      "label": "Title",
+      "role": "editorial.heading"
+    },
+    "pages.body": {
+      "source": "prose",
+      "target": "portableText",
+      "label": "Body",
+      "role": "editorial.paragraph"
+    },
+    "pages.view": {
+      "source": "text",
+      "target": "string",
+      "label": "View"
+    },
+    "pages.path": {
+      "source": "text",
+      "target": "string",
+      "label": "Path"
+    },
+    "posts.title": {
+      "source": "text",
+      "target": "string",
+      "label": "Title",
+      "role": "article.title"
+    },
+    "posts.excerpt": {
+      "source": "prose",
+      "target": "portableText",
+      "label": "Excerpt",
+      "role": "article.lead"
+    },
+    "posts.body": {
+      "source": "prose",
+      "target": "portableText",
+      "label": "Body",
+      "role": "editorial.paragraph"
+    },
+    "posts.date": {
+      "source": "date",
+      "target": "datetime",
+      "label": "Date",
+      "role": "article.date"
+    },
+    "posts.modified": {
+      "source": "date",
+      "target": "datetime",
+      "label": "Modified",
+      "role": "article.date"
+    },
+    "posts.cover": {
+      "source": "image",
+      "target": "image",
+      "label": "Cover",
+      "role": "article.image"
+    },
+    "posts.hero": {
+      "source": "image",
+      "target": "image",
+      "label": "Hero",
+      "role": "article.image"
+    },
+    "posts.author": {
+      "source": "text",
+      "target": "string",
+      "label": "Author",
+      "role": "post.author",
+      "group": {
+        "kind": "post"
+      }
+    },
+    "posts.hits": {
+      "source": "number",
+      "target": "integer",
+      "label": "Hits"
+    },
+    "posts.featured": {
+      "source": "boolean",
+      "target": "boolean",
+      "label": "Featured"
+    },
+    "posts.featured_order": {
+      "source": "number",
+      "target": "integer",
+      "label": "Featured order"
+    },
+    "posts.home_lead": {
+      "source": "boolean",
+      "target": "boolean",
+      "label": "Home lead"
+    },
+    "posts.highlight": {
+      "source": "boolean",
+      "target": "boolean",
+      "label": "Highlight"
+    },
+    "posts.kind": {
+      "source": "text",
+      "target": "string",
+      "label": "Kind"
+    },
+    "posts.layout": {
+      "source": "text",
+      "target": "string",
+      "label": "Layout"
+    },
+    "posts.video_source": {
+      "source": "text",
+      "target": "string",
+      "label": "Video source"
+    },
+    "posts.video_id": {
+      "source": "text",
+      "target": "string",
+      "label": "Video id"
+    },
+    "posts.gallery": {
+      "source": "group",
+      "target": "repeater",
+      "label": "Gallery",
+      "group": {
+        "kind": "gallery"
+      },
+      "subRoles": {
+        "image": "business.gallery_image"
+      }
+    },
+    "posts.path": {
+      "source": "text",
+      "target": "string",
+      "label": "Path"
+    },
+    "gallery.number_col": {
+      "source": "text",
+      "target": "string",
+      "label": "Number col"
+    },
+    "gallery.auto_play": {
+      "source": "text",
+      "target": "string",
+      "label": "Auto play"
+    },
+    "gallery.auto_time": {
+      "source": "text",
+      "target": "string",
+      "label": "Auto time"
+    },
+    "gallery.gallery_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Gallery title",
+      "role": "editorial.heading"
+    },
+    "gallery.gallery_link": {
+      "source": "url",
+      "target": "string",
+      "label": "Gallery link",
+      "role": "editorial.navigation_url"
+    },
+    "gallery.title": {
+      "source": "text",
+      "target": "string",
+      "label": "Title",
+      "role": "editorial.heading"
+    },
+    "gallery.items": {
+      "source": "group",
+      "target": "repeater",
+      "label": "Items",
+      "group": {
+        "kind": "gallery"
+      },
+      "subRoles": {
+        "gallery_image": "business.gallery_image"
+      }
+    },
+    "social.social_style": {
+      "source": "text",
+      "target": "string",
+      "label": "Social style"
+    },
+    "social.title": {
+      "source": "text",
+      "target": "string",
+      "label": "Title",
+      "role": "editorial.heading"
+    },
+    "social.items": {
+      "source": "group",
+      "target": "repeater",
+      "label": "Items",
+      "group": {
+        "kind": "contact"
+      },
+      "subRoles": {
+        "title": "contact.social_label",
+        "link": "contact.social_url"
+      }
+    },
+    "authors.name": {
+      "source": "text",
+      "target": "string",
+      "label": "Name",
+      "role": "person.name",
+      "group": {
+        "kind": "person"
+      }
+    },
+    "authors.avatar": {
+      "source": "image",
+      "target": "image",
+      "label": "Avatar",
+      "role": "person.image",
+      "group": {
+        "kind": "person"
+      }
+    },
+    "authors.job_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Job title",
+      "role": "person.role",
+      "group": {
+        "kind": "person"
+      }
+    },
+    "authors.bio": {
+      "source": "text",
+      "target": "string",
+      "label": "Bio",
+      "role": "person.bio",
+      "group": {
+        "kind": "person"
+      }
+    },
+    "category_info.title": {
+      "source": "text",
+      "target": "string",
+      "label": "Title",
+      "role": "editorial.heading"
+    },
+    "category_info.description": {
+      "source": "text",
+      "target": "string",
+      "label": "Description",
+      "role": "editorial.paragraph"
+    },
+    "category_info.image": {
+      "source": "image",
+      "target": "image",
+      "label": "Image",
+      "role": "editorial.illustration"
+    },
+    "category_info.list_style": {
+      "source": "text",
+      "target": "string",
+      "label": "List style"
+    },
+    "contact.title": {
+      "source": "text",
+      "target": "string",
+      "label": "Title",
+      "role": "editorial.heading"
+    },
+    "contact.intro": {
+      "source": "text",
+      "target": "string",
+      "label": "Intro",
+      "role": "editorial.paragraph"
+    },
+    "contact.name_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Name label",
+      "role": "editorial.button_label"
+    },
+    "contact.email_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Email label",
+      "role": "editorial.button_label"
+    },
+    "contact.subject_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Subject label",
+      "role": "editorial.button_label"
+    },
+    "contact.message_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Message label",
+      "role": "editorial.button_label"
+    },
+    "contact.copy_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Copy label",
+      "role": "editorial.button_label"
+    },
+    "contact.send_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Send label",
+      "role": "editorial.button_label"
+    },
+    "contact.form_id": {
+      "source": "text",
+      "target": "string",
+      "label": "Form id"
+    },
+    "chrome.brand_name": {
+      "source": "text",
+      "target": "string",
+      "label": "Brand name",
+      "role": "business.name",
+      "group": {
+        "kind": "business",
+        "name": "identity"
+      }
+    },
+    "chrome.logo_dark": {
+      "source": "image",
+      "target": "image",
+      "label": "Logo dark",
+      "role": "business.logo",
+      "group": {
+        "kind": "business",
+        "name": "identity"
+      }
+    },
+    "chrome.skip_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Skip label",
+      "role": "editorial.button_label"
+    },
+    "chrome.menu_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Menu label",
+      "role": "editorial.menu_label"
+    },
+    "chrome.theme_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Theme label",
+      "role": "editorial.button_label"
+    },
+    "chrome.search_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Search label",
+      "role": "editorial.button_label"
+    },
+    "chrome.subscribe_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Subscribe label",
+      "role": "editorial.button_label"
+    },
+    "chrome.subscribe_link": {
+      "source": "text",
+      "target": "string",
+      "label": "Subscribe link",
+      "role": "editorial.navigation_url"
+    },
+    "chrome.footer_text": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer text",
+      "role": "editorial.paragraph"
+    },
+    "chrome.footer_cta_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer cta label",
+      "role": "editorial.button_label"
+    },
+    "chrome.footer_cta_text": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer cta text",
+      "role": "editorial.paragraph"
+    },
+    "chrome.copyright": {
+      "source": "text",
+      "target": "string",
+      "label": "Copyright",
+      "role": "business.copyright",
+      "group": {
+        "kind": "business",
+        "name": "identity"
+      }
+    },
+    "chrome.newsletter_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Newsletter title",
+      "role": "editorial.heading"
+    },
+    "chrome.newsletter_text": {
+      "source": "text",
+      "target": "string",
+      "label": "Newsletter text",
+      "role": "editorial.paragraph"
+    },
+    "chrome.newsletter_email": {
+      "source": "text",
+      "target": "string",
+      "label": "Newsletter email",
+      "role": "editorial.button_label"
+    },
+    "chrome.newsletter_button": {
+      "source": "text",
+      "target": "string",
+      "label": "Newsletter button",
+      "role": "editorial.button_label"
+    },
+    "chrome.newsletter_terms": {
+      "source": "text",
+      "target": "string",
+      "label": "Newsletter terms",
+      "role": "editorial.paragraph"
+    },
+    "chrome.form_id": {
+      "source": "text",
+      "target": "string",
+      "label": "Form id"
+    },
+    "chrome.latest_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Latest title",
+      "role": "editorial.heading"
+    },
+    "chrome.features_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Features title",
+      "role": "editorial.heading"
+    },
+    "chrome.tags_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Tags title",
+      "role": "editorial.heading"
+    },
+    "chrome.follow_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Follow title",
+      "role": "editorial.heading"
+    },
+    "chrome.more_read_title": {
+      "source": "text",
+      "target": "string",
+      "label": "More read title",
+      "role": "editorial.heading"
+    },
+    "chrome.more_read_list_title": {
+      "source": "text",
+      "target": "string",
+      "label": "More read list title",
+      "role": "editorial.heading"
+    },
+    "chrome.author_articles_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Author articles title",
+      "role": "editorial.heading"
+    },
+    "chrome.written_by": {
+      "source": "text",
+      "target": "string",
+      "label": "Written by",
+      "role": "editorial.button_label"
+    },
+    "chrome.share_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Share label",
+      "role": "editorial.button_label"
+    },
+    "chrome.tags_in_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Tags in label",
+      "role": "editorial.button_label"
+    },
+    "chrome.read_more": {
+      "source": "text",
+      "target": "string",
+      "label": "Read more",
+      "role": "editorial.button_label"
+    },
+    "chrome.prev_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Prev label",
+      "role": "editorial.button_label"
+    },
+    "chrome.next_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Next label",
+      "role": "editorial.button_label"
+    },
+    "chrome.by_label": {
+      "source": "text",
+      "target": "string",
+      "label": "By label",
+      "role": "editorial.button_label"
+    },
+    "chrome.hits_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Hits label",
+      "role": "editorial.button_label"
+    },
+    "chrome.search_placeholder": {
+      "source": "text",
+      "target": "string",
+      "label": "Search placeholder",
+      "role": "editorial.button_label"
+    },
+    "chrome.articles_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Articles label",
+      "role": "editorial.button_label"
+    }
+  },
+  "taxonomyRoles": {
+    "category": {
+      "role": "editorial.heading"
+    },
+    "tag": {
+      "role": "editorial.heading"
+    }
+  }
 }
