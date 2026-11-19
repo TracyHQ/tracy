@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-essence",
-  "revision": 45,
+  "revision": 46,
   "pending": [],
   "locales": [
     "en"
@@ -3063,9 +3063,9 @@
         "styles": {
           "1440-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "32px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "32px",
+            "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(33, 37, 41)",
@@ -3073,9 +3073,9 @@
           },
           "1440-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "32px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "32px",
+            "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(238, 241, 246)",
@@ -3083,9 +3083,9 @@
           },
           "768-light": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "32px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "32px",
+            "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(33, 37, 41)",
@@ -3093,9 +3093,9 @@
           },
           "768-dark": {
             "font-family": "Jost-7233de9ec6bdad1c, Helvetica, Arial, sans-serif, Jost, Helvetica, Arial, sans-serif",
-            "font-size": "32px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "32px",
+            "line-height": "24px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(238, 241, 246)",
