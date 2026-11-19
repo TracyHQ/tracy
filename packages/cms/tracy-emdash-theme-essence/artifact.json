@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Essence",
-	"generatedAt": "2026-11-19T09:33:08.234Z",
+	"generatedAt": "2026-11-19T12:29:53.354Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,7 +75,7 @@
 		"docs/content-model.md": "sha256:e9a3b53a72a33ec4bfba69c0d328c7570338db7bbd0d1e8f6dd4b89adf687793",
 		"docs/content-rules.md": "sha256:b9d236568f6f33ff31252f4d3cd2d8dec7f079a499be318282f9188e44468b27",
 		"docs/design-system.md": "sha256:02039b1b3b4ddff6e0c519f66ee90b3fdc02661d7f0bc4f674ddd45a0cb306b6",
-		"docs/generated/inventory.json": "sha256:b145e881845088ec3f2d02d24c007aa295287b5b82669835b8db3029661c2dfe",
+		"docs/generated/inventory.json": "sha256:5b79bd39e944fb7798411f7e95dcc5d2be9da2fe2e42c24b932e8193ba3e7bbf",
 		"docs/generated/inventory.md": "sha256:34a8057b44a7eb59ea966ad23510113c4b492deef0b8d6c704b5878cd750908c",
 		"docs/install.md": "sha256:e2343b4ae26c341d1e467b6a9a26085cbb9013c02ec291d6ceaa44cfd1fec201",
 		"docs/languages.md": "sha256:2d404f1b996cbde1965276643ed278167e2d923db49b8fc11530ffb2662c9f5e",
@@ -83,7 +83,7 @@
 		"seed/seed.json": "sha256:f9f7b2f1304c84b0823799c8a4a2cba2808e9db2e22460c18fe5e3ea834e8db3",
 		"seed/media-map.json": "sha256:19782aef06ebfd07df9f0b20150812514aa4dc8b3b8688d01beb4f54e9eabbd0",
 		"seed/field-map.json": "sha256:8dbf1e6dc5ff58d4012c5ee1eaa9a221cdec43e4a186ad80ba53b2382e66d9ca",
-		"pnpm-lock.yaml": "sha256:d7a904f4d0cc00b3c5d5012916f76bcd7a021cfedb84133d3ea15adf598f96af",
+		"pnpm-lock.yaml": "sha256:49375a6eae59dd5297de5d5c2e5c21c68fa008fe35f388e911465bf1cd5cf956",
 		"tools/forms.json": "sha256:48712892a843cbd30c804cbf957b7e46872c48b1f79ddd92c0488e8e0e3c672d",
 		"seed/media/*": "sha256:25fac2079c34b558341a887938aa9dd808ec1fbe7e3de30cd0f3e1193399cee5 (97 files)"
 	}
