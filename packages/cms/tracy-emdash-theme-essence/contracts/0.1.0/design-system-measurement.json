@@ -4,10 +4,10 @@
   "cms": "emdash",
   "tag": "tracy-essence/emdash-0.x",
   "version": "0.1.0",
-  "measuredAt": "2026-11-19T12:54:02.311Z",
+  "measuredAt": "2026-11-19T13:39:10.988Z",
   "machine": "linux-arm64",
   "measuredBy": "tdsr flow.mjs --cms emdash --template emdash-tracy-essence",
-  "flowVersion": "78f7ac096",
+  "flowVersion": "dfc483f9e",
   "modes": [
     "native",
     "derived"
@@ -22273,7 +22273,7 @@
       }
     }
   ],
-  "previewMeasuredAt": "2026-11-19T12:56:57.326Z",
+  "previewMeasuredAt": "2026-11-19T13:42:05.105Z",
   "previewPages": [
     "/",
     "/our-authors",
