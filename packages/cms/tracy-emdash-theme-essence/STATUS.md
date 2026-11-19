@@ -1,25 +1,25 @@
 # STATUS — tracy-essence
 
-**Phase reached (end of session 9, 2026-11-19): P8 done to a publishable local cut; PR #700 is a draft. Nothing is published.**
+**Phase reached (end of session 10, 2026-11-19): P8 done to a publishable local cut; PR #700 is a draft. Nothing is published.**
 
-**Release folder: `<evidence-dir>/p22/release`** (tag `tracy-essence/emdash-0.x`, version 0.1.0, built from pack 22; the package files of the commit named below equal pack 21 except `contracts/`, `perf/`, `tests/regression/` and this file).
+**Release folder: `<evidence-dir>/p23/release`** (tag `tracy-essence/emdash-0.x`, version 0.1.0, built from pack 23, cut from commit `53310897a` (the user's `0cc82df7a` and `bdf9e4a48` on top of pack 22's work); the package files of the commit to publish equal pack 23 except `contracts/`, `perf/`, `tests/regression/` and this file. **Commit to publish: the head of the branch (the one whose subject is "docs(emdash): JA Essence STATUS for pack 23").**
 
 | File | sha256 |
 |---|---|
-| tracy-essence-emdash-quickstart-0.1.0.zip | `7294db3281921be755e3ab61af84db3cdce952634439a1c6588f6b88596d2ee3` |
-| tracy-essence-emdash-state-0.1.0.tar.gz | `15b0e5a82dbfed2ace577c6ef2a8b18b2b066a6649aae9cef2d46279ef51cc7f` |
+| tracy-essence-emdash-quickstart-0.1.0.zip | `2d97939f7e9b2bf1d94b9b97574c6721b16f6c6f064b43dbce4f0d0458f57ec3` |
+| tracy-essence-emdash-state-0.1.0.tar.gz | `f20a9a80397772c5bbf4e91b5e4c91273a96748e63fb3018cb1fc9f6a04d7dc5` |
 | template-kit-tracy-essence-0.1.0.zip (its `template-kit.json` is byte-identical to `contracts/0.1.0/template-kit.json`, `approval: null`) | `025feae82ce36a3dd068b23cb3db6cd62f4d6634ed870486e09a352aed6641fe` |
-| design-system-roles.json (0 unresolved) | `bcc7ed73ce235031c519022ed013b35617654f32151494efa102cb1542fbad2c` |
-| tracy_setting.json (tracy-setting/v1, written by hand) | `0265879a94d2fd01593edfcfd9355d420129bbcbce22a12199d7346374904388` |
-| manifest.json | `fc9f7b89b1264f1572dccf2cff462d88216572d7eb69e12306e74c9c90215a61` |
-| VERIFICATION.json | `660d5567461efc172cf26128b4d4d9280dc80c5a272a80a0e230fa744ba87e77` |
-| SHA256SUMS | `f20c904f2e59062008e2b5270b1aab4406987b8ed5a75716150f2f6f9e9f584d` |
-| README.md | `594d49f8f5344438389fb8822a06dbadc51fefa6db1d064fcf8abf82efbcf851` |
+| design-system-roles.json (0 unresolved) | `4a66c8d6f65adab7026e83b01dea8a4d2ab5a9830e6cca9ee5a7d28d85be5752` |
+| tracy_setting.json (tracy-setting/v1, written by hand) | `a9fce78438178194a7b3605564261633b2a6a08c0a8cf9024840015c761f22c6` |
+| manifest.json | `7daee63c70d9c8130411f2cccc60fd735d51619858831c4600acddbbb0c213d3` |
+| VERIFICATION.json | `629591775bf9c4f3e623c3c6018d98235e1af563607ed6b8f94b22a9d115729b` |
+| SHA256SUMS | `9710677e6c911a07fbbce2a7e796d7b2bc23c79ebde7ae94d7d300aee434e1f3` |
+| README.md | `ec61462df12d64667b6405fbcead031f1e126739ba7088e69f6903441f8b3e35` |
 | LICENSE | `e16879cbf57577faa0bf2c8c5120c7de6a86fb1d4f93898a4ca30a445c957504` |
 | tracy_site_pages.json | `4f80a56032def813ed06ac1f23084822445b7a06dd03718f966e2b67310e9ca6` |
 | tracy_site_question.json | `959994585f60482fadd456ca970a509df2f6c3190646486aae519657d22e1101` |
 
-**Gate results** (`<evidence-dir>/p22/qa/qa.2/report.json`, the manifest agrees): contracts, distribution, preflight, browser, routing, visual, build, security, visual-review, font-review, viewing-contexts, editability, forms, recovery, clean-install, independent = **pass, 16 of 16**. Evidence: editability, forms, recovery, clean install and the independent handover (4 documentation gaps, none blocking, `perf/independent-handover-0.1.0.md`) are from pack 22; security, font-review and viewing-contexts are carried from session 4; visual review is the four tier runs j1..j4 (lens readers on every tile) on pack 13, and packs 14 to 22 differ by (and by formatting) field-map roles, content map, slot limits, Dockerfile, lock overrides and CSS values read through `var(--ds-*, <same value>)`; the scrim over the Home strip pictures became neutral black (up to 16 levels darker over a picture); the machine `visual` gate of pack 22 measured the same 2400 computed values. **A lens re-read of the strip tiles was not done.**
+**Gate results** (`<evidence-dir>/p23/qa/qa.2/report.json`, the manifest agrees): contracts, distribution, preflight, browser, routing, visual, build, security, visual-review, font-review, viewing-contexts, editability, forms, recovery, clean-install, independent = **pass, 16 of 16**. Evidence: editability, forms, recovery, clean install and the independent handover (6 documentation gaps, none blocking, `perf/independent-handover-0.1.0.md`) are from pack 23 (the editability, forms and recovery runs used the site's `localhost` origin, the one its sign-in link names); security, font-review and viewing-contexts are carried from session 4; visual review is the four tier runs j1..j4 (lens readers on every tile) on pack 13, and packs 14 to 23 differ by (and by formatting) field-map roles, content map, slot limits, Dockerfile, lock overrides and CSS values read through `var(--ds-*, <same value>)`; the scrim over the Home strip pictures became neutral black (up to 16 levels darker over a picture); the machine `visual` gate of pack 22 measured the same 2400 computed values. **A lens re-read of the strip tiles was not done.**
 
 **CI of PR #700, session 9: format and the render map.** `check-lint` format was red on 35 files because my earlier format passes ran over a hand-picked list of changed files by extension (it skipped `.astro` and the `seed/`, `contracts/`, `inventory/` and policy JSON) instead of every file the branch changed; `biome format --write` over `git diff --name-only origin/develop` fixed all 35 and `pnpm format:check` over the repo is clean apart from an out-of-tree capture the checkout does not have. The render map row of the essence template was regenerated from `qa.contract.json` (the contract had been reformatted, so its hash moved); `brief-quickstart-first.test.mjs` 118 of 118 pass.
 
@@ -28,12 +28,14 @@
 2. Regression: case `REG-PR-700-emdash-essence-0-1-0` (`kind: feat`, script case over 17 named tests of the package); result line in `tests/regression/results/` (see DECISIONS D43 for the commit it ran on).
 3. Language policy: rows in `scripts/language-policy.json` and standalone in `<evidence-dir>/language-policy-rows.json` (D43).
 
+**Session 10 re-cut (pack 23):** the user's three commits changed two source files, one test marker and the inventory, so the zip was cut again from HEAD; 16 of 16 gates pass on it (`qa.2` and the manifest agree). The regression case `REG-PR-700-emdash-essence-0-1-0` runs five test files none of which the user's commits touched, so its result line stands. `qa.contract.json` did not change, so the render map row stands. The template kit inputs did not change: the kit zip of pack 22 is kept, `approval: null`. Final checks: biome format over every changed file clean, `check-emdash-inventory` current, `check-language` clean, `check-test-quality` clean, `brief-quickstart-first` 118 of 118.
+
 **Design System readiness (`scripts/template-design-system-readiness.mjs` on the release folder): 46 PASS, 0 FAIL** (ROLE-1 pass, flow 64 of 64, preview rows for Moxie and Figma, light and dark, 16 pages). Customization readiness: 0 FAIL (LANG-2 pass, no font finding). Role scan 0 unresolved. `scan.mjs`: see D43.
 
 **Open:**
 1. Template kit: `approval: null` (the owner's step). Gaps recorded: 65 (was 370): 45 on 15 author/tag card lists (`measure-min` could not find the kit block on those pages), 3 coverage failures (the Instagram button has no declared target, two tag pages print their name outside a slot), 6 picture frames with no fixed flag, 2 pages, and 9 not-on-platform notes that every EmDash kit carries. Settled: slot limits (`seed/slot-limits.json`), the Categories control and two dead-link gaps accepted with reasons (`reach-accepts.json`, `gap-accepts.json` in the kit work folder `<evidence-dir>/p21/kit`).
 2. The strip scrim: a lens re-read of the Home tiles (light and dark, 1440, 768, 390).
-3. Five documentation gaps of the independent review; fixing them changes the zip.
+3. Six documentation gaps of the independent review (tools must run from the installed site folder; Chromium install; localhost link host; log and stop instructions; example slugs; entry-id lookup); fixing them changes the zip.
 4. `pnpm build:check` on the re-cut tree (session 9): every gate before `tests` passes; `check-lint` is red only for 20 files of a local out-of-tree capture (a symlink `source/snapshot` of this workstation that a clean checkout does not have; biome follows it), none of this repository; `check-tests` and `turbo-config` are red in the suites `@tracy/web#3`, `joomla-quickstart`, `@tracy/quickstart-tools`, `@tracy/wordpress-theme` and `@tracy/dsh-fleet-operation` for reasons of this workstation, not of the branch: `copy-verify` waits on a network call (timeout), `website-opportunities-dubai-ranking` needs its database, the Joomla and WordPress tool tests stop on `PHP Fatal error: Class DOMDocument` (the PHP here has no dom extension), the fleet suite runs over its time budget; `apps/tracy-web/test/brief-quickstart-first.test.mjs` (the CI failure) passes 118 of 118.
 
 **Phase reached (end of session 7, 2026-11-19): P8 done to a publishable local cut. Nothing is pushed or published.**
@@ -42,15 +44,15 @@
 
 | File | sha256 |
 |---|---|
-| tracy-essence-emdash-quickstart-0.1.0.zip | `a908fdee0184dd8e8dbcf93d376847e95c143190ae966ab019615c0bd016daf8` |
-| tracy-essence-emdash-state-0.1.0.tar.gz | `997eb93939fc4b961595143b49b770415f7795d27ef1e03a1faec6582707d4ee` |
+| tracy-essence-emdash-quickstart-0.1.0.zip | `2d97939f7e9b2bf1d94b9b97574c6721b16f6c6f064b43dbce4f0d0458f57ec3` |
+| tracy-essence-emdash-state-0.1.0.tar.gz | `f20a9a80397772c5bbf4e91b5e4c91273a96748e63fb3018cb1fc9f6a04d7dc5` |
 | template-kit-tracy-essence-0.1.0.zip (its `template-kit.json` is byte-identical to `contracts/0.1.0/template-kit.json`) | `6e32f0014b200d4d217ab3f5426787cde10d5eabdf7f00d0aa6d87511852cef8` |
-| design-system-roles.json (role scan, 0 unresolved) | `f4567d941403a8952f6d2afb043e7c135e4d9d4f5e89761c96f644d29d0dfd50` |
-| tracy_setting.json (written by hand, tracy-setting/v1) | `3e2c166cc330848acafac037004b1f5ccd93e1b12914dceaec7cf5ecca3576ea` |
-| manifest.json | `bc51a3cfbdaeac641a8a92c407f93fc97597b1a149a5db2cdd6abb3f1d6b3197` |
-| VERIFICATION.json | `3ad8b2183591bc74a8ed9f58d4c98aa0254d6629cb50b1a62daa0b8911220bc2` |
-| SHA256SUMS | `c37dfb91aecf4bbfbb4c5ab6e3d3fce73adc434fd45e55b2de848c12d1312673` |
-| README.md | `b4ecd2cb558958c70abd70a348e233ca7cbc24371c4a2794b072f93e03647c5f` |
+| design-system-roles.json (role scan, 0 unresolved) | `4a66c8d6f65adab7026e83b01dea8a4d2ab5a9830e6cca9ee5a7d28d85be5752` |
+| tracy_setting.json (written by hand, tracy-setting/v1) | `a9fce78438178194a7b3605564261633b2a6a08c0a8cf9024840015c761f22c6` |
+| manifest.json | `7daee63c70d9c8130411f2cccc60fd735d51619858831c4600acddbbb0c213d3` |
+| VERIFICATION.json | `629591775bf9c4f3e623c3c6018d98235e1af563607ed6b8f94b22a9d115729b` |
+| SHA256SUMS | `9710677e6c911a07fbbce2a7e796d7b2bc23c79ebde7ae94d7d300aee434e1f3` |
+| README.md | `ec61462df12d64667b6405fbcead031f1e126739ba7088e69f6903441f8b3e35` |
 | LICENSE | `e16879cbf57577faa0bf2c8c5120c7de6a86fb1d4f93898a4ca30a445c957504` |
 | tracy_site_pages.json | `4f80a56032def813ed06ac1f23084822445b7a06dd03718f966e2b67310e9ca6` |
 | tracy_site_question.json | `959994585f60482fadd456ca970a509df2f6c3190646486aae519657d22e1101` |
