@@ -33,7 +33,8 @@ export async function orderStep(ctx, { kit, plan, copy, pictures, icons }) {
     profile: pictures.profile,
     language: plan.plan.language,
     withheld,
-    template: kit.aiq.template
+    template: kit.aiq.template,
+    plan: plan.plan
   })
   const order = buildWriteOrder({
     run: { id: ctx.runId ?? null, kind: 'build' },

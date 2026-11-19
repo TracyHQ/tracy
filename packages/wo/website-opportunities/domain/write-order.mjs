@@ -3,8 +3,7 @@
 // look, every writer page, the pictures and the icons in; one `tracy-write-order/v1` document out, the write step's
 // only input. Spec: docs/references/write-order.md. The check is `checkWriteOrder` (`write-order-check.mjs`).
 import { placeLimitsOf } from './field-place-limits.mjs'
-import { carryChannelFacts } from './plan-composer-channels.mjs'
-import { planDataOf } from './plan-data.mjs'
+import { planDataOfPlan } from './plan-data-of-plan.mjs'
 import { blockPlacesOf } from './write-order-block.mjs'
 import { dataIndexOf } from './write-order-data.mjs'
 import { WriteOrderError } from './write-order-error.mjs'
@@ -46,8 +45,7 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
   // A repeating block kept on trade basis shows the cards the page writer wrote (`trade-cards.mjs`, #575).
   // The channel facts the plan holds from the brief (WhatsApp, a second phone) are no fact of the profile: carried in
   // as the page writer carries them (`writerContextOf`), so a block that shows them is written to the site (#575).
-  const profileData = planDataOf(profile)
-  carryChannelFacts(approved, profileData)
+  const profileData = planDataOfPlan(profile, approved)
   const { plan, data } = withTradeCards(approved, declarations, profileData)
   const written = writtenPagesOf(writers)
   const missing = plan.pages.filter((p) => !written.has(p.id)).map((p) => p.id)

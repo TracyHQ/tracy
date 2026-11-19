@@ -9,7 +9,7 @@ import { knownOf, placeOwnerFacts } from './page-writer-owner-facts.mjs'
 import { pageWriterUser } from './page-writer-request.mjs'
 import { foreignValuesOf } from './page-writer-rows.mjs'
 import { carryChannelFacts } from './plan-composer-channels.mjs'
-import { planDataOf } from './plan-data.mjs'
+import { planDataOfPlan } from './plan-data-of-plan.mjs'
 import { seoLimitsOf } from './seo-limits.mjs'
 
 /**
@@ -18,8 +18,8 @@ import { seoLimitsOf } from './seo-limits.mjs'
  * profile, so they are carried into the plan data, as a revision of the plan carries them.
  */
 export function writerContextOf({ profile, blockStore, library = [], mapping, plan }) {
-  const data = planDataOf(profile)
-  if (plan) carryChannelFacts(plan, data)
+  // The plan data the plan gate held the plan to (`planDataOfPlan`): item field facts and the plan's channel facts.
+  const data = planDataOfPlan(profile, plan ?? null)
   const { byId } = data
   const blocks = blockDescriptionsOf(blockStore, library)
   return {

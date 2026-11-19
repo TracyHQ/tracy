@@ -11,7 +11,7 @@ import { selectIcons } from './icon-selection.mjs'
 import { labelOwnPictures, PicturePolicyError } from './picture-labelling.mjs'
 import { assignPictures } from './picture-policy.mjs'
 import { leftOutKeptOff } from './plan-picture-count.mjs'
-import { planDataOf } from './plan-data.mjs'
+import { planDataOfPlan } from './plan-data-of-plan.mjs'
 import { withResearchLabels } from './picture-research-labels.mjs'
 import { emptySpotsOf, pictureTallyOf, unusedReasonOf } from './picture-tally.mjs'
 
@@ -77,7 +77,7 @@ export async function placeBuildPictures({
   labels = null
 }) {
   planPages(plan, PicturePolicyError)
-  const data = planDataOf(profile)
+  const data = planDataOfPlan(profile, plan)
   // A refused picture is never shown to the vision call nor placed: its frame has no own photo (the policy decides).
   const allowed = (p) => typeof refuse !== 'function' || !refuse(p)
   // A photo the plan leaves out for a reason other than gallery room (the owner took it off) fills no frame either.
@@ -119,7 +119,7 @@ export async function placeBuildPictures({
  *   without: Set<string>}} input `placed`: a result of `placeBuildPictures`
  */
 export function placeAgainWithout({ plan, profile, blockStore, library = [], placed, without }) {
-  const data = planDataOf(profile)
+  const data = planDataOfPlan(profile, plan)
   // A rejected photo stays one of the owner's photos (the tally counts it, unused `looker_rejected`), never placed.
   const pictures = list(placed.pictures).map((p) => (without.has(p.id) ? { ...p, lookRejected: true } : p))
   const assignment = assignPictures({
@@ -179,7 +179,7 @@ export async function selectBuildIcons({
       'picture_frames_missing',
       'the icons are checked against the placed picture frames: give the frames of placeBuildPictures'
     )
-  const data = planDataOf(profile)
+  const data = planDataOfPlan(profile, plan)
   const blocks = blocksOf(blockStore, library)
   const strange = framesMismatchOf(pictureFrames, framesOfPlan(plan.pages, blocks, data))
   if (strange)

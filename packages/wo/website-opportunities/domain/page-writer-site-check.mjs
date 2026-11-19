@@ -12,7 +12,7 @@
 // is rewritten, by the writer's own one rewrite (`page-writer.mjs`). Pure.
 import { repeatsOf } from './copy-repeats.mjs'
 import { PageWriterError, knownValuesOf } from './page-writer-fields.mjs'
-import { planDataOf } from './plan-data.mjs'
+import { planDataOfPlan } from './plan-data-of-plan.mjs'
 import { titleKey } from './seo-limits.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -110,10 +110,11 @@ export function siteCopyFailing(pages, { known = [], own } = {}) {
  * For the step chain, which runs one writer step per page in parallel: the site check over every written page, as a
  * typed error `site_copy_failed` (not `noRerun`) naming the pages to write again, or null when the site passes. A page
  * named is re-run once, with the other pages' copy as `others` of `writePages`, so its own rewrite fixes the repeat.
- * @param {{pages: object[], profile: object}} input the written pages in page order, and the approved profile
+ * @param {{pages: object[], profile: object, plan?: object}} input the written pages in page order, the approved
+ *   profile and the plan they were written for (its channel facts are values a page may repeat)
  */
-export function siteCopyError({ pages, profile }) {
-  const data = planDataOf(profile)
+export function siteCopyError({ pages, profile, plan = null }) {
+  const data = planDataOfPlan(profile, plan)
   const failing = siteCopyFailing(pages, { known: knownValuesOf(data.byId, data.rowsById) })
   if (failing.length === 0) return null
   const ids = [...new Set(failing.map((f) => f.page))]

@@ -19,7 +19,7 @@
 import { detect } from 'tinyld'
 import { fieldValueProblems } from 'website-opportunities/domain/page-copy-check.mjs'
 import { knownEntriesOf } from 'website-opportunities/domain/page-writer-fields.mjs'
-import { planDataOf } from 'website-opportunities/domain/plan-data.mjs'
+import { planDataOfPlan } from 'website-opportunities/domain/plan-data-of-plan.mjs'
 import { namesTemplate } from 'website-opportunities/domain/plan-request-claims.mjs'
 import { heldTextsOf, namesHeldInAnyForm } from 'website-opportunities/domain/plan-withheld.mjs'
 
@@ -53,9 +53,10 @@ const itemLabelOf = (item) =>
         ?.value ?? null)
 
 /** The alt guard: the cut text when it passes, else null. */
-export function altGuard({ profile, withheld, template }) {
+export function altGuard({ profile, withheld, template, plan = null }) {
   const held = heldTextsOf(withheld)
-  const data = planDataOf(profile)
+  // The plan data the plan gate held the plan to, when the plan is given (`planDataOfPlan`).
+  const data = planDataOfPlan(profile, plan)
   const known = knownEntriesOf(data.byId, data.rowsById)
   const field = { name: 'alt', type: 'text', limit: ALT_LIMIT }
   return (text) => {
@@ -79,8 +80,8 @@ export function altGuard({ profile, withheld, template }) {
  * @param {{profile: object, language?: string, withheld?: object, template?: {name?: string}}} context the profile
  *   the order is built from, the site language, `withheld` of the full profile and the template of the kit
  */
-export function withAltTexts(frames, { profile, language, withheld, template }) {
-  const guard = altGuard({ profile, withheld, template })
+export function withAltTexts(frames, { profile, language, withheld, template, plan = null }) {
+  const guard = altGuard({ profile, withheld, template, plan })
   const english = baseOf(language) === 'en'
   const inSite = (text) => (english || readsAs(text, language) ? text : null)
   const items = new Map(

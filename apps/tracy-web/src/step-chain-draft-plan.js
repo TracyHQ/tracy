@@ -1,7 +1,9 @@
 // The approved plan of an assembled run (#597) held against the needs profile stored beside it, before any model work.
 //
-// SAME DATA. Every id a block of the plan shows (`block.data`) must be a fact, an item or a row of the stored profile
-// (`planDataOf`, the ids the plan gate held the plan to). An id the profile lacks means the plan and the profile were
+// SAME DATA. Every id a block of the plan shows (`block.data`) must be a fact, an item or a row of the plan data the
+// plan gate held the plan to (`planDataOfPlan`: the stored profile's data with its item field facts and the channel
+// facts the plan holds from the brief, a WhatsApp link or a second phone, #575 stand). An id that data lacks means the
+// plan and the profile were
 // stored apart (a plan edited after the research changed, a profile written by another run): the build stops with
 // `draft_plan_profile_mismatch` (`step-chain-draft-source.js`), naming the ids, instead of dropping them in silence.
 //
@@ -9,12 +11,12 @@
 // business name in any text of a fact or item, as words or in a slug) leave the plan every step reads: its blocks'
 // data, its items and its facts. The plan gate refuses such an id in a plan it composes or edits (`withheld_shown`); a
 // plan approved before the owner held it still builds, without it.
-import { planDataOf } from 'website-opportunities/domain/plan-data.mjs'
+import { planDataOfPlan } from 'website-opportunities/domain/plan-data-of-plan.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 /** The ids the plan's blocks show that the stored profile does not hold, each with where it is shown. */
 export function unknownPlanIdsOf(plan, profile) {
-  const data = planDataOf(profile)
+  const data = planDataOfPlan(profile, plan)
   const known = (id) => data.byId.has(id) || data.rowsById?.has?.(id) === true
   const out = []
   for (const page of list(plan?.pages))
@@ -26,7 +28,7 @@ export function unknownPlanIdsOf(plan, profile) {
 
 /** The plan without the ids the owner keeps off the site (blocks' data, items, facts); as it is when none is held. */
 export function planWithoutWithheld(plan, profile) {
-  const held = planDataOf(profile).withheld
+  const held = planDataOfPlan(profile, plan).withheld
   if (!held || held.size === 0) return plan
   const shown = (id) => !held.has(typeof id === 'string' ? id : id?.id)
   return {
