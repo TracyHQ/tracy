@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-710-copy-parts-picture-laps",
+  "kind": "feat",
+  "title": "The copy draft is written in eight parts, and a finished picture round records where its time went",
+  "pr": 710,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The chain's copy parts are the writer's own ceiling and a value it takes.",
+    "A finished picture round records its round times as whole milliseconds and its frame task count."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-copy-parts.test.mjs",
+      "apps/tracy-web/test/site-pictures-ladder.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the copy step's first draft is written in the most parts the writer takes",
+      "a finished round records where its time went: whole milliseconds, and how many frame tasks it ran"
+    ]
+  }
+}
