@@ -132,6 +132,7 @@ Read the one nearest to what you are editing — they hold local conventions and
 | [Tracy Business (`@tracy/emdash-theme-business`)](../packages/cms/tracy-emdash-theme-business/README.md) | Tracy Business (`@tracy/emdash-theme-business`) |
 | [Tracy Coffee (`@tracy/emdash-theme-coffee`)](../packages/cms/tracy-emdash-theme-coffee/README.md) | Tracy Coffee (`@tracy/emdash-theme-coffee`) |
 | [JA Diner (`@tracy/emdash-theme-diner`)](../packages/cms/tracy-emdash-theme-diner/README.md) | JA Diner (`@tracy/emdash-theme-diner`) |
+| [JA Essence (`@tracy/emdash-theme-essence`)](../packages/cms/tracy-emdash-theme-essence/README.md) | JA Essence (`@tracy/emdash-theme-essence`) |
 | [JA Restaurant (`@tracy/emdash-theme-restaurant`)](../packages/cms/tracy-emdash-theme-restaurant/README.md) | JA Restaurant (`@tracy/emdash-theme-restaurant`) |
 | [Tracy SaaS (`@tracy/emdash-theme-saas`)](../packages/cms/tracy-emdash-theme-saas/README.md) | Tracy SaaS (`@tracy/emdash-theme-saas`) |
 | [@tracy/joomla-template — `tpl_tracy`](../packages/cms/tracy-joomla-template/README.md) | @tracy/joomla-template — `tpl_tracy` |
