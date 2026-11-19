@@ -91,16 +91,17 @@ function manifestProblems(m, slug) {
 }
 
 /**
- * The site a build of this kit installs (#610), as the manifest names it: `site: {platform, design, quickstart, release?}`, the
- * create door's own fields (`POST /api/sites`). Null when the manifest names none: such a kit is offered and planned,
- * but its build stops with `SITE_SOURCE_MISSING` until the release that carries its blank site is pinned.
+ * The site a build of this kit installs (#610), as the manifest names it: `site: {platform, quickstart, release?}`, the
+ * create door's own fields (`POST /api/sites`), `quickstart` the AI quickstart's own release (`ai-quickstart/<slug>/<cms>`,
+ * `build-draft-build-wiring.js`). Null when the manifest names none: such a kit is offered and planned, but its build
+ * stops with `SITE_SOURCE_MISSING`. A `design` an older manifest names is no longer read: the AI quickstart's release
+ * is installed as released, never through a Design inspiration card.
  */
 function siteOf(m) {
   const site = m?.site
-  if (!site || !isText(site.platform) || !isText(site.quickstart) || !isText(site.design)) return null
+  if (!site || !isText(site.platform) || !isText(site.quickstart)) return null
   return {
     platform: site.platform,
-    design: site.design,
     quickstart: site.quickstart,
     ...(site.release && typeof site.release === 'object' ? { release: site.release } : {})
   }

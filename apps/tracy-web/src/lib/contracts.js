@@ -24,6 +24,7 @@
  * the OTHER road: a caller naming a quickstart directly, which is what `provision.sh` asks
  * `quickstart.py --field contract` for.
  */
+import { createHash } from 'node:crypto'
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -40,9 +41,19 @@ const IN_CHECKOUT = [
   fileURLToPath(new URL('../../../../packages/cms/tracy-wordpress-quickstart/contracts', import.meta.url))
 ]
 
+// The blank site contracts of the AI quickstarts (ADR 0045): `<kits>/<slug>/<cms>/<version>/blank-site-contract/`. Each
+// seals its AI quickstart's own release (`ai-quickstart/<slug>/<cms>`, its manifest's `quickstart.release`), never the
+// human quickstart's, so it joins the same index without claiming a demo release twice. The image copies the kits to
+// `src/ai-quickstarts` (Dockerfile), a checkout reads the package.
+const BLANK_IN_IMAGE = fileURLToPath(new URL('../ai-quickstarts', import.meta.url))
+const BLANK_IN_CHECKOUT = [
+  fileURLToPath(new URL('../../../../packages/cms/tracy-joomla-quickstart/ai-quickstarts', import.meta.url))
+]
+const BLANK_CONTRACT_DIR = 'blank-site-contract'
+
 /**
  * @typedef {{ id: string, source: 'catalog' } | { id: string, source: 'quickstart', name: string, tokensFrom: string, tokens: Record<string, string> }} ContractDesign
- * @typedef {{ id: string, dir: string, platform: string, coworkMinVersion: string | null, mode: string | null, design: ContractDesign | null }} Contract
+ * @typedef {{ id: string, dir: string, platform: string, coworkMinVersion: string | null, mode: string | null, design: ContractDesign | null, carried?: true, madeFrom?: string }} Contract
  * @typedef {Map<string, Contract>} ContractIndex
  */
 
@@ -126,6 +137,30 @@ function manifestsIn(dir) {
   return found
 }
 
+/** Every blank site contract's `manifest.json` under a folder of AI quickstart kits (`<slug>/<cms>/<version>/`). */
+function blankManifestsIn(root) {
+  /** @type {string[]} */
+  const found = []
+  const dirs = (at) => {
+    try {
+      return readdirSync(at).filter((name) => statSync(path.join(at, name)).isDirectory())
+    } catch {
+      return []
+    }
+  }
+  for (const slug of dirs(root))
+    for (const cms of dirs(path.join(root, slug)))
+      for (const version of dirs(path.join(root, slug, cms))) {
+        const file = path.join(root, slug, cms, version, BLANK_CONTRACT_DIR, 'manifest.json')
+        try {
+          if (statSync(file).isFile()) found.push(file)
+        } catch {
+          // A kit with no blank site contract yet seals nothing.
+        }
+      }
+  return found
+}
+
 /**
  * Read the contract profiles into an index keyed by the quickstart each one names.
  *
@@ -136,51 +171,100 @@ function manifestsIn(dir) {
  * @param {string | string[]} [dirs] where the profiles live; defaults to the image, then the checkout
  * @returns {ContractIndex}
  */
-export function readContracts(dirs = undefined) {
+export function readContracts(dirs = undefined, { blankRoots = undefined } = {}) {
   const roots = dirs === undefined ? [IN_IMAGE, ...IN_CHECKOUT] : Array.isArray(dirs) ? dirs : [dirs]
+  // The blank site contracts ride along with the shipped profiles; a caller naming its own folders names its own kits.
+  const kits = blankRoots ?? (dirs === undefined ? [BLANK_IN_IMAGE, ...BLANK_IN_CHECKOUT] : [])
   /** @type {ContractIndex} */
   const index = new Map()
-  for (const root of roots) {
-    for (const file of manifestsIn(root)) {
-      const manifest = JSON.parse(readFileSync(file, 'utf8'))
-      const named = manifest?.quickstart
-      if (typeof named?.release !== 'string' || typeof named?.version !== 'string')
-        throw new Error(`contract profile ${file} names no quickstart it seals`)
-      const key = keyOf(named.release, named.version)
-      const seen = index.get(key)
-      if (seen !== undefined && seen.id !== manifest.id)
-        throw new Error(`quickstart ${key} is claimed twice: ${seen.id} and ${manifest.id}`)
-      index.set(key, {
-        id: typeof manifest.id === 'string' ? manifest.id : key,
-        // Where the profile's files sit, for readers that need more than the manifest (the
-        // capabilities reader opens `content-map.json` beside it). The manifest already settled
-        // which profile seals which quickstart; this only says where that profile is.
-        dir: path.dirname(file),
-        platform: typeof manifest.platform === 'string' ? manifest.platform : '',
-        // 🔒 TWO NAMES FOR ONE FIELD, AND READING ONLY THE FIRST MADE THIS NULL EVERYWHERE THAT
-        // MATTERED. The WordPress profile writes `coworkMinVersion`; all eight Joomla profiles write
-        // `coworkContractVersion`. This read named only the first, so every Joomla contract answered
-        // `null` — and because nothing downstream asked for it, nothing went red. What went wrong
-        // instead was two steps away and looked unrelated: with no floor to pass, a sealed card was
-        // provisioned with a Claude Cowork plugin too old to bind and died at `content.contract`.
-        // Published profiles (before 27/09/2026) still carry the pre-rename keys `receiverVersion` /
-        // `receiverFloor`; they are sealed artifacts and are not rewritten, so all four names are read.
-        coworkMinVersion:
-          [
-            manifest.coworkContractVersion,
-            manifest.receiverVersion,
-            manifest.coworkMinVersion,
-            manifest.receiverFloor
-          ].find((v) => typeof v === 'string') ?? null,
-        mode: typeof manifest.mode === 'string' ? manifest.mode : null,
-        // The design system the quickstart wears (decided 29/09/2026): the profile is the
-        // ONE place that names it. A release card carries no design id; `templateCards` joins
-        // this field into the card at read time, so nothing on a release can drift from it.
-        design: designOf(path.dirname(file))
-      })
-    }
+  const files = [
+    ...roots.flatMap((root) => manifestsIn(root).map((file) => ({ file, carried: false }))),
+    ...kits.flatMap((root) => blankManifestsIn(root).map((file) => ({ file, carried: true })))
+  ]
+  for (const { file, carried } of files) {
+    const manifest = JSON.parse(readFileSync(file, 'utf8'))
+    const named = manifest?.quickstart
+    if (typeof named?.release !== 'string' || typeof named?.version !== 'string')
+      throw new Error(`contract profile ${file} names no quickstart it seals`)
+    const key = keyOf(named.release, named.version)
+    const seen = index.get(key)
+    if (seen !== undefined && seen.id !== manifest.id)
+      throw new Error(`quickstart ${key} is claimed twice: ${seen.id} and ${manifest.id}`)
+    index.set(key, {
+      id: typeof manifest.id === 'string' ? manifest.id : key,
+      // Where the profile's files sit, for readers that need more than the manifest (the
+      // capabilities reader opens `content-map.json` beside it). The manifest already settled
+      // which profile seals which quickstart; this only says where that profile is.
+      dir: path.dirname(file),
+      platform: typeof manifest.platform === 'string' ? manifest.platform : '',
+      // 🔒 TWO NAMES FOR ONE FIELD, AND READING ONLY THE FIRST MADE THIS NULL EVERYWHERE THAT
+      // MATTERED. The WordPress profile writes `coworkMinVersion`; all eight Joomla profiles write
+      // `coworkContractVersion`. This read named only the first, so every Joomla contract answered
+      // `null` — and because nothing downstream asked for it, nothing went red. What went wrong
+      // instead was two steps away and looked unrelated: with no floor to pass, a sealed card was
+      // provisioned with a Claude Cowork plugin too old to bind and died at `content.contract`.
+      // Published profiles (before 27/09/2026) still carry the pre-rename keys `receiverVersion` /
+      // `receiverFloor`; they are sealed artifacts and are not rewritten, so all four names are read.
+      coworkMinVersion:
+        [
+          manifest.coworkContractVersion,
+          manifest.receiverVersion,
+          manifest.coworkMinVersion,
+          manifest.receiverFloor
+        ].find((v) => typeof v === 'string') ?? null,
+      mode: typeof manifest.mode === 'string' ? manifest.mode : null,
+      // The design system the quickstart wears (decided 29/09/2026): the profile is the
+      // ONE place that names it. A release card carries no design id; `templateCards` joins
+      // this field into the card at read time, so nothing on a release can drift from it.
+      design: designOf(path.dirname(file)),
+      // 🔒 NO PLUGIN RELEASE CARRIES A BLANK SITE CONTRACT. The Claude Cowork plugin fetches a profile only when its
+      // own `contracts.json` lists it; a blank site contract is Tracy's (the AI quickstart's folder), so the install
+      // information carries its files and the host puts them on disk before the bind (`resolveInstall`).
+      ...(carried ? { carried: true } : {}),
+      // The released contract a blank site contract was made from (`blankSiteOf.contract`): its release's pins (the
+      // Claude Cowork plugin) are the ones the blank site was measured with (`releaseOfContract`).
+      ...(carried && typeof manifest.blankSiteOf?.contract === 'string'
+        ? { madeFrom: manifest.blankSiteOf.contract }
+        : {})
+    })
   }
   return index
+}
+
+/**
+ * The files of a carried profile (`carried`: a blank site contract), as the install information hands them to the host:
+ * `{id, files: {<name>: {sha256, bytes, text}}}`, every `.json` of the profile's folder. The host writes them under the
+ * Claude Cowork component's `lib/contracts/<id>/` before the bind, each held to its size and sha256 (`quickstart.py
+ * --contract-profile`), so the plugin's own fetch finds the profile on disk and fetches nothing. Null for a profile the
+ * plugin's release carries (every released contract): that one is fetched by the plugin, as before.
+ * @param {Contract | null} contract
+ * @returns {{ id: string, files: Record<string, { sha256: string, bytes: number, text: string }> } | null}
+ */
+export function carriedProfileOf(contract) {
+  if (!contract?.carried) return null
+  /** @type {Record<string, { sha256: string, bytes: number, text: string }>} */
+  const files = {}
+  for (const name of readdirSync(contract.dir)
+    .filter((n) => n.endsWith('.json'))
+    .sort()) {
+    const bytes = readFileSync(path.join(contract.dir, name))
+    files[name] = {
+      sha256: createHash('sha256').update(bytes).digest('hex'),
+      bytes: bytes.length,
+      text: bytes.toString('utf8')
+    }
+  }
+  return { id: contract.id, files }
+}
+
+/**
+ * The release a profile seals, by the profile's id, or null when the index holds no such profile.
+ * @param {ContractIndex} index
+ * @param {unknown} id
+ */
+export function releaseOfContract(index, id) {
+  for (const [key, contract] of index) if (contract.id === id) return key.slice(0, key.lastIndexOf('@'))
+  return null
 }
 
 /** @type {ContractIndex | null} */

@@ -707,6 +707,34 @@ joomla_install_cowork_release() {
 # `ContractFetch::ensure` as root (asset names, named profiles and checks stay the component's),
 # leaves the profile 0755/0644 so the site reads it, and is a no-op for a component that predates
 # fetching or a profile already on disk. A failure stops here, before the bind, naming the profile.
+# A profile no Claude Cowork plugin release carries (an AI quickstart's blank site contract) travels with the
+# quickstart entry tracy-web resolved (`contractProfile`, `carriedProfileOf`), so the plugin's own fetch would find
+# it in no `contracts.json` and stop. `quickstart.py --contract-profile` writes its files, each held to its size and
+# sha256 and only when it is the profile this card is sealed by; they go into `lib/contracts/<id>/` as root, 0755/0644
+# like a fetched profile, and the fetch that follows finds it on disk and fetches nothing. An entry that carries no
+# profile (every released contract) leaves this a no-op: those are fetched by the plugin, as before.
+joomla_place_contract_profile() {
+  local contract="$1" dir status=0
+  [ -n "$contract" ] || return 0
+  joomla_contract_id_valid "$contract" || { echo '!! the contract to place is not a profile id' >&2; return 1; }
+  dir="$(mktemp -d)"
+  python3 "$HERE/quickstart.py" --id "$QUICKSTART" --contract-profile "$dir" >/dev/null || status=$?
+  if [ "$status" = 4 ]; then rm -rf "$dir"; return 0; fi
+  if [ "$status" != 0 ]; then rm -rf "$dir"; echo "!! contract profile $contract: the profile this quickstart carries did not check out" >&2; return 1; fi
+  (cd "$SITE_DIR"; docker compose cp "$dir/." web:/tmp/tracy-contract-profile) \
+    && (cd "$SITE_DIR"; docker compose exec -T -e TRACY_CONTRACT_ID="$contract" web sh -c '
+      set -e
+      to="/var/www/html/administrator/components/com_claudecowork/lib/contracts/$TRACY_CONTRACT_ID"
+      mkdir -p "$to"
+      cp /tmp/tracy-contract-profile/*.json "$to/"
+      rm -rf /tmp/tracy-contract-profile
+      chmod 0755 "$to"
+      chmod 0644 "$to"/*.json') || status=$?
+  rm -rf "$dir"
+  [ "$status" = 0 ] || { echo "!! contract profile $contract: could not be put into the component" >&2; return 1; }
+  echo "==> contract profile $contract: carried by this quickstart, put on disk"
+}
+
 joomla_fetch_contract() {
   local contract="$1"
   [ -n "$contract" ] || return 0
@@ -963,6 +991,7 @@ LOAD
       fi
       # The sealed card's profile, on disk before the bind reads it (`joomla_fetch_contract` says why).
       if [ "$cowork_installed" = 1 ]; then
+        joomla_place_contract_profile "$card_contract" || return 1
         joomla_fetch_contract "$card_contract" || return 1
       fi
       echo '==> pairing the template with its private Cowork token'

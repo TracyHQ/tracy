@@ -76,7 +76,11 @@ const refuse = (c, code) => {
 }
 
 /** The create door's refusal that says the chosen design has no site to build from (`build-draft-build-wiring.js`). */
-const DESIGN_REFUSALS = new Set(['SITE_SOURCE_MISSING'])
+const DESIGN_REFUSALS = new Set([
+  'SITE_SOURCE_MISSING',
+  'SITE_SOURCE_NOT_AI_QUICKSTART',
+  'AI_QUICKSTART_RELEASE_MISSING'
+])
 
 /**
  * Why a build stopped before any of its steps ran, as a stable code the chat says in the owner's language, or null.

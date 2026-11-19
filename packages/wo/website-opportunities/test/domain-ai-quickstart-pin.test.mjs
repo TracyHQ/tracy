@@ -11,6 +11,8 @@ import { kitFilesSha256, kitHashesOf } from '../../../../scripts/ai-quickstart/g
 import {
   PINS_FILE,
   PINS_SCHEMA,
+  aiQuickstartReleaseOf,
+  isAiQuickstartRelease,
   kitFilesSha256Of,
   pinKeyOf,
   readPins,
@@ -151,4 +153,23 @@ test('a pin of the wrong shape, or a pins file of another schema, is unreadable'
     ['pin_unreadable']
   )
   rmSync(t.pkg, { recursive: true, force: true })
+})
+
+test("an AI quickstart's release is named as its pin, apart from the human quickstart's release", () => {
+  assert.equal(aiQuickstartReleaseOf('example-ring', 'j6'), 'ai-quickstart/example-ring/j6')
+  assert.equal(aiQuickstartReleaseOf('example-ring', 'j6'), pinKeyOf('example-ring', 'j6'))
+  for (const tag of ['ai-quickstart/example-ring/j6', 'local/ai-quickstart/example-ring/j6'])
+    assert.equal(isAiQuickstartRelease(tag), true, tag)
+  for (const tag of [
+    'quickstart/example-ring/j6',
+    'local/quickstart/example-ring/j6',
+    'example-ring/j6',
+    'ai-quickstart/example-ring',
+    'ai-quickstart/example-ring/j6/1.0.0',
+    'ai-quickstart/../j6',
+    'local/local/ai-quickstart/example-ring/j6',
+    '',
+    null
+  ])
+    assert.equal(isAiQuickstartRelease(tag), false, String(tag))
 })

@@ -135,10 +135,22 @@ test('the create door finds a template by its quickstart tag, with or without a 
     'quickstart/example-ring/j6',
     'example-ring/j6',
     'example-ring/j6/2.0.1',
-    'example-ring/j6@2.0.1'
+    'example-ring/j6@2.0.1',
+    'ai-quickstart/example-ring/j6',
+    'local/ai-quickstart/example-ring/j6',
+    'local/quickstart/example-ring/j6'
   ])
     assert.equal(aiQuickstartOfTemplate({ quickstart: tag, quickstarts })?.key, 'example-ring/j6', tag)
-  for (const tag of ['example-ring/wp7', 'example-ring/j6-extra', 'example-other/j6', '', undefined, 4])
+  for (const tag of [
+    'example-ring/wp7',
+    'example-ring/j6-extra',
+    'example-other/j6',
+    'ai-quickstart/example-other/j6',
+    'local/example-other/j6',
+    '',
+    undefined,
+    4
+  ])
     assert.equal(aiQuickstartOfTemplate({ quickstart: tag, quickstarts }), null, String(tag))
   assert.equal(quickstartTemplateKey('quickstart/example-ring/j6/v1.2'), 'example-ring/j6')
 })

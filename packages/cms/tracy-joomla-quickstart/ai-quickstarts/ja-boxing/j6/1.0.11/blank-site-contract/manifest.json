@@ -24,7 +24,7 @@
       "by": "tracy-ds-slot release-joomla.mjs",
       "change": "repaired: 11 files replaced (templates/ja_boxing/AGENTS.md, templates/ja_boxing/templateDetails.xml, templates/ja_boxing/docs, templates/ja_boxing/html, templates/ja_boxing/etc, templates/ja_boxing/language); 1 installed language files (language/en-GB/en-GB.tpl_ja_boxing.ini)"
     },
-    "release": "quickstart/ja-boxing/j6"
+    "release": "ai-quickstart/ja-boxing/j6"
   },
   "coworkContractVersion": "0.24.83",
   "mode": "content-recommendation",

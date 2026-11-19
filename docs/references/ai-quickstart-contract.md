@@ -1094,6 +1094,14 @@ is sealed and never edited; the blank site contract is a new artifact in the AI 
 The build loads it beside the three declarations: `blankContractReader` (`apps/tracy-web/src/step-chain-draft-blank-contract.js`)
 reads `<kits dir>/<slug>/<cms>/<version>/blank-site-contract/content-map.json` and answers `kit_missing` without it.
 
+**It seals the AI quickstart's own release** (ADR 0045, amendment 19/11/2026): its `manifest.json` names
+`quickstart.release: "ai-quickstart/<slug>/<cms>"` (checked by `blank-site-contract-check.mjs`), the release whose
+install file is the blank site. The contract index of tracy-web reads it beside the released profiles
+(`apps/tracy-web/src/lib/contracts.js`), so that release resolves to it and the human release still resolves to the
+released contract. No Claude Cowork plugin release carries it, so the install information carries its files
+(`contractProfile`, `carriedProfileOf`) and the host writes them into `lib/contracts/<id>/` before the bind
+(`joomla_place_contract_profile` in `platform/joomla.sh`, through `quickstart.py --contract-profile`).
+
 It is made by the blank site command, in the same run as the blank site:
 
 ```
