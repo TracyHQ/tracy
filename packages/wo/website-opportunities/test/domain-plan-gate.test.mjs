@@ -121,11 +121,24 @@ test('a page without its main block is dropped and reported; with no page left t
   assert.ok(result.plan.leftOut.some((e) => e.kind === 'item' && e.what === 'Ilse Varrow'))
 
   const none = goodComposition()
-  none.pages = [none.pages[1]]
-  none.pages[0].blocks = [
-    { block: 'footer-main', label: 'Footer', data: ['business-name'], reason: 'Your name.' }
-  ]
+  none.pages = [none.pages[0], none.pages[1]]
+  for (const page of none.pages)
+    page.blocks = [{ block: 'footer-main', label: 'Footer', data: ['business-name'], reason: 'Your name.' }]
   assert.deepEqual(codes(gate(none)), ['no_pages'])
+})
+
+test('a template with a home page type: a plan whose first page is not of that type goes back to the model', () => {
+  // #575: a plan of a list page and a contact page opened the site on the list page; code never invents the page.
+  const c = goodComposition()
+  const result = gate({ ...c, pages: c.pages.filter((p) => p.pageType !== 'home') })
+  // Dropping the home page also drops the channels it showed: only the home problem is this rule's.
+  assert.equal(result.ok, false)
+  assert.deepEqual(
+    result.problems.filter((p) => p.code === 'home_missing').map((p) => p.at),
+    ['pages[0].pageType']
+  )
+  const later = gate({ ...c, pages: [...c.pages.slice(1), c.pages[0]] })
+  assert.deepEqual(codes(later), ['home_missing'])
 })
 
 test('extra reviews with no block in the template go to the Tracy library block', () => {

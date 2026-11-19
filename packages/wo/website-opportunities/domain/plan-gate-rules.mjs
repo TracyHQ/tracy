@@ -128,6 +128,14 @@ export function keptBlockProblems(block, description, at, data, problem) {
 export function compositionProblems(composition, context, problem) {
   if (composition.pages.length === 0)
     return problem('reply_shape', 'pages', 'the reply lists the pages of the site, at least one')
+  // The template's front page is planned when it has one: the first page is the one the site opens on, and a list or
+  // contact page there leaves the visitor without the designed front page (#575). Never added by code: the model is told.
+  if (context.recipes.has('home') && composition.pages[0]?.pageType !== 'home')
+    problem(
+      'home_missing',
+      'pages[0].pageType',
+      'the template has a home page type: keep one page of type "home", first, the page the site opens on'
+    )
   const shown = new Set()
   composition.pages.forEach((page, i) => {
     const at = `pages[${i}]`

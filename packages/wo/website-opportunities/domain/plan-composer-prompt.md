@@ -137,6 +137,7 @@ not-found page says.
 - Each page type of `recipes`: keep or leave out. A page keeps its recipe's `mainBlock`; leave out a page whose main
   block has nothing to show. A page the business has nothing true for is left out. A page you leave out is simply not
   planned: code lists it, with the reason the data gives.
+- When `recipes` has a page type `home`, the plan keeps one page of that type, first: it is the page the site opens on.
 - A page made of person items is kept when the business names at least one person, one item per named person. Leave
   it out only when the business names no one.
 - Each block on a kept page: keep, keep on trade basis (see Trade knowledge), or leave out. Use only blocks of `blocks` and page types of `recipes`. A `template`
@@ -260,6 +261,7 @@ page keeps its main block.
   `business`?
 - Does any block show more items than the business has true items, or fewer than its `items.min`?
 - Is every id in the plan one that `business`, `blocks` or `recipes` gives?
+- When `recipes` has a `home` page type, is the first page of the plan a page of that type?
 - Does any service or item appear in two blocks of the same page?
 - Does any review appear outside a block that shows reviews?
 - Does any block name or promise a contact channel it does not show?
