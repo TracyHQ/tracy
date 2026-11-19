@@ -1,0 +1,2875 @@
+{
+  "schemaVersion": "tracy-content-coverage/v1",
+  "tool": {
+    "name": "@tracy/quickstart-tools content-coverage (emdash)",
+    "version": "1.8.0"
+  },
+  "platform": "emdash",
+  "contract": {
+    "id": "tracy-essence/emdash-0.x/0.1.0",
+    "contentMapSha256": "0edfc05754d2fc618eb3eef0e94f680be3a651d8f930dd55cbad36a4617e669d",
+    "presentationLockSha256": null
+  },
+  "measuredAt": "2026-11-19T06:00:09.877Z",
+  "viewports": [
+    "desktop",
+    "phone"
+  ],
+  "bound": {
+    "stamp": 4076,
+    "menu": 1948,
+    "words": 1032,
+    "media": 1554,
+    "entry": 216,
+    "route": 1516,
+    "clone": 4,
+    "term": 451
+  },
+  "lockedFiles": [],
+  "pages": {
+    "audited": 108,
+    "inMap": 54,
+    "notInMap": 54,
+    "failed": 0,
+    "failures": [],
+    "capReached": false
+  },
+  "counts": {
+    "text": {
+      "total": 1137,
+      "matched": 973,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 78,
+      "core": 3,
+      "unknown": 83,
+      "catalogue": 0,
+      "ignored": 31
+    },
+    "images": {
+      "total": 138,
+      "matched": 137,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 1,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 0
+    },
+    "links": {
+      "total": 576,
+      "matched": 317,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 0,
+      "unknown": 259,
+      "catalogue": 0,
+      "ignored": 2
+    }
+  },
+  "coverage": {
+    "text": 85.8,
+    "images": 100,
+    "links": 55
+  },
+  "holes": [
+    {
+      "kind": "text",
+      "value": "# Articles",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "main#main > div.es-wrap > header.es-cat-head > p.es-cat-count",
+      "pages": 32,
+      "firstPage": "/category/blog-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Leave blank",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.es-box > div.es-contact-form > form.ec-form > div.ec-form-field",
+      "pages": 1,
+      "firstPage": "/contact",
+      "accepted": "The Forms plugin's own label of its anti-spam field, not demo content a customer rewrites."
+    },
+    {
+      "kind": "text",
+      "value": "Page # of #",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "main#main > div.es-home-blog > nav.es-pager > p.es-page-count",
+      "pages": 45,
+      "firstPage": "/",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits: #",
+      "class": "template",
+      "cause": "words in the template's own source (stamped posts.capturing-essence-expressive-line-art-techniques-blog-health field hits: no slot holds these words)",
+      "evidence": "div.es-stack-info > dl.es-card-meta > div.es-card-hits > dd",
+      "pages": 320,
+      "firstPage": "/",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "#",
+      "class": "template",
+      "cause": "words in the template's own source (stamped posts.natural-remedies-for-common-ailments-blog-fashion field hits: no slot holds these words)",
+      "evidence": "div.es-side-text > div.es-info > span.es-info-item > span",
+      "pages": 53,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "link",
+      "value": "/author/adrian-perez",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "dl.es-card-meta > div.es-card-by > dd > a",
+      "pages": 46,
+      "firstPage": "/",
+      "accepted": "The route to an author's page, built from the slug of an author record; the author's name, photo and biography are slots of the content map."
+    },
+    {
+      "kind": "link",
+      "value": "/author/adrian-perez?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 1,
+      "firstPage": "/author/adrian-perez",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/author/alfonso-cortez",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-strip-content > p.es-strip-meta > span > a",
+      "pages": 31,
+      "firstPage": "/",
+      "accepted": "The route to an author's page, built from the slug of an author record; the author's name, photo and biography are slots of the content map."
+    },
+    {
+      "kind": "link",
+      "value": "/author/eula-ward",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-strip-content > p.es-strip-meta > span > a",
+      "pages": 50,
+      "firstPage": "/",
+      "accepted": "The route to an author's page, built from the slug of an author record; the author's name, photo and biography are slots of the content map."
+    },
+    {
+      "kind": "link",
+      "value": "/author/eula-ward?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 1,
+      "firstPage": "/author/eula-ward",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/author/faith-singleton",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-strip-content > p.es-strip-meta > span > a",
+      "pages": 29,
+      "firstPage": "/",
+      "accepted": "The route to an author's page, built from the slug of an author record; the author's name, photo and biography are slots of the content map."
+    },
+    {
+      "kind": "link",
+      "value": "/author/laverne-robbins",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-strip-content > p.es-strip-meta > span > a",
+      "pages": 67,
+      "firstPage": "/",
+      "accepted": "The route to an author's page, built from the slug of an author record; the author's name, photo and biography are slots of the content map."
+    },
+    {
+      "kind": "link",
+      "value": "/author/laverne-robbins?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 2,
+      "firstPage": "/author/laverne-robbins",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/author/laverne-robbins?page=3",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 2,
+      "firstPage": "/author/laverne-robbins",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/author/maxine-palmer",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-strip-content > p.es-strip-meta > span > a",
+      "pages": 37,
+      "firstPage": "/",
+      "accepted": "The route to an author's page, built from the slug of an author record; the author's name, photo and biography are slots of the content map."
+    },
+    {
+      "kind": "link",
+      "value": "/author/maxine-palmer?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 1,
+      "firstPage": "/author/maxine-palmer",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/author/shelia-ortiz",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > a",
+      "pages": 33,
+      "firstPage": "/blog/organic-geometry-exploring-geometric-line-art-blog-design",
+      "accepted": "The route to an author's page, built from the slug of an author record; the author's name, photo and biography are slots of the content map."
+    },
+    {
+      "kind": "link",
+      "value": "/author/shelia-ortiz?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 1,
+      "firstPage": "/author/shelia-ortiz",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/author/trevor-patrick",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-strip-content > p.es-strip-meta > span > a",
+      "pages": 42,
+      "firstPage": "/",
+      "accepted": "The route to an author's page, built from the slug of an author record; the author's name, photo and biography are slots of the content map."
+    },
+    {
+      "kind": "link",
+      "value": "/author/trevor-patrick?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 1,
+      "firstPage": "/author/trevor-patrick",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/author/woodrow-ortega",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "main#main > div.es-authors > article.es-author-card > a.es-author-photo",
+      "pages": 29,
+      "firstPage": "/our-authors",
+      "accepted": "The route to an author's page, built from the slug of an author record; the author's name, photo and biography are slots of the content map."
+    },
+    {
+      "kind": "link",
+      "value": "/category/blog-design?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 1,
+      "firstPage": "/category/blog-design",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/category/blog-health?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 1,
+      "firstPage": "/category/blog-health",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/design?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 4,
+      "firstPage": "/tag/design",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/design?page=3",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 4,
+      "firstPage": "/tag/design",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/design?page=4",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 4,
+      "firstPage": "/tag/design",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/design?page=5",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 4,
+      "firstPage": "/tag/design",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/health?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/health",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/health?page=3",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/health",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/health?page=4",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/health",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/health?page=5",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/health",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/health?page=6",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li.is-end > a",
+      "pages": 5,
+      "firstPage": "/tag/health",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/lifestyle?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/lifestyle",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/lifestyle?page=3",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/lifestyle",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/lifestyle?page=4",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/lifestyle",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/lifestyle?page=5",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/lifestyle",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/lifestyle?page=6",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li.is-end > a",
+      "pages": 5,
+      "firstPage": "/tag/lifestyle",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/technology?page=2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/technology",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/technology?page=3",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/technology",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/technology?page=4",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/technology",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/technology?page=5",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li > a",
+      "pages": 5,
+      "firstPage": "/tag/technology",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "/tag/technology?page=6",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.es-pager > ul.es-pagination > li.is-end > a",
+      "pages": 5,
+      "firstPage": "/tag/technology",
+      "accepted": "A pagination link the template builds from a page number: navigation of the template, not demo content."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fabstract-wonders-exploring-line-art-composition-blog-health&text=Abstract%20Wonders%3A%20Exploring%20Line%20Art%20Composi...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fabstract-wonders-exploring-line-art-composition-resources&text=Abstract%20Wonders%3A%20Exploring%20Line%20Art%20Composition",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/abstract-wonders-exploring-line-art-composition-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Farchitectural-wonders-line-art-in-buildings-and-landscapes-blog-design&text=Architectural%20Wonders%3A%20Line%20Art%20in%...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Farchitectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design&text=Architectural%20Wonders%3A%20Line%20Ar...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Farchitectural-wonders-line-art-in-buildings-and-landscapes-resources&text=Architectural%20Wonders%3A%20Line%20Art%20in%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fbeauty-in-simplicity-exploring-line-art&text=Beauty%20in%20Simplicity%3A%20Exploring%20Line%20Art",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/beauty-in-simplicity-exploring-line-art",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fbeyond-black-and-white-adding-colors-to-line-art-blog-design&text=Beyond%20Black%20and%20White%3A%20Adding%20Colors%20to%...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/beyond-black-and-white-adding-colors-to-line-art-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fbeyond-black-and-white-adding-colors-to-line-art-blog-normal-design&text=Beyond%20Black%20and%20White%3A%20Adding%20Color...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/beyond-black-and-white-adding-colors-to-line-art-blog-normal-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fcapturing-essence-expressive-line-art-techniques-blog-health&text=Capturing%20Essence%3A%20Expressive%20Line%20Art%20Tech...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fcapturing-essence-expressive-line-art-techniques-blog-normal-health&text=Capturing%20Essence%3A%20Expressive%20Line%20Art...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fcapturing-essence-expressive-line-art-techniques-resources&text=Capturing%20Essence%3A%20Expressive%20Line%20Art%20Techni...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdancing-with-lines-dynamic-line-art-expressions-blog-fashion&text=Dancing%20with%20Lines%3A%20Dynamic%20Line%20Art%20Expr...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdancing-with-lines-dynamic-line-art-expressions-blog-health&text=Dancing%20with%20Lines%3A%20Dynamic%20Line%20Art%20Expre...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdancing-with-lines-dynamic-line-art-expressions-blog-normal-fashion&text=Dancing%20with%20Lines%3A%20Dynamic%20Line%20Art...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-normal-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdrawing-with-elegance-the-art-of-line-work-blog-health&text=Drawing%20with%20Elegance%3A%20The%20Art%20of%20Line%20Work",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/drawing-with-elegance-the-art-of-line-work-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdrawing-with-elegance-the-art-of-line-work-blog-normal-health&text=Drawing%20with%20Elegance%3A%20The%20Art%20of%20Line%2...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/drawing-with-elegance-the-art-of-line-work-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fembracing-minimalism-line-art-creations-blog-health&text=Embracing%20Minimalism%3A%20Line%20Art%20Creations",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/embracing-minimalism-line-art-creations-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fembracing-minimalism-line-art-creations-blog-normal-health&text=Embracing%20Minimalism%3A%20Line%20Art%20Creations",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/embracing-minimalism-line-art-creations-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fessential-nutrients-for-optimal-health-blog-health&text=Essential%20Nutrients%20for%20Optimal%20Health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/essential-nutrients-for-optimal-health-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fessential-nutrients-for-optimal-health-resources-2&text=Essential%20Nutrients%20for%20Optimal%20Health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/essential-nutrients-for-optimal-health-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fexercise-routines-for-overall-fitness&text=Exercise%20Routines%20for%20Overall%20Fitness",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/exercise-routines-for-overall-fitness",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffitness-tips-for-a-healthy-lifestyle-blog-fashion&text=Fitness%20Tips%20for%20a%20Healthy%20Lifestyle",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffitness-tips-for-a-healthy-lifestyle-resources-2&text=Fitness%20Tips%20for%20a%20Healthy%20Lifestyle",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fitness-tips-for-a-healthy-lifestyle-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion&text=Fluid%20Lines%2C%20Infinite%20Possibilities%3A...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffluid-lines-infinite-possibilities-line-art-inspirations-blog-health&text=Fluid%20Lines%2C%20Infinite%20Possibilities%3A%...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion&text=Fluid%20Lines%2C%20Infinite%20Possibili...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffrom-lines-to-life-mastering-the-art-of-line-drawing&text=From%20Lines%20to%20Life%3A%20Mastering%20the%20Art%20of%20Line...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/from-lines-to-life-mastering-the-art-of-line-drawing",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-fashion&text=Harmony%20in%20Lines%3A%20Balancing%20Elements%20in%20L...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-health&text=Harmony%20in%20Lines%3A%20Balancing%20Elements%20in%20Li...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-normal-fashion&text=Harmony%20in%20Lines%3A%20Balancing%20Elements%2...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-normal-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-normal-health&text=Harmony%20in%20Lines%3A%20Balancing%20Elements%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fhealthy-eating-tips-for-busy-professionals&text=Healthy%20Eating%20Tips%20for%20Busy%20Professionals",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/healthy-eating-tips-for-busy-professionals",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fline-art-portraits-capturing-emotions-with-lines&text=Line%20Art%20Portraits%3A%20Capturing%20Emotions%20with%20Lines",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/line-art-portraits-capturing-emotions-with-lines",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmental-health-and-well-being-strategies-blog-health&text=Mental%20Health%20and%20Well-being%20Strategies",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mental-health-and-well-being-strategies-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmental-health-and-well-being-strategies-resources-2&text=Mental%20Health%20and%20Well-being%20Strategies",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mental-health-and-well-being-strategies-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmindful-eating-for-weight-management-blog-health&text=Mindful%20Eating%20for%20Weight%20Management",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mindful-eating-for-weight-management-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmindful-eating-for-weight-management-resources-2&text=Mindful%20Eating%20for%20Weight%20Management",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mindful-eating-for-weight-management-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnatural-remedies-for-common-ailments-blog-fashion&text=Natural%20Remedies%20for%20Common%20Ailments",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/natural-remedies-for-common-ailments-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnatural-remedies-for-common-ailments-resources-2&text=Natural%20Remedies%20for%20Common%20Ailments",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/natural-remedies-for-common-ailments-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnature-s-intricacy-botanical-line-art-explorations-blog-design&text=Nature's%20Intricacy%3A%20Botanical%20Line%20Art%20Ex...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/nature-s-intricacy-botanical-line-art-explorations-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnature-s-intricacy-botanical-line-art-explorations-resources&text=Nature's%20Intricacy%3A%20Botanical%20Line%20Art%20Expl...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/nature-s-intricacy-botanical-line-art-explorations-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Forganic-geometry-exploring-geometric-line-art-blog-design&text=Organic%20Geometry%3A%20Exploring%20Geometric%20Line%20Art",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/organic-geometry-exploring-geometric-line-art-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Forganic-geometry-exploring-geometric-line-art-blog-normal-design&text=Organic%20Geometry%3A%20Exploring%20Geometric%20Lin...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/organic-geometry-exploring-geometric-line-art-blog-normal-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Foutlining-creativity-line-art-for-illustrations-and-designs&text=Outlining%20Creativity%3A%20Line%20Art%20for%20Illustrat...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/outlining-creativity-line-art-for-illustrations-and-designs",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fsketching-stories-narrative-elements-in-line-art-blog-design&text=Sketching%20Stories%3A%20Narrative%20Elements%20in%20Li...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/sketching-stories-narrative-elements-in-line-art-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fsketching-stories-narrative-elements-in-line-art-resources&text=Sketching%20Stories%3A%20Narrative%20Elements%20in%20Line...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/sketching-stories-narrative-elements-in-line-art-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fthe-beauty-of-symmetry-symmetrical-line-art-designs&text=The%20Beauty%20of%20Symmetry%3A%20Symmetrical%20Line%20Art%20Des...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/the-beauty-of-symmetry-symmetrical-line-art-designs",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fthe-power-of-lines-creating-impactful-line-art&text=The%20Power%20of%20Lines%3A%20Creating%20Impactful%20Line%20Art",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/the-power-of-lines-creating-impactful-line-art",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fvintage-inspired-martini-cocktail-glasses&text=Vintage-inspired%20martini%20%26%20cocktail%20glasses",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fwhimsical-wonders-imaginative-line-art-creations-blog-design&text=Whimsical%20Wonders%3A%20Imaginative%20Line%20Art%20Cre...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/whimsical-wonders-imaginative-line-art-creations-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fwhimsical-wonders-imaginative-line-art-creations-resources&text=Whimsical%20Wonders%3A%20Imaginative%20Line%20Art%20Creat...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/whimsical-wonders-imaginative-line-art-creations-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fabstract-wonders-exploring-line-art-composition-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fabstract-wonders-exploring-line-art-composition-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/abstract-wonders-exploring-line-art-composition-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Farchitectural-wonders-line-art-in-buildings-and-landscapes-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Farchitectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Farchitectural-wonders-line-art-in-buildings-and-landscapes-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fbeauty-in-simplicity-exploring-line-art",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/beauty-in-simplicity-exploring-line-art",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fbeyond-black-and-white-adding-colors-to-line-art-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/beyond-black-and-white-adding-colors-to-line-art-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fbeyond-black-and-white-adding-colors-to-line-art-blog-normal-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/beyond-black-and-white-adding-colors-to-line-art-blog-normal-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fcapturing-essence-expressive-line-art-techniques-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fcapturing-essence-expressive-line-art-techniques-blog-normal-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fcapturing-essence-expressive-line-art-techniques-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdancing-with-lines-dynamic-line-art-expressions-blog-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdancing-with-lines-dynamic-line-art-expressions-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdancing-with-lines-dynamic-line-art-expressions-blog-normal-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-normal-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdrawing-with-elegance-the-art-of-line-work-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/drawing-with-elegance-the-art-of-line-work-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdrawing-with-elegance-the-art-of-line-work-blog-normal-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/drawing-with-elegance-the-art-of-line-work-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fembracing-minimalism-line-art-creations-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/embracing-minimalism-line-art-creations-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fembracing-minimalism-line-art-creations-blog-normal-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/embracing-minimalism-line-art-creations-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fessential-nutrients-for-optimal-health-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/essential-nutrients-for-optimal-health-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fessential-nutrients-for-optimal-health-resources-2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/essential-nutrients-for-optimal-health-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fexercise-routines-for-overall-fitness",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/exercise-routines-for-overall-fitness",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffitness-tips-for-a-healthy-lifestyle-blog-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffitness-tips-for-a-healthy-lifestyle-resources-2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fitness-tips-for-a-healthy-lifestyle-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffluid-lines-infinite-possibilities-line-art-inspirations-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffrom-lines-to-life-mastering-the-art-of-line-drawing",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/from-lines-to-life-mastering-the-art-of-line-drawing",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-normal-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-normal-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-normal-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fhealthy-eating-tips-for-busy-professionals",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/healthy-eating-tips-for-busy-professionals",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fline-art-portraits-capturing-emotions-with-lines",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/line-art-portraits-capturing-emotions-with-lines",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmental-health-and-well-being-strategies-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mental-health-and-well-being-strategies-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmental-health-and-well-being-strategies-resources-2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mental-health-and-well-being-strategies-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmindful-eating-for-weight-management-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mindful-eating-for-weight-management-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmindful-eating-for-weight-management-resources-2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mindful-eating-for-weight-management-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnatural-remedies-for-common-ailments-blog-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/natural-remedies-for-common-ailments-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnatural-remedies-for-common-ailments-resources-2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/natural-remedies-for-common-ailments-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnature-s-intricacy-botanical-line-art-explorations-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/nature-s-intricacy-botanical-line-art-explorations-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnature-s-intricacy-botanical-line-art-explorations-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/nature-s-intricacy-botanical-line-art-explorations-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Forganic-geometry-exploring-geometric-line-art-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/organic-geometry-exploring-geometric-line-art-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Forganic-geometry-exploring-geometric-line-art-blog-normal-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/organic-geometry-exploring-geometric-line-art-blog-normal-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Foutlining-creativity-line-art-for-illustrations-and-designs",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/outlining-creativity-line-art-for-illustrations-and-designs",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fsketching-stories-narrative-elements-in-line-art-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/sketching-stories-narrative-elements-in-line-art-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fsketching-stories-narrative-elements-in-line-art-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/sketching-stories-narrative-elements-in-line-art-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fthe-beauty-of-symmetry-symmetrical-line-art-designs",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/the-beauty-of-symmetry-symmetrical-line-art-designs",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fthe-power-of-lines-creating-impactful-line-art",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/the-power-of-lines-creating-impactful-line-art",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fvintage-inspired-martini-cocktail-glasses",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fwhimsical-wonders-imaginative-line-art-creations-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/whimsical-wonders-imaginative-line-art-creations-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fwhimsical-wonders-imaginative-line-art-creations-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/whimsical-wonders-imaginative-line-art-creations-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fabstract-wonders-exploring-line-art-composition-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fabstract-wonders-exploring-line-art-composition-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/abstract-wonders-exploring-line-art-composition-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Farchitectural-wonders-line-art-in-buildings-and-landscapes-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Farchitectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Farchitectural-wonders-line-art-in-buildings-and-landscapes-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fbeauty-in-simplicity-exploring-line-art",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/beauty-in-simplicity-exploring-line-art",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fbeyond-black-and-white-adding-colors-to-line-art-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/beyond-black-and-white-adding-colors-to-line-art-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fbeyond-black-and-white-adding-colors-to-line-art-blog-normal-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/beyond-black-and-white-adding-colors-to-line-art-blog-normal-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fcapturing-essence-expressive-line-art-techniques-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fcapturing-essence-expressive-line-art-techniques-blog-normal-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fcapturing-essence-expressive-line-art-techniques-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdancing-with-lines-dynamic-line-art-expressions-blog-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdancing-with-lines-dynamic-line-art-expressions-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdancing-with-lines-dynamic-line-art-expressions-blog-normal-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-normal-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdrawing-with-elegance-the-art-of-line-work-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/drawing-with-elegance-the-art-of-line-work-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fdrawing-with-elegance-the-art-of-line-work-blog-normal-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/drawing-with-elegance-the-art-of-line-work-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fembracing-minimalism-line-art-creations-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/embracing-minimalism-line-art-creations-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fembracing-minimalism-line-art-creations-blog-normal-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/embracing-minimalism-line-art-creations-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fessential-nutrients-for-optimal-health-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/essential-nutrients-for-optimal-health-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fessential-nutrients-for-optimal-health-resources-2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/essential-nutrients-for-optimal-health-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fexercise-routines-for-overall-fitness",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/exercise-routines-for-overall-fitness",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffitness-tips-for-a-healthy-lifestyle-blog-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffitness-tips-for-a-healthy-lifestyle-resources-2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fitness-tips-for-a-healthy-lifestyle-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffluid-lines-infinite-possibilities-line-art-inspirations-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Ffrom-lines-to-life-mastering-the-art-of-line-drawing",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/from-lines-to-life-mastering-the-art-of-line-drawing",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-normal-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-normal-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fharmony-in-lines-balancing-elements-in-line-art-blog-normal-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-normal-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fhealthy-eating-tips-for-busy-professionals",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/healthy-eating-tips-for-busy-professionals",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fline-art-portraits-capturing-emotions-with-lines",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/line-art-portraits-capturing-emotions-with-lines",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmental-health-and-well-being-strategies-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mental-health-and-well-being-strategies-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmental-health-and-well-being-strategies-resources-2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mental-health-and-well-being-strategies-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmindful-eating-for-weight-management-blog-health",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mindful-eating-for-weight-management-blog-health",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fmindful-eating-for-weight-management-resources-2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/mindful-eating-for-weight-management-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnatural-remedies-for-common-ailments-blog-fashion",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/natural-remedies-for-common-ailments-blog-fashion",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnatural-remedies-for-common-ailments-resources-2",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/natural-remedies-for-common-ailments-resources-2",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnature-s-intricacy-botanical-line-art-explorations-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/nature-s-intricacy-botanical-line-art-explorations-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fnature-s-intricacy-botanical-line-art-explorations-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/nature-s-intricacy-botanical-line-art-explorations-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Forganic-geometry-exploring-geometric-line-art-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/organic-geometry-exploring-geometric-line-art-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Forganic-geometry-exploring-geometric-line-art-blog-normal-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/organic-geometry-exploring-geometric-line-art-blog-normal-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Foutlining-creativity-line-art-for-illustrations-and-designs",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/outlining-creativity-line-art-for-illustrations-and-designs",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fsketching-stories-narrative-elements-in-line-art-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/sketching-stories-narrative-elements-in-line-art-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fsketching-stories-narrative-elements-in-line-art-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/sketching-stories-narrative-elements-in-line-art-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fthe-beauty-of-symmetry-symmetrical-line-art-designs",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/the-beauty-of-symmetry-symmetrical-line-art-designs",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fthe-power-of-lines-creating-impactful-line-art",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/the-power-of-lines-creating-impactful-line-art",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fvintage-inspired-martini-cocktail-glasses",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fwhimsical-wonders-imaginative-line-art-creations-blog-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/whimsical-wonders-imaginative-line-art-creations-blog-design",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4431%2Fblog%2Fwhimsical-wonders-imaginative-line-art-creations-resources",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.es-post-foot > div.es-share > div.es-share-list > a.es-round",
+      "pages": 1,
+      "firstPage": "/blog/whimsical-wonders-imaginative-line-art-creations-resources",
+      "accepted": "A share link the template builds from the page's own address for three social networks; it carries no demo content and no business fact (a customer's page gets its own address)."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 10",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 103",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/natural-remedies-for-common-ailments-blog-fashion",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 109",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 12",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-fashion",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 13",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 14",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-blog-normal-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 15",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-design",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 198",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 22",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/beauty-in-simplicity-exploring-line-art",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 23",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/beyond-black-and-white-adding-colors-to-line-art-blog-design",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 3",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/whimsical-wonders-imaginative-line-art-creations-blog-design",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 4",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 20,
+      "firstPage": "/blog/the-power-of-lines-creating-impactful-line-art",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 4310",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/healthy-eating-tips-for-busy-professionals",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 49",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/capturing-essence-expressive-line-art-techniques-blog-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 5",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 4,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 568",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "div.es-narrow > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/mental-health-and-well-being-strategies-blog-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 6",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 7",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 2,
+      "firstPage": "/blog/mindful-eating-for-weight-management-blog-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 71",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "div.es-post-top > div.es-info > span.es-info-item > span",
+      "pages": 1,
+      "firstPage": "/blog/essential-nutrients-for-optimal-health-blog-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 8",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 6,
+      "firstPage": "/blog/drawing-with-elegance-the-art-of-line-work-blog-normal-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Hits : 9",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field hits_label: no slot holds these words)",
+      "evidence": "article.es-article > div.es-info > span.es-info-item > span",
+      "pages": 3,
+      "firstPage": "/blog/sketching-stories-narrative-elements-in-line-art-blog-design",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "By Faith Singleton",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.abstract-wonders-exploring-line-art-composition-blog-health field author: no slot holds these words)",
+      "evidence": "li.es-strip-item > div.es-strip-content > p.es-strip-meta > span",
+      "pages": 23,
+      "firstPage": "/",
+      "accepted": "A byline the template composes from the word \"By\" (a slot of the chrome entry) and an author's name (a slot of the authors collection): both parts are slots of the content map."
+    },
+    {
+      "kind": "text",
+      "value": "198",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.abstract-wonders-exploring-line-art-composition-blog-health field hits: no slot holds these words)",
+      "evidence": "div.es-side-text > div.es-info > span.es-info-item > span",
+      "pages": 47,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "By Trevor Patrick",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.architectural-wonders-line-art-in-buildings-and-landscapes-blog-design field author: no slot holds these words)",
+      "evidence": "li.es-strip-item > div.es-strip-content > p.es-strip-meta > span",
+      "pages": 33,
+      "firstPage": "/",
+      "accepted": "A byline the template composes from the word \"By\" (a slot of the chrome entry) and an author's name (a slot of the authors collection): both parts are slots of the content map."
+    },
+    {
+      "kind": "text",
+      "value": "15",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.architectural-wonders-line-art-in-buildings-and-landscapes-blog-design field hits: no slot holds these words)",
+      "evidence": "div.es-side-text > div.es-info > span.es-info-item > span",
+      "pages": 47,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "By Alfonso Cortez",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.beauty-in-simplicity-exploring-line-art field author: no slot holds these words)",
+      "evidence": "li.es-strip-item > div.es-strip-content > p.es-strip-meta > span",
+      "pages": 25,
+      "firstPage": "/",
+      "accepted": "A byline the template composes from the word \"By\" (a slot of the chrome entry) and an author's name (a slot of the authors collection): both parts are slots of the content map."
+    },
+    {
+      "kind": "text",
+      "value": "22",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.beauty-in-simplicity-exploring-line-art field hits: no slot holds these words)",
+      "evidence": "div.es-side-text > div.es-info > span.es-info-item > span",
+      "pages": 47,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "By Maxine Palmer",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.beyond-black-and-white-adding-colors-to-line-art-blog-design field author: no slot holds these words)",
+      "evidence": "li.es-strip-item > div.es-strip-content > p.es-strip-meta > span",
+      "pages": 29,
+      "firstPage": "/",
+      "accepted": "A byline the template composes from the word \"By\" (a slot of the chrome entry) and an author's name (a slot of the authors collection): both parts are slots of the content map."
+    },
+    {
+      "kind": "text",
+      "value": "23",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.beyond-black-and-white-adding-colors-to-line-art-blog-design field hits: no slot holds these words)",
+      "evidence": "div.es-side-text > div.es-info > span.es-info-item > span",
+      "pages": 52,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "By Eula Ward",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.capturing-essence-expressive-line-art-techniques-blog-health field author: no slot holds these words)",
+      "evidence": "li.es-strip-item > div.es-strip-content > p.es-strip-meta > span",
+      "pages": 40,
+      "firstPage": "/",
+      "accepted": "A byline the template composes from the word \"By\" (a slot of the chrome entry) and an author's name (a slot of the authors collection): both parts are slots of the content map."
+    },
+    {
+      "kind": "text",
+      "value": "49",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.capturing-essence-expressive-line-art-techniques-blog-health field hits: no slot holds these words)",
+      "evidence": "div.es-side-text > div.es-info > span.es-info-item > span",
+      "pages": 53,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "14",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.capturing-essence-expressive-line-art-techniques-blog-normal-health field hits: no slot holds these words)",
+      "evidence": "div.es-mini-info > div.es-info > span.es-info-item > span",
+      "pages": 5,
+      "firstPage": "/blog/drawing-with-elegance-the-art-of-line-work-blog-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "By Laverne Robbins",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.dancing-with-lines-dynamic-line-art-expressions-blog-health field author: no slot holds these words)",
+      "evidence": "li.es-strip-item > div.es-strip-content > p.es-strip-meta > span",
+      "pages": 53,
+      "firstPage": "/",
+      "accepted": "A byline the template composes from the word \"By\" (a slot of the chrome entry) and an author's name (a slot of the authors collection): both parts are slots of the content map."
+    },
+    {
+      "kind": "text",
+      "value": "13",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.dancing-with-lines-dynamic-line-art-expressions-blog-health field hits: no slot holds these words)",
+      "evidence": "div.es-mini-info > div.es-info > span.es-info-item > span",
+      "pages": 7,
+      "firstPage": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-health",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "By Adrian Perez",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.essential-nutrients-for-optimal-health-blog-health field author: no slot holds these words)",
+      "evidence": "div.es-stack-info > dl.es-card-meta > div.es-card-by > dd",
+      "pages": 33,
+      "firstPage": "/",
+      "accepted": "A byline the template composes from the word \"By\" (a slot of the chrome entry) and an author's name (a slot of the authors collection): both parts are slots of the content map."
+    },
+    {
+      "kind": "text",
+      "value": "71",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.essential-nutrients-for-optimal-health-blog-health field hits: no slot holds these words)",
+      "evidence": "div.es-mini-info > div.es-info > span.es-info-item > span",
+      "pages": 4,
+      "firstPage": "/blog/mental-health-and-well-being-strategies-resources-2",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "By Woodrow Ortega",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.fitness-tips-for-a-healthy-lifestyle-blog-fashion field author: no slot holds these words)",
+      "evidence": "div.es-grid-info > dl.es-card-meta > div.es-card-by > dd",
+      "pages": 23,
+      "firstPage": "/category/blog-fashion",
+      "accepted": "A byline the template composes from the word \"By\" (a slot of the chrome entry) and an author's name (a slot of the authors collection): both parts are slots of the content map."
+    },
+    {
+      "kind": "text",
+      "value": "109",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.fitness-tips-for-a-healthy-lifestyle-blog-fashion field hits: no slot holds these words)",
+      "evidence": "div.es-mini-info > div.es-info > span.es-info-item > span",
+      "pages": 2,
+      "firstPage": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "4310",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.healthy-eating-tips-for-busy-professionals field hits: no slot holds these words)",
+      "evidence": "div.es-mini-info > div.es-info > span.es-info-item > span",
+      "pages": 2,
+      "firstPage": "/blog/fitness-tips-for-a-healthy-lifestyle-resources-2",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "568",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.mental-health-and-well-being-strategies-blog-health field hits: no slot holds these words)",
+      "evidence": "div.es-mini-info > div.es-info > span.es-info-item > span",
+      "pages": 4,
+      "firstPage": "/blog/essential-nutrients-for-optimal-health-resources-2",
+      "accepted": "Interface wording the template prints around a number (hits, page numbers, article counts): the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "By Shelia Ortiz",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped posts.organic-geometry-exploring-geometric-line-art-blog-design field author: no slot holds these words)",
+      "evidence": "div.es-stack-info > dl.es-card-meta > div.es-card-by > dd",
+      "pages": 25,
+      "firstPage": "/category/blog-design",
+      "accepted": "A byline the template composes from the word \"By\" (a slot of the chrome entry) and an author's name (a slot of the authors collection): both parts are slots of the content map."
+    }
+  ],
+  "hygiene": [],
+  "sitePages": [
+    {
+      "entity": "pages.home",
+      "title": "Home",
+      "route": "/",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.our-authors",
+      "title": "Authors",
+      "route": "/our-authors",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.contact",
+      "title": "Contact",
+      "route": "/contact",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.vintage-inspired-martini-cocktail-glasses",
+      "title": "Vintage-inspired martini & cocktail glasses",
+      "route": "/blog/vintage-inspired-martini-cocktail-glasses",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.healthy-eating-tips-for-busy-professionals",
+      "title": "Healthy Eating Tips for Busy Professionals",
+      "route": "/blog/healthy-eating-tips-for-busy-professionals",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mindful-eating-for-weight-management-blog-health",
+      "title": "Mindful Eating for Weight Management",
+      "route": "/blog/mindful-eating-for-weight-management-blog-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.exercise-routines-for-overall-fitness",
+      "title": "Exercise Routines for Overall Fitness",
+      "route": "/blog/exercise-routines-for-overall-fitness",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.beauty-in-simplicity-exploring-line-art",
+      "title": "Beauty in Simplicity: Exploring Line Art",
+      "route": "/blog/beauty-in-simplicity-exploring-line-art",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.drawing-with-elegance-the-art-of-line-work-blog-health",
+      "title": "Drawing with Elegance: The Art of Line Work",
+      "route": "/blog/drawing-with-elegance-the-art-of-line-work-blog-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.embracing-minimalism-line-art-creations-blog-health",
+      "title": "Embracing Minimalism: Line Art Creations",
+      "route": "/blog/embracing-minimalism-line-art-creations-blog-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.capturing-essence-expressive-line-art-techniques-blog-health",
+      "title": "Capturing Essence: Expressive Line Art Techniques",
+      "route": "/blog/capturing-essence-expressive-line-art-techniques-blog-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.from-lines-to-life-mastering-the-art-of-line-drawing",
+      "title": "From Lines to Life: Mastering the Art of Line Drawing",
+      "route": "/blog/from-lines-to-life-mastering-the-art-of-line-drawing",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.the-power-of-lines-creating-impactful-line-art",
+      "title": "The Power of Lines: Creating Impactful Line Art",
+      "route": "/blog/the-power-of-lines-creating-impactful-line-art",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.fluid-lines-infinite-possibilities-line-art-inspirations-blog-health",
+      "title": "Fluid Lines, Infinite Possibilities: Line Art Inspirations",
+      "route": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.dancing-with-lines-dynamic-line-art-expressions-blog-health",
+      "title": "Dancing with Lines: Dynamic Line Art Expressions",
+      "route": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.harmony-in-lines-balancing-elements-in-line-art-blog-health",
+      "title": "Harmony in Lines: Balancing Elements in Line Art",
+      "route": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.the-beauty-of-symmetry-symmetrical-line-art-designs",
+      "title": "The Beauty of Symmetry: Symmetrical Line Art Designs",
+      "route": "/blog/the-beauty-of-symmetry-symmetrical-line-art-designs",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.beyond-black-and-white-adding-colors-to-line-art-blog-design",
+      "title": "Beyond Black and White: Adding Colors to Line Art",
+      "route": "/blog/beyond-black-and-white-adding-colors-to-line-art-blog-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.sketching-stories-narrative-elements-in-line-art-blog-design",
+      "title": "Sketching Stories: Narrative Elements in Line Art",
+      "route": "/blog/sketching-stories-narrative-elements-in-line-art-blog-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.organic-geometry-exploring-geometric-line-art-blog-design",
+      "title": "Organic Geometry: Exploring Geometric Line Art",
+      "route": "/blog/organic-geometry-exploring-geometric-line-art-blog-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.line-art-portraits-capturing-emotions-with-lines",
+      "title": "Line Art Portraits: Capturing Emotions with Lines",
+      "route": "/blog/line-art-portraits-capturing-emotions-with-lines",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.nature-s-intricacy-botanical-line-art-explorations-blog-design",
+      "title": "Nature's Intricacy: Botanical Line Art Explorations",
+      "route": "/blog/nature-s-intricacy-botanical-line-art-explorations-blog-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.architectural-wonders-line-art-in-buildings-and-landscapes-blog-design",
+      "title": "Architectural Wonders: Line Art in Buildings and Landscapes",
+      "route": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.outlining-creativity-line-art-for-illustrations-and-designs",
+      "title": "Outlining Creativity: Line Art for Illustrations and Designs",
+      "route": "/blog/outlining-creativity-line-art-for-illustrations-and-designs",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.whimsical-wonders-imaginative-line-art-creations-blog-design",
+      "title": "Whimsical Wonders: Imaginative Line Art Creations",
+      "route": "/blog/whimsical-wonders-imaginative-line-art-creations-blog-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.harmony-in-lines-balancing-elements-in-line-art-blog-fashion",
+      "title": "Harmony in Lines: Balancing Elements in Line Art",
+      "route": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-fashion",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.dancing-with-lines-dynamic-line-art-expressions-blog-fashion",
+      "title": "Dancing with Lines: Dynamic Line Art Expressions",
+      "route": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-fashion",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion",
+      "title": "Fluid Lines, Infinite Possibilities: Line Art Inspirations",
+      "route": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.harmony-in-lines-balancing-elements-in-line-art-blog-normal-health",
+      "title": "Harmony in Lines: Balancing Elements in Line Art",
+      "route": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-normal-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.capturing-essence-expressive-line-art-techniques-blog-normal-health",
+      "title": "Capturing Essence: Expressive Line Art Techniques",
+      "route": "/blog/capturing-essence-expressive-line-art-techniques-blog-normal-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.embracing-minimalism-line-art-creations-blog-normal-health",
+      "title": "Embracing Minimalism: Line Art Creations",
+      "route": "/blog/embracing-minimalism-line-art-creations-blog-normal-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.drawing-with-elegance-the-art-of-line-work-blog-normal-health",
+      "title": "Drawing with Elegance: The Art of Line Work",
+      "route": "/blog/drawing-with-elegance-the-art-of-line-work-blog-normal-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design",
+      "title": "Architectural Wonders: Line Art in Buildings and Landscapes",
+      "route": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.organic-geometry-exploring-geometric-line-art-blog-normal-design",
+      "title": "Organic Geometry: Exploring Geometric Line Art",
+      "route": "/blog/organic-geometry-exploring-geometric-line-art-blog-normal-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.beyond-black-and-white-adding-colors-to-line-art-blog-normal-design",
+      "title": "Beyond Black and White: Adding Colors to Line Art",
+      "route": "/blog/beyond-black-and-white-adding-colors-to-line-art-blog-normal-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.fluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion",
+      "title": "Fluid Lines, Infinite Possibilities: Line Art Inspirations",
+      "route": "/blog/fluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.dancing-with-lines-dynamic-line-art-expressions-blog-normal-fashion",
+      "title": "Dancing with Lines: Dynamic Line Art Expressions",
+      "route": "/blog/dancing-with-lines-dynamic-line-art-expressions-blog-normal-fashion",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.harmony-in-lines-balancing-elements-in-line-art-blog-normal-fashion",
+      "title": "Harmony in Lines: Balancing Elements in Line Art",
+      "route": "/blog/harmony-in-lines-balancing-elements-in-line-art-blog-normal-fashion",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.whimsical-wonders-imaginative-line-art-creations-resources",
+      "title": "Whimsical Wonders: Imaginative Line Art Creations",
+      "route": "/blog/whimsical-wonders-imaginative-line-art-creations-resources",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.architectural-wonders-line-art-in-buildings-and-landscapes-resources",
+      "title": "Architectural Wonders: Line Art in Buildings and Landscapes",
+      "route": "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-resources",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.nature-s-intricacy-botanical-line-art-explorations-resources",
+      "title": "Nature's Intricacy: Botanical Line Art Explorations",
+      "route": "/blog/nature-s-intricacy-botanical-line-art-explorations-resources",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.sketching-stories-narrative-elements-in-line-art-resources",
+      "title": "Sketching Stories: Narrative Elements in Line Art",
+      "route": "/blog/sketching-stories-narrative-elements-in-line-art-resources",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.abstract-wonders-exploring-line-art-composition-resources",
+      "title": "Abstract Wonders: Exploring Line Art Composition",
+      "route": "/blog/abstract-wonders-exploring-line-art-composition-resources",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.capturing-essence-expressive-line-art-techniques-resources",
+      "title": "Capturing Essence: Expressive Line Art Techniques",
+      "route": "/blog/capturing-essence-expressive-line-art-techniques-resources",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mindful-eating-for-weight-management-resources-2",
+      "title": "Mindful Eating for Weight Management",
+      "route": "/blog/mindful-eating-for-weight-management-resources-2",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.essential-nutrients-for-optimal-health-resources-2",
+      "title": "Essential Nutrients for Optimal Health",
+      "route": "/blog/essential-nutrients-for-optimal-health-resources-2",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mental-health-and-well-being-strategies-resources-2",
+      "title": "Mental Health and Well-being Strategies",
+      "route": "/blog/mental-health-and-well-being-strategies-resources-2",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.natural-remedies-for-common-ailments-resources-2",
+      "title": "Natural Remedies for Common Ailments",
+      "route": "/blog/natural-remedies-for-common-ailments-resources-2",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.fitness-tips-for-a-healthy-lifestyle-resources-2",
+      "title": "Fitness Tips for a Healthy Lifestyle",
+      "route": "/blog/fitness-tips-for-a-healthy-lifestyle-resources-2",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.abstract-wonders-exploring-line-art-composition-blog-health",
+      "title": "Abstract Wonders: Exploring Line Art Composition",
+      "route": "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mental-health-and-well-being-strategies-blog-health",
+      "title": "Mental Health and Well-being Strategies",
+      "route": "/blog/mental-health-and-well-being-strategies-blog-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.essential-nutrients-for-optimal-health-blog-health",
+      "title": "Essential Nutrients for Optimal Health",
+      "route": "/blog/essential-nutrients-for-optimal-health-blog-health",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+      "title": "Fitness Tips for a Healthy Lifestyle",
+      "route": "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.natural-remedies-for-common-ailments-blog-fashion",
+      "title": "Natural Remedies for Common Ailments",
+      "route": "/blog/natural-remedies-for-common-ailments-blog-fashion",
+      "opens": "live",
+      "status": 200
+    }
+  ],
+  "labelRules": {
+    "version": "label-rules/1",
+    "roleVocabularyVersion": "place-content-roles/3",
+    "applies": true,
+    "r1": {
+      "facts": 127,
+      "slots": 349,
+      "percent": 36.4
+    },
+    "rules": {
+      "R2": {
+        "title": "fact-like sample without a contact or price role",
+        "count": 0,
+        "keys": []
+      },
+      "R3": {
+        "title": "URL slot without a role",
+        "count": 0,
+        "keys": []
+      },
+      "R4": {
+        "title": "repeat or CTA not grouped",
+        "count": 0,
+        "keys": []
+      },
+      "R5": {
+        "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
+        "count": 0,
+        "keys": []
+      },
+      "R6": {
+        "title": "link or list item inside a fact slot",
+        "count": 0,
+        "keys": []
+      },
+      "R7": {
+        "title": "siblings with different roles",
+        "count": 0,
+        "keys": []
+      },
+      "R8": {
+        "title": "adjacent short slots on one line (a cut heading)",
+        "count": 0,
+        "keys": []
+      },
+      "R9": {
+        "title": "fact-like hole",
+        "count": 0,
+        "keys": []
+      }
+    }
+  }
+}
