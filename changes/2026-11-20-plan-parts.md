@@ -1,0 +1,3 @@
+- **A chain build plans its first draft in three parts at once, by page groups** — David (WO pipeline) · #708 · `perf/wo-plan-parts` · 2026-11-20
+  **Affects:** Rebuild and deploy tracy-web. Chain planner runs are started with `--parallel-pages 3` (`step-chain-steps.js` `planArgs`); the planner bench's parts (#645) were already in; bench runs started by hand plan as before. Same prompt, checker, effort and visual review; the merged plan is checked once.
+  **Why / Measured:** Dev 16/11/2026: planner round 0 took 357 to 753 s, one writing turn 158 to 495 s; lat13 to lat17 (17–19/11/2026) the plan step was 7 to 14.5 minutes, the longest of every build. After-deploy numbers in a comment on the PR. Case REG-PR-708-plan-parts.
