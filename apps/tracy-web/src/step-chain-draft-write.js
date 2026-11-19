@@ -25,6 +25,7 @@
 import { createHash } from 'node:crypto'
 import { planCountsOf } from 'website-opportunities/domain/draft-write-coverage.mjs'
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
+import { withoutGone } from 'website-opportunities/domain/draft-write-skip.mjs'
 import { runOf } from './step-chain-draft-write-kinds.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -90,6 +91,23 @@ const placesLeftOf = (state) =>
       }
     : {}
 
+/** An operation the doors failed on, as the build result keeps it: codes and ids only. */
+const failedItemOf = (op, error) => ({
+  code: error?.code === 'read_back_mismatch' ? 'read_back_mismatch' : 'redo_failed',
+  op: op.key,
+  place: error?.details?.slot ?? error?.details?.ref ?? null,
+  reason: typeof error?.code === 'string' ? error.code : null,
+  at: 'door'
+})
+
+/** How many page operations of the plan ran (a plan with none to write counts as one). */
+function pagesWrittenOf(plan, report) {
+  const pages = plan.ops.filter((op) => op.kind === 'menuItem.create')
+  if (!pages.length) return 1
+  const ran = new Set(report.ran)
+  return pages.filter((op) => ran.has(op.key)).length
+}
+
 /**
  * Run a write plan.
  * @param {{plan: object, doors: object, record: {state?: object, save?: (state: object) => Promise<void>},
@@ -98,7 +116,9 @@ const placesLeftOf = (state) =>
  *   input `record`: the run record, kept between attempts and runs (`state` is resumed from, `save` is called after
  *   every step of an op); `drawInitials`: draws the initials picture of a person with no photo; `now`: the clock the
  *   created articles are dated from on the first run; `pictureLabels`: the research labels of the owner photos by
- *   address (`picture-research-labels.mjs`), read by the photo cut (`step-chain-draft-photo-cut.js`)
+ *   address (`picture-research-labels.mjs`), read by the photo cut (`step-chain-draft-photo-cut.js`); `skipFailed`: the
+ *   build's policy (#575), an operation that fails after its redo is left out and listed in `skippedItems`, and the
+ *   run goes on; only no page written at all stops it (`no_page_written`)
  * @returns {Promise<{status: 'done', ran: string[], counts: object, unproven: object[]}>}
  */
 export async function runDraftWrite({
@@ -109,7 +129,8 @@ export async function runDraftWrite({
   drawInitials,
   runId = 'draft',
   now = () => Date.now(),
-  pictureLabels = null
+  pictureLabels = null,
+  skipFailed = false
 }) {
   const state = stateOf(record, plan, now)
   const report = {
@@ -123,6 +144,8 @@ export async function runDraftWrite({
     conflicts: [...list(plan.conflicts)],
     // Words the plan changed before any door (control characters out, plugin codes neutralised), with a code.
     cleaned: [...list(plan.cleaned)],
+    // The items left out, each with a code and ids, never the words (#575): refused before any door, or failed at it.
+    skippedItems: [...list(plan.skippedItems)],
     // A revision run (#599): the operations the site already holds from the previous build run nothing.
     ...(state.kept ? { kept: state.kept.length } : {})
   }
@@ -143,10 +166,15 @@ export async function runDraftWrite({
     // One id per door call of an operation, the same on every retry and resume: `<run>:<op>:<call>`.
     applyId: (op, call) => `${runId}:${op.key}:${call}`
   }
-  for (const op of plan.ops) {
-    if (state.done.includes(op.key) || kept.has(op.key)) continue
-    const run = runOf(op)
-    if (!run) throw new DraftWriteError('op_unknown', `no way to run ${op.kind}`, { op: op.key })
+  // The operations the doors failed on in this run: what names one loses that value only (`withoutGone`).
+  const gone = new Set()
+  for (const planned of plan.ops) {
+    if (state.done.includes(planned.key) || kept.has(planned.key)) continue
+    const run = runOf(planned)
+    if (!run) throw new DraftWriteError('op_unknown', `no way to run ${planned.kind}`, { op: planned.key })
+    const live = skipFailed ? withoutGone(planned, gone, plan, 'door') : { op: planned, skipped: [] }
+    for (const { value: _v, ...item } of live.skipped) report.skippedItems.push(item)
+    const op = live.op
     for (let attempt = 1; ; attempt++) {
       try {
         await run(op, ctx)
@@ -166,6 +194,12 @@ export async function runDraftWrite({
           }
           // The process went away: the error is passed on as it is, with what ran, so a half site is never silent.
           if (error?.fatal) throw Object.assign(error, { report: failed })
+          // The build's policy (#575): one operation that fails is left out and listed, and the rest is written.
+          if (skipFailed) {
+            report.skippedItems.push(failedItemOf(op, error))
+            gone.add(op.key)
+            break
+          }
           const code = error?.code === 'read_back_mismatch' ? 'read_back_mismatch' : 'redo_failed'
           throw Object.assign(
             new DraftWriteError(code, `${op.key} failed ${attempt} time(s)`, {
@@ -178,10 +212,21 @@ export async function runDraftWrite({
         }
       }
     }
+    if (gone.has(op.key)) continue
     state.done.push(op.key)
     report.ran.push(op.key)
     await ctx.save()
   }
+  // A site with no page written is no site: the only failure of the door stage that stops the build.
+  if (skipFailed && pagesWrittenOf(plan, report) === 0)
+    throw Object.assign(new DraftWriteError('no_page_written', 'no page of the plan was written', {}), {
+      report: {
+        ...report,
+        status: 'failed',
+        failed: { op: null, code: 'no_page_written' },
+        ...placesLeftOf(state)
+      }
+    })
   // Each entry counted once: written by an operation, conflicted (lost its place, written nowhere) or skipped.
   return { ...report, ...placesLeftOf(state), status: 'done', counts: planCountsOf(plan) }
 }

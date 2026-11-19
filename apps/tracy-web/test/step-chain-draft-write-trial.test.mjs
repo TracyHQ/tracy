@@ -50,11 +50,12 @@ test('a done write carries its order and plan; keepTrial gets them; the record k
 
 test('a failed write carries its order, its plan and the report on error.value; the record keeps none of them', async () => {
   const kept = []
-  const error = await write(blankSite({ fail: [30, 31] }), kept)({ runId: 't2' }, inputs()).then(
+  // One operation that fails is left out and listed (#575); the process going away still fails the write.
+  const error = await write(blankSite({ crash: 30 }), kept)({ runId: 't2' }, inputs()).then(
     () => assert.fail('the step passed'),
     (e) => e
   )
-  assert.equal(error.code, 'redo_failed')
+  assert.equal(error.code, 'crash')
   assert.equal(error.value.report.status, 'failed')
   assert.equal(error.value.plan.ops.length, floristPlan.ops.length)
   assert.equal(error.value.order.schema, florist.order.schema)
@@ -67,13 +68,15 @@ test('a failed write carries its order, its plan and the report on error.value; 
 
 test('a plan the guards refuse: error.value names the order, no plan, no report; nothing is recorded', async () => {
   const kept = []
+  // A block the approved plan does not place is a problem of the whole plan: it still stops before any door.
   const held = inputs()
-  held.plan.profile = { ...held.plan.profile, withheld: { names: ['Larkspur Blooms'] } }
+  held.plan.plan = structuredClone(held.plan.plan)
+  held.plan.plan.pages[0].blocks.splice(3, 1)
   const error = await write(blankSite(), kept)({ runId: 't3' }, held).then(
     () => assert.fail('the step passed'),
     (e) => e
   )
-  assert.equal(error.code, 'held_text_in_value')
+  assert.equal(error.code, 'block_not_approved')
   assert.equal(error.value.plan, null)
   assert.equal(error.value.report, null)
   assert.ok(error.value.order)

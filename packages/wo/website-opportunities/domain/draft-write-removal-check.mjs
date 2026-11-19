@@ -28,12 +28,16 @@ export function removalProblems(op, report) {
     try {
       html.set(key, memoryHtml.remove(html.get(key), r.xpath))
     } catch {
-      report('removal_element_gone', {
-        op: op.key,
-        entity: r.loc?.entity ?? null,
-        xpath: r.xpath,
-        rule: r.rule
-      })
+      report(
+        'removal_element_gone',
+        {
+          op: op.key,
+          entity: r.loc?.entity ?? null,
+          xpath: r.xpath,
+          rule: r.rule
+        },
+        r
+      )
     }
   }
 }

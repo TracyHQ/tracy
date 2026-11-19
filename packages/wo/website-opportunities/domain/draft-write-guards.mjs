@@ -37,6 +37,7 @@ import { libraryHtmlProblems } from './draft-write-library-check.mjs'
 import { addressRunsCode, runsCodeIn } from './draft-write-markup.mjs'
 import { nameProblems, placeProblems } from './draft-write-place-guard.mjs'
 import { removalProblems } from './draft-write-removal-check.mjs'
+import { skipItems } from './draft-write-skip.mjs'
 import { addressAt, linkOf, PLAIN_COLUMNS, plainAt, TAG_START } from './draft-write-place-kinds.mjs'
 import { DOUBLE_PARENTHESIS } from './draft-write-tags.mjs'
 import { heldTextsOf } from './plan-withheld.mjs'
@@ -163,36 +164,50 @@ function textsOf(plan) {
 }
 
 /**
- * Hold a plan to the guards; throws on the first failed check with every problem.
+ * Hold a plan to the guards; throws on the first failed check with every problem. With `skipItems` (the build's
+ * policy, #575) a problem of one item (a value, a removal, an operation) takes that item out of the plan and is listed
+ * in `plan.skippedItems` (`draft-write-skip.mjs`); only a problem of the whole plan, or no page left, still throws.
  * @param {object} plan the write plan
- * @param {{order: object, kit: object, withheld?: object, approved?: object, iconKeys?: string[]}} ctx
+ * @param {{order: object, kit: object, withheld?: object, approved?: object, iconKeys?: string[], skipItems?: boolean}} ctx
  */
 export function guardPlan(plan, ctx) {
   const problems = []
+  const items = []
   const report = (code, details) => problems.push({ code, ...details })
+  // A problem of one item: reported, and remembered with the item it takes out.
+  const of = (target) => (code, details) => {
+    report(code, details)
+    items.push({ code, details, ...target })
+  }
   const entries = new Map(
     placesOfOrder(ctx.order).flatMap(({ place }) => list(place.fields).map((e) => [e.place, e]))
   )
   const classes = new Set(Object.values(ctx.kit.mapping.networkIconClasses?.classes ?? {}))
   const guard = { kit: ctx.kit, entries, classes }
+  const heldTexts = heldTextsOf(ctx.withheld)
+  const held = (texts) => heldTexts.length > 0 && texts.some((t) => heldInLeaf(t, heldTexts))
   orderProblems(ctx.order, ctx, report)
   for (const op of plan.ops) {
-    if (op.kind === 'picture.upload') pictureProblems(op, report)
-    if (op.kind === 'library.create') libraryHtmlProblems(op, report)
-    columnProblems(op, report, ctx.kit.mapping)
-    removalProblems(op, report)
-    for (const v of list(op.values)) valueProblems(op, v, guard, report)
+    const opReport = of({ op })
+    if (op.kind === 'picture.upload') pictureProblems(op, opReport)
+    if (op.kind === 'library.create') libraryHtmlProblems(op, opReport)
+    columnProblems(op, opReport, ctx.kit.mapping)
+    removalProblems(op, (code, details, remove) => of({ op, remove })(code, details))
+    for (const v of list(op.values)) {
+      valueProblems(op, v, guard, of({ op, value: v }))
+      if (typeof v.value === 'string' && held([v.value]))
+        of({ op, value: v })('held_text_in_value', { op: op.key, slot: v.loc?.slot ?? null, entry: v.entry })
+    }
+    if (held(textsOf({ ops: [{ ...op, values: [] }] }))) opReport('held_text_in_value', { op: op.key })
   }
   for (const c of list(plan.controls))
     if (c.written.some(Boolean) && !c.written.every(Boolean))
       report('pair_incomplete', { record: c.record, fields: c.fields })
   for (const pair of list(plan.pairs)) report('pair_incomplete', pair)
-  const heldTexts = heldTextsOf(ctx.withheld)
-  if (heldTexts.length && textsOf(plan).some((t) => heldInLeaf(t, heldTexts)))
-    report('held_text_in_value', { count: heldTexts.length })
-  if (problems.length)
-    throw new DraftWriteError(problems[0].code, `${problems.length} problem(s) before any door call`, {
-      problems: problems.slice(0, 20),
-      problemsCount: problems.length
-    })
+  if (!problems.length) return
+  if (ctx.skipItems && problems.length === items.length) return skipItems(plan, items)
+  throw new DraftWriteError(problems[0].code, `${problems.length} problem(s) before any door call`, {
+    problems: problems.slice(0, 20),
+    problemsCount: problems.length
+  })
 }

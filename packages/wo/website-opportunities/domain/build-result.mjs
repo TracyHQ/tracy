@@ -11,13 +11,25 @@
 //   write      `{state, ops}`: the run record's state (`{mark, ids, paths, done, seq, base, kept, rewrite, undo}`) and the
 //              ops record (`opsRecordOf`); `undo` is what a revision run wrote over, by address, for the restore;
 //              `wrote` the sha256 of the value the build (and the builds before it) last wrote at each place
+//   skipped    the items the write left out (#575): `{code, op, place, reason, at}` each, codes and ids only
 //   status     `done`; only a build whose write is done can be revised
 export const BUILD_RESULT_SCHEMA = 'tracy-build-result/v1'
 
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 
 /** The build result of a finished run. */
-export function buildResultOf({ ref, previous = null, plan, profile, kit, copy, replies, state, ops }) {
+export function buildResultOf({
+  ref,
+  previous = null,
+  plan,
+  profile,
+  kit,
+  copy,
+  replies,
+  state,
+  ops,
+  skipped
+}) {
   return {
     schema: BUILD_RESULT_SCHEMA,
     ref,
@@ -37,7 +49,7 @@ export function buildResultOf({ ref, previous = null, plan, profile, kit, copy, 
         }
       : null,
     replies: Array.isArray(replies) ? replies : [],
-    write: { state, ops }
+    write: { state, ops, ...(Array.isArray(skipped) && skipped.length ? { skipped } : {}) }
   }
 }
 

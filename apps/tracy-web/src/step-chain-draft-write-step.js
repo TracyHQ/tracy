@@ -69,6 +69,8 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
       accentShifts: accentShiftsOf(inputs.plan?.brand, inputs.plan?.plan?.look),
       withheld: inputs.plan?.profile?.withheld,
       approved: inputs.plan?.plan,
+      // The build's policy (#575): one item a guard refuses is left out and listed, never the whole build.
+      skipItems: true,
       iconKeys: (iconLibrary?.()?.icons ?? []).map((icon) => icon?.name)
     })
     const record = (await wiring.record?.(ctx)) ?? {}
@@ -80,6 +82,8 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
       runId: ctx.runId ?? 'draft',
       openStored: (id) => wiring.openStored(id, ctx),
       drawInitials: wiring.drawInitials ?? drawInitials,
+      // One operation the doors fail on is left out and listed; the rest is written (#575).
+      skipFailed: true,
       // The research labels of the owner photos, by address: the photo cut keeps their subject whole.
       pictureLabels: researchLabelsOf(inputs.plan?.research?.brief, inputs.plan?.research?.manifest),
       // The clock the created articles are dated from (tests fix it; the server leaves the wall clock).
@@ -99,8 +103,18 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
       copy: inputs.copy,
       replies: [...(inputs.pictures?.replies ?? []), ...(inputs.icons?.replies ?? [])],
       state,
-      ops: opsRecordOf(plan)
+      ops: opsRecordOf(plan),
+      skipped: report.skippedItems
     })
+    // The items left out, for the logs: codes and ids only, never the owner's words.
+    if (report.skippedItems?.length)
+      console.warn(
+        JSON.stringify({
+          event: 'draft_write_items_skipped',
+          run: ctx.runId ?? null,
+          items: report.skippedItems
+        })
+      )
     await builds?.keep?.(build, ctx)
     await keep(report)
     return {
@@ -122,6 +136,8 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary, builds,
           })),
           // The created legal pages and the not-found page the write does not build, with the reason (#575).
           notBuilt: report.notBuilt ?? [],
+          // The items left out, each a code with ids (#575): kept out of the owner's screen for now.
+          skippedItems: report.skippedItems ?? [],
           // Two entries with other words for one place: how many lost a place, and which (entry ids, never the words).
           conflicts: { count: report.counts.conflicts.length, entries: report.counts.conflicts },
           ...(report.delta ? { delta: report.delta } : {})

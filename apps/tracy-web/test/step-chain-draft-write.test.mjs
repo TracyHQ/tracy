@@ -56,38 +56,59 @@ test('with doors the step writes the order and its report is done', async () => 
   assert.deepEqual(snapshotOf(memory), snapshotOf(clean))
 })
 
-test('a guard that fails stops the step before any door call', async () => {
+test('a value a guard refuses is left out and listed; a problem of the whole plan stops before any door call', async () => {
+  // A held name: every value and record holding it is left out (#575), the rest is written, and nothing shows it.
   const memory = blankSite()
   const held = inputs()
   held.plan.profile = { ...held.plan.profile, withheld: { names: ['Larkspur Blooms'] } }
-  const error = await failure(writeOf(wiringOf(memory))({ runId: 'r3' }, held))
-  assert.equal(error.code, 'held_text_in_value')
-  assert.equal(error.noRerun, true)
-  assert.equal(memory.calls, 0)
+  const done = await writeOf(wiringOf(memory))({ runId: 'r3' }, held)
+  assert.equal(done.value.report.status, 'done')
+  const skipped = done.value.recorded.skippedItems
+  assert.ok(skipped.some((s) => s.code === 'held_text_in_value' && s.at === 'plan'))
+  assert.ok(!JSON.stringify(snapshotOf(memory)).includes('Larkspur Blooms'))
+  assert.ok(!JSON.stringify(skipped).includes('Larkspur'))
+  const untouched = blankSite()
   const unapproved = inputs()
   unapproved.plan.plan = structuredClone(unapproved.plan.plan)
   unapproved.plan.plan.pages[0].blocks.splice(3, 1)
-  assert.equal(
-    (await failure(writeOf(wiringOf(memory))({ runId: 'r3' }, unapproved))).code,
-    'block_not_approved'
-  )
-  assert.equal(memory.calls, 0)
+  const error = await failure(writeOf(wiringOf(untouched))({ runId: 'r3' }, unapproved))
+  assert.equal(error.code, 'block_not_approved')
+  assert.equal(error.noRerun, true)
+  assert.equal(untouched.calls, 0)
 })
 
-test('a door that fails twice stops the step with the report of what ran; a later run with the same record resumes', async () => {
+test('an operation the doors fail on twice is left out and listed, the rest is written; a later run writes it', async () => {
   const memory = blankSite({ fail: [30, 31] })
   const record = {}
   const step = writeOf(wiringOf(memory, record))
-  const error = await failure(step({ runId: 'r4' }, inputs()))
-  assert.equal(error.code, 'redo_failed')
-  assert.equal(error.value.report.status, 'failed')
-  const ran = error.value.report.ran.length
-  assert.ok(ran > 0 && ran < floristPlan.ops.length)
+  const first = await step({ runId: 'r4' }, inputs())
+  assert.equal(first.value.report.status, 'done')
+  const failed = first.value.recorded.skippedItems
+  // The copy the doors failed on, and its assignment, which names the copy: both listed, nothing else lost.
+  assert.deepEqual(
+    failed.map((f) => [f.code, f.at]),
+    [
+      ['redo_failed', 'door'],
+      ['redo_failed', 'door']
+    ]
+  )
+  assert.equal(first.value.report.ran.length, floristPlan.ops.length - failed.length)
   const again = await step({ runId: 'r4' }, inputs())
   assert.equal(again.value.report.status, 'done')
-  const clean = blankSite()
-  await writeOf(wiringOf(clean))({ runId: 'r4' }, inputs())
-  assert.deepEqual(snapshotOf(memory), snapshotOf(clean))
+  assert.deepEqual(again.value.recorded.skippedItems, [])
+  assert.equal(again.value.report.ran.length, floristPlan.ops.length)
+})
+
+test('a run whose doors write no page at all stops typed: no site is no site', async () => {
+  const memory = blankSite()
+  const pages = memory.doors.update
+  memory.doors.update = async (input) => {
+    if (input.kind === 'menuItem') throw Object.assign(new Error('refused'), { code: 'scripted_refusal' })
+    return pages(input)
+  }
+  const error = await failure(writeOf(wiringOf(memory))({ runId: 'r9' }, inputs()))
+  assert.equal(error.code, 'no_page_written')
+  assert.equal(error.value.report.status, 'failed')
 })
 
 test('an icon picture of the order must be a name of the icon library the icons step chose from', async () => {
