@@ -2,7 +2,7 @@
 // turns with their durations, tokens and tool names, and nothing of what was said.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { benchRunTiming, failuresIn, toolsOf } from '../src/lib/wo-bench-run-timing.js'
+import { benchRunTiming, failuresIn, phasesOf, toolsOf } from '../src/lib/wo-bench-run-timing.js'
 
 const RUN = '11111111-2222-3333-4444-555555555555'
 const fakePool = (tables) => ({
@@ -82,6 +82,32 @@ test("a planner run's rounds and turns: durations, tokens, tool names, never the
     tools: ['open_kit_image']
   })
   assert.equal(JSON.stringify(out).includes('secret'), false, 'no text of the turn')
+})
+
+test("a picture round also says where its own time went (its manifest's timing), as numbers only", async () => {
+  const pool = fakePool({
+    site_picture_run: [{ id: RUN, status: 'succeeded', created_at: '2026-11-19T10:00:00Z', harness: {} }],
+    site_picture_round: [
+      {
+        run_id: RUN,
+        round: 0,
+        state: 'checked',
+        started_at: '2026-11-19T10:00:00Z',
+        finished_at: '2026-11-19T10:03:00Z',
+        cost_usd: 0.05,
+        failure_list: 'L01 | The looker passes every finished picture | block-96.1 | it saw: a waterfront',
+        // The database answers pictures->'timing' as `phases`.
+        phases: { code: 41_000, iconRanking: 9_000, looker: 95_000, drawer: 30_000 }
+      }
+    ]
+  })
+  const out = await benchRunTiming(pool, 'pictures', RUN)
+  assert.deepEqual(out.rounds[0].phases, { code: 41_000, iconRanking: 9_000, looker: 95_000, drawer: 30_000 })
+  assert.equal(out.rounds[0].failures, 1)
+  assert.equal(JSON.stringify(out).includes('waterfront'), false)
+  assert.deepEqual(phasesOf({ looker: 5, note: 'text', 'bad key': 3, drawer: -1 }), { looker: 5 })
+  assert.equal(phasesOf(null), null)
+  assert.equal(phasesOf([1, 2]), null)
 })
 
 test('an unknown bench, a malformed id and a missing run are refused', async () => {

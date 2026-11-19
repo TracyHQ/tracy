@@ -8,7 +8,13 @@
 export const BENCH_TABLES = Object.freeze({
   plan: { run: 'site_planner_run', round: 'site_planner_round', turn: 'site_planner_turn' },
   copy: { run: 'site_writer_run', round: 'site_writer_round', turn: 'site_writer_turn' },
-  pictures: { run: 'site_picture_run', round: 'site_picture_round', turn: 'site_picture_turn' }
+  // A picture round's manifest keeps where its own time went (code, icon ranking, looker, drawer: `timing`, in ms).
+  pictures: {
+    run: 'site_picture_run',
+    round: 'site_picture_round',
+    turn: 'site_picture_turn',
+    phases: "pictures->'timing'"
+  }
 })
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -18,7 +24,18 @@ const count = (v) => {
   const n = Number(v)
   return Number.isFinite(n) && n >= 0 ? n : null
 }
-const json = (v) => {
+/** A round's phase times: only named, non-negative milliseconds. */
+export function phasesOf(timing) {
+  const t = json(timing)
+  if (!t || Array.isArray(t)) return null
+  const out = Object.fromEntries(
+    Object.entries(t).filter(
+      ([k, v]) => /^[A-Za-z][A-Za-z0-9]{0,31}$/.test(k) && Number.isFinite(v) && v >= 0
+    )
+  )
+  return Object.keys(out).length ? out : null
+}
+function json(v) {
   if (v && typeof v === 'object') return v
   try {
     return typeof v === 'string' ? JSON.parse(v) : null
@@ -60,7 +77,7 @@ export async function benchRunTiming(pool, bench, runId) {
   if (!run) return { ok: false, error: 'NO_SUCH_RUN' }
   const rounds = (
     await pool.query(
-      `select round, state, started_at, finished_at, cost_usd, failure_list from ${t.round} where run_id = $1 order by round`,
+      `select round, state, started_at, finished_at, cost_usd, failure_list, ${t.phases ?? 'null'} as phases from ${t.round} where run_id = $1 order by round`,
       [runId]
     )
   ).rows
@@ -95,7 +112,8 @@ export async function benchRunTiming(pool, bench, runId) {
       startedAt: iso(r.started_at),
       ms: ms(r.started_at, r.finished_at),
       costUsd: count(r.cost_usd),
-      failures: failuresIn(r.failure_list)
+      failures: failuresIn(r.failure_list),
+      ...(phasesOf(r.phases) ? { phases: phasesOf(r.phases) } : {})
     })),
     turns: turns.map((x) => {
       const usage = json(x.usage) ?? {}
