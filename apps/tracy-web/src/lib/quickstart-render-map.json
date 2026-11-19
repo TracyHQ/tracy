@@ -518,8 +518,8 @@
     }
   },
   "tracy-essence": {
-    "revision": 50,
-    "sourceSha256": "2593eb0a405f6c286ee95d2a2dd382c048db2b388550359174d77dc0d1bd7ec7",
+    "revision": 54,
+    "sourceSha256": "873c303f8cfae1cb0eae8377f62122b010b72729882af086fa845dfd0516f038",
     "collections": {
       "en:chrome": [
         "/",
