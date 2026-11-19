@@ -20,6 +20,8 @@ export const USAGE = `usage: node scripts/site-planner-bench.mjs <command>
       [--kit-in-first-message]            send the whole kit in the first message; the image tool stays (frozen with the run)
       [--parallel-pages <n>]              plan round 0 in n parts at the same time, by page groups (1 to 8), frozen
                                           with the run; 1 or absent plans it as one conversation
+      [--plan-turns]                      plan round 0 in turns of one conversation: the whole site, then one page
+                                          group a turn (frozen with the run; not with --parallel-pages above 1)
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, duration, checker summary
   get <runId> --out <dir>                 write every plan version, the check and failure list of each round,
@@ -55,6 +57,7 @@ export async function runCli(argv, deps) {
         'require-visual-review': { type: 'boolean' },
         'kit-in-first-message': { type: 'boolean' },
         'parallel-pages': { type: 'string' },
+        'plan-turns': { type: 'boolean' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -171,6 +174,7 @@ async function startRun(d, values) {
     requireVisualReview: values['require-visual-review'] === true,
     kitInFirstMessage: values['kit-in-first-message'] === true,
     ...(values['parallel-pages'] !== undefined ? { parallelPages: Number(values['parallel-pages']) } : {}),
+    ...(values['plan-turns'] === true ? { planTurns: true } : {}),
     ...(d.index ? { index: d.index } : {})
   })
   if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)

@@ -31,10 +31,12 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
  *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object>, noCaps?: boolean, requireVisualReview?: boolean,
- *   kitInFirstMessage?: boolean, parallelPages?: number }} input `parallelPages`: the number of parts round 0 is
- *   planned in at the same time (plan-parts.js; 1 or absent plans it as before and freezes nothing); `kitImages`: the kit
- *   images of this server (kit-images.js kitImagesFor); `index`: the contracts to find kits in (tests); `noCaps`: the
- *   run is a step of a chain build, so it carries no USD budget (#478).
+ *   kitInFirstMessage?: boolean, parallelPages?: number, planTurns?: boolean }} input `parallelPages`: the number of
+ *   parts round 0 is planned in at the same time (plan-parts.js; 1 or absent plans it as before and freezes nothing);
+ *   `planTurns`: round 0 is planned in turns of one conversation, the whole site first, then one page group a turn
+ *   (plan-turns.js; frozen as harness.planTurns, never with parallelPages above 1); `kitImages`: the kit images of this
+ *   server (kit-images.js kitImagesFor); `index`: the contracts to find kits in (tests); `noCaps`: the run is a step of
+ *   a chain build, so it carries no USD budget (#478).
  */
 export async function startBenchRun({
   pool,
@@ -48,7 +50,8 @@ export async function startBenchRun({
   noCaps = false,
   requireVisualReview = false,
   kitInFirstMessage = false,
-  parallelPages
+  parallelPages,
+  planTurns = false
 }) {
   if (parallelPages !== undefined) {
     const partsProblem = parallelPagesProblem(parallelPages)
@@ -59,6 +62,11 @@ export async function startBenchRun({
         reason: `The run cannot start: ${partsProblem}.`
       }
   }
+  if (planTurns && parallelPages > 1)
+    return refuse(
+      'SITE_PLANNER_BAD_PLAN_TURNS',
+      'The run cannot start: plan turns writes round 0 as one conversation, so parallel pages must be 1 or absent.'
+    )
   const problems = briefShapeProblems(brief)
   if (problems.length)
     return refuse('SITE_PLANNER_BRIEF_SHAPE', `The brief cannot run: ${problems.join('; ')}`, { problems })
@@ -101,6 +109,8 @@ export async function startBenchRun({
       ...(kitInFirstMessage ? { kitInFirstMessage: true } : {}),
       // Asked for: round 0 planned in parts at the same time (plan-parts.js), frozen with the run.
       ...(parallelPages > 1 ? { parallelPages } : {}),
+      // Asked for: round 0 planned in turns of one conversation (plan-turns.js), frozen with the run.
+      ...(planTurns ? { planTurns: true } : {}),
       ...(requireVisualReview ? { visualReview: VISUAL_REVIEW_POLICY } : {})
     }
   })
