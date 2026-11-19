@@ -4,10 +4,10 @@
   "cms": "emdash",
   "tag": "tracy-essence/emdash-0.x",
   "version": "0.1.0",
-  "measuredAt": "2026-11-19T07:52:17.033Z",
+  "measuredAt": "2026-11-19T12:54:02.311Z",
   "machine": "linux-arm64",
   "measuredBy": "tdsr flow.mjs --cms emdash --template emdash-tracy-essence",
-  "flowVersion": "074f2a02c",
+  "flowVersion": "78f7ac096",
   "modes": [
     "native",
     "derived"
@@ -38,7 +38,7 @@
       "match": 1,
       "margin": 0.6,
       "apart": true,
-      "follows": 0.834,
+      "follows": 1,
       "followsSamples": 145,
       "followsKept": 0,
       "left": {
@@ -46,7 +46,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.97,
+      "lowestContrast": 8.69,
       "misses": [],
       "fontsLoaded": 5,
       "fontsDeclared": 2,
@@ -64,15 +64,15 @@
       "match": 1,
       "margin": 0.6,
       "apart": true,
-      "follows": 0.826,
+      "follows": 1,
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0,
+        "first": 0.009,
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.81,
+      "lowestContrast": 8.48,
       "misses": [],
       "fontsLoaded": 5,
       "fontsDeclared": 2,
@@ -98,7 +98,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.89,
+      "lowestContrast": 9.24,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -120,11 +120,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.011,
+        "first": 0,
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.76,
+      "lowestContrast": 9.06,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -150,7 +150,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.82,
+      "lowestContrast": 9.14,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -172,11 +172,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.004,
+        "first": 0,
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.87,
+      "lowestContrast": 9.21,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -202,7 +202,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.82,
+      "lowestContrast": 9.14,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -224,11 +224,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.012,
+        "first": 0,
         "page": 0.01
       },
       "lowContrast": 0,
-      "lowestContrast": 6.8,
+      "lowestContrast": 9.12,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -254,7 +254,7 @@
         "page": 0.004
       },
       "lowContrast": 0,
-      "lowestContrast": 6.97,
+      "lowestContrast": 9.36,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -276,11 +276,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.015,
+        "first": 0.005,
         "page": 0.012
       },
       "lowContrast": 0,
-      "lowestContrast": 6.97,
+      "lowestContrast": 9.35,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -306,7 +306,7 @@
         "page": 0.002
       },
       "lowContrast": 0,
-      "lowestContrast": 6.79,
+      "lowestContrast": 8.97,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": 2,
@@ -328,11 +328,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.008,
+        "first": 0,
         "page": 0.006
       },
       "lowContrast": 0,
-      "lowestContrast": 6.76,
+      "lowestContrast": 8.92,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": 2,
@@ -358,7 +358,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.91,
+      "lowestContrast": 9.26,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 2,
@@ -380,11 +380,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.001,
+        "first": 0,
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.74,
+      "lowestContrast": 9.04,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 2,
@@ -410,7 +410,7 @@
         "page": 0.002
       },
       "lowContrast": 0,
-      "lowestContrast": 6.69,
+      "lowestContrast": 8.97,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -432,11 +432,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.011,
+        "first": 0,
         "page": 0.005
       },
       "lowContrast": 0,
-      "lowestContrast": 6.82,
+      "lowestContrast": 9.15,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -462,7 +462,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.79,
+      "lowestContrast": 9.11,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": 1,
@@ -484,11 +484,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.001,
+        "first": 0,
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.82,
+      "lowestContrast": 9.15,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": 1,
@@ -514,7 +514,7 @@
         "page": 0.002
       },
       "lowContrast": 0,
-      "lowestContrast": 6.87,
+      "lowestContrast": 9.22,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 2,
@@ -536,11 +536,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.008,
+        "first": 0,
         "page": 0.004
       },
       "lowContrast": 0,
-      "lowestContrast": 6.75,
+      "lowestContrast": 9.05,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 2,
@@ -566,7 +566,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.74,
+      "lowestContrast": 9.04,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -588,11 +588,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0,
+        "first": 0.01,
         "page": 0.009
       },
       "lowContrast": 0,
-      "lowestContrast": 6.9,
+      "lowestContrast": 9.26,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -618,7 +618,7 @@
         "page": 0.003
       },
       "lowContrast": 0,
-      "lowestContrast": 6.74,
+      "lowestContrast": 9.04,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -640,11 +640,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.01,
+        "first": 0.001,
         "page": 0.011
       },
       "lowContrast": 0,
-      "lowestContrast": 6.9,
+      "lowestContrast": 9.26,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -670,7 +670,7 @@
         "page": 0.002
       },
       "lowContrast": 0,
-      "lowestContrast": 6.72,
+      "lowestContrast": 9.01,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -692,11 +692,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.012,
+        "first": 0.003,
         "page": 0.007
       },
       "lowContrast": 0,
-      "lowestContrast": 7.38,
+      "lowestContrast": 9.91,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -722,7 +722,7 @@
         "page": 0.001
       },
       "lowContrast": 0,
-      "lowestContrast": 6.89,
+      "lowestContrast": 8.86,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -744,11 +744,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.015,
+        "first": 0.001,
         "page": 0.001
       },
       "lowContrast": 0,
-      "lowestContrast": 6.76,
+      "lowestContrast": 8.69,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -774,7 +774,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.69,
+      "lowestContrast": 8.97,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": 1,
@@ -796,11 +796,11 @@
       "followsSamples": 138,
       "followsKept": 0,
       "left": {
-        "first": 0.001,
+        "first": 0.012,
         "page": 0.006
       },
       "lowContrast": 0,
-      "lowestContrast": 6.82,
+      "lowestContrast": 9.15,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": 1,
@@ -826,7 +826,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.97,
+      "lowestContrast": 8.69,
       "misses": [],
       "fontsLoaded": 5,
       "fontsDeclared": null,
@@ -852,7 +852,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.81,
+      "lowestContrast": 8.48,
       "misses": [],
       "fontsLoaded": 5,
       "fontsDeclared": null,
@@ -878,7 +878,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.89,
+      "lowestContrast": 8.87,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -904,7 +904,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.76,
+      "lowestContrast": 8.69,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -930,7 +930,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.82,
+      "lowestContrast": 8.54,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -956,7 +956,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.87,
+      "lowestContrast": 8.6,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -982,7 +982,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.82,
+      "lowestContrast": 8.72,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1008,7 +1008,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.8,
+      "lowestContrast": 8.69,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1034,7 +1034,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.97,
+      "lowestContrast": 8.76,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1060,7 +1060,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.97,
+      "lowestContrast": 8.75,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1086,7 +1086,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.79,
+      "lowestContrast": 8.97,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1112,7 +1112,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.76,
+      "lowestContrast": 8.92,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1138,7 +1138,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.91,
+      "lowestContrast": 8.65,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1164,7 +1164,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.74,
+      "lowestContrast": 8.43,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1190,7 +1190,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.69,
+      "lowestContrast": 8.89,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1216,7 +1216,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.82,
+      "lowestContrast": 9.07,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1242,7 +1242,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.79,
+      "lowestContrast": 8.5,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1268,7 +1268,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.82,
+      "lowestContrast": 8.54,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1294,7 +1294,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.87,
+      "lowestContrast": 8.6,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1320,7 +1320,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.75,
+      "lowestContrast": 8.45,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1346,7 +1346,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.74,
+      "lowestContrast": 9.04,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1372,7 +1372,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.9,
+      "lowestContrast": 9.26,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1398,7 +1398,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.74,
+      "lowestContrast": 8.45,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1424,7 +1424,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.9,
+      "lowestContrast": 8.66,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1450,7 +1450,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.72,
+      "lowestContrast": 8.42,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1476,7 +1476,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 7.38,
+      "lowestContrast": 9.25,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1502,7 +1502,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.89,
+      "lowestContrast": 8.86,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1528,7 +1528,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.76,
+      "lowestContrast": 8.69,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1554,7 +1554,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.69,
+      "lowestContrast": 8.97,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1580,7 +1580,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 6.82,
+      "lowestContrast": 9.15,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1616,14 +1616,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 4,
-          "unique": 4,
-          "where": [
-            "a.es-pill.es-strip-pill::before fill #6f42c1",
-            "a.es-pill.es-strip-pill::before fill #4d6bff",
-            "a.es-pill.es-strip-pill::before fill #20c997",
-            "a.es-pill::before fill #6f42c1"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -1837,12 +1832,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "a.es-pill.es-strip-pill::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -1864,11 +1856,9 @@
           "bySystem": 0
         },
         "shape-fill": {
-          "count": 4,
-          "unique": 1,
-          "where": [
-            "li.es-strip-item::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "sheet-failed": {
@@ -1949,13 +1939,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 3,
-          "unique": 3,
-          "where": [
-            "a.es-pill.es-strip-pill::before fill #6f42c1",
-            "a.es-pill.es-strip-pill::before fill #20c997",
-            "a.es-pill::before fill #6f42c1"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -2169,12 +2155,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 8,
-          "unique": 2,
-          "where": [
-            "a.es-pill.es-strip-pill::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -2925,11 +2908,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "span.ec-form-required words #e03131"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -3250,11 +3231,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "span.ec-form-required words #e03131"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -3575,15 +3554,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 5,
-          "unique": 5,
-          "where": [
-            "a.es-pill.es-strip-pill::before fill #6f42c1",
-            "a.es-pill.es-strip-pill::before fill #4d6bff",
-            "a.es-pill.es-strip-pill::before fill #20c997",
-            "a.es-pill::before fill #4d6bff",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -3797,12 +3770,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "a.es-pill.es-strip-pill::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -3824,11 +3794,9 @@
           "bySystem": 0
         },
         "shape-fill": {
-          "count": 4,
-          "unique": 1,
-          "where": [
-            "li.es-strip-item::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "sheet-failed": {
@@ -3909,13 +3877,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 3,
-          "unique": 3,
-          "where": [
-            "a.es-pill.es-strip-pill::before fill #6f42c1",
-            "a.es-pill.es-strip-pill::before fill #20c997",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -4129,12 +4093,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 2,
-          "where": [
-            "a.es-pill.es-strip-pill::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -4239,12 +4200,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "h1.es-cat-title span::before fill #6f42c1",
-            "a.es-pill::before fill #6f42c1"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -4458,12 +4416,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "span::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -4568,12 +4523,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "h1.es-cat-title span::before fill #6f42c1",
-            "a.es-pill::before fill #6f42c1"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -4787,12 +4739,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "span::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -4897,12 +4846,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "h1.es-cat-title span::before fill #4d6bff",
-            "a.es-pill::before fill #4d6bff"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -5116,12 +5062,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 7,
-          "unique": 2,
-          "where": [
-            "span::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -5143,11 +5086,9 @@
           "bySystem": 0
         },
         "shape-fill": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "a::after"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "sheet-failed": {
@@ -5551,12 +5492,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "h1.es-cat-title span::before fill #20c997",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -5770,12 +5708,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "span::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -5797,11 +5732,9 @@
           "bySystem": 0
         },
         "shape-fill": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "a::after"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "sheet-failed": {
@@ -5882,12 +5815,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "h1.es-cat-title span::before fill #20c997",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -6101,12 +6031,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "span::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -6211,20 +6138,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 10,
-          "unique": 10,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #dc3545",
-            "a.es-pill::before fill #4d6bff",
-            "a.es-pill::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #4d6bff",
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -6438,12 +6354,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 25,
-          "unique": 2,
-          "where": [
-            "a.es-pill::before",
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -6548,18 +6461,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #dc3545",
-            "a.es-pill::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -6773,12 +6677,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 20,
-          "unique": 2,
-          "where": [
-            "a.es-pill::before",
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -6883,13 +6784,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 3,
-          "unique": 3,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #4d6bff",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -7103,11 +7000,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 9,
-          "unique": 1,
-          "where": [
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -7212,12 +7107,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -7431,11 +7323,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 7,
-          "unique": 1,
-          "where": [
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -7540,12 +7430,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -7759,11 +7646,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 4,
-          "unique": 1,
-          "where": [
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -7868,12 +7753,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -8087,11 +7969,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 4,
-          "unique": 1,
-          "where": [
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -8196,14 +8076,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 4,
-          "unique": 4,
-          "where": [
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #4d6bff",
-            "a.es-pill-cat::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -8417,11 +8292,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 8,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -8526,13 +8399,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 3,
-          "unique": 3,
-          "where": [
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -8746,11 +8615,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -8855,15 +8722,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 5,
-          "unique": 5,
-          "where": [
-            "a.es-pill-cat.is-white::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #4d6bff",
-            "a.es-pill-cat::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -9077,12 +8938,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 8,
-          "unique": 2,
-          "where": [
-            "a.es-pill-cat.is-white::before",
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -9187,14 +9045,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 4,
-          "unique": 4,
-          "where": [
-            "a.es-pill-cat.is-white::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -9408,12 +9261,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 2,
-          "where": [
-            "a.es-pill-cat.is-white::before",
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -9518,18 +9368,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
-          "where": [
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #4d6bff",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -9743,11 +9584,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 15,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -9852,17 +9691,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 7,
-          "unique": 7,
-          "where": [
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -10076,11 +9907,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 12,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -10185,18 +10014,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
-          "where": [
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #4d6bff",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -10410,11 +10230,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 15,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -10519,17 +10337,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 7,
-          "unique": 7,
-          "where": [
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -10743,11 +10553,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 12,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -10852,18 +10660,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
-          "where": [
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #4d6bff",
-            "a.es-pill-cat::before fill #20c997",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -11077,11 +10876,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 12,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -11186,17 +10983,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 7,
-          "unique": 7,
-          "where": [
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #20c997",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -11410,11 +11199,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -12165,14 +11952,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 4,
-          "unique": 4,
-          "where": [
-            "a.es-pill.es-strip-pill::before fill #6f42c1",
-            "a.es-pill.es-strip-pill::before fill #4d6bff",
-            "a.es-pill.es-strip-pill::before fill #20c997",
-            "a.es-pill::before fill #6f42c1"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -12386,12 +12168,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "a.es-pill.es-strip-pill::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -12496,13 +12275,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 3,
-          "unique": 3,
-          "where": [
-            "a.es-pill.es-strip-pill::before fill #6f42c1",
-            "a.es-pill.es-strip-pill::before fill #20c997",
-            "a.es-pill::before fill #6f42c1"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -12716,12 +12491,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 8,
-          "unique": 2,
-          "where": [
-            "a.es-pill.es-strip-pill::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -13006,11 +12778,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -13474,11 +13244,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "span.ec-form-required words #ff8787"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -13656,11 +13424,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -13801,11 +13567,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "span.ec-form-required words #ff8787"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -14126,15 +13890,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 5,
-          "unique": 5,
-          "where": [
-            "a.es-pill.es-strip-pill::before fill #6f42c1",
-            "a.es-pill.es-strip-pill::before fill #4d6bff",
-            "a.es-pill.es-strip-pill::before fill #20c997",
-            "a.es-pill::before fill #4d6bff",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -14348,12 +14106,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "a.es-pill.es-strip-pill::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -14458,13 +14213,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 3,
-          "unique": 3,
-          "where": [
-            "a.es-pill.es-strip-pill::before fill #6f42c1",
-            "a.es-pill.es-strip-pill::before fill #20c997",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -14678,12 +14429,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 2,
-          "where": [
-            "a.es-pill.es-strip-pill::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -14788,12 +14536,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "h1.es-cat-title span::before fill #6f42c1",
-            "a.es-pill::before fill #6f42c1"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -14971,11 +14716,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -15009,12 +14752,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "span::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -15119,12 +14859,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "h1.es-cat-title span::before fill #6f42c1",
-            "a.es-pill::before fill #6f42c1"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -15338,12 +15075,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "span::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -15448,12 +15182,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "h1.es-cat-title span::before fill #4d6bff",
-            "a.es-pill::before fill #4d6bff"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -15631,11 +15362,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -15669,12 +15398,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 7,
-          "unique": 2,
-          "where": [
-            "span::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -16102,12 +15828,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "h1.es-cat-title span::before fill #20c997",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -16285,11 +16008,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -16323,12 +16044,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "span::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -16433,12 +16151,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "h1.es-cat-title span::before fill #20c997",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -16652,12 +16367,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 2,
-          "where": [
-            "span::before",
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -16755,27 +16467,16 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 3,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 10,
-          "unique": 10,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #dc3545",
-            "a.es-pill::before fill #4d6bff",
-            "a.es-pill::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #4d6bff",
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -16953,11 +16654,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -16991,12 +16690,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 25,
-          "unique": 2,
-          "where": [
-            "a.es-pill::before",
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -17101,18 +16797,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #dc3545",
-            "a.es-pill::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -17326,12 +17013,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 20,
-          "unique": 2,
-          "where": [
-            "a.es-pill::before",
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -17436,13 +17120,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 3,
-          "unique": 3,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #4d6bff",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -17620,11 +17300,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -17658,11 +17336,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 9,
-          "unique": 1,
-          "where": [
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -17767,12 +17443,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -17986,11 +17659,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 7,
-          "unique": 1,
-          "where": [
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -18095,12 +17766,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -18278,11 +17946,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -18316,11 +17982,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 4,
-          "unique": 1,
-          "where": [
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -18425,12 +18089,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "a.es-pill::before fill #6f42c1",
-            "a.es-pill::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -18644,11 +18305,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 4,
-          "unique": 1,
-          "where": [
-            "a.es-pill::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -18753,14 +18412,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 4,
-          "unique": 4,
-          "where": [
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #4d6bff",
-            "a.es-pill-cat::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -18938,11 +18592,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -18976,11 +18628,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 8,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -19085,13 +18735,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 3,
-          "unique": 3,
-          "where": [
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -19305,11 +18951,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -19407,22 +19051,16 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 3,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 5,
-          "unique": 5,
-          "where": [
-            "a.es-pill-cat.is-white::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #4d6bff",
-            "a.es-pill-cat::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -19600,11 +19238,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -19638,12 +19274,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 8,
-          "unique": 2,
-          "where": [
-            "a.es-pill-cat.is-white::before",
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -19748,14 +19381,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 4,
-          "unique": 4,
-          "where": [
-            "a.es-pill-cat.is-white::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #20c997"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -19969,12 +19597,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 6,
-          "unique": 2,
-          "where": [
-            "a.es-pill-cat.is-white::before",
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -20072,25 +19697,16 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 3,
-      "lostButtons": 1,
+      "lowText": 0,
+      "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
-          "where": [
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #4d6bff",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -20268,11 +19884,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -20306,11 +19920,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 15,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -20409,23 +20021,15 @@
       "glare": 0,
       "keptText": 0,
       "lowText": 0,
-      "lostButtons": 1,
+      "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 7,
-          "unique": 7,
-          "where": [
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -20639,11 +20243,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 12,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -20741,25 +20343,16 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 3,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
-          "where": [
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #4d6bff",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -20937,11 +20530,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -20975,11 +20566,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 15,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -21084,17 +20673,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 7,
-          "unique": 7,
-          "where": [
-            "a.es-pill-cat::before fill #20c997",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #6f42c1",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -21308,11 +20889,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 12,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -21410,25 +20989,16 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 3,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 8,
-          "unique": 8,
-          "where": [
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #4d6bff",
-            "a.es-pill-cat::before fill #20c997",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -21606,11 +21176,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -21644,11 +21212,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 12,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -21753,17 +21319,9 @@
       "docs": 1,
       "detectors": {
         "accent-leak": {
-          "count": 7,
-          "unique": 7,
-          "where": [
-            "a.es-pill-cat::before fill #6f42c1",
-            "a.es-pill-cat::before fill #dc3545",
-            "a.es-pill-cat::before fill #20c997",
-            "div.es-side-num words #20c997",
-            "div.es-side-num words #6f42c1",
-            "a.es-pill-cat::before fill #fd7e14",
-            "span.es-round.is-rss fill #f9b439"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "accent-surface": {
@@ -21977,11 +21535,9 @@
           "bySystem": 0
         },
         "pseudo-colour": {
-          "count": 10,
-          "unique": 1,
-          "where": [
-            "a.es-pill-cat::before"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "reveal-hidden": {
@@ -22266,11 +21822,9 @@
           "bySystem": 0
         },
         "loud-band": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "header.es-header.is-inner"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "missing-element": {
@@ -22719,7 +22273,7 @@
       }
     }
   ],
-  "previewMeasuredAt": "2026-11-19T07:55:07.318Z",
+  "previewMeasuredAt": "2026-11-19T12:56:57.326Z",
   "previewPages": [
     "/",
     "/our-authors",

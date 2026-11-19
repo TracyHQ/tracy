@@ -5,7 +5,7 @@
  * Class prefix `es-` = JA Essence component.
  * Design-system roles: the stylesheet reads each role as `var(--ds-…, <the template's own value>)`.
  */
-/* ds-not-used: --ds-c-success, --ds-c-success-bg, --ds-c-success-text, --ds-c-warn, --ds-c-warn-bg, --ds-c-warn-text, --ds-c-info, --ds-c-info-bg, --ds-c-info-text, --ds-c-danger-bg — the site draws no state colours but the contact form's required mark and error line, which read --ds-c-danger and --ds-c-danger-text, and a tint of --ds-c-danger for the error box */
+/* ds-not-used: --ds-c-success, --ds-c-success-bg, --ds-c-success-text, --ds-c-warn, --ds-c-warn-bg, --ds-c-warn-text, --ds-c-info, --ds-c-info-bg, --ds-c-info-text, --ds-c-danger-bg — the site draws no state colours but the contact form: its required mark and error line read --ds-c-danger-text, and a tint of --ds-c-danger fills the error box */
 /* ds-not-used: --ds-c-disabled-bg, --ds-c-disabled-fg — a disabled button or field is drawn at 60% opacity, it has no ground or text colour of its own */
 /* ds-not-used: --ds-c-border-soft — the template's hairlines read --ds-c-border; it has no second, softer line colour */
 @import "tailwindcss";

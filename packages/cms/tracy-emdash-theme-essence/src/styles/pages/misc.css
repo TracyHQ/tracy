@@ -12,8 +12,8 @@
 	.es-contact .ec-form-label:has(.ec-form-required) { font-family: var(--font-display); font-size: 18px; color: var(--color-heading); }
 	/* dark: the source draws every label in the body colour, "Your message" included (measured rgb(194, 201, 214)) */
 	html[data-theme="dark"] .es-contact .ec-form-label { color: var(--color-fg); }
-	.es-contact .ec-form-required { margin-left: 6px; color: var(--ds-c-danger, #e03131); }
-	html[data-theme="dark"] .es-contact .ec-form-required { color: var(--ds-c-danger, #ff8787); } /* ds-keep: status colour: the contact form keeps its red required mark and error line under every system */
+	.es-contact .ec-form-required { margin-left: 6px; color: var(--ds-c-danger-text, #e03131); }
+	html[data-theme="dark"] .es-contact .ec-form-required { color: var(--ds-c-danger-text, #ff8787); } /* ds-keep: status colour: the contact form keeps its red required mark and error line under every system */
 	.es-contact .ec-form-input:not([type="checkbox"]) { display: block; width: 100%; box-sizing: border-box; padding: 12.8px 18px; font-family: var(--font-body); font-size: 14px; line-height: 20.3px; color: var(--color-heading); background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--ds-input-radius, 8px); }
 	.es-contact .ec-form-input::placeholder { color: var(--color-meta); opacity: 1; }
 	.es-contact textarea.ec-form-input { height: 231px; resize: vertical; }

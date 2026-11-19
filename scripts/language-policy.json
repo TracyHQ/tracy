@@ -24760,6 +24760,12 @@
       "sha256": "3b40c34366eb2e8360cf930bf77b05356936af547c4ce876a41319de0a942f18",
       "count": 1,
       "reason": "Language tables of the personalize tool (language names and sample labels in the site languages): localized data, the same tool as the Diner template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-essence/tests/personalize-gate.test.mjs",
+      "sha256": "47551043a5ee62a76759b56cca0c12f69f9c2af7ba08253efc1a111b96c49484",
+      "count": 1,
+      "reason": "Test fixture with words of other writing systems that the personalization and language tests must keep (the test names and comments stay English)"
     }
   ],
   "objects": [
