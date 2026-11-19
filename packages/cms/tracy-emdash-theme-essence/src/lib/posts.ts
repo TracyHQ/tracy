@@ -131,12 +131,13 @@ export const homeBlog = (all: PostRow[]) =>
 export const homeLead = (all: PostRow[]) =>
   all.filter((p) => p.homeLead).sort((a, b) => a.title.localeCompare(b.title))
 /** One post per title: the demo repeats each article in several categories, a sidebar block lists each once. */
-const oneEach = (rows: PostRow[]) => {
+const oneEach = (rows: PostRow[], prefer: PostRow[] = []) => {
   const seen = new Set<string>()
-  return rows.filter((p) => (seen.has(p.title) ? false : (seen.add(p.title), true)))
+  const mine = new Map(prefer.map((p) => [p.title, p]))
+  return rows.filter((p) => (seen.has(p.title) ? false : (seen.add(p.title), true))).map((p) => mine.get(p.title) ?? p)
 }
-/** "Articles - Latest": the newest posts. */
-export const latestPosts = (all: PostRow[], n = 4) => oneEach(all).slice(0, n)
+/** "Articles - Latest": the newest posts; a list page with a sidebar shows its own list's newest (the source's module reads the same category). */
+export const latestPosts = (all: PostRow[], n = 4, prefer: PostRow[] = []) => (prefer.length >= n ? oneEach(prefer) : oneEach(all, prefer)).slice(0, n)
 /** "Features post": the first titles A-Z (the source's module sorts by title). */
 export const featuresPosts = (all: PostRow[], n = 4) => oneEach([...all].sort((a, b) => a.title.localeCompare(b.title))).slice(0, n)
 /** "Trending": the least-hit posts first, as the source's module orders them (`a.hits ASC`). */

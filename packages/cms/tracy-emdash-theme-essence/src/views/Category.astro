@@ -94,7 +94,7 @@ const photo = profile ? mediaUrl(profile.avatar) : null
 						{style === 'sidebar' && shown.map((p, i) => p.highlight && by === 'category' ? <StackCard post={p} chrome={chrome} authors={authors} eager={i === 0} highlight /> : <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} wide eager={i === 0} />)}
 						<Pager path={href(locale, basePath)} page={page} pages={pages} locale={locale} pillLast={by === 'author'} />
 					</div>
-					{style === 'sidebar' && <Sidebar chrome={chrome} locale={locale} posts={all} current={null} />}
+					{style === 'sidebar' && <Sidebar chrome={chrome} locale={locale} posts={all} current={null} prefer={posts} />}
 				</div>
 			</div>
 			{by === 'category' && style === 'grid' && chrome.site.more_read_list_title && (

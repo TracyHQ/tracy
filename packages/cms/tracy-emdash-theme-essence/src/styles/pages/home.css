@@ -33,11 +33,12 @@
 	/* ── the blog: a narrow column of stack cards ── */
 	.es-home-blog { max-width: 820px; margin-inline: auto; padding: 72px 18px; }
 	.es-home-blog .es-pager { margin-top: 104px; }
-	.es-lead-list::after { content: ""; grid-column: 1 / -1; margin: 18px 18px 0; border-bottom: 1px solid var(--color-line); }
+	.es-lead-list::after { content: ""; grid-column: 1 / -1; margin: 39px 18px 0; border-bottom: 1px solid var(--color-line); }
 
 	@media (max-width: 991px) {
 		.es-strip-track { --per: 2; }
 		.es-lead-list { grid-template-columns: 1fr; }
+		.es-lead-list::after { margin-top: 0; }
 	}
 	@media (max-width: 767px) {
 		.es-strip-track { --per: 1; }
