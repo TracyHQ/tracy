@@ -13,8 +13,8 @@ const shown = (block) => block.state !== 'hidden'
 /**
  * The container copies of every page (`holds.copies: {perPage: 1, keptWhen}`): one container per page holds every
  * held block the page places, and is kept only while one of them is (`keptWhen: "any-held-block-kept"`; any other
- * value stops the plan, `kept_when_unknown`). Returns the container blocks to drop (none held
- * on their page); stops when a page places more containers than `perPage` or a held block with no container.
+ * value stops the plan, `kept_when_unknown`). Returns the blocks to drop: a container none of whose held blocks is on
+ * its page, and a held block whose page has no container; stops when a page places more containers than `perPage`.
  */
 export function droppedContainersOf(state) {
   const dropped = new Set()
@@ -35,16 +35,16 @@ export function droppedContainersOf(state) {
           page: page.id,
           block: id
         })
-      if (held.length && !containers.length)
-        throw new DraftWriteError(
-          'held_block_without_container',
-          `${page.id} places a block ${id} holds without it`,
-          {
-            page: page.id,
-            block: id,
-            held: held.map((b) => b.id)
-          }
-        )
+      // A held block with no container prints nothing (the container draws it): left out and listed, never the whole
+      // build (#575). The build's plan step brings the container along (`plan-held-containers.mjs`), so only an order
+      // made before that repair reaches here.
+      if (held.length && !containers.length) {
+        state.dropReasons ??= new Map()
+        for (const b of held) {
+          dropped.add(b.id)
+          state.dropReasons.set(b.id, 'held_block_without_container')
+        }
+      }
       if (containers.length && !held.length) for (const c of containers) dropped.add(c.id)
     }
   return dropped

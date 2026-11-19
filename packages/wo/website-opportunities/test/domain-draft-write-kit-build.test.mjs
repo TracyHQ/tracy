@@ -66,7 +66,7 @@ test('holds.copies: a container none of whose held blocks the page keeps is drop
   )
 })
 
-test('holds.copies: a held block with no container on its page, or two containers on one page, stops the plan', () => {
+test('holds.copies: a held block with no container is left out; two containers on one page stop the plan', () => {
   const alone = () =>
     planWith(
       () => {},
@@ -74,7 +74,8 @@ test('holds.copies: a held block with no container on its page, or two container
         hide(o, 'plans', 'plans-b3')
       }
     )
-  assert.equal(codeOf(alone), 'held_block_without_container')
+  assert.equal(codeOf(alone), 'passed', 'a held block with no container is left out (#575)')
+  assert.ok(alone().skipped.some((x) => x.reason === 'held_block_without_container'))
   const twice = () =>
     planWith(
       (m) => {

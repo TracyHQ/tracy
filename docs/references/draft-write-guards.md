@@ -189,7 +189,7 @@ Typed stops (all noRerun, `DRAFT_WRITE_NO_RERUN`):
 | `menu_item_to_under_page` | an alias item of another menu (a kit with no `menu.items`) links to a page reached under its list page: an alias has nothing to name |
 | `menu_items_link_unknown`, `menu_items_over_max` | see `menu.items` above |
 | `kept_when_unknown`, `category_title_unknown`, `accent_written_as_unknown` | a word of `holds.copies.keptWhen`, `record.category.title` or `look.accent` the write does not know |
-| `container_copies_per_page`, `held_block_without_container` | a page places more containers than `perPage`, or a held block without its container |
+| `container_copies_per_page` | a page places more containers than `perPage` (a held block without its container is left out, `held_block_without_container`, and the build plan step brings the container along) |
 | `created_frame_not_declared` | see `createdFrames` above |
 | `under_page_position_not_detail` | a block on a page reached under its list page sits outside the declared detail positions and no recipe of the page type places it (or it is a library block), or `assignTo` is not `list-page` |
 | `place_not_written` | a value at a place the kit's `escapes` declares `not-written` |

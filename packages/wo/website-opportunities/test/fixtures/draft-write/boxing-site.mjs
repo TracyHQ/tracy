@@ -134,7 +134,7 @@ function withPlansPage(plan) {
 }
 
 /** The saved step values and the write order of the site, with the mapping file read from the kit. */
-export async function boxingSite({ write } = {}) {
+export async function boxingSite({ write, extend } = {}) {
   const profile = siteProfile()
   const kit = boxingKit()
   const build = await boxingFloristBuild({
@@ -144,6 +144,8 @@ export async function boxingSite({ write } = {}) {
     extend: (plan) => {
       withPlansPage(plan)
       withMenus(plan)
+      // A test's own change of the approved plan, read like the build reads it (`extend` returns the plan to use).
+      if (extend) Object.assign(plan, extend(plan, kit))
     }
   })
   build.aiq.mapping = kit.mapping

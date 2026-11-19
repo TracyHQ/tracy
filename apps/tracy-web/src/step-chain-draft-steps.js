@@ -22,6 +22,7 @@
 // build model door (`buildModel`, `lib/llm-catalog.js`), resolved once per step by the injected resolver; no step names
 // a model. 🔒 NOTHING HELD REACHES THE WRITER. The draft keeps the full gated profile (`withWithheld`); every step
 // reads it through `withoutWithheld`.
+import { withHeldContainers } from 'website-opportunities/domain/plan-held-containers.mjs'
 import { selectBuildIcons, placeBuildPictures } from 'website-opportunities/domain/picture-step.mjs'
 import { writePages } from 'website-opportunities/domain/page-writer.mjs'
 import { withoutWithheld } from 'website-opportunities/domain/plan-withheld.mjs'
@@ -110,7 +111,11 @@ export function createDraftSteps(deps) {
 
     async plan(ctx, { kit } = {}) {
       const draft = await source.of(ctx)
-      const { plan, profile, lastEdit, draftId } = draft
+      const { profile, lastEdit, draftId } = draft
+      // A held block placed without its kit container gets the container (#575, `plan-held-containers.mjs`).
+      const stores = new Map(list(kit?.aiq?.blockStore?.blocks).map((b) => [b.id, b]))
+      const held = withHeldContainers(draft.plan, kit?.aiq?.mapping, (id) => stores.get(id))
+      const plan = held.plan
       // A revision run (#599, `step-chain-draft-revision.js`): the previous build and which pages are written again.
       const revision = kit ? await revisionOf(deps, ctx, { kit, plan, profile }) : null
       const recorded = {
@@ -118,6 +123,7 @@ export function createDraftSteps(deps) {
         plan: plan.id ?? null,
         revision: plan.revision ?? null,
         pages: plan.pages.length,
+        ...(held.added.length ? { containersAdded: held.added } : {}),
         ...(revision ? { rebuild: revisionRecordOf(revision) } : {})
       }
       // `brand`: the kept brand file of the plan's look (`step-chain-draft-source.js`), whose pictures the write places.
