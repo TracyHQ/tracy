@@ -97,6 +97,12 @@ const failedItemOf = (op, error) => ({
   op: op.key,
   place: error?.details?.slot ?? error?.details?.ref ?? null,
   reason: typeof error?.code === 'string' ? error.code : null,
+  // What the door said beyond its code (#575: a live `sheets_unreadable` and a `contract_failed` came with no cause):
+  // a typed stop's own reason, the plugin's first error code, or the start of its message.
+  detail:
+    error?.details?.reason ??
+    error?.details?.errors?.[0]?.code ??
+    (String(error?.message ?? '').slice(0, 200) || null),
   at: 'door'
 })
 
