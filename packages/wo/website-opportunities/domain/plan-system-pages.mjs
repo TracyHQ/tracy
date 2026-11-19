@@ -44,105 +44,67 @@ function identityFactsOf(pages, data) {
     .map((f) => f.id)
 }
 
-function legalPagesOf(given, { data, ids }, problem) {
-  const entries = list(given)
-  const privacy = entries.filter((e) => e.kind === PRIVACY_KIND)
-  entries.forEach((e, i) => {
-    if (e.kind !== PRIVACY_KIND)
-      problem(
-        'privacy_page',
-        `legalPages[${i}].kind`,
-        `the only legal page a plan carries is of kind "${PRIVACY_KIND}"`
-      )
-  })
-  if (privacy.length !== 1) {
-    problem('privacy_page', 'legalPages', 'the plan carries exactly one legal page of kind "privacy"')
-    return []
-  }
-  const entry = privacy[0]
-  const at = `legalPages[${entries.indexOf(entry)}]`
-  if (entry.use !== CREATE_PAGE) {
-    // The template's own Privacy page: a page type the plan keeps, named the same in `id`.
-    if (!ids.has(entry.use))
-      problem(
-        'privacy_page',
-        `${at}.use`,
-        `"${entry.use}" is neither "create" nor the page type of a page the plan keeps`
-      )
-    else if (entry.id !== entry.use)
-      problem('privacy_page', `${at}.id`, "the id of the template's own page is its page type")
-    return ids.has(entry.use) ? [{ kind: PRIVACY_KIND, use: ids.get(entry.use), id: ids.get(entry.use) }] : []
-  }
-  if (entry.id !== PRIVACY_PAGE_ID)
-    problem('privacy_page', `${at}.id`, `a Privacy page you plan has the fixed id "${PRIVACY_PAGE_ID}"`)
-  if (!isText(entry.says)) problem('privacy_page', `${at}.says`, 'a Privacy page you plan has a says line')
-  const factIds = list(entry.factIds)
-  if (factIds.length === 0)
-    problem(
-      'privacy_page',
-      `${at}.factIds`,
-      'a Privacy page you plan rests only on facts: cite them in factIds'
-    )
-  factIds.forEach((id, j) => {
-    if (!data?.byId?.has(id))
-      problem(
-        'privacy_page',
-        `${at}.factIds[${j}]`,
-        `${JSON.stringify(id)} is not a fact or item of the business`
-      )
-    else if (data.withheld?.has(id))
-      problem('privacy_page', `${at}.factIds[${j}]`, `${JSON.stringify(id)} is kept off the site`)
-  })
+/** The Privacy page code plans: created, resting on the business name and the contact channels the pages show. */
+const plannedPrivacy = (pages, data) => ({
+  kind: PRIVACY_KIND,
+  use: CREATE_PAGE,
+  id: PRIVACY_PAGE_ID,
+  says: PRIVACY_SAYS,
+  factIds: identityFactsOf(pages, data)
+})
+
+/**
+ * The plan's Privacy page from the model's `legalPages`, repaired by code and never a gate failure (#575): these are
+ * details code derives, not the plan's substance. Only the privacy entry is read (another kind is dropped); the
+ * template's own page is kept when the plan keeps its page type, else the page is created; a created page takes its
+ * fixed id, a says line, and only the facts that are the business's and shown (none left: the facts code plans).
+ */
+function legalPagesOf(given, { pages, data, ids }) {
+  const entry = list(given).find((e) => e?.kind === PRIVACY_KIND)
+  if (!entry) return [plannedPrivacy(pages, data)]
+  if (entry.use !== CREATE_PAGE && ids.has(entry.use))
+    return [{ kind: PRIVACY_KIND, use: ids.get(entry.use), id: ids.get(entry.use) }]
+  const usable = list(entry.factIds).filter((id) => data?.byId?.has(id) && !data.withheld?.has(id))
+  const planned = plannedPrivacy(pages, data)
   return [
     {
-      kind: PRIVACY_KIND,
-      use: CREATE_PAGE,
-      id: PRIVACY_PAGE_ID,
-      says: entry.says,
-      factIds: [...new Set(factIds)]
+      ...planned,
+      says: isText(entry.says) ? entry.says : PRIVACY_SAYS,
+      factIds: usable.length ? [...new Set(usable)] : planned.factIds
     }
   ]
 }
 
-function notFoundOf(given, { ids }, problem) {
-  if (!isText(given.says)) problem('not_found_page', 'notFound.says', 'the not-found page has no says line')
-  const leadsTo = list(given.leadsTo)
-  if (leadsTo.length === 0) problem('not_found_page', 'notFound.leadsTo', 'the not-found page leads nowhere')
-  leadsTo.forEach((type, i) => {
-    if (!ids.has(type))
-      problem(
-        'not_found_page',
-        `notFound.leadsTo[${i}]`,
-        `"${type}" is not the page type of a page the plan keeps`
-      )
-  })
-  return { says: given.says, leadsTo: [...new Set(leadsTo.filter((t) => ids.has(t)).map((t) => ids.get(t)))] }
+/**
+ * The not-found page from the model's `notFound`, repaired by code and never a gate failure (#575, the stopped build
+ * whose model wrote `leadsTo: ["home"]` for a plan with no page of that type): a link to a page type the plan does not
+ * keep is dropped, and with none left the page leads to the first page of the plan (the site's home page, as the step
+ * chain's not-found page did). No says line: the line code plans.
+ */
+function notFoundOf(given, { pages, ids }) {
+  const leadsTo = [
+    ...new Set(
+      list(given?.leadsTo)
+        .filter((t) => ids.has(t))
+        .map((t) => ids.get(t))
+    )
+  ]
+  return {
+    says: isText(given?.says) ? given.says : NOT_FOUND_SAYS,
+    leadsTo: leadsTo.length ? leadsTo : pages.slice(0, 1).map((p) => p.id)
+  }
 }
 
 /**
- * The plan's `legalPages` and `notFound` from the composition, on the plan's final pages, every problem through
- * `problem(code, at, message)` (codes `privacy_page`, `not_found_page`). What the model does not plan, code plans.
+ * The plan's `legalPages` and `notFound` from the composition, on the plan's final pages. Both are derived and
+ * repaired by code, never a gate failure (#575): what the model does not plan, or plans wrong, code plans.
  * @param {object} composition the gated reply
  * @param {{pages: object[], data: object}} context the plan's final pages (with ids) and the plan data
  */
-export function systemPagesOf(composition, { pages, data }, problem) {
+export function systemPagesOf(composition, { pages, data }) {
   const ids = pageIdsByType(pages)
-  const legalPages =
-    composition.legalPages === undefined
-      ? [
-          {
-            kind: PRIVACY_KIND,
-            use: CREATE_PAGE,
-            id: PRIVACY_PAGE_ID,
-            says: PRIVACY_SAYS,
-            factIds: identityFactsOf(pages, data)
-          }
-        ]
-      : legalPagesOf(composition.legalPages, { data, ids }, problem)
-  const notFound =
-    composition.notFound === undefined
-      ? { says: NOT_FOUND_SAYS, leadsTo: pages.slice(0, 1).map((p) => p.id) }
-      : notFoundOf(composition.notFound, { ids }, problem)
+  const legalPages = legalPagesOf(composition.legalPages, { pages, data, ids })
+  const notFound = notFoundOf(composition.notFound, { pages, ids })
   return { legalPages, notFound }
 }
 

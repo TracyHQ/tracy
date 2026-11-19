@@ -77,43 +77,63 @@ test('when the model plans none, code plans a created Privacy page on the shown 
   assert.deepEqual(checkBuildDocument(result.plan), { ok: true, problems: [] })
 })
 
-test('a created Privacy page rests only on facts of the business (R09 adapted)', () => {
-  const none = gate(withPages({ legalPages: [{ ...PRIVACY, factIds: [] }] }))
-  assert.deepEqual(codes(none), ['privacy_page'])
-  const invented = gate(withPages({ legalPages: [{ ...PRIVACY, factIds: ['fact-data-officer'] }] }))
-  assert.deepEqual(codes(invented), ['privacy_page'])
-  assert.equal(invented.problems[0].at, 'legalPages[0].factIds[0]')
-  const noSays = gate(withPages({ legalPages: [{ ...PRIVACY, says: ' ' }] }))
-  assert.deepEqual(codes(noSays), ['privacy_page'])
+// The legal and not-found pages are derived details: code repairs what the model gets wrong, never a gate failure
+// that costs a composition attempt (#575, a stopped build on `notFound.leadsTo: ["home"]`).
+const passes = (composition) => {
+  const result = gate(composition)
+  assert.equal(result.ok, true, JSON.stringify(result.problems))
+  return result.plan
+}
+
+test('a created Privacy page rests only on facts of the business: code keeps those and fills the rest', () => {
+  const planned = passes({ ...goodComposition(), notFound: NOT_FOUND }).legalPages[0]
+  assert.deepEqual(
+    passes(withPages({ legalPages: [{ ...PRIVACY, factIds: [] }] })).legalPages[0].factIds,
+    planned.factIds
+  )
+  const invented = passes(
+    withPages({ legalPages: [{ ...PRIVACY, factIds: ['fact-data-officer', 'contact-email'] }] })
+  )
+  assert.deepEqual(invented.legalPages[0].factIds, ['contact-email'])
+  assert.equal(
+    passes(withPages({ legalPages: [{ ...PRIVACY, says: ' ' }] })).legalPages[0].says,
+    planned.says
+  )
 })
 
 test('a created Privacy page has the fixed id legal:privacy, and exactly one privacy entry is planned', () => {
-  assert.deepEqual(codes(gate(withPages({ legalPages: [{ ...PRIVACY, id: 'privacy' }] }))), ['privacy_page'])
-  assert.deepEqual(codes(gate(withPages({ legalPages: [] }))), ['privacy_page'])
-  assert.deepEqual(codes(gate(withPages({ legalPages: [PRIVACY, { ...PRIVACY, kind: 'terms' }] }))), [
-    'privacy_page'
-  ])
+  assert.equal(
+    passes(withPages({ legalPages: [{ ...PRIVACY, id: 'privacy' }] })).legalPages[0].id,
+    'legal:privacy'
+  )
+  assert.equal(passes(withPages({ legalPages: [] })).legalPages[0].id, 'legal:privacy')
+  assert.deepEqual(
+    passes(withPages({ legalPages: [{ ...PRIVACY, kind: 'terms' }, PRIVACY] })).legalPages.map((l) => l.kind),
+    ['privacy']
+  )
 })
 
-test("the template's own Privacy page is a page type the plan keeps, named the same", () => {
-  const own = gate(withPages({ legalPages: [{ kind: 'privacy', use: 'contact', id: 'contact' }] }))
-  assert.equal(own.ok, true, JSON.stringify(own.problems))
-  assert.deepEqual(own.plan.legalPages, [{ kind: 'privacy', use: 'contact', id: 'contact' }])
-  const missing = gate(
+test("the template's own Privacy page is a page type the plan keeps; one it does not keep is created", () => {
+  const own = passes(withPages({ legalPages: [{ kind: 'privacy', use: 'contact', id: 'contact' }] }))
+  assert.deepEqual(own.legalPages, [{ kind: 'privacy', use: 'contact', id: 'contact' }])
+  const missing = passes(
     withPages({ legalPages: [{ kind: 'privacy', use: 'privacy-policy', id: 'privacy-policy' }] })
   )
-  assert.deepEqual(codes(missing), ['privacy_page'])
-  assert.equal(missing.problems[0].at, 'legalPages[0].use')
+  assert.deepEqual([missing.legalPages[0].use, missing.legalPages[0].id], ['create', 'legal:privacy'])
 })
 
-test('the not-found page says something and leads to a kept page (R09, R10d)', () => {
-  assert.deepEqual(codes(gate(withPages({ notFound: { says: '', leadsTo: ['home'] } }))), ['not_found_page'])
-  assert.deepEqual(codes(gate(withPages({ notFound: { says: 'Not here.', leadsTo: [] } }))), [
-    'not_found_page'
+test('the not-found page leads only to kept pages: code drops the rest, and leads home when none is left', () => {
+  const home = passes(withPages({})).pages[0].id
+  assert.ok(passes(withPages({ notFound: { says: '', leadsTo: ['home'] } })).notFound.says.length > 0)
+  assert.deepEqual(passes(withPages({ notFound: { says: 'Not here.', leadsTo: [] } })).notFound.leadsTo, [
+    home
   ])
-  const nowhere = gate(withPages({ notFound: { says: 'Not here.', leadsTo: ['blog'] } }))
-  assert.deepEqual(codes(nowhere), ['not_found_page'])
-  assert.equal(nowhere.problems[0].at, 'notFound.leadsTo[0]')
+  assert.deepEqual(
+    passes(withPages({ notFound: { says: 'Not here.', leadsTo: ['blog'] } })).notFound.leadsTo,
+    [home]
+  )
+  const mixed = passes(withPages({ notFound: { says: 'Not here.', leadsTo: ['blog', 'team'] } }))
+  assert.deepEqual(mixed.notFound.leadsTo.length, 1)
 })
 
 test('the reply shape of the legal and not-found pages is closed: no slug, no address', () => {

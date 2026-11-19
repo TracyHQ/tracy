@@ -213,7 +213,7 @@ export function gatePlan(reply, context) {
   const kitPages = kitPagesLeftOut({ ...context, pages: rows.pages, except: context.removedPageTypes })
   // The Privacy Policy page and the not-found page, on the final pages (`plan-system-pages.mjs`, step chain R09).
   const before = problems.length
-  const systemPages = systemPagesOf(composition, { pages: rows.pages, data: context.data }, problem)
+  const systemPages = systemPagesOf(composition, { pages: rows.pages, data: context.data })
   const systemProblems = problems.length > before
   // The step chain's intent for the writer (`plan-intent.mjs`): notes, key messages placed, search terms, main action.
   const intent = planIntentOf(composition, rows.pages, context, { fix, problem, index: dropped.index, kept })
