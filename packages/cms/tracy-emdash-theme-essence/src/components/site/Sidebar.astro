@@ -15,7 +15,7 @@ import { stampFor } from '@/lib/stamps'
 import Newsletter from '@/components/site/Newsletter.astro'
 import PostMeta from '@/components/site/PostMeta.astro'
 import PostPill from '@/components/site/PostPill.astro'
-import Icon from '@/components/site/Icon.astro'
+import FollowItem from '@/components/site/FollowItem.astro'
 
 interface Props { chrome: Chrome; locale: Locale | string; posts: PostRow[]; current?: PostRow | null; prefer?: PostRow[]; features?: boolean }
 const { chrome, posts, current = null, prefer = [], features: showFeatures = true } = Astro.props
@@ -29,12 +29,14 @@ const tagOrder = ((await getTaxonomyTerms('tag').catch(() => [])) as { slug: str
 const tags = tagCloud(live, 6, tagOrder)
 const follow = chrome.social['follow-me']
 const $f = stampFor(Astro.request, 'social', follow?.entry)
+
 const cover = (p: PostRow) => mediaUrl(p.cover)
 // a social link counts only when the editor gave it a real address
 const own = (url: string | undefined) => {
   const h = url ? dataHref(url, (p) => href(locale, p)) : null
   return h && h !== '#' ? h : null
 }
+const followItems = (follow?.items ?? []).map((it) => ({ net: networkOf(it.font_icon, it.title), url: own(it.link), title: it.title }))
 ---
 
 <aside class="es-sidebar">
@@ -89,14 +91,7 @@ const own = (url: string | undefined) => {
 		<section class="es-side-box es-side-follow" {...$f()}>
 			<h3 class="es-side-title" {...$c('follow_title')}>{site.follow_title}</h3>
 			<div class="es-follow">
-				{follow.items.map((it) => {
-					const net = networkOf(it.font_icon, it.title)
-					const url = own(it.link)
-					const glyph = <Icon name={net} size={16} weight="fill" />
-					return url
-						? <a class={`es-round is-${net}`} href={url} title={it.title} aria-label={it.title}>{glyph}</a>
-						: <span class={`es-round is-${net}`} title={it.title}>{glyph}</span>
-				})}
+				{followItems.map((f) => <FollowItem net={f.net} url={f.url} title={f.title} />)}
 			</div>
 		</section>
 	)}

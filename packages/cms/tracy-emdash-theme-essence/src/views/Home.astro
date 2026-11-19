@@ -23,12 +23,14 @@ const pages = Math.max(1, Math.ceil(blog.length / PER_PAGE))
 const page = Math.min(pages, Math.max(1, parseInt(Astro.url.searchParams.get('page') ?? '1', 10) || 1))
 const shown = blog.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const site = chrome.site
 ---
 
 <Base chrome={chrome} title={ui(locale).w.home} currentPath="/" headerVariant="home" robots="index, follow">
 	<main id="main" class="es-home">
 		<PageOwner stamp={$c} />
-		<h1 class="sr-only" {...$c('brand_name')}>{chrome.site.brand_name}</h1>
+		<h1 class="sr-only" {...$c('brand_name')}>{site.brand_name}</h1>
+		<p class="sr-only" {...$c('footer_text')}>{site.footer_text}</p>
 		<LeadStrip posts={lead} chrome={chrome} authors={authors} />
 		<LeadList posts={lead.slice(0, 3)} chrome={chrome} />
 		<div class="es-home-blog">

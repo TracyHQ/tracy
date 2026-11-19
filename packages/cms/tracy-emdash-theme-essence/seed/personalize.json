@@ -25,6 +25,28 @@
         "es": "Copyright © {year} {name}. Todos los derechos reservados.",
         "zh": "版权所有 © {year} {name}。保留所有权利。"
       }
+    },
+    {
+      "collection": "social",
+      "slug": "social",
+      "field": "items",
+      "value": [],
+      "from": "social",
+      "item": {
+        "label": "{name}",
+        "url": "{url}"
+      }
+    },
+    {
+      "collection": "social",
+      "slug": "follow-me",
+      "field": "items",
+      "value": [],
+      "from": "social",
+      "item": {
+        "label": "{name}",
+        "url": "{url}"
+      }
     }
   ],
   "replace": [
@@ -67,7 +89,113 @@
       "maxWords": 45
     }
   ],
-  "rewrite": [],
+  "rewrite": [
+    {
+      "collection": "posts",
+      "slugs": [
+        "vintage-inspired-martini-cocktail-glasses",
+        "healthy-eating-tips-for-busy-professionals",
+        "mindful-eating-for-weight-management-blog-health",
+        "exercise-routines-for-overall-fitness",
+        "beauty-in-simplicity-exploring-line-art",
+        "drawing-with-elegance-the-art-of-line-work-blog-health",
+        "embracing-minimalism-line-art-creations-blog-health",
+        "capturing-essence-expressive-line-art-techniques-blog-health",
+        "from-lines-to-life-mastering-the-art-of-line-drawing",
+        "the-power-of-lines-creating-impactful-line-art",
+        "fluid-lines-infinite-possibilities-line-art-inspirations-blog-health",
+        "dancing-with-lines-dynamic-line-art-expressions-blog-health",
+        "harmony-in-lines-balancing-elements-in-line-art-blog-health",
+        "the-beauty-of-symmetry-symmetrical-line-art-designs",
+        "beyond-black-and-white-adding-colors-to-line-art-blog-design",
+        "sketching-stories-narrative-elements-in-line-art-blog-design",
+        "organic-geometry-exploring-geometric-line-art-blog-design",
+        "line-art-portraits-capturing-emotions-with-lines",
+        "nature-s-intricacy-botanical-line-art-explorations-blog-design",
+        "architectural-wonders-line-art-in-buildings-and-landscapes-blog-design",
+        "outlining-creativity-line-art-for-illustrations-and-designs",
+        "whimsical-wonders-imaginative-line-art-creations-blog-design",
+        "harmony-in-lines-balancing-elements-in-line-art-blog-fashion",
+        "dancing-with-lines-dynamic-line-art-expressions-blog-fashion",
+        "fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion",
+        "harmony-in-lines-balancing-elements-in-line-art-blog-normal-health",
+        "capturing-essence-expressive-line-art-techniques-blog-normal-health",
+        "embracing-minimalism-line-art-creations-blog-normal-health",
+        "drawing-with-elegance-the-art-of-line-work-blog-normal-health",
+        "architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design",
+        "organic-geometry-exploring-geometric-line-art-blog-normal-design",
+        "beyond-black-and-white-adding-colors-to-line-art-blog-normal-design",
+        "fluid-lines-infinite-possibilities-line-art-inspirations-blog-normal-fashion",
+        "dancing-with-lines-dynamic-line-art-expressions-blog-normal-fashion",
+        "harmony-in-lines-balancing-elements-in-line-art-blog-normal-fashion",
+        "whimsical-wonders-imaginative-line-art-creations-resources",
+        "architectural-wonders-line-art-in-buildings-and-landscapes-resources",
+        "nature-s-intricacy-botanical-line-art-explorations-resources",
+        "sketching-stories-narrative-elements-in-line-art-resources",
+        "abstract-wonders-exploring-line-art-composition-resources",
+        "capturing-essence-expressive-line-art-techniques-resources",
+        "mindful-eating-for-weight-management-resources-2",
+        "essential-nutrients-for-optimal-health-resources-2",
+        "mental-health-and-well-being-strategies-resources-2",
+        "natural-remedies-for-common-ailments-resources-2",
+        "fitness-tips-for-a-healthy-lifestyle-resources-2",
+        "abstract-wonders-exploring-line-art-composition-blog-health",
+        "mental-health-and-well-being-strategies-blog-health",
+        "essential-nutrients-for-optimal-health-blog-health",
+        "fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+        "natural-remedies-for-common-ailments-blog-fashion"
+      ],
+      "brief": "one article this publication would run for its readers: a story, a how-to or a short opinion in the field the business works in",
+      "fields": [
+        "title",
+        "excerpt",
+        "body"
+      ],
+      "body": "body",
+      "bodyWords": 160,
+      "batch": 3,
+      "decides": [
+        "title"
+      ]
+    },
+    {
+      "collection": "authors",
+      "slugs": [
+        "alfonso-cortez",
+        "trevor-patrick",
+        "eula-ward",
+        "laverne-robbins",
+        "woodrow-ortega",
+        "faith-singleton",
+        "maxine-palmer",
+        "adrian-perez",
+        "shelia-ortiz"
+      ],
+      "brief": "the two-sentence biography of one writer of this publication",
+      "fields": [
+        "bio"
+      ],
+      "batch": 4
+    },
+    {
+      "collection": "category_info",
+      "slugs": [
+        "blog-health",
+        "blog-design",
+        "blog-fashion",
+        "blog-normal-health",
+        "blog-normal-design",
+        "blog-normal-fashion",
+        "resources",
+        "resources-2"
+      ],
+      "brief": "the one-sentence introduction of one group of this publication's articles",
+      "fields": [
+        "description"
+      ],
+      "batch": 5
+    }
+  ],
   "facts": [
     {
       "collection": "chrome",
@@ -105,8 +233,16 @@
     },
     {
       "collection": "category_info"
+    },
+    {
+      "collection": "gallery"
+    },
+    {
+      "collection": "authors"
     }
   ],
   "blocks": [],
-  "keptText": []
+  "keptText": [
+    "chrome/chrome.newsletter_terms"
+  ]
 }

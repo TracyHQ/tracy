@@ -3,6 +3,7 @@ import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
 import { networkOf } from '@/lib/chrome'
 import { stampFor } from '@/lib/stamps'
 import { href } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
 import { brandLogos, logoSpots } from '@/lib/brand'
 import { getSiteSettings } from 'emdash'
 import BrandLogo from '@/components/site/BrandLogo.astro'
@@ -19,6 +20,7 @@ interface Props {
 }
 const { chrome, currentPath, variant = 'inner' } = Astro.props
 const { site, locale } = chrome
+const { w } = ui(locale)
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const settings = await getSiteSettings()
 const logos = brandLogos(settings, site.logo_dark, site.brand_name)
@@ -90,7 +92,7 @@ const subscribeUrl = site.subscribe_link && live(site.subscribe_link) ? own(site
 		</form>
 	</div>
 	<div class="es-offcanvas" id="offcanvas" hidden>
-		<button type="button" class="es-icon-btn" data-offcanvas-close aria-label="Close"><Icon name="close" size={22} /></button>
+		<button type="button" class="es-icon-btn" data-offcanvas-close aria-label={w.close}><Icon name="close" size={22} /></button>
 		<ul>
 			{primary.map((item) => (
 				<li>

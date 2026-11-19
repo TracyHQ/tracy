@@ -6,6 +6,7 @@ set -euo pipefail
 W="${SRC_WORK:?SRC_WORK is the folder holding spec/ j6/ webroot/}"
 cp "$W/spec/site-model.json" seed/site-model.json
 node ingest/enrich-essence.mjs seed/site-model.json "$W/spec/content.json" "$W/j6/inventory.json" "$W/webroot"
+node ingest/blank-hash-links.mjs seed/site-model.json
 node ingest/bind-paths.mjs seed/site-model.json
 node tools/compile-seed.mjs seed/site-model.json seed --config seed/compile.config.json
 node ingest/normalize-seed-dates.mjs seed/seed.json

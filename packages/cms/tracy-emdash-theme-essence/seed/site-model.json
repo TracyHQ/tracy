@@ -2409,7 +2409,7 @@
         "auto_play": "0",
         "auto_time": "2500",
         "gallery_title": "@Grazia on instagram",
-        "gallery_link": "#",
+        "gallery_link": "",
         "title": "Gallery",
         "items": [
           {
@@ -2451,22 +2451,22 @@
           {
             "font_icon": "fa fa-facebook",
             "title": "Facebook",
-            "link": "#"
+            "link": ""
           },
           {
             "font_icon": "fa fa-twitter",
             "title": "Twitter",
-            "link": "#"
+            "link": ""
           },
           {
             "font_icon": "fa fa-instagram",
             "title": "Instagram",
-            "link": "#"
+            "link": ""
           },
           {
             "font_icon": "fa fa-rss",
             "title": "Rss",
-            "link": "#"
+            "link": ""
           }
         ]
       }
@@ -2483,22 +2483,22 @@
           {
             "font_icon": "fa fa-facebook",
             "title": "Facebook",
-            "link": "#"
+            "link": ""
           },
           {
             "font_icon": "fa fa-twitter",
             "title": "Twitter",
-            "link": "#"
+            "link": ""
           },
           {
             "font_icon": "fa fa-instagram",
             "title": "Instagram",
-            "link": "#"
+            "link": ""
           },
           {
             "font_icon": "fa fa-rss",
             "title": "Rss",
-            "link": "#"
+            "link": ""
           }
         ]
       }
