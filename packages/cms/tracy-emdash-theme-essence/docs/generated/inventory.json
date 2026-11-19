@@ -838,7 +838,7 @@
     "src/styles/global.css": "sha256:61944a292af28ab2a4930f4c3ab9f1c30b52bc9ffa70bcc1ad3f47dc573f6bac",
     "src/styles/pages/category.css": "sha256:c408af33d96863c37d31637793c7c3f02f923aca0174bf3734170d33e4e42fbd",
     "src/styles/pages/home.css": "sha256:29f77e628491631a5a7697e84c0e07c021550c17eea494080b65215e8448cba2",
-    "src/styles/pages/misc.css": "sha256:f11f9070ede2357b883e7742c17d3993f83bf0aae2846608a0fbe74099f88881",
+    "src/styles/pages/misc.css": "sha256:c1aed42a1421d6df3724ead646346926f56481e817152249fbf7eb70adc6eed6",
     "src/styles/pages/post.css": "sha256:0509d86300031af5aa4d28fbff0c3fe86efdf7170e9cdd4e26d135c991315c2b",
     "src/styles/tokens.css": "sha256:0574ea9828c309de0be065cbaa662beec80c7a80b5d14bc944817e7466c2cacb",
     "src/views/Authors.astro": "sha256:3f5c11e4126d403a5a2d3401a43299ca377813a53ca5a5217cc4917e8e89a2b4",
