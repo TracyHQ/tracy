@@ -211,8 +211,8 @@
 	.es-side-text h4 a { color: var(--color-heading); }
 	.es-side-text h4 a:hover { color: var(--color-accent-text-hover); }
 	.es-side-latest .es-side-text .es-info { margin-top: 0; }
-	/* below 992px the source leaves ~15px more under a latest-article title (measured: date 35px under the title top at 768, 59px at 390) */
-	@media (max-width: 991px) { .es-side-latest .es-side-text .es-info { margin-top: 15px; } }
+	/* the source's latest-article title: an 18px/23.4px block link with 12px under it (measured at 1440, 768, 390) */
+	.es-side-latest .es-side-text h4 a { display: block; font-size: 18px; line-height: 23.4px; padding-bottom: 12px; }
 	.es-side-features .es-side-text h4 { margin-bottom: 12px; font-size: 18px; }
 	html[data-theme="dark"] .es-side-num { opacity: .5; }
 	.es-side-num { flex: none; padding-right: 33px; font-family: var(--font-display); font-size: 56px; line-height: 1; letter-spacing: -.02em; opacity: .2; color: #4d6bff; }

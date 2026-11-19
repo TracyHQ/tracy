@@ -160,4 +160,6 @@
 	@media (min-width: 576px) and (max-width: 991px) { .es-cat.is-sidebar .es-cat-list .es-card { margin-bottom: 12px; } }
 	/* three columns: each row's cards end level, as the source's do (the two-column tablet list stacks on its own, see Category.astro) */
 	@media (min-width: 1200px) { .es-cat-grid { align-items: stretch; } }
+	/* an author's page on a phone starts 68px under the header (measured: 32px more than the other lists) */
+	@media (max-width: 575px) { .es-cat[data-by="author"] { padding-top: 68px; } }
 }
