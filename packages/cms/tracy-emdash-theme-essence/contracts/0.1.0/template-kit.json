@@ -110045,7 +110045,11 @@
       ]
     }
   ],
-  "approval": null,
+  "approval": {
+    "by": "hano-xbt",
+    "at": "2026-11-19T23:36:58.862Z",
+    "imagesSha256": "d53a924a83fbfce5d61339532a47f8616e6ec2fee118e9bd51cd5d6395b07636"
+  },
   "site": {
     "logoSpots": [
       {
