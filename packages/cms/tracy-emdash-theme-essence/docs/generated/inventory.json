@@ -759,7 +759,7 @@
     "astro.config.mjs": "sha256:072082c5093bed8434eeffd68c8fb268baf142c6c12af956fccedb33be5b5b6a",
     "package.json": "sha256:c1d984e1d97655453b1d6b515e5a34111da8e767e9e5c6ddac00efb08a3ff287",
     "pnpm-lock.yaml": "sha256:d7a904f4d0cc00b3c5d5012916f76bcd7a021cfedb84133d3ea15adf598f96af",
-    "seed/field-map.json": "sha256:c20814ac0e85ea59a1fecceeba28dfb7599d18a0cb02a148020ba5054dc3bdc4",
+    "seed/field-map.json": "sha256:32a17107af41411203dc7675db7a5ca313380bf24c9753fe6a165892c3837ebd",
     "seed/media-map.json": "sha256:19782aef06ebfd07df9f0b20150812514aa4dc8b3b8688d01beb4f54e9eabbd0",
     "seed/seed.json": "sha256:f9f7b2f1304c84b0823799c8a4a2cba2808e9db2e22460c18fe5e3ea834e8db3",
     "src/components/site/AuthorBox.astro": "sha256:c51090aa0d3095bbee63ec4c38ba70fe857e64ac544c19c245a2c88207cdd9de",
