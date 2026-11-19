@@ -226,6 +226,66 @@ export async function readTheme(page, theme) {
 }
 
 // ───────────────────────── navigation ─────────────────────────
+/**
+ * Whether a request of a page that renders the design SOURCE leaves the source's own origin. Only http(s) requests
+ * are judged (a `data:` or `blob:` URL never reaches the network); another port of the same loopback address is
+ * another origin (a mirror still names the stand it was crawled from, which is gone).
+ * @param {string} url the request's URL
+ * @param {string} origin the source site (`--source-site`)
+ */
+export function offSourceOrigin(url, origin) {
+  let u
+  try {
+    u = new URL(url)
+  } catch {
+    return false
+  }
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') return false
+  return u.origin !== new URL(origin).origin
+}
+
+/**
+ * The font hosts a source capture lets through (owner decision, 2026-11-17): Google Fonts' stylesheet host and its
+ * file host. They serve static files that answer a headless browser, and a source that loads its webfonts from them
+ * (the JA Restaurant and JA Diner mirrors do) needs them for visual parity; without them its pages render in the
+ * fallback font. A fixed list: every other host stays blocked.
+ */
+export const SOURCE_FONT_HOSTS = Object.freeze(['fonts.googleapis.com', 'fonts.gstatic.com'])
+
+/**
+ * Whether a request of a page that renders the design SOURCE is aborted: it leaves the source's own origin
+ * (`offSourceOrigin`) and its host is not one of the font hosts.
+ * @param {string} url the request's URL
+ * @param {string} origin the source site (`--source-site`)
+ * @param {readonly string[]} [fontHosts] the hosts let through (SOURCE_FONT_HOSTS)
+ */
+export function blockedForSource(url, origin, fontHosts = SOURCE_FONT_HOSTS) {
+  return offSourceOrigin(url, origin) && !fontHosts.includes(new URL(url).hostname)
+}
+
+/**
+ * 🔒 THE SOURCE IS CAPTURED OFFLINE (owner decisions, 2026-11-17). Every request of `page` to a host other than the
+ * source's own origin is aborted and its URL added to `blocked`, so the run can say what the mirror asked for and did
+ * not get; only the font hosts (SOURCE_FONT_HOSTS) are let through, because the source's webfonts are needed for
+ * visual parity. Measured on JA Restaurant 1.0.3: the source home page embeds an OpenTable booking frame that never
+ * answers a headless Chromium, so the page never reached `networkidle` and every home axis of every stage crashed
+ * (`axis-error`, 6 per run); a map frame from google.com made the Contact source shots differ between two runs of
+ * the same mirror. Widgets, maps, analytics and every other host stay blocked. The site under test is not routed: a
+ * request it makes to another host is a finding of the browser gate.
+ * @param {import('playwright').Page} page
+ * @param {string} origin the source site (`--source-site`)
+ * @param {Set<string>} blocked collects the aborted URLs
+ * @param {{ fontHosts?: readonly string[] }} [options] the hosts let through (SOURCE_FONT_HOSTS; tests pass their own)
+ */
+export async function keepSourceOffline(page, origin, blocked, { fontHosts = SOURCE_FONT_HOSTS } = {}) {
+  await page.route('**/*', (route) => {
+    const url = route.request().url()
+    if (!blockedForSource(url, origin, fontHosts)) return route.continue()
+    blocked.add(url)
+    return route.abort('blockedbyclient')
+  })
+}
+
 export async function navigate(page, url, { expectedStatus = 200, identity } = {}) {
   const response = await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 })
   let status = response?.status()

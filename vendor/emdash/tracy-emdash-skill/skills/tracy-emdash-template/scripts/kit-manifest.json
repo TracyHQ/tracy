@@ -210,9 +210,15 @@
         "stmt:f29f37e71d",
         "stmt:55f789bf61",
         "different prose or wrapping · 0 same code in a different order · 1 CODE DIFFERS · 0 missing · 14 template-only",
-        "stmt:aebb5aab80"
+        "stmt:aebb5aab80",
+        "sql",
+        "import better-sqlite3",
+        "stmt:2f44d24bcd",
+        "stateDb",
+        "stmt:10fc1d08d0",
+        "stmt:15502c5908"
       ],
-      "why": "Same exception as tracy-emdash-theme-diner, for Tracy Essence (the Diner release.mjs and tools/state-residue.mjs copied unchanged): tracy_site_pages.json comes from Tracy readiness page rule (REL-2) so pages under a submenu heading are listed; the kit sitePagesFor reads level 1 of the primary menu only. Same named declarations; every other statement must still match the kit. Same named declarations as the Diner entry; every other statement must still match the kit."
+      "why": "Same exception as tracy-emdash-theme-diner, for Tracy Essence: the Diner release.mjs and tools/state-residue.mjs copied unchanged (tracy_site_pages.json from Tracy's readiness page rule; the state archive is a fresh seed). Same named declarations; every other statement must still match the kit."
     },
     {
       "file": "tools/visual-qa.mjs",
