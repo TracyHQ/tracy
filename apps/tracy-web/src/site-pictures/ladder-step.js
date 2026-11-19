@@ -199,6 +199,19 @@ export function createFinisher({
       stopped ??= error
     }
     const climbing = () => [...running].filter((f) => s.progress.has(f) && !s.progress.get(f).done).length
+    // Where the round's time went (the manifest's timing, in ms, read on /api/ops/wo/bench-runs): the frame tasks as a
+    // whole, the look-ahead waves after them and the final look, and the time all frame tasks spent in each kind of step.
+    // The frame steps overlap, so their sums are frame-time, not wall time.
+    const startedAt = Date.now()
+    const spent = { climb: 0, darken: 0, look: 0, retry: 0, ahead: 0 }
+    async function timed(kind, work) {
+      const t = Date.now()
+      try {
+        return await work()
+      } finally {
+        spent[kind] += Date.now() - t
+      }
+    }
 
     // Each look is recorded once and paid once. A look another task was already taking comes back marked cached (the
     // looker took it once); its record gives way to the paid one.
@@ -346,18 +359,18 @@ export function createFinisher({
       try {
         let climbs = climbsFirst
         for (let pass = 0; !stopped; pass++) {
-          if (climbs) await climbFrame(ctx, s, frameId, (fn) => lock(frameId, fn))
+          if (climbs) await timed('climb', () => climbFrame(ctx, s, frameId, (fn) => lock(frameId, fn)))
           const held = s.entries.get(frameId)
           // Nothing for the looker: hidden, returned, still waiting, or drawn by code (icons, initials).
           if (stopped || !held || !LOOKED_SOURCES.has(held.entry.source) || !held.entry.file) return
-          await darkenFrame(frameId)
-          await lookAtFrame(frameId)
-          if (await retryFrame(frameId)) {
+          await timed('darken', () => darkenFrame(frameId))
+          await timed('look', () => lookAtFrame(frameId))
+          if (await timed('retry', () => retryFrame(frameId))) {
             climbs = false
             continue
           }
           if (!rejected(frameId) || pass >= MAX_PASSES) return
-          await lookAheadFor(frameId)
+          await timed('ahead', () => lookAheadFor(frameId))
           climbs = true
         }
       } finally {
@@ -410,7 +423,9 @@ export function createFinisher({
       ...placed.filter((f) => !climbers.includes(f)).map((f) => frameTask(f, false))
     ]
     await Promise.all(tasks.map((t) => t.catch(stop)))
+    const framesDone = Date.now()
     await Promise.all(background)
+    const aheadDone = Date.now()
     if (stopped) throw stopped
 
     const ordered = inFrameOrder([...s.entries], ([f]) => f, entryOrder)
@@ -423,6 +438,7 @@ export function createFinisher({
     // The whole manifest with every look on it, the twins' and the alts too, and the looker's rule: each of its looks was
     // taken above, so this asks the looker nothing new.
     const looked = await looker.look(s.docOf(), { memo })
+    const lookDone = Date.now()
     keepLooks(looked.doc.looker.calls)
     const lookCalls = inFrameOrder([...looks.values()], (c) => c.frame, entryOrder)
     const draws = inFrameOrder(s.draws, (c) => c.frame, entryOrder)
@@ -448,7 +464,20 @@ export function createFinisher({
           calls: draws
         },
         cost: { ...out.cost, looker: sum(lookCalls, 'costUsd'), drawer: sum(draws, 'costUsd') },
-        timing: { ...out.timing, looker: sum(lookCalls, 'ms'), drawer: sum(draws, 'ms') }
+        timing: {
+          ...out.timing,
+          looker: sum(lookCalls, 'ms'),
+          drawer: sum(draws, 'ms'),
+          roundFrameTasks: tasks.length,
+          roundFrames: framesDone - startedAt,
+          roundAheadAfter: aheadDone - framesDone,
+          roundFinalLook: lookDone - aheadDone,
+          roundClimbSum: spent.climb,
+          roundDarkenSum: spent.darken,
+          roundLookSum: spent.look,
+          roundRetrySum: spent.retry,
+          roundAheadSum: spent.ahead
+        }
       },
       rule: looked.rule,
       paid:

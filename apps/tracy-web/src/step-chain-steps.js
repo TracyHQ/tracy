@@ -56,6 +56,9 @@ const stepError = (message, usd = 0) => Object.assign(new Error(message), { usd 
  *   benchCli?: Partial<Record<'brand' | 'plan' | 'copy' | 'pictures', Function>> }} deps `keepFiles`: leave a
  *   run's files on disk after it ends
  */
+/** How many parts the copy step's first draft is written in at once (site-writer/writer-parts.js). */
+export const COPY_PARTS = 8
+
 /** How many parts the planner's first draft is planned in at once (site-planner/plan-parts.js). */
 export const PLAN_PARTS = 3
 
@@ -244,8 +247,12 @@ export function createStepChainSteps(deps) {
       // standing against 11; the copy step's spend doubles (0.19 against 0.09 USD). Five since 19/11/2026: on dev the
       // copy step became BXR London's longest (8.9 to 10.2 minutes) and its round 0 waited on its heaviest of three
       // parts (367 s against 177 s for the lightest); each part's first message is the same cached fixed part.
+      // Eight since 20/11/2026, the most the writer takes: on dev (lat18, 19/11/2026) the copy step's first draft waited
+      // on its heaviest of five parts, 364 s against 82 s for the lightest (BXR London; 213 s against 58 s at Arabian
+      // Tea House), and that draft is on the build's critical path (plan round 0, then the draft, then the final copy).
+      // Its parts spend about nine tenths of what they write on reasoning, which grows with the pages a part writes.
       '--parallel-pages',
-      '5'
+      String(COPY_PARTS)
     ]
   }
 
