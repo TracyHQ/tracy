@@ -84,8 +84,8 @@
 	.es-newsletter .es-btn:disabled { opacity: .6; cursor: not-allowed; }
 	.es-newsletter-terms { display: block; font-size: 14px; line-height: 21px; color: rgba(255, 255, 255, .7); }
 	.es-newsletter-terms span { display: inline; }
-	.es-newsletter-terms strong { font-weight: 700; color: #fff; }
-	.es-newsletter-terms input { display: inline-block; vertical-align: -1px; width: 13px; height: 13px; margin: 0 6px 0 0; accent-color: #fff; }
+	.es-newsletter-terms strong { font-weight: 400; color: #fff; }
+	.es-newsletter-terms input { display: inline-block; vertical-align: -1px; width: 13px; height: 13px; margin: 0 4px 0 0; accent-color: #fff; }
 	.es-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 	.es-newsletter-status { margin: 0; font-size: 14px; }
 	.es-newsletter-status:empty { display: none; }

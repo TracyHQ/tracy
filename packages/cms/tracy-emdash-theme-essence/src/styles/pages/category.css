@@ -151,4 +151,6 @@
 	@media (max-width: 575px) { .es-cat.is-stack .es-card, .es-cat.is-sidebar .es-card { margin-bottom: 24px; } .es-cat-grid { gap: 24px; } }
 	/* author pages: the source pads the article cards 36px (picture 280/252/282 wide at 1440/768/390), measured */
 	.es-cat[data-by="author"] .es-grid-card { padding: 36px; }
+	/* the list with a sidebar stacks its cards 12px apart on a tablet (measured at 768; 36px on a desktop, 24px on a phone) */
+	@media (min-width: 576px) and (max-width: 991px) { .es-cat.is-sidebar .es-cat-list .es-card { margin-bottom: 12px; } }
 }
