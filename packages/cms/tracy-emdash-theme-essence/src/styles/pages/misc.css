@@ -53,7 +53,7 @@
 	.es-authors-pager .es-pagination a, .es-authors-pager .es-pagination span { display: flex; align-items: center; justify-content: center; line-height: 1; }
 	.es-authors-pager .es-page-count { margin-top: 52px; }
 	@media (max-width: 991px) { .es-authors { grid-template-columns: repeat(2, 1fr); } }
-	@media (max-width: 767px) { .es-authors { grid-template-columns: 1fr; gap: 18px; } .es-author-name { font-size: 24px; line-height: 24px; } .es-authors-pager { margin-top: 36px; } }
+	@media (max-width: 767px) { .es-authors { grid-template-columns: 1fr; gap: 36px; } .es-author-name { font-size: 24px; line-height: 24px; } .es-authors-pager { margin-top: 36px; } }
 
 	/* ---- Search: a 784px column, the filter row then a ruled list of titles ---- */
 	.es-search-main { max-width: 820px; }

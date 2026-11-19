@@ -101,6 +101,7 @@
 
 	/* the picture strip above the footer */
 	.es-gallery { margin-bottom: 72px; }
+	@media (max-width: 575px) { body:has(.es-cat) .es-gallery { margin-bottom: 36px; } }
 
 	/* footer */
 	@media (max-width: 767px) { .es-main { padding-block: 36px; } }
@@ -162,7 +163,7 @@
 	@media (max-width: 575px) { .es-gal-track { --per: 1; } }
 
 	/* footer */
-	.es-footer-info { display: grid; grid-template-columns: 1fr 1fr; align-items: flex-start; gap: 24px; padding-bottom: 36px; border-bottom: 1px solid var(--color-line); }
+	.es-footer-info { display: grid; grid-template-columns: 1fr 1fr; align-items: flex-start; gap: 24px; padding-bottom: 56px; border-bottom: 1px solid var(--color-line); }
 	.es-footer-left { max-width: 360px; }
 	.es-footer-left p { margin: 12px 0 0; }
 	.es-footer-right { justify-self: end; width: min(329px, 100%); text-align: center; }
@@ -185,7 +186,7 @@
 @layer components {
 	/* the inner pages' header sits on a white band (the source's header-1) */
 	.es-header.is-inner { background: var(--color-band); }
-	@media (min-width: 576px) and (max-width: 991px) { .es-wrap, .es-main { padding-inline: 42px; } .es-header .es-wrap, .es-footer .es-wrap { padding-inline: 18px; } }
+	@media (min-width: 576px) and (max-width: 991px) { .es-wrap, .es-main { padding-inline: 42px; } .es-header.is-inner .es-wrap, .es-footer .es-wrap { padding-inline: 18px; } }
 	@media (max-width: 767px) {
 		.es-subscribe { display: none; }
 		.es-header.is-home .es-header-top { grid-template-columns: 1fr 1fr; padding: 18px 0; }

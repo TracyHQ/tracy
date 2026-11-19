@@ -10,8 +10,10 @@ interface Props {
   page: number
   pages: number
   locale: string
+  /** the "Page n of m" pill under the buttons (the author's list), not above them */
+  pillLast?: boolean
 }
-const { path, page, pages, locale } = Astro.props
+const { path, page, pages, locale, pillLast = false } = Astro.props
 const { w } = ui(locale)
 const at = (n: number) => (n <= 1 ? path : `${path}${path.includes('?') ? '&' : '?'}page=${n}`)
 const from = Math.max(1, Math.min(page - 2, pages - 4))
@@ -27,12 +29,13 @@ const tail = [
 ---
 
 {pages > 1 && (
-	<nav class="es-pager" aria-label={w.pagination}>
-		<p class="es-page-count">{fillWords(w.pageOf, { page, pages })}</p>
+	<nav class:list={['es-pager', pillLast && 'is-pill-last']} aria-label={w.pagination}>
+		{!pillLast && <p class="es-page-count">{fillWords(w.pageOf, { page, pages })}</p>}
 		<ul class="es-pagination" data-many={pages > 3 ? '' : undefined}>
 			{ends.map((b) => <li class:list={{ 'is-disabled': b.off, 'is-end': true }}>{b.off ? <span aria-hidden="true"><Icon name={b.icon} size={16} /></span> : <a href={at(b.to)} aria-label={b.label} rel={b.to === page - 1 ? 'prev' : undefined}><Icon name={b.icon} size={16} /></a>}</li>)}
 			{nums.map((n) => <li class:list={{ 'is-active': n === page }}>{n === page ? <span aria-current="page">{n}</span> : <a href={at(n)} aria-label={fillWords(w.pageOf, { page: n, pages })}>{n}</a>}</li>)}
 			{tail.map((b) => <li class:list={{ 'is-disabled': b.off, 'is-end': true }}>{b.off ? <span aria-hidden="true"><Icon name={b.icon} size={16} /></span> : <a href={at(b.to)} aria-label={b.label} rel={b.to === page + 1 ? 'next' : undefined}><Icon name={b.icon} size={16} /></a>}</li>)}
 		</ul>
+		{pillLast && <p class="es-page-count">{fillWords(w.pageOf, { page, pages })}</p>}
 	</nav>
 )}

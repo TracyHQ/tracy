@@ -102,6 +102,8 @@
 	.es-cat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; align-items: start; }
 	.es-cat:not([data-by="category"]) .es-cat-grid { align-items: stretch; }
 	.es-cat .es-pager { margin-top: 36px; }
+	.es-pager.is-pill-last .es-page-count { margin-top: 52px; }
+	.es-pager.is-pill-last .es-pagination { margin-top: 0; }
 	.es-cat-body.is-sidebar, .es-cat.is-sidebar .es-cat-body { display: grid; grid-template-columns: minmax(0, 740px) minmax(0, 352px); gap: 36px; align-items: start; }
 	.es-cat.is-stack .es-card { margin-bottom: 36px; }
 
@@ -135,6 +137,7 @@
 @layer components {
 	.es-cat .es-cat-more { margin: 80px 0 24px; }
 	.es-cat { padding-bottom: 80px; }
+	.es-cat.is-grid[data-by="category"] { padding-bottom: 0; }
 	/* the pill under the list: 72px under a grid, 104px under a stack or a sidebar list (42px / 74px on a phone), as the source */
 	.es-cat.is-grid .es-pager { margin-top: 72px; }
 	.es-cat.is-stack .es-pager, .es-cat.is-sidebar .es-pager { margin-top: 104px; }
