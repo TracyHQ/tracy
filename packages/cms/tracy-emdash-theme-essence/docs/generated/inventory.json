@@ -846,7 +846,7 @@
     "src/views/Authors.astro": "sha256:3f5c11e4126d403a5a2d3401a43299ca377813a53ca5a5217cc4917e8e89a2b4",
     "src/views/Category.astro": "sha256:50c650748a4166426a72d0bddab31c15762b5410e8feef44f260cd0015a8d23f",
     "src/views/Contact.astro": "sha256:872a0b7453716c028a4030298f05565126c5f76d77600fd819d6bb3049b24d8a",
-    "src/views/Home.astro": "sha256:8438e9caba452cb0925068f7d211e3fc517b355c47015076888a535a65f5512b",
+    "src/views/Home.astro": "sha256:323f98d5458869aaa974ace499db7a50b52972fadf8ee46e2e64ad3bddb7a42a",
     "src/views/NotFound.astro": "sha256:bf55fe7a0893bbb51ff613afe18b00301266c5e5c70e85550bd1138a4f48cc5f",
     "src/views/Post.astro": "sha256:a9f03f3caa031fe24a061ca9331480de7d15dae062f9f124afbe108c4bfc509c",
     "src/views/Search.astro": "sha256:c13c6b4d14731706f8858790512b682f7b277344b9412baac867e3d35ccf95a3",

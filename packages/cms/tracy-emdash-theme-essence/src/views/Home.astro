@@ -30,7 +30,7 @@ const site = chrome.site
 	<main id="main" class="es-home">
 		<PageOwner stamp={$c} />
 		<h1 class="sr-only" {...$c('brand_name')}>{site.brand_name}</h1>
-		<p class="sr-only" {...$c('footer_text')}>{site.footer_text}</p>
+		<div class="sr-only" {...$c('footer_text')}>{site.footer_text}</div>
 		<LeadStrip posts={lead} chrome={chrome} authors={authors} />
 		<LeadList posts={lead.slice(0, 3)} chrome={chrome} />
 		<div class="es-home-blog">
