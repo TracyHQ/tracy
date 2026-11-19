@@ -124,7 +124,7 @@ const GROUPS: readonly CoverageGroup[] = [
   {
     run: 'standalone',
     files:
-      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant|diner)\/tests\/[^/]+\.test\.mjs$/
+      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant|diner|essence)\/tests\/[^/]+\.test\.mjs$/
   }
 ]
 
