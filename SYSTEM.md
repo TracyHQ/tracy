@@ -2710,7 +2710,10 @@ apply to it (its bench runs start with `--no-caps`; step 9 gets `chainRepairLimi
 steps: a step still going then is stopped, its best version used, no new 9b work starts, and the Write step still runs inside a
 15 minute window (a soft failure; the run's hard stop is about 2 h 15 min). Lost-run
 detection (stale lease, the queue's attempt count) is unchanged. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
-and the planner side by side, then the writer (with Copy check) and the picture step side by side; each is a run of its bench,
+and the planner side by side, then the writer (with Copy check) and the picture step side by side. When the planner's round 0
+is checked with failures (so fix rounds follow), the writer's first draft starts on that draft plan at once (`copyDraft`, a writer
+run with `--max-fix-rounds 0`), and the writer run on the final plan takes it as round 0 (`--base-copy`) and only checks and fixes
+it; the picture step never waits for it, and a draft that fails leaves the writer step as before. Each is a run of its bench,
 queued through the bench's own command line on the revision and played by the bench worker this server runs
 (`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Each bench holds up to
 `BENCH_RUNS_AT_ONCE` (3) runs, so builds started together run their steps side by side (each run's model calls go out at

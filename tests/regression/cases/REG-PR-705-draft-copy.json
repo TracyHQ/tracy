@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-705-draft-copy",
+  "kind": "feat",
+  "title": "The copy step's first draft starts on the plan's draft and the final copy takes it as its base",
+  "pr": 705,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The draft copy starts before the plan ends; the final copy takes it as its base; pictures do not wait.",
+    "A failing draft, or a plan without a draft, leaves the copy step as before.",
+    "A writer run on a base copy writes no turn; max fix rounds 0 is honoured."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-draft-copy.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the copy step's first draft starts on the plan's draft, before the plan ends, and the final copy takes it as its base",
+      "a draft that fails leaves the copy step as before, and a plan with no draft never starts one",
+      "a writer run on a base copy writes no turn and takes it as round 0; a run may ask for no fix round"
+    ]
+  }
+}
