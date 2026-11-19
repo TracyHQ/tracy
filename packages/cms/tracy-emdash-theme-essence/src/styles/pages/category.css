@@ -51,6 +51,11 @@
 	.es-grid-card.is-wide .es-card-meta { justify-content: flex-start; padding-inline: 0; }
 	.es-grid-card.is-wide .es-card-intro { margin-top: 24px; }
 	/* the highlighted article (the source's `item-highlight`): the picture fills the card, darkened, the text lies over it */
+	/* the Home's highlighted article (the source's page 2 draws it so): picture full width above the text */
+	.es-card.is-cover .es-stack-top { flex-direction: column; gap: 24px; }
+	.es-card.is-cover .es-stack-top .es-card-pic { width: 100%; }
+	.es-card.is-cover .es-stack-top .es-card-pic img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+	.es-card.is-cover .es-stack-info { width: 100%; }
 	.es-card.is-highlight { position: relative; isolation: isolate; overflow: hidden; color: rgba(255, 255, 255, .7); background: #494c4f; }
 	.es-card.is-highlight .es-card-pic { position: absolute; inset: 0; z-index: -1; }
 	.es-card.is-highlight .es-card-pic a, .es-card.is-highlight .es-card-pic img { height: 100%; border-radius: var(--ds-card-radius, 16px); }
@@ -135,7 +140,7 @@
 }
 
 @layer components {
-	.es-cat .es-cat-more { margin: 80px 0 24px; }
+	.es-cat .es-cat-more { margin: 72px 0 32px; }
 	.es-cat { padding-bottom: 80px; }
 	.es-cat.is-grid[data-by="category"] { padding-bottom: 40px; }
 	.es-cat.is-grid[data-by="author"] .es-pager { margin-top: 108px; }
@@ -144,7 +149,7 @@
 	.es-cat.is-grid .es-pager { margin-top: 72px; }
 	.es-cat.is-stack .es-pager, .es-cat.is-sidebar .es-pager { margin-top: 104px; }
 	@media (max-width: 767px) { .es-cat { padding-bottom: 44px; } .es-cat.is-grid .es-pager { margin-top: 42px; } .es-cat.is-stack .es-pager, .es-cat.is-sidebar .es-pager { margin-top: 74px; } .es-cat.is-grid[data-by="category"] { padding-bottom: 30px; } .es-cat.is-grid[data-by="author"] .es-pager { margin-top: 90px; } }
-	@media (max-width: 767px) { .es-cat .es-cat-more { margin: 36px 0 0; } }
+	@media (max-width: 767px) { .es-cat .es-cat-more { margin: 36px 0 30px; } }
 	/* the highlighted card's picture wins over the stack picture sizes above */
 	.es-cat .es-card.is-highlight .es-card-pic, .es-cat .es-card.is-highlight .es-card-pic a, .es-cat .es-card.is-highlight .es-card-pic img { width: 100%; height: 100%; aspect-ratio: auto; }
 	/* a phone: the source keeps 24px between list cards */
@@ -153,4 +158,6 @@
 	.es-cat[data-by="author"] .es-grid-card { padding: 36px; }
 	/* the list with a sidebar stacks its cards 12px apart on a tablet (measured at 768; 36px on a desktop, 24px on a phone) */
 	@media (min-width: 576px) and (max-width: 991px) { .es-cat.is-sidebar .es-cat-list .es-card { margin-bottom: 12px; } }
+	/* three columns: each row's cards end level, as the source's do (the two-column tablet list stacks on its own, see Category.astro) */
+	@media (min-width: 1200px) { .es-cat-grid { align-items: stretch; } }
 }

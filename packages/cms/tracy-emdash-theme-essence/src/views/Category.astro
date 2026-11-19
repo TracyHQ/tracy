@@ -94,7 +94,7 @@ const photo = profile ? mediaUrl(profile.avatar) : null
 						{style === 'sidebar' && shown.map((p, i) => p.highlight && by === 'category' ? <StackCard post={p} chrome={chrome} authors={authors} eager={i === 0} highlight /> : <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} wide eager={i === 0} />)}
 						<Pager path={href(locale, basePath)} page={page} pages={pages} locale={locale} pillLast={by === 'author'} />
 					</div>
-					{style === 'sidebar' && <Sidebar chrome={chrome} locale={locale} posts={all} current={null} prefer={posts} />}
+					{style === 'sidebar' && <Sidebar chrome={chrome} locale={locale} posts={all} current={null} prefer={posts} features={false} />}
 				</div>
 			</div>
 			{by === 'category' && style === 'grid' && chrome.site.more_read_list_title && (
@@ -103,3 +103,34 @@ const photo = profile ? mediaUrl(profile.avatar) : null
 		</main>
 	</Base>
 )}
+
+<script>
+	// The source's two-column blog list stacks each column on its own (Joomla's float masonry): the odd cards go
+	// down the left, the even cards down the right, each card starting 36px under the one above it.
+	const wide = matchMedia('(min-width: 768px) and (max-width: 1199px)')
+	function stack(grid: HTMLElement) {
+		const cards = [...grid.children] as HTMLElement[]
+		for (const c of cards) c.style.transform = ''
+		grid.style.marginBottom = ''
+		if (!wide.matches || cards.length < 3) return
+		const gap = parseFloat(getComputedStyle(grid).rowGap) || 36
+		const tops = cards.map((c) => c.offsetTop)
+		const heights = cards.map((c) => c.offsetHeight)
+		const natural = Math.max(...cards.map((_, i) => tops[i] + heights[i]))
+		const bottom = [0, 0]
+		cards.forEach((c, i) => {
+			const col = i % 2
+			const at = i < 2 ? tops[i] : bottom[col] + gap
+			if (at !== tops[i]) c.style.transform = `translateY(${at - tops[i]}px)`
+			bottom[col] = at + heights[i]
+		})
+		grid.style.marginBottom = `${Math.max(...bottom) - natural}px`
+	}
+	for (const grid of document.querySelectorAll<HTMLElement>('.es-cat[data-by="category"] .es-cat-grid')) {
+		const run = () => stack(grid)
+		run()
+		addEventListener('load', run)
+		addEventListener('resize', run)
+		document.fonts?.ready.then(run)
+	}
+</script>

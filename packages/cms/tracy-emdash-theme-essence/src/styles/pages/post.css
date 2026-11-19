@@ -71,6 +71,7 @@
 
 	/* ---- the body ---- */
 	.es-body { margin: 16px 0; }
+	.es-post[data-layout="type-2"] .es-body { margin-top: 0; }
 	.es-body > :first-child { margin-top: 0; }
 	.es-body p { margin: 0 0 16px; }
 	.es-body h2 { margin: 48px 0 24px; }
@@ -85,7 +86,7 @@
 	@media (max-width: 1199px) { .es-quote blockquote { font-size: 28px; } }
 	@media (max-width: 767px) { .es-quote blockquote { font-size: 24px; } }
 	.es-body ul { margin: 32px 0; padding: 24px 0; list-style: none; border-block: 1px solid var(--color-line); }
-	.es-body ul li { padding: 0; }
+	.es-body ul li { padding: 0 0 0 24px; text-indent: -24px; }
 	.es-body ul li + li { margin-top: 10px; }
 	.es-body ul li::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 18px; border-radius: 50%; background: var(--color-accent); transform: translateY(-2px); }
 	.es-body ul p { display: inline; margin: 0; }
@@ -210,6 +211,8 @@
 	.es-side-text h4 a { color: var(--color-heading); }
 	.es-side-text h4 a:hover { color: var(--color-accent-text-hover); }
 	.es-side-latest .es-side-text .es-info { margin-top: 0; }
+	/* below 992px the source leaves ~15px more under a latest-article title (measured: date 35px under the title top at 768, 59px at 390) */
+	@media (max-width: 991px) { .es-side-latest .es-side-text .es-info { margin-top: 15px; } }
 	.es-side-features .es-side-text h4 { margin-bottom: 12px; font-size: 18px; }
 	html[data-theme="dark"] .es-side-num { opacity: .5; }
 	.es-side-num { flex: none; padding-right: 33px; font-family: var(--font-display); font-size: 56px; line-height: 1; letter-spacing: -.02em; opacity: .2; color: #4d6bff; }

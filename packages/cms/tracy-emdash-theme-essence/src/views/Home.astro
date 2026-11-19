@@ -32,7 +32,7 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 		<LeadStrip posts={lead} chrome={chrome} authors={authors} />
 		<LeadList posts={lead.slice(0, 3)} chrome={chrome} />
 		<div class="es-home-blog">
-			{shown.map((p, i) => <StackCard post={p} chrome={chrome} authors={authors} eager={i === 0} />)}
+			{shown.map((p, i) => <StackCard post={p} chrome={chrome} authors={authors} eager={i === 0} cover={p.highlight} />)}
 			<Pager path={href(locale, '/')} page={page} pages={pages} locale={locale} />
 		</div>
 	</main>

@@ -17,14 +17,14 @@ import PostMeta from '@/components/site/PostMeta.astro'
 import PostPill from '@/components/site/PostPill.astro'
 import Icon from '@/components/site/Icon.astro'
 
-interface Props { chrome: Chrome; locale: Locale | string; posts: PostRow[]; current?: PostRow | null; prefer?: PostRow[] }
-const { chrome, posts, current = null, prefer = [] } = Astro.props
+interface Props { chrome: Chrome; locale: Locale | string; posts: PostRow[]; current?: PostRow | null; prefer?: PostRow[]; features?: boolean }
+const { chrome, posts, current = null, prefer = [], features: showFeatures = true } = Astro.props
 const locale = Astro.props.locale as Locale
 const { site } = chrome
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const live = await livePosts(Astro.request, locale, posts)
 const latest = latestPosts(live, 4, prefer)
-const features = featuresPosts(live, 4)
+const features = showFeatures ? featuresPosts(live, 4) : []
 const tagOrder = ((await getTaxonomyTerms('tag').catch(() => [])) as { slug: string }[]).map((t) => t.slug)
 const tags = tagCloud(live, 6, tagOrder)
 const follow = chrome.social['follow-me']
