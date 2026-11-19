@@ -101,6 +101,12 @@ const round = (n, places) => Math.round(n * 10 ** places) / 10 ** places
 /** When each running step started, ISO, from the clock readings the run keeps (`active`). */
 const sinceOf = (active) =>
   Object.fromEntries([...active].map(([step, ms]) => [step, new Date(ms).toISOString()]))
+/** The bench run ids a step answered with (its run, and the copy step's draft run), for its record. */
+const runIdsOf = (x) => ({
+  ...(typeof x?.runId === 'string' ? { runId: x.runId } : {}),
+  ...(typeof x?.draftRunId === 'string' ? { draftRunId: x.draftRunId } : {})
+})
+
 const messageOf = (error) => String(error instanceof Error ? error.message : error).slice(0, 300)
 
 /**
@@ -172,6 +178,7 @@ export function createStepChainEngine({
             endMs: now() - t0,
             usd: answer?.usd === null ? null : Number(answer?.usd ?? 0),
             ...(answer?.usd === null ? { knownUsd: Number(answer?.knownUsd ?? 0) } : {}),
+            ...runIdsOf(answer),
             outcome: 'done'
           })
           await snap()
@@ -185,6 +192,7 @@ export function createStepChainEngine({
             endMs: now() - t0,
             usd: error?.usd === null ? null : Number(error?.usd ?? 0),
             ...(error?.usd === null ? { knownUsd: Number(error?.knownUsd ?? 0) } : {}),
+            ...runIdsOf(error),
             outcome: signal.aborted ? 'stopped' : made ? 'failed, best version used' : 'failed',
             ...(typeof error?.code === 'string' ? { code: error.code } : {}),
             error: messageOf(error)

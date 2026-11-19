@@ -32042,6 +32042,40 @@
           "x-internal": true
         }
       },
+      "/api/ops/wo/bench-runs/{bench}/{runId}": {
+        "get": {
+          "operationId": "get_api_ops_wo_bench_runs_bench_runId_",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "bench",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "path",
+              "name": "runId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Ops: fleet"],
+          "x-audience": ["team"],
+          "x-internal": true
+        }
+      },
       "/api/ops/wo/chain-builds": {
         "get": {
           "operationId": "get_api_ops_wo_chain_builds",

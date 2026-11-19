@@ -180,6 +180,18 @@ export const OPS_B_ROUTES = [
   },
   {
     method: 'GET',
+    path: '/api/ops/wo/bench-runs/:bench/:runId',
+    summary: 'Read where one bench run of a chain build spent its time',
+    description:
+      'One planner, writer or picture bench run (`bench` is `plan`, `copy` or `pictures`; a chain build step records its `runId`, and the copy step its `draftRunId`): the run, each round with its duration and failure count, and each model turn with its duration, tokens and the names of the tools it called. Structural only: no prompt, answer, checker text or measured value. Staff seat required.',
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    params: { path: { bench: '`plan`, `copy` or `pictures`', runId: 'The bench run id' } },
+    answers: '`{run, rounds, turns}`, or `error` (`UNKNOWN_BENCH`, `BAD_RUN_ID`, `NO_SUCH_RUN`)'
+  },
+  {
+    method: 'GET',
     path: '/api/ops/wo/demos/summary',
     summary: 'Read the demo retention settings and how many demos each state holds',
     description:

@@ -228,10 +228,14 @@ export function createStepChainSteps(deps) {
    * A bench step's answer: its output when the run succeeded; when it failed, an error that still carries the output it
    * made (if any), so the chain uses the best version rather than nothing.
    */
-  async function answerOf({ usd, failure, checkFailures }, value, made) {
-    if (!failure) return { value, usd }
+  async function answerOf({ usd, failure, checkFailures, runId, draftRunId }, value, made) {
+    // The bench run ids go on the chain's step record, so staff can read where a step's time went
+    // (GET /api/ops/wo/bench-runs/:bench/:runId).
+    const ids = { ...(runId ? { runId } : {}), ...(draftRunId ? { draftRunId } : {}) }
+    if (!failure) return { value, usd, ...ids }
     throw Object.assign(
       stepError(failure, usd),
+      ids,
       checkFailures ? { code: CHAIN_BENCH_CHECK_FAILED } : {},
       (await made) ? { value } : {}
     )
@@ -356,7 +360,7 @@ export function createStepChainSteps(deps) {
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
       const ran = await benchRun('copy', argv, dir, signal, same)
       const file = path.join(dir, 'site-copy.json')
-      return (await exists(file)) ? { file, usd: ran.usd } : null
+      return (await exists(file)) ? { file, usd: ran.usd, runId: ran.runId } : null
     },
 
     async copy(ctx, { kit, plan, base = null }, { signal }) {
@@ -378,7 +382,11 @@ export function createStepChainSteps(deps) {
         const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
         const ran = await benchRun('copy', argv, dir, signal, same)
         const file = path.join(dir, 'site-copy.json')
-        return answerOf({ ...ran, usd: Number(ran.usd ?? 0) + Number(base.usd ?? 0) }, { file }, exists(file))
+        return answerOf(
+          { ...ran, usd: Number(ran.usd ?? 0) + Number(base.usd ?? 0), draftRunId: base.runId },
+          { file },
+          exists(file)
+        )
       }
       const argv = [...copyArgs(ctx, kit, plan), ...NO_CAPS]
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
