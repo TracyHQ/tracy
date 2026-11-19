@@ -45,6 +45,7 @@ Template: JA Essence (tracy-essence). Default locale: en. Locales: en.
 | featured | boolean | no | Featured |
 | featured_order | integer | no | Featured order |
 | home_lead | boolean | no | Home lead |
+| highlight | boolean | no | Highlight |
 | kind | string | no | Kind |
 | layout | string | no | Layout |
 | video_source | string | no | Video source |

@@ -101,7 +101,7 @@
 
 	/* the picture strip above the footer */
 	.es-gallery { margin-bottom: 72px; }
-	@media (max-width: 575px) { body:has(.es-cat) .es-gallery { margin-bottom: 36px; } }
+	@media (max-width: 575px) { .es-gallery { margin-bottom: 36px; } }
 
 	/* footer */
 	@media (max-width: 767px) { .es-main { padding-block: 36px; } }

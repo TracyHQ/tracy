@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Essence",
-	"generatedAt": "2026-11-18T23:02:53.209Z",
+	"generatedAt": "2026-11-19T00:24:41.183Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -72,17 +72,17 @@
 		"docs/architecture.md": "sha256:ffa3b101d066da5db056095f1605dcd8be702ae6eb69fd3275cee1daee312591",
 		"docs/checks-and-recovery.md": "sha256:776b1897119db055a006d85b9cffd1f3ac215c3930c3d15be8183143f6147111",
 		"docs/content-api.md": "sha256:715822ef2e01540ae113aa3cb58b2aa8c107a3d31638b264f4c56d490b6c0b40",
-		"docs/content-model.md": "sha256:ca585de26cad45862080ee5f1c105edee43c856d54570c978915887fcc9cd33f",
+		"docs/content-model.md": "sha256:e9a3b53a72a33ec4bfba69c0d328c7570338db7bbd0d1e8f6dd4b89adf687793",
 		"docs/content-rules.md": "sha256:b9d236568f6f33ff31252f4d3cd2d8dec7f079a499be318282f9188e44468b27",
 		"docs/design-system.md": "sha256:02039b1b3b4ddff6e0c519f66ee90b3fdc02661d7f0bc4f674ddd45a0cb306b6",
-		"docs/generated/inventory.json": "sha256:f1bb3835ba7107db389d4323822f9df747d8a7cdbae940e5ef5da81cc427162d",
-		"docs/generated/inventory.md": "sha256:3557350be1f2766213fb4b45762729d22ae1c36bf264343845c4ee6fbd854c17",
+		"docs/generated/inventory.json": "sha256:99b7c560767965336faf43b77583daec5ad1d5ff3b017fb1b5be626150d83cbc",
+		"docs/generated/inventory.md": "sha256:34a8057b44a7eb59ea966ad23510113c4b492deef0b8d6c704b5878cd750908c",
 		"docs/install.md": "sha256:e2343b4ae26c341d1e467b6a9a26085cbb9013c02ec291d6ceaa44cfd1fec201",
 		"docs/languages.md": "sha256:2d404f1b996cbde1965276643ed278167e2d923db49b8fc11530ffb2662c9f5e",
 		"template.config.json": "sha256:317c33caf3ec1d83611eaa37c2f021dbe4cbf79620e69bc0272c8cc306f73e9f",
-		"seed/seed.json": "sha256:5e25fd31b2f368c18d7dafe997c43df7b8f18a563afbc14d896c4f4ce9ca9b34",
-		"seed/media-map.json": "sha256:244f6b40bc7fffae6125d4930e7790503f44f51ce2e4a1321a7a128ffcbf3694",
-		"seed/field-map.json": "sha256:fc744a807d2e191aadb03cb4c971d6f9a9e91b79c0616e925ecc0ed8f2f23ce4",
+		"seed/seed.json": "sha256:cceac394e9492d50fdeb4668dfe77d2a14839dc0126491ed9cf907db916c36f0",
+		"seed/media-map.json": "sha256:5966e6c8e989142e638e60a60c4fc37299387d8a368891f339f76ece7112fc7d",
+		"seed/field-map.json": "sha256:64ca6818cefa76034da75ae0510abde28aade15e1e1a3b0d34ac6172cc839db6",
 		"pnpm-lock.yaml": "sha256:d7a904f4d0cc00b3c5d5012916f76bcd7a021cfedb84133d3ea15adf598f96af",
 		"tools/forms.json": "sha256:9a0febac662789d891473dca346ce3010a53ea4e0d50fc00b508070f455c93f0",
 		"seed/media/*": "sha256:25fac2079c34b558341a887938aa9dd808ec1fbe7e3de30cd0f3e1193399cee5 (97 files)"
