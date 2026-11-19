@@ -63,6 +63,10 @@ export const SITE_WRITER_STEP = Object.freeze({
   codePrefix: 'SITE_WRITER',
   store: SITE_WRITER_STORE,
   maxFixRounds: MAX_FIX_ROUNDS,
+  // A fix round rewrites the few slots its failure list names (a repeated sentence, a text a few characters long), so it
+  // thinks at high, not at the first draft's max. Dev, BXR London 17/11/2026: the copy step's two fix rounds took 139 and
+  // 220 s at max for a handful of W03 and W06 slots, and the copy step was the build's longest (8.9 to 12.3 minutes).
+  fixRoundEffort: (effort) => (effort === 'max' ? 'high' : undefined),
   prompt: writerPrompt,
   checker: Object.freeze({
     version: CHECKER_VERSION,

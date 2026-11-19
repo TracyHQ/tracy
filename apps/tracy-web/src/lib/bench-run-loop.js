@@ -228,6 +228,7 @@ async function ask(
   })
   const inside = (turn) => turn.n >= from && turn.n < to
   const harness = harnessOf(row.harness)
+  const effort = effortFor(step, harness, round)
   const bounded = Number.isFinite(to) ? { maxTurns: Math.min(harness.maxTurns ?? to - from, to - from) } : {}
   // A step may answer some doors without a chat call (site-pictures: the picker on Gemini Decision 1); the same
   // arguments, the same result, each call saved as a turn through onTurn.
@@ -243,6 +244,7 @@ async function ask(
       fetchImpl: deps.fetchImpl,
       signal: stop.signal,
       ...harness,
+      ...(effort ? { effort } : {}),
       ...bounded,
       ...(deps.retry ? { retry: deps.retry } : {}),
       // A streamed call's progress, for `status`: a hint, so a lost write is not an error (runAgent ignores it).
@@ -286,6 +288,15 @@ async function prepare(step, deps, row) {
   const ready = await step.prepare(deps, row)
   if (!ready.ok) return ready
   return platformRefusal(ready.kit, step.codePrefix) ?? { ...ready, prompt }
+}
+
+/**
+ * The reasoning effort of one call: the run's, unless the step asks a fix round to think less than its first draft
+ * (`step.fixRoundEffort(effort)`, site-writer: max to high). Round 0 and any step without the hook keep the run's.
+ */
+export function effortFor(step, harness, round) {
+  if (!(round > 0) || typeof step?.fixRoundEffort !== 'function') return undefined
+  return step.fixRoundEffort(harness?.effort) ?? undefined
 }
 
 const harnessOf = (harness) =>
