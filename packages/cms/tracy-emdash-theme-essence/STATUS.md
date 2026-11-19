@@ -1,27 +1,29 @@
 # STATUS — tracy-essence
 
-**Phase reached (end of session 8, 2026-11-19): P8 done to a publishable local cut; PR #700 is a draft. Nothing is published.**
+**Phase reached (end of session 9, 2026-11-19): P8 done to a publishable local cut; PR #700 is a draft. Nothing is published.**
 
-**Release folder: `<evidence-dir>/p21/release`** (tag `tracy-essence/emdash-0.x`, version 0.1.0, built from pack 21; the package files of the commit named below equal pack 21 except `contracts/`, `perf/`, `tests/regression/` and this file).
+**Release folder: `<evidence-dir>/p22/release`** (tag `tracy-essence/emdash-0.x`, version 0.1.0, built from pack 22; the package files of the commit named below equal pack 21 except `contracts/`, `perf/`, `tests/regression/` and this file).
 
 | File | sha256 |
 |---|---|
-| tracy-essence-emdash-quickstart-0.1.0.zip | `7260099e98b22e3e2c5a82563aebf5613fdf5bca4fb7257fb682bca4d46962e2` |
-| tracy-essence-emdash-state-0.1.0.tar.gz | `2f88fd93b95a0ffb9ece150863601e4ca017c2509568d7842f127715a731e3de` |
+| tracy-essence-emdash-quickstart-0.1.0.zip | `7294db3281921be755e3ab61af84db3cdce952634439a1c6588f6b88596d2ee3` |
+| tracy-essence-emdash-state-0.1.0.tar.gz | `15b0e5a82dbfed2ace577c6ef2a8b18b2b066a6649aae9cef2d46279ef51cc7f` |
 | template-kit-tracy-essence-0.1.0.zip (its `template-kit.json` is byte-identical to `contracts/0.1.0/template-kit.json`, `approval: null`) | `025feae82ce36a3dd068b23cb3db6cd62f4d6634ed870486e09a352aed6641fe` |
-| design-system-roles.json (0 unresolved) | `75d9ed3227eacd5887fa29e267787f78e13aaf1fdb8c57e7a2330d08a1d87b28` |
-| tracy_setting.json (tracy-setting/v1, written by hand) | `b0624132b52b28b74e0b306abfa3216639ed756cd80de7f96f6eabe3e2e2e87f` |
-| manifest.json | `a508646cd456d4c6692675b0c5301a05ac74e88640245e31cc820bedbff2db68` |
-| VERIFICATION.json | `14e1aeb88873a851859c1a336f9c8c9c11073a94337464064d307fdbc5cd2111` |
-| SHA256SUMS | `7e215c92dc5bec460b2241eaac9762bddac5a9b5aa574ed3be0793e4fb2fa51b` |
-| README.md | `7a970ebd57e23380ebd0493e2b1c1fa9fc0ee24bd0a84fdce4257a9dd17807b4` |
+| design-system-roles.json (0 unresolved) | `bcc7ed73ce235031c519022ed013b35617654f32151494efa102cb1542fbad2c` |
+| tracy_setting.json (tracy-setting/v1, written by hand) | `0265879a94d2fd01593edfcfd9355d420129bbcbce22a12199d7346374904388` |
+| manifest.json | `fc9f7b89b1264f1572dccf2cff462d88216572d7eb69e12306e74c9c90215a61` |
+| VERIFICATION.json | `660d5567461efc172cf26128b4d4d9280dc80c5a272a80a0e230fa744ba87e77` |
+| SHA256SUMS | `f20c904f2e59062008e2b5270b1aab4406987b8ed5a75716150f2f6f9e9f584d` |
+| README.md | `594d49f8f5344438389fb8822a06dbadc51fefa6db1d064fcf8abf82efbcf851` |
 | LICENSE | `e16879cbf57577faa0bf2c8c5120c7de6a86fb1d4f93898a4ca30a445c957504` |
 | tracy_site_pages.json | `4f80a56032def813ed06ac1f23084822445b7a06dd03718f966e2b67310e9ca6` |
 | tracy_site_question.json | `959994585f60482fadd456ca970a509df2f6c3190646486aae519657d22e1101` |
 
-**Gate results** (`<evidence-dir>/p21/qa/qa.2/report.json`, the manifest agrees): contracts, distribution, preflight, browser, routing, visual, build, security, visual-review, font-review, viewing-contexts, editability, forms, recovery, clean-install, independent = **pass, 16 of 16**. Evidence: editability, forms, recovery, clean install and the independent handover (6 documentation gaps, none blocking, `perf/independent-handover-0.1.0.md`) are from pack 21; security, font-review and viewing-contexts are carried from session 4; visual review is the four tier runs j1..j4 (lens readers on every tile) on pack 13, and packs 14 to 21 differ by field-map roles, content map, slot limits, Dockerfile, lock overrides and CSS values read through `var(--ds-*, <same value>)`; the scrim over the Home strip pictures became neutral black (up to 16 levels darker over a picture); the machine `visual` gate of pack 21 measured the same 2400 computed values. **A lens re-read of the strip tiles was not done.**
+**Gate results** (`<evidence-dir>/p22/qa/qa.2/report.json`, the manifest agrees): contracts, distribution, preflight, browser, routing, visual, build, security, visual-review, font-review, viewing-contexts, editability, forms, recovery, clean-install, independent = **pass, 16 of 16**. Evidence: editability, forms, recovery, clean install and the independent handover (4 documentation gaps, none blocking, `perf/independent-handover-0.1.0.md`) are from pack 22; security, font-review and viewing-contexts are carried from session 4; visual review is the four tier runs j1..j4 (lens readers on every tile) on pack 13, and packs 14 to 22 differ by (and by formatting) field-map roles, content map, slot limits, Dockerfile, lock overrides and CSS values read through `var(--ds-*, <same value>)`; the scrim over the Home strip pictures became neutral black (up to 16 levels darker over a picture); the machine `visual` gate of pack 22 measured the same 2400 computed values. **A lens re-read of the strip tiles was not done.**
 
-**CI of PR #700, the three failed jobs:**
+**CI of PR #700, session 9: format and the render map.** `check-lint` format was red on 35 files because my earlier format passes ran over a hand-picked list of changed files by extension (it skipped `.astro` and the `seed/`, `contracts/`, `inventory/` and policy JSON) instead of every file the branch changed; `biome format --write` over `git diff --name-only origin/develop` fixed all 35 and `pnpm format:check` over the repo is clean apart from an out-of-tree capture the checkout does not have. The render map row of the essence template was regenerated from `qa.contract.json` (the contract had been reformatted, so its hash moved); `brief-quickstart-first.test.mjs` 118 of 118 pass.
+
+**CI of PR #700, the first three failed jobs:**
 1. Dependency review: `@hono/node-server` moved to 2.1.6 (first patched release of GHSA-qv5m-9pm6-hqp3 and GHSA-jpvv-r467-5p4w) and `hono` to 4.13.16 (five advisories below it) through `overrides` in `pnpm-workspace.yaml`; the lock is frozen-install clean (the clean install and the independent review ran `pnpm install --frozen-lockfile`); `pnpm audit`: 0 advisories. **Follow-up, not touched here: Diner and Restaurant still carry `@hono/node-server@2.1.3` (and hono 4.13.11), the same two advisories.**
 2. Regression: case `REG-PR-700-emdash-essence-0-1-0` (`kind: feat`, script case over 17 named tests of the package); result line in `tests/regression/results/` (see DECISIONS D43 for the commit it ran on).
 3. Language policy: rows in `scripts/language-policy.json` and standalone in `<evidence-dir>/language-policy-rows.json` (D43).
