@@ -220,3 +220,21 @@ test('nameFallback is set where the theme was proven to print the site title wit
   ])
     assert.equal(templateProfileOf(tag, version)?.nameFallback, undefined, `${tag}@${version}`)
 })
+
+// Production reads JA Restaurant EmDash 1.0.4 and JA Diner EmDash 0.1.4 from their release tags (shared by dev and
+// production) since 18/11/2026. Main had no row for either, so the lookup fell back to 1.0.3 / 0.1.3 and the
+// Customize readiness rules REL-3, FAV-1, LOGO-1..3 and STAB-1 failed on production for both templates.
+test('the EmDash versions the restaurant and diner tags publish have a row of their own, with their source logos', () => {
+  for (const [tag, version, from] of [
+    ['tracy-restaurant/emdash-0.x', '1.0.4', '1.0.3'],
+    ['tracy-diner/emdash-0.x', '0.1.4', '0.1.3']
+  ]) {
+    const own = templateProfileOf(tag, version)
+    assert.ok(own, `${tag}@${version} has no profile`)
+    assert.equal(own.version, version, `${tag}@${version} falls back to ${own.version}`)
+    assert.equal(own.fallbackFrom, undefined)
+    const { note: _a, release: _b, version: _c, ...fields } = own
+    const { note: _d, release: _e, version: _f, fallbackFrom: _g, ...source } = templateProfileOf(tag, from)
+    assert.deepEqual(fields, source, `${tag}@${version} changes the logo spots of ${from}`)
+  }
+})
