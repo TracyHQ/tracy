@@ -32,6 +32,7 @@ import {
   withDraftPictures
 } from './step-chain-draft-pictures.js'
 import { altAskOf, drawerOf, finishPictures } from './step-chain-draft-finish-wiring.js'
+import { draftPreflight } from './step-chain-draft-preflight.js'
 import { draftError, draftSource } from './step-chain-draft-source.js'
 import { keptModelOf, reuseOf, revisionOf, revisionRecordOf } from './step-chain-draft-revision.js'
 import { siteWriteOf } from './step-chain-draft-site.js'
@@ -74,15 +75,8 @@ export function createDraftSteps(deps) {
       return source.forget(runId)
     },
 
-    /** The build model door, when it cannot be answered, as the frame's door check reads it. */
-    async doors() {
-      try {
-        await modelOf()
-        return []
-      } catch (error) {
-        return [{ door: ASSEMBLED_MODEL_DOOR, state: String(error?.code ?? 'unreadable') }]
-      }
-    },
+    /** Every door the run needs that cannot be answered, before any work that costs (`step-chain-draft-preflight.js`). */
+    doors: () => draftPreflight(deps, () => modelOf()),
 
     async kit(ctx) {
       const draft = await source.of(ctx)

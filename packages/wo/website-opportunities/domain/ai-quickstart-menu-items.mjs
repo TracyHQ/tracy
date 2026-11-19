@@ -6,7 +6,7 @@
 //
 // `menuItemPagesOf` is the rule, in this order: the plan's pages (`order: "plan"`: the plan's order; `"main-menu"`:
 // the main menu's order, a parent page before its children, depth first); keep those of `pageTypes`; keep those of
-// `level` (1: a page with a main menu item of its own and no parent page); drop those of `except`; then add the pages
+// `level` (1: a page with a main menu item of its own and no parent page in the plan); drop those of `except`; then add the pages
 // of `plus` not already listed, in the same order; then the first `max`. A page reached under its list page has no
 // main menu item, so it is never of level 1 (with no list page in the plan it takes an item of its own, `ownItem`). `link: "page-address"`: each item is a `url` menu item (component 0)
 // linking the page's own address: `index.php?Itemid=<the page's main menu item>`, or for a page reached under its list
@@ -71,7 +71,8 @@ export function menuItemPagesOf(items, pages, mapping) {
           return [...out, ...pages.filter((p) => !out.includes(p))]
         })()
       : [...pages]
-  const level = (p) => !under(p) && !decl(p).menuItem?.parent
+  // A parent page type the plan has no page of leaves the page at the top of the main menu (`pageItemOf`).
+  const level = (p) => !under(p) && !parentOf(p)
   const listed = ordered
     .filter((p) => items.pageTypes === undefined || items.pageTypes.includes(p.pageType))
     .filter((p) => items.level === undefined || level(p))

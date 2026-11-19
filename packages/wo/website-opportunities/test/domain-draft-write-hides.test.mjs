@@ -6,10 +6,13 @@
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-draft-write-hides.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { emptyControl, omitRows } from '../domain/draft-write-plan-hides.mjs'
+import { emptyControl, omitRows, removalsOf } from '../domain/draft-write-plan-hides.mjs'
 import { put, recordOf, sinkOf } from '../domain/draft-write-sink.mjs'
+import { addressOf } from '../domain/draft-write-codec.mjs'
+import { frameOf } from '../domain/draft-write-frame.mjs'
 import { memoryHtml } from '../domain/write-order-memory-html.mjs'
-import { plan } from './fixtures/draft-write/guarded.mjs'
+import { guardPlan } from '../domain/draft-write-guards.mjs'
+import { kit, plan, site } from './fixtures/draft-write/guarded.mjs'
 
 const at = (item, xpath) => ({
   entity: 'module-9',
@@ -121,4 +124,102 @@ test('the florist plan: the plans page copies leave every unfilled feature out a
     assert.equal(op.removes.filter((r) => r.rule === 'hides.omit').length, 7, key)
     assert.equal(op.values.filter((v) => v.rule === 'hides.empty').length, 2, key)
   }
+})
+
+test('removals: a removal inside another of the same value is dropped, the same element once, the rest last first', () => {
+  const value = (item) => ({
+    entity: 'module-9',
+    column: 'params',
+    jsonPath: ['cards', 'cards[info]', item],
+    nestedJson: 'config'
+  })
+  const removes = [
+    { loc: value(0), xpath: '/html/body/div/a[2]', rule: 'hides.omit' },
+    { loc: value(0), xpath: '/html/body/div/a[1]/i', rule: 'hides.omit' },
+    { loc: value(0), xpath: '/html/body/div/a[2]/i', rule: 'hides.omit' },
+    { loc: value(0), xpath: '/html/body/div/a[1]', rule: 'hides.rows.remove' },
+    { loc: value(0), xpath: '/html/body/div/a[2]', rule: 'hides.rows.remove' },
+    { loc: value(1), xpath: '/html/body/div/a[1]/i', rule: 'hides.omit' }
+  ]
+  assert.deepEqual(
+    removalsOf(removes).map((r) => [r.loc.jsonPath[2], r.xpath]),
+    [
+      [0, '/html/body/div/a[2]'],
+      [0, '/html/body/div/a[1]'],
+      [1, '/html/body/div/a[1]/i']
+    ]
+  )
+})
+
+// Every omit and rows.remove hide the real JA Boxing kit declares, on a copy whose rows are all left empty, then with
+// only the first row filled: every removal names an element still there when it runs, on the smallest HTML holding
+// every piece of the value. A container's removal takes the elements inside it (#575: a social link and its icon).
+test('every element hide of the kit runs on its value with no removal naming an element already gone', () => {
+  const mapping = site.aiq.mapping
+  let checked = 0
+  for (const [block, hides] of Object.entries(mapping.hides ?? {}))
+    for (const hide of hides) {
+      if (hide.by !== 'omit') continue
+      const rows =
+        mapping.blocks?.[block]?.itemLists?.[hide.rows] ?? mapping.blocks?.[block]?.lists?.[hide.rows]
+      const pieces = Object.values(rows?.fields ?? {})
+        .flatMap((f) => [f].flat(Infinity))
+        .filter((p) => p?.xpath)
+      for (const fill of [[], pieces.slice(0, 1)]) {
+        const sink = sinkOf()
+        const record = recordOf(sink, `copy:p.${block}`, {
+          kind: 'copy',
+          block,
+          entity: mapping.blocks[block].entity
+        })
+        for (const p of fill) put(sink, record.key, p, 'Invented words', { entry: 'e1' })
+        try {
+          omitRows({ sink, kit: { mapping } }, record, { ...hide, order: undefined })
+        } catch {
+          continue
+        }
+        const byValue = new Map()
+        for (const p of pieces) {
+          const { xpath, ...whole } = p
+          const key = addressOf(whole)
+          byValue.set(key, [...(byValue.get(key) ?? []), xpath])
+        }
+        const html = new Map([...byValue].map(([key, xpaths]) => [key, frameOf(xpaths)]))
+        for (const r of removalsOf(record.removes)) {
+          const key = addressOf(r.loc)
+          assert.doesNotThrow(
+            () => html.set(key, memoryHtml.remove(html.get(key), r.xpath)),
+            `${block} ${r.xpath}`
+          )
+          checked += 1
+        }
+      }
+    }
+  assert.ok(checked > 0, 'the kit declares element hides')
+})
+
+test('a copy removal naming an element an earlier removal took out is refused before any door', () => {
+  const removal = (xpath) => ({
+    loc: { entity: 'module-9', column: 'params', jsonPath: ['x'], nestedJson: 'config' },
+    xpath,
+    rule: 'hides.omit'
+  })
+  const codes = (removes) => {
+    const p = structuredClone(plan)
+    p.ops.find((op) => op.kind === 'module.copy').removes = removes
+    try {
+      guardPlan(p, { order: site.order, kit })
+      return 'passed'
+    } catch (error) {
+      return error.details.problems.map((x) => x.code).join(',')
+    }
+  }
+  assert.equal(
+    codes([removal('/html/body/div/a[1]'), removal('/html/body/div/a[1]/i')]),
+    'removal_element_gone'
+  )
+  assert.equal(
+    codes(removalsOf([removal('/html/body/div/a[1]'), removal('/html/body/div/a[1]/i')])),
+    'passed'
+  )
 })

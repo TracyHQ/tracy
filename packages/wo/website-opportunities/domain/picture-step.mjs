@@ -11,7 +11,7 @@ import { selectIcons } from './icon-selection.mjs'
 import { labelOwnPictures, PicturePolicyError } from './picture-labelling.mjs'
 import { assignPictures } from './picture-policy.mjs'
 import { leftOutKeptOff } from './plan-picture-count.mjs'
-import { planDataOfPlan } from './plan-data-of-plan.mjs'
+import { shownPlanOf } from './trade-cards.mjs'
 import { withResearchLabels } from './picture-research-labels.mjs'
 import { emptySpotsOf, pictureTallyOf, unusedReasonOf } from './picture-tally.mjs'
 
@@ -77,7 +77,9 @@ export async function placeBuildPictures({
   labels = null
 }) {
   planPages(plan, PicturePolicyError)
-  const data = planDataOfPlan(profile, plan)
+  const blocks = blocksOf(blockStore, library)
+  // The plan as the build shows it: a trade block's cards are frames too (`shownPlanOf`).
+  const { plan: shown, data } = shownPlanOf(profile, plan, blocks)
   // A refused picture is never shown to the vision call nor placed: its frame has no own photo (the policy decides).
   const allowed = (p) => typeof refuse !== 'function' || !refuse(p)
   // A photo the plan leaves out for a reason other than gallery room (the owner took it off) fills no frame either.
@@ -89,12 +91,7 @@ export async function placeBuildPictures({
   const labelling = { ...labelled, pictures: labelled.pictures.filter(allowed) }
   // The plan's pictures summary is an estimate: it is compared with what is placed (`difference`), never a cap.
   const approved = plan.pictures ?? {}
-  const assignment = assignPictures({
-    pages: plan.pages,
-    blocks: blocksOf(blockStore, library),
-    data,
-    pictures: labelling.pictures
-  })
+  const assignment = assignPictures({ pages: shown.pages, blocks, data, pictures: labelling.pictures })
   const placed = {
     ...assignment,
     leftOut: leftOutOf(assignment.frames),
@@ -119,12 +116,13 @@ export async function placeBuildPictures({
  *   without: Set<string>}} input `placed`: a result of `placeBuildPictures`
  */
 export function placeAgainWithout({ plan, profile, blockStore, library = [], placed, without }) {
-  const data = planDataOfPlan(profile, plan)
+  const blocks = blocksOf(blockStore, library)
+  const { plan: shown, data } = shownPlanOf(profile, plan, blocks)
   // A rejected photo stays one of the owner's photos (the tally counts it, unused `looker_rejected`), never placed.
   const pictures = list(placed.pictures).map((p) => (without.has(p.id) ? { ...p, lookRejected: true } : p))
   const assignment = assignPictures({
-    pages: plan.pages,
-    blocks: blocksOf(blockStore, library),
+    pages: shown.pages,
+    blocks,
     data,
     pictures: pictures.filter((p) => !p.lookRejected)
   })
@@ -179,16 +177,17 @@ export async function selectBuildIcons({
       'picture_frames_missing',
       'the icons are checked against the placed picture frames: give the frames of placeBuildPictures'
     )
-  const data = planDataOfPlan(profile, plan)
   const blocks = blocksOf(blockStore, library)
-  const strange = framesMismatchOf(pictureFrames, framesOfPlan(plan.pages, blocks, data))
+  // The plan as the build shows it: a trade block's cards have icon fields too (`shownPlanOf`, #575).
+  const { plan: shown, data } = shownPlanOf(profile, plan, blocks)
+  const strange = framesMismatchOf(pictureFrames, framesOfPlan(shown.pages, blocks, data))
   if (strange)
     throw new IconSelectionError(
       'picture_frames_mismatch',
       `the picture frames are not the placed frames of this plan: ${strange}`
     )
   // The icon keywords and ranking are TEXT calls: they take `model` only, never the vision door.
-  const icons = await selectIcons({ plan, data, blocks, copy, iconLibrary, model, looks })
+  const icons = await selectIcons({ plan: shown, data, blocks, copy, iconLibrary, model, looks })
   const crossed = iconProblemsOf(icons, { pictureFrames })
   if (crossed.length)
     throw new IconSelectionError('icon_policy_broken', 'an icon field was given a picture', {

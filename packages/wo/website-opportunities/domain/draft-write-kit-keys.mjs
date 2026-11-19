@@ -8,7 +8,7 @@ const ITEM = {
   link: READ,
   templateStyle: READ,
   params: READ,
-  parent: 'read; a parent page type the plan has not stops (page_parent_not_in_plan)',
+  parent: 'read; a parent page type the plan has not leaves the item at the top of the main menu',
   home: 'not read: the order says which page is the home page',
   why: 'not read: prose'
 }

@@ -7,21 +7,25 @@
 //             `&gt;`, `&quot;`, `&#039;`); the declared markers of a codes field are kept
 //   html      a whole HTML column: the words escaped, the tags its field declares kept (`inline_html` of `textAt`)
 //   piece     an xpath piece of a stored HTML value: the DOM escapes `&`, `<` and `>` but leaves a quote in a text
-//             node, so plain words get typographic quotes
-//   plain     every print escapes it: the words as they are (typographic quotes where a quote is unsafe); the guard
-//             refuses each other mark the place does not show as written
+//             node, so plain words get typographic quotes, and a text that reads as a reference a word joiner
+//   plain     every print escapes it: the words as they are, each mark the place does not show as written in
+//             its look-alike (`lookAlike`)
 //   neutral   printed raw somewhere, escaped elsewhere, or not declared: the value reads the same either way
-//             (typographic quotes; a `<`, a `>` or a text that reads as a character reference is refused)
+//             (typographic quotes, angle brackets and a text that reads as a character reference in their look-alike)
 //   free      no page prints it: written as it is
 //   token     no words (an id, a class): written as it is, refused with `<`, `>` or a quote
 //   unwritten the kit says the build never writes it: refused
 //
 // A text that reads as a character reference (`&` then a letter or `#`, legacy names without their semicolon
-// included, `escapes.legacyReferences`) is written only where the build escapes the `&` (raw, html). The JA ACM
-// converter replaces every `((` and `))` of the whole `jatools-config` string blindly, so a double parenthesis is
-// refused at every place (`doubleParenthesisProblems`); only the declared markers of a codes field are kept there.
+// included, `escapes.legacyReferences`) is escaped where the build escapes the `&` (raw, html), and broken with a word
+// joiner elsewhere (`draft-write-look-alike.mjs`). The JA ACM converter replaces every `((` and `))` of the whole
+// `jatools-config` string blindly, so a double parenthesis is refused at every place (`doubleParenthesisProblems`);
+// only the declared markers of a codes field are kept there.
+// Legal owner text is never refused: a mark a place cannot show as written is written as its look-alike
+// (`draft-write-look-alike.mjs`).
 // Pure.
 import { safetyAt } from './draft-write-escape-place.mjs'
+import { lookAlike, NEUTRAL_MARKS, PIECE_MARKS, typographic } from './draft-write-look-alike.mjs'
 import { cleanedAt } from './draft-write-text-clean.mjs'
 import { addressAt } from './draft-write-place-kinds.mjs'
 import { readTags } from './draft-write-tags.mjs'
@@ -53,20 +57,8 @@ function partsOf(value, markers) {
   return parts
 }
 
-/** Straight quotes as typographic ones: double quotes open and close in turn, a single quote is an apostrophe. */
-export function typographic(text) {
-  let open = true
-  return String(text)
-    .replace(/"/g, () => {
-      const mark = open ? '“' : '”'
-      open = !open
-      return mark
-    })
-    .replace(/(^|[\s([{])'/g, '$1‘')
-    .replace(/'/g, '’')
-}
+export { lookAlike, typographic }
 
-const QUOTES = ['"', "'"]
 /**
  * The value written at a place, made safe there.
  * @param {string} value the value as the planner made it (`textAt`)
@@ -82,10 +74,15 @@ export function safeValue(
     return partsOf(text, markers)
       .map((p) => p.marker ?? escapeRaw(p.words))
       .join('')
-  if (kind === 'neutral') return address ? text : typographic(text)
-  if (kind === 'plain') return !address && QUOTES.some((q) => marks.has(q)) ? typographic(text) : text
-  if (kind === 'piece') return address || /</.test(text) ? text : typographic(text)
-  if (kind === 'html' && !escaped && !/</.test(text)) return escapeRaw(text)
+  if (kind === 'neutral') return address ? text : lookAlike(text, NEUTRAL_MARKS)
+  if (kind === 'plain') return address ? text : lookAlike(text, marks)
+  // Words with no tag (an angle bracket of the owner's, `Joe <3 Gym`) are words: the piece's DOM escapes them, a whole
+  // HTML column takes them escaped.
+  const words = readTags(text).tags.length === 0
+  // A piece's DOM reads a character reference written into an element (`&quot;` becomes a quote it stores raw): words
+  // keep the `&` of a text that reads as one with a word joiner, as at a neutral place.
+  if (kind === 'piece') return address || !words ? text : lookAlike(text, PIECE_MARKS)
+  if (kind === 'html' && !escaped && words) return escapeRaw(text)
   return text
 }
 

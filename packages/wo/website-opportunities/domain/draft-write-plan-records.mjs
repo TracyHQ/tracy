@@ -1,6 +1,7 @@
 // The door operation of one record of the draft write (ticket #597): a created record, a module copy, its assignment
 // and a picture to upload or draw, with the aliases a resumed run finds created records by. Pure; part of `opsOf`
 // (`draft-write-plan-ops.mjs`).
+import { removalsOf } from './draft-write-plan-hides.mjs'
 
 export const valuesOf = (record) =>
   [...record.values.values()].map(({ loc, value, entry, rule }) => ({ loc, value, entry, rule }))
@@ -72,7 +73,7 @@ export function copyOp(record) {
     ordering: record.rank ?? null,
     values: valuesOf(record),
     cuts: record.cuts,
-    removes: record.removes,
+    removes: removalsOf(record.removes),
     entries: record.entries,
     rules: [...record.rules, 'ordering:page_rank']
   }

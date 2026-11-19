@@ -24,6 +24,7 @@
 //                                declaration (`draft-write-escape-place.mjs`, `draft-write-escape.mjs`)
 //   place_not_written            a value at a place the kit declares the build never writes (`not-written`)
 //   record_name_empty            a contact created with an empty name, which the site would take (measured)
+//   removal_element_gone         a copy's removal naming an element an earlier removal took out (`removalProblems`)
 //   markup_runs_code             any other value written as HTML (an HTML piece, a value with a tag or a marker start,
 //                                a created record's HTML) with anything `runsCodeIn` refuses, or a value written where
 //                                an address is written (a link field, a link or picture slot, an address attribute
@@ -35,6 +36,7 @@ import { doorLength, visibleLength, visibleTextOf } from './draft-write-length.m
 import { libraryHtmlProblems } from './draft-write-library-check.mjs'
 import { addressRunsCode, runsCodeIn } from './draft-write-markup.mjs'
 import { nameProblems, placeProblems } from './draft-write-place-guard.mjs'
+import { removalProblems } from './draft-write-removal-check.mjs'
 import { addressAt, linkOf, PLAIN_COLUMNS, plainAt, TAG_START } from './draft-write-place-kinds.mjs'
 import { DOUBLE_PARENTHESIS } from './draft-write-tags.mjs'
 import { heldTextsOf } from './plan-withheld.mjs'
@@ -178,6 +180,7 @@ export function guardPlan(plan, ctx) {
     if (op.kind === 'picture.upload') pictureProblems(op, report)
     if (op.kind === 'library.create') libraryHtmlProblems(op, report)
     columnProblems(op, report, ctx.kit.mapping)
+    removalProblems(op, report)
     for (const v of list(op.values)) valueProblems(op, v, guard, report)
   }
   for (const c of list(plan.controls))

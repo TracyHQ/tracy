@@ -84,17 +84,20 @@ test('the category is titled after the list page of its page type, never the hom
   assert.equal(category.fields.title, list.name)
 })
 
-test('words with an angle bracket are refused by the order check, where the writer can still redo them', () => {
-  for (const words of ['Stems 3 < 5 days', 'Fresh > frozen']) {
+test('an angle bracket that opens no tag is words: the order check passes it and the write escapes it; a tag is refused', () => {
+  const orderWith = (words) => {
     const order = structuredClone(site.order)
     placesOfOrder(order)
       .flatMap(({ place }) => place.fields ?? [])
       .find((e) => e.place === 'home.home-b3.paragraph').value = words
-    assert.ok(
-      checkWriteOrder(order).some((p) => p.code === 'markup_forbidden'),
-      words
-    )
+    return order
   }
+  for (const words of ['Stems 3 < 5 days', 'Fresh > frozen'])
+    assert.ok(!checkWriteOrder(orderWith(words)).some((p) => p.code === 'markup_forbidden'), words)
+  assert.ok(
+    checkWriteOrder(orderWith('Fresh <b>tulips</b>')).some((p) => p.code === 'markup_forbidden'),
+    'a tag the field does not declare'
+  )
 })
 
 test('the florist plan raises exactly these skip reasons, flags and operation kinds', () => {

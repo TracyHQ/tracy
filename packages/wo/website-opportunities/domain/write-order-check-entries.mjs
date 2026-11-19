@@ -17,8 +17,8 @@ const hasValue = (e) => e.value !== undefined && e.value !== null && e.value !==
 const asText = (value) => (typeof value === 'number' ? String(value) : value)
 
 /**
- * Why a text entry holds markup its field does not declare, or null: a `<`, `>`, `((` or `))` in a field with no
- * `inline` part (`no_inline`), a tag its `inline` does not list (`tag`), an attribute its emphasis
+ * Why a text entry holds markup its field does not declare, or null: a tag, a `((` or `))` in a field with no
+ * `inline` part (`no_inline`; an angle bracket that opens no tag is words, never markup), a tag its `inline` does not list (`tag`), an attribute its emphasis
  * part does not declare, none declared meaning none allowed, an attribute on a closing tag included (`attribute`), a
  * tag in the other form than the field's `write` (`form`: a tag in a `codes` field, a marker in an `html` field), and
  * anything the write guard's `runsCodeIn` refuses (`runs_code`: a comment or other `<!`, `<?`, `</` form, a raw text
@@ -30,6 +30,9 @@ const asText = (value) => (typeof value === 'number' ? String(value) : value)
  */
 export function markupNotDeclared(e) {
   if (typeof e.value !== 'string' || !(/[<>]/.test(e.value) || DOUBLE_PARENTHESIS.test(e.value))) return null
+  // An angle bracket that opens no tag is words (`Joe <3 Gym`, `A > B`): each place writes it so it shows as typed.
+  if (!DOUBLE_PARENTHESIS.test(e.value) && tagsOf(e.value).length === 0 && runsCodeIn(e.value).length === 0)
+    return null
   const inline = e.declared?.inline
   if (!inline) return 'no_inline'
   const declared = new Map()

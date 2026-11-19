@@ -54,13 +54,13 @@ test('a parent page type makes the item a child of that page item, created after
   assert.ok(keys.indexOf(`menuItem:${p.mainMenu}:plans`) < keys.indexOf(`menuItem:${p.mainMenu}:contact`))
 })
 
-test('a parent page type the plan has not stops the plan typed', () => {
-  const stop = stopOf(() =>
-    planWith((m) => {
-      m.pages.contact.menuItem.parent = 'news'
-    })
-  )
-  assert.deepEqual([stop.code, stop.noRerun, stop.details.parent], ['page_parent_not_in_plan', true, 'news'])
+test('a parent page type the plan has not leaves the item at the top of the main menu, written', () => {
+  const p = planWith((m) => {
+    m.pages.contact.menuItem.parent = 'news'
+  })
+  const contact = item(p, 'contact')
+  assert.equal(contact.item.parent, undefined)
+  assert.ok(p.ops.some((op) => op.key === `menuItem:${p.mainMenu}:contact`))
 })
 
 test('an item page whose list page is not in the plan takes its own item (ownItem)', () => {
@@ -167,4 +167,24 @@ test('a block assigned to a page reached under its list page prints there only a
     m.pages.class.under.detailPositions.assignTo = 'item-page'
   }
   assert.equal(stopOf(() => planWith(assignTo, at('detail-bottom-1'))).code, 'under_page_position_not_detail')
+})
+
+test('every parent page type the kit declares: a planned page is written whether or not its parent is planned', () => {
+  const declared = Object.entries(site.aiq.mapping.pages)
+    .map(([type, d]) => [type, (d.menuItem ?? d.ownItem)?.parent])
+    .filter(([, parent]) => parent !== undefined)
+  assert.ok(declared.length > 0, 'the kit declares at least one parent page type')
+  const planned = new Set(site.order.pages.map((p) => p.pageType))
+  for (const [type, parent] of declared) {
+    // The invented contact page takes the parent the kit declares for this page type.
+    const p = planWith((m) => {
+      m.pages.contact.menuItem.parent = parent
+    })
+    const contact = item(p, 'contact')
+    assert.ok(contact, `${type}: the page under ${parent} is written`)
+    const at = site.order.pages.find((q) => q.pageType === parent)
+    if (planned.has(parent)) assert.deepEqual(contact.item.parent, { ref: `page:${at.id}`, form: 'id' })
+    else
+      assert.equal(contact.item.parent, undefined, `${type}: no ${parent} page, so the item sits at the top`)
+  }
 })

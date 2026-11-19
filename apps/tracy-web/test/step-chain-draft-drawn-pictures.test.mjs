@@ -41,12 +41,28 @@ test('every frame no photo fills is drawn once, looked at, stored and named by i
   assert.equal(run.inputs.pictures.recorded.drawing.spend.draws, drawn.length)
 })
 
-test('without a drawer door a frame that waits for a drawing stops the pictures step, typed, once', async () => {
+test('without a drawer door the run stops at its door check, typed, before the writer or the vision call is paid', async () => {
   const s = await setUp({ doors: { pictureDrawer: undefined } })
   const error = await s.engine.prepare(s.ctx).catch((e) => e)
-  assert.equal(error.stop?.step, 'pictures')
+  assert.equal(error.stop?.step, 'doors')
   assert.equal(error.stop?.attempts, 1)
-  assert.match(String(error.stop?.error), /picture_drawer_missing/)
+  assert.match(String(error.stop?.error), /pictureDrawer \(unset\)/)
+  assert.equal(s.model.requests.length, 0)
+})
+
+test('a drawer door that refuses (a key that will not open) is named with its refusal at the door check', async () => {
+  const s = await setUp({ doors: { pictureDrawer: async () => ({ ok: false, code: 'key_unreadable' }) } })
+  assert.deepEqual(await s.steps.doors(s.ctx), [{ door: 'pictureDrawer', state: 'key_unreadable' }])
+  const thrown = await setUp({
+    doors: {
+      pictureDrawer: async () => {
+        throw Object.assign(new Error('unreadable'), { code: 'picture_drawer_unreadable' })
+      }
+    }
+  })
+  assert.deepEqual(await thrown.steps.doors(thrown.ctx), [
+    { door: 'pictureDrawer', state: 'picture_drawer_unreadable' }
+  ])
 })
 
 test('a rejected drawing climbs the rungs: the redraw names the faults, a hard fault everywhere leaves the frame empty', async () => {

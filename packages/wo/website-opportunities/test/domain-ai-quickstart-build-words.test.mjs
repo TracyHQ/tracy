@@ -161,3 +161,16 @@ test('the keyed row of the masthead agrees with the locations of its fields', ()
     'placements[block-162].keyedRow.pageType: stat-page keys the row to classes, not plans'
   ])
 })
+
+test('a page whose parent page type is not planned is a top level page of the site map, as the write places it', () => {
+  const items = {
+    from: 'pages',
+    level: 1,
+    except: ['home'],
+    order: 'main-menu',
+    max: 9,
+    link: 'page-address'
+  }
+  const noAbout = PLAN.filter((p) => p.pageType !== 'about')
+  assert.deepEqual(ids(menuItemPagesOf(items, noAbout, MAPPING)), ['p-team', 'p-blog', 'p-legal'])
+})

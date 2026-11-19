@@ -97,6 +97,46 @@ export function omitRows(state, record, hide) {
   }
 }
 
+/** The steps of an element path: `[name, index]` each, an unindexed step at index 1. */
+const stepsOf = (element) =>
+  indexed(element)
+    .split('/')
+    .filter(Boolean)
+    .map((step) => [step.replace(/\[\d+\]$/, ''), indexOf(step)])
+
+/** Sort order of two elements of one stored value: the later one first, step by step (a later sibling of one name first). */
+function laterFirst(a, b) {
+  const [x, y] = [stepsOf(a), stepsOf(b)]
+  for (let i = 0; i < Math.min(x.length, y.length); i += 1) {
+    if (x[i][0] !== y[i][0]) return x[i][0] < y[i][0] ? 1 : -1
+    if (x[i][1] !== y[i][1]) return y[i][1] - x[i][1]
+  }
+  return y.length - x.length
+}
+
+/**
+ * The element removals of a copy as the write runs them (#575): a removal of an element inside another removal of the
+ * same stored value is dropped, since its container takes it (an omitted social link takes its icon); the same element
+ * named twice is removed once; the rest run last first in the value, so no removal renumbers an element a later one
+ * names. Every hide that takes an element out (`omit`, `rows.remove`) goes through here, so no removal ever names an
+ * element already gone (`HTML_SLOT_MISSING` after the first writes, a half written site).
+ */
+export function removalsOf(removes) {
+  const all = list(removes)
+  const kept = all.filter(
+    (r, i) =>
+      !all.some(
+        (o, j) =>
+          valueAddress(o.loc) === valueAddress(r.loc) &&
+          (within(r.xpath, o.xpath) ? indexed(r.xpath) !== indexed(o.xpath) || j < i : false)
+      )
+  )
+  const byValue = (a, b) => (valueAddress(a.loc) < valueAddress(b.loc) ? -1 : 1)
+  return kept.sort((a, b) =>
+    valueAddress(a.loc) === valueAddress(b.loc) ? laterFirst(a.xpath, b.xpath) : byValue(a, b)
+  )
+}
+
 /** The `empty` hide: `""` in every location of a control none of whose locations is written. */
 export function emptyControl(state, record, hide) {
   const block = state.kit.mapping.blocks?.[record.block]

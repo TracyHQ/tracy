@@ -136,25 +136,15 @@ function styleOf(state, page, style) {
 
 /**
  * The menu item of a page as the kit declares it (`menuItem`, or `ownItem` for an item page with no list page in the
- * plan): its link, template style, params and parent page.
+ * plan): its link, template style, params and parent page. A parent page type the plan has no page of puts the item at
+ * the top of the main menu, as the step chain placed every page the plan did not nest (`menuPlacements`, parent 1): a
+ * planned page is written whether or not its kit parent is planned, and the site map lists it as a top level page
+ * (`menuItemPagesOf`, the same rule).
  */
 export function pageItemOf(state, page, decl) {
   const item = decl.menuItem ?? decl.ownItem
-  let parent = null
-  if (item.parent !== undefined) {
-    const at = firstOfType(state.order, item.parent)
-    if (!at)
-      throw new DraftWriteError(
-        'page_parent_not_in_plan',
-        `the ${page.pageType} page sits under a page the plan has not`,
-        {
-          page: page.id,
-          pageType: page.pageType,
-          parent: item.parent
-        }
-      )
-    parent = { ref: `page:${at.id}`, form: 'id' }
-  }
+  const at = item.parent === undefined ? null : firstOfType(state.order, item.parent)
+  const parent = at ? { ref: `page:${at.id}`, form: 'id' } : null
   return {
     link: linkOf(state, page, item.link),
     item: {

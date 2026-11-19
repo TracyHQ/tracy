@@ -26,7 +26,17 @@ const tradeBlocks = () => [
     itemsLabel: 'Steps',
     fields: [text('heading', 'editorial.heading', 40, { slot: 'module-90.1' })],
     itemFields: [
-      text('step', 'editorial.paragraph', 120, { slots: ['module-90.10', 'module-90.11', 'module-90.12'] })
+      text('step', 'editorial.paragraph', 120, { slots: ['module-90.10', 'module-90.11', 'module-90.12'] }),
+      // An icon on every card: the pictures and icons steps read the cards as the writer and the write order do.
+      {
+        name: 'icon',
+        kind: 'editorial.item_icon',
+        type: 'icon',
+        storage: 'image-file',
+        for: ['step'],
+        slots: ['module-90.20', 'module-90.21', 'module-90.22'],
+        frame: { width: 48, height: 48 }
+      }
     ]
   },
   {
@@ -114,6 +124,17 @@ test('the write order shows both trade blocks, the repeating one with its writte
     assert.ok(item.fields.some((f) => f.from === 'writer' && typeof f.value === 'string' && f.value !== ''))
   assert.ok(!order.hidden.some((h) => h.at === repeating.at))
   assert.deepEqual(checkWriteOrder(order), [])
+})
+
+test('the icons step reads the trade cards as the writer and the write order do: every card has its icon', () => {
+  const steps = saved.approval.plan.pages[0].blocks.find((b) => b.block === 'care-steps')
+  const cards = [1, 2, 3].map((n) => `trade-${steps.id}-${n}`)
+  const iconed = saved.pictures.icons.map((i) => i.id)
+  for (const card of cards)
+    assert.ok(
+      iconed.some((id) => id.includes(card)),
+      card
+    )
 })
 
 test('a trade card that states a term is sent back, and the writer request names the trade facts', async () => {

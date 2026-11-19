@@ -10,6 +10,7 @@
 // and the write order shows them like any item. A block that already shows items, or declares no item fields, gets
 // none. The ids follow from the approved plan alone, so the writer and the write order give the same cards. Pure: the
 // plan and the plan data are copied, never changed.
+import { planDataOfPlan } from './plan-data-of-plan.mjs'
 import { isTradeBlock } from './plan-gate-trade.mjs'
 
 /** The data kind of a trade card: an item with no value of the business. */
@@ -72,4 +73,18 @@ export function withTradeCards(plan, blocks, data) {
     }))
   }
   return { plan: withCards, data: { ...data, byId, items }, cards }
+}
+
+/**
+ * The plan as the build shows it, and its plan data: the plan data the plan gate held the plan to (`planDataOfPlan`)
+ * with the trade cards in (`withTradeCards`). Every build stage that reads the plan's blocks (the page writer, the
+ * pictures, the icons, the write order) reads this one, so a field one stage fills is never one another stage has not
+ * heard of (#575: the trade cards' icon fields reached the write order with no icon, `field_unaccounted`).
+ * @param {object} profile the approved needs profile
+ * @param {object} plan the approved plan
+ * @param {Map<string, object>} blocks the block descriptions by id (block store and library)
+ * @returns {{plan: object, data: object, cards: Map<string, string[]>}}
+ */
+export function shownPlanOf(profile, plan, blocks) {
+  return withTradeCards(plan, blocks, planDataOfPlan(profile, plan))
 }

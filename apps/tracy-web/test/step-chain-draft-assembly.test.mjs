@@ -122,7 +122,7 @@ test('a copy that still repeats after its one rewrite stops the build at copy, o
   assert.ok(!error.chain || !JSON.stringify(error.chain).includes('"order"'))
 })
 
-test('a draft run checks the build model door before any work, and an empty door stops it up front', async () => {
+test('a draft run checks the build model and drawer doors before any work, and an empty door stops it up front', async () => {
   const { steps, ctx } = await setUp()
   assert.deepEqual(await steps.doors(ctx), [])
   const empty = createStepChainSteps({
@@ -137,7 +137,11 @@ test('a draft run checks the build model door before any work, and an empty door
       }
     }
   })
-  assert.deepEqual(await empty.doors(ctx), [{ door: 'buildModel', state: 'model_missing' }])
+  // No drawer is wired either: both doors are named, before anything is spent.
+  assert.deepEqual(await empty.doors(ctx), [
+    { door: 'buildModel', state: 'model_missing' },
+    { door: 'pictureDrawer', state: 'unset' }
+  ])
   const engine = createStepChainEngine({ steps: empty, applyFor: () => async () => ({}) })
   const error = await engine.prepare(ctx).catch((e) => e)
   assert.equal(error.code, STEP_CHAIN_STOPPED)
