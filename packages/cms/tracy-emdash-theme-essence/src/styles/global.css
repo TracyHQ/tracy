@@ -121,12 +121,16 @@
 	/* header rows. Home: top row (social · brand · button) over the menu row; inner pages: one row */
 	.es-header-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 36px 0; border-bottom: 1px solid var(--color-line); }
 	.es-header-top .es-subscribe { justify-self: end; }
+	/* the source's button: an 18px icon, 13px before the text; from 1400px its column is 133px wide and the icon sits above the text (measured: 144x48 below, 133x69 above) */
+	.es-header .es-subscribe { gap: 13px; }
+	.es-header .es-subscribe svg { width: 18px; height: 18px; }
+	@media (min-width: 1400px) { .es-header.is-inner .es-subscribe { flex-direction: column; gap: 3px; width: 133px; box-sizing: border-box; } }
 	.es-brand-link { display: inline-flex; align-items: center; }
 	.es-logo { height: 40px; width: auto; }
 	.es-header.is-home .es-header-bar { margin-bottom: 36px; border-bottom: 1px solid var(--color-line-strong); }
 	.es-header-bar { display: flex; align-items: center; gap: 12px; min-height: 72px; }
 	.es-header.is-home .es-header-bar { display: grid; grid-template-columns: 1fr auto 1fr; }
-	.es-header.is-inner .es-header-bar { justify-content: space-between; min-height: 96px; }
+	.es-header.is-inner .es-header-bar { justify-content: space-between; min-height: 123px; }
 	.es-header.is-inner .es-nav { margin-left: auto; }
 	.es-bar-left, .es-bar-right { display: flex; align-items: center; gap: 12px; }
 	.es-bar-right { justify-content: flex-end; }

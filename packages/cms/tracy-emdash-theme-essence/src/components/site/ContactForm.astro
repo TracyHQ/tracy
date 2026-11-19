@@ -36,3 +36,8 @@ const LABELS: [string, string][] = [['name', c.name_label], ['email', c.email_la
 		</form>
 	)}
 </div>
+
+<script>
+	// the plugin prints its textarea with whitespace inside, which hides the placeholder: an untouched field starts empty
+	document.querySelectorAll<HTMLTextAreaElement>('.es-contact-form textarea').forEach((t) => { if (!t.value.trim()) t.value = '' })
+</script>

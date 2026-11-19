@@ -6,9 +6,10 @@
 	@media (max-width: 991px) { .es-contact h1 { font-size: 28px; line-height: 36.4px; } }
 	.es-contact-intro { text-align: center; margin: 0 0 48px; }
 	.es-contact .ec-form { display: block; }
-	.es-contact .ec-form-page { display: grid; gap: 40px; border: 0; padding: 0; margin: 0; min-width: 0; }
+	.es-contact .ec-form-page { display: grid; gap: 31px; border: 0; padding: 0; margin: 0; min-width: 0; }
 	.es-contact .ec-form-field { min-width: 0; }
-	.es-contact .ec-form-label { display: block; margin-bottom: 6px; font-family: var(--font-display); font-size: 16px; line-height: 24px; color: var(--color-heading); }
+	.es-contact .ec-form-label { display: block; margin-bottom: 12px; font-family: var(--font-body); font-size: 16px; line-height: 18px; color: var(--color-meta); }
+	.es-contact .ec-form-label:has(.ec-form-required) { font-family: var(--font-display); font-size: 18px; color: var(--color-heading); }
 	.es-contact .ec-form-required { margin-left: 6px; color: #e03131; }
 	html[data-theme="dark"] .es-contact .ec-form-required { color: #ff8787; }
 	.es-contact .ec-form-input:not([type="checkbox"]) { display: block; width: 100%; box-sizing: border-box; padding: 12.8px 18px; font-family: var(--font-body); font-size: 14px; line-height: 20.3px; color: var(--color-heading); background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--ds-input-radius, 8px); }
@@ -30,7 +31,7 @@
 	.es-contact .ec-form-status--success { border-color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
 	.es-contact .ec-form-status--error { border-color: #e03131; background: color-mix(in srgb, #e03131 10%, transparent); }
 	.es-contact .ec-form.is-disabled .ec-form-input { opacity: .6; cursor: not-allowed; }
-	@media (max-width: 767px) { .es-contact-intro { margin-bottom: 36px; } .es-contact .ec-form-page { gap: 30px; } }
+	@media (max-width: 767px) { .es-contact-intro { margin-bottom: 36px; } .es-contact .ec-form-page { gap: 35px; } }
 
 	/* ---- Authors: three columns of cards (card ~353px, portrait 314x260 radius 8) ---- */
 	.es-authors-main { max-width: 1164px; }
