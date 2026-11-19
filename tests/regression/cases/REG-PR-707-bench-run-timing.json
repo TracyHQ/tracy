@@ -14,7 +14,8 @@
   "expect": [
     "A planner run's rounds and turns come back with durations, tokens and tool names and no text.",
     "A picture round also carries its phase times (code, icon ranking, looker, drawer) as numbers.",
-    "An unknown bench, a malformed id and a missing run are refused."
+    "An unknown bench, a malformed id and a missing run are refused.",
+    "A bench's runs started in a window come back with kit, revision and duration; a bad window is refused."
   ],
   "selectors": {},
   "run": {
@@ -29,7 +30,8 @@
     "tests": [
       "a planner run's rounds and turns: durations, tokens, tool names, never the text",
       "a picture round also says where its own time went (its manifest's timing), as numbers only",
-      "an unknown bench, a malformed id and a missing run are refused"
+      "an unknown bench, a malformed id and a missing run are refused",
+      "a bench's runs in a window: kit, revision, duration and timing settings, oldest first; a bad window is refused"
     ]
   }
 }

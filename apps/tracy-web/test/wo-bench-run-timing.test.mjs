@@ -2,7 +2,14 @@
 // turns with their durations, tokens and tool names, and nothing of what was said.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { benchRunTiming, failuresIn, phasesOf, toolsOf } from '../src/lib/wo-bench-run-timing.js'
+import {
+  benchRunTiming,
+  benchRunsBetween,
+  failuresIn,
+  LIST_LIMIT,
+  phasesOf,
+  toolsOf
+} from '../src/lib/wo-bench-run-timing.js'
 
 const RUN = '11111111-2222-3333-4444-555555555555'
 const fakePool = (tables) => ({
@@ -115,6 +122,62 @@ test('an unknown bench, a malformed id and a missing run are refused', async () 
   assert.deepEqual(await benchRunTiming(pool, 'brand', RUN), { ok: false, error: 'UNKNOWN_BENCH' })
   assert.deepEqual(await benchRunTiming(pool, 'plan', 'x; drop table'), { ok: false, error: 'BAD_RUN_ID' })
   assert.deepEqual(await benchRunTiming(pool, 'copy', RUN), { ok: false, error: 'NO_SUCH_RUN' })
+})
+
+test("a bench's runs in a window: kit, revision, duration and timing settings, oldest first; a bad window is refused", async () => {
+  const asked = []
+  const pool = {
+    query: async (sql, params) => {
+      asked.push({ sql, params })
+      return {
+        rows: [
+          {
+            id: RUN,
+            status: 'succeeded',
+            created_at: '2026-11-19T18:02:07Z',
+            finished_at: '2026-11-19T18:11:04Z',
+            cost_usd: '0.16',
+            harness: { effort: 'max', parallelPages: 3, budgetUsd: 2 },
+            kit_ref: 'ja-diner/j6/1.0.9',
+            revision_id: '7ef2a1d4-d846-49d1-adaa-2fad610dd665'
+          },
+          { id: RUN, status: 'running', created_at: '2026-11-19T18:03:00Z', revision_id: 'not a uuid' }
+        ]
+      }
+    }
+  }
+  const now = () => Date.parse('2026-11-19T20:00:00Z')
+  const out = await benchRunsBetween(pool, 'plan', { now })
+  assert.equal(out.ok, true)
+  assert.deepEqual(out.runs[0], {
+    id: RUN,
+    bench: 'plan',
+    status: 'succeeded',
+    createdAt: '2026-11-19T18:02:07.000Z',
+    finishedAt: '2026-11-19T18:11:04.000Z',
+    ms: 537_000,
+    costUsd: 0.16,
+    kitRef: 'ja-diner/j6/1.0.9',
+    revisionId: '7ef2a1d4-d846-49d1-adaa-2fad610dd665',
+    harness: { effort: 'max', parallelPages: 3 }
+  })
+  assert.equal(out.runs[1].revisionId, null)
+  assert.equal(out.runs[1].ms, null)
+  // The default window is the last 24 hours, read from the planner's own run table, at most LIST_LIMIT runs.
+  assert.deepEqual(asked[0].params, ['2026-11-18T20:00:00.000Z', '2026-11-19T20:00:00.000Z'])
+  assert.match(asked[0].sql, /from site_planner_run where created_at >= \$1/)
+  assert.match(asked[0].sql, new RegExp(`limit ${LIST_LIMIT}$`))
+  for (const window of [
+    { since: 'yesterday' },
+    { since: '2026-11-19T10:00:00Z', until: '2026-11-19T09:00:00Z' },
+    { since: '2026-11-01T00:00:00Z', until: '2026-11-19T00:00:00Z' }
+  ])
+    assert.deepEqual(await benchRunsBetween(pool, 'copy', { ...window, now }), {
+      ok: false,
+      error: 'BAD_WINDOW'
+    })
+  assert.deepEqual(await benchRunsBetween(pool, 'brand', { now }), { ok: false, error: 'UNKNOWN_BENCH' })
+  assert.equal(asked.length, 1, 'a refused window reads nothing')
 })
 
 test('tool names and failure counts are read defensively', () => {

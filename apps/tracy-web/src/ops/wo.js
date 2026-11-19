@@ -43,7 +43,7 @@ import {
   socialOrigin
 } from 'website-opportunities/src/wo-social-auth.js'
 import { listChainBuilds } from '../lib/wo-chain-builds.js'
-import { benchRunTiming } from '../lib/wo-bench-run-timing.js'
+import { benchRunTiming, benchRunsBetween } from '../lib/wo-bench-run-timing.js'
 import { admit, denied } from './admit.js'
 import {
   parsePublicDemoSettings,
@@ -113,6 +113,18 @@ export function woOpsRoutes({
     if (!pool) return c.json({ error: 'NO_DATABASE' }, 503)
     c.header('cache-control', 'no-store')
     return c.json(await listChainBuilds(pool, config))
+  })
+  app.get('/api/ops/wo/bench-runs/:bench', async (c) => {
+    const g = await guard(c)
+    if (g.deny) return g.deny
+    if (!pool) return c.json({ error: 'NO_DATABASE' }, 503)
+    c.header('cache-control', 'no-store')
+    const out = await benchRunsBetween(pool, c.req.param('bench'), {
+      since: c.req.query('since'),
+      until: c.req.query('until')
+    })
+    if (!out.ok) return c.json({ error: out.error }, 400)
+    return c.json({ runs: out.runs })
   })
   app.get('/api/ops/wo/bench-runs/:bench/:runId', async (c) => {
     const g = await guard(c)

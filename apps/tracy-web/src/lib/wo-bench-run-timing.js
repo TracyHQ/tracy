@@ -58,6 +58,59 @@ export const failuresIn = (list) =>
     .split('\n')
     .filter((line) => /^[A-Z][0-9]{2}[a-z]? \|/.test(line)).length
 
+/** The harness settings that change a run's timing, and nothing else of the harness. */
+export function timingHarness(value) {
+  const harness = json(value) ?? {}
+  return {
+    ...(typeof harness.effort === 'string' ? { effort: harness.effort } : {}),
+    ...(Number.isInteger(harness.parallelPages) ? { parallelPages: harness.parallelPages } : {}),
+    ...(harness.planTurns === true ? { planTurns: true } : {}),
+    ...(Number.isInteger(harness.maxFixRounds) ? { maxFixRounds: harness.maxFixRounds } : {}),
+    ...(harness.baseCopy ? { baseCopy: true } : {})
+  }
+}
+
+/** The most runs one listing answers, and the widest window it reads. */
+export const LIST_LIMIT = 100
+export const LIST_WINDOW_MS = 7 * 24 * 3600_000
+
+/**
+ * The runs of one bench started in a window (by default the last 24 hours), oldest first: for builds whose step records
+ * carry no run id (before #707), told apart by their kit and start time.
+ * @param {import('pg').Pool} pool
+ * @param {'plan' | 'copy' | 'pictures'} bench
+ * @param {{ since?: string, until?: string, now?: () => number }} window
+ */
+export async function benchRunsBetween(pool, bench, { since, until, now = Date.now } = {}) {
+  const t = BENCH_TABLES[bench]
+  if (!t) return { ok: false, error: 'UNKNOWN_BENCH' }
+  const end = until === undefined ? now() : Date.parse(until)
+  const start = since === undefined ? end - 24 * 3600_000 : Date.parse(since)
+  if (!Number.isFinite(start) || !Number.isFinite(end) || start > end || end - start > LIST_WINDOW_MS)
+    return { ok: false, error: 'BAD_WINDOW' }
+  const { rows } = await pool.query(
+    `select id, status, created_at, finished_at, cost_usd, harness, kit->>'ref' as kit_ref,
+            brief_source->>'revisionId' as revision_id
+       from ${t.run} where created_at >= $1 and created_at <= $2 order by created_at limit ${LIST_LIMIT}`,
+    [new Date(start).toISOString(), new Date(end).toISOString()]
+  )
+  return {
+    ok: true,
+    runs: rows.map((r) => ({
+      id: r.id,
+      bench,
+      status: r.status,
+      createdAt: iso(r.created_at),
+      finishedAt: iso(r.finished_at),
+      ms: ms(r.created_at, r.finished_at),
+      costUsd: count(r.cost_usd),
+      kitRef: typeof r.kit_ref === 'string' ? r.kit_ref.slice(0, 200) : null,
+      revisionId: UUID.test(String(r.revision_id)) ? r.revision_id : null,
+      harness: timingHarness(r.harness)
+    }))
+  }
+}
+
 /**
  * @param {import('pg').Pool} pool
  * @param {'plan' | 'copy' | 'pictures'} bench
@@ -87,7 +140,6 @@ export async function benchRunTiming(pool, bench, runId) {
       [runId]
     )
   ).rows
-  const harness = json(run.harness) ?? {}
   return {
     ok: true,
     run: {
@@ -98,13 +150,7 @@ export async function benchRunTiming(pool, bench, runId) {
       finishedAt: iso(run.finished_at),
       ms: ms(run.created_at, run.finished_at),
       costUsd: count(run.cost_usd),
-      harness: {
-        ...(typeof harness.effort === 'string' ? { effort: harness.effort } : {}),
-        ...(Number.isInteger(harness.parallelPages) ? { parallelPages: harness.parallelPages } : {}),
-        ...(harness.planTurns === true ? { planTurns: true } : {}),
-        ...(Number.isInteger(harness.maxFixRounds) ? { maxFixRounds: harness.maxFixRounds } : {}),
-        ...(harness.baseCopy ? { baseCopy: true } : {})
-      }
+      harness: timingHarness(run.harness)
     },
     rounds: rounds.map((r) => ({
       round: r.round,
