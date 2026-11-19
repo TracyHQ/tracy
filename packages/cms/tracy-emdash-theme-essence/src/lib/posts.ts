@@ -87,20 +87,24 @@ export async function loadPosts(locale: Locale): Promise<PostRow[]> {
       tags: (tags.get(d.id) ?? []).map(ref)
     } satisfies PostRow
   })
-  return rows.sort((a: PostRow, b: PostRow) => (a.date < b.date ? 1 : a.date > b.date ? -1 : a.slug < b.slug ? -1 : 1))
+  return rows.sort((a: PostRow, b: PostRow) =>
+    a.date < b.date ? 1 : a.date > b.date ? -1 : a.slug < b.slug ? -1 : 1
+  )
 }
 
 export async function loadAuthors(locale: Locale): Promise<AuthorRow[]> {
   const { entries } = await getEmDashCollection('authors', { locale, status: 'published' })
   // the store returns rows in no promised order: entry ids are issued in import order, which is the source's order
-  return [...entries].sort((a: any, b: any) => String(a.data.id).localeCompare(String(b.data.id))).map((e: any) => ({
-    id: e.data.id as string,
-    slug: e.id as string,
-    name: (e.data.name as string) ?? '',
-    avatar: e.data.avatar ?? null,
-    jobTitle: (e.data.job_title as string) ?? '',
-    bio: (e.data.bio as string) ?? ''
-  }))
+  return [...entries]
+    .sort((a: any, b: any) => String(a.data.id).localeCompare(String(b.data.id)))
+    .map((e: any) => ({
+      id: e.data.id as string,
+      slug: e.id as string,
+      name: (e.data.name as string) ?? '',
+      avatar: e.data.avatar ?? null,
+      jobTitle: (e.data.job_title as string) ?? '',
+      bio: (e.data.bio as string) ?? ''
+    }))
 }
 
 export async function loadCategoryInfo(locale: Locale): Promise<CategoryInfo[]> {
@@ -134,23 +138,35 @@ export const homeLead = (all: PostRow[]) =>
 const oneEach = (rows: PostRow[], prefer: PostRow[] = []) => {
   const seen = new Set<string>()
   const mine = new Map(prefer.map((p) => [p.title, p]))
-  return rows.filter((p) => (seen.has(p.title) ? false : (seen.add(p.title), true))).map((p) => mine.get(p.title) ?? p)
+  return rows
+    .filter((p) => (seen.has(p.title) ? false : (seen.add(p.title), true)))
+    .map((p) => mine.get(p.title) ?? p)
 }
 /** "Articles - Latest": the newest posts; a list page with a sidebar shows its own list's newest (the source's module reads the same category). */
-export const latestPosts = (all: PostRow[], n = 4, prefer: PostRow[] = []) => (prefer.length >= n ? oneEach(prefer) : oneEach(all, prefer)).slice(0, n)
+export const latestPosts = (all: PostRow[], n = 4, prefer: PostRow[] = []) =>
+  (prefer.length >= n ? oneEach(prefer) : oneEach(all, prefer)).slice(0, n)
 /** "Features post": the first titles A-Z (the source's module sorts by title). */
-export const featuresPosts = (all: PostRow[], n = 4) => oneEach([...all].sort((a, b) => a.title.localeCompare(b.title))).slice(0, n)
+export const featuresPosts = (all: PostRow[], n = 4) =>
+  oneEach([...all].sort((a, b) => a.title.localeCompare(b.title))).slice(0, n)
 /** "Trending": the least-hit posts first, as the source's module orders them (`a.hits ASC`). */
-export const trendingPosts = (all: PostRow[], n = 3) => oneEach([...all].sort((a, b) => a.hits - b.hits)).slice(0, n)
+export const trendingPosts = (all: PostRow[], n = 3) =>
+  oneEach([...all].sort((a, b) => a.hits - b.hits)).slice(0, n)
 /** Tags by use, most used first; tags used as often keep the order of the tag list (`order`: slugs as the taxonomy lists them). */
 export function tagCloud(all: PostRow[], n = 6, order: string[] = []): (TermRef & { count: number })[] {
-  const rank = (slug: string) => { const i = order.indexOf(slug); return i < 0 ? order.length : i }
+  const rank = (slug: string) => {
+    const i = order.indexOf(slug)
+    return i < 0 ? order.length : i
+  }
   const m = new Map<string, TermRef & { count: number }>()
   for (const p of all) for (const t of p.tags) m.set(t.slug, { ...t, count: (m.get(t.slug)?.count ?? 0) + 1 })
-  return [...m.values()].sort((a, b) => b.count - a.count || rank(a.slug) - rank(b.slug) || a.label.localeCompare(b.label)).slice(0, n)
+  return [...m.values()]
+    .sort((a, b) => b.count - a.count || rank(a.slug) - rank(b.slug) || a.label.localeCompare(b.label))
+    .slice(0, n)
 }
 /** "More read": posts that share a tag with this one, newest first. */
 export function relatedPosts(all: PostRow[], post: PostRow, n = 4): PostRow[] {
   const mine = new Set(post.tags.map((t) => t.slug))
-  return oneEach(all.filter((p) => p.id !== post.id && p.title !== post.title && p.tags.some((t) => mine.has(t.slug)))).slice(0, n)
+  return oneEach(
+    all.filter((p) => p.id !== post.id && p.title !== post.title && p.tags.some((t) => mine.has(t.slug)))
+  ).slice(0, n)
 }

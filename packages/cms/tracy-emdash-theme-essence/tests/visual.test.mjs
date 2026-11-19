@@ -11,7 +11,14 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { promisify } from 'node:util'
 import { after, before, describe, it } from 'node:test'
-import { diffSnapshots, imageCensus, siteSnapshotOf, snapshotOf, navigate, scanSeams } from '../tools/visual-lib.mjs'
+import {
+  diffSnapshots,
+  imageCensus,
+  siteSnapshotOf,
+  snapshotOf,
+  navigate,
+  scanSeams
+} from '../tools/visual-lib.mjs'
 import { launchBrowser } from '../tools/qa-browser.mjs'
 const execFileP = promisify(execFile)
 const HERE = new URL('.', import.meta.url).pathname
@@ -380,8 +387,12 @@ describe('F12 — visual-qa on a mock site', { concurrency: CONCURRENCY }, () =>
           const rows = triage.split('\n').filter((l) => l.startsWith(`| ${kind} |`))
           assert.equal(rows.length >= 1, true, `no triage row for ${kind}:\n${triage}`)
           const seen = r.report.pages.flatMap((p) => p.findings).filter((f) => f.kind === kind).length
-          const counted = rows.reduce((n, l) => n + Number(l.split('|')[4].trim() || 0), 0)  // | kind | where | what | N |
-          assert.equal(counted, seen, `triage counted ${counted} sighting(s), the run found ${seen}\n${triage}`)
+          const counted = rows.reduce((n, l) => n + Number(l.split('|')[4].trim() || 0), 0) // | kind | where | what | N |
+          assert.equal(
+            counted,
+            seen,
+            `triage counted ${counted} sighting(s), the run found ${seen}\n${triage}`
+          )
         }
         if (only === 'dark')
           assert.ok(
@@ -439,7 +450,11 @@ describe('F12 — visual-qa on a mock site', { concurrency: CONCURRENCY }, () =>
       has(before, 'parity-mismatch')
       c.design.parity.sourceThemes = ['light']
       const after = await visual(site, c)
-      assert.equal(after.code, 0, JSON.stringify(after.report.pages[0].findings.map((f) => [f.kind, f.property, f.selector])))
+      assert.equal(
+        after.code,
+        0,
+        JSON.stringify(after.report.pages[0].findings.map((f) => [f.kind, f.property, f.selector]))
+      )
       const dark = after.report.pages[0].axes.find((a) => a.variant === 'desktop-dark')
       assert.ok(dark.parity.checked > 0, 'geometry and type are still compared')
     } finally {
@@ -1261,15 +1276,25 @@ it('seam scanning ignores a proven sticky occlusion but preserves visible, offsc
   const browser = await launchBrowser()
   try {
     const page = await browser.newPage({ viewport: { width: 1000, height: 700 } })
-    await page.setContent('<style>body{margin:0;height:2500px}header{position:sticky;top:0;z-index:40;height:79px;border-bottom:1px solid #888;background:rgba(255,255,255,.8)}.spacer{height:420px}input{display:block;box-sizing:border-box;width:600px;height:80px;border:1px solid #888}</style><header>Header</header><div class="spacer"></div><input>')
+    await page.setContent(
+      '<style>body{margin:0;height:2500px}header{position:sticky;top:0;z-index:40;height:79px;border-bottom:1px solid #888;background:rgba(255,255,255,.8)}.spacer{height:420px}input{display:block;box-sizing:border-box;width:600px;height:80px;border:1px solid #888}</style><header>Header</header><div class="spacer"></div><input>'
+    )
     await page.evaluate(() => scrollTo(0, 500))
-    assert.equal((await page.evaluate(scanSeams)).length, 0, 'an opaque sticky border hides the coincident input border over a translucent surface')
-    await page.setContent('<style>body{margin:0;height:2500px}.a{height:40px;border-bottom:1px solid #888}.b{margin-top:1px;height:40px;border-top:1px solid #888}</style><div class="a">First</div><div class="b">Second</div>')
+    assert.equal(
+      (await page.evaluate(scanSeams)).length,
+      0,
+      'an opaque sticky border hides the coincident input border over a translucent surface'
+    )
+    await page.setContent(
+      '<style>body{margin:0;height:2500px}.a{height:40px;border-bottom:1px solid #888}.b{margin-top:1px;height:40px;border-top:1px solid #888}</style><div class="a">First</div><div class="b">Second</div>'
+    )
     await page.evaluate(() => scrollTo(0, 0))
     assert.ok((await page.evaluate(scanSeams)).length > 0, 'adjacent visible borders remain a seam')
     await page.locator('.a').evaluate((e) => (e.style.marginTop = '1600px'))
     assert.ok((await page.evaluate(scanSeams)).length > 0, 'offscreen full-page coverage is preserved')
-    await page.setContent('<style>body{margin:0}.hero{position:relative;height:120px;width:600px;border-bottom:1px solid #888}.inner{position:absolute;bottom:1px;left:0;width:600px;height:60px;border-bottom:1px solid #888}</style><div class="hero"><div class="inner">Nested preview</div></div>')
+    await page.setContent(
+      '<style>body{margin:0}.hero{position:relative;height:120px;width:600px;border-bottom:1px solid #888}.inner{position:absolute;bottom:1px;left:0;width:600px;height:60px;border-bottom:1px solid #888}</style><div class="hero"><div class="inner">Nested preview</div></div>'
+    )
     await page.evaluate(() => scrollTo(0, 0))
     assert.ok((await page.evaluate(scanSeams)).length > 0, 'a real nested hero border seam remains a finding')
   } finally {
@@ -1285,15 +1310,23 @@ it('imageCensus says which root it counted, so a source without <main> can be ma
   const browser = await launchBrowser()
   try {
     const page = await browser.newPage()
-    await page.setContent(`<body><header>${img}</header><div>${img}${img}</div><footer>${img}</footer></body>`)
+    await page.setContent(
+      `<body><header>${img}</header><div>${img}${img}</div><footer>${img}</footer></body>`
+    )
     const source = await page.evaluate(imageCensus, { scope: 'main' })
     assert.deepEqual([source.resolved, source.images], ['body', 4])
-    await page.setContent(`<body><header>${img}</header><main>${img}${img}</main><footer>${img}</footer></body>`)
+    await page.setContent(
+      `<body><header>${img}</header><main>${img}${img}</main><footer>${img}</footer></body>`
+    )
     assert.deepEqual(
       await page.evaluate(imageCensus, { scope: 'main' }).then((r) => [r.resolved, r.images]),
       ['main', 2]
     )
-    assert.equal((await page.evaluate(imageCensus, { scope: 'body' })).images, 4, 'the site counted by the source root agrees')
+    assert.equal(
+      (await page.evaluate(imageCensus, { scope: 'body' })).images,
+      4,
+      'the site counted by the source root agrees'
+    )
   } finally {
     await browser.close()
   }

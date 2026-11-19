@@ -303,9 +303,9 @@ export function resolveFastGate(contract, { root = process.cwd() } = {}) {
       if (chosen.has(p.id) || dropped.has(layoutOf(p)?.id)) continue
       const g = [...coversOf(p)].filter((k) => !covered.has(k)).sort(byId)
       if (g.length > gain.length) {
-      best = p
-      gain = g
-    }
+        best = p
+        gain = g
+      }
     }
     if (!best) break
     take(best, gain)
@@ -665,7 +665,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
         : path.join(
             tmpdir(),
             'tracy-cli',
-            `fast-gate-plan-${createHash('sha256').update(`${process.cwd()}\0${path.resolve(contractFile)}`).digest('hex').slice(0, 10)}.md`
+            `fast-gate-plan-${createHash('sha256')
+              .update(`${process.cwd()}\0${path.resolve(contractFile)}`)
+              .digest('hex')
+              .slice(0, 10)}.md`
           )
       mkdirSync(path.dirname(path.resolve(md)), { recursive: true })
       writeFileSync(md, planMarkdown(plan))

@@ -99,8 +99,13 @@ function pagePath(url) {
   if ([...searchParams.keys()].length === 0) return base
   // `key=value&key=value`, each part percent-encoded, so two different queries never share a name (`a=b-c` and
   // `a-b=c` stay apart because `=` and `&` only ever appear as separators).
-  const query = [...searchParams].map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&')
-  const suffix = query.length > 80 ? `${query.slice(0, 60)}&${createHash('sha256').update(query).digest('hex').slice(0, 16)}` : query
+  const query = [...searchParams]
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join('&')
+  const suffix =
+    query.length > 80
+      ? `${query.slice(0, 60)}&${createHash('sha256').update(query).digest('hex').slice(0, 16)}`
+      : query
   return base.replace(/\.html$/, `~${suffix}.html`)
 }
 

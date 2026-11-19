@@ -625,14 +625,18 @@ export function unpickedPageRules(answers, seed) {
 
 /** `find` as a whole word: not inside a longer one (a brand "RES" must leave RESERVATIONS and FRESH alone). */
 const wordPattern = (find) =>
-  new RegExp(`(?<![\\p{L}\\p{N}_])${String(find).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}\\p{N}_])`, 'gu')
+  new RegExp(
+    `(?<![\\p{L}\\p{N}_])${String(find).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}\\p{N}_])`,
+    'gu'
+  )
 
 /** Every string in an entry's data with the demo brand replaced, keys that are addresses untouched. */
 export function replaceDeep(value, rules, key = '') {
   if (typeof value === 'string') {
     if (SKIP_KEYS.has(key) || looksLikeAddress(value)) return value
     let out = value
-    for (const r of rules) out = r.word ? out.replace(wordPattern(r.find), () => r.with) : out.split(r.find).join(r.with)
+    for (const r of rules)
+      out = r.word ? out.replace(wordPattern(r.find), () => r.with) : out.split(r.find).join(r.with)
     return out
   }
   if (Array.isArray(value)) return value.map((v) => replaceDeep(v, rules, key))
@@ -958,7 +962,11 @@ export function planFrom(
           const value = spec.value === undefined ? { missing: null } : fill(String(spec.value), facts)
           if (!('missing' in value)) {
             const href = spec.href === undefined ? null : fill(String(spec.href), facts)
-            out.push({ ...row, value: value.value, ...(href && !('missing' in href) ? { href: href.value } : {}) })
+            out.push({
+              ...row,
+              value: value.value,
+              ...(href && !('missing' in href) ? { href: href.value } : {})
+            })
             changed = true
             continue
           }
@@ -969,9 +977,9 @@ export function planFrom(
           out.push(row)
           if (value.missing !== null)
             unanswered.push({
-            rule: `${rule.collection}.${rule.slug}.${rule.field} ${String(row.label)}`,
-            why: `${noAnswer(value.missing)}: the template's value stays as a placeholder`
-          })
+              rule: `${rule.collection}.${rule.slug}.${rule.field} ${String(row.label)}`,
+              why: `${noAnswer(value.missing)}: the template's value stays as a placeholder`
+            })
         }
         if (changed) set(rule.collection, rule.slug, locale, rule.field, out, 'customer')
         continue
@@ -1722,8 +1730,8 @@ export async function writeCopy({
     .filter(Boolean)
   if (items.length === 0) return {}
   const language = languageNameOfWritten(locale, writtenAs)
-  // 🔒 THE LANGUAGE IS THE CUSTOMER'S ANSWER, NOT THE NAME'S. "Tiệm hoa Mai Vàng" at "45 Hàng Lược, language-allow
-  // Hà Nội" pulled the whole page into Vietnamese on a site the customer asked for in English
+  // 🔒 THE LANGUAGE IS THE CUSTOMER'S ANSWER, NOT THE NAME'S. A Vietnamese shop name at a Hanoi street address
+  // pulled the whole page into Vietnamese on a site the customer asked for in English
   // (measured 15/09) — every prompt says so, not only the entries'.
   const system = [
     `You write website copy in ${language} for a small business. Answer with ONE JSON object: key → text, nothing else.`,
@@ -2219,14 +2227,17 @@ export function demoPlaceWordsOf(
     const raw = rule?.value
     const template = typeof raw === 'string' ? raw : raw && typeof raw === 'object' ? raw.en : null
     if (typeof template === 'string')
-      return template.includes('{address}') && typeof e.data?.[rule.field] === 'string' ? [e.data[rule.field]] : []
+      return template.includes('{address}') && typeof e.data?.[rule.field] === 'string'
+        ? [e.data[rule.field]]
+        : []
     if (!rule?.rows || typeof rule.rows !== 'object' || !Array.isArray(e.data?.[rule.field])) return []
     const out = []
     for (const row of e.data[rule.field]) {
       const spec = rule.rows[String(row?.[rule.rowKey ?? 'label'] ?? '')]
       const templates = { value: spec?.value, ...spec?.fields }
       for (const [key, t] of Object.entries(templates))
-        if (typeof t === 'string' && t.includes('{address}') && typeof row?.[key] === 'string') out.push(row[key])
+        if (typeof t === 'string' && t.includes('{address}') && typeof row?.[key] === 'string')
+          out.push(row[key])
     }
     return out
   }
@@ -2303,20 +2314,31 @@ function placeWordConflictsIn(words, seedEntries, addressValues) {
   const out = new Map()
   if (single.length === 0) return out
   const vocabulary = new Set()
-  for (const a of addressValues) for (const m of String(a).toLowerCase().matchAll(/\p{L}+/gu)) vocabulary.add(m[0])
+  for (const a of addressValues)
+    for (const m of String(a)
+      .toLowerCase()
+      .matchAll(/\p{L}+/gu))
+      vocabulary.add(m[0])
   const continues = (next) => isStreetWord(next.toLowerCase()) || vocabulary.has(next.toLowerCase())
   /** The one-word places the seed also capitalises inside a sentence: proper nouns, so places. */
   const proper = new Set()
   const sources = new Set(addressValues.map((a) => String(a)))
   const walk = (v, key, where) => {
     if (typeof v === 'string') {
-      if (/^_|(?:^|_)(?:slug|id|url|href|link|path|src)$/i.test(key) || /:\/\/|^\/|^[\w./@-]+$/.test(v.trim())) return
+      if (
+        /^_|(?:^|_)(?:slug|id|url|href|link|path|src)$/i.test(key) ||
+        /:\/\/|^\/|^[\w./@-]+$/.test(v.trim())
+      )
+        return
       for (const line of v.replace(/<[^>]*>/g, '\n').split('\n')) {
         const starts = [0, ...sentenceEnds(line).filter((x) => x < line.length)]
         // a capitalised use after a sentence's first word, outside the demo address values: a proper noun
         if (!sources.has(v))
           for (const m of line.matchAll(/(?<![\p{L}\p{N}])\p{Lu}\p{L}*/gu))
-            if (single.includes(m[0]) && !starts.some((at) => /^\s*["'“‘(«]?$/u.test(line.slice(at, m.index))))
+            if (
+              single.includes(m[0]) &&
+              !starts.some((at) => /^\s*["'“‘(«]?$/u.test(line.slice(at, m.index)))
+            )
               proper.add(m[0])
         for (const at of starts) {
           const m = /^\s*["'“‘(«]?(\p{L}+)/u.exec(line.slice(at))
@@ -2324,7 +2346,8 @@ function placeWordConflictsIn(words, seedEntries, addressValues) {
           const rest = line.slice(at + m[0].length)
           if (/^['’\-\p{L}]/u.test(rest) || /^\s*[,;:(]/.test(rest)) continue
           const next = /^\s+([\p{L}\p{N}]+)/u.exec(rest)?.[1]
-          const ordinaryUse = next === undefined ? LABEL_KEY.test(key) : /^\p{Ll}/u.test(next) && !continues(next)
+          const ordinaryUse =
+            next === undefined ? LABEL_KEY.test(key) : /^\p{Ll}/u.test(next) && !continues(next)
           if (ordinaryUse)
             out.set(m[1], [...(out.get(m[1]) ?? []), `${where}: ${line.slice(at).trim().slice(0, 60)}`])
         }
@@ -2347,7 +2370,10 @@ function placeWordConflictsIn(words, seedEntries, addressValues) {
 export function placeWordConflicts(map, seedEntries) {
   const addressValues = []
   const words = demoPlaceWordsOf(map, seedEntries, { guard: false, addressValues })
-  return [...placeWordConflictsIn(words, seedEntries, addressValues)].map(([word, where]) => ({ word, where }))
+  return [...placeWordConflictsIn(words, seedEntries, addressValues)].map(([word, where]) => ({
+    word,
+    where
+  }))
 }
 
 /**
@@ -2357,24 +2383,22 @@ export function placeWordConflicts(map, seedEntries) {
  * Great Britain, UK, USA, America, England, Scotland, Wales, Northern Ireland, Holland, Turkey). Lower case.
  */
 const COUNTRY_NAMES = (() => {
-  const names = new Set(
-    [
-      'britain',
-      'great britain',
-      'uk',
-      'u.k',
-      'usa',
-      'u.s.a',
-      'u.s',
-      'america',
-      'england',
-      'scotland',
-      'wales',
-      'northern ireland',
-      'holland',
-      'turkey'
-    ]
-  )
+  const names = new Set([
+    'britain',
+    'great britain',
+    'uk',
+    'u.k',
+    'usa',
+    'u.s.a',
+    'u.s',
+    'america',
+    'england',
+    'scotland',
+    'wales',
+    'northern ireland',
+    'holland',
+    'turkey'
+  ])
   try {
     const regions = new Intl.DisplayNames(['en'], { type: 'region', fallback: 'none' })
     for (let a = 65; a <= 90; a += 1)
@@ -2409,7 +2433,11 @@ export function ordinaryWordsOf(seedEntries) {
   const low = new Set()
   const walk = (v, key = '') => {
     if (typeof v === 'string') {
-      if (/^_|(?:^|_)(?:slug|id|url|href|link|path|src)$/i.test(key) || /:\/\/|^\/|^[\w./@-]+$/.test(v.trim())) return
+      if (
+        /^_|(?:^|_)(?:slug|id|url|href|link|path|src)$/i.test(key) ||
+        /:\/\/|^\/|^[\w./@-]+$/.test(v.trim())
+      )
+        return
       for (const m of v.matchAll(/(?<![\p{L}\p{N}_/.@-])\p{Ll}+(?![\p{L}\p{N}_/@-])/gu)) low.add(m[0])
     } else if (Array.isArray(v)) v.forEach((x) => walk(x, key))
     else if (v && typeof v === 'object') for (const [k, x] of Object.entries(v)) walk(x, k)
@@ -2427,8 +2455,7 @@ const STREET_WORDS = new Set(
     ' '
   )
 )
-const isStreetWord = (word) =>
-  STREET_WORDS.has(word) || ADDRESS_NOUNS.has(word) || ABBREVIATIONS.has(word)
+const isStreetWord = (word) => STREET_WORDS.has(word) || ADDRESS_NOUNS.has(word) || ABBREVIATIONS.has(word)
 
 /**
  * 🔒 A PLACE WORD INSIDE THE CUSTOMER'S OWN VALUES IS THE CUSTOMER'S, NEVER THE DEMO'S (code review, 18/11/2026). With the name
@@ -2690,7 +2717,8 @@ const yearOf = (row) => {
 }
 
 /** The site's name from the brief: the last value of a heading's fallback chain; null when the brief gives none. */
-const nameFallbackOf = (facts) => (typeof facts?.name === 'string' && facts.name.trim() !== '' ? facts.name.trim() : null)
+const nameFallbackOf = (facts) =>
+  typeof facts?.name === 'string' && facts.name.trim() !== '' ? facts.name.trim() : null
 
 /**
  * 🔒 ONE FALLBACK CHAIN FOR EVERY PASS (last code review of D-K14, D-K17: the row pass skipped the entry's title and wrote
@@ -2703,7 +2731,11 @@ const nameFallbackOf = (facts) => (typeof facts?.name === 'string' && facts.name
 export function neutralFallbackOf({ key, value, row = null, title = null, facts = null, ownTitle = false }) {
   if (ownTitle) return null
   if (!(HEADING_KEYS.test(key) || key === 'body' || shortText(value))) return null
-  return (row ? yearOf(row) : null) ?? (typeof title === 'string' && title !== '' ? title : null) ?? nameFallbackOf(facts)
+  return (
+    (row ? yearOf(row) : null) ??
+    (typeof title === 'string' && title !== '' ? title : null) ??
+    nameFallbackOf(facts)
+  )
 }
 
 /**
@@ -2716,7 +2748,9 @@ export function entryTitleFallbackOf(title, collection, collections, places, fac
   if (typeof title !== 'string' || title.trim() === '') return null
   if (holdsPlace(title, places, customerSpansOf(facts))) return null
   const c = (Array.isArray(collections) ? collections : []).find((x) => x?.slug === collection)
-  const labels = [c?.label, c?.labelSingular].filter((l) => typeof l === 'string').map((l) => l.trim().toLowerCase())
+  const labels = [c?.label, c?.labelSingular]
+    .filter((l) => typeof l === 'string')
+    .map((l) => l.trim().toLowerCase())
   return labels.includes(title.trim().toLowerCase()) ? null : title
 }
 
@@ -2736,7 +2770,10 @@ export function demoDomainsIn(text, domains) {
   const found = []
   for (const d of domains) {
     const body = String(d).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    const host = new RegExp(`(?<![\\p{L}\\p{N}_.-])(?:[\\p{L}\\p{N}](?:[\\p{L}\\p{N}-]*[\\p{L}\\p{N}])?\\.)*${body}(?![\\p{L}\\p{N}_-]|\\.[\\p{L}\\p{N}])`, 'giu')
+    const host = new RegExp(
+      `(?<![\\p{L}\\p{N}_.-])(?:[\\p{L}\\p{N}](?:[\\p{L}\\p{N}-]*[\\p{L}\\p{N}])?\\.)*${body}(?![\\p{L}\\p{N}_-]|\\.[\\p{L}\\p{N}])`,
+      'giu'
+    )
     for (const m of String(text).matchAll(host)) found.push(m[0])
   }
   return found
@@ -2792,13 +2829,27 @@ export function demoContactsOf(map, seedEntries, { vendorDomains = [] } = {}) {
         continue
       }
       const raw = rule.value
-      take(typeof raw === 'string' ? raw : raw && typeof raw === 'object' && !Array.isArray(raw) ? raw.en : '', demo)
+      take(
+        typeof raw === 'string' ? raw : raw && typeof raw === 'object' && !Array.isArray(raw) ? raw.en : '',
+        demo
+      )
     }
   return { phones, emails, domains }
 }
 
 /** Keys whose value is never a visitor's text or link. */
-const CONTACT_SKIP = new Set(['_key', '_type', '_ref', 'id', 'slug', 'locale', 'status', 'type', 'style', 'listItem'])
+const CONTACT_SKIP = new Set([
+  '_key',
+  '_type',
+  '_ref',
+  'id',
+  'slug',
+  'locale',
+  'status',
+  'type',
+  'style',
+  'listItem'
+])
 
 /**
  * One text with the demo's contacts replaced by the brief's: a run whose digits are the demo's number takes the brief's
@@ -2812,7 +2863,10 @@ function textWithCustomerContacts(text, demo, facts) {
   if (facts.phone) {
     if (/^tel:/i.test(out.trim())) {
       if (isDemoPhone(phoneDigits(out), demo.phones) && typeof facts.tel === 'string') return facts.tel
-    } else out = out.replace(PHONE_RUN, (run) => (isDemoPhone(phoneDigits(run), demo.phones) ? String(facts.phone) : run))
+    } else
+      out = out.replace(PHONE_RUN, (run) =>
+        isDemoPhone(phoneDigits(run), demo.phones) ? String(facts.phone) : run
+      )
   }
   if (facts.email) out = out.replace(EMAIL_RUN, (m) => (demo.emails.has(m) ? String(facts.email) : m))
   if ((facts.phone || facts.address || facts.email) && demo.domains.size > 0) {
@@ -2890,7 +2944,8 @@ export function demoContactsLeft(value, demo, facts) {
   const text = JSON.stringify(value ?? '')
   const found = []
   if (facts.phone)
-    for (const run of text.match(PHONE_RUN) ?? []) if (isDemoPhone(phoneDigits(run), demo.phones)) found.push(run)
+    for (const run of text.match(PHONE_RUN) ?? [])
+      if (isDemoPhone(phoneDigits(run), demo.phones)) found.push(run)
   if (facts.email) found.push(...demoDomainsIn(text, demo.domains))
   return found
 }
@@ -2940,7 +2995,11 @@ export function withoutDemoPlace(
   if (Array.isArray(value)) {
     if (value.some((b) => b && typeof b === 'object' && b._type === 'block')) {
       const inner = []
-      const left = withoutDemoFacts(value, { ...facts, address: facts?.address || ' ' }, { places, fallback, unresolved: inner })
+      const left = withoutDemoFacts(
+        value,
+        { ...facts, address: facts?.address || ' ' },
+        { places, fallback, unresolved: inner }
+      )
       for (const u of inner) unresolved?.push({ at: `${at}${u?.at ?? ''}`, value: u?.value ?? u })
       // a heading block kept as written (no fallback) leaves the value as it was: nothing changed
       if (left === null || JSON.stringify(left.value) === JSON.stringify(value)) return null
@@ -2953,7 +3012,14 @@ export function withoutDemoPlace(
     }
     let changed = false
     const out = value.map((row, n) => {
-      const next = withoutDemoPlace(row, places, facts, { fallback, required, unresolved, only, title, at: `${at}[${String(n)}]` })
+      const next = withoutDemoPlace(row, places, facts, {
+        fallback,
+        required,
+        unresolved,
+        only,
+        title,
+        at: `${at}[${String(n)}]`
+      })
       if (next === null) return row
       changed = true
       return next
@@ -2996,7 +3062,8 @@ export function withoutDemoPlace(
  * @returns {{ rows: any[], left: number[], emptied: number[] }}
  */
 export function rowsWithoutDemoPlace({ rule, rows, left, places, facts, title = null }) {
-  if (String(facts?.address ?? '').trim() === '' || places.size === 0) return { rows, left, emptied: [], kept: [] }
+  if (String(facts?.address ?? '').trim() === '' || places.size === 0)
+    return { rows, left, emptied: [], kept: [] }
   const out = [...rows]
   const emptied = []
   /** The row fields that keep the demo's place because nothing would be left of them: `{ row, field, value }`. */
@@ -3056,7 +3123,11 @@ const LEAD_IN =
  * @param {{ places?: Set<string> }} [opts]
  * @returns {{ value: any[], readable: boolean } | null}
  */
-export function withoutDemoFacts(value, facts = null, { places = new Set(), fallback = null, unresolved = null } = {}) {
+export function withoutDemoFacts(
+  value,
+  facts = null,
+  { places = new Set(), fallback = null, unresolved = null } = {}
+) {
   if (!Array.isArray(value)) return null
   let changed = false
   const protect = customerSpansOf(facts)
@@ -3066,7 +3137,8 @@ export function withoutDemoFacts(value, facts = null, { places = new Set(), fall
     const facted = new Map(
       [...outsideLinksOf(b, facts)].filter(([mark]) => factOfLink(hrefOf(b, mark)) !== null)
     )
-    const placed = placesOn && holdsPlace(b.children.map((c) => String(c?.text ?? '')).join(''), places, protect)
+    const placed =
+      placesOn && holdsPlace(b.children.map((c) => String(c?.text ?? '')).join(''), places, protect)
     if (facted.size === 0 && !placed) return b
     /** One entry per character: the span it belongs to and its marks. */
     let chars = b.children.flatMap((c, s) =>
@@ -3087,7 +3159,10 @@ export function withoutDemoFacts(value, facts = null, { places = new Set(), fall
       const left = chars.map((x) => x.ch).join('')
       const bounds = [0, ...sentenceEnds(left).filter((p) => p < left.length), left.length]
       for (let k = bounds.length - 2; k >= 0; k -= 1)
-        if (!readable(left.slice(bounds[k], bounds[k + 1])) && /\S/.test(left.slice(bounds[k], bounds[k + 1])))
+        if (
+          !readable(left.slice(bounds[k], bounds[k + 1])) &&
+          /\S/.test(left.slice(bounds[k], bounds[k + 1]))
+        )
           chars.splice(bounds[k], bounds[k + 1] - bounds[k])
     }
     const factMark = (x) => x.marks.find((mark) => facted.has(mark))
@@ -3147,6 +3222,7 @@ export function withoutDemoFacts(value, facts = null, { places = new Set(), fall
     text = chars.map((x) => x.ch).join('')
     const children = []
     for (const x of chars) {
+      // oxlint-disable-next-line no-control-regex -- the NUL suffix is the tool's own mark tag
       const marks = x.marks.map((m) => m.replace(/\u0000$/, ''))
       const last = children.at(-1)
       if (last && last.s === x.s) last.text += x.ch
@@ -3172,7 +3248,14 @@ export function withoutDemoFacts(value, facts = null, { places = new Set(), fall
       return {
         ...b,
         markDefs: [],
-        children: [{ ...b.children[0], _key: String(b.children[0]?._key ?? `${String(b._key)}s0`), text: fallback, marks: [] }]
+        children: [
+          {
+            ...b.children[0],
+            _key: String(b.children[0]?._key ?? `${String(b._key)}s0`),
+            text: fallback,
+            marks: []
+          }
+        ]
       }
     // a heading with no fallback keeps its words and is reported, never dropped (code review, 18/11/2026)
     if (/^h[1-6]$/.test(String(b.style))) {
@@ -3881,8 +3964,8 @@ export function labelDestinations({ seed, locale, menus, chromeLabels, rowOf }) 
 }
 
 /**
- * 🔒 ONE PAGE, ONE NAME, IN ONE LANGUAGE (TCH #1013, PAGE-5, g65). On g64-biz-emd-full the menu called /about "Giới language-allow
- * thiệu" and the footer "Về chúng tôi": "About" and "About us" were translated as two labels. A label that leads to a
+ * 🔒 ONE PAGE, ONE NAME, IN ONE LANGUAGE (TCH #1013, PAGE-5, g65). On g64-biz-emd-full the menu named /about in
+ * Vietnamese one way and the footer another: "About" and "About us" were translated as two labels. A label that leads to a
  * page whose name is already chosen (the first translated label for that URL) and that names the same thing (a word in
  * common, a plural `s` aside) takes that name; a label to the same page that names something else (a service in the
  * footer's list of services) keeps its own translation.
@@ -3996,9 +4079,9 @@ export async function translateLabels({
   // skipped without a word. A key left out, or a value of two words or more given back as it was, is asked again with the
   // others like it, then one at a time; one still unchanged is handed to `kept` for the caller's report. One word given
   // back (a network, a product name) stands. A root written in English has nothing to ask again.
-  // 🔒 HALF TRANSLATED IS UNCHANGED TOO (g64): on g63-biz-emd-full (1.7.11) the same lines came back "7/22 Derbenevskaya emb.,
-  // tầng 8" and "Khu xưởng Fabrication, Zavolzhye IP": a common word of the template's language left in a short line of language-allow
-  // another language (`wordsLeft`) is asked again like a line given back whole.
+  // 🔒 HALF TRANSLATED IS UNCHANGED TOO (g64): on g63-biz-emd-full (1.7.11) the same lines came back as English
+  // addresses that kept the Vietnamese for "floor 8" and "workshop area": a common word of the template's language
+  // left in a short line of another language (`wordsLeft`) is asked again like a line given back whole.
   // 🔒 A CAPITALISED ADDRESS IS NOT A NAME (g65): on g64-biz-emd-full (1.7.12) "Vorsino Industrial Park, lô 12" passed as
   // done, "Industrial Park" read as part of a name. A line is a name only when it is one name; the capitalised words after
   // the first of a run in a longer line are words (`wordsLeft`). A word of the customer's own answers is theirs, never left.
@@ -4314,8 +4397,11 @@ export function keepImportedPictures(fields, live, seedData, spots) {
   const at = (/** @type {unknown} */ data, /** @type {string[]} */ parts) =>
     parts.reduce((/** @type {any} */ node, k) => (node == null ? undefined : node[k]), data)
   const isRow = (/** @type {unknown} */ r) => r !== null && typeof r === 'object' && !Array.isArray(r)
-  const list = spots.map((s) => (typeof s === 'string' ? { path: s } : s)).filter((s) => typeof s?.path === 'string')
-  const nameOf = (/** @type {string | undefined} */ file) => (typeof file === 'string' ? file.split('/').pop() : null)
+  const list = spots
+    .map((s) => (typeof s === 'string' ? { path: s } : s))
+    .filter((s) => typeof s?.path === 'string')
+  const nameOf = (/** @type {string | undefined} */ file) =>
+    typeof file === 'string' ? file.split('/').pop() : null
   const keyOf = (/** @type {any} */ v) => v.id ?? JSON.stringify(v)
   /** The library's name for a file named `name`: the name, or `<stem>-<n><ext>` with n >= 2 (`findAvailableFilename`). */
   const isNameOf = (/** @type {unknown} */ filename, /** @type {string} */ name) => {
@@ -4354,7 +4440,8 @@ export function keepImportedPictures(fields, live, seedData, spots) {
     if (!name || filesOf.get(name).size > 1) continue
     // A picture whose name fits two source files of the entry is neither's.
     const named = [...held.values()].filter(
-      (v) => isNameOf(v.filename, name) && [...filesOf.keys()].filter((n) => isNameOf(v.filename, n)).length === 1
+      (v) =>
+        isNameOf(v.filename, name) && [...filesOf.keys()].filter((n) => isNameOf(v.filename, n)).length === 1
     )
     if (named.length === 1) byName.set(was, named[0])
   }
@@ -4893,7 +4980,12 @@ export function uploadRequest(ask, { site, token, mime }) {
  * Put one picture in the site's library and answer the value an image field holds — the same shape
  * `tools/seed-apply.mjs` writes, so the site resolves it the way it resolves the template's own.
  */
-export async function uploadPicture(api, token, { bytes, mime, filename, alt }, { fetchImpl = fetch, site = SITE } = {}) {
+export async function uploadPicture(
+  api,
+  token,
+  { bytes, mime, filename, alt },
+  { fetchImpl = fetch, site = SITE } = {}
+) {
   const hash = `sha1:${createHash('sha1').update(bytes).digest('hex')}`
   const ask = await api('POST', '/_emdash/api/media/upload-url', {
     filename,
@@ -7038,7 +7130,9 @@ async function main() {
       : Array.isArray(v)
         ? v
             .map((x) =>
-              x?._type === 'block' ? (x.children ?? []).map((c) => String(c?.text ?? '')).join('') : plainOf(x)
+              x?._type === 'block'
+                ? (x.children ?? []).map((c) => String(c?.text ?? '')).join('')
+                : plainOf(x)
             )
             .filter((t) => t !== '')
             .join(' | ')

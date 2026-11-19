@@ -68,7 +68,10 @@ test('reach decides the road, not the CMS name alone', () => {
 
 // found while porting JA Restaurant: the title "Restaurant Joomla Template - JA Restaurant" named the package after the product kind
 test('a title that wraps the name in product words still yields the name', () => {
-  const named = suggestNames({ title: 'Restaurant Joomla Template - JA Restaurant', url: 'http://127.0.0.1:8216/' })
+  const named = suggestNames({
+    title: 'Restaurant Joomla Template - JA Restaurant',
+    url: 'http://127.0.0.1:8216/'
+  })
   assert.equal(named.label, 'JA Restaurant')
   assert.equal(named.needsName, false)
   const page = suggestNames({ title: 'Home - Kinetic', url: 'http://127.0.0.1:8216/' })
@@ -79,10 +82,20 @@ test('a title that wraps the name in product words still yields the name', () =>
 })
 
 test('a CMS webroot folder is recognised without an index.html', () => {
-  assert.equal(detectFromFolder(['configuration.php', 'administrator', 'templates', 'index.php']).cms, 'joomla')
-  assert.equal(detectFromFolder(['configuration.php', 'administrator', 'templates']).t4, false, 'plain Joomla')
   assert.equal(
-    detectFromFolder(['configuration.php', 'administrator', 'templates'], (rel) => rel === 'plugins/system/t4').t4,
+    detectFromFolder(['configuration.php', 'administrator', 'templates', 'index.php']).cms,
+    'joomla'
+  )
+  assert.equal(
+    detectFromFolder(['configuration.php', 'administrator', 'templates']).t4,
+    false,
+    'plain Joomla'
+  )
+  assert.equal(
+    detectFromFolder(
+      ['configuration.php', 'administrator', 'templates'],
+      (rel) => rel === 'plugins/system/t4'
+    ).t4,
     true
   )
   assert.equal(detectFromFolder(['wp-config.php', 'wp-content']).cms, 'wordpress')

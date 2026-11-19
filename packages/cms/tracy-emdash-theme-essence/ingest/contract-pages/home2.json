@@ -10,17 +10,9 @@
     {
       "id": "en-home-2",
       "path": "/?page=2",
-      "source": [
-        "index~start=6.html"
-      ],
+      "source": ["index~start=6.html"],
       "identity": ".es-strip",
-      "collections": [
-        "chrome",
-        "pages",
-        "posts",
-        "gallery",
-        "social"
-      ],
+      "collections": ["chrome", "pages", "posts", "gallery", "social"],
       "rules": [
         "strip-title",
         "lead-title",
@@ -30,13 +22,7 @@
         "page-count",
         "page-h1"
       ],
-      "parity": [
-        "nav",
-        "stripTitle",
-        "cardTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "stripTitle", "cardTitle", "footerButton", "ground"],
       "content": [
         [
           "strip-1",

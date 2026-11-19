@@ -27,7 +27,10 @@ const slugify = (s) =>
     .replace(/^-+|-+$/g, '')
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 /** `images/a/b.jpg#joomlaImage://…?width=1` → `images/a/b.jpg`; '' when there is none. */
-const imagePath = (v) => String(v ?? '').split('#')[0].replace(/^\//, '')
+const imagePath = (v) =>
+  String(v ?? '')
+    .split('#')[0]
+    .replace(/^\//, '')
 const exists = (rel) => rel && existsSync(path.join(webroot, rel))
 
 // ── posts ─────────────────────────────────────────────────────────────────────────────────────────
@@ -46,7 +49,10 @@ const used = (rel) => {
 }
 const media = (obj) => {
   const rows = obj?.src ? (Array.isArray(obj.src) ? obj.src : Object.values(obj.src)) : []
-  return rows.map(imagePath).filter(Boolean).map((p) => ({ image: used(p) }))
+  return rows
+    .map(imagePath)
+    .filter(Boolean)
+    .map((p) => ({ image: used(p) }))
 }
 // The adapter makes a page of every article a menu item points at (here the five "Detail" demos: the three article
 // layouts, the video and the gallery article) and leaves it with no text. They are posts of this template: their
@@ -54,8 +60,14 @@ const media = (obj) => {
 const CATEGORY_OF = { 9: 'blog-health', 10: 'blog-design', 11: 'blog-fashion' }
 const tagTitle = new Map(inv.tags.map((t) => [t.id, t.title]))
 const frontOrder = new Map(inv.content_frontpage.map((x) => [x.content_id, Number(x.ordering)]))
-const plain = (html) => String(html).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
-for (const page of content.pages.filter((p) => ['11', '12', '13', '14', '23'].includes(p.joomla?.articleId))) {
+const plain = (html) =>
+  String(html)
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+for (const page of content.pages.filter((p) =>
+  ['11', '12', '13', '14', '23'].includes(p.joomla?.articleId)
+)) {
   const art = articleById.get(page.joomla.articleId)
   const cat = CATEGORY_OF[art.catid]
   const tags = inv.contentitem_tag_map
@@ -70,7 +82,12 @@ for (const page of content.pages.filter((p) => ['11', '12', '13', '14', '23'].in
     tags,
     sticky: art.featured === '1',
     author: { id: `joomla-user-${art.created_by}` },
-    joomla: { articleId: art.id, alias: art.alias, hits: Number(art.hits), featuredOrdering: frontOrder.get(art.id) ?? 0 }
+    joomla: {
+      articleId: art.id,
+      alias: art.alias,
+      hits: Number(art.hits),
+      featuredOrdering: frontOrder.get(art.id) ?? 0
+    }
   }
   bySlug.set(`${art.alias}|${cat}`, row)
   model.records.push({
@@ -92,7 +109,10 @@ for (const r of model.records.filter((x) => x.type === 'posts')) {
   const intro = imagePath(images.image_intro)
   const full = imagePath(images.image_fulltext)
   usedCategories.add(cat)
-  const kind = attribs.ctm_content_type === 'video' || attribs.ctm_content_type === 'gallery' ? attribs.ctm_content_type : 'standard'
+  const kind =
+    attribs.ctm_content_type === 'video' || attribs.ctm_content_type === 'gallery'
+      ? attribs.ctm_content_type
+      : 'standard'
   const v = r.values
   v.excerpt = src.excerpt ? `<p>${esc(src.excerpt)}</p>` : ''
   v.modified = src.modified
@@ -113,8 +133,9 @@ for (const r of model.records.filter((x) => x.type === 'posts')) {
   r.terms = { category: [cat], tag: src.tags.map(slugify) }
   for (const t of src.tags) tagSet.set(slugify(t), t)
   // The body cites pictures by bare file name; `data-path` carries the folder.
-  v.body = v.body.replace(/src="([^"]+)"([^>]*?)data-path="local-images:\/([^"]+)"/g, (m, _src, mid, p) =>
-    `src="${used(`images/${p}`)}"${mid}data-path="local-images:/${p}"`
+  v.body = v.body.replace(
+    /src="([^"]+)"([^>]*?)data-path="local-images:\/([^"]+)"/g,
+    (m, _src, mid, p) => `src="${used(`images/${p}`)}"${mid}data-path="local-images:/${p}"`
   )
 }
 // Home: the featured posts of the three main categories; the top strip is the six first titles of those
@@ -208,14 +229,27 @@ setType({
   name: 'category_info',
   mode: 'list',
   label: label('Category pages'),
-  fields: [field('title', 'text'), field('description', 'text'), field('image', 'image'), field('list_style', 'text')]
+  fields: [
+    field('title', 'text'),
+    field('description', 'text'),
+    field('image', 'image'),
+    field('list_style', 'text')
+  ]
 })
 for (const [slug, row] of Object.entries(CATEGORY_ROW)) {
   if (!usedCategories.has(slug)) continue
   const c = inv.categories.find((x) => x.id === row.id)
-  const text = String(c.description ?? '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  const text = String(c.description ?? '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
   const img = imagePath(JSON.parse(c.params || '{}').image)
-  rec('category_info', slug, { title: c.title, description: text, image: img ? used(img) : '', list_style: row.style })
+  rec('category_info', slug, {
+    title: c.title,
+    description: text,
+    image: img ? used(img) : '',
+    list_style: row.style
+  })
 }
 
 // ── pages ─────────────────────────────────────────────────────────────────────────────────────────
@@ -341,7 +375,11 @@ rec('chrome', 'chrome', {
 
 // ── gallery strip and social buttons: pictures by their folder ───────────────────────────────────────
 // `gallery-140` and `follow-me-143` are the copies the Home 5 demo uses (DECISIONS D8)
-model.records = model.records.filter((r) => !(r.type === 'gallery' && r.slug === 'gallery-140') && !(r.type === 'social' && r.slug === 'follow-me-143'))
+model.records = model.records.filter(
+  (r) =>
+    !(r.type === 'gallery' && r.slug === 'gallery-140') &&
+    !(r.type === 'social' && r.slug === 'follow-me-143')
+)
 const galleryDir = 'images/joomlart/gallery'
 const galleryFiles = new Set(readdirSync(path.join(webroot, galleryDir)))
 for (const r of model.records.filter((x) => x.type === 'gallery'))

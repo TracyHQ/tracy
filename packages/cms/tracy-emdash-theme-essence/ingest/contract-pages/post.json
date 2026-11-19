@@ -5,56 +5,16 @@
     "family": "detail"
   },
   "rules": [
-    [
-      "post-title",
-      ".es-post-title",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "post-body",
-      ".es-body > p",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "post-quote",
-      ".es-quote blockquote p",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "side-title",
-      ".es-side-title",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "body-h2",
-      ".es-body h2",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "sec-title",
-      ".es-sec-title:not(.is-small)",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "newsletter-title",
-      "#es-newsletter-title",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "article-h3",
-      "main article h3",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "quote-by",
-      ".es-quote figcaption p",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "newsletter-text",
-      ".es-newsletter-text, .es-newsletter-status",
-      "detail/layout-1/index.html"
-    ],
+    ["post-title", ".es-post-title", "detail/layout-1/index.html"],
+    ["post-body", ".es-body > p", "detail/layout-1/index.html"],
+    ["post-quote", ".es-quote blockquote p", "detail/layout-1/index.html"],
+    ["side-title", ".es-side-title", "detail/layout-1/index.html"],
+    ["body-h2", ".es-body h2", "detail/layout-1/index.html"],
+    ["sec-title", ".es-sec-title:not(.is-small)", "detail/layout-1/index.html"],
+    ["newsletter-title", "#es-newsletter-title", "detail/layout-1/index.html"],
+    ["article-h3", "main article h3", "detail/layout-1/index.html"],
+    ["quote-by", ".es-quote figcaption p", "detail/layout-1/index.html"],
+    ["newsletter-text", ".es-newsletter-text, .es-newsletter-status", "detail/layout-1/index.html"],
     [
       "sec-title-small",
       ".es-post[data-layout=\"type-2\"] .es-sec-title.is-small",
@@ -76,17 +36,9 @@
     {
       "id": "en-post",
       "path": "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
-      "source": [
-        "detail/layout-1/index.html"
-      ],
+      "source": ["detail/layout-1/index.html"],
       "identity": ".es-article",
-      "collections": [
-        "chrome",
-        "posts",
-        "authors",
-        "social",
-        "gallery"
-      ],
+      "collections": ["chrome", "posts", "authors", "social", "gallery"],
       "rules": [
         "post-title",
         "post-body",
@@ -100,13 +52,7 @@
         "newsletter-text",
         "sec-title-small"
       ],
-      "parity": [
-        "nav",
-        "postTitle",
-        "sideTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "postTitle", "sideTitle", "footerButton", "ground"],
       "content": [
         [
           "h1",

@@ -45,10 +45,10 @@ const pics = post.kind === 'gallery' ? post.gallery.map((g) => ({ src: mediaUrl(
 	(function () {
 		// the player is a click-to-play facade: nothing is fetched from the video host until the visitor presses play
 		document.querySelectorAll('[data-es-video]').forEach(function (root) {
-			var btn = root.querySelector('.es-video-play');
+			const btn = root.querySelector('.es-video-play');
 			if (!btn) return;
 			btn.addEventListener('click', function () {
-				var f = document.createElement('iframe');
+				const f = document.createElement('iframe');
 				f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(root.getAttribute('data-es-video')) + '?autoplay=1';
 				f.title = root.getAttribute('data-es-video-title') || '';
 				f.setAttribute('allow', 'accelerometer; autoplay; compute-pressure; encrypted-media; gyroscope; picture-in-picture; fullscreen');
@@ -61,13 +61,13 @@ const pics = post.kind === 'gallery' ? post.gallery.map((g) => ({ src: mediaUrl(
 	})();
 	(function () {
 		document.querySelectorAll('[data-es-slider]').forEach(function (root) {
-			var track = root.querySelector('[data-es-slides]');
-			var dots = root.querySelectorAll('[data-es-sl-dot]');
+			const track = root.querySelector('[data-es-slides]');
+			const dots = root.querySelectorAll('[data-es-sl-dot]');
 			if (!track || !dots.length) return;
-			var show = function (i) { dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); }); };
+			const show = function (i) { dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); }); };
 			track.addEventListener('scroll', function () { show(Math.round(track.scrollLeft / track.clientWidth)); }, { passive: true });
 			dots.forEach(function (d, i) { d.addEventListener('click', function () { track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' }); show(i); }); });
-			root.querySelectorAll('[data-es-sl-step]').forEach(function (b) { b.addEventListener('click', function () { var n = dots.length; var at = Math.round(track.scrollLeft / track.clientWidth); var to = (at + Number(b.getAttribute('data-es-sl-step')) + n) % n; track.scrollTo({ left: to * track.clientWidth, behavior: 'smooth' }); show(to); }); });
+			root.querySelectorAll('[data-es-sl-step]').forEach(function (b) { b.addEventListener('click', function () { const n = dots.length; const at = Math.round(track.scrollLeft / track.clientWidth); const to = (at + Number(b.getAttribute('data-es-sl-step')) + n) % n; track.scrollTo({ left: to * track.clientWidth, behavior: 'smooth' }); show(to); }); });
 		});
 	})();
 </script>

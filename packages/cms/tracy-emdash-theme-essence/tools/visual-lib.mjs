@@ -753,7 +753,8 @@ export function scanSeams() {
       const w = parseFloat(cs['border' + side + 'Width'])
       if (!w) continue
       const c = parse(cs['border' + side + 'Color'])
-      if (c && c[3] > 0.4 && L(c) >= 35) add(axis, pos, f, t, 'b' + side[0], pos + (side === 'Top' || side === 'Left' ? 0.5 : -0.5))
+      if (c && c[3] > 0.4 && L(c) >= 35)
+        add(axis, pos, f, t, 'b' + side[0], pos + (side === 'Top' || side === 'Left' ? 0.5 : -0.5))
     }
     if (/inset 0(px)? 0(px)? 0(px)? 1px/.test(cs.boxShadow) || / 0px 0px 0px 1px inset/.test(cs.boxShadow)) {
       const c = parse(cs.boxShadow)
@@ -765,33 +766,41 @@ export function scanSeams() {
   }
   // Only discard a line when an unrelated opaque surface demonstrably covers every sample.
   // Offscreen samples cannot prove occlusion: full-page scans must still retain those seams.
-  const occluded = (line, from, to) => [0.25, 0.5, 0.75].every((fraction) => {
-    const along = from + (to - from) * fraction
-    const x = line.axis === 'h' ? along : line.sample
-    const y = line.axis === 'h' ? line.sample : along
-    if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) return false
-    const top = document.elementFromPoint(x, y)
-    if (!top || line.element.contains(top) || top.contains(line.element)) return false
-    for (let cover = top; cover && cover !== document.body; cover = cover.parentElement) {
-      if (cover.contains(line.element)) return false
-      const rect = cover.getBoundingClientRect()
-      if (x < rect.left || x >= rect.right || y < rect.top || y >= rect.bottom) continue
-      const style = getComputedStyle(cover)
-      // An opaque border can cover the line even when its surface is translucent.
-      const opaque = (color) => parse(color)?.[3] === 1
-      const covered = opaque(style.backgroundColor) || [
-        ['Top', y - rect.top], ['Bottom', rect.bottom - y],
-        ['Left', x - rect.left], ['Right', rect.right - x]
-      ].some(([side, distance]) => distance < parseFloat(style['border' + side + 'Width']) &&
-        opaque(style['border' + side + 'Color']))
-      if (!covered) continue
-      let fullOpacity = true
-      for (let ancestor = cover; ancestor; ancestor = ancestor.parentElement)
-        if (Number(getComputedStyle(ancestor).opacity) !== 1) fullOpacity = false
-      if (fullOpacity) return true
-    }
-    return false
-  })
+  const occluded = (line, from, to) =>
+    [0.25, 0.5, 0.75].every((fraction) => {
+      const along = from + (to - from) * fraction
+      const x = line.axis === 'h' ? along : line.sample
+      const y = line.axis === 'h' ? line.sample : along
+      if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) return false
+      const top = document.elementFromPoint(x, y)
+      if (!top || line.element.contains(top) || top.contains(line.element)) return false
+      for (let cover = top; cover && cover !== document.body; cover = cover.parentElement) {
+        if (cover.contains(line.element)) return false
+        const rect = cover.getBoundingClientRect()
+        if (x < rect.left || x >= rect.right || y < rect.top || y >= rect.bottom) continue
+        const style = getComputedStyle(cover)
+        // An opaque border can cover the line even when its surface is translucent.
+        const opaque = (color) => parse(color)?.[3] === 1
+        const covered =
+          opaque(style.backgroundColor) ||
+          [
+            ['Top', y - rect.top],
+            ['Bottom', rect.bottom - y],
+            ['Left', x - rect.left],
+            ['Right', rect.right - x]
+          ].some(
+            ([side, distance]) =>
+              distance < parseFloat(style['border' + side + 'Width']) &&
+              opaque(style['border' + side + 'Color'])
+          )
+        if (!covered) continue
+        let fullOpacity = true
+        for (let ancestor = cover; ancestor; ancestor = ancestor.parentElement)
+          if (Number(getComputedStyle(ancestor).opacity) !== 1) fullOpacity = false
+        if (fullOpacity) return true
+      }
+      return false
+    })
   const out = new Map()
   for (let i = 0; i < lines.length; i++)
     for (let j = i + 1; j < lines.length; j++) {
@@ -799,7 +808,8 @@ export function scanSeams() {
         b = lines[j]
       if (a.axis !== b.axis || Math.abs(a.pos - b.pos) > 2 || a.pos === 0 || a.label === b.label) continue
       if (Math.min(a.to, b.to) - Math.max(a.from, b.from) < 60) continue
-      const overlapFrom = Math.max(a.from, b.from), overlapTo = Math.min(a.to, b.to)
+      const overlapFrom = Math.max(a.from, b.from),
+        overlapTo = Math.min(a.to, b.to)
       if (occluded(a, overlapFrom, overlapTo) || occluded(b, overlapFrom, overlapTo)) continue
       const key = `${a.axis}@${a.pos}:${a.label}+${b.label}`
       if (!out.has(key))

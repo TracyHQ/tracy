@@ -85,7 +85,9 @@ const subPosts = []
 page.on('request', (r) => {
   if (r.method() === 'POST' && /emdash-forms\/submit/.test(r.url())) subPosts.push(r.url())
 })
-await page.goto(`${site}/blog/natural-remedies-for-common-ailments-blog-fashion`, { waitUntil: "networkidle" })
+await page.goto(`${site}/blog/natural-remedies-for-common-ailments-blog-fashion`, {
+  waitUntil: 'networkidle'
+})
 subPosts.length = 0
 await box.locator('input[name=email]').fill('not-an-address')
 await box.locator('button[type=submit], input[type=submit]').first().click()
@@ -94,7 +96,11 @@ step('subscribe: invalid address blocked natively (0 POST)', subPosts.length ===
   posts: subPosts.length
 })
 await box.locator('input[name=email]').fill(`${subStamp}@example.test`)
-await box.locator('input[type=checkbox][required]').first().check().catch(() => {})
+await box
+  .locator('input[type=checkbox][required]')
+  .first()
+  .check()
+  .catch(() => {})
 await box.locator('button[type=submit], input[type=submit]').first().click()
 await page
   .waitForFunction(

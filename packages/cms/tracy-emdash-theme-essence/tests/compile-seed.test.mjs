@@ -237,7 +237,10 @@ test('CLI: positional arguments survive without --config, and --media-from copie
   try {
     writeFileSync(path.join(dir, 'model.json'), JSON.stringify(model()))
     mkdirSync(path.join(dir, 'files'))
-    const run = (...args) => spawnSync(process.execPath, [tool, path.join(dir, 'model.json'), path.join(dir, 'seed'), ...args], { encoding: 'utf8' })
+    const run = (...args) =>
+      spawnSync(process.execPath, [tool, path.join(dir, 'model.json'), path.join(dir, 'seed'), ...args], {
+        encoding: 'utf8'
+      })
     assert.equal(run().status, 0)
     const missing = run('--media-from', path.join(dir, 'files'))
     assert.equal(missing.status, 1)
@@ -260,14 +263,29 @@ test('CLI: a media file name that leaves the seed or source folder is refused, n
     const run = (file, ...extra) => {
       const m = model({ media: [{ file, alt: { en: 'x' }, usedBy: [] }] })
       writeFileSync(path.join(dir, 'model.json'), JSON.stringify(m))
-      return spawnSync(process.execPath, [tool, path.join(dir, 'model.json'), path.join(dir, 'out', 'seed'), ...extra], { encoding: 'utf8' })
+      return spawnSync(
+        process.execPath,
+        [tool, path.join(dir, 'model.json'), path.join(dir, 'out', 'seed'), ...extra],
+        { encoding: 'utf8' }
+      )
     }
     const from = ['--media-from', path.join(dir, 'files')]
-    for (const bad of ['../../victim.txt', '../victim.txt', path.join(dir, 'victim.txt'), '/etc/passwd', 'C:\\x.jpg', 'images\\..\\..\\a.jpg', 'images/../../../victim.txt']) {
+    for (const bad of [
+      '../../victim.txt',
+      '../victim.txt',
+      path.join(dir, 'victim.txt'),
+      '/etc/passwd',
+      'C:\\x.jpg',
+      'images\\..\\..\\a.jpg',
+      'images/../../../victim.txt'
+    ]) {
       for (const args of [from, []]) {
         const r = run(bad, ...args)
         assert.notEqual(r.status, 0, bad)
-        assert.ok(r.stderr.includes(JSON.stringify(bad).slice(1, -1)) || r.stderr.includes('media file'), `${bad}: ${r.stderr}`)
+        assert.ok(
+          r.stderr.includes(JSON.stringify(bad).slice(1, -1)) || r.stderr.includes('media file'),
+          `${bad}: ${r.stderr}`
+        )
       }
       assert.equal(readFileSync(path.join(dir, 'victim.txt'), 'utf8'), 'original')
     }
@@ -288,8 +306,15 @@ test('CLI: a symlinked folder under the source or the seed media folder cannot c
     writeFileSync(path.join(dir, 'outside', 'victim.txt'), 'original')
     writeFileSync(path.join(dir, 'files', 'ok.jpg'), 'new')
     const run = (file) => {
-      writeFileSync(path.join(dir, 'model.json'), JSON.stringify(model({ media: [{ file, alt: { en: 'x' }, usedBy: [] }] })))
-      return spawnSync(process.execPath, [tool, path.join(dir, 'model.json'), path.join(dir, 'seed'), '--media-from', path.join(dir, 'files')], { encoding: 'utf8' })
+      writeFileSync(
+        path.join(dir, 'model.json'),
+        JSON.stringify(model({ media: [{ file, alt: { en: 'x' }, usedBy: [] }] }))
+      )
+      return spawnSync(
+        process.execPath,
+        [tool, path.join(dir, 'model.json'), path.join(dir, 'seed'), '--media-from', path.join(dir, 'files')],
+        { encoding: 'utf8' }
+      )
     }
     // target side: seed/media/nested -> outside; the source file exists so only the target can go wrong
     mkdirSync(path.join(dir, 'seed', 'media'), { recursive: true })
@@ -321,8 +346,15 @@ test('CLI: a seed/media folder that is itself a symlink to an outside folder is 
     writeFileSync(path.join(dir, 'outside', 'victim.txt'), 'original')
     writeFileSync(path.join(dir, 'files', 'victim.txt'), 'attack')
     symlinkSync(path.join(dir, 'outside'), path.join(dir, 'seed', 'media'))
-    writeFileSync(path.join(dir, 'model.json'), JSON.stringify(model({ media: [{ file: 'victim.txt', alt: { en: 'x' }, usedBy: [] }] })))
-    const r = spawnSync(process.execPath, [tool, path.join(dir, 'model.json'), path.join(dir, 'seed'), '--media-from', path.join(dir, 'files')], { encoding: 'utf8' })
+    writeFileSync(
+      path.join(dir, 'model.json'),
+      JSON.stringify(model({ media: [{ file: 'victim.txt', alt: { en: 'x' }, usedBy: [] }] }))
+    )
+    const r = spawnSync(
+      process.execPath,
+      [tool, path.join(dir, 'model.json'), path.join(dir, 'seed'), '--media-from', path.join(dir, 'files')],
+      { encoding: 'utf8' }
+    )
     assert.notEqual(r.status, 0)
     assert.match(r.stderr, /symlink/)
     assert.equal(readFileSync(path.join(dir, 'outside', 'victim.txt'), 'utf8'), 'original')

@@ -17,9 +17,9 @@ const OUT = opt('--out', 'qa.contract.json')
 const contract = JSON.parse(readFileSync(OUT, 'utf8'))
 const config = JSON.parse(readFileSync('template.config.json', 'utf8'))
 const HOME_SRC = 'index.html'
-const POST_SRC = 'detail/layout-1/index.html'
+const _POST_SRC = 'detail/layout-1/index.html'
 const E404_SRC = 'nope-404/index.html'
-const POST_PATH = '/blog/abstract-wonders-exploring-line-art-composition-blog-health'
+const _POST_PATH = '/blog/abstract-wonders-exploring-line-art-composition-blog-health'
 const ALL = contract.variants.map((v) => v.id)
 
 // ── rules: id → site selector, which page file it is read from, optional on pages/variants that may lack it ───
@@ -57,7 +57,18 @@ const DEFAULT_PROPS = [
 const BASE = ['body-type', 'nav-link', 'nav-font', 'footer-text', 'footer-button', 'copyright']
 // Order matters: a rule is measured on the first page that carries it.
 const PAGES_OF = {
-  'en-home': [...BASE, 'strip-title', 'lead-title', 'card-title', 'card-intro', 'pill', 'page-h1', 'pager', 'page-count', 'strip-meta'],
+  'en-home': [
+    ...BASE,
+    'strip-title',
+    'lead-title',
+    'card-title',
+    'card-intro',
+    'pill',
+    'page-h1',
+    'pager',
+    'page-count',
+    'strip-meta'
+  ],
   'en-not-found': [...BASE, 'nf-code', 'nf-title', 'nf-text', 'nf-button']
 }
 const PAGE_URL = { 'en-home': '/', 'en-not-found': '/404' }
@@ -149,15 +160,50 @@ const F = (id, selector, source, owner, binding, expected, attribute = 'text') =
   }
 }
 const homeContent = [
-  F('strip-1', '.es-strip-item h3', HOME_SRC, 'derived', 'posts with home_lead (first by title)', 'Abstract Wonders: Exploring Line Art Composition'),
-  F('card-1', '.es-card-title', HOME_SRC, 'derived', 'posts, featured, first of the first category', 'Capturing Essence: Expressive Line Art Techniques'),
-  F('footer-cta', '.es-footer-right .es-btn', HOME_SRC, 'field', 'chrome.footer_cta_label', 'Become a subscriber'),
-  F('gallery-btn', '.es-gallery-action .es-btn', HOME_SRC, 'field', 'gallery.gallery_title', '@Grazia on instagram')
+  F(
+    'strip-1',
+    '.es-strip-item h3',
+    HOME_SRC,
+    'derived',
+    'posts with home_lead (first by title)',
+    'Abstract Wonders: Exploring Line Art Composition'
+  ),
+  F(
+    'card-1',
+    '.es-card-title',
+    HOME_SRC,
+    'derived',
+    'posts, featured, first of the first category',
+    'Capturing Essence: Expressive Line Art Techniques'
+  ),
+  F(
+    'footer-cta',
+    '.es-footer-right .es-btn',
+    HOME_SRC,
+    'field',
+    'chrome.footer_cta_label',
+    'Become a subscriber'
+  ),
+  F(
+    'gallery-btn',
+    '.es-gallery-action .es-btn',
+    HOME_SRC,
+    'field',
+    'gallery.gallery_title',
+    '@Grazia on instagram'
+  )
 ]
 const nfContent = [
   F('code', '.es-404 h1', E404_SRC, 'derived', 'template word', '404'),
   F('h1', '.es-404 h2', E404_SRC, 'derived', 'template word', 'Page not found'),
-  F('text', '.es-404 p', E404_SRC, 'derived', 'template word', 'An error has occurred while processing your request.'),
+  F(
+    'text',
+    '.es-404 p',
+    E404_SRC,
+    'derived',
+    'template word',
+    'An error has occurred while processing your request.'
+  ),
   F('back', '.es-404 .es-btn', E404_SRC, 'derived', 'template word', 'Home Page')
 ]
 const common = { locale: 'en', variants: ALL, states: ['default'] }
@@ -343,9 +389,15 @@ contract.visual = {
   ],
   fastGate: {
     add: [
-      { page: 'en-contact', reason: 'Contact draws the form box (own components, not shared with the other pages)' },
+      {
+        page: 'en-contact',
+        reason: 'Contact draws the form box (own components, not shared with the other pages)'
+      },
       { page: 'en-search', reason: 'Search draws its own result list (own components)' },
-      { page: 'en-cat-stack', reason: 'the stack list style puts the picture beside the text (own card, not the grid card)' },
+      {
+        page: 'en-cat-stack',
+        reason: 'the stack list style puts the picture beside the text (own card, not the grid card)'
+      },
       { page: 'en-cat-sidebar', reason: 'the sidebar list style carries the sidebar next to the cards' },
       { page: 'en-post-type2', reason: 'article layout type-2: title above the picture and the author box' },
       { page: 'en-post-gallery', reason: 'a gallery article draws the slider in place of the hero picture' },
@@ -367,11 +419,26 @@ contract.visual = {
 // source pages no built view reads yet: `excluded` with the reason, never a silent drop
 const mapped = new Set(contract.pages.flatMap((p) => p.source))
 const REASONS = [
-  [/pages\/user\//, 'visitor accounts are not ported: a customer site has no front-end sign-in (DECISIONS D8)'],
-  [/home\/home-/, 'a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)'],
-  [/pages\/j-pages|typography|featured-articles|tagged-items/, 'demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)'],
-  [/category\/category-style-4\/|pages\/j-content\/category-blog/, 'a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them'],
-  [/\/(templates|plugins|media)\//, 'a stylesheet, script, font or picture of the source site: the source of the measurements, not a page'],
+  [
+    /pages\/user\//,
+    'visitor accounts are not ported: a customer site has no front-end sign-in (DECISIONS D8)'
+  ],
+  [
+    /home\/home-/,
+    'a Home demo (header and sidebar variants of the one Home): not ported, not as a page and not as a preset (DECISIONS D8, owner answer 1)'
+  ],
+  [
+    /pages\/j-pages|typography|featured-articles|tagged-items/,
+    'demo page of the source (error and offline pages, typography, featured and tagged lists): not ported (DECISIONS D8)'
+  ],
+  [
+    /category\/category-style-4\/|pages\/j-content\/category-blog/,
+    'a copy of the same articles listed under another category or layout demo (DECISIONS D10, D15): one view serves them'
+  ],
+  [
+    /\/(templates|plugins|media)\//,
+    'a stylesheet, script, font or picture of the source site: the source of the measurements, not a page'
+  ],
   [/.*/, 'no built page reads this file (see the reason in DECISIONS)']
 ]
 for (const f of contract.source.files)
@@ -422,7 +489,7 @@ contract.distribution = {
     'tools/personalize.mjs',
     'tools/forms.json',
     'public/favicon.svg',
-        'seed/seed.json',
+    'seed/seed.json',
     'seed/media-map.json',
     'seed/field-map.json',
     'seed/questions.json',

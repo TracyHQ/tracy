@@ -385,7 +385,7 @@ function fakeRun(
         coverage: { missing: [] },
         lenses: ['layout', 'color'],
         todos: [],
-        ...(notes[id] ?? {})
+        ...notes[id]
       })
   return dir
 }

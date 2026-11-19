@@ -46,7 +46,11 @@ const items = (list: MenuItem[] | undefined): ChromeMenuItem[] =>
 
 /** The network a Font Awesome class of the source names (`fa fa-facebook` → `facebook`). */
 export const networkOf = (fontIcon: string | undefined, title?: string): string =>
-  String(fontIcon ?? '').split('-').pop()?.trim().toLowerCase() || String(title ?? '').toLowerCase()
+  String(fontIcon ?? '')
+    .split('-')
+    .pop()
+    ?.trim()
+    .toLowerCase() || String(title ?? '').toLowerCase()
 
 export async function loadChrome(locale: Locale): Promise<Chrome> {
   const [chromeRes, primary, footer, socialRes, galleryRes] = await Promise.all([

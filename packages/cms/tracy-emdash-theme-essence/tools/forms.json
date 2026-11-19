@@ -7,11 +7,51 @@
       "pages": [
         {
           "fields": [
-            { "id": "name-en", "type": "text", "label": "Name", "name": "name", "required": true, "width": "full", "placeholder": "Name" },
-            { "id": "email-en", "type": "email", "label": "Email", "name": "email", "required": true, "width": "full", "placeholder": "Mail" },
-            { "id": "subject-en", "type": "text", "label": "Subject", "name": "subject", "required": true, "width": "full", "placeholder": "Subject" },
-            { "id": "message-en", "type": "textarea", "label": "Your message", "name": "message", "required": false, "width": "full", "placeholder": "Message" },
-            { "id": "copy-en", "type": "checkbox", "label": "Send a copy to yourself", "name": "copy", "required": false, "width": "full", "defaultValue": "true" }
+            {
+              "id": "name-en",
+              "type": "text",
+              "label": "Name",
+              "name": "name",
+              "required": true,
+              "width": "full",
+              "placeholder": "Name"
+            },
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Mail"
+            },
+            {
+              "id": "subject-en",
+              "type": "text",
+              "label": "Subject",
+              "name": "subject",
+              "required": true,
+              "width": "full",
+              "placeholder": "Subject"
+            },
+            {
+              "id": "message-en",
+              "type": "textarea",
+              "label": "Your message",
+              "name": "message",
+              "required": false,
+              "width": "full",
+              "placeholder": "Message"
+            },
+            {
+              "id": "copy-en",
+              "type": "checkbox",
+              "label": "Send a copy to yourself",
+              "name": "copy",
+              "required": false,
+              "width": "full",
+              "defaultValue": "true"
+            }
           ]
         }
       ],
@@ -30,8 +70,24 @@
       "pages": [
         {
           "fields": [
-            { "id": "email-en", "type": "email", "label": "Email", "name": "email", "required": true, "width": "full", "placeholder": "Email" },
-            { "id": "consent-en", "type": "checkbox", "label": "I agree with the Terms and conditions and the Privacy policy", "name": "consent", "required": true, "width": "full", "defaultValue": "true" }
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Email"
+            },
+            {
+              "id": "consent-en",
+              "type": "checkbox",
+              "label": "I agree with the Terms and conditions and the Privacy policy",
+              "name": "consent",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            }
           ]
         }
       ],

@@ -36,7 +36,9 @@ export function personalizeProblems(artifact) {
   try {
     map = JSON.parse(readFileSync(path.join(artifact, 'seed', 'personalize.json'), 'utf8'))
   } catch (error) {
-    return [`seed/personalize.json is not readable JSON: ${error instanceof Error ? error.message : String(error)}`]
+    return [
+      `seed/personalize.json is not readable JSON: ${error instanceof Error ? error.message : String(error)}`
+    ]
   }
   const text = JSON.stringify(map)
   if (PLACEHOLDERS.some((p) => text.includes(p)))
@@ -62,10 +64,13 @@ export function questionProblems(raw) {
   try {
     doc = JSON.parse(raw)
   } catch (error) {
-    return [`seed/questions.json is not readable JSON: ${error instanceof Error ? error.message : String(error)}`]
+    return [
+      `seed/questions.json is not readable JSON: ${error instanceof Error ? error.message : String(error)}`
+    ]
   }
   const problems = []
-  if (doc.schemaVersion !== 'tracy-questions/v1') problems.push('seed/questions.json is not a tracy-questions/v1 document')
+  if (doc.schemaVersion !== 'tracy-questions/v1')
+    problems.push('seed/questions.json is not a tracy-questions/v1 document')
   if (!Array.isArray(doc.questions) || doc.questions.length === 0) {
     problems.push('seed/questions.json asks nothing')
     return problems

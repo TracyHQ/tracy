@@ -106,8 +106,8 @@ const subscribeUrl = site.subscribe_link && live(site.subscribe_link) ? own(site
 </header>
 <script is:inline>
 	(function () {
-		var panel = document.getElementById('offcanvas');
-		var open = function (on) {
+		const panel = document.getElementById('offcanvas');
+		const open = function (on) {
 			if (!panel) return;
 			panel.hidden = !on;
 			document.querySelectorAll('[data-offcanvas-toggle]').forEach(function (b) { b.setAttribute('aria-expanded', on ? 'true' : 'false'); });
@@ -119,8 +119,8 @@ const subscribeUrl = site.subscribe_link && live(site.subscribe_link) ? own(site
 		document.addEventListener('click', function (e) {
 			if (panel && !panel.hidden && !panel.contains(e.target) && !e.target.closest('[data-offcanvas-toggle]')) open(false);
 		});
-		var box = document.getElementById('es-search');
-		var sb = document.querySelector('[data-search-toggle]');
+		const box = document.getElementById('es-search');
+		const sb = document.querySelector('[data-search-toggle]');
 		if (box && sb)
 			sb.addEventListener('click', function () {
 				box.hidden = !box.hidden;
@@ -129,11 +129,11 @@ const subscribeUrl = site.subscribe_link && live(site.subscribe_link) ? own(site
 			});
 		document.querySelectorAll('[data-theme-toggle]').forEach(function (b) {
 			b.addEventListener('click', function () {
-				var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+				const dark = document.documentElement.getAttribute('data-theme') === 'dark';
 				if (dark) document.documentElement.removeAttribute('data-theme');
 				else document.documentElement.setAttribute('data-theme', 'dark');
-				var ds = document.getElementById('tracy-ds-slot')?.getAttribute('data-ds');
-				var key = document.documentElement.hasAttribute('data-ds-worn') && ds ? 'tracy-essence-theme@' + ds : 'tracy-essence-theme';
+				const ds = document.getElementById('tracy-ds-slot')?.getAttribute('data-ds');
+				const key = document.documentElement.hasAttribute('data-ds-worn') && ds ? 'tracy-essence-theme@' + ds : 'tracy-essence-theme';
 				try { localStorage.setItem(key, dark ? 'light' : 'dark'); } catch (e) {}
 			});
 		});

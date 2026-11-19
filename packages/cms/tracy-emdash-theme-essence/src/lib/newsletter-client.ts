@@ -31,7 +31,13 @@ for (const form of document.querySelectorAll<HTMLFormElement>('form.es-newslette
       const json = await res.json().catch(() => ({}))
       const payload = json.data ?? json
       const ok = res.ok && payload.success !== false
-      show(payload.message ?? payload.errors?.[0]?.message ?? payload.error?.message ?? (ok ? '' : String(res.status)), ok ? 'ok' : 'error')
+      show(
+        payload.message ??
+          payload.errors?.[0]?.message ??
+          payload.error?.message ??
+          (ok ? '' : String(res.status)),
+        ok ? 'ok' : 'error'
+      )
       if (ok) form.reset()
     } catch (e) {
       show(String(e), 'error')

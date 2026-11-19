@@ -22,9 +22,15 @@ export function oneLine(value, max = 120) {
  * a path with a newline or a `|` keeps the row shape and decodes back exactly (decodeURIComponent).
  */
 export function encodeField(value, extra = '') {
-  const bad = new RegExp(`[\\u0000-\\u001f\\u007f-\\u009f\\u2028\\u2029%${extra.replace(/[\\\]^-]/g, '\\$&')}]`, 'g')
+  const bad = new RegExp(
+    `[\\u0000-\\u001f\\u007f-\\u009f\\u2028\\u2029%${extra.replace(/[\\\]^-]/g, '\\$&')}]`,
+    'g'
+  )
   return String(value).replace(bad, (c) =>
-    encodeURIComponent(c).replace(/^[^%]$/, (x) => `%${x.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`)
+    encodeURIComponent(c).replace(
+      /^[^%]$/,
+      (x) => `%${x.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`
+    )
   )
 }
 
@@ -45,7 +51,13 @@ export function fields(obj) {
     if (value === null || value === undefined) continue
     if (Array.isArray(value)) tokens.push(`${key}=${value.length}`)
     else if (typeof value === 'object')
-      tokens.push(`${key}=${Object.entries(value).map(([k, v]) => `${k}:${v}`).join(',') || '-'}`)
+      tokens.push(
+        `${key}=${
+          Object.entries(value)
+            .map(([k, v]) => `${k}:${v}`)
+            .join(',') || '-'
+        }`
+      )
     else tokens.push(`${key}=${oneLine(value, 80)}`)
   }
   return tokens.join(' ')

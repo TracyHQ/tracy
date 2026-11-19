@@ -5,48 +5,19 @@
     "family": "list"
   },
   "rules": [
-    [
-      "cat-title",
-      ".es-cat:not([data-by=\"author\"]) .es-cat-title",
-      "category/category-style-1/index.html"
-    ],
-    [
-      "cat-count",
-      ".es-cat-count",
-      "category/category-style-1/index.html"
-    ],
-    [
-      "cat-desc",
-      ".es-cat-desc",
-      "category/category-style-1/index.html"
-    ],
-    [
-      "side-title",
-      ".es-side-title",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "newsletter-title",
-      "#es-newsletter-title",
-      "detail/layout-1/index.html"
-    ],
-    [
-      "newsletter-text",
-      ".es-newsletter-text, .es-newsletter-status",
-      "detail/layout-1/index.html"
-    ],
+    ["cat-title", ".es-cat:not([data-by=\"author\"]) .es-cat-title", "category/category-style-1/index.html"],
+    ["cat-count", ".es-cat-count", "category/category-style-1/index.html"],
+    ["cat-desc", ".es-cat-desc", "category/category-style-1/index.html"],
+    ["side-title", ".es-side-title", "detail/layout-1/index.html"],
+    ["newsletter-title", "#es-newsletter-title", "detail/layout-1/index.html"],
+    ["newsletter-text", ".es-newsletter-text, .es-newsletter-status", "detail/layout-1/index.html"],
     [
       "grid-card-title",
       ".es-cat:not([data-by=\"author\"]) .es-grid-card:not(.is-wide) .es-card-title",
       "category/category-style-1/index.html",
       true
     ],
-    [
-      "wide-card-title",
-      ".es-grid-card.is-wide .es-card-title",
-      "category/category-style-1/index.html",
-      true
-    ],
+    ["wide-card-title", ".es-grid-card.is-wide .es-card-title", "category/category-style-1/index.html", true],
     [
       "author-title",
       ".es-cat[data-by=\"author\"] .es-cat-title",
@@ -59,34 +30,15 @@
       "category/category-style-1/index.html",
       true
     ],
-    [
-      "cat-more",
-      ".es-cat-more",
-      "category/category-style-1/index.html",
-      true
-    ],
-    [
-      "profile-role",
-      ".es-cat-role",
-      "pages/j-content/author-listting/author/Eula%20Ward/index.html"
-    ],
+    ["cat-more", ".es-cat-more", "category/category-style-1/index.html", true],
+    ["profile-role", ".es-cat-role", "pages/j-content/author-listting/author/Eula%20Ward/index.html"],
     [
       "profile-bio",
       ".es-cat[data-by=\"author\"] .es-cat-desc",
       "pages/j-content/author-listting/author/Eula%20Ward/index.html"
     ],
-    [
-      "hl-title",
-      ".es-card.is-highlight .es-card-title",
-      "category/category-style-2/index.html",
-      true
-    ],
-    [
-      "hl-intro",
-      ".es-card.is-highlight .es-card-intro",
-      "category/category-style-2/index.html",
-      true
-    ]
+    ["hl-title", ".es-card.is-highlight .es-card-title", "category/category-style-2/index.html", true],
+    ["hl-intro", ".es-card.is-highlight .es-card-intro", "category/category-style-2/index.html", true]
   ],
   "parity": {
     "catTitle": {
@@ -114,31 +66,11 @@
     {
       "id": "en-cat-grid",
       "path": "/category/blog-health",
-      "source": [
-        "category/category-style-1/index.html"
-      ],
+      "source": ["category/category-style-1/index.html"],
       "identity": ".es-cat-title",
-      "collections": [
-        "chrome",
-        "posts",
-        "pages",
-        "authors",
-        "social"
-      ],
-      "rules": [
-        "cat-title",
-        "cat-count",
-        "cat-desc",
-        "grid-card-title",
-        "page-count",
-        "cat-more"
-      ],
-      "parity": [
-        "nav",
-        "catTitle",
-        "catCard",
-        "ground"
-      ],
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
+      "rules": ["cat-title", "cat-count", "cat-desc", "grid-card-title", "page-count", "cat-more"],
+      "parity": ["nav", "catTitle", "catCard", "ground"],
       "content": [
         [
           "title",
@@ -170,17 +102,9 @@
     {
       "id": "en-cat-stack",
       "path": "/category/blog-design",
-      "source": [
-        "category/category-style-2/index.html"
-      ],
+      "source": ["category/category-style-2/index.html"],
       "identity": ".es-cat-title",
-      "collections": [
-        "chrome",
-        "posts",
-        "pages",
-        "authors",
-        "social"
-      ],
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
       "rules": [
         "cat-title",
         "cat-count",
@@ -192,12 +116,7 @@
         "hl-title",
         "hl-intro"
       ],
-      "parity": [
-        "nav",
-        "catTitle",
-        "catCard",
-        "ground"
-      ],
+      "parity": ["nav", "catTitle", "catCard", "ground"],
       "content": [
         [
           "title",
@@ -229,32 +148,11 @@
     {
       "id": "en-cat-fashion",
       "path": "/category/blog-fashion",
-      "source": [
-        "category/category-style-3/index.html"
-      ],
+      "source": ["category/category-style-3/index.html"],
       "identity": ".es-cat-title",
-      "collections": [
-        "chrome",
-        "posts",
-        "pages",
-        "authors",
-        "social"
-      ],
-      "rules": [
-        "cat-title",
-        "cat-count",
-        "cat-desc",
-        "grid-card-title",
-        "cat-more",
-        "hl-title",
-        "hl-intro"
-      ],
-      "parity": [
-        "nav",
-        "catTitle",
-        "catCard",
-        "ground"
-      ],
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
+      "rules": ["cat-title", "cat-count", "cat-desc", "grid-card-title", "cat-more", "hl-title", "hl-intro"],
+      "parity": ["nav", "catTitle", "catCard", "ground"],
       "content": [
         [
           "title",
@@ -278,17 +176,9 @@
     {
       "id": "en-cat-sidebar",
       "path": "/category/blog-normal-health",
-      "source": [
-        "category/category-style-4/index.html"
-      ],
+      "source": ["category/category-style-4/index.html"],
       "identity": ".es-card-intro",
-      "collections": [
-        "chrome",
-        "posts",
-        "pages",
-        "authors",
-        "social"
-      ],
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
       "rules": [
         "page-h1",
         "wide-card-title",
@@ -298,12 +188,7 @@
         "newsletter-text",
         "cat-more"
       ],
-      "parity": [
-        "nav",
-        "catCard",
-        "sideTitle",
-        "ground"
-      ],
+      "parity": ["nav", "catCard", "sideTitle", "ground"],
       "content": [
         [
           "card1",
@@ -327,28 +212,11 @@
     {
       "id": "en-tag",
       "path": "/tag/health",
-      "source": [
-        "component/tags/tag/health/index.html"
-      ],
+      "source": ["component/tags/tag/health/index.html"],
       "identity": ".es-cat-count",
-      "collections": [
-        "chrome",
-        "posts",
-        "pages",
-        "authors",
-        "social"
-      ],
-      "rules": [
-        "cat-title",
-        "cat-count",
-        "grid-card-title",
-        "page-count",
-        "cat-more"
-      ],
-      "parity": [
-        "nav",
-        "ground"
-      ],
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
+      "rules": ["cat-title", "cat-count", "grid-card-title", "page-count", "cat-more"],
+      "parity": ["nav", "ground"],
       "content": [
         [
           "title",
@@ -372,33 +240,11 @@
     {
       "id": "en-author",
       "path": "/author/eula-ward",
-      "source": [
-        "pages/j-content/author-listting/author/Eula%20Ward/index.html"
-      ],
+      "source": ["pages/j-content/author-listting/author/Eula%20Ward/index.html"],
       "identity": ".es-cat-title",
-      "collections": [
-        "chrome",
-        "posts",
-        "pages",
-        "authors",
-        "social"
-      ],
-      "rules": [
-        "author-title",
-        "author-card-title",
-        "cat-more",
-        "profile-role",
-        "profile-bio",
-        "page-count"
-      ],
-      "parity": [
-        "nav",
-        "authorHeading",
-        "catCard",
-        "ground",
-        "authorRole",
-        "authorBio"
-      ],
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
+      "rules": ["author-title", "author-card-title", "cat-more", "profile-role", "profile-bio", "page-count"],
+      "parity": ["nav", "authorHeading", "catCard", "ground", "authorRole", "authorBio"],
       "content": [
         [
           "title",

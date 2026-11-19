@@ -9,7 +9,8 @@ export function unsafeReason(name) {
   if (typeof name !== 'string' || name === '') return 'is not a non-empty string'
   if (name.includes('\0')) return 'contains a NUL byte'
   if (name.includes('\\')) return 'contains a backslash'
-  if (path.posix.isAbsolute(name) || path.win32.isAbsolute(name) || /^[A-Za-z]:/.test(name)) return 'is absolute'
+  if (path.posix.isAbsolute(name) || path.win32.isAbsolute(name) || /^[A-Za-z]:/.test(name))
+    return 'is absolute'
   if (name.split('/').includes('..')) return 'has a ".." segment'
   return null
 }
@@ -27,7 +28,8 @@ export function joinInside(root, name, { within = root } = {}) {
   }
   // The text is clean; now the disk. A symlinked directory (or file) inside root must not lead out of it.
   const realRoot = realpathExisting(path.resolve(within))
-  if (within !== root && isLink(base)) throw new Error(`${root} is a symlink; file name ${JSON.stringify(name)} is refused`)
+  if (within !== root && isLink(base))
+    throw new Error(`${root} is a symlink; file name ${JSON.stringify(name)} is refused`)
   const realProbe = isLink(full) ? null : realpathExisting(full)
   if (realProbe === null) throw new Error(`file name ${JSON.stringify(name)} is a symlink inside ${root}`)
   if (realProbe !== realRoot && !realProbe.startsWith(realRoot + path.sep)) {

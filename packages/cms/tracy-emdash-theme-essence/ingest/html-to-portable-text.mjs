@@ -126,7 +126,10 @@ export function htmlToPortableText(html) {
           alt: decode(attrs.match(/alt\s*=\s*"([^"]*)"/i)?.[1] ?? ''),
           _file: src
         })
-    } else if (tag === 'figcaption' && (slash ? cur?.style === 'blockquote' : blocks[blocks.length - 1]?.style === 'blockquote')) {
+    } else if (
+      tag === 'figcaption' &&
+      (slash ? cur?.style === 'blockquote' : blocks[blocks.length - 1]?.style === 'blockquote')
+    ) {
       // the author line of a quote (`<figure><blockquote>…</blockquote><figcaption>Name</figcaption></figure>`) is its last quote block
       close()
       if (!slash) open('blockquote')

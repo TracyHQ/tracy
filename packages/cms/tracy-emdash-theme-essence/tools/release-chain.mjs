@@ -38,7 +38,16 @@
 // Output: `release-chain <step>: ok|FAIL|skipped …` per step and a last line `release-chain: status=… -> <file>`;
 // `--verbose` prints each step's log after its line. Exit 0 every step passed · 1 a step failed · 2 usage.
 import { spawnSync } from 'node:child_process'
-import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, writeFileSync } from 'node:fs'
+import {
+  closeSync,
+  existsSync,
+  mkdirSync,
+  openSync,
+  readFileSync,
+  readdirSync,
+  realpathSync,
+  writeFileSync
+} from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { summaryLine, takeVerbose } from './cli-output.mjs'
@@ -54,11 +63,26 @@ const NEEDS = {
   'content-api': ['pack'],
   release: ['pack', 'target', 'port']
 }
-const FLAGS = ['pack', 'target', 'port', 'source', 'reviews', 'out', 'contract', 'config', 'report', 'version', 'tag', 'repo', 'from']
+const FLAGS = [
+  'pack',
+  'target',
+  'port',
+  'source',
+  'reviews',
+  'out',
+  'contract',
+  'config',
+  'report',
+  'version',
+  'tag',
+  'repo',
+  'from'
+]
 
 export class Refusal extends Error {}
 /** A TCP port as clean-install.sh and a URL take it: an integer 1–65535, in canonical spelling ("080" → "80"); null otherwise. */
-export const portOf = (v) => (/^\d{1,5}$/.test(String(v)) && Number(v) >= 1 && Number(v) <= 65535 ? String(Number(v)) : null)
+export const portOf = (v) =>
+  /^\d{1,5}$/.test(String(v)) && Number(v) >= 1 && Number(v) <= 65535 ? String(Number(v)) : null
 /** An origin in the one form every comparison here uses — the form qa.mjs writes (`new URL(site).origin`); null when unparseable. */
 export const normOrigin = (v) => {
   try {
@@ -88,7 +112,9 @@ export function parseArgs(argv) {
   for (let i = 0; i < own.length; i++) {
     const name = own[i].replace(/^--/, '')
     if (own[i] === '--site')
-      throw new Error('--site is refused: QA runs on the clean install the release snapshots, http://127.0.0.1:<port>, where clean-install.sh starts it')
+      throw new Error(
+        '--site is refused: QA runs on the clean install the release snapshots, http://127.0.0.1:<port>, where clean-install.sh starts it'
+      )
     if (!own[i].startsWith('--') || !FLAGS.includes(name)) throw new Error(`unknown argument ${own[i]}`)
     const v = own[++i]
     if (v === undefined || v.startsWith('--')) throw new Error(`--${name} needs a value`)
@@ -103,7 +129,8 @@ export function parseArgs(argv) {
     o.site = siteOrigin(port)
   }
   const missing = new Set()
-  for (const step of STEPS.slice(STEPS.indexOf(o.from))) for (const k of NEEDS[step]) if (!o[k]) missing.add(`--${k}`)
+  for (const step of STEPS.slice(STEPS.indexOf(o.from)))
+    for (const k of NEEDS[step]) if (!o[k]) missing.add(`--${k}`)
   if (missing.size) throw new Error(`missing ${[...missing].join(', ')} for the steps from ${o.from}`)
   return o
 }
@@ -117,7 +144,9 @@ const nextFree = (dir, base) => {
 export function runChain(o, { cwd = process.cwd(), print = console.log } = {}) {
   const out = path.resolve(cwd, o.out)
   const stateFile = path.join(out, 'chain.json')
-  const state = existsSync(stateFile) ? JSON.parse(readFileSync(stateFile, 'utf8')) : { runs: [], qaReport: null }
+  const state = existsSync(stateFile)
+    ? JSON.parse(readFileSync(stateFile, 'utf8'))
+    : { runs: [], qaReport: null }
   const logs = path.join(out, 'logs')
   mkdirSync(logs, { recursive: true })
   const runNo = readdirSync(logs).reduce((n, f) => Math.max(n, Number(f.split('-')[0]) || 0), 0) + 1
@@ -128,7 +157,9 @@ export function runChain(o, { cwd = process.cwd(), print = console.log } = {}) {
   const run = { at: new Date().toISOString(), from: o.from, steps: [] }
   state.runs.push(run)
   const save = () => writeFileSync(stateFile, JSON.stringify(state, null, 2) + '\n')
-  const site = o.port ? { target: o.target ? realTarget(abs(o.target)) : null, port: o.port, origin: o.site } : null
+  const site = o.port
+    ? { target: o.target ? realTarget(abs(o.target)) : null, port: o.port, origin: o.site }
+    : null
   let known = null
   if (STEPS.indexOf(o.from) > STEPS.indexOf('clean-install')) {
     const rec = state.cleanInstall
@@ -155,13 +186,34 @@ export function runChain(o, { cwd = process.cwd(), print = console.log } = {}) {
     docs: () => [node, [tool('generate-docs.mjs'), '--check'], cwd],
     artifact: () => [node, [tool('artifact.mjs')], cwd],
     pack: () => [node, [tool('distribution.mjs'), 'pack', o.contract, pack], cwd],
-    'clean-install': () => ['bash', [path.join(pack, 'tools', 'clean-install.sh'), abs(o.target), o.port], pack],
+    'clean-install': () => [
+      'bash',
+      [path.join(pack, 'tools', 'clean-install.sh'), abs(o.target), o.port],
+      pack
+    ],
     qa: () => {
       qaDir = nextFree(out, 'qa')
       return [
         node,
-        [tool('qa.mjs'), '--contract', o.contract, '--source', o.source, '--site', o.site, '--out', qaDir,
-          '--config', o.config, '--browser', '--artifact', pack, '--reviews', o.reviews, ...o.qaExtra],
+        [
+          tool('qa.mjs'),
+          '--contract',
+          o.contract,
+          '--source',
+          o.source,
+          '--site',
+          o.site,
+          '--out',
+          qaDir,
+          '--config',
+          o.config,
+          '--browser',
+          '--artifact',
+          pack,
+          '--reviews',
+          o.reviews,
+          ...o.qaExtra
+        ],
         cwd
       ]
     },
@@ -177,11 +229,23 @@ export function runChain(o, { cwd = process.cwd(), print = console.log } = {}) {
       }
       const released = known?.origin ?? o.site
       if (normOrigin(origin) !== released)
-        return { refuse: `qa report measured ${origin ?? 'no origin'}, the clean site released is ${released}: not the same site` }
+        return {
+          refuse: `qa report measured ${origin ?? 'no origin'}, the clean site released is ${released}: not the same site`
+        }
       return [
         node,
-        [tool('release.mjs'), '--artifact', pack, '--site', known?.target ?? realTarget(abs(o.target)), '--report', report, '--out', nextFree(out, 'release'),
-          ...['version', 'tag', 'repo'].flatMap((k) => (o[k] ? [`--${k}`, o[k]] : []))],
+        [
+          tool('release.mjs'),
+          '--artifact',
+          pack,
+          '--site',
+          known?.target ?? realTarget(abs(o.target)),
+          '--report',
+          report,
+          '--out',
+          nextFree(out, 'release'),
+          ...['version', 'tag', 'repo'].flatMap((k) => (o[k] ? [`--${k}`, o[k]] : []))
+        ],
         cwd
       ]
     }
@@ -214,7 +278,14 @@ export function runChain(o, { cwd = process.cwd(), print = console.log } = {}) {
     }
     const code = r.status ?? (r.error ? 127 : 1)
     const secs = ((Date.now() - t0) / 1000).toFixed(1)
-    run.steps.push({ step, status: code === 0 ? 'ok' : 'fail', code, seconds: Number(secs), log, ...(qaDir && step === 'qa' ? { dir: qaDir } : {}) })
+    run.steps.push({
+      step,
+      status: code === 0 ? 'ok' : 'fail',
+      code,
+      seconds: Number(secs),
+      log,
+      ...(qaDir && step === 'qa' ? { dir: qaDir } : {})
+    })
     if (step === 'qa' && code === 0) state.qaReport = path.join(qaDir, 'report.json')
     if (step === 'clean-install' && code === 0) {
       // a new clean site: a qa report of the previous one is not evidence for it
@@ -238,7 +309,9 @@ if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToP
   try {
     o = parseArgs(process.argv.slice(2))
   } catch (e) {
-    console.error(`${e.message}\nusage: release-chain.mjs --pack <new> --target <new> --port <n> --source <design> --reviews <dir> --out <dir> [--from <step>] [-- <qa.mjs flags>]`)
+    console.error(
+      `${e.message}\nusage: release-chain.mjs --pack <new> --target <new> --port <n> --source <design> --reviews <dir> --out <dir> [--from <step>] [-- <qa.mjs flags>]`
+    )
     process.exit(2)
   }
   try {

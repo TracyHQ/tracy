@@ -7,9 +7,7 @@
       {
         "weight": "100 900",
         "style": "normal",
-        "src": [
-          "./src/fonts/noto-serif-latin.woff2"
-        ],
+        "src": ["./src/fonts/noto-serif-latin.woff2"],
         "unicodeRange": [
           "U+0000-00FF",
           "U+0131",
@@ -35,9 +33,7 @@
       {
         "weight": "100 900",
         "style": "normal",
-        "src": [
-          "./src/fonts/noto-serif-latin-ext.woff2"
-        ],
+        "src": ["./src/fonts/noto-serif-latin-ext.woff2"],
         "unicodeRange": [
           "U+0100-02BA",
           "U+02BD-02C5",
@@ -61,9 +57,7 @@
       {
         "weight": "100 900",
         "style": "normal",
-        "src": [
-          "./src/fonts/noto-serif-vietnamese.woff2"
-        ],
+        "src": ["./src/fonts/noto-serif-vietnamese.woff2"],
         "unicodeRange": [
           "U+0102-0103",
           "U+0110-0111",
@@ -82,11 +76,7 @@
       }
     ],
     "optimizedFallbacks": false,
-    "fallbacks": [
-      "Georgia",
-      "Times New Roman",
-      "serif"
-    ]
+    "fallbacks": ["Georgia", "Times New Roman", "serif"]
   },
   {
     "name": "Jost",
@@ -96,9 +86,7 @@
       {
         "weight": "100 900",
         "style": "normal",
-        "src": [
-          "./src/fonts/jost-latin.woff2"
-        ],
+        "src": ["./src/fonts/jost-latin.woff2"],
         "unicodeRange": [
           "U+0000-00FF",
           "U+0131",
@@ -124,9 +112,7 @@
       {
         "weight": "100 900",
         "style": "normal",
-        "src": [
-          "./src/fonts/jost-latin-ext.woff2"
-        ],
+        "src": ["./src/fonts/jost-latin-ext.woff2"],
         "unicodeRange": [
           "U+0100-02BA",
           "U+02BD-02C5",
@@ -149,11 +135,7 @@
       }
     ],
     "optimizedFallbacks": false,
-    "fallbacks": [
-      "Helvetica",
-      "Arial",
-      "sans-serif"
-    ]
+    "fallbacks": ["Helvetica", "Arial", "sans-serif"]
   },
   {
     "name": "Be Vietnam Pro",
@@ -164,30 +146,20 @@
       {
         "weight": 400,
         "style": "normal",
-        "src": [
-          "./src/fonts/be-vietnam-pro-400.woff2"
-        ]
+        "src": ["./src/fonts/be-vietnam-pro-400.woff2"]
       },
       {
         "weight": 600,
         "style": "normal",
-        "src": [
-          "./src/fonts/be-vietnam-pro-600.woff2"
-        ]
+        "src": ["./src/fonts/be-vietnam-pro-600.woff2"]
       },
       {
         "weight": 700,
         "style": "normal",
-        "src": [
-          "./src/fonts/be-vietnam-pro-700.woff2"
-        ]
+        "src": ["./src/fonts/be-vietnam-pro-700.woff2"]
       }
     ],
     "optimizedFallbacks": false,
-    "fallbacks": [
-      "Helvetica",
-      "Arial",
-      "sans-serif"
-    ]
+    "fallbacks": ["Helvetica", "Arial", "sans-serif"]
   }
 ]

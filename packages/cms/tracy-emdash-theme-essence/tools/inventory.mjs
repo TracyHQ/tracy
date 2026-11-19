@@ -24,7 +24,9 @@ if (!srcArg || !outArg) {
   process.exit(2)
 }
 if (/\.json$/i.test(outArg)) {
-  console.error(`<out-dir> is a directory that receives source-inventory.json and assets.json; got a file name: ${outArg}`)
+  console.error(
+    `<out-dir> is a directory that receives source-inventory.json and assets.json; got a file name: ${outArg}`
+  )
   process.exit(2)
 }
 const SRC = path.resolve(srcArg)
@@ -69,6 +71,7 @@ const mirrorOrigin = (() => {
   }
 })()
 const rootRelative = (ref) => {
+  // oxlint-disable-next-line unicorn/prefer-string-starts-ends-with -- kit file, kept byte-for-byte with the kit
   if (/^\/\//.test(ref) || /^(data|blob|mailto|tel|javascript):/i.test(ref)) return null
   if (/^https?:\/\//i.test(ref)) {
     try {
@@ -159,7 +162,9 @@ for (const entry of inventory.files) {
 }
 // A stylesheet points at fonts and pictures of its own, relative to itself.
 for (const entry of inventory.files) {
-  if (entry.ext === '.css') for (const ref of otherRefs(readFileSync(path.join(SRC, entry.path), 'utf8'), { dots: true })) note(entry.path, ref)
+  if (entry.ext === '.css')
+    for (const ref of otherRefs(readFileSync(path.join(SRC, entry.path), 'utf8'), { dots: true }))
+      note(entry.path, ref)
 }
 
 for (const entry of inventory.files) {

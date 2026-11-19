@@ -5,27 +5,10 @@
     "family": "detail"
   },
   "rules": [
-    [
-      "mini-title",
-      ".es-mini.is-card .es-mini-title",
-      "detail/video/index.html"
-    ],
-    [
-      "abox-title",
-      ".es-author-box h3",
-      "detail/layout-3/index.html"
-    ],
-    [
-      "abox-bio",
-      ".es-abox-bio",
-      "detail/layout-3/index.html"
-    ],
-    [
-      "mini-thumb-title",
-      ".es-mini.is-thumb .es-mini-title",
-      "detail/video/index.html",
-      true
-    ],
+    ["mini-title", ".es-mini.is-card .es-mini-title", "detail/video/index.html"],
+    ["abox-title", ".es-author-box h3", "detail/layout-3/index.html"],
+    ["abox-bio", ".es-abox-bio", "detail/layout-3/index.html"],
+    ["mini-thumb-title", ".es-mini.is-thumb .es-mini-title", "detail/video/index.html", true],
     [
       "sec-title-type1",
       ".es-post[data-layout=\"type-1\"] .es-sec-title.is-small",
@@ -47,17 +30,9 @@
     {
       "id": "en-post-type1",
       "path": "/blog/mental-health-and-well-being-strategies-blog-health",
-      "source": [
-        "detail/layout-2/index.html"
-      ],
+      "source": ["detail/layout-2/index.html"],
       "identity": ".es-article",
-      "collections": [
-        "chrome",
-        "posts",
-        "authors",
-        "social",
-        "gallery"
-      ],
+      "collections": ["chrome", "posts", "authors", "social", "gallery"],
       "rules": [
         "post-title",
         "post-body",
@@ -69,12 +44,7 @@
         "sec-title-type1",
         "mini-thumb-title"
       ],
-      "parity": [
-        "nav",
-        "postTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "postTitle", "footerButton", "ground"],
       "content": [
         [
           "h1",
@@ -92,31 +62,16 @@
           "posts.body",
           "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
         ],
-        [
-          "h2",
-          ".es-body h2",
-          "detail/layout-2/index.html",
-          "field",
-          "posts.body",
-          "Me unpleasing impossible"
-        ]
+        ["h2", ".es-body h2", "detail/layout-2/index.html", "field", "posts.body", "Me unpleasing impossible"]
       ],
       "images": "placeholders"
     },
     {
       "id": "en-post-type2",
       "path": "/blog/essential-nutrients-for-optimal-health-blog-health",
-      "source": [
-        "detail/layout-3/index.html"
-      ],
+      "source": ["detail/layout-3/index.html"],
       "identity": ".es-article",
-      "collections": [
-        "chrome",
-        "posts",
-        "authors",
-        "social",
-        "gallery"
-      ],
+      "collections": ["chrome", "posts", "authors", "social", "gallery"],
       "rules": [
         "post-title",
         "post-body",
@@ -132,12 +87,7 @@
         "sec-title-small",
         "mini-thumb-title"
       ],
-      "parity": [
-        "nav",
-        "postTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "postTitle", "footerButton", "ground"],
       "content": [
         [
           "h1",
@@ -177,17 +127,9 @@
     {
       "id": "en-post-video",
       "path": "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
-      "source": [
-        "detail/video/index.html"
-      ],
+      "source": ["detail/video/index.html"],
       "identity": ".es-article",
-      "collections": [
-        "chrome",
-        "posts",
-        "authors",
-        "social",
-        "gallery"
-      ],
+      "collections": ["chrome", "posts", "authors", "social", "gallery"],
       "rules": [
         "post-title",
         "post-body",
@@ -202,13 +144,7 @@
         "sec-title-small",
         "mini-thumb-title"
       ],
-      "parity": [
-        "nav",
-        "postTitle",
-        "sideTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "postTitle", "sideTitle", "footerButton", "ground"],
       "content": [
         [
           "h1",
@@ -226,14 +162,7 @@
           "posts.body",
           "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
         ],
-        [
-          "h2",
-          ".es-body h2",
-          "detail/video/index.html",
-          "field",
-          "posts.body",
-          "Me unpleasing impossible"
-        ],
+        ["h2", ".es-body h2", "detail/video/index.html", "field", "posts.body", "Me unpleasing impossible"],
         [
           "side",
           ".es-side-title",
@@ -248,17 +177,9 @@
     {
       "id": "en-post-gallery",
       "path": "/blog/natural-remedies-for-common-ailments-blog-fashion",
-      "source": [
-        "detail/gallery/index.html"
-      ],
+      "source": ["detail/gallery/index.html"],
       "identity": ".es-article",
-      "collections": [
-        "chrome",
-        "posts",
-        "authors",
-        "social",
-        "gallery"
-      ],
+      "collections": ["chrome", "posts", "authors", "social", "gallery"],
       "rules": [
         "post-title",
         "post-body",
@@ -273,13 +194,7 @@
         "sec-title-small",
         "mini-thumb-title"
       ],
-      "parity": [
-        "nav",
-        "postTitle",
-        "sideTitle",
-        "footerButton",
-        "ground"
-      ],
+      "parity": ["nav", "postTitle", "sideTitle", "footerButton", "ground"],
       "content": [
         [
           "h1",
@@ -297,14 +212,7 @@
           "posts.body",
           "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
         ],
-        [
-          "h2",
-          ".es-body h2",
-          "detail/gallery/index.html",
-          "field",
-          "posts.body",
-          "Me unpleasing impossible"
-        ],
+        ["h2", ".es-body h2", "detail/gallery/index.html", "field", "posts.body", "Me unpleasing impossible"],
         [
           "side",
           ".es-side-title",
