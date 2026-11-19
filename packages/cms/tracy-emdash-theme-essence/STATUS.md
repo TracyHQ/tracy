@@ -1,5 +1,39 @@
 # STATUS — tracy-essence
 
+**Phase reached (end of session 8, 2026-11-19): P8 done to a publishable local cut; PR #700 is a draft. Nothing is published.**
+
+**Release folder: `<evidence-dir>/p21/release`** (tag `tracy-essence/emdash-0.x`, version 0.1.0, built from pack 21; the package files of the commit named below equal pack 21 except `contracts/`, `perf/`, `tests/regression/` and this file).
+
+| File | sha256 |
+|---|---|
+| tracy-essence-emdash-quickstart-0.1.0.zip | `7260099e98b22e3e2c5a82563aebf5613fdf5bca4fb7257fb682bca4d46962e2` |
+| tracy-essence-emdash-state-0.1.0.tar.gz | `2f88fd93b95a0ffb9ece150863601e4ca017c2509568d7842f127715a731e3de` |
+| template-kit-tracy-essence-0.1.0.zip (its `template-kit.json` is byte-identical to `contracts/0.1.0/template-kit.json`, `approval: null`) | `025feae82ce36a3dd068b23cb3db6cd62f4d6634ed870486e09a352aed6641fe` |
+| design-system-roles.json (0 unresolved) | `75d9ed3227eacd5887fa29e267787f78e13aaf1fdb8c57e7a2330d08a1d87b28` |
+| tracy_setting.json (tracy-setting/v1, written by hand) | `b0624132b52b28b74e0b306abfa3216639ed756cd80de7f96f6eabe3e2e2e87f` |
+| manifest.json | `a508646cd456d4c6692675b0c5301a05ac74e88640245e31cc820bedbff2db68` |
+| VERIFICATION.json | `14e1aeb88873a851859c1a336f9c8c9c11073a94337464064d307fdbc5cd2111` |
+| SHA256SUMS | `7e215c92dc5bec460b2241eaac9762bddac5a9b5aa574ed3be0793e4fb2fa51b` |
+| README.md | `7a970ebd57e23380ebd0493e2b1c1fa9fc0ee24bd0a84fdce4257a9dd17807b4` |
+| LICENSE | `e16879cbf57577faa0bf2c8c5120c7de6a86fb1d4f93898a4ca30a445c957504` |
+| tracy_site_pages.json | `4f80a56032def813ed06ac1f23084822445b7a06dd03718f966e2b67310e9ca6` |
+| tracy_site_question.json | `959994585f60482fadd456ca970a509df2f6c3190646486aae519657d22e1101` |
+
+**Gate results** (`<evidence-dir>/p21/qa/qa.2/report.json`, the manifest agrees): contracts, distribution, preflight, browser, routing, visual, build, security, visual-review, font-review, viewing-contexts, editability, forms, recovery, clean-install, independent = **pass, 16 of 16**. Evidence: editability, forms, recovery, clean install and the independent handover (6 documentation gaps, none blocking, `perf/independent-handover-0.1.0.md`) are from pack 21; security, font-review and viewing-contexts are carried from session 4; visual review is the four tier runs j1..j4 (lens readers on every tile) on pack 13, and packs 14 to 21 differ by field-map roles, content map, slot limits, Dockerfile, lock overrides and CSS values read through `var(--ds-*, <same value>)`; the scrim over the Home strip pictures became neutral black (up to 16 levels darker over a picture); the machine `visual` gate of pack 21 measured the same 2400 computed values. **A lens re-read of the strip tiles was not done.**
+
+**CI of PR #700, the three failed jobs:**
+1. Dependency review: `@hono/node-server` moved to 2.1.6 (first patched release of GHSA-qv5m-9pm6-hqp3 and GHSA-jpvv-r467-5p4w) and `hono` to 4.13.16 (five advisories below it) through `overrides` in `pnpm-workspace.yaml`; the lock is frozen-install clean (the clean install and the independent review ran `pnpm install --frozen-lockfile`); `pnpm audit`: 0 advisories. **Follow-up, not touched here: Diner and Restaurant still carry `@hono/node-server@2.1.3` (and hono 4.13.11), the same two advisories.**
+2. Regression: case `REG-PR-700-emdash-essence-0-1-0` (`kind: feat`, script case over 17 named tests of the package); result line in `tests/regression/results/` (see DECISIONS D43 for the commit it ran on).
+3. Language policy: rows in `scripts/language-policy.json` and standalone in `<evidence-dir>/language-policy-rows.json` (D43).
+
+**Design System readiness (`scripts/template-design-system-readiness.mjs` on the release folder): 46 PASS, 0 FAIL** (ROLE-1 pass, flow 64 of 64, preview rows for Moxie and Figma, light and dark, 16 pages). Customization readiness: 0 FAIL (LANG-2 pass, no font finding). Role scan 0 unresolved. `scan.mjs`: see D43.
+
+**Open:**
+1. Template kit: `approval: null` (the owner's step). Gaps recorded: 65 (was 370): 45 on 15 author/tag card lists (`measure-min` could not find the kit block on those pages), 3 coverage failures (the Instagram button has no declared target, two tag pages print their name outside a slot), 6 picture frames with no fixed flag, 2 pages, and 9 not-on-platform notes that every EmDash kit carries. Settled: slot limits (`seed/slot-limits.json`), the Categories control and two dead-link gaps accepted with reasons (`reach-accepts.json`, `gap-accepts.json` in the kit work folder `<evidence-dir>/p21/kit`).
+2. The strip scrim: a lens re-read of the Home tiles (light and dark, 1440, 768, 390).
+3. Five documentation gaps of the independent review; fixing them changes the zip.
+4. `pnpm build:check` full run: lint and format are clean on this package; test:ci was red in four suites on a previous run for reasons outside this package (they read GitHub release assets and Joomla/WordPress tools); not rerun here.
+
 **Phase reached (end of session 7, 2026-11-19): P8 done to a publishable local cut. Nothing is pushed or published.**
 
 **Release folder: `<evidence-dir>/p18/release`** (tag `tracy-essence/emdash-0.x`, version 0.1.0, built from pack 18 = commit `bb15228e9`; the only later changes under this package are `contracts/0.1.0/{design-system-measurement,template-kit}.json` and `perf/`). **Commit to publish: `fab02d7fb`** (its package files equal pack 18, the release zip, except `contracts/`, `perf/` and this file). **Caution: `5a0c1cd28` (HEAD) is lint and format only** (oxlint 0 errors and biome format after `pnpm build:check` named them: `var` to `const` in the inline scripts of `Header.astro` and `PostHero.astro`, 54 files reformatted, the three kit tools replaced by the Diner's lint-clean copies; kit sync level, 511 of 512 package tests pass, the one failure `release-site-pages` also fails on `fab02d7fb` and on the Diner). It changes packaged files, so **the release zip does not contain it: a repository that must pass `build:check` lint needs one more cut** (`bash <evidence-dir>/scripts/cycle.sh <n>`, `qa.mjs`, P4 evidence, `qa-receipt.mjs`, `release.mjs`, then the kit, the measurement and the role scan again). The decision is the owner's: publish `fab02d7fb` as gated, or re-cut from HEAD. The upload command is printed by `tools/release.mjs` (`gh release create 'tracy-essence/emdash-0.x' -R JoomlArt-Products/joomlart-products --draft ...`) and is a person's step.
