@@ -6,6 +6,12 @@
 // 🔒 NEVER NARROWER THAN THE KIT'S MINIMUM (card AI). A frame whose content map slot sets `fit.minWidth` (the write
 // door refuses a narrower file, SLOT_IMAGE_TOO_SMALL) is written at least that wide, and an owner photo region narrower
 // than it is refused (`narrower-than-min-width`): it is never enlarged to reach it, so the next rung takes over.
+// One exception (David, 19/11/2026): a full-width background band whose picture the template darkens (overlayCovers)
+// or that carries text (so the step darkens it) may be enlarged to its minimum, at most MAX_ENLARGE times and through
+// the sharpness gate's background bar like any enlargement (mayEnlargeToMinWidth); that bar still asks for 1600 real
+// pixels across (photo-sharpness.js BACKGROUND_MIN_OWN_WIDTH), so a 1920 px minimum now takes a 1600 to 1919 px photo.
+// Dev, BXR London on JA Boxing (17–18/11/2026): no owner photo was 1920 px wide for the shared call-to-action band, so
+// the template's bg-cta.jpg stayed on every page, 7 of the build's template pictures.
 //
 // 🔒 ENLARGED AT MOST MAX_ENLARGE (1.5) TIMES, AND ONLY THROUGH THE SHARPNESS GATE. A crop smaller than the size it must
 // be written at is judged first at its own pixels for the frame's display width (lib/photo-sharpness.js judgePhoto):
@@ -16,6 +22,7 @@ import { subjectCrop } from 'website-opportunities/domain/pictures/subject-crop.
 import { SHARPNESS_VERSION } from '../lib/photo-sharpness.js'
 import { judgePhotoOffThread } from '../lib/photo-sharpness-pool.js'
 import { sha256Hex } from './file-store.js'
+import { overlayCovers } from './frame-surface/surface.js'
 import { headBoxesOf } from './head-boxes.js'
 import { MAX_ENLARGE, SMALL_FRAME_MAX } from './picture-check/rules-files.js'
 
@@ -93,6 +100,16 @@ export function outputSizeFor(demo, box, natural) {
   }
   return { width, height }
 }
+
+/**
+ * Whether a frame may be enlarged to reach its kit minimum width (the exception to the lock above): a full-width
+ * background band (shownAs background, at least BACKGROUND_MIN_WIDTH wide) that the template's own overlay darkens or
+ * that carries text. The enlargement stays within MAX_ENLARGE and goes through the sharpness gate.
+ */
+export const mayEnlargeToMinWidth = (frame) =>
+  frame?.shownAs === 'background' &&
+  Number(frame.width) >= BACKGROUND_MIN_WIDTH &&
+  (overlayCovers(frame) || frame.textOver === true)
 
 /** The sharpness gate's slot class for a frame: small, medium, large by display width, or a wide background. */
 export function slotClassOfFrame(frame) {
@@ -173,7 +190,7 @@ export async function cutPhoto(bytes, asset, frame, demo, { matches = false, any
 export async function writeRect(bytes, rect, frame, demo, low) {
   if (frame.transparent === true) return { ok: false, refused: 'requires-transparent-image' }
   const box = { width: Number(frame.width), height: Number(frame.height), minWidth: frame.minWidth }
-  if (Number.isInteger(frame.minWidth) && rect.width < frame.minWidth)
+  if (Number.isInteger(frame.minWidth) && rect.width < frame.minWidth && !mayEnlargeToMinWidth(frame))
     return { ok: false, refused: 'narrower-than-min-width' }
   const out = outputSizeFor(demo, box, rect.width)
   const enlarge = Number((out.width / rect.width).toFixed(4))
