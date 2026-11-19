@@ -32,6 +32,7 @@ const ev = (root, p) => path.join(root, 'evidence', `${p}.md`)
 
 describe('checkpoint.mjs — phase evidence and the inputs that invalidate it', () => {
   it('records phases in order, with P4.5/P4.6 between P4 and P5, and refuses one whose predecessor is open', () => {
+    // test-quality: contract the phase list must agree with the phase table in SKILL.md
     assert.deepEqual(PHASES, ['P0', 'P1', 'P2', 'P3', 'P4', 'P4.5', 'P4.6', 'P5', 'P6', 'P7', 'P8'])
     const root = template()
     try {
