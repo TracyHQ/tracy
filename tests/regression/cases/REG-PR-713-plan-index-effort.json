@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-713-plan-index-effort",
   "kind": "feat",
-  "title": "The chain's planner reads the kit index from its first message, thinks its first draft at high, and slots go to their own blocks",
+  "title": "The chain's planner plans round 0 as a frame, then its kept pages in parts, reads the kit index from its first message, thinks its first draft at high, and slots go to their own blocks",
   "pr": 713,
   "area": "website-opportunities/site-planner",
   "cms": ["jo", "wp", "em"],
@@ -15,7 +15,9 @@
     "The first message carries contents, site, pageGroups and pages, the part tool answers them as sent and reads blocks.",
     "A first draft effort applies to round 0 only.",
     "A copy entry under the wrong block moves to its own kept block or is left out; a clean plan is unchanged.",
-    "The chain asks for the kit index and a first draft below max."
+    "The chain asks for the kit index and a first draft below max.",
+    "Round 0 as a frame then parts: the frame decides everything shared, each part writes only its kept pages, the frame's decisions win in the merge.",
+    "A leading part runs first and alone, the others are made from its answer, and the fix round continues its conversation."
   ],
   "selectors": {},
   "run": {
@@ -27,7 +29,9 @@
       "apps/tracy-web/test/site-planner-kit-index-message.test.mjs",
       "apps/tracy-web/test/bench-fix-round-effort.test.mjs",
       "apps/tracy-web/test/site-planner-slot-owners.test.mjs",
-      "apps/tracy-web/test/step-chain-plan-parts.test.mjs"
+      "apps/tracy-web/test/step-chain-plan-parts.test.mjs",
+      "apps/tracy-web/test/site-planner-plan-frame.test.mjs",
+      "apps/tracy-web/test/bench-run-parts-lead.test.mjs"
     ],
     "needs": [],
     "tests": [
@@ -37,7 +41,15 @@
       "a slot under the wrong block moves to its own block on the page; one in no block of the kit is left out",
       "a slot whose own block is not kept on the page, or already writes it, is left out of the wrong block",
       "a plan with every slot in its own block comes back as the same object",
-      "the chain's planner run gets the kit index in its first message and thinks its first draft at high"
+      "the chain's planner run gets the kit index in its first message and thinks its first draft at high",
+      "a run plans as a frame only with 1 to 7 page parts",
+      "the frame is told to decide everything shared and only the frame fields of every page",
+      "after the frame, only the kept groups with a kept page are cut into the parts, the same way every time",
+      "a part is told its kept pages and the frame; a part with no kept page gets no message",
+      "the parts' pages go into the frame: the frame's fields win, a page outside a part's share is left out",
+      "the leading part goes first and alone, the others are made from its answer, the fix round continues it",
+      "a leading part with no JSON object makes round 0 not a document, and no other part is asked",
+      "the chain's planner run plans its first draft as a frame, then the kept pages in parts the planner takes"
     ]
   }
 }
