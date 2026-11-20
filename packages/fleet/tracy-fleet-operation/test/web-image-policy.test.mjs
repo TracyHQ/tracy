@@ -47,7 +47,7 @@ test('an explicit image override cannot bypass the PHP 8.1 refusal or silently u
   )
   blocked(
     resolve('wordpress', 'wordpress:php8.1-apache', {
-      TRACY_WEB_IMAGE: 'tracy/web-wordpress:php8.3-apache-20261116-r1'
+      TRACY_WEB_IMAGE: 'tracy/web-wordpress:php8.3-apache-20261120-r1'
     })
   )
 })
@@ -86,7 +86,7 @@ test('a direct PHP image switch refuses 8.1 before writing compose, including --
     const site = path.join(dir, 'policy')
     spawnSync('mkdir', ['-p', site])
     const compose = path.join(site, 'docker-compose.yml')
-    const before = 'services:\n  web:\n    image: tracy/web-wordpress:php8.3-apache-20261116-r1\n'
+    const before = 'services:\n  web:\n    image: tracy/web-wordpress:php8.3-apache-20261120-r1\n'
     writeFileSync(compose, before)
     const result = spawnSync(
       'bash',

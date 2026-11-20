@@ -78,7 +78,7 @@ test('a version the checkout has no contract for is refused, not stood in for by
 })
 
 test('an invalid stand image policy refuses startup before any release download or container command', () => {
-  const r = standAsking('1.3.0', 'joomla=tracy/web-joomla:5-apache-20261116-r1\n')
+  const r = standAsking('1.3.0', 'joomla=tracy/web-joomla:5-apache-20261120-r1\n')
   assert.notEqual(r.status, 0)
   assert.match(r.stderr, /IMAGE_TAGS must name exactly one wordpress:php8.3-apache/)
   assert.doesNotMatch(r.stderr, /spawn.*(?:gh|docker)|ENOENT/)

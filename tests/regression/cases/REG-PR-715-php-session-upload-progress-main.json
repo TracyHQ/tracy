@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-715-php-session-upload-progress-main",
+  "kind": "fix",
+  "title": "Production (port of #714): Every PHP site image ships session.upload_progress off and refuses a base below the 19 Nov 2026 PHP releases",
+  "pr": 715,
+  "area": "fleet/php-security",
+  "cms": ["wp", "jo"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/web-php-security.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "The ini sets session.upload_progress.enabled = 0; joomla, wordpress and demos Dockerfiles copy it into conf.d and check it at build time; all three carry the same PHP floor; build.sh hashes it for PHP images only; every IMAGE_TAGS line and DEMOS_IMAGE are on 20261120-r1."
+  ],
+  "selectors": {
+    "ini": "packages/fleet/tracy-fleet-operation/web/tracy-php-security.ini",
+    "tests": "packages/fleet/tracy-fleet-operation/test/web-php-security.test.mjs"
+  },
+  "evidence": "20/11/2026: 111/114 production and 60/60 dev site containers on PHP 8.3.36/8.4.27 with session.upload_progress.enabled=1 (CVE-2026-126714, CVE-2026-115560, fixed in 8.3.37/8.4.28 on 19/11/2026). Dev-host build from this branch: wordpress php8.3 -> 8.3.37 up=0, demos -> 8.4.28 up=0, old 8.3.36 base refused by the floor.",
+  "fence": "A PHP site image never builds on a base below the patched floor, and never ships with session upload progress on.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/web-php-security.test.mjs"
+    ],
+    "tests": [
+      "the PHP security ini turns session.upload_progress off (CVE-2026-126714, CVE-2026-115560)",
+      "every PHP image carries the same patched-PHP floor",
+      "every IMAGE_TAGS line and the demo farm image moved to the patched 20261120-r1 tag"
+    ]
+  }
+}

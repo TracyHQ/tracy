@@ -1,0 +1,1 @@
+{"id":"REG-PR-715-php-session-upload-progress-main","verdict":"PASS","commit":"d93fff163791e70526cbe78e8c44497ad69e4c02","ran_at":"2026-11-20T17:56:11.401Z","evidence":"tests/regression/.runs/2026-11-20-d93fff163/REG-PR-715-php-session-upload-progress-main.log"}

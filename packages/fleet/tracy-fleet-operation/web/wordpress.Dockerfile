@@ -155,3 +155,9 @@ LABEL tracy.site-mail="v1"
 # the file). conf-enabled reads in name order: a demo's zz-tracy-demo-limits.conf still wins.
 COPY --from=tracy-web-files --chmod=0644 tracy-prefork.conf /etc/apache2/conf-enabled/tracy-prefork.conf
 RUN apache2ctl -t
+
+# PHP hardening (web/tracy-php-security.ini: session.upload_progress off, CVE-2026-126714 /
+# CVE-2026-115560) and a floor on the base's PHP: the build FAILS on a base older than the
+# 19 Nov 2026 releases (8.2.36 / 8.3.37 / 8.4.28 / 8.5.13), so a stale cached base cannot ship.
+COPY --from=tracy-web-files --chmod=0644 tracy-php-security.ini /usr/local/etc/php/conf.d/zz-tracy-php-security.ini
+RUN php -r '$v = PHP_VERSION_ID; $floor = [80200 => 80236, 80300 => 80337, 80400 => 80428, 80500 => 80513]; $b = intdiv($v, 100) * 100; $min = $floor[$b] ?? ($b > 80500 ? 0 : PHP_INT_MAX); if ($v < $min) { fwrite(STDERR, "PHP " . PHP_VERSION . " is below the patched floor for its branch\n"); exit(1); } exit(ini_get("session.upload_progress.enabled") === "0" ? 0 : 1);'
