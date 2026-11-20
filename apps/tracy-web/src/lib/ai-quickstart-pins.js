@@ -13,7 +13,14 @@ import { readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { aiQuickstartPinsOf } from 'website-opportunities/domain'
 import { resolvePinnedAiQuickstart } from 'website-opportunities/domain/ai-quickstart-pin.mjs'
+
 import { AI_QUICKSTARTS_DIR, KIT_MANIFEST_FILE } from '../build-draft/ai-quickstarts.js'
+
+/** An AI quickstart's own release name, and whether a tag is one (the domain's rule, for the doors of this server). */
+export {
+  aiQuickstartReleaseOf,
+  isAiQuickstartRelease
+} from 'website-opportunities/domain/ai-quickstart-pin.mjs'
 
 const SEGMENT = /^[a-z0-9][a-z0-9._-]*$/i
 

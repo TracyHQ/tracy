@@ -9,9 +9,13 @@
 // `brief: {workflow, draftId, plan}` and the account, which reads the build's snapshot (`step-chain-draft-source.js`).
 // `buildId` is the build's own id, so the door answers a second ask with the site it made.
 //
-// WHAT SITE IS INSTALLED. The AI quickstart kit names it (`kit.site`: `{platform, design, quickstart, release?}`, read from
-// its `kit-manifest.json`). A kit that names none cannot be built here: the build stops with `SITE_SOURCE_MISSING`,
-// a fault for the team, never a stand in site.
+// WHAT SITE IS INSTALLED. The AI quickstart kit names it (`kit.site`: `{platform, quickstart, release?}`, read from its
+// `kit-manifest.json`): the AI quickstart's own release (`ai-quickstart/<slug>/<cms>`, ADR 0045), whose installer is the
+// blank site and whose contract is the blank site contract. Never the human quickstart's release, which installs the
+// demo. The published release when this server has read it, else a dev stand's local pack of it
+// (`local/ai-quickstart/...`, `TRACY_LOCAL_RELEASES_DIR`). Each way it cannot be built stops the build, a fault for the
+// team and never a stand in site: `SITE_SOURCE_MISSING` (the kit names no site), `SITE_SOURCE_NOT_AI_QUICKSTART` (it
+// names another release, the demo's included) and `AI_QUICKSTART_RELEASE_MISSING` (no release of that name is here).
 import { nextSiteLabel, siteLabelFor } from 'website-opportunities/domain'
 import { freeLabelFor } from './opportunities-build/builds.js'
 import { saveBuildLabel } from './build-draft/build-store.js'
@@ -22,21 +26,52 @@ import { promptSiteSession, siteSessionAhead } from './lib/site-session-ahead.js
 import { siteRowOf } from './opportunities-build/build-store.js'
 import { accountByEmail, grantFor } from './seats/store.js'
 import { STEP_CHAIN_WORKFLOW } from './lib/step-chain-switch.js'
+import { isAiQuickstartRelease } from './lib/ai-quickstart-pins.js'
+import { isLocalTag, LOCAL_TAG_NAMESPACE } from './lib/local-releases.js'
+import { readReleases } from './lib/quickstart-releases.js'
 
 // The name the label is made from: what the site may show, else a neutral name (never a name the owner keeps off).
 const NEUTRAL_NAME = 'my-site'
 
 /**
+ * The release a build installs for a kit's site, or the refusal that says why there is none: the AI quickstart's own
+ * release as published when this server read it, else the dev stand's local pack of it. Never the demo's release.
+ * @param {{platform: string, quickstart: string} | null} source the kit's `site`
+ * @param {Array<{tag: string, platform?: string | null}>} readable the choosable releases this server read
+ * @returns {{quickstart: string, published: boolean} | {refusal: {code: string, status: number}}}
+ */
+export function aiQuickstartToInstall(source, readable) {
+  if (!source) return { refusal: { code: 'SITE_SOURCE_MISSING', status: 409 } }
+  if (!isAiQuickstartRelease(source.quickstart) || isLocalTag(source.quickstart))
+    return { refusal: { code: 'SITE_SOURCE_NOT_AI_QUICKSTART', status: 409 } }
+  const here = (tag) => readable.some((r) => r.tag === tag && r.platform === source.platform)
+  if (here(source.quickstart)) return { quickstart: source.quickstart, published: true }
+  const local = LOCAL_TAG_NAMESPACE + source.quickstart
+  if (here(local)) return { quickstart: local, published: false }
+  return { refusal: { code: 'AI_QUICKSTART_RELEASE_MISSING', status: 409 } }
+}
+
+/**
  * The route's `startSite`: asks the create door for the build's site.
  * @param {{pool: import('pg').Pool, config: {origin: string, sessionSecret: string}, kits: {loadKit: Function},
- *   request: (path: string, init: RequestInit) => Promise<Response>, now?: () => number}} deps
+ *   request: (path: string, init: RequestInit) => Promise<Response>, now?: () => number,
+ *   releases?: () => Promise<Array<{tag: string, platform?: string | null}>>}} deps `releases`: the choosable releases
+ *   (`readReleases`), injected by a test
  */
-export function draftSiteStarter({ pool, config, kits, request, now = Date.now }) {
+export function draftSiteStarter({
+  pool,
+  config,
+  kits,
+  request,
+  now = Date.now,
+  releases = () => readReleases(pool, { choosable: true })
+}) {
   return async ({ accountId, email, draftId, build }) => {
     const plan = build.snapshot?.plan
     const kit = kits.loadKit(plan?.look?.template?.slug)
     const source = kit?.site ?? null
-    if (!source) return { refusal: { code: 'SITE_SOURCE_MISSING', status: 409 } }
+    const install = aiQuickstartToInstall(source, source ? await releases() : [])
+    if ('refusal' in install) return install
     const label =
       build.label ??
       (await saveBuildLabel(
@@ -57,9 +92,9 @@ export function draftSiteStarter({ pool, config, kits, request, now = Date.now }
       headers: { cookie, origin: config.origin, 'content-type': 'application/json' },
       body: JSON.stringify({
         platform: source.platform,
-        design: source.design,
-        quickstart: source.quickstart,
-        ...(source.release ? { expectedQuickstartRelease: source.release } : {}),
+        quickstart: install.quickstart,
+        // The release the kit was checked against, held only to the published release: a local pack is a candidate.
+        ...(source.release && install.published ? { expectedQuickstartRelease: source.release } : {}),
         label,
         buildId: build.id,
         workflow: STEP_CHAIN_WORKFLOW,

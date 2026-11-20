@@ -28,6 +28,28 @@ const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 /** The key of a template's pin. */
 export const pinKeyOf = (slug, cms) => 'ai-quickstart/' + slug + '/' + cms
 
+/**
+ * The release an AI quickstart's blank site is installed from: a release of its own, named as its pin
+ * (`ai-quickstart/<slug>/<cms>`), never the human quickstart's release (`quickstart/<slug>/<cms>`), which installs the
+ * demo. Its `tracy_setting.json` names the blank site archive; its contract is the blank site contract, whose manifest
+ * names this release (`blank-site-contract.mjs`). A dev stand offers it as the local pack
+ * `local/ai-quickstart/<slug>/<cms>` (tracy-web `local-releases.js`).
+ */
+export const AI_QUICKSTART_RELEASE_PREFIX = 'ai-quickstart/'
+export const aiQuickstartReleaseOf = pinKeyOf
+
+/** Whether a release tag is an AI quickstart's own release, published or as a dev stand's local pack. */
+export function isAiQuickstartRelease(tag) {
+  if (typeof tag !== 'string') return false
+  const parts = tag.replace(/^local\//, '').split('/')
+  return (
+    parts.length === 3 &&
+    parts[0] + '/' === AI_QUICKSTART_RELEASE_PREFIX &&
+    SEGMENT.test(parts[1]) &&
+    SEGMENT.test(parts[2])
+  )
+}
+
 /** The sha256 over every kit file but the check record, as the check record binds it; null for a missing folder. */
 export function kitFilesSha256Of(folder) {
   if (!existsSync(folder)) return null

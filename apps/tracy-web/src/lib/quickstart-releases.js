@@ -21,7 +21,7 @@ import { readFile } from 'node:fs/promises'
 
 import { ensureRepoWebhook, installationIdFor, mintTokenFor } from '../github/app.js'
 import { validateQuestions } from './questions-schema.mjs'
-import { contractFor, coworkPinFor, readContracts } from './contracts.js'
+import { carriedProfileOf, contractFor, coworkPinFor, readContracts, releaseOfContract } from './contracts.js'
 import { installedCowork } from './cowork-install.js'
 import {
   createReleaseReadCache,
@@ -717,6 +717,10 @@ export async function resolveInstall(pool, tag, { repo = RELEASES_REPO, pinsFile
   if (sealed) {
     entry.contract = sealed.id
     if (sealed.coworkMinVersion) entry.coworkMinVersion = sealed.coworkMinVersion
+    // A profile no Claude Cowork plugin release carries (an AI quickstart's blank site contract) travels with the entry,
+    // and the host puts it on disk before the bind (`carriedProfileOf`); every released profile is fetched as before.
+    const carried = carriedProfileOf(sealed)
+    if (carried) entry.contractProfile = carried
     // The Claude Cowork plugin the seal pins (see `coworkPinFor`): the release's own `install.cowork` wins
     // when it carries one; otherwise the pin this repository records for that release and version.
     //
@@ -726,7 +730,10 @@ export async function resolveInstall(pool, tag, { repo = RELEASES_REPO, pinsFile
     // answered 501. Flipping the order for every pin is not safe: `main` pins j6 at 0.17.2 while its
     // release carries 0.17.4, and that pin winning would downgrade new production sites. So the pin
     // that must win says so, and every other pin keeps the old order.
-    const chosen = installedCowork(entry.cowork, coworkPinFor(tag, row.setting.version, pinsFile))
+    // A blank site contract's release is pinned as the human quickstart release it was made from: the blank site is that
+    // release's installer emptied, measured with that release's Claude Cowork plugin.
+    const pinned = sealed.madeFrom ? (releaseOfContract(contracts(), sealed.madeFrom) ?? tag) : tag
+    const chosen = installedCowork(entry.cowork, coworkPinFor(pinned, row.setting.version, pinsFile))
     if (chosen) entry.cowork = chosen.cowork
   }
   return entry

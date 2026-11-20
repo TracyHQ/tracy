@@ -23,6 +23,7 @@ import {
   BLANK_CONTRACT_DIR,
   blankLockRows,
   blankSiteContractId,
+  blankSiteReleaseOf,
   lockDump,
   removedEntities
 } from './blank-site-contract.mjs'
@@ -55,6 +56,13 @@ export function checkBlankSiteContract({ mapping, blockStore, released, blank, e
   const add = (file, at, message) => problems.push({ file: `${BLANK_CONTRACT_DIR}/${file}`, at, message })
   const id = blankSiteContractId(released.manifest.id)
   if (blank.manifest.id !== id) add('manifest.json', 'id', `must be ${id}`)
+  const release = blankSiteReleaseOf(released.manifest.id)
+  if (blank.manifest.quickstart?.release !== release)
+    add(
+      'manifest.json',
+      'quickstart.release',
+      `must be ${release}, the release the blank site is installed from`
+    )
   if (blank.manifest.blankSiteOf?.contract !== released.manifest.id)
     add('manifest.json', 'blankSiteOf.contract', `must name ${released.manifest.id}`)
   for (const [file, sha] of Object.entries(released.sha256))

@@ -339,6 +339,7 @@ import { teardownSaid } from './teardown-said.js'
 import { researchRevisionOwned } from '../lib/research-revision.js'
 import { draftBuildApproved } from '../lib/draft-build.js'
 import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
+import { isAiQuickstartRelease } from '../lib/ai-quickstart-pins.js'
 
 /** How long a call to a site's component may take. Why this number: the signal it feeds. */
 const COMPONENT_TIMEOUT_MS = 170_000
@@ -1991,12 +1992,22 @@ export function sitesRoutes({
     )
       return { refused: json(c, { code: 'UNSUPPORTED_QUICKSTART' }, 400) }
 
+    // ── An AI QUICKSTART's blank site, named by a build of the build chat (ADR 0045) ─────────────────
+    // Its own release (`ai-quickstart/<slug>/<cms>`, or the stand's `local/ai-quickstart/...`), sealed by its blank site
+    // contract and offered on no shelf, so neither a design press nor a bare quickstart reaches it: only a build of an
+    // approved draft names it, with no design. Installed as released, like a template.
+    if (isAiQuickstartRelease(body.quickstart)) {
+      if (body.draftId === undefined || body.design !== undefined)
+        return { refused: json(c, { code: 'AI_QUICKSTART_BUILD_ONLY', quickstart: body.quickstart }, 400) }
+    }
+    const aiQuickstart = isAiQuickstartRelease(body.quickstart) ? body.quickstart : null
+
     // ── A TEMPLATE pressed on Design inspiration: installed as seen, on the CMS pressed ──────────────
     // `design` names a template card (Tracy Business) rather than a design system. Its quickstart
     // for this platform is the archive; there is no design to resolve and no default base to fall
     // back to — the customer asked for exactly this site. A CMS the template has no build for is
     // refused here, the same words the greyed button carried.
-    let templateChosen = null
+    let templateChosen = aiQuickstart
     if (typeof body.design === 'string' && isTemplateId(readable, body.design)) {
       templateChosen = templateRelease(readable, platform, body.design)
       if (templateChosen === null)

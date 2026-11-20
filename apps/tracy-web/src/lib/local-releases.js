@@ -44,6 +44,14 @@ export const LOCAL_TAG_NAMESPACE = 'local/'
  */
 export const JOOMLART_TAG_NAMESPACE = 'quickstart'
 
+/**
+ * The top folder that holds AI quickstart packs, as their release name does (`ai-quickstart/ja-boxing/j6`, website-
+ * opportunities `aiQuickstartReleaseOf`): the blank site a build of the build chat installs. Such a pack carries NO card:
+ * a blank site is never a site to pick on Design inspiration, and a card would make it a template a design press could
+ * name. A build names it, sealed by its blank site contract (`contracts.js`).
+ */
+export const AI_QUICKSTART_TAG_NAMESPACE = 'ai-quickstart'
+
 /** One path segment of a pack: the same characters a release tag is spelled with, no path. */
 const SEGMENT = /^[a-z0-9][a-z0-9._-]*$/
 
@@ -161,7 +169,7 @@ function standInCard(setting) {
  * @param {string} tag
  * @param {string} slug the release slug the folder is spelled with (`tracy-apple`, `ja-essence`)
  */
-async function readPack(dir, tag, slug) {
+async function readPack(dir, tag, slug, { card: offered = true } = {}) {
   // Regular files only: a symbolic link could name a file outside the directory this stand opened
   // on purpose, and the host would refuse it at download anyway (`quickstart.py`).
   const files = (await readdir(dir, { withFileTypes: true })).filter((e) => e.isFile()).map((e) => e.name)
@@ -233,7 +241,8 @@ async function readPack(dir, tag, slug) {
   // own id (see the header), never under the published card's.
   let inspiration = null
   let cardReason = null
-  if (setting) {
+  // An AI quickstart pack is offered on no shelf: no card, and nothing to say about one.
+  if (setting && offered) {
     let card = null
     if (files.includes('tracy_design_inspiration.json')) {
       try {
@@ -281,26 +290,34 @@ async function readPack(dir, tag, slug) {
 export async function readLocalPacks(dir) {
   const out = []
   /** @param {string} root @param {string} prefix the release tag's leading segments, `/`-ended */
-  const readTier = async (root, prefix) => {
+  const readTier = async (root, prefix, options = {}) => {
     for (const slug of await subdirectories(root)) {
-      // The namespace folder is not a slug of its own: its children are read one level down.
-      if (prefix === '' && slug === JOOMLART_TAG_NAMESPACE) continue
+      // A namespace folder is not a slug of its own: its children are read one level down.
+      if (prefix === '' && (slug === JOOMLART_TAG_NAMESPACE || slug === AI_QUICKSTART_TAG_NAMESPACE)) continue
       // eslint-disable-next-line no-await-in-loop -- few packs; sequential keeps the log readable.
       for (const cms of await subdirectories(path.join(root, slug))) {
         // eslint-disable-next-line no-await-in-loop -- same.
         out.push(
-          await readPack(path.join(root, slug, cms), `${LOCAL_TAG_NAMESPACE}${prefix}${slug}/${cms}`, slug)
+          await readPack(
+            path.join(root, slug, cms),
+            `${LOCAL_TAG_NAMESPACE}${prefix}${slug}/${cms}`,
+            slug,
+            options
+          )
         )
       }
     }
   }
+  const isDir = (at) =>
+    stat(at).then(
+      (info) => info.isDirectory(),
+      () => false
+    )
   await readTier(dir, '')
   const joomlart = path.join(dir, JOOMLART_TAG_NAMESPACE)
-  const hasJoomlart = await stat(joomlart).then(
-    (info) => info.isDirectory(),
-    () => false
-  )
-  if (hasJoomlart) await readTier(joomlart, `${JOOMLART_TAG_NAMESPACE}/`)
+  if (await isDir(joomlart)) await readTier(joomlart, `${JOOMLART_TAG_NAMESPACE}/`)
+  const ai = path.join(dir, AI_QUICKSTART_TAG_NAMESPACE)
+  if (await isDir(ai)) await readTier(ai, `${AI_QUICKSTART_TAG_NAMESPACE}/`, { card: false })
   return out
 }
 

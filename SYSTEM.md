@@ -890,6 +890,12 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   nothing and keeps the current build path; a template left out for its pin is logged once with the pin reader's
   codes. With the pins file empty (no kit has passed the release gate yet) nothing is offered. No template name is in
   code: a template joins by being pinned.
+  An approved build creates its site from the AI quickstart's OWN release, `ai-quickstart/<slug>/<cms>` (ADR 0045,
+  amendment 19/11/2026; `build-draft-build-wiring.js` `aiQuickstartToInstall`): its installer is the blank site, and
+  the blank site contract seals it (read by `lib/contracts.js` beside the released profiles). A dev stand uses a local
+  pack of it (`local/ai-quickstart/...`), which carries no card. The entry sent to the host carries that contract's
+  files (`contractProfile`), and `platform/joomla.sh` writes them into the component's `lib/contracts/<id>/` before the
+  plugin's fetch and the bind. The human release is never installed by a build.
   The build chat's agent reaches the engine only through the tool `tracy_build` (`@tracy/dsh-build-chat` host half,
   registered in the `site-builder` agent's scope), which forwards to the engine doors under `/api/build-draft/`
   (`research`, `templates`, `compose`, `edit`, `engine`, contract in `packages/ui/tracy-build-chat/README.md`) as the

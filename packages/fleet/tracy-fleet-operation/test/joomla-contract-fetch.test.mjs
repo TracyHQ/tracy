@@ -116,8 +116,12 @@ test('both quickstart roads fetch after the component install and before the bin
     card > 0 && cardInstall > card && cardFetch > cardInstall && cardBind > cardFetch,
     'card road: install → fetch → bind'
   )
-  // Only when a component was installed: a site left with none has nothing to fetch into.
-  assert.match(JOOMLA_SRC.slice(cardInstall, cardFetch), /if \[ "\$cowork_installed" = 1 \]; then\s*$/)
+  // Only when a component was installed: a site left with none has nothing to fetch into. A profile the entry
+  // carries is put on disk first (`joomla-contract-carried.test.mjs`).
+  assert.match(
+    JOOMLA_SRC.slice(cardInstall, cardFetch),
+    /if \[ "\$cowork_installed" = 1 \]; then\s*joomla_place_contract_profile "\$card_contract" \|\| return 1\s*$/
+  )
 
   const road = JOOMLA_SRC.indexOf('provision resolved no content contract')
   const install = JOOMLA_SRC.indexOf('joomla_install_cowork_package "$package"', road)

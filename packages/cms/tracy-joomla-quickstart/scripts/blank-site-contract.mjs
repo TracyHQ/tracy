@@ -19,6 +19,7 @@
  */
 
 import { blankSlot, emptiedSamples } from './blank-site-contract-samples.mjs'
+import { aiQuickstartReleaseOf } from '../../../wo/website-opportunities/domain/ai-quickstart-pin.mjs'
 import { parseDump, records, sqlQuote } from './joomla-sql-dump.mjs'
 
 /** The folder of the blank site contract inside an AI quickstart folder. */
@@ -50,6 +51,16 @@ export function blankSiteContractId(releasedId) {
   if (!/^[a-z][a-z0-9-]{1,40}\/[a-z][a-z0-9]{0,9}\/[0-9]+\.[0-9]+\.[0-9]+$/.test(id))
     throw new Error(`${releasedId} gives no valid blank site contract id`)
   return id
+}
+
+/**
+ * `ja-boxing/j6/1.0.11` -> `ai-quickstart/ja-boxing/j6`: the release the blank site is installed from, which this
+ * contract seals (`quickstart.release` of its manifest). Not the released contract's own release, which installs the
+ * demo and stays sealed by the released contract: one release, one contract (tracy-web `contracts.js`).
+ */
+export function blankSiteReleaseOf(releasedId) {
+  const [slug, cms] = String(releasedId).split('/')
+  return aiQuickstartReleaseOf(slug, cms)
 }
 
 /**
@@ -266,6 +277,7 @@ export function blankSiteContract({
   const manifestOut = {
     ...manifest,
     id,
+    quickstart: { ...manifest.quickstart, release: blankSiteReleaseOf(manifest.id) },
     blankSiteOf: {
       contract: manifest.id,
       files: released,

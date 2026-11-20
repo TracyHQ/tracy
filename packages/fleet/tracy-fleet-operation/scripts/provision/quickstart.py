@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import pathlib
+import re
 import shutil
 import sys
 import tarfile
@@ -335,6 +336,45 @@ def download(artifact, output, part):
         shutil.copyfile(file, output)
 
 
+PROFILE_ID = re.compile(r'^[a-z][a-z0-9-]{1,40}/[a-z][a-z0-9]{0,9}/[0-9]+\.[0-9]+\.[0-9]+$')
+PROFILE_FILE = re.compile(r'^[a-z0-9][a-z0-9._-]*\.json$')
+
+
+def write_contract_profile(entry, out):
+    """Write the contract profile an entry carries into `out`, each file held to its size and sha256.
+
+    A profile no Claude Cowork plugin release carries (an AI quickstart's blank site contract, tracy-web
+    `carriedProfileOf`) travels inside the entry tracy-web resolved. It must be the profile the entry is sealed by
+    (`contract`): a second id would put one profile on disk and bind another. Nothing is written unless every file
+    checks out, so a bad entry leaves no half profile behind."""
+    profile = entry.get('contractProfile')
+    if not isinstance(profile, dict):
+        raise FieldAbsent('quickstart carries no contract profile')
+    pid = profile.get('id')
+    if not isinstance(pid, str) or not PROFILE_ID.match(pid):
+        raise ValueError('carried contract profile has no profile id')
+    if pid != entry.get('contract'):
+        raise ValueError(f'carried contract profile {pid} is not the contract this quickstart is sealed by')
+    files = profile.get('files')
+    if not isinstance(files, dict) or 'manifest.json' not in files:
+        raise ValueError('carried contract profile has no manifest.json')
+    ready = {}
+    for name, file in files.items():
+        if not isinstance(name, str) or not PROFILE_FILE.match(name):
+            raise ValueError('carried contract profile names a file that is not a plain .json name')
+        if not isinstance(file, dict) or not isinstance(file.get('text'), str):
+            raise ValueError(f'carried contract file {name} has no text')
+        data = file['text'].encode('utf-8')
+        if len(data) != file.get('bytes') or hashlib.sha256(data).hexdigest() != file.get('sha256'):
+            raise ValueError(f'carried contract file {name} does not match its size and sha256')
+        ready[name] = data
+    target = pathlib.Path(out)
+    target.mkdir(parents=True, exist_ok=True)
+    for name, data in ready.items():
+        (target / name).write_bytes(data)
+    print(pid)
+
+
 class FieldAbsent(ValueError):
     """`--field` names a key the entry does not carry: exit 4, apart from every other refusal."""
 
@@ -352,6 +392,7 @@ def main():
     parser.add_argument('--platform', action='store_true', help='print the platform of --id and exit')
     parser.add_argument('--field', help='print one scalar field of --id (dotted path) and exit')
     parser.add_argument('--prefetch', action='store_true', help='fetch and verify every pinned part of --id into the cache, then exit')
+    parser.add_argument('--contract-profile', help='write the contract profile --id carries into this folder, print its id and exit')
     args = parser.parse_args()
     # TRACY_QUICKSTARTS_JSON exists for the tests: the refusal of an unpinned entry must stay
     # provable after every real entry is pinned, so the test hands in a catalog of its own.
@@ -389,6 +430,9 @@ def main():
         return
     if args.prefetch:
         prefetch(entry)
+        return
+    if args.contract_profile:
+        write_contract_profile(entry, args.contract_profile)
         return
     if not args.part or not args.out:
         parser.error('--part and --out are required to download')

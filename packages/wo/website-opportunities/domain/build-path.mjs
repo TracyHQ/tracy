@@ -24,14 +24,17 @@ const byKey = (a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0)
 
 /**
  * A quickstart tag without its release prefix or version suffix: `quickstart/<slug>/<cms>/1.0.10` and
- * `<slug>/<cms>@1.0.10` are both `<slug>/<cms>`. Anything that is not text is `''`.
+ * `<slug>/<cms>@1.0.10` are both `<slug>/<cms>`, and so are the AI quickstart's own release
+ * `ai-quickstart/<slug>/<cms>` (`ai-quickstart-pin.mjs` `aiQuickstartReleaseOf`) and a dev stand's local pack of either
+ * (`local/...`, tracy-web `local-releases.js`). Anything that is not text is `''`.
  * @param {unknown} quickstart
  */
 export function quickstartTemplateKey(quickstart) {
   if (typeof quickstart !== 'string') return ''
   return quickstart
     .trim()
-    .replace(/^quickstart\//, '')
+    .replace(/^local\//, '')
+    .replace(/^(?:ai-)?quickstart\//, '')
     .replace(/@.*$/, '')
     .replace(/\/v?\d+(\.\d+)*$/, '')
 }

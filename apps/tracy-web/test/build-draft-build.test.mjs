@@ -317,10 +317,15 @@ test('the create door is asked as the owner, for the approved draft, with the ki
   const withSite = {
     loadKit: (slug) => ({
       ...kits.loadKit(slug),
-      site: { platform: 'joomla', design: 'club', quickstart: 'quickstart/club/j6/1.0.0' }
+      site: { platform: 'joomla', quickstart: 'ai-quickstart/club/j6' }
     })
   }
-  const start = draftSiteStarter({ pool: db.pool, config, kits: withSite, request })
+  // The AI quickstart's release as this server read it; the human release beside it installs the demo.
+  const releases = async () => [
+    { tag: 'quickstart/club/j6', platform: 'joomla' },
+    { tag: 'ai-quickstart/club/j6', platform: 'joomla' }
+  ]
+  const start = draftSiteStarter({ pool: db.pool, config, kits: withSite, request, releases })
   const started = await start({ accountId, email: OWNER, draftId, build: { ...build, site: null } })
   assert.equal(started.site.siteKey, 'larkfen.localhost')
   const body = JSON.parse(asked[0].init.body)
@@ -340,8 +345,9 @@ test('the create door is asked as the owner, for the approved draft, with the ki
       draftId,
       plan: pinOf(plan),
       buildId: build.id,
-      design: 'club',
-      quickstart: 'quickstart/club/j6/1.0.0'
+      // No design: the AI quickstart's release is installed as released, never through a Design inspiration card.
+      design: undefined,
+      quickstart: 'ai-quickstart/club/j6'
     }
   )
   assert.equal(body.researchRevisionId, undefined)

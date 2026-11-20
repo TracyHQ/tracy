@@ -44,3 +44,31 @@ Measured on JA Boxing j6 1.0.11 and JA Diner j6 1.0.8, 12/11/2026:
 
 - **Keep rewriting the demo and find the misses.** Every miss shows demo words to a customer, and finding misses has no end.
 - **Generate a new site per customer from design tokens (as some site builders do).** Loses the template's design, which is the product's strength, and every site becomes a new, unchecked design.
+
+## Amendment 19/11/2026: the AI quickstart is its own release, and the build installs it (settled by Akemi)
+
+Measured on the stand: a build created its site from the human quickstart's release, so the site was bound to the
+demo's contract and the bind stopped (`Missing or ambiguous entity`). One release name was sealed by one contract, and
+the blank site contract named the human release. So:
+
+1. **An AI quickstart is installed from its own release, `ai-quickstart/<slug>/<cms>`** (`aiQuickstartReleaseOf` in
+   `packages/wo/website-opportunities/domain/ai-quickstart-pin.mjs`, the name of its pin). Its `tracy_setting.json`
+   names the blank site as the install file. The release carries no Design inspiration card: it is never a template a
+   customer picks. The human release is untouched and still installs the demo, sealed by its released contract.
+2. **The blank site contract seals that release** (`manifest.json` `quickstart.release`). The contract index reads the
+   blank site contracts of the AI quickstart kits beside the released profiles (`apps/tracy-web/src/lib/contracts.js`);
+   a release still resolves exactly one contract, so a blank site contract naming the human release is refused as a
+   second claim.
+3. **The install information carries the blank site contract's files** (`contractProfile`), since no Claude Cowork
+   plugin release lists it in its `contracts.json`. The host writes them into the component's `lib/contracts/<id>/`,
+   each held to its size and sha256, after installing the plugin and before the plugin's own fetch and the bind
+   (`joomla_place_contract_profile`). The Claude Cowork plugin installed is the one the human release pins.
+4. **A build of the build chat names the AI quickstart release, never the demo's.** The kit manifest's `site.quickstart`
+   names it; the build installs the published release, or a dev stand's local pack of it
+   (`local/ai-quickstart/<slug>/<cms>` under `TRACY_LOCAL_RELEASES_DIR`). Any other case stops the build with a code
+   (`SITE_SOURCE_MISSING`, `SITE_SOURCE_NOT_AI_QUICKSTART`, `AI_QUICKSTART_RELEASE_MISSING`); the create door takes the
+   AI quickstart release only from a draft build (`AI_QUICKSTART_BUILD_ONLY`).
+
+Still to do for a real release: `scripts/ai-quickstart/publish.mjs` creates the `ai-quickstart/<slug>/<cms>` release
+with a `tracy_setting.json` that names the blank site zip (its version the human quickstart's), and the kit manifest
+gains `site: {platform, quickstart: "ai-quickstart/<slug>/<cms>"}` together with its pin.
