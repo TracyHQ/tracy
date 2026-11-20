@@ -537,6 +537,12 @@ In a scenario a partial run builds the revision its edit produced, and a writer 
 
 ### Changes for consumers
 
+- 20/11/2026 (#575), unchanged shape, stricter meaning: an outcome of `done` from a draft build means the written
+  site answered at its root (read as a visitor after the write step); a root that does not answer ends the build
+  `stopped` on the write step with the reason `site_not_serving`. Items the build left out (a block, a page, a field a
+  door refused) are kept on the run's record as codes with ids (`skippedItems`), never in the outcome. A plan whose
+  template has a page type `home` starts with a page of that type (the gate sends a plan that does not back to the
+  model, `home_missing`).
 - 17/11/2026 (#575), additive: a build plan may carry the step chain's intent for the writer: on a page
   `visitorQuestion`, `keyMessage`, `seo` (`searchTerms`, `titleIntent?`, `descriptionIntent?`) and `endAction`
   (`block`, `factIds`); on a block `message` and `carries` (key message ids); on the plan `keyMessages` (`{id, label}`),
