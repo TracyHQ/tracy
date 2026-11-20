@@ -174,11 +174,13 @@ export function createFinisher({
    *   fails in the last round climbs the ladder as a rejected one does)
    * @returns {Promise<{ doc: object, rule: object, paid: number, files: object[] }>}
    */
+  // The pictures already found dark enough, by their bytes: the same bytes need no overlay in any later round either.
+  const darkChecked = new Set()
+
   async function finish(doc, { lastRound, failing = new Map() }) {
     const s = ladderState(idx, doc)
     const looks = new Map()
     const memo = new Map()
-    const darkChecked = new Set()
     let paidLooks = 0
     // Persist source and output hashes so a later round cannot retry the same candidate. Crash replay produces the
     // same bytes and therefore reuses the looker's per-run disk cache, including the independent transformed look.
@@ -312,6 +314,9 @@ export function createFinisher({
       if (entry.looker?.verdict !== 'fail' || !LOOKED_SOURCES.has(entry.source) || !climbable(frameId))
         return false
       if (!s.progress.has(frameId) && s.picked.has(frameId) && !lastRound) return false
+      // A picture an earlier round's ladder kept as its best rejected one: that ladder ran to its end on the same
+      // inputs, and with its looks and drawings stored it would end the same way again.
+      if (!s.progress.has(frameId) && entry.filledBy?.rung === 'best-rejected') return false
       const faults = entry.looker.faults
       // A look that could not be read is no verdict on the picture: it fails L01 and the next round asks again.
       if (faults.every((f) => f === LOOK_UNREADABLE)) return false

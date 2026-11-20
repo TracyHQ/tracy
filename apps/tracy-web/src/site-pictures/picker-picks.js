@@ -15,6 +15,7 @@
 import { invalidChangesMessage as invalidChangesMessageFor } from '../lib/bench-changes.js'
 import { WAITS_FOR } from './fill-frames.js'
 import { addTwins, pendingEntry, placedEntry } from './frame-entries.js'
+import { OWNER_SOURCES } from './manifest-shape.js'
 import { ANSWER_FORM, NO_FIT_REASON } from './picker-input.js'
 import { failureListText } from './picture-check/check-pictures.js'
 
@@ -145,7 +146,11 @@ export function applyPicks(previous, changeList, { ready }) {
     picks.set(change.frame, { photo: change.photo, reason: change.reason.trim() })
     validChanges.push(change)
   }
-  const doc = manifestFor(ready, picks)
+  const fresh = manifestFor(ready, picks)
+  // A fix round (a finished manifest before it): only the frames whose photo this answer changes are made again.
+  const before = new Map((previous?.picks ?? []).map((p) => [p.frame, p.photo]))
+  const changed = new Set(validChanges.filter((c) => before.get(c.frame) !== c.photo).map((c) => c.frame))
+  const doc = previous ? carriedManifest(previous, fresh, changed, ready.idx) : fresh
   if (previous?.readabilityRetries?.length) {
     doc.readabilityRetries = [...previous.readabilityRetries]
     // A fix round rebuilds cuts from the original owner photos. Reselecting the same candidate keeps its recorded
@@ -182,6 +187,56 @@ export function applyPicks(previous, changeList, { ready }) {
     applied: validChanges.length,
     rejected,
     validChanges
+  }
+}
+
+/**
+ * The previous round's finished manifest, with only the frames in `changed` (and the twins that follow them) taken from
+ * `fresh`, the manifest of every pick made from the code half (manifestFor). Every other frame keeps what the earlier
+ * rounds finished for it: its picture (a drawing, a reused or extended photo, the best rejected one), its wait, its
+ * return, its dropped row and its ladder. Before 20/11/2026 each fix round started again from the code half, so every
+ * frame the ladder had filled waited again and climbed its whole ladder again, all rungs one at a time under one lock:
+ * at Arabian Tea House (dev, lat18 and lat19, 19/11/2026) each picture round took 115 s and 210 to 290 s whether it
+ * named 6 frames or 1, and the picture step was the build's longest after the plan. Twins are put together again from
+ * the frames they follow, as manifestFor and the ladder do; usage is counted again from the entries.
+ */
+function carriedManifest(previous, fresh, changed, idx) {
+  const twin = (id) => isTwinOf(idx, id)
+  const touched = (id) => changed.has(id)
+  const own = (e) => e.source !== 'twin' && !twin(e.frame)
+  const freshEntry = new Map()
+  for (const list of ['frames', 'siteSettings'])
+    for (const e of fresh[list] ?? [])
+      if (own(e) && touched(e.frame)) freshEntry.set(e.frame, { list, entry: e })
+  const entries = new Map()
+  for (const list of ['frames', 'siteSettings'])
+    for (const e of previous[list] ?? []) {
+      if (!own(e)) continue
+      if (!touched(e.frame)) entries.set(e.frame, { list, entry: e })
+      else if (freshEntry.has(e.frame)) entries.set(e.frame, freshEntry.get(e.frame))
+    }
+  for (const [frame, held] of freshEntry) if (!entries.has(frame)) entries.set(frame, held)
+  const keepOrTake = (key) => [
+    ...(previous[key] ?? []).filter((x) => !twin(x.frame) && !touched(x.frame)),
+    ...(fresh[key] ?? []).filter((x) => !twin(x.frame) && touched(x.frame))
+  ]
+  const pending = keepOrTake('pending')
+  const returns = keepOrTake('returns')
+  addTwins({ idx, entries, returns, pending })
+  const usage = new Map([...(previous.usage ?? []), ...(fresh.usage ?? [])].map((u) => [u.asset, 0]))
+  for (const { entry } of entries.values())
+    if (entry.source !== 'twin' && !twin(entry.frame) && OWNER_SOURCES.has(entry.source))
+      usage.set(entry.asset, (usage.get(entry.asset) ?? 0) + 1)
+  const of = (list) => [...entries.values()].filter((e) => e.list === list).map((e) => e.entry)
+  return {
+    ...previous,
+    frames: of('frames'),
+    siteSettings: of('siteSettings'),
+    pending,
+    returns,
+    picks: fresh.picks,
+    usage: [...usage].map(([asset, frames]) => ({ asset, frames })),
+    ...(Array.isArray(previous.ladder) ? { ladder: previous.ladder.filter((l) => !touched(l.frame)) } : {})
   }
 }
 
