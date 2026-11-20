@@ -1,0 +1,3 @@
+{"id":"REG-PR-712-plan-one-conversation","verdict":"PASS","commit":"9e1f6ec9ad874407bd81005e8781583b53b212fc","ran_at":"2026-11-20T03:59:36.167Z","evidence":"tests/regression/.runs/2026-11-20-9e1f6ec9a/REG-PR-712-plan-one-conversation.log"}
+{"id":"REG-PR-708-plan-parts","verdict":"PASS","commit":"9e1f6ec9ad874407bd81005e8781583b53b212fc","ran_at":"2026-11-20T03:59:36.642Z","evidence":"tests/regression/.runs/2026-11-20-9e1f6ec9a/REG-PR-708-plan-parts.log"}
+{"id":"REG-PR-710-copy-parts-picture-laps","verdict":"PASS","commit":"9e1f6ec9ad874407bd81005e8781583b53b212fc","ran_at":"2026-11-20T03:59:42.219Z","evidence":"tests/regression/.runs/2026-11-20-9e1f6ec9a/REG-PR-710-copy-parts-picture-laps.log"}
