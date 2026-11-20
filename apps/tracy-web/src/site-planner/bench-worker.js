@@ -29,6 +29,7 @@ import { kitImagesFor } from './kit-images.js'
 import {
   FIRST_MESSAGE_PARTS,
   firstUserMessage,
+  kitIndexFirstMessage,
   wholeKitFirstMessage,
   kitTools,
   openKit,
@@ -49,6 +50,7 @@ import { withHiddenLinkLabels, withHiddenListLinks } from './plan-hidden-links.j
 import { withDemoVideosHidden } from './plan-demo-videos.js'
 import { withWrittenRowFieldsShown } from './plan-row-fields.js'
 import { withKitCharacterLimits } from './plan-kit-limits.js'
+import { withSlotsInTheirBlocks } from './plan-slot-owners.js'
 import { mergePlanParts, partFirstMessages, planningParts, plansInParts } from './plan-parts.js'
 import {
   firstTurnMessage,
@@ -202,7 +204,9 @@ function agentRequest({ row, ready, history }) {
   const whole =
     !preloaded && imageTool && row.harness?.kitInFirstMessage === true
       ? wholeKitFirstMessage({ kit: ready.kit, brief, visualReviewText })
-      : null
+      : !preloaded && imageTool && row.harness?.kitIndexInFirstMessage === true
+        ? kitIndexFirstMessage({ kit: ready.kit, brief, visualReviewText })
+        : null
   return {
     firstUser: preloaded
       ? preloadedFirstMessage({ kit: ready.kit, brief })
@@ -281,7 +285,10 @@ function normalizedPlan(plan, kit) {
   return withWrittenRowFieldsShown(
     withHiddenLinkLabels(
       withDemoVideosHidden(
-        withKitCharacterLimits(withHiddenListLinks(withStockScreensDropped(plan, kit), kit), kit),
+        withKitCharacterLimits(
+          withHiddenListLinks(withSlotsInTheirBlocks(withStockScreensDropped(plan, kit), kit), kit),
+          kit
+        ),
         kit
       ),
       kit

@@ -31,7 +31,10 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
  *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object>, noCaps?: boolean, requireVisualReview?: boolean,
- *   kitInFirstMessage?: boolean, parallelPages?: number, planTurns?: boolean }} input `parallelPages`: the number of
+ *   kitInFirstMessage?: boolean, kitIndexInFirstMessage?: boolean, firstDraftEffort?: 'low' | 'high' | 'max',
+ *   parallelPages?: number, planTurns?: boolean }} input `kitIndexInFirstMessage`: the first message carries the kit's
+ *   site, page groups and pages beside its contents (template-kit-source.js kitIndexFirstMessage), blocks read by tool;
+ *   `firstDraftEffort`: the reasoning effort of round 0 (fix rounds keep the run's); `parallelPages`: the number of
  *   parts round 0 is planned in at the same time (plan-parts.js; 1 or absent plans it as before and freezes nothing);
  *   `planTurns`: round 0 is planned in turns of one conversation, the whole site first, then one page group a turn
  *   (plan-turns.js; frozen as harness.planTurns, never with parallelPages above 1); `kitImages`: the kit images of this
@@ -50,9 +53,16 @@ export async function startBenchRun({
   noCaps = false,
   requireVisualReview = false,
   kitInFirstMessage = false,
+  kitIndexInFirstMessage = false,
+  firstDraftEffort,
   parallelPages,
   planTurns = false
 }) {
+  if (kitInFirstMessage && kitIndexInFirstMessage)
+    return refuse(
+      'SITE_PLANNER_BAD_FIRST_MESSAGE',
+      'The run cannot start: the whole kit and the kit index in the first message are two choices; ask for one.'
+    )
   if (parallelPages !== undefined) {
     const partsProblem = parallelPagesProblem(parallelPages)
     if (partsProblem)
@@ -93,6 +103,15 @@ export async function startBenchRun({
     const images = await kitImages.ensure(opened)
     if (!images.ok) return refuse(images.code, images.reason)
   }
+  const base = capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps)
+  if (
+    firstDraftEffort !== undefined &&
+    (base.modelProfile !== 'deepseek-flash-native' || !['low', 'high', 'max'].includes(firstDraftEffort))
+  )
+    return refuse(
+      'SITE_PLANNER_BAD_FIRST_DRAFT_EFFORT',
+      'The run cannot start: a first draft effort must be low, high or max, on native DeepSeek Flash.'
+    )
   const created = await createRun(pool, {
     startedBy,
     brief,
@@ -102,8 +121,12 @@ export async function startBenchRun({
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,
     harness: {
-      ...capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps),
+      ...base,
       briefView: PLANNER_BRIEF_VIEW,
+      // Asked for (a chain build's plan step): the kit's index in the first message, blocks read by tool, and the
+      // first draft's own effort; frozen with the run.
+      ...(kitIndexInFirstMessage ? { kitIndexInFirstMessage: true } : {}),
+      ...(firstDraftEffort !== undefined ? { firstDraftEffort } : {}),
       // Asked for (a chain build's plan step): the whole kit goes in the first message (template-kit-source.js
       // wholeKitFirstMessage); frozen with the run, so a run saved before reads part by part as it did.
       ...(kitInFirstMessage ? { kitInFirstMessage: true } : {}),

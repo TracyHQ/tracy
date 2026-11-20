@@ -63,6 +63,9 @@ const stepError = (message, usd = 0) => Object.assign(new Error(message), { usd 
  */
 export const COPY_PARTS = 5
 
+/** The reasoning effort of the chain planner's first draft (round 0); its fix rounds keep the run's (max). */
+export const PLAN_FIRST_DRAFT_EFFORT = 'high'
+
 /**
  * The chain's planner run arguments, without the budget flag: round 0 in one conversation.
  *
@@ -77,13 +80,23 @@ export const COPY_PARTS = 5
  * - Not `--kit-in-first-message`: with the whole kit in its first message the planner put all its reasoning into the
  *   turn that writes the plan, and on the local stand (run15, 15/11/2026) that turn hit the 128k output cap (104k of
  *   reasoning) and the build lost its plan; read part by part, the reasoning is spread over turns.
+ * - `--kit-index-in-first-message` (20/11/2026): the kit's site, page groups and pages come in the first message, the
+ *   blocks still by tool. A planner given only "contents" spent its first reading turns on those three, each turn with
+ *   its own reasoning; on dev (lat18) BXR London's reading turns took 398 s of a 588 s round 0.
+ * - `--first-draft-effort` PLAN_FIRST_DRAFT_EFFORT: round 0 thinks at high, the fix rounds at the run's max. The
+ *   planner writes its plan in a turn that may still call tools (the visual review leaves it no separate writing turn),
+ *   so the whole first draft takes the effort. Since #705 the copy draft starts on round 0's checked plan, so the plan's
+ *   fix rounds run beside it, and round 0 is the plan's part of the build's critical path.
  */
 export const planArgs = (kitRef, revisionId) => [
   '--kit',
   kitRef,
   '--brief-revision',
   revisionId,
-  '--require-visual-review'
+  '--require-visual-review',
+  '--kit-index-in-first-message',
+  '--first-draft-effort',
+  PLAN_FIRST_DRAFT_EFFORT
 ]
 
 export function createStepChainSteps(deps) {
