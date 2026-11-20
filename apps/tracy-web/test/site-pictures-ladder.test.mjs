@@ -463,6 +463,21 @@ test('a finished round records where its time went: whole milliseconds, and how 
   assert.ok(Number.isFinite(timing.looker) && Number.isFinite(timing.drawer))
 })
 
+test('a later round keeps the picture an earlier ladder kept as its best rejected one: no rung, draw or look again', async () => {
+  const doors = fakeDoors({ reject: new Set(['block-c.1']) })
+  const { doc, finisher } = await setUp(doors, 'run-ladder-carry')
+  const first = await finisher.finish(doc, { lastRound: false })
+  const c = byFrame(first.doc).get('block-c.1')
+  assert.equal(c.filledBy?.rung, 'best-rejected')
+  const steps = rungs(first.doc, 'block-c.1')
+  const asked = [doors.drawings.length, doors.looks.length]
+  const second = await finisher.finish(first.doc, { lastRound: false })
+  assert.deepEqual([doors.drawings.length, doors.looks.length], asked, 'nothing drawn or looked at again')
+  assert.equal(byFrame(second.doc).get('block-c.1').sha256, c.sha256)
+  assert.deepEqual(rungs(second.doc, 'block-c.1'), steps, 'its rungs are carried, none taken again')
+  assert.equal(second.paid, 0)
+})
+
 test('a frame the picker placed climbs only in the last round; an any-real frame is never drawn', async () => {
   const doors = fakeDoors({ reject: new Set(['block-b.1']) })
   const { doc, finisher } = await setUp(doors, 'run-picker')

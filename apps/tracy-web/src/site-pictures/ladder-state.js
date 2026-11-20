@@ -14,7 +14,17 @@ export function ladderState(idx, doc) {
   const entries = new Map()
   for (const list of ['frames', 'siteSettings'])
     for (const e of doc[list]) if (e.source !== 'twin') entries.set(e.frame, { list, entry: { ...e } })
-  const ladder = new Map()
+  // A fix round's manifest carries what the earlier rounds finished (picker-picks.js carriedManifest): the rungs each
+  // frame took and the rows dropped stay on it, and a further drop of a list counts from the rows it has left.
+  const ladder = new Map(
+    (Array.isArray(doc.ladder) ? doc.ladder : []).map((l) => [l.frame, [...(l.steps ?? [])]])
+  )
+  const rows = Array.isArray(doc.rows) ? doc.rows.map((r) => ({ ...r })) : []
+  const rowsNow = new Map()
+  for (const r of rows) {
+    const key = `${r.block} ${r.list}`
+    if (Number.isFinite(r.rows)) rowsNow.set(key, Math.min(rowsNow.get(key) ?? Infinity, r.rows))
+  }
   const s = {
     isTwin,
     entries,
@@ -23,8 +33,8 @@ export function ladderState(idx, doc) {
     returns: doc.returns.filter(
       (r) => !(isTwin(r.frame) && idx.frames.get(r.frame) && idx.frames.get(r.frame).writable !== false)
     ),
-    rows: [],
-    rowsNow: new Map(),
+    rows,
+    rowsNow,
     ladder,
     /** frame -> { at, tried: Set of assets, photos, mode, asset, faults, last, done } */
     progress: new Map(),
