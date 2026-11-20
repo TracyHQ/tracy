@@ -3,6 +3,7 @@
 // nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
 // snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
 import { benchHarnessFor, capsOf, sendsImages } from '../lib/bench-harness.js'
+import { framedPartsProblem } from './plan-frame.js'
 import { parallelPagesProblem } from './plan-parts.js'
 import { BENCH_RUNS_AT_ONCE, benchFullRefusal, briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { activeRuns, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
@@ -32,7 +33,9 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
  *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object>, noCaps?: boolean, requireVisualReview?: boolean,
  *   kitInFirstMessage?: boolean, kitIndexInFirstMessage?: boolean, firstDraftEffort?: 'low' | 'high' | 'max',
- *   parallelPages?: number, planTurns?: boolean }} input `kitIndexInFirstMessage`: the first message carries the kit's
+ *   parallelPages?: number, planTurns?: boolean, framedParts?: number }} input `framedParts`: round 0 as a frame, then
+ *   its kept pages in that many parts at the same time (plan-frame.js; frozen as harness.framedParts, never with
+ *   parallelPages above 1, planTurns or the whole kit in the first message); `kitIndexInFirstMessage`: the first message carries the kit's
  *   site, page groups and pages beside its contents (template-kit-source.js kitIndexFirstMessage), blocks read by tool;
  *   `firstDraftEffort`: the reasoning effort of round 0 (fix rounds keep the run's); `parallelPages`: the number of
  *   parts round 0 is planned in at the same time (plan-parts.js; 1 or absent plans it as before and freezes nothing);
@@ -56,8 +59,18 @@ export async function startBenchRun({
   kitIndexInFirstMessage = false,
   firstDraftEffort,
   parallelPages,
-  planTurns = false
+  planTurns = false,
+  framedParts
 }) {
+  if (framedParts !== undefined) {
+    const problem = framedPartsProblem(framedParts)
+    if (problem) return refuse('SITE_PLANNER_BAD_FRAMED_PARTS', `The run cannot start: ${problem}.`)
+    if (parallelPages > 1 || planTurns || kitInFirstMessage)
+      return refuse(
+        'SITE_PLANNER_BAD_FRAMED_PARTS',
+        'The run cannot start: a framed plan is its own way of planning round 0, not with parallel pages, plan turns or the whole kit in the first message.'
+      )
+  }
   if (kitInFirstMessage && kitIndexInFirstMessage)
     return refuse(
       'SITE_PLANNER_BAD_FIRST_MESSAGE',
@@ -134,6 +147,8 @@ export async function startBenchRun({
       ...(parallelPages > 1 ? { parallelPages } : {}),
       // Asked for: round 0 planned in turns of one conversation (plan-turns.js), frozen with the run.
       ...(planTurns ? { planTurns: true } : {}),
+      // Asked for: round 0 as a frame, then its kept pages in parts at the same time (plan-frame.js), frozen.
+      ...(framedParts !== undefined ? { framedParts } : {}),
       ...(requireVisualReview ? { visualReview: VISUAL_REVIEW_POLICY } : {})
     }
   })

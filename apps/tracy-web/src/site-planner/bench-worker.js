@@ -51,6 +51,7 @@ import { withDemoVideosHidden } from './plan-demo-videos.js'
 import { withWrittenRowFieldsShown } from './plan-row-fields.js'
 import { withKitCharacterLimits } from './plan-kit-limits.js'
 import { withSlotsInTheirBlocks } from './plan-slot-owners.js'
+import { framedPartMessage, frameInstruction, framesPlan, mergeFramedPlan } from './plan-frame.js'
 import { mergePlanParts, partFirstMessages, planningParts, plansInParts } from './plan-parts.js'
 import {
   firstTurnMessage,
@@ -122,6 +123,24 @@ export const SITE_PLANNER_STEP = Object.freeze({
   // Parallel parts (plan-parts.js): each part's first message, or null when the run plans round 0 as before; then the
   // merge of the parts' plans into one, normalized like any answer.
   parts: ({ row, ready }) => {
+    // A framed run (plan-frame.js): the page parts, each made from the frame's answer, then the frame, asked first.
+    if (framesPlan(row.harness)) {
+      const n = row.harness.framedParts
+      const { firstUser } = agentRequest({ row, ready, history: [] })
+      const withFrame = (text) =>
+        typeof firstUser === 'string'
+          ? `${firstUser}\n\n${text}`
+          : Array.isArray(firstUser)
+            ? [...firstUser, { type: 'text', text }]
+            : text
+      return [
+        ...Array.from({ length: n }, (_, part) => ({
+          about: [`page part ${part + 1}`],
+          firstUserFor: (frame) => framedPartMessage(firstUser, frame, ready.kit.doc, part, n)
+        })),
+        { about: ['frame'], leads: true, firstUser: withFrame(frameInstruction(n)) }
+      ]
+    }
     if (!plansInParts(row.harness)) return null
     const groups = planningParts(ready.kit.doc, row.harness.parallelPages)
     if (groups.length < 2) return null
@@ -132,10 +151,12 @@ export const SITE_PLANNER_STEP = Object.freeze({
     }))
   },
   mergeParts: (values, { row, ready }) =>
-    normalizedPlan(
-      mergePlanParts(values, planningParts(ready.kit.doc, row.harness.parallelPages), ready.kit.doc),
-      ready.kit.doc
-    ),
+    framesPlan(row.harness)
+      ? normalizedPlan(mergeFramedPlan(values, ready.kit.doc, row.harness.framedParts).plan, ready.kit.doc)
+      : normalizedPlan(
+          mergePlanParts(values, planningParts(ready.kit.doc, row.harness.parallelPages), ready.kit.doc),
+          ready.kit.doc
+        ),
   // Writing turns of one conversation (plan-turns.js), only for a run started with harness.planTurns: turn 1's message
   // (the run's own first message, then what the turn decides), each page group's, then the merge of the turns' plans
   // (read like any answer by readAnswer), and the page-local check of each group's turn.
