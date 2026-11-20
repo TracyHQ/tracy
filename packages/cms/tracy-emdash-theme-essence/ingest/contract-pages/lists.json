@@ -1,0 +1,269 @@
+{
+  "layout": {
+    "id": "Category",
+    "view": "src/views/Category.astro",
+    "family": "list"
+  },
+  "rules": [
+    ["cat-title", ".es-cat:not([data-by=\"author\"]) .es-cat-title", "category/category-style-1/index.html"],
+    ["cat-count", ".es-cat-count", "category/category-style-1/index.html"],
+    ["cat-desc", ".es-cat-desc", "category/category-style-1/index.html"],
+    ["side-title", ".es-side-title", "detail/layout-1/index.html"],
+    ["newsletter-title", "#es-newsletter-title", "detail/layout-1/index.html"],
+    ["newsletter-text", ".es-newsletter-text, .es-newsletter-status", "detail/layout-1/index.html"],
+    [
+      "grid-card-title",
+      ".es-cat:not([data-by=\"author\"]) .es-grid-card:not(.is-wide) .es-card-title",
+      "category/category-style-1/index.html",
+      true
+    ],
+    ["wide-card-title", ".es-grid-card.is-wide .es-card-title", "category/category-style-1/index.html", true],
+    [
+      "author-title",
+      ".es-cat[data-by=\"author\"] .es-cat-title",
+      "category/category-style-1/index.html",
+      true
+    ],
+    [
+      "author-card-title",
+      ".es-cat[data-by=\"author\"] .es-grid-card .es-card-title",
+      "category/category-style-1/index.html",
+      true
+    ],
+    ["cat-more", ".es-cat-more", "category/category-style-1/index.html", true],
+    ["profile-role", ".es-cat-role", "pages/j-content/author-listting/author/Eula%20Ward/index.html"],
+    [
+      "profile-bio",
+      ".es-cat[data-by=\"author\"] .es-cat-desc",
+      "pages/j-content/author-listting/author/Eula%20Ward/index.html"
+    ],
+    ["hl-title", ".es-card.is-highlight .es-card-title", "category/category-style-2/index.html", true],
+    ["hl-intro", ".es-card.is-highlight .es-card-intro", "category/category-style-2/index.html", true]
+  ],
+  "parity": {
+    "catTitle": {
+      "site": ".es-cat-title",
+      "source": "h1.page-subtitle"
+    },
+    "catCard": {
+      "site": ".es-card-title",
+      "source": ".page-header h2"
+    },
+    "authorHeading": {
+      "site": ".es-cat-title",
+      "source": ".author-name"
+    },
+    "authorRole": {
+      "site": ".es-cat-role",
+      "source": ".author-title span"
+    },
+    "authorBio": {
+      "site": ".es-cat[data-by=\"author\"] .es-cat-desc",
+      "source": ".author-about-me"
+    }
+  },
+  "pages": [
+    {
+      "id": "en-cat-grid",
+      "path": "/category/blog-health",
+      "source": ["category/category-style-1/index.html"],
+      "identity": ".es-cat-title",
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
+      "rules": ["cat-title", "cat-count", "cat-desc", "grid-card-title", "page-count", "cat-more"],
+      "parity": ["nav", "catTitle", "catCard", "ground"],
+      "content": [
+        [
+          "title",
+          ".es-cat-title",
+          "category/category-style-1/index.html",
+          "derived",
+          "categories.title (list heading)",
+          "Health"
+        ],
+        [
+          "card1",
+          ".es-card-title",
+          "category/category-style-1/index.html",
+          "derived",
+          "posts, first of the category",
+          "Capturing Essence: Expressive Line Art Techniques"
+        ],
+        [
+          "pager",
+          ".es-page-count",
+          "category/category-style-1/index.html",
+          "derived",
+          "template word (page counter)",
+          "Page 1 of 2"
+        ]
+      ],
+      "images": "placeholders"
+    },
+    {
+      "id": "en-cat-stack",
+      "path": "/category/blog-design",
+      "source": ["category/category-style-2/index.html"],
+      "identity": ".es-cat-title",
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
+      "rules": [
+        "cat-title",
+        "cat-count",
+        "cat-desc",
+        "card-title",
+        "card-intro",
+        "page-count",
+        "cat-more",
+        "hl-title",
+        "hl-intro"
+      ],
+      "parity": ["nav", "catTitle", "catCard", "ground"],
+      "content": [
+        [
+          "title",
+          ".es-cat-title",
+          "category/category-style-2/index.html",
+          "derived",
+          "categories.title (list heading)",
+          "Design"
+        ],
+        [
+          "card1",
+          ".es-card-title",
+          "category/category-style-2/index.html",
+          "derived",
+          "posts, first of the category",
+          "Beyond Black and White: Adding Colors to Line Art"
+        ],
+        [
+          "pager",
+          ".es-page-count",
+          "category/category-style-2/index.html",
+          "derived",
+          "template word (page counter)",
+          "Page 1 of 2"
+        ]
+      ],
+      "images": "placeholders"
+    },
+    {
+      "id": "en-cat-fashion",
+      "path": "/category/blog-fashion",
+      "source": ["category/category-style-3/index.html"],
+      "identity": ".es-cat-title",
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
+      "rules": ["cat-title", "cat-count", "cat-desc", "grid-card-title", "cat-more", "hl-title", "hl-intro"],
+      "parity": ["nav", "catTitle", "catCard", "ground"],
+      "content": [
+        [
+          "title",
+          ".es-cat-title",
+          "category/category-style-3/index.html",
+          "derived",
+          "categories.title (list heading)",
+          "Fashion"
+        ],
+        [
+          "card1",
+          ".es-card-title",
+          "category/category-style-3/index.html",
+          "derived",
+          "posts, first of the category",
+          "Natural Remedies for Common Ailments"
+        ]
+      ],
+      "images": "placeholders"
+    },
+    {
+      "id": "en-cat-sidebar",
+      "path": "/category/blog-normal-health",
+      "source": ["category/category-style-4/index.html"],
+      "identity": ".es-card-intro",
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
+      "rules": [
+        "page-h1",
+        "wide-card-title",
+        "card-intro",
+        "side-title",
+        "newsletter-title",
+        "newsletter-text",
+        "cat-more"
+      ],
+      "parity": ["nav", "catCard", "sideTitle", "ground"],
+      "content": [
+        [
+          "card1",
+          ".es-card-title",
+          "category/category-style-4/index.html",
+          "derived",
+          "posts, first of the category",
+          "Capturing Essence: Expressive Line Art Techniques"
+        ],
+        [
+          "intro1",
+          ".es-card-intro",
+          "category/category-style-4/index.html",
+          "derived",
+          "posts, first paragraph",
+          "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        ]
+      ],
+      "images": "placeholders"
+    },
+    {
+      "id": "en-tag",
+      "path": "/tag/health",
+      "source": ["component/tags/tag/health/index.html"],
+      "identity": ".es-cat-count",
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
+      "rules": ["cat-title", "cat-count", "grid-card-title", "page-count", "cat-more"],
+      "parity": ["nav", "ground"],
+      "content": [
+        [
+          "title",
+          ".es-cat-title",
+          "component/tags/tag/health/index.html",
+          "derived",
+          "tags.title (list heading)",
+          "Health"
+        ],
+        [
+          "card1",
+          ".es-card-title",
+          "component/tags/tag/health/index.html",
+          "derived",
+          "posts, first of the tag",
+          "Capturing Essence: Expressive Line Art Techniques"
+        ]
+      ],
+      "images": "placeholders"
+    },
+    {
+      "id": "en-author",
+      "path": "/author/eula-ward",
+      "source": ["pages/j-content/author-listting/author/Eula%20Ward/index.html"],
+      "identity": ".es-cat-title",
+      "collections": ["chrome", "posts", "pages", "authors", "social"],
+      "rules": ["author-title", "author-card-title", "cat-more", "profile-role", "profile-bio", "page-count"],
+      "parity": ["nav", "authorHeading", "catCard", "ground", "authorRole", "authorBio"],
+      "content": [
+        [
+          "title",
+          ".es-cat-title",
+          "pages/j-content/author-listting/author/Eula%20Ward/index.html",
+          "field",
+          "authors.title",
+          "Eula Ward"
+        ],
+        [
+          "card1",
+          ".es-card-title",
+          "pages/j-content/author-listting/author/Eula%20Ward/index.html",
+          "derived",
+          "posts by the author",
+          "Capturing Essence: Expressive Line Art Techniques"
+        ]
+      ],
+      "images": "placeholders"
+    }
+  ]
+}

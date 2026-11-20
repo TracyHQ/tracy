@@ -1,0 +1,167 @@
+/* JA Essence: category page styles (class prefix `es-`). Imported by global.css. Also holds the list cards shared with the Home. */
+@layer components {
+	/* ── list cards ── */
+	.es-card { background: var(--color-surface); border-radius: var(--ds-card-radius, 16px); padding: 36px; margin-bottom: 36px; }
+	.es-card-pic { position: relative; margin: 0; }
+	.es-card-pic a { display: block; }
+	.es-card-pic img { display: block; width: 100%; object-fit: cover; border-radius: var(--ds-card-radius, 8px); }
+	html[data-theme="dark"] .es-card-badge { background: var(--color-surface); color: var(--color-accent-text); }
+	.es-card-badge { position: absolute; top: 20px; left: 20px; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: var(--ds-c-surface, #fff); color: var(--ds-c-accent-text, #4d6bff); border-radius: var(--ds-pill-radius, 8px); pointer-events: none; }
+	.es-card .es-pill { padding: 6px 16px; font-size: 16px; line-height: 24px; background: var(--color-bg); margin-bottom: 12px; }
+	.es-card-title { margin: 0 0 12px; font-size: 32px; line-height: 41.6px; }
+	.es-card-title a { color: var(--color-heading); }
+	.es-card-title a:hover { color: var(--color-accent-text-hover); }
+	.es-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; margin: 0; font-size: 14px; line-height: 21px; }
+	.es-card-meta > div { display: flex; align-items: center; }
+	.es-card-meta dd { display: flex; align-items: center; gap: 4px; margin: 0; }
+	.es-card-meta > div:not(:last-child)::after { content: "-"; margin: 0 5px; }
+	.es-card-meta a, .es-card-author { font-weight: 700; color: var(--color-heading); }
+	.es-card-hits svg { color: var(--color-accent-text); }
+	.es-card-intro { margin: 24px 0 0; }
+	.es-card-more { display: inline-block; margin-top: 24px; font-family: var(--font-display); font-size: 18px; line-height: 20.7px; color: var(--color-heading); }
+	.es-card-more:hover { color: var(--color-accent-text-hover); }
+
+	/* stack: picture left */
+	.es-stack-top { display: flex; align-items: flex-start; gap: 36px; }
+	.es-stack-top .es-card-pic { flex: none; width: 200px; }
+	.es-stack-top .es-card-pic img { width: 200px; height: 200px; }
+	.es-stack-top .es-card-badge { top: 12px; left: 12px; width: 40px; height: 40px; }
+	.es-stack-info { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+	.es-stack .es-card-intro { margin-top: 16px; }
+	/* the list pages draw the stack wider than the Home does: a 330px picture on a desktop, 200px on a tablet, on top on a phone (measured on category-style-2) */
+	.es-cat .es-stack-top .es-card-pic { width: 330px; }
+	.es-cat .es-stack-top .es-card-pic img { width: 330px; height: 330px; object-fit: cover; }
+	.es-cat .es-stack-info { align-self: center; }
+	@media (max-width: 1199px) { .es-cat .es-stack-top .es-card-pic, .es-cat .es-stack-top .es-card-pic img { width: 200px; } .es-cat .es-stack-top .es-card-pic img { height: 200px; } }
+	@media (max-width: 767px) {
+		.es-cat .es-stack-top { flex-direction: column; gap: 24px; }
+		.es-cat .es-stack-top .es-card-pic { width: 100%; }
+		.es-cat .es-stack-top .es-card-pic img { width: 100%; height: auto; aspect-ratio: 3 / 2; }
+	}
+
+	/* grid: picture on top, centred */
+	.es-grid-card { padding: 18px; margin-bottom: 0; text-align: center; }
+	.es-grid-card .es-card-pic img { aspect-ratio: 3 / 2; height: auto; }
+	.es-grid-info { display: flex; flex-direction: column; align-items: center; margin-top: 36px; padding-bottom: 12px; }
+	.es-grid-card .es-card-title { font-size: 24px; line-height: 31.2px; }
+	.es-grid-card .es-card-meta { justify-content: center; padding-inline: 0; }
+	.es-grid-card.is-wide { padding: 36px; margin-bottom: 36px; text-align: start; }
+	.es-grid-card.is-wide .es-grid-info { align-items: flex-start; margin-top: 36px; padding-bottom: 0; }
+	.es-grid-card.is-wide .es-card-title { font-size: 32px; line-height: 41.6px; }
+	.es-grid-card.is-wide .es-card-meta { justify-content: flex-start; padding-inline: 0; }
+	.es-grid-card.is-wide .es-card-intro { margin-top: 24px; }
+	/* the highlighted article (the source's `item-highlight`): the picture fills the card, darkened, the text lies over it */
+	/* the Home's highlighted article (the source's page 2 draws it so): picture full width above the text */
+	.es-card.is-cover .es-stack-top { flex-direction: column; gap: 24px; }
+	.es-card.is-cover .es-stack-top .es-card-pic { width: 100%; }
+	.es-card.is-cover .es-stack-top .es-card-pic img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+	.es-card.is-cover .es-stack-info { width: 100%; }
+	.es-card.is-highlight { position: relative; isolation: isolate; overflow: hidden; color: color-mix(in srgb, color-mix(in srgb, var(--ds-c-on-ink, #fff) 50%, #fff) 70%, transparent); background: var(--ds-c-ink, #494c4f); } /* ds-keep: words over a photograph: the on-ink role pulled toward white so they read on the neutral scrim, the picture is not repainted by a system */
+	.es-card.is-highlight .es-card-pic { position: absolute; inset: 0; z-index: -1; }
+	.es-card.is-highlight .es-card-pic a, .es-card.is-highlight .es-card-pic img { height: 100%; border-radius: var(--ds-card-radius, 16px); }
+	.es-card.is-highlight .es-card-pic a { position: relative; }
+	.es-card.is-highlight .es-card-pic a::after { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, .5); border-radius: var(--ds-card-radius, 16px); } /* ds-keep: text and scrim over a photograph keep the template colours: the picture is not repainted, the block is kept by keepScopes of the contract */
+	.es-card.is-highlight .es-card-badge { top: 36px; left: 36px; }
+	.es-card.is-highlight .es-stack-info { padding-top: 200px; }
+	.es-card.is-highlight .es-card-title a, .es-card.is-highlight .es-card-more { color: color-mix(in srgb, var(--ds-c-on-ink, #fff) 50%, #fff); } /* ds-keep: words over a photograph: the on-ink role pulled toward white so they read on the neutral scrim, the picture is not repainted by a system */
+	.es-card.is-highlight .es-card-meta, .es-card.is-highlight .es-card-meta a, .es-card.is-highlight .es-card-intro { color: color-mix(in srgb, color-mix(in srgb, var(--ds-c-on-ink, #fff) 50%, #fff) 70%, transparent); } /* ds-keep: words over a photograph: the on-ink role pulled toward white so they read on the neutral scrim, the picture is not repainted by a system */
+	.es-card.is-highlight .es-card-by a, .es-card.is-highlight .es-card-by .es-card-author { color: color-mix(in srgb, var(--ds-c-on-ink, #fff) 50%, #fff); font-weight: 700; } /* ds-keep: words over a photograph: the on-ink role pulled toward white so they read on the neutral scrim, the picture is not repainted by a system */
+	.es-card.is-highlight .es-pill { color: var(--ds-c-fg, #212529); background: var(--ds-c-bg, #f8f8ff); }
+	.es-cat-grid .es-card.is-highlight { grid-column: 1 / -1; margin-bottom: 0; }
+	@media (max-width: 575px) { .es-card.is-highlight .es-card-intro { display: none; } }
+	@media (max-width: 767px) { .es-card.is-highlight { padding: 24px; } .es-card.is-highlight .es-card-badge { top: 36px; left: 36px; } }
+	.es-card-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+	.es-card-tags li:nth-child(1) .es-pill { --dot: var(--ds-c-heading, #dc3545); }
+	.es-card-tags li:nth-child(2) .es-pill { --dot: var(--ds-c-accent-text, #6f42c1); }
+	.es-card-tags li:nth-child(3) .es-pill { --dot: var(--ds-c-accent, #4d6bff); }
+	.es-card-tags li:nth-child(4) .es-pill { --dot: var(--ds-c-muted, #20c997); }
+	.es-card-tags li:nth-child(5) .es-pill { --dot: var(--ds-c-meta, #fd7e14); }
+	.es-card-tags .es-pill { margin: 0; padding: 2px 12px; font-family: var(--font-body); font-size: 14px; }
+
+	.es-pager .es-pagination a, .es-pager .es-pagination span { display: flex; align-items: center; justify-content: center; line-height: 1; }
+
+	/* ── the heading block ── */
+	.es-cat { padding-block: 72px; }
+	.es-cat-head { max-width: 640px; margin: 0 auto 48px; text-align: center; }
+	.es-cat-title { margin: 16px 0 8px; }
+	.es-cat[data-by="author"] .es-cat-title { font-size: 32px; }
+	.es-cat-title span { display: inline-flex; align-items: center; gap: 12px; }
+	.es-cat-title span::before { content: ""; width: 16px; height: 16px; border-radius: 50%; background: var(--dot, var(--color-accent)); flex: none; }
+	.es-cat-who { display: contents; }
+	.es-cat-head.is-profile { max-width: 720px; text-align: center; }
+	.es-cat-head.is-profile .es-cat-who { display: grid; grid-template-columns: max-content max-content; justify-content: center; align-items: center; column-gap: 36px; }
+	.es-cat-head.is-profile .es-cat-photo { grid-row: 1 / span 2; margin: 0; }
+	.es-cat-head.is-profile .es-cat-title { align-self: end; margin: 0 0 4px; }
+	.es-cat-head.is-profile .es-cat-title span::before { display: none; }
+	.es-cat-head.is-profile .es-cat-role { grid-column: 2; align-self: start; margin: 0; }
+	.es-cat-head.is-profile .es-cat-desc { max-width: 560px; margin: 24px auto 0; }
+	.es-cat-photo { display: block; width: 120px; height: 120px; margin: 0 auto; object-fit: cover; border-radius: 50%; }
+	.es-cat-role { margin: 0 0 12px; font-family: var(--font-display); }
+	@media (max-width: 575px) { .es-cat-head.is-profile .es-cat-who { grid-template-columns: minmax(0, 1fr); } .es-cat-head.is-profile .es-cat-photo { grid-row: auto; margin: 0 auto 24px; } .es-cat-head.is-profile .es-cat-role { grid-column: 1; } }
+	.es-cat-count { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; }
+	.es-cat-count::before, .es-cat-count::after { content: "–"; }
+	.es-cat-desc { margin: 32px 0 0; }
+	.es-cat-empty { text-align: center; }
+
+	/* ── lists ── */
+	.es-cat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; align-items: start; }
+	.es-cat:not([data-by="category"]) .es-cat-grid { align-items: stretch; }
+	.es-cat .es-pager { margin-top: 36px; }
+	.es-pager.is-pill-last .es-page-count { margin-top: 52px; }
+	.es-pager.is-pill-last .es-pagination { margin-top: 0; }
+	.es-cat-body.is-sidebar, .es-cat.is-sidebar .es-cat-body { display: grid; grid-template-columns: minmax(0, 740px) minmax(0, 352px); gap: 36px; align-items: start; }
+	.es-cat.is-stack .es-card { margin-bottom: 36px; }
+
+	@media (max-width: 1199px) { .es-cat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+	@media (max-width: 991px) {
+		.es-cat.is-sidebar .es-cat-body { grid-template-columns: minmax(0, 1fr); }
+	}
+	@media (max-width: 767px) {
+		.es-cat { padding-block: 36px; }
+		.es-cat-head { margin-bottom: 24px; }
+		.es-cat-desc { margin-top: 18px; }
+		.es-cat-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+		.es-card, .es-grid-card.is-wide { padding: 24px; }
+		.es-grid-card { padding: 18px; }
+		.es-grid-card .es-card-title { font-size: 22px; line-height: 28.6px; }
+		.es-grid-card .es-grid-info { margin-top: 18px; }
+		.es-card-title, .es-grid-card.is-wide .es-card-title { font-size: 24px; line-height: 31.2px; }
+		.es-stack-top { flex-direction: column; gap: 18px; }
+		.es-stack-top .es-card-pic, .es-stack-top .es-card-pic img { width: 100%; }
+		.es-stack-top .es-card-pic img { height: auto; aspect-ratio: 3 / 2; }
+	}
+}
+
+@layer components {
+	@media (max-width: 767px) {
+		.es-cat[data-by="author"] .es-grid-card .es-card-title { font-size: 24px; line-height: 31.2px; }
+		.es-cat[data-by="author"] .es-cat-title { font-size: 24px; line-height: 31.2px; }
+	}
+}
+
+@layer components {
+	.es-cat .es-cat-more { margin: 72px 0 32px; }
+	.es-cat { padding-bottom: 80px; }
+	.es-cat.is-grid[data-by="category"] { padding-bottom: 40px; }
+	.es-cat.is-grid[data-by="author"] .es-pager { margin-top: 108px; }
+	.es-cat.is-grid[data-by="author"] .es-pager.is-pill-last .es-page-count { margin-top: 28px; }
+	/* the pill under the list: 72px under a grid, 104px under a stack or a sidebar list (42px / 74px on a phone), as the source */
+	.es-cat.is-grid .es-pager { margin-top: 72px; }
+	.es-cat.is-stack .es-pager, .es-cat.is-sidebar .es-pager { margin-top: 104px; }
+	@media (max-width: 767px) { .es-cat { padding-bottom: 44px; } .es-cat.is-grid .es-pager { margin-top: 42px; } .es-cat.is-stack .es-pager, .es-cat.is-sidebar .es-pager { margin-top: 74px; } .es-cat.is-grid[data-by="category"] { padding-bottom: 30px; } .es-cat.is-grid[data-by="author"] .es-pager { margin-top: 90px; } }
+	@media (max-width: 767px) { .es-cat .es-cat-more { margin: 36px 0 30px; } }
+	/* the highlighted card's picture wins over the stack picture sizes above */
+	.es-cat .es-card.is-highlight .es-card-pic, .es-cat .es-card.is-highlight .es-card-pic a, .es-cat .es-card.is-highlight .es-card-pic img { width: 100%; height: 100%; aspect-ratio: auto; }
+	/* a phone: the source keeps 24px between list cards */
+	@media (max-width: 575px) { .es-cat.is-stack .es-card, .es-cat.is-sidebar .es-card { margin-bottom: 24px; } .es-cat-grid { gap: 24px; } }
+	/* author pages: the source pads the article cards 36px (picture 280/252/282 wide at 1440/768/390), measured */
+	.es-cat[data-by="author"] .es-grid-card { padding: 36px; }
+	/* the list with a sidebar stacks its cards 12px apart on a tablet (measured at 768; 36px on a desktop, 24px on a phone) */
+	@media (min-width: 576px) and (max-width: 991px) { .es-cat.is-sidebar .es-cat-list .es-card { margin-bottom: 12px; } }
+	/* three columns: each row's cards end level, as the source's do (the two-column tablet list stacks on its own, see Category.astro) */
+	@media (min-width: 1200px) { .es-cat-grid { align-items: stretch; } }
+	/* an author's page on a phone starts 68px under the header (measured: 32px more than the other lists) */
+	@media (max-width: 575px) { .es-cat[data-by="author"] { padding-top: 68px; } }
+	/* the author bio is 476px wide on a tablet (measured at 768) */
+	@media (min-width: 576px) and (max-width: 991px) { .es-cat-head.is-profile .es-cat-desc { max-width: 476px; } }
+}

@@ -1,0 +1,37 @@
+---
+/**
+ * One article as a small item: `card` (white card, picture on top, category pill, centred title and the date/hits line) or
+ * `thumb` (square picture on the left, title and the small line on the right). Used by "Author's latest articles" and "More Read".
+ */
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { categoryPath, postPath, type PostRow } from '@/lib/posts'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import PostMeta from '@/components/site/PostMeta.astro'
+import PostPill from '@/components/site/PostPill.astro'
+
+interface Props {
+  post: PostRow
+  chrome: Chrome
+  locale: Locale
+  variant: 'card' | 'thumb'
+  /** `thumb` only: print the date as well as the hits. */
+  withDate?: boolean
+}
+const { post, chrome, locale, variant, withDate = false } = Astro.props
+const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
+const img = mediaUrl(post.cover)
+const to = href(locale, postPath(post))
+const w = Number(post.cover?.width) || 632
+const h = Number(post.cover?.height) || 422
+---
+
+<article class:list={['es-mini', `is-${variant}`]} {...$p()}>
+	{img && <a class="es-mini-pic" href={to} tabindex="-1" aria-hidden="true"><img src={img} alt="" width={w} height={h} loading="lazy" {...$p('cover')} /></a>}
+	<div class="es-mini-info">
+		{variant === 'card' && post.category && <div class="es-mini-cat"><PostPill href={href(locale, categoryPath(post.category.slug))} label={post.category.label} slug={post.category.slug} /></div>}
+		{variant === 'card' ? <h3 class="es-mini-title"><a href={to} {...$p('title')}>{post.title}</a></h3> : <h4 class="es-mini-title"><a href={to} {...$p('title')}>{post.title}</a></h4>}
+		<PostMeta post={post} chrome={chrome} locale={locale} mode={variant === 'card' || withDate ? 'dated' : 'hits'} />
+	</div>
+</article>

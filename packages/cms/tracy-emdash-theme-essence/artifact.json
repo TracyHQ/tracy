@@ -1,0 +1,90 @@
+{
+	"templateId": "tracy-essence",
+	"label": "JA Essence",
+	"version": "0.1.0",
+	"package": {
+		"name": "@tracy/emdash-theme-essence",
+		"version": "0.1.0"
+	},
+	"demoContent": "JA Essence",
+	"generatedAt": "2026-11-19T20:43:09.236Z",
+	"cms": {
+		"name": "emdash",
+		"version": "1.1.0"
+	},
+	"runtime": {
+		"node": ">=22.23.4",
+		"astro": "7.4.12",
+		"adapter": "@astrojs/node standalone",
+		"database": "sqlite (data/data.db)",
+		"storage": "local (uploads/)"
+	},
+	"locales": {
+		"default": "en",
+		"all": [
+			"en"
+		],
+		"prefixed": []
+	},
+	"capabilities": [
+		"forms",
+		"smtp",
+		"audit-log",
+		"search",
+		"i18n",
+		"seo",
+		"media"
+	],
+	"plugins": {
+		"@emdash-cms/plugin-audit-log": "0.2.3",
+		"@emdash-cms/plugin-forms": "0.2.9",
+		"emdash-smtp": "0.3.3"
+	},
+	"env": [
+		"EMDASH_ENCRYPTION_KEY",
+		"EMDASH_SITE_URL",
+		"SITE_DATA_DIR",
+		"HOST",
+		"PORT",
+		"TRACY_OWNER_EMAIL",
+		"TRACY_OWNER_NAME"
+	],
+	"entrypoints": {
+		"install": "pnpm install --frozen-lockfile",
+		"build": "pnpm build",
+		"start": "node dist/server/entry.mjs",
+		"dev": "pnpm dev",
+		"bootstrap": "tools/bootstrap-site.sh <origin> <data-dir>",
+		"seed": "node tools/seed-apply.mjs <status|schema|content|media|forms|all>",
+		"backup": "tools/backup.sh",
+		"restore": "tools/restore.sh <archive>",
+		"cleanInstall": "tools/clean-install.sh <dir> <port>",
+		"smtp": "node tools/configure-smtp.mjs"
+	},
+	"seed": {
+		"file": "seed/seed.json",
+		"mediaMap": "seed/media-map.json",
+		"forms": "tools/forms.json",
+		"config": "template.config.json"
+	},
+	"checksums": {
+		"AGENTS.md": "sha256:3a5d9b61fffece7f74a836a0afeb1d9b6271696e6b9f7e188cc7a40ad2ad7ab5",
+		"docs/architecture.md": "sha256:ffa3b101d066da5db056095f1605dcd8be702ae6eb69fd3275cee1daee312591",
+		"docs/checks-and-recovery.md": "sha256:776b1897119db055a006d85b9cffd1f3ac215c3930c3d15be8183143f6147111",
+		"docs/content-api.md": "sha256:715822ef2e01540ae113aa3cb58b2aa8c107a3d31638b264f4c56d490b6c0b40",
+		"docs/content-model.md": "sha256:e9a3b53a72a33ec4bfba69c0d328c7570338db7bbd0d1e8f6dd4b89adf687793",
+		"docs/content-rules.md": "sha256:b9d236568f6f33ff31252f4d3cd2d8dec7f079a499be318282f9188e44468b27",
+		"docs/design-system.md": "sha256:02039b1b3b4ddff6e0c519f66ee90b3fdc02661d7f0bc4f674ddd45a0cb306b6",
+		"docs/generated/inventory.json": "sha256:a15d7d175ed41d1c605251b3f1ba6a008b28bf13fc92957d20cbf622da085d89",
+		"docs/generated/inventory.md": "sha256:34a8057b44a7eb59ea966ad23510113c4b492deef0b8d6c704b5878cd750908c",
+		"docs/install.md": "sha256:e2343b4ae26c341d1e467b6a9a26085cbb9013c02ec291d6ceaa44cfd1fec201",
+		"docs/languages.md": "sha256:2d404f1b996cbde1965276643ed278167e2d923db49b8fc11530ffb2662c9f5e",
+		"template.config.json": "sha256:3d3f810e697f876e5f9179a5db7fac968c4129595cecd6af2c9a1dbf192e9d6c",
+		"seed/seed.json": "sha256:f9f7b2f1304c84b0823799c8a4a2cba2808e9db2e22460c18fe5e3ea834e8db3",
+		"seed/media-map.json": "sha256:19782aef06ebfd07df9f0b20150812514aa4dc8b3b8688d01beb4f54e9eabbd0",
+		"seed/field-map.json": "sha256:8dbf1e6dc5ff58d4012c5ee1eaa9a221cdec43e4a186ad80ba53b2382e66d9ca",
+		"pnpm-lock.yaml": "sha256:49375a6eae59dd5297de5d5c2e5c21c68fa008fe35f388e911465bf1cd5cf956",
+		"tools/forms.json": "sha256:48712892a843cbd30c804cbf957b7e46872c48b1f79ddd92c0488e8e0e3c672d",
+		"seed/media/*": "sha256:25fac2079c34b558341a887938aa9dd808ec1fbe7e3de30cd0f3e1193399cee5 (97 files)"
+	}
+}

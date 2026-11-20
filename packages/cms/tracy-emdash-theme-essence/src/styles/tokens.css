@@ -1,0 +1,57 @@
+/*
+ * JA Essence design tokens. Light values are the source template's own (etc/theme/default.json, measured on the rendered source
+ * home: inventory/visual-contract.md); dark values are the source's own `css/darkmode.css` palette. Every colour reads its
+ * Design-system role first (`--ds-c-<role>`, the names of design-system-roles.json) and keeps the template's own value as the
+ * fallback, so with no system worn the site looks exactly as designed.
+ */
+@theme {
+	--font-display: var(--ds-font-display, var(--font-jost), "Jost", Helvetica, Arial, sans-serif);
+	--font-body: var(--ds-font-body, var(--font-noto-serif), "Noto Serif", Georgia, "Times New Roman", serif);
+
+	--color-bg: var(--ds-c-bg, #f8f8ff);
+	--color-band: var(--ds-c-surface-warm, #ffffff);
+	--color-surface: var(--ds-c-surface, #ffffff);
+	--color-fg: var(--ds-c-fg, rgba(37, 36, 36, 0.7));
+	--color-heading: var(--ds-c-heading, #212529);
+	--color-meta: var(--ds-c-meta, rgba(37, 36, 36, 0.7));
+	--color-line: var(--ds-c-border, rgba(0, 0, 0, 0.1));
+	--color-line-strong: var(--ds-c-fg-2, #212529);
+
+	--color-accent: var(--ds-c-accent, #4d6bff);
+	--color-accent-on: var(--ds-c-accent-on, #ffffff);
+	--color-accent-hover: var(--ds-c-accent-hover, #1a3eed);
+	--color-accent-text: var(--ds-c-accent-text, #4d6bff);
+	--color-accent-text-hover: var(--ds-c-accent-text-hover, #1a3eed);
+	/* the dark button ("Become a subscriber", the newsletter's Sign up) and the words on it */
+	--color-ink: var(--ds-c-ink, #212529);
+	--color-on-ink: var(--ds-c-on-ink, #ffffff);
+
+	/* shadcn semantic tokens, mapped onto the design */
+	--color-background: var(--color-bg);
+	--color-foreground: var(--color-fg);
+	--color-primary: var(--color-accent);
+	--color-primary-foreground: var(--color-accent-on);
+	--color-card: var(--color-surface);
+	--color-card-foreground: var(--color-fg);
+	--color-border: var(--color-line);
+	--color-input: var(--color-line);
+	--color-ring: var(--color-accent);
+	--radius: var(--ds-card-radius, 1rem);
+}
+
+html[data-theme="dark"] {
+	--color-bg: var(--ds-c-bg, #11151f);
+	--color-band: var(--ds-c-surface-warm, #161b27);
+	--color-surface: var(--ds-c-surface, #1a2130);
+	--color-fg: var(--ds-c-fg, #c2c9d6);
+	--color-heading: var(--ds-c-heading, #eef1f6);
+	--color-meta: var(--ds-c-muted, #8c97a8);
+	--color-line: var(--ds-c-border, #2b3548);
+	--color-line-strong: var(--ds-c-border, #3a4459);
+	--color-accent: var(--ds-c-accent, #4d6bff);
+	--color-accent-hover: var(--ds-c-accent-hover, #7d93ff);
+	--color-accent-text: var(--ds-c-accent-text, #4d6bff);
+	--color-accent-text-hover: var(--ds-c-accent-text-hover, #7d93ff);
+	--color-ink: var(--ds-c-ink, #0b0e15);
+	color-scheme: dark;
+}

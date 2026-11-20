@@ -1,0 +1,18 @@
+---
+/** Two or three consecutive pictures of the body, side by side. */
+import { bodyImageUrl } from '@/lib/media'
+
+const { node } = Astro.props
+const imgs = (node?.images ?? [])
+  .map((n: any) => ({
+    src: bodyImageUrl(n?.asset),
+    alt: n?.alt ?? '',
+    w: Number(n?.width ?? n?.asset?.width ?? n?.asset?.meta?.width) || undefined,
+    h: Number(n?.height ?? n?.asset?.height ?? n?.asset?.meta?.height) || undefined
+  }))
+  .filter((i: any) => i.src)
+---
+
+<div class="es-body-row" style={`--cols:${Math.max(1, imgs.length)}`}>
+	{imgs.map((i: any) => <figure class="es-body-pic"><img src={i.src} alt={i.alt} width={i.w} height={i.h} loading="lazy" decoding="async" /></figure>)}
+</div>

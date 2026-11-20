@@ -1,0 +1,857 @@
+{
+  "format": 1,
+  "scope": "Source baseline only. No live IDs, credentials, entry bodies or runtime verification.",
+  "template": {
+    "id": "tracy-essence",
+    "label": "JA Essence",
+    "version": "0.1.0"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "collections": [
+    {
+      "slug": "pages",
+      "label": "Pages",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "view",
+          "label": "View",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 3
+    },
+    {
+      "slug": "posts",
+      "label": "Posts",
+      "routable": true,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "modified",
+          "label": "Modified",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "cover",
+          "label": "Cover",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "hero",
+          "label": "Hero",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hits",
+          "label": "Hits",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "slug": "featured",
+          "label": "Featured",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "slug": "featured_order",
+          "label": "Featured order",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "slug": "home_lead",
+          "label": "Home lead",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "slug": "highlight",
+          "label": "Highlight",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "slug": "kind",
+          "label": "Kind",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "layout",
+          "label": "Layout",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "video_source",
+          "label": "Video source",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "video_id",
+          "label": "Video id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "gallery",
+          "label": "Gallery",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 51
+    },
+    {
+      "slug": "gallery",
+      "label": "gallery",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "number_col",
+          "label": "Number col",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "auto_play",
+          "label": "Auto play",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "auto_time",
+          "label": "Auto time",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "gallery_title",
+          "label": "Gallery title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "gallery_link",
+          "label": "Gallery link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "social",
+      "label": "social",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "social_style",
+          "label": "Social style",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "authors",
+      "label": "Authors",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "name",
+          "label": "Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "avatar",
+          "label": "Avatar",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "job_title",
+          "label": "Job title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bio",
+          "label": "Bio",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 9
+    },
+    {
+      "slug": "category_info",
+      "label": "Category pages",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "list_style",
+          "label": "List style",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 8
+    },
+    {
+      "slug": "contact",
+      "label": "Contact page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "name_label",
+          "label": "Name label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email_label",
+          "label": "Email label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subject_label",
+          "label": "Subject label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "message_label",
+          "label": "Message label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "copy_label",
+          "label": "Copy label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "send_label",
+          "label": "Send label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "chrome",
+      "label": "Site chrome",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "brand_name",
+          "label": "Brand name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "logo_dark",
+          "label": "Logo dark",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "skip_label",
+          "label": "Skip label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "menu_label",
+          "label": "Menu label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "theme_label",
+          "label": "Theme label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_label",
+          "label": "Search label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subscribe_label",
+          "label": "Subscribe label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subscribe_link",
+          "label": "Subscribe link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_text",
+          "label": "Footer text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_cta_label",
+          "label": "Footer cta label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_cta_text",
+          "label": "Footer cta text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "copyright",
+          "label": "Copyright",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_title",
+          "label": "Newsletter title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_text",
+          "label": "Newsletter text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_email",
+          "label": "Newsletter email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_button",
+          "label": "Newsletter button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_terms",
+          "label": "Newsletter terms",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "latest_title",
+          "label": "Latest title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "features_title",
+          "label": "Features title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "tags_title",
+          "label": "Tags title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "follow_title",
+          "label": "Follow title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "more_read_title",
+          "label": "More read title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "more_read_list_title",
+          "label": "More read list title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author_articles_title",
+          "label": "Author articles title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "written_by",
+          "label": "Written by",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "share_label",
+          "label": "Share label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "tags_in_label",
+          "label": "Tags in label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "read_more",
+          "label": "Read more",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "prev_label",
+          "label": "Prev label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "next_label",
+          "label": "Next label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "by_label",
+          "label": "By label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hits_label",
+          "label": "Hits label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_placeholder",
+          "label": "Search placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "articles_label",
+          "label": "Articles label",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": "Primary",
+      "locale": "en",
+      "items": 9
+    },
+    {
+      "name": "footer",
+      "label": "Footer",
+      "locale": "en",
+      "items": 5
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 8
+    },
+    {
+      "name": "tag",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 6
+    }
+  ],
+  "formBindings": [
+    {
+      "form": "contact-{locale}",
+      "collection": "contact",
+      "slug": "contact-layout",
+      "field": "form_id"
+    },
+    {
+      "form": "subscribe-{locale}",
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "form_id"
+    }
+  ],
+  "dependencies": {
+    "@astrojs/node": "11.1.13",
+    "@astrojs/react": "6.0.0",
+    "@cloudflare/kumo": "2.6.0",
+    "@emdash-cms/auth": "1.1.0",
+    "@emdash-cms/plugin-audit-log": "0.2.3",
+    "@emdash-cms/plugin-forms": "0.2.9",
+    "@phosphor-icons/react": "2.1.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.4.12",
+    "better-sqlite3": "12.11.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "emdash": "1.1.0",
+    "emdash-smtp": "0.3.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0",
+    "lucide-react": "1.45.0",
+    "radix-ui": "1.6.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3"
+  },
+  "dependencyNotice": "Declared pins only; enabled plugin registration is owned by astro.config.mjs. Native CMS capabilities need not be separate dependencies.",
+  "routeFiles": [
+    "src/pages/404.astro",
+    "src/pages/[...path].astro"
+  ],
+  "routeNotice": "Route source files only, not expanded URLs. Dynamic/catch-all dispatch and CMS routes require authored guidance and runtime crawl evidence.",
+  "sourceFiles": [
+    "src/components/site/AuthorBox.astro",
+    "src/components/site/AuthorCard.astro",
+    "src/components/site/AuthorLatest.astro",
+    "src/components/site/BrandLogo.astro",
+    "src/components/site/ContactForm.astro",
+    "src/components/site/ContactFormWords.astro",
+    "src/components/site/FollowItem.astro",
+    "src/components/site/Footer.astro",
+    "src/components/site/FormWords.astro",
+    "src/components/site/GalleryStrip.astro",
+    "src/components/site/GridCard.astro",
+    "src/components/site/Header.astro",
+    "src/components/site/Icon.astro",
+    "src/components/site/LeadList.astro",
+    "src/components/site/LeadStrip.astro",
+    "src/components/site/ListMeta.astro",
+    "src/components/site/ListPic.astro",
+    "src/components/site/ListPill.astro",
+    "src/components/site/MoreRead.astro",
+    "src/components/site/Newsletter.astro",
+    "src/components/site/PageOwner.astro",
+    "src/components/site/Pager.astro",
+    "src/components/site/PostBody.astro",
+    "src/components/site/PostFoot.astro",
+    "src/components/site/PostHead.astro",
+    "src/components/site/PostHero.astro",
+    "src/components/site/PostImage.astro",
+    "src/components/site/PostImageRow.astro",
+    "src/components/site/PostMeta.astro",
+    "src/components/site/PostMini.astro",
+    "src/components/site/PostPill.astro",
+    "src/components/site/PostQuote.astro",
+    "src/components/site/ProseBlock.astro",
+    "src/components/site/ProseListItem.astro",
+    "src/components/site/ProseQuote.astro",
+    "src/components/site/ShareRow.astro",
+    "src/components/site/Sidebar.astro",
+    "src/components/site/StackCard.astro",
+    "src/fonts.json",
+    "src/layouts/Base.astro",
+    "src/lib/brand.ts",
+    "src/lib/category-dot.ts",
+    "src/lib/chrome.ts",
+    "src/lib/content.ts",
+    "src/lib/data-links.ts",
+    "src/lib/demo-logo.ts",
+    "src/lib/display-locale.ts",
+    "src/lib/ds-slot.ts",
+    "src/lib/font-subsets.mjs",
+    "src/lib/form-embed-words.ts",
+    "src/lib/hreflang-plugin.ts",
+    "src/lib/hreflang.ts",
+    "src/lib/html.ts",
+    "src/lib/i18n.ts",
+    "src/lib/link-gate.ts",
+    "src/lib/listed-children.ts",
+    "src/lib/media.ts",
+    "src/lib/menu-gate.ts",
+    "src/lib/newsletter-client.ts",
+    "src/lib/page-records.ts",
+    "src/lib/page-routes.json",
+    "src/lib/parent-gate.ts",
+    "src/lib/posts.ts",
+    "src/lib/prose-text.ts",
+    "src/lib/public-origin.ts",
+    "src/lib/stamps.ts",
+    "src/lib/strip-client.ts",
+    "src/lib/tel.ts",
+    "src/lib/ui-words.ts",
+    "src/lib/ui.ts",
+    "src/lib/utils.ts",
+    "src/live.config.ts",
+    "src/middleware.ts",
+    "src/pages/404.astro",
+    "src/pages/[...path].astro",
+    "src/styles/global.css",
+    "src/styles/pages/category.css",
+    "src/styles/pages/home.css",
+    "src/styles/pages/misc.css",
+    "src/styles/pages/post.css",
+    "src/styles/tokens.css",
+    "src/views/Authors.astro",
+    "src/views/Category.astro",
+    "src/views/Contact.astro",
+    "src/views/Home.astro",
+    "src/views/NotFound.astro",
+    "src/views/Post.astro",
+    "src/views/Search.astro"
+  ],
+  "inputs": {
+    "astro.config.mjs": "sha256:072082c5093bed8434eeffd68c8fb268baf142c6c12af956fccedb33be5b5b6a",
+    "package.json": "sha256:c1d984e1d97655453b1d6b515e5a34111da8e767e9e5c6ddac00efb08a3ff287",
+    "pnpm-lock.yaml": "sha256:49375a6eae59dd5297de5d5c2e5c21c68fa008fe35f388e911465bf1cd5cf956",
+    "seed/field-map.json": "sha256:8dbf1e6dc5ff58d4012c5ee1eaa9a221cdec43e4a186ad80ba53b2382e66d9ca",
+    "seed/media-map.json": "sha256:19782aef06ebfd07df9f0b20150812514aa4dc8b3b8688d01beb4f54e9eabbd0",
+    "seed/seed.json": "sha256:f9f7b2f1304c84b0823799c8a4a2cba2808e9db2e22460c18fe5e3ea834e8db3",
+    "src/components/site/AuthorBox.astro": "sha256:a828107783a9f04bd96b712b6fb35779312c2166343b9e814a38fb152b0c2848",
+    "src/components/site/AuthorCard.astro": "sha256:0fccb56c58a027bc0335979caba84b1bf766a3aac07dd7765c3cf2446ffbc4bc",
+    "src/components/site/AuthorLatest.astro": "sha256:066b4dd5af5b611a3995da5fa3b7eead48356f46d7b5351587d81fddd331e30e",
+    "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
+    "src/components/site/ContactForm.astro": "sha256:be6fd800d55301c2bbb3e2062819f9256d9cd4f3784331516894413675b4f30b",
+    "src/components/site/ContactFormWords.astro": "sha256:ec294d30dd61b8a9d624238dbf9f58eb86f82f41afa2602bd6671b899b6e67e1",
+    "src/components/site/FollowItem.astro": "sha256:f43a6fcb17638683e5fcc06c2ccb2ad66ead7caabcff2f144938d827471c2a90",
+    "src/components/site/Footer.astro": "sha256:b1bf43f880261726c7f8dcb640ef2eb1b158155d49bdfe6ec0c0d6a13784341f",
+    "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
+    "src/components/site/GalleryStrip.astro": "sha256:fa9769ac23061a76f00c02ac1118fd513fc6d0459dcb9ba8f8154d74cd20cc62",
+    "src/components/site/GridCard.astro": "sha256:39bcba500fe14840bdd1e94d9c9fe2c3e9f61349d6a8d04252dec592126c8e84",
+    "src/components/site/Header.astro": "sha256:a0c0d83f970d6f598b2bba817f99f25771a162efd7e303f43479ad56d0c207c1",
+    "src/components/site/Icon.astro": "sha256:7dc75e73d004a77c87d1fcb6716ada1f40c1fb5667a15cae84a5fa71f48db9f9",
+    "src/components/site/LeadList.astro": "sha256:b03e70b94a7f7bda2b22c97f8872db91ee6e18325417f8dbc90fa6474068dbf9",
+    "src/components/site/LeadStrip.astro": "sha256:61a7fc389f676278319c6b84134bd8b6bd5924d839b4313c5950596818b5bf8b",
+    "src/components/site/ListMeta.astro": "sha256:88394c6509afe41e82e7fb427103413031ea6028e4c248195168447720bc410a",
+    "src/components/site/ListPic.astro": "sha256:74ab7e0939a0e6698d6fdfe1d852f8757f139769cdb035e3addb17b57d28db87",
+    "src/components/site/ListPill.astro": "sha256:e1d5e6b65cbdd5fb345e401bfc9ce180123aecfc4dbfa6d6fb680a55e6e5b234",
+    "src/components/site/MoreRead.astro": "sha256:7f85778fd578efb2332126b6186a00dd9f0a3b7374d51c5a9dc123710625ed3a",
+    "src/components/site/Newsletter.astro": "sha256:b838577c59dc5b94874af0aa76fb33e8a51250ab046e500e3a2733f48f99e920",
+    "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
+    "src/components/site/Pager.astro": "sha256:e48cec39d1dbf061291c7499a40cecc4d870bc8feec55cfc0c141fb49c4a982b",
+    "src/components/site/PostBody.astro": "sha256:beffaaf7af506358feca917515005768ff9f4e38c2c655d43df1fb7c87c83f4e",
+    "src/components/site/PostFoot.astro": "sha256:89b8a40ba5096e40b33ff3396d79d01f8709b7cad7e35b6280e3986fef9cae6c",
+    "src/components/site/PostHead.astro": "sha256:8dceeb0e64da2a9944393e21265201aea45cbf43f5bcb09925a8120255c5bb38",
+    "src/components/site/PostHero.astro": "sha256:ffa1c39fa1e33f7ba37e200239c7faeffa9483eef66d0183f0f75d3b809d4e26",
+    "src/components/site/PostImage.astro": "sha256:d262bb990d2653977793b42b550ee64109efff3e0a44451ce698bf4c0fc6ed7d",
+    "src/components/site/PostImageRow.astro": "sha256:1130d6730de3dbadc5a546cf5a20fdf3ab19f681e789e75613ae7faad9005067",
+    "src/components/site/PostMeta.astro": "sha256:3dafd386e026fdfe1d14fb70a8e0310c41ec7cc351966b13972bf2f0b2935c8e",
+    "src/components/site/PostMini.astro": "sha256:debf8d645f81d2ac5362db3fc9458e397353d6f5dff71ce3e9cddb7c5316b5e7",
+    "src/components/site/PostPill.astro": "sha256:4315101a20daafb7f09257e6ec86a798fbc9ca9b002b73c7bce58d3498db073f",
+    "src/components/site/PostQuote.astro": "sha256:8cf9e84763ac848353483bb1ff6c14e04c35f83b3086c77c0103f1af845c6293",
+    "src/components/site/ProseBlock.astro": "sha256:aae09606433eaaa875e7b16087bc404ed440e95c9fb56cf764ad2ea530364240",
+    "src/components/site/ProseListItem.astro": "sha256:e2c0293803a3cc1337b84ec79f684d76be0819335d31b5d2528abef0661e5404",
+    "src/components/site/ProseQuote.astro": "sha256:2d5ecd7987f911a2b7b2497143ab99c2feb4dc14c3fb417327a7a1ca782bda62",
+    "src/components/site/ShareRow.astro": "sha256:403fdfd46087a122ce7cf134f80863e12fe298dc2c8d2b83beadafbb9ea98fe7",
+    "src/components/site/Sidebar.astro": "sha256:4f4a52b5de1115f8275c1d06afe556ba676fce9c25c13726d5aabb3131a2c380",
+    "src/components/site/StackCard.astro": "sha256:7e567ac43d4d19271614ffa0974dead5ee8dec2d08ddde79bb783728568c419e",
+    "src/fonts.json": "sha256:ae007f88cbe374d9629cebf9dfb766902ab67b25c4df759a20568e7af8741671",
+    "src/layouts/Base.astro": "sha256:da616dae5b50881aee80afa99b1edbd87885f3a15aba8dda5f3f972798e1f71a",
+    "src/lib/brand.ts": "sha256:38f8c2adeaa1e083f4ef5cabdd8e2ceac7d9243b9481414e41212c6d493e8939",
+    "src/lib/category-dot.ts": "sha256:ef02446d82b50f0851ac5d5b57a04fcf0d64449cbca822a2fdbe7e4e0f28b7e8",
+    "src/lib/chrome.ts": "sha256:52362dd9025e9b268d9df7fb9e60a55a3c30245c98e87ecafbae15d1c445557a",
+    "src/lib/content.ts": "sha256:684f9fba7ecc3ea9332c640791e917a13a2805eb6fe818cd0004a1e06510e31c",
+    "src/lib/data-links.ts": "sha256:fb08660882cf4e99e35cddf7631c84d95405c9e72d0d761f83d1e935ef62910e",
+    "src/lib/demo-logo.ts": "sha256:6c2fb1cbab871811a49fc807afee47e7cc5af7a9220a4b4ac8148b99546cd8f3",
+    "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
+    "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
+    "src/lib/font-subsets.mjs": "sha256:4588e6245fff77b220db5b153406c28cb7c8df3d4de1c2d6ab01a7848e2f6689",
+    "src/lib/form-embed-words.ts": "sha256:0f341c8e6aea0a904c3a60eb1f5644dc51edf5dbbdc79512a8249fbc82ec3a66",
+    "src/lib/hreflang-plugin.ts": "sha256:fb1993974b6296c4a677f4691b7038313c5eb3b222088f4c9160a52e744fbe0d",
+    "src/lib/hreflang.ts": "sha256:924561614f01c3e11fa8f6f06b17ef04e1212a47dc7d1bedd83bb64cfe0f5f98",
+    "src/lib/html.ts": "sha256:30442b05e2b16f22159c04d2dace659f7f553d40a0c6651e25bcb04078d8c5ef",
+    "src/lib/i18n.ts": "sha256:49c23b9690c4300f0f6a509e044a4e1aa6dd26d55a2f6d2f0142108341ac9362",
+    "src/lib/link-gate.ts": "sha256:f035924f28c7ec1670822f3575557e1467cd2a0e4284fb916de16beff3e3d531",
+    "src/lib/listed-children.ts": "sha256:fb03fc5213623a76c22ae6ff13e9f5e6bee4b6a9884b4a9ea5e5e4cf695c13d3",
+    "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
+    "src/lib/menu-gate.ts": "sha256:1884514cd874f6edb1a845332a1da81afb4d85abebd65d287538a6a6a79d1441",
+    "src/lib/newsletter-client.ts": "sha256:b0c432fea2259e8f6d7393a0f450897a950fee0de6cf999dd795a2ec3d0f7940",
+    "src/lib/page-records.ts": "sha256:490bbe348ae80ac7e429e0342e2f898768e2c43c1331905b83c71e2f51eca1ea",
+    "src/lib/page-routes.json": "sha256:a21cbf7fce3b22015cc2aa40ed668914ccafbddb261116884fa0ad07fc3b68ad",
+    "src/lib/parent-gate.ts": "sha256:299a77bee7cb473c869e6e3b9642c99afddf4097f492217a3d9be150bb9ca6bc",
+    "src/lib/posts.ts": "sha256:ab1c2e2ba065cfea9bbb47cef9c50a86414741775c6930d9068cd9da007e531d",
+    "src/lib/prose-text.ts": "sha256:13755292b7abdbc64a511467e36966a9536a9b22d882ccf65319c4e63b4a5f33",
+    "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
+    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/strip-client.ts": "sha256:e92e7c3d20dab5a9d54659d4e5f508d0899bbc6b619e184fad3876839de4673d",
+    "src/lib/tel.ts": "sha256:e4d78945f79f6e0f18ef5e21efe402133d4556fe3030885ca95907d8144c1077",
+    "src/lib/ui-words.ts": "sha256:c94eeee2243ca704f64918dc5a5bbf0178a3b4f9d25418c42bc9dfc47e0118f3",
+    "src/lib/ui.ts": "sha256:f83d530f9d9b2c5107f21e14bb2bac40a9cca39733f2b661003250a2fe1171a9",
+    "src/lib/utils.ts": "sha256:0ca01a948ba414a7c7348bda63bf68803a73dbbb6f10b6e8183280e405d3aa13",
+    "src/live.config.ts": "sha256:52f0c8177d0e327ffdf28af8baf680d539d2aae444ba5ceace98baf095f7bf6c",
+    "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
+    "src/pages/[...path].astro": "sha256:64435407a9dbfb3b59feccee06182434d310834444d3660bcb81ef0c1f07491a",
+    "src/pages/404.astro": "sha256:1bb36ddb50cf53b12f004fa928afd8cf915187984a6943c3d55cc13100dd6318",
+    "src/styles/global.css": "sha256:14156a99e961a0e6341aefdb02449ff26c62b934fe70123b2a9d2f14b04651a2",
+    "src/styles/pages/category.css": "sha256:d91c5768a9ddc72e7ee1a05068ec2be36f033aaa76e70e4ba3b63819f01eb739",
+    "src/styles/pages/home.css": "sha256:acb7e0737b164a2248790a37f4e7a718e3656a169d2f80aa31b5ae272a3b9a6c",
+    "src/styles/pages/misc.css": "sha256:a7175adccfa3e69c48d1ed5de31ee178ee5bf4736273b5e5d195d7369ddda8c9",
+    "src/styles/pages/post.css": "sha256:4f33ff2abfdf84bf394f1493395eed783a0a0e5d7a1969c4fef3b47fae74900a",
+    "src/styles/tokens.css": "sha256:736effb9c9aa3159357c636ab62bc3624c448e16f882ebaf8c7986435616066d",
+    "src/views/Authors.astro": "sha256:188ce273a60b4f866d46c6b29b32b7e26d1a5d02183fc74053bfd21b4bce7f62",
+    "src/views/Category.astro": "sha256:ba7470d7377f33475a42600b538b48f881802015fb73a9782af65622f8f2a3b2",
+    "src/views/Contact.astro": "sha256:872a0b7453716c028a4030298f05565126c5f76d77600fd819d6bb3049b24d8a",
+    "src/views/Home.astro": "sha256:b808485eca0ee1618debe12ca1708d09686fc3486ec8278b3933637a1fa948be",
+    "src/views/NotFound.astro": "sha256:a87bd2364f6e4f31de61b6e3a3b5cb0e38905241a1708e96cfd90262a1e9d44c",
+    "src/views/Post.astro": "sha256:d49a0369ad4032c34d797d6bcf65ad14fd8aba6605d8d160b5c6d8821fd24e6f",
+    "src/views/Search.astro": "sha256:bf7d7c52985ea2af28db16da6be975290f3a16e8d1d0daa62659df7baf32f816",
+    "template.config.json": "sha256:3d3f810e697f876e5f9179a5db7fac968c4129595cecd6af2c9a1dbf192e9d6c",
+    "tools/forms.json": "sha256:48712892a843cbd30c804cbf957b7e46872c48b1f79ddd92c0488e8e0e3c672d",
+    "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
+  }
+}

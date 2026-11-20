@@ -1,0 +1,16 @@
+---
+/** One picture of the body, full width of the text column, with the size the media record gives it. */
+import { bodyImageUrl } from '@/lib/media'
+
+const { node } = Astro.props
+const src = bodyImageUrl(node?.asset)
+const w = Number(node?.width ?? node?.asset?.width ?? node?.asset?.meta?.width) || undefined
+const h = Number(node?.height ?? node?.asset?.height ?? node?.asset?.meta?.height) || undefined
+---
+
+{src && (
+	<figure class="es-body-pic">
+		<img src={src} alt={node.alt ?? ''} width={w} height={h} loading="lazy" decoding="async" />
+		{node.caption && <figcaption>{node.caption}</figcaption>}
+	</figure>
+)}

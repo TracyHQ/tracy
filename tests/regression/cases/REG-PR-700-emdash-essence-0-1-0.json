@@ -1,0 +1,62 @@
+{
+  "id": "REG-PR-700-emdash-essence-0-1-0",
+  "kind": "feat",
+  "title": "JA Essence EmDash 0.1.0: the template installs clean, every page family and the contact and subscribe forms work, nothing is requested from another origin before a click, and the shipped package carries its documented tools",
+  "pr": 700,
+  "area": "emdash-theme/tracy-essence",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout, run the package's own tests from packages/cms/tracy-emdash-theme-essence (the package is not a workspace member; its dependencies are installed there with pnpm install --frozen-lockfile).",
+    "S2: Run run.cmd from run.cwd: the personalization tool on the template's real seed, the click-to-play video facade and slot roles, the source capture kept offline, the data link and link gate rules, the pager and category views, and the forms words.",
+    "S3: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The personalize tool run on the template's real seed with --no-model leaves no demo place, phone, address or company name of JA Essence in any field the template owns and keeps the customer's words.",
+    "The source capture blocks every request to another origin and lists it, and lets the font hosts through.",
+    "A link of the data that is empty or a hash is drawn without an address, never as a dead link; a page or an article of an unticked page answers 404.",
+    "The release tool refuses a package whose state carries a QA leftover (a form submission, a mail log row, a revision written after the seed)."
+  ],
+  "selectors": {
+    "personalize": "tools/personalize.mjs --no-model --json",
+    "source capture": "tools/visual-lib.mjs keepSourceOffline",
+    "state residue": "tools/state-residue.mjs (stateResidue)"
+  },
+  "evidence": "Release cut of JA Essence 0.1.0 (19/11/2026): all 16 gates of tools/qa.mjs pass on the clean install of the package.",
+  "fence": "The personalization tool, the offline source capture, the link gate and the state residue check that tools/release.mjs runs before packing the state",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "tests/personalize-demo-street.test.mjs",
+      "tests/source-offline.test.mjs",
+      "tests/state-residue.test.mjs",
+      "tests/link-gate.test.mjs",
+      "tests/form-embed-words.test.mjs"
+    ],
+    "cwd": "packages/cms/tracy-emdash-theme-essence",
+    "needs": [],
+    "tests": [
+      "the demo place is its proper names",
+      "withoutDemoPlace takes only the place phrase",
+      "the demo contacts come from the rules",
+      "with an address and no model",
+      "with no address: the demo address",
+      "with a model that gives nothing usable",
+      "offSourceOrigin",
+      "blockedForSource",
+      "keepSourceOffline",
+      "visual-qa.mjs routes the source page offline",
+      "a state equal to a fresh seed has no residue",
+      "form submissions and the mail log a gate left are named",
+      "a revision written after the seed is named",
+      "the longest key alone lets a child outlive",
+      "the menu drops an unticked page",
+      "the header draws the menu through the gate",
+      "every place that renders the plugin form goes through FormWords"
+    ]
+  }
+}

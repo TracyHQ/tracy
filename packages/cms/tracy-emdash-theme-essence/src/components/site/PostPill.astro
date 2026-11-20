@@ -1,0 +1,20 @@
+---
+/** A category or tag pill: grey rounded label with a coloured dot (the dot colour cycles by the slug, as the source's `cat-*` classes do). */
+import { categoryDot } from '@/lib/category-dot'
+
+interface Props {
+  href: string | null
+  label: string
+  slug: string
+  /** `bare`: no grey ground (the pill sits on a white card). */
+  tone?: 'grey' | 'white'
+  /** a tag chip: its dot colour comes from its place in the list (CSS), not from its name */
+  tag?: boolean
+}
+const { href, label, slug, tone = 'grey', tag = false } = Astro.props
+const dotStyle = tag ? undefined : `--dot:${categoryDot(slug)}`
+---
+
+{href
+	? <a class:list={['es-pill-cat', tone === 'white' && 'is-white']} href={href} style={dotStyle}>{label}</a>
+	: <span class:list={['es-pill-cat', tone === 'white' && 'is-white']} style={dotStyle}>{label}</span>}

@@ -1,0 +1,28 @@
+---
+/** "Author's latest articles": the other posts of the same author. `cards`: two white cards (default layout); `list`: small rows in a white box (the other layouts). */
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import type { PostRow } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import PostMini from '@/components/site/PostMini.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  posts: PostRow[]
+  variant: 'cards' | 'list'
+}
+const { chrome, locale, posts, variant } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+---
+
+{posts.length > 0 && (
+	<section class:list={['es-author-latest', `is-${variant}`]}>
+		{variant === 'cards'
+			? <div class="es-sec-title" {...$c('author_articles_title')}>{chrome.site.author_articles_title}</div>
+			: <div class="es-sec-title is-small" {...$c('author_articles_title')}>{chrome.site.author_articles_title}</div>}
+		<div class="es-author-items">
+			{posts.map((p) => <PostMini post={p} chrome={chrome} locale={locale} variant={variant === 'cards' ? 'card' : 'thumb'} withDate />)}
+		</div>
+	</section>
+)}

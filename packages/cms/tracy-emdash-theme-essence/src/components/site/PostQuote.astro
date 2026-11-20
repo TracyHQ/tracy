@@ -1,0 +1,18 @@
+---
+/**
+ * A run of quote blocks: the first paragraphs are the quote, a last paragraph after them is its author line (the source's
+ * `figcaption`). A single block is a quote with no author line.
+ */
+import { PortableText } from 'emdash/ui'
+import ProseBlock from './ProseBlock.astro'
+
+const { node } = Astro.props
+const all = (node?.blocks ?? []).map((b: Record<string, unknown>) => ({ ...b, style: 'normal' }))
+const quote = all.length > 1 ? all.slice(0, -1) : all
+const by = all.length > 1 ? all[all.length - 1] : null
+---
+
+<figure class="es-quote">
+	<blockquote><PortableText value={quote} components={{ block: ProseBlock }} /></blockquote>
+	{by && <figcaption><PortableText value={[by]} components={{ block: ProseBlock }} /></figcaption>}
+</figure>

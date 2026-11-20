@@ -1,0 +1,57 @@
+---
+/** The top strip of the Home: overlay cards on a picture, three at a time on a wide screen, a scroll-snap row with dots. */
+import { formatDate, href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { authorPath, postPath, type AuthorRow, type PostRow } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { ui } from '@/lib/ui'
+import type { Chrome } from '@/lib/chrome'
+import ListPill from '@/components/site/ListPill.astro'
+
+interface Props {
+  posts: PostRow[]
+  chrome: Chrome
+  authors: Record<string, AuthorRow>
+}
+const { posts, chrome, authors } = Astro.props
+const { tag, w } = ui(chrome.locale)
+const liveAuthor = await liveLinks(
+  Astro.request,
+  chrome.locale,
+  Object.values(authors).map((a) => authorPath(a.slug))
+)
+const stamps = (p: PostRow) => stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })
+---
+
+{posts.length > 0 && (
+	<section class="es-strip" data-es-strip data-label={w.pageOf}>
+		<div class="es-wrap">
+			<ul class="es-strip-track" data-es-track>
+				{posts.map((p) => {
+					const $p = stamps(p)
+					const src = mediaUrl(p.cover)
+					const a = authors[p.author]
+					return (
+						<li class="es-strip-item" {...$p()}>
+							{src && <img src={src} alt="" width={p.cover?.width ?? 355} height={p.cover?.height ?? 362} loading="eager" decoding="async" {...$p('cover')} />}
+							<div class="es-strip-content">
+								<ListPill post={p} chrome={chrome} class="es-strip-pill" />
+								<h3><a href={href(chrome.locale, postPath(p))} {...$p('title')}>{p.title}</a></h3>
+								<p class="es-strip-meta">
+									{a && <span {...$p('author')}>{chrome.site.by_label} {liveAuthor(authorPath(a.slug)) ? <a href={href(chrome.locale, authorPath(a.slug))}>{a.name}</a> : <b>{a.name}</b>}</span>}
+									<time datetime={p.date} {...$p('date')}>{formatDate(p.date, tag)}</time>
+								</p>
+							</div>
+						</li>
+					)
+				})}
+			</ul>
+			<div class="es-dots" data-es-dots></div>
+		</div>
+	</section>
+)}
+
+<script>
+	import '@/lib/strip-client'
+</script>

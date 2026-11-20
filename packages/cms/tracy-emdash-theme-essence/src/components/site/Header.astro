@@ -1,0 +1,141 @@
+---
+import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
+import { networkOf } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { href } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import Icon from '@/components/site/Icon.astro'
+import { liveLinks } from '@/lib/link-gate'
+import { menuUrls, pruneMenu } from '@/lib/menu-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  chrome: Chrome
+  currentPath: string
+  /** `home`: social row, brand and button above a second row with the menu; `inner`: one row. */
+  variant?: 'home' | 'inner'
+}
+const { chrome, currentPath, variant = 'inner' } = Astro.props
+const { site, locale } = chrome
+const { w } = ui(locale)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const settings = await getSiteSettings()
+const logos = brandLogos(settings, site.logo_dark, site.brand_name)
+const own = (url: string) => (url ? dataHref(url, (p) => href(locale, p)) : '')
+const active = (item: ChromeMenuItem): boolean => {
+  const u = item.url
+  if (u === '/') return currentPath === '/'
+  return (u !== '' && (currentPath === u || currentPath.startsWith(`${u}/`))) || item.children.some(active)
+}
+// the menu without the pages the customer unticked, and the pages under them
+const live = await liveLinks(Astro.request, locale, [...menuUrls(chrome.primary), site.subscribe_link])
+const primary = pruneMenu(chrome.primary, live)
+const social = chrome.social['social']
+const subscribeUrl = site.subscribe_link && live(site.subscribe_link) ? own(site.subscribe_link) : ''
+---
+
+<header class:list={['es-header', `is-${variant}`]}>
+	{variant === 'home' && (
+		<div class="es-wrap">
+			<div class="es-header-top">
+				<div class="es-social" {...(social ? stampFor(Astro.request, 'social', social.entry)() : {})}>
+					{(social?.items ?? []).map((it) => (it.link && it.link !== '#' ? <a href={it.link} title={it.title} aria-label={it.title}><Icon name={networkOf(it.font_icon, it.title)} size={20} weight="fill" /></a> : <span class="es-social-off" title={it.title}><Icon name={networkOf(it.font_icon, it.title)} size={20} weight="fill" /></span>))}
+				</div>
+				<a class="es-brand-link" href={href(locale, '/')} aria-label={site.brand_name}>
+					<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="es-logo"><span class="es-brand" {...$c('brand_name')}>{site.brand_name}</span></BrandLogo>
+				</a>
+				{subscribeUrl && <a class="es-btn es-subscribe" href={subscribeUrl} {...$c('subscribe_label')}><Icon name="plane" size={16} />{site.subscribe_label}</a>}
+			</div>
+		</div>
+	)}
+	<div class="es-wrap">
+		<div class="es-header-bar">
+			{variant === 'inner' && (
+				<a class="es-brand-link" href={href(locale, '/')} aria-label={site.brand_name}>
+					<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="es-logo"><span class="es-brand" {...$c('brand_name')}>{site.brand_name}</span></BrandLogo>
+				</a>
+			)}
+			<div class="es-bar-left">
+				<button type="button" class="es-icon-btn es-burger" data-offcanvas-toggle aria-expanded="false" aria-controls="offcanvas" aria-label={site.menu_label} {...$c('menu_label')}><Icon name="bars" size={22} /></button>
+				{variant === 'home' && (
+					<button type="button" class="es-icon-btn" data-theme-toggle aria-label={site.theme_label} title={site.theme_label} {...$c('theme_label')}><span data-theme-icon="moon"><Icon name="moon" size={20} /></span><span data-theme-icon="sun"><Icon name="sun" size={20} /></span></button>
+				)}
+			</div>
+			<nav class="es-nav" aria-label="Primary">
+				<ul>
+					{primary.map((item) => (
+						<li class:list={[active(item) && 'is-active', item.children.length && 'has-sub']}>
+							{item.url ? <a href={own(item.url)}>{item.label}{item.children.length > 0 && <Icon name="caret" size={12} weight="bold" />}</a> : <span tabindex="0">{item.label}{item.children.length > 0 && <Icon name="caret" size={12} weight="bold" />}</span>}
+							{item.children.length > 0 && (
+								<ul class="es-sub">
+									{item.children.map((c) => <li><a href={own(c.url)}>{c.label}</a></li>)}
+								</ul>
+							)}
+						</li>
+					))}
+				</ul>
+			</nav>
+			<div class="es-bar-right">
+				{variant === 'inner' && (
+					<button type="button" class="es-icon-btn" data-theme-toggle aria-label={site.theme_label} title={site.theme_label}><span data-theme-icon="moon"><Icon name="moon" size={20} /></span><span data-theme-icon="sun"><Icon name="sun" size={20} /></span></button>
+				)}
+				<button type="button" class="es-icon-btn" data-search-toggle aria-expanded="false" aria-controls="es-search" aria-label={site.search_label} {...$c('search_label')}><Icon name="search" size={20} /></button>
+				{variant === 'inner' && subscribeUrl && <a class="es-btn es-subscribe" href={subscribeUrl} {...$c('subscribe_label')}><Icon name="plane" size={16} />{site.subscribe_label}</a>}
+			</div>
+		</div>
+		<form class="es-searchbox" id="es-search" role="search" action={href(locale, '/search')} method="get" hidden>
+			<input type="search" name="q" placeholder={site.search_placeholder} aria-label={site.search_label} />
+			<button class="es-btn" type="submit">{site.search_label}</button>
+		</form>
+	</div>
+	<div class="es-offcanvas" id="offcanvas" hidden>
+		<button type="button" class="es-icon-btn" data-offcanvas-close aria-label={w.close}><Icon name="close" size={22} /></button>
+		<ul>
+			{primary.map((item) => (
+				<li>
+					{item.url ? <a href={own(item.url)}>{item.label}</a> : <span>{item.label}</span>}
+					{item.children.length > 0 && <ul>{item.children.map((c) => <li><a href={own(c.url)}>{c.label}</a></li>)}</ul>}
+				</li>
+			))}
+		</ul>
+		<button type="button" class="es-icon-btn" data-theme-toggle aria-label={site.theme_label}><span data-theme-icon="moon"><Icon name="moon" size={20} /></span><span data-theme-icon="sun"><Icon name="sun" size={20} /></span></button>
+	</div>
+</header>
+<script is:inline>
+	(function () {
+		const panel = document.getElementById('offcanvas');
+		const open = function (on) {
+			if (!panel) return;
+			panel.hidden = !on;
+			document.querySelectorAll('[data-offcanvas-toggle]').forEach(function (b) { b.setAttribute('aria-expanded', on ? 'true' : 'false'); });
+		};
+		document.querySelectorAll('[data-offcanvas-toggle]').forEach(function (b) { b.addEventListener('click', function () { open(panel.hidden); }); });
+		document.querySelectorAll('[data-offcanvas-close]').forEach(function (b) { b.addEventListener('click', function () { open(false); }); });
+		document.addEventListener('keydown', function (e) { if (e.key === 'Escape') open(false); });
+		// a click anywhere outside the panel and its buttons closes it
+		document.addEventListener('click', function (e) {
+			if (panel && !panel.hidden && !panel.contains(e.target) && !e.target.closest('[data-offcanvas-toggle]')) open(false);
+		});
+		const box = document.getElementById('es-search');
+		const sb = document.querySelector('[data-search-toggle]');
+		if (box && sb)
+			sb.addEventListener('click', function () {
+				box.hidden = !box.hidden;
+				sb.setAttribute('aria-expanded', box.hidden ? 'false' : 'true');
+				if (!box.hidden) box.querySelector('input').focus();
+			});
+		document.querySelectorAll('[data-theme-toggle]').forEach(function (b) {
+			b.addEventListener('click', function () {
+				const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+				if (dark) document.documentElement.removeAttribute('data-theme');
+				else document.documentElement.setAttribute('data-theme', 'dark');
+				const ds = document.getElementById('tracy-ds-slot')?.getAttribute('data-ds');
+				const key = document.documentElement.hasAttribute('data-ds-worn') && ds ? 'tracy-essence-theme@' + ds : 'tracy-essence-theme';
+				try { localStorage.setItem(key, dark ? 'light' : 'dark'); } catch (e) {}
+			});
+		});
+	})();
+</script>

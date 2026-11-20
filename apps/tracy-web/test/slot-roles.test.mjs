@@ -209,7 +209,8 @@ test('slotRolesOf resolves EmDash seed files when laid out as in the tracy-web D
     'tracy-base',
     'tracy-coffee',
     'tracy-restaurant',
-    'tracy-diner'
+    'tracy-diner',
+    'tracy-essence'
   ]) {
     const pkg = slug.replace(/^tracy-/, 'tracy-emdash-theme-')
     assert.ok(

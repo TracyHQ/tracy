@@ -1,0 +1,20 @@
+{
+  "pages": [
+    {
+      "path": "/",
+      "slug": "home",
+      "view": "home"
+    },
+    {
+      "path": "/our-authors",
+      "slug": "our-authors",
+      "view": "authors"
+    },
+    {
+      "path": "/contact",
+      "slug": "contact",
+      "view": "contact"
+    }
+  ],
+  "lists": []
+}

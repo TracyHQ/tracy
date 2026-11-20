@@ -1,0 +1,26 @@
+---
+/** "More Read": posts that share a tag with this one. `list`: picture and title rows (default layout); `cards`: three white cards. */
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import type { PostRow } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import PostMini from '@/components/site/PostMini.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  posts: PostRow[]
+  variant: 'cards' | 'list'
+}
+const { chrome, locale, posts, variant } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+---
+
+{posts.length > 0 && (
+	<section class:list={['es-more-read', `is-${variant}`]}>
+		<h2 class="es-sec-title" {...$c(variant === 'cards' ? 'more_read_list_title' : 'more_read_title')}>{variant === 'cards' ? chrome.site.more_read_list_title : chrome.site.more_read_title}</h2>
+		<div class="es-more-items">
+			{posts.map((p) => <PostMini post={p} chrome={chrome} locale={locale} variant={variant === 'cards' ? 'card' : 'thumb'} />)}
+		</div>
+	</section>
+)}

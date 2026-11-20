@@ -1,0 +1,228 @@
+{
+  "layout": {
+    "id": "PostVariants",
+    "view": "src/views/Post.astro",
+    "family": "detail"
+  },
+  "rules": [
+    ["mini-title", ".es-mini.is-card .es-mini-title", "detail/video/index.html"],
+    ["abox-title", ".es-author-box h3", "detail/layout-3/index.html"],
+    ["abox-bio", ".es-abox-bio", "detail/layout-3/index.html"],
+    ["mini-thumb-title", ".es-mini.is-thumb .es-mini-title", "detail/video/index.html", true],
+    [
+      "sec-title-type1",
+      ".es-post[data-layout=\"type-1\"] .es-sec-title.is-small",
+      "detail/layout-2/index.html",
+      true
+    ]
+  ],
+  "parity": {
+    "postTitle": {
+      "site": ".es-post-title",
+      "source": "h2[itemprop=\"headline\"]"
+    },
+    "sideTitle": {
+      "site": ".es-side-title",
+      "source": ".module-title"
+    }
+  },
+  "pages": [
+    {
+      "id": "en-post-type1",
+      "path": "/blog/mental-health-and-well-being-strategies-blog-health",
+      "source": ["detail/layout-2/index.html"],
+      "identity": ".es-article",
+      "collections": ["chrome", "posts", "authors", "social", "gallery"],
+      "rules": [
+        "post-title",
+        "post-body",
+        "post-quote",
+        "quote-by",
+        "body-h2",
+        "sec-title",
+        "mini-title",
+        "sec-title-type1",
+        "mini-thumb-title"
+      ],
+      "parity": ["nav", "postTitle", "footerButton", "ground"],
+      "content": [
+        [
+          "h1",
+          ".es-post-title",
+          "detail/layout-2/index.html",
+          "field",
+          "posts.title",
+          "Mental Health and Well-being Strategies"
+        ],
+        [
+          "p1",
+          ".es-body > p",
+          "detail/layout-2/index.html",
+          "field",
+          "posts.body",
+          "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        ],
+        ["h2", ".es-body h2", "detail/layout-2/index.html", "field", "posts.body", "Me unpleasing impossible"]
+      ],
+      "images": "placeholders"
+    },
+    {
+      "id": "en-post-type2",
+      "path": "/blog/essential-nutrients-for-optimal-health-blog-health",
+      "source": ["detail/layout-3/index.html"],
+      "identity": ".es-article",
+      "collections": ["chrome", "posts", "authors", "social", "gallery"],
+      "rules": [
+        "post-title",
+        "post-body",
+        "post-quote",
+        "quote-by",
+        "body-h2",
+        "sec-title",
+        "mini-title",
+        "abox-title",
+        "abox-bio",
+        "newsletter-title",
+        "newsletter-text",
+        "sec-title-small",
+        "mini-thumb-title"
+      ],
+      "parity": ["nav", "postTitle", "footerButton", "ground"],
+      "content": [
+        [
+          "h1",
+          ".es-post-title",
+          "detail/layout-3/index.html",
+          "field",
+          "posts.title",
+          "Essential Nutrients for Optimal Health"
+        ],
+        [
+          "p1",
+          ".es-body > p",
+          "detail/layout-3/index.html",
+          "field",
+          "posts.body",
+          "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        ],
+        [
+          "h2",
+          ".es-body h2",
+          "detail/layout-3/index.html",
+          "field",
+          "posts.body",
+          "Me unpleasing impossible"
+        ],
+        [
+          "written",
+          ".es-author-box h3",
+          "detail/layout-3/index.html",
+          "field",
+          "chrome.written_by",
+          "Written by"
+        ]
+      ],
+      "images": "placeholders"
+    },
+    {
+      "id": "en-post-video",
+      "path": "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+      "source": ["detail/video/index.html"],
+      "identity": ".es-article",
+      "collections": ["chrome", "posts", "authors", "social", "gallery"],
+      "rules": [
+        "post-title",
+        "post-body",
+        "post-quote",
+        "quote-by",
+        "body-h2",
+        "sec-title",
+        "mini-title",
+        "side-title",
+        "newsletter-title",
+        "newsletter-text",
+        "sec-title-small",
+        "mini-thumb-title"
+      ],
+      "parity": ["nav", "postTitle", "sideTitle", "footerButton", "ground"],
+      "content": [
+        [
+          "h1",
+          ".es-post-title",
+          "detail/video/index.html",
+          "field",
+          "posts.title",
+          "Fitness Tips for a Healthy Lifestyle"
+        ],
+        [
+          "p1",
+          ".es-body > p",
+          "detail/video/index.html",
+          "field",
+          "posts.body",
+          "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        ],
+        ["h2", ".es-body h2", "detail/video/index.html", "field", "posts.body", "Me unpleasing impossible"],
+        [
+          "side",
+          ".es-side-title",
+          "detail/video/index.html",
+          "field",
+          "chrome.latest_title",
+          "Articles - Latest"
+        ]
+      ],
+      "images": "placeholders"
+    },
+    {
+      "id": "en-post-gallery",
+      "path": "/blog/natural-remedies-for-common-ailments-blog-fashion",
+      "source": ["detail/gallery/index.html"],
+      "identity": ".es-article",
+      "collections": ["chrome", "posts", "authors", "social", "gallery"],
+      "rules": [
+        "post-title",
+        "post-body",
+        "post-quote",
+        "quote-by",
+        "body-h2",
+        "sec-title",
+        "mini-title",
+        "side-title",
+        "newsletter-title",
+        "newsletter-text",
+        "sec-title-small",
+        "mini-thumb-title"
+      ],
+      "parity": ["nav", "postTitle", "sideTitle", "footerButton", "ground"],
+      "content": [
+        [
+          "h1",
+          ".es-post-title",
+          "detail/gallery/index.html",
+          "field",
+          "posts.title",
+          "Natural Remedies for Common Ailments"
+        ],
+        [
+          "p1",
+          ".es-body > p",
+          "detail/gallery/index.html",
+          "field",
+          "posts.body",
+          "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        ],
+        ["h2", ".es-body h2", "detail/gallery/index.html", "field", "posts.body", "Me unpleasing impossible"],
+        [
+          "side",
+          ".es-side-title",
+          "detail/gallery/index.html",
+          "field",
+          "chrome.latest_title",
+          "Articles - Latest"
+        ]
+      ],
+      "images": "placeholders"
+    }
+  ]
+}

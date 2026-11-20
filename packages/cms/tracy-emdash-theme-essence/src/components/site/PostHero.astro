@@ -1,0 +1,89 @@
+---
+/** The picture at the head of an article: the hero image, a YouTube player (kind `video`) or a sliding stack of pictures (kind `gallery`). */
+import type { PostRow } from '@/lib/posts'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { ui } from '@/lib/ui'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  post: PostRow
+  locale: string /** a taller crop (layout type-2) */
+  tall?: boolean
+}
+const { post, locale, tall = false } = Astro.props
+const { w } = ui(locale)
+const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
+const hero = mediaUrl(post.hero)
+const hw = Number(post.hero?.width) || 1128
+const hh = Number(post.hero?.height) || 752
+const video =
+  post.kind === 'video' && post.videoSource === 'youtube' && /^[\w-]{6,20}$/.test(post.videoId)
+    ? post.videoId
+    : ''
+const pics =
+  post.kind === 'gallery'
+    ? post.gallery
+        .map((g) => ({
+          src: mediaUrl(g.image),
+          w: Number(g.image?.width) || hw,
+          h: Number(g.image?.height) || hh
+        }))
+        .filter((g) => g.src)
+    : []
+---
+
+{video
+	? (
+		<div class="es-hero is-video" data-es-video={video} data-es-video-title={post.title} {...$p('video_id')}>
+			<button type="button" class="es-video-play" aria-label={`${w.playVideo}: ${post.title}`}>
+				{hero && <img src={hero} alt="" width={hw} height={hh} loading="eager" />}
+				<span class="es-video-badge"><Icon name="play" size={28} weight="fill" /></span>
+			</button>
+		</div>
+	)
+	: pics.length > 1
+		? (
+			<div class="es-hero is-gallery" data-es-slider {...$p('gallery')}>
+				<div class="es-slides" data-es-slides>
+					{pics.map((g) => <img src={g.src!} alt="" width={g.w} height={g.h} loading="eager" />)}
+				</div>
+				<button type="button" class="es-sl-arrow is-prev" data-es-sl-step="-1" aria-label={w.previousSlide}><Icon name="prev" size={16} /></button>
+				<button type="button" class="es-sl-arrow is-next" data-es-sl-step="1" aria-label={w.nextSlide}><Icon name="next" size={16} /></button>
+				<div class="es-sl-thumbs">
+					{pics.map((g, i) => <button type="button" class:list={['es-sl-thumb', i === 0 && 'is-active']} data-es-sl-dot={i} aria-label={`${i + 1}`}><img src={g.src!} alt="" width="64" height="44" loading="lazy" /></button>)}
+				</div>
+			</div>
+		)
+		: hero && <figure class:list={['es-hero', tall && 'is-tall']}><img src={hero} alt="" width={hw} height={hh} loading="eager" fetchpriority="high" {...$p('hero')} /></figure>}
+
+<script is:inline>
+	(function () {
+		// the player is a click-to-play facade: nothing is fetched from the video host until the visitor presses play
+		document.querySelectorAll('[data-es-video]').forEach(function (root) {
+			const btn = root.querySelector('.es-video-play');
+			if (!btn) return;
+			btn.addEventListener('click', function () {
+				const f = document.createElement('iframe');
+				f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(root.getAttribute('data-es-video')) + '?autoplay=1';
+				f.title = root.getAttribute('data-es-video-title') || '';
+				f.setAttribute('allow', 'accelerometer; autoplay; compute-pressure; encrypted-media; gyroscope; picture-in-picture; fullscreen');
+				f.setAttribute('allowfullscreen', '');
+				f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+				root.replaceChildren(f);
+				f.focus();
+			});
+		});
+	})();
+	(function () {
+		document.querySelectorAll('[data-es-slider]').forEach(function (root) {
+			const track = root.querySelector('[data-es-slides]');
+			const dots = root.querySelectorAll('[data-es-sl-dot]');
+			if (!track || !dots.length) return;
+			const show = function (i) { dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); }); };
+			track.addEventListener('scroll', function () { show(Math.round(track.scrollLeft / track.clientWidth)); }, { passive: true });
+			dots.forEach(function (d, i) { d.addEventListener('click', function () { track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' }); show(i); }); });
+			root.querySelectorAll('[data-es-sl-step]').forEach(function (b) { b.addEventListener('click', function () { const n = dots.length; const at = Math.round(track.scrollLeft / track.clientWidth); const to = (at + Number(b.getAttribute('data-es-sl-step')) + n) % n; track.scrollTo({ left: to * track.clientWidth, behavior: 'smooth' }); show(to); }); });
+		});
+	})();
+</script>

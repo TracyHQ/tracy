@@ -1,0 +1,110 @@
+/* JA Essence: misc page styles (class prefix `es-`): Contact, Authors, Search, the newsletter box. Imported by global.css. */
+@layer components {
+	/* ---- Contact: the white box, 834px of content (measured on the source: x303..1137 at 1440) ---- */
+	.es-contact { max-width: 906px; margin-inline: auto; padding: 36px; }
+	.es-contact h1 { text-align: center; margin-bottom: 12px; }
+	@media (max-width: 991px) { .es-contact h1 { font-size: 28px; line-height: 36.4px; } }
+	.es-contact-intro { text-align: center; margin: 0 0 48px; }
+	.es-contact .ec-form { display: block; }
+	.es-contact .ec-form-page { display: grid; gap: 31px; border: 0; padding: 0; margin: 0; min-width: 0; }
+	.es-contact .ec-form-field { min-width: 0; }
+	.es-contact .ec-form-label { display: block; margin-bottom: 12px; font-family: var(--font-body); font-size: 16px; line-height: 18px; color: var(--color-meta); }
+	.es-contact .ec-form-label:has(.ec-form-required) { font-family: var(--font-display); font-size: 18px; color: var(--color-heading); }
+	/* dark: the source draws every label in the body colour, "Your message" included (measured rgb(194, 201, 214)) */
+	html[data-theme="dark"] .es-contact .ec-form-label { color: var(--color-fg); }
+	.es-contact .ec-form-required { margin-left: 6px; color: var(--ds-c-danger-text, #e03131); }
+	html[data-theme="dark"] .es-contact .ec-form-required { color: var(--ds-c-danger-text, #ff8787); } /* ds-keep: status colour: the contact form keeps its red required mark and error line under every system */
+	.es-contact .ec-form-input:not([type="checkbox"]) { display: block; width: 100%; box-sizing: border-box; padding: 12.8px 18px; font-family: var(--font-body); font-size: 14px; line-height: 20.3px; color: var(--color-heading); background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--ds-input-radius, 8px); }
+	.es-contact .ec-form-input::placeholder { color: var(--color-meta); opacity: 1; }
+	.es-contact textarea.ec-form-input { height: 231px; resize: vertical; }
+	.es-contact .ec-form-input:focus { outline: 1px solid var(--color-accent); outline-offset: 0; border-color: var(--color-accent); }
+	.es-contact .ec-form-field--checkbox { margin-top: -16px; }
+	.es-contact .ec-form-checkbox-label { display: flex; align-items: center; gap: 10px; font-size: 16px; }
+	.es-contact .ec-form-checkbox-label input { width: 16px; height: 16px; margin: 0; accent-color: var(--color-accent); }
+	.es-contact .ec-form-error { display: block; margin-top: 4px; font-size: 14px; color: var(--ds-c-danger-text, #e03131); }
+	html[data-theme="dark"] .es-contact .ec-form-error { color: var(--ds-c-danger-text, #ff8787); }
+	.es-contact .ec-form-error:empty, .es-contact .ec-form-status:empty { display: none; }
+	.es-contact .ec-form-nav { display: flex; margin-top: 50px; }
+	.es-contact .ec-form-prev, .es-contact .ec-form-next { display: none; }
+	.es-contact .ec-form-submit { display: inline-flex; align-items: center; justify-content: center; padding: 12.8px 18px; font-family: var(--font-display); font-size: 18px; line-height: 20.7px; color: var(--color-accent-on); background: var(--color-accent); border: 1px solid var(--color-accent); border-radius: var(--ds-btn-radius, 8px); cursor: pointer; transition: background-color .2s, border-color .2s; }
+	.es-contact .ec-form-submit:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+	.es-contact .ec-form-submit:disabled { opacity: .6; cursor: progress; }
+	.es-contact .ec-form-status { margin-top: 24px; padding: 12px 18px; border-radius: var(--ds-card-radius, 8px); border: 1px solid var(--color-line); font-family: var(--font-display); font-size: 16px; color: var(--color-heading); }
+	.es-contact .ec-form-status--success { border-color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+	.es-contact .ec-form-status--error { border-color: var(--ds-c-danger, #e03131); background: color-mix(in srgb, var(--ds-c-danger, #e03131) 10%, transparent); } /* ds-keep: status colour: the contact form keeps its red required mark and error line under every system */
+	.es-contact .ec-form.is-disabled .ec-form-input { opacity: .6; cursor: not-allowed; }
+	@media (max-width: 767px) { .es-contact-intro { margin-bottom: 36px; } .es-contact .ec-form-page { gap: 35px; } }
+
+	/* ---- Authors: three columns of cards (card ~353px, portrait 314x260 radius 8) ---- */
+	.es-authors-main { max-width: 1164px; }
+	.es-authors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px 36px; }
+	.es-author-card { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 18px 18px 36px; background: var(--color-surface); border-radius: var(--ds-card-radius, 16px); }
+	.es-author-photo { display: block; width: 100%; }
+	.es-author-photo img { display: block; width: 100%; height: 260px; object-fit: cover; border-radius: 8px; } /* ds-keep: picture corner: the template rounds its pictures by their own 8px (6px thumbnails), not by a role */
+	.es-author-name { margin: 24px 0 12px; font-size: 32px; line-height: 32px; }
+	.es-author-name a { color: var(--color-heading); font-size: 24px; }
+	.es-author-name a:hover { color: var(--color-accent-text-hover); }
+	.es-author-title { margin: 0 0 18px; font-size: 16px; line-height: 20.8px; }
+	.es-author-bio { margin: 0 0 24px; padding-inline: 18px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+	.es-author-social { display: flex; gap: 6px; justify-content: center; list-style: none; margin: 0; padding: 0; }
+	.es-author-social a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; color: #fff; background: #3b5999; } /* ds-keep: brand colours of the social networks and the white glyph on them, kept under every system */
+	.es-author-social a.is-instagram { background: #e4405f; }
+	.es-author-social a.is-twitter { background: #55acee; }
+	.es-author-social a:hover { color: #fff; filter: brightness(1.12); } /* ds-keep: brand colours of the social networks and the white glyph on them, kept under every system */
+	.es-author-card > :last-child { margin-bottom: 0; }
+	.es-authors-pager { margin-top: 88px; }
+	.es-authors-pager .es-pagination a, .es-authors-pager .es-pagination span { display: flex; align-items: center; justify-content: center; line-height: 1; }
+	.es-authors-pager .es-page-count { margin-top: 52px; }
+	@media (max-width: 991px) { .es-authors { grid-template-columns: repeat(2, 1fr); } }
+	@media (max-width: 767px) { .es-authors { grid-template-columns: 1fr; gap: 36px; } .es-author-name { font-size: 24px; line-height: 24px; } .es-authors-pager { margin-top: 36px; } }
+
+	/* ---- Search: a 784px column, the filter row then a ruled list of titles ---- */
+	.es-search-main { max-width: 820px; }
+	.es-search-form { display: flex; width: 100%; max-width: 280px; margin-bottom: 16px; }
+	.es-search-form input { flex: 1; min-width: 0; height: 48px; padding: 0 18px; font-family: var(--font-body); font-size: 14px; color: var(--color-heading); background: var(--color-surface); border: 1px solid var(--color-line); border-right: 0; border-radius: var(--ds-input-radius, 8px) 0 0 var(--ds-input-radius, 8px); }
+	.es-search-form input:focus { outline: 1px solid var(--color-accent); outline-offset: 0; border-color: var(--color-accent); }
+	.es-search-form button { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; color: var(--color-accent-on); background: var(--color-accent); border: 1px solid var(--color-accent); border-radius: 0 var(--ds-btn-radius, 8px) var(--ds-btn-radius, 8px) 0; cursor: pointer; }
+	.es-search-form button:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+	.es-search-count { margin: 0 0 8px; font-size: 14px; }
+	.es-search-list { list-style: none; margin: 0; padding: 0; }
+	.es-search-list li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 18px; padding: 16px 0 13px; border-bottom: 1px solid var(--color-line); }
+	.es-search-list a { font-family: var(--font-display); font-size: 20px; font-weight: 500; line-height: 26px; color: var(--color-heading); }
+	.es-search-list a:hover { color: var(--color-accent-text-hover); }
+	.es-search-list time { font-size: 14px; color: var(--color-meta); }
+
+	/* ---- Newsletter box: accent rounded box, white field, dark button, consent line ---- */
+	.es-newsletter { padding: 36px; color: var(--color-accent-on); background: var(--color-accent); border-radius: var(--ds-card-radius, 16px); }
+	.es-newsletter h3 { margin: 0; font-size: 24px; line-height: 31px; color: var(--color-accent-on); }
+	.es-newsletter-text { margin: 18px 0 36px; color: var(--color-accent-on); }
+	.es-newsletter-form { display: grid; gap: 30px; }
+	.es-newsletter-form input[type="email"] { width: 100%; box-sizing: border-box; height: 48px; padding: 12.8px 16px; font-family: var(--font-body); font-size: 16px; text-align: center; color: #252424b3; background: var(--ds-c-surface, #fff); border: 1px solid transparent; border-radius: var(--ds-input-radius, 8px); } /* ds-keep: placeholder on the white email field of the accent box, kept under every system */
+	html[data-theme="dark"] .es-newsletter-form input[type="email"] { background: var(--ds-c-surface-warm, #222a3b); color: var(--color-heading); border-color: var(--ds-c-border, #3a4459); }
+	.es-newsletter-form input[type="email"]::placeholder { color: #252424b3; opacity: 1; } /* ds-keep: placeholder on the white email field of the accent box, kept under every system */
+	html[data-theme="dark"] .es-newsletter-form input[type="email"]::placeholder { color: var(--color-meta); }
+	.es-newsletter-form input[type="email"]:focus { outline: 1px solid var(--ds-c-border-soft, #fff); outline-offset: 2px; }
+	.es-newsletter .es-btn.is-dark:hover { background: var(--color-accent-hover); border-color: var(--ds-c-border-soft, #fff); }
+	.es-newsletter .es-btn:disabled { opacity: .6; cursor: not-allowed; }
+		.es-newsletter-terms { display: block; font-size: 14px; line-height: 21px; color: color-mix(in srgb, var(--ds-c-accent-on, #fff) 70%, transparent); }
+	.es-newsletter-terms span { display: inline; }
+		.es-newsletter-terms strong { font-weight: 400; color: var(--ds-c-accent-on, #fff); }
+	.es-newsletter-terms input { display: inline-block; vertical-align: -1px; width: 13px; height: 13px; margin: 0 4px 0 0; accent-color: var(--ds-c-surface, #fff); }
+	.es-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+	.es-newsletter-status { margin: 0; font-size: 14px; }
+	.es-newsletter-status:empty { display: none; }
+	.es-newsletter-status:not(:empty) { margin-top: 18px; }
+	.es-newsletter-status[data-state="error"] { font-weight: 700; }
+}
+
+@layer components {
+	html[data-theme="dark"] .es-contact .ec-form-input:not([type="checkbox"]) { background: var(--ds-c-surface-warm, #222a3b); border-color: var(--ds-c-border, #3a4459); color: var(--color-heading); }
+}
+
+@layer components {
+	/* tablet and phone measurements of the source: the contact card pads 18px, the Authors pager sits 105px under the last card on a phone */
+	@media (max-width: 991px) { .es-box.es-contact { padding: 36px 18px; margin-bottom: 24px; } }
+	@media (max-width: 575px) { .es-authors-main .es-authors-pager { margin-top: 105px; } }
+}
+
+@layer components {
+	@media (max-width: 575px) { .es-newsletter { padding: 18px; } }
+}

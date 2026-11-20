@@ -1,0 +1,33 @@
+{
+  "layout": {
+    "id": "Search",
+    "view": "src/views/Search.astro",
+    "family": "page",
+    "hasSource": false
+  },
+  "rules": [["search-count", ".es-search-count", "index.html"]],
+  "parity": {},
+  "pages": [
+    {
+      "id": "en-search",
+      "path": "/search?q=line",
+      "status": 200,
+      "source": ["index.html"],
+      "identity": ".es-search-form",
+      "collections": ["chrome", "posts"],
+      "rules": ["page-h1", "search-count", "pager", "page-count"],
+      "parity": ["ground"],
+      "content": [
+        [
+          "footer-cta",
+          ".es-footer-right .es-btn",
+          "index.html",
+          "field",
+          "chrome.footer_cta_label",
+          "Become a subscriber"
+        ]
+      ],
+      "images": "placeholders"
+    }
+  ]
+}

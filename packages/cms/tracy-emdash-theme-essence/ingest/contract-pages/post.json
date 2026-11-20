@@ -1,0 +1,85 @@
+{
+  "layout": {
+    "id": "Post",
+    "view": "src/views/Post.astro",
+    "family": "detail"
+  },
+  "rules": [
+    ["post-title", ".es-post-title", "detail/layout-1/index.html"],
+    ["post-body", ".es-body > p", "detail/layout-1/index.html"],
+    ["post-quote", ".es-quote blockquote p", "detail/layout-1/index.html"],
+    ["side-title", ".es-side-title", "detail/layout-1/index.html"],
+    ["body-h2", ".es-body h2", "detail/layout-1/index.html"],
+    ["sec-title", ".es-sec-title:not(.is-small)", "detail/layout-1/index.html"],
+    ["newsletter-title", "#es-newsletter-title", "detail/layout-1/index.html"],
+    ["article-h3", "main article h3", "detail/layout-1/index.html"],
+    ["quote-by", ".es-quote figcaption p", "detail/layout-1/index.html"],
+    ["newsletter-text", ".es-newsletter-text, .es-newsletter-status", "detail/layout-1/index.html"],
+    [
+      "sec-title-small",
+      ".es-post[data-layout=\"type-2\"] .es-sec-title.is-small",
+      "detail/layout-3/index.html",
+      true
+    ]
+  ],
+  "parity": {
+    "postTitle": {
+      "site": ".es-post-title",
+      "source": "h2[itemprop=\"headline\"]"
+    },
+    "sideTitle": {
+      "site": ".es-side-title",
+      "source": ".module-title"
+    }
+  },
+  "pages": [
+    {
+      "id": "en-post",
+      "path": "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
+      "source": ["detail/layout-1/index.html"],
+      "identity": ".es-article",
+      "collections": ["chrome", "posts", "authors", "social", "gallery"],
+      "rules": [
+        "post-title",
+        "post-body",
+        "post-quote",
+        "side-title",
+        "body-h2",
+        "sec-title",
+        "newsletter-title",
+        "article-h3",
+        "quote-by",
+        "newsletter-text",
+        "sec-title-small"
+      ],
+      "parity": ["nav", "postTitle", "sideTitle", "footerButton", "ground"],
+      "content": [
+        [
+          "h1",
+          ".es-post-title",
+          "detail/layout-1/index.html",
+          "field",
+          "posts.title",
+          "Abstract Wonders: Exploring Line Art Composition"
+        ],
+        [
+          "p1",
+          ".es-body > p",
+          "detail/layout-1/index.html",
+          "field",
+          "posts.body",
+          "Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation."
+        ],
+        [
+          "side",
+          ".es-side-title",
+          "detail/layout-1/index.html",
+          "field",
+          "chrome.latest_title",
+          "Articles - Latest"
+        ]
+      ],
+      "images": "placeholders"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "scope": "entry-scalars",
+  "note": "Tracy Content API: one row per collection of seed/site-model.json. type is page, article, service, project, shared or generic; urlPattern is the public path ({slug} for one entry per page), null when the collection has no page of its own. chrome names the shared entry the header and footer print. tools/content-api-gate.mjs refuses a collection of the model that has no row here. pages and posts keep their own public path in the data field `path` (urlField): this template's post paths (`/blog/<slug>`) are set by ingest/bind-paths.mjs. The other collections have no page of their own.",
+  "collections": {
+    "pages": {
+      "type": "page",
+      "urlPattern": null,
+      "urlField": "path"
+    },
+    "posts": {
+      "type": "article",
+      "urlPattern": null,
+      "urlField": "path"
+    },
+    "authors": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "category_info": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "contact": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "gallery": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "social": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "chrome": {
+      "type": "shared",
+      "urlPattern": null
+    }
+  },
+  "chrome": {
+    "collection": "chrome",
+    "slug": "chrome"
+  }
+}

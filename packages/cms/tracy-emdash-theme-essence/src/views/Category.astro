@@ -1,0 +1,150 @@
+---
+/** `/category/<slug>`, `/tag/<slug>`, `/author/<slug>`: a post list in the style the category's menu item had (grid, stack, sidebar). */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import GridCard from '@/components/site/GridCard.astro'
+import StackCard from '@/components/site/StackCard.astro'
+import Pager from '@/components/site/Pager.astro'
+import Sidebar from '@/components/site/Sidebar.astro'
+import NotFound from '@/views/NotFound.astro'
+import { href, type Locale } from '@/lib/i18n'
+import type { Chrome } from '@/lib/chrome'
+import { authorPath, categoryPath, loadAuthors, loadCategoryInfo, loadPosts, tagPath } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
+import { stampFor } from '@/lib/stamps'
+import { categoryDot } from '@/lib/category-dot'
+import { mediaUrl } from '@/lib/media'
+import { ui } from '@/lib/ui'
+import { uiCount } from '@/lib/ui-words'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  by: 'category' | 'tag' | 'author'
+  slug: string
+  path?: string
+}
+const { chrome, locale, by, slug } = Astro.props
+const { tag, w } = ui(locale)
+const [all, authorRows, infos] = await Promise.all([
+  loadPosts(locale),
+  loadAuthors(locale),
+  loadCategoryInfo(locale)
+])
+const authors = Object.fromEntries(authorRows.map((a) => [a.slug, a]))
+
+let title = ''
+let description = ''
+let style: 'grid' | 'stack' | 'sidebar' = 'grid'
+let found: typeof all = []
+let basePath = ''
+if (by === 'category') {
+  const info = infos.find((i) => i.slug === slug)
+  if (info) {
+    title = info.title
+    description = info.description
+    style = info.listStyle
+    found = all.filter((p) => p.category?.slug === slug)
+    basePath = categoryPath(slug)
+  }
+} else if (by === 'tag') {
+  const label = all.flatMap((p) => p.tags).find((t) => t.slug === slug)?.label
+  if (label) {
+    title = label
+    found = all.filter((p) => p.tags.some((t) => t.slug === slug))
+    basePath = tagPath(slug)
+  }
+} else {
+  const a = authors[slug]
+  if (a) {
+    title = a.name
+    found = all.filter((p) => p.author === slug)
+    basePath = authorPath(slug)
+  }
+}
+const missing = !title
+if (missing) Astro.response.status = 404
+const posts = missing ? [] : await livePosts(Astro.request, locale, found)
+const perPage = by === 'author' ? 4 : style === 'grid' ? 9 : 6
+const pages = Math.max(1, Math.ceil(posts.length / perPage))
+const page = Math.min(pages, Math.max(1, parseInt(Astro.url.searchParams.get('page') ?? '1', 10) || 1))
+const shown = posts.slice((page - 1) * perPage, page * perPage)
+const count = uiCount(
+  tag,
+  { other: w.countArticles, one: w.countArticlesOne ?? w.countArticles },
+  posts.length
+)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+// an author's page opens with the profile the Authors card shows in short
+const profile = by === 'author' && !missing ? (authors[slug] ?? null) : null
+const $a = stampFor(Astro.request, 'authors', profile ? { id: profile.id, slug: profile.slug } : null)
+const photo = profile ? mediaUrl(profile.avatar) : null
+---
+
+{missing ? (
+	<NotFound chrome={chrome} locale={locale} />
+) : (
+	<Base chrome={chrome} title={title} description={description || null} currentPath={basePath} robots="index, follow">
+		<main id="main" class:list={['es-cat', `is-${style}`]} data-by={by}>
+			<PageOwner stamp={$c} />
+			<div class="es-wrap">
+				{style === 'sidebar' ? <h1 class="sr-only">{title}</h1> : (
+					<header class:list={['es-cat-head', profile && 'is-profile']}>
+						<div class="es-cat-who">
+							{photo && <img class="es-cat-photo" src={photo} alt="" width="120" height="120" {...$a('avatar')} />}
+							<h1 class="es-cat-title"><span style={by === 'category' ? `--dot:${categoryDot(slug)}` : undefined}>{title}</span></h1>
+							{profile?.jobTitle && <p class="es-cat-role" {...$a('job_title')}>{profile.jobTitle}</p>}
+						</div>
+						{profile?.bio && <p class="es-cat-desc" {...$a('bio')}>{profile.bio}</p>}
+						{!profile && <p class="es-cat-count">{count}</p>}
+						{description && <p class="es-cat-desc">{description}</p>}
+					</header>
+				)}
+				{posts.length === 0 && <p class="es-cat-empty">{w.noArticles}</p>}
+				<div class="es-cat-body">
+					<div class="es-cat-list">
+						{style === 'grid' && <div class="es-cat-grid">{shown.map((p, i) => p.highlight && by === 'category' ? <StackCard post={p} chrome={chrome} authors={authors} eager={i < 3} highlight /> : <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i < 3} />)}</div>}
+						{style === 'stack' && shown.map((p, i) => <StackCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} eager={i === 0} highlight={p.highlight && by === 'category'} />)}
+						{style === 'sidebar' && shown.map((p, i) => p.highlight && by === 'category' ? <StackCard post={p} chrome={chrome} authors={authors} eager={i === 0} highlight /> : <GridCard post={p} chrome={chrome} authors={by === 'author' ? {} : authors} wide eager={i === 0} />)}
+						<Pager path={href(locale, basePath)} page={page} pages={pages} locale={locale} pillLast={by === 'author'} />
+					</div>
+					{style === 'sidebar' && <Sidebar chrome={chrome} locale={locale} posts={all} current={null} prefer={posts} features={false} />}
+				</div>
+			</div>
+			{by === 'category' && style === 'grid' && chrome.site.more_read_list_title && (
+				<div class="es-wrap"><h2 class="es-sec-title es-cat-more" {...$c('more_read_list_title')}>{chrome.site.more_read_list_title}</h2></div>
+			)}
+		</main>
+	</Base>
+)}
+
+<script>
+	// The source's two-column blog list stacks each column on its own (Joomla's float masonry): the odd cards go
+	// down the left, the even cards down the right, each card starting 36px under the one above it.
+	const wide = matchMedia('(min-width: 768px) and (max-width: 1199px)')
+	function stack(grid: HTMLElement) {
+		const cards = [...grid.children] as HTMLElement[]
+		for (const c of cards) c.style.transform = ''
+		grid.style.marginBottom = ''
+		if (!wide.matches || cards.length < 3) return
+		const gap = parseFloat(getComputedStyle(grid).rowGap) || 36
+		const tops = cards.map((c) => c.offsetTop)
+		const heights = cards.map((c) => c.offsetHeight)
+		const natural = Math.max(...cards.map((_, i) => tops[i] + heights[i]))
+		const bottom = [0, 0]
+		cards.forEach((c, i) => {
+			const col = i % 2
+			const at = i < 2 ? tops[i] : bottom[col] + gap
+			if (at !== tops[i]) c.style.transform = `translateY(${at - tops[i]}px)`
+			bottom[col] = at + heights[i]
+		})
+		grid.style.marginBottom = `${Math.max(...bottom) - natural}px`
+	}
+	for (const grid of document.querySelectorAll<HTMLElement>('.es-cat[data-by="category"] .es-cat-grid')) {
+		const run = () => stack(grid)
+		run()
+		addEventListener('load', run)
+		addEventListener('resize', run)
+		document.fonts?.ready.then(run)
+	}
+</script>

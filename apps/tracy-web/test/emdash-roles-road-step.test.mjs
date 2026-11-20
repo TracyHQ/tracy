@@ -14,6 +14,7 @@ const put = (step, state, code, params) => ({ step, state, code, params })
 
 for (const [template, version] of [
   ['tracy-diner', '0.1.0'],
+  ['tracy-essence', '0.1.0'],
   ['tracy-restaurant', '1.0.1'],
   ['tracy-base', '0.5.8']
 ]) {

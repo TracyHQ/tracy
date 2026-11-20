@@ -1,0 +1,60 @@
+---
+/** One author card: portrait, name, job title, bio (two lines) and the social buttons the follow-me row links to. */
+import Icon from '@/components/site/Icon.astro'
+import type { AuthorRow } from '@/lib/posts'
+import { authorPath } from '@/lib/posts'
+import { networkOf, type Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  author: AuthorRow
+  locale: Locale
+  chrome: Chrome
+  eager?: boolean
+}
+const { author, locale, chrome, eager = false } = Astro.props
+const $a = stampFor(Astro.request, 'authors', { id: author.id, slug: author.slug })
+const img = mediaUrl(author.avatar)
+const to = href(locale, authorPath(author.slug))
+// The source draws three round buttons with `#` links: here a button exists only where the follow-me row has a real link.
+const NETWORKS = ['facebook', 'instagram', 'twitter']
+const row = chrome.social['follow-me']
+const wanted = (row?.items ?? [])
+  .map((it) => ({
+    net: networkOf(it.font_icon, it.title),
+    title: it.title ?? '',
+    link: String(it.link ?? '').trim()
+  }))
+  .filter((it) => NETWORKS.includes(it.net) && it.link && it.link !== '#')
+const live = await liveLinks(
+  Astro.request,
+  locale,
+  wanted.map((it) => it.link)
+)
+const socials = wanted
+  .filter((it) => live(it.link))
+  .map((it) => ({ ...it, to: dataHref(it.link, (p) => href(locale, p)) }))
+  .filter((it) => it.to)
+---
+
+<article class="es-author-card" {...$a()}>
+	{img && (
+		<a class="es-author-photo" href={to} tabindex="-1" aria-hidden="true">
+			<img src={img} alt="" width="314" height="260" loading={eager ? 'eager' : 'lazy'} {...$a('avatar')} />
+		</a>
+	)}
+	<h2 class="es-author-name"><a href={to} {...$a('name')}>{author.name}</a></h2>
+	{author.jobTitle && <p class="es-author-title" {...$a('job_title')}>{author.jobTitle}</p>}
+	{author.bio && <p class="es-author-bio" {...$a('bio')}>{author.bio}</p>}
+	{socials.length > 0 && (
+		<ul class="es-author-social">
+			{socials.map((s) => (
+				<li><a class={`is-${s.net}`} href={s.to} title={s.title} aria-label={s.title} rel="noopener"><Icon name={s.net} size={14} weight="fill" /></a></li>
+			))}
+		</ul>
+	)}
+</article>

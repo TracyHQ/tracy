@@ -1,0 +1,52 @@
+{
+  "layout": {
+    "id": "Contact",
+    "view": "src/views/Contact.astro",
+    "family": "page"
+  },
+  "rules": [
+    ["contact-title", ".es-contact h1", "contact/index.html"],
+    ["contact-intro", ".es-contact-intro", "contact/index.html"]
+  ],
+  "parity": {
+    "contactTitle": {
+      "site": ".es-contact h1",
+      "source": ".title-lead h2"
+    },
+    "contactSubmit": {
+      "site": ".ec-form-submit",
+      "source": "button.validate"
+    }
+  },
+  "pages": [
+    {
+      "id": "en-contact",
+      "path": "/contact",
+      "source": ["contact/index.html"],
+      "identity": ".es-contact",
+      "collections": ["chrome", "contact"],
+      "rules": ["contact-title", "contact-intro"],
+      "parity": ["nav", "contactTitle", "contactSubmit", "footerButton", "ground"],
+      "content": [
+        [
+          "title",
+          ".es-contact h1",
+          "contact/index.html",
+          "field",
+          "contact.title",
+          "We\u2019d love to hear from you"
+        ],
+        [
+          "intro",
+          ".es-contact-intro",
+          "contact/index.html",
+          "field",
+          "contact.intro",
+          "It\u2019s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines."
+        ],
+        ["send", ".ec-form-submit", "contact/index.html", "field", "forms.submit_label", "Send message"]
+      ],
+      "images": "placeholders"
+    }
+  ]
+}

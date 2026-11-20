@@ -1,0 +1,11 @@
+# Design system
+
+- **Tokens:** `src/styles/tokens.css` (Tailwind 4 `@theme`): colours, the two font variables and the shadcn semantic names mapped onto them. Light values are the source's own (`etc/theme/default.json`); dark values are the source's `css/darkmode.css` palette. Every colour reads its Design-system role first (`var(--ds-c-<role>, <own value>)`), so with no system worn the site is the design.
+- **Theme selector:** `html[data-theme="dark"]`; light is the attribute absent. The visitor's choice is stored under `tracy-essence-theme` (`tracy-essence-theme@<id>` while a design system is worn); `Base.astro` resolves it before first paint, `Header.astro` holds the toggle (moon/sun glyphs).
+- **Global styles:** `src/styles/global.css` (base type scale 40/32/24/18/16/14, buttons, pills, pagination, header, footer, strips) is imported only by `src/layouts/Base.astro`; page families add `src/styles/pages/{home,category,post,misc}.css`. Class prefix `es-`. Nothing here loads in the EmDash admin.
+- **Fonts:** `src/fonts.json` (local files in `src/fonts/`, wired in `astro.config.mjs`): Noto Serif (body), Jost (headings, menu, buttons), Be Vietnam Pro only under `:lang(vi)` (`DECISIONS.md` D14).
+- **Layouts and components:** `src/layouts/Base.astro`; views in `src/views/` (Home, Category, Post, Authors, Contact, Search, NotFound); components in `src/components/site/` (Header, Footer, GalleryStrip, LeadStrip, StackCard, GridCard, Sidebar, Newsletter, Post*, Prose*, Icon, BrandLogo). Icons are inline SVG glyphs (`Icon.astro`, Phosphor, MIT). There are no React islands; the strips' dots, the off-canvas menu, the search box, the theme toggle and the gallery slider are small inline or module scripts.
+- **Source/build workflow:** edit `src/`, not `dist/`. `pnpm dev` (`astro dev`) picks up styles and views without a restart; a change to `astro.config.mjs`, `src/fonts.json` or `seed/` needs a restart (and a re-bootstrap for seed changes). `ingest/rebuild-seed.sh` rebuilds the seed from the source stand's dump (`source/REBUILD.md`).
+
+Read ../AGENTS.md. Preserve source design and third-party provenance. Storefront
+Tailwind/reset must stay outside EmDash admin and Tracy/dsh UI. Edit source, not dist.

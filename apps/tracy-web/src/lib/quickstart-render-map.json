@@ -517,6 +517,98 @@
       "en:reservation": ["/reservation"]
     }
   },
+  "tracy-essence": {
+    "revision": 56,
+    "sourceSha256": "c611dad4c1cb615fbb480a52cb53df12f0e92b73d4d21638d08b224c0371e230",
+    "collections": {
+      "en:chrome": [
+        "/",
+        "/404",
+        "/our-authors",
+        "/contact",
+        "/?page=2",
+        "/category/blog-health",
+        "/category/blog-design",
+        "/category/blog-fashion",
+        "/category/blog-normal-health",
+        "/tag/health",
+        "/author/eula-ward",
+        "/blog/mental-health-and-well-being-strategies-blog-health",
+        "/blog/essential-nutrients-for-optimal-health-blog-health",
+        "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+        "/blog/natural-remedies-for-common-ailments-blog-fashion",
+        "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
+        "/search?q=line"
+      ],
+      "en:pages": [
+        "/",
+        "/our-authors",
+        "/?page=2",
+        "/category/blog-health",
+        "/category/blog-design",
+        "/category/blog-fashion",
+        "/category/blog-normal-health",
+        "/tag/health",
+        "/author/eula-ward"
+      ],
+      "en:posts": [
+        "/",
+        "/?page=2",
+        "/category/blog-health",
+        "/category/blog-design",
+        "/category/blog-fashion",
+        "/category/blog-normal-health",
+        "/tag/health",
+        "/author/eula-ward",
+        "/blog/mental-health-and-well-being-strategies-blog-health",
+        "/blog/essential-nutrients-for-optimal-health-blog-health",
+        "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+        "/blog/natural-remedies-for-common-ailments-blog-fashion",
+        "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
+        "/search?q=line"
+      ],
+      "en:gallery": [
+        "/",
+        "/?page=2",
+        "/blog/mental-health-and-well-being-strategies-blog-health",
+        "/blog/essential-nutrients-for-optimal-health-blog-health",
+        "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+        "/blog/natural-remedies-for-common-ailments-blog-fashion",
+        "/blog/abstract-wonders-exploring-line-art-composition-blog-health"
+      ],
+      "en:social": [
+        "/",
+        "/our-authors",
+        "/?page=2",
+        "/category/blog-health",
+        "/category/blog-design",
+        "/category/blog-fashion",
+        "/category/blog-normal-health",
+        "/tag/health",
+        "/author/eula-ward",
+        "/blog/mental-health-and-well-being-strategies-blog-health",
+        "/blog/essential-nutrients-for-optimal-health-blog-health",
+        "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+        "/blog/natural-remedies-for-common-ailments-blog-fashion",
+        "/blog/abstract-wonders-exploring-line-art-composition-blog-health"
+      ],
+      "en:authors": [
+        "/our-authors",
+        "/category/blog-health",
+        "/category/blog-design",
+        "/category/blog-fashion",
+        "/category/blog-normal-health",
+        "/tag/health",
+        "/author/eula-ward",
+        "/blog/mental-health-and-well-being-strategies-blog-health",
+        "/blog/essential-nutrients-for-optimal-health-blog-health",
+        "/blog/fitness-tips-for-a-healthy-lifestyle-blog-fashion",
+        "/blog/natural-remedies-for-common-ailments-blog-fashion",
+        "/blog/abstract-wonders-exploring-line-art-composition-blog-health"
+      ],
+      "en:contact": ["/contact"]
+    }
+  },
   "tracy-restaurant": {
     "revision": 33,
     "sourceSha256": "ee76a65cada57fc6547f83241e7a66a60dafce83e7ffee970bce8af5e2828673",

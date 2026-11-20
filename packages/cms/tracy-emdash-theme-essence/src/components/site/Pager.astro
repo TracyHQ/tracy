@@ -1,0 +1,41 @@
+---
+/** Page buttons: first, previous, the page numbers, next, last (round 48px), under "Page n of m". Pages are `?page=N` on the list's own path. */
+import { fillWords } from '@/lib/ui-words'
+import { ui } from '@/lib/ui'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  /** the path the list lives at, with the locale prefix */
+  path: string
+  page: number
+  pages: number
+  locale: string
+  /** the "Page n of m" pill under the buttons (the author's list), not above them */
+  pillLast?: boolean
+}
+const { path, page, pages, locale, pillLast = false } = Astro.props
+const { w } = ui(locale)
+const at = (n: number) => (n <= 1 ? path : `${path}${path.includes('?') ? '&' : '?'}page=${n}`)
+const from = Math.max(1, Math.min(page - 2, pages - 4))
+const nums = Array.from({ length: Math.min(5, pages) }, (_, i) => from + i)
+const ends = [
+  { icon: 'first', label: w.firstPage, to: 1, off: page <= 1 },
+  { icon: 'prev', label: w.previousPage, to: page - 1, off: page <= 1 }
+]
+const tail = [
+  { icon: 'next', label: w.nextPage, to: page + 1, off: page >= pages },
+  { icon: 'last', label: w.lastPage, to: pages, off: page >= pages }
+]
+---
+
+{pages > 1 && (
+	<nav class:list={['es-pager', pillLast && 'is-pill-last']} aria-label={w.pagination}>
+		{!pillLast && <p class="es-page-count">{fillWords(w.pageOf, { page, pages })}</p>}
+		<ul class="es-pagination" data-many={pages > 3 ? '' : undefined}>
+			{ends.map((b) => <li class:list={{ 'is-disabled': b.off, 'is-end': true }}>{b.off ? <span aria-hidden="true"><Icon name={b.icon} size={16} /></span> : <a href={at(b.to)} aria-label={b.label} rel={b.to === page - 1 ? 'prev' : undefined}><Icon name={b.icon} size={16} /></a>}</li>)}
+			{nums.map((n) => <li class:list={{ 'is-active': n === page }}>{n === page ? <span aria-current="page">{n}</span> : <a href={at(n)} aria-label={fillWords(w.pageOf, { page: n, pages })}>{n}</a>}</li>)}
+			{tail.map((b) => <li class:list={{ 'is-disabled': b.off, 'is-end': true }}>{b.off ? <span aria-hidden="true"><Icon name={b.icon} size={16} /></span> : <a href={at(b.to)} aria-label={b.label} rel={b.to === page + 1 ? 'next' : undefined}><Icon name={b.icon} size={16} /></a>}</li>)}
+		</ul>
+		{pillLast && <p class="es-page-count">{fillWords(w.pageOf, { page, pages })}</p>}
+	</nav>
+)}
