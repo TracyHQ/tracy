@@ -6,10 +6,13 @@
 // (16/11/2026) it took 357 to 753 s: 77 to 500 s of reading turns, then one writing turn of 158 to 495 s, and the plan
 // step was the longest of a chain build (7 to 16 minutes with its fix rounds).
 //
-// - The split (planningParts): the kit's page groups in kit order cut into that many runs of consecutive groups of
-//   about the same size, by the blocks of each group's root page. A part plans its groups and their pages and nothing
-//   else; the first part also plans everything of the whole site (site, mainMenu, sharedBlocks), so one part decides
-//   each thing and two parts never decide the same one.
+// - The split (planningParts, since 20/11/2026): the first part plans everything of the whole site (site, mainMenu,
+//   sharedBlocks) and no page group; the kit's page groups in kit order are cut into the other parts, runs of
+//   consecutive groups of about the same size (groupWeights). A part plans its groups and their pages and nothing else,
+//   so one part decides each thing and two parts never decide the same one. Measured on dev (lat19, 19/11/2026, three
+//   parts, the first with the whole site and groups by the blocks of their root page alone): the first part read for
+//   233 s and wrote for 215 s at Arabian Tea House while the last wrote 31 s, and at BXR London the part holding the
+//   learning centre's many pages wrote 113k tokens in 507 s against 81k for the next; round 0 waited on them.
 // - Each part's first message is the run's own first message (the same bytes, so the provider's prefix cache can
 //   reuse it, and the same kit tools), then the part: its groups, the other parts' groups, and what is the first
 //   part's alone (partInstruction). The planner prompt itself is locked and unchanged.
@@ -47,32 +50,51 @@ function blocksOf(page) {
 }
 
 /**
- * The size of each page group, in kit order: the blocks of its root page that are not on every page of the site (the
- * header, the footer), at least 1.
+ * The size of each page group, in kit order: the blocks of all its pages that are not on every page of the site (the
+ * header, the footer), at least 1. A group with no page in the kit's main menu weighs 1 (sign-in screens, tag and
+ * category listings, a template's alternative home pages that are not linked): the planner mostly drops it, in a line.
+ * A kit that marks no page in its main menu weighs every group by its blocks.
  * @param {any} kit
  */
 export function groupWeights(kit) {
-  const pages = new Map(arr(kit?.pages).map((p) => [p?.id, p]))
   const every = arr(kit?.pages).map((p) => new Set(blocksOf(p)))
   const shared = (block) => every.length > 1 && every.every((set) => set.has(block))
+  const inMenu = new Set(
+    arr(kit?.pages)
+      .filter((p) => p?.inMainMenu === true)
+      .map((p) => p.group)
+  )
   const weights = new Map()
   for (const group of arr(kit?.pageGroups)) {
     if (typeof group?.id !== 'string') continue
-    const root = pages.get(group.root ?? group.representative)
-    weights.set(group.id, Math.max(1, blocksOf(root).filter((b) => !shared(b)).length))
+    if (inMenu.size > 0 && !inMenu.has(group.id)) {
+      weights.set(group.id, 1)
+      continue
+    }
+    const blocks = arr(kit?.pages)
+      .filter((p) => p?.group === group.id)
+      .reduce((n, p) => n + blocksOf(p).filter((b) => !shared(b)).length, 0)
+    weights.set(group.id, Math.max(1, blocks))
   }
   return weights
 }
 
 /**
- * The kit's page groups cut into `parallelPages` runs of consecutive groups whose heaviest is as light as it can be
- * (fewer when the kit has fewer groups). Every group is in exactly one part; joined in order, the parts are the kit's
- * order. The same kit always gives the same parts.
+ * The parts of round 0: the first plans the whole site and no page group (an empty list), the other `parallelPages - 1`
+ * are the kit's page groups cut into runs of consecutive groups whose heaviest is as light as it can be (fewer when the
+ * kit has fewer groups). Every group is in exactly one part; joined in order, the parts are the kit's order. One part
+ * (`parallelPages` 1, or a kit without groups) is every group, the whole site with them. The same kit always gives the
+ * same parts.
  */
 export function planningParts(kit, parallelPages) {
   const weights = groupWeights(kit)
   const groups = [...weights.keys()]
-  const k = Math.max(1, Math.min(parallelPages, groups.length))
+  if (!(parallelPages > 1) || groups.length === 0) return [groups]
+  return [[], ...groupRuns(groups, weights, Math.min(parallelPages - 1, groups.length))]
+}
+
+/** `groups` in order cut into `k` runs of consecutive groups whose heaviest is as light as it can be. */
+function groupRuns(groups, weights, k) {
   if (k === 1) return [groups]
   const n = groups.length
   const before = [0]
@@ -118,15 +140,21 @@ export function partInstruction({ parts, part, kit }) {
   const own = parts[part]
   const ownPages = own.flatMap((g) => pages.get(g) ?? [])
   const first = part === 0
+  const yours =
+    own.length > 0
+      ? `Your part: the page groups ${own.join(', ')}, and their pages (${ownPages.join(', ')}). Decide these groups (keep or drop, with why), and plan every page of them you keep, block by block, exactly as the whole plan asks. Read with the tools only what your part needs.`
+      : 'Your part: everything of the whole site, and no page group. Read with the tools only what the whole site needs: the site-wide parts, the blocks every page shows, and the page groups and pages only as far as the main menu needs them.'
   return [
     `# Planning part ${part + 1} of ${total}, planned at the same time as the others`,
     '',
     `The site is planned in ${total} parts at the same time, each in a conversation of its own that starts from this same message. Code puts the parts' plans together into one plan, and the plan check reads it as one site.`,
     '',
-    `Your part: the page groups ${own.join(', ')}, and their pages (${ownPages.join(', ')}). Decide these groups (keep or drop, with why), and plan every page of them you keep, block by block, exactly as the whole plan asks. Read with the tools only what your part needs.`,
+    yours,
     '',
     'The other parts plan these page groups and their pages, so write nothing for them in pageGroups or pages:',
-    ...parts.flatMap((list, p) => (p === part ? [] : [`- part ${p + 1}: ${list.join(', ')}`])),
+    ...parts.flatMap((list, p) =>
+      p === part || list.length === 0 ? [] : [`- part ${p + 1}: ${list.join(', ')}`]
+    ),
     '',
     first
       ? `You also plan everything of the whole site: ${SITE_FIELDS.join(', ')}. Plan the main menu as if every page group of the kit that holds content for this business is kept; code takes out an entry for a page another part drops.`

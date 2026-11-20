@@ -18,7 +18,7 @@ test("the chain's planner run plans its first draft in parts, with the visual re
   assert.ok(!argv.includes('--kit-in-first-message'))
 })
 
-test('the number of parts is one the planner bench takes and plans in parts; a kit with fewer groups gets fewer parts', () => {
+test('the number of parts is one the planner bench takes and plans in parts; a kit with fewer groups gets fewer parts, the whole site first', () => {
   assert.ok(PLAN_PARTS > 1)
   assert.equal(parallelPagesProblem(PLAN_PARTS), null)
   assert.equal(plansInParts({ parallelPages: PLAN_PARTS }), true)
@@ -27,8 +27,10 @@ test('the number of parts is one the planner bench takes and plans in parts; a k
     pageGroups: groups.map((g) => ({ id: g, root: `page-${g}` })),
     pages: groups.map((g) => page(`page-${g}`, g, ['a', 'b']))
   })
+  // The whole site's part, then the groups over the others.
   const five = planningParts(kit(['home', 'classes', 'about', 'plans', 'contact']), PLAN_PARTS)
   assert.equal(five.length, PLAN_PARTS)
+  assert.deepEqual(five[0], [])
   assert.deepEqual(five.flat(), ['home', 'classes', 'about', 'plans', 'contact'])
-  assert.equal(planningParts(kit(['home', 'contact']), PLAN_PARTS).length, 2)
+  assert.deepEqual(planningParts(kit(['home', 'contact']), PLAN_PARTS), [[], ['home'], ['contact']])
 })

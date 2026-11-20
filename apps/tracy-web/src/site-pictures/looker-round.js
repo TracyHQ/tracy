@@ -73,6 +73,7 @@ export function withLooker(step) {
             failing.set(frame, [...new Set([...(failing.get(frame) ?? []), r.id])])
           }
         let finished
+        const finishFrom = Date.now()
         try {
           finished = await ready.finisher.finish(args.pictures, { lastRound, failing })
         } catch (error) {
@@ -84,6 +85,7 @@ export function withLooker(step) {
             error: `${error.code}: ${error.message}`
           })
         }
+        const filesFrom = Date.now()
         for (const f of finished.files) {
           if (!ready.files[f.file])
             ready.files[f.file] = { sha256: f.sha256, width: f.width, height: f.height }
@@ -103,8 +105,16 @@ export function withLooker(step) {
         // The run's cost holds every role: what these drawings and looks spent is added to the picker's turns.
         if (finished.paid > 0)
           await addRunCost(pool, { runId: args.runId, usd: finished.paid, leaseToken: args.leaseToken })
+        const checkFrom = Date.now()
         const doc = stamped(finished.doc)
         const checkResult = withLookerRule(step.checker.check({ doc, row, ready }), finished.rule, doc)
+        // The finish of this round (drawings, overlays, looks, ladder), the files it stored and its check, in ms.
+        doc.timing = {
+          ...doc.timing,
+          roundFinish: filesFrom - finishFrom,
+          roundFiles: checkFrom - filesFrom,
+          roundCheck: Date.now() - checkFrom
+        }
         return store.saveRound(pool, {
           ...args,
           pictures: doc,

@@ -438,6 +438,31 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   assert.deepEqual(byFrame(second.doc).get('block-k.1').sha256, k.sha256)
 })
 
+test('a finished round records where its time went: whole milliseconds, and how many frame tasks it ran', async () => {
+  const doors = fakeDoors({ reject: new Set(['block-g.1', 'block-c.1']) })
+  const { doc, finisher } = await setUp(doors, 'run-round-laps')
+  const { timing } = (await finisher.finish(doc, { lastRound: true })).doc
+  const keys = [
+    'roundFrames',
+    'roundAheadAfter',
+    'roundFinalLook',
+    'roundClimbSum',
+    'roundDarkenSum',
+    'roundLookSum',
+    'roundRetrySum',
+    'roundAheadSum'
+  ]
+  for (const key of keys)
+    assert.ok(Number.isInteger(timing[key]) && timing[key] >= 0, `${key}: ${timing[key]}`)
+  // Two rejected frames climbed: every placed picture and every climber is one task.
+  assert.ok(timing.roundFrameTasks >= 2, `${timing.roundFrameTasks}`)
+  // The steps of the frame tasks overlap: their sums are frame time, at most the tasks' wall time for each task.
+  const frameTime = keys.slice(3).reduce((a, k) => a + timing[k], 0)
+  assert.ok(frameTime <= (timing.roundFrames + 5) * timing.roundFrameTasks, `${frameTime}`)
+  // The roles' own sums stay as they were.
+  assert.ok(Number.isFinite(timing.looker) && Number.isFinite(timing.drawer))
+})
+
 test('a frame the picker placed climbs only in the last round; an any-real frame is never drawn', async () => {
   const doors = fakeDoors({ reject: new Set(['block-b.1']) })
   const { doc, finisher } = await setUp(doors, 'run-picker')
