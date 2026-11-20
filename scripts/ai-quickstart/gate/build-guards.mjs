@@ -30,6 +30,9 @@ export const BUILD_GUARD_CODES = Object.freeze([
   'location_unresolved',
   'markup_forbidden',
   'markup_runs_code',
+  // Every page of the plan refused by a guard before any door (#575): one refused item is left out, a plan with no
+  // page left stops.
+  'no_page_writable',
   'menu_item_to_under_page',
   'menu_items_link_unknown',
   'menu_items_over_max',
@@ -37,7 +40,6 @@ export const BUILD_GUARD_CODES = Object.freeze([
   'op_unknown',
   'order_invalid',
   'page_link_unresolved',
-  'page_parent_not_in_plan',
   'page_style_unresolved',
   'page_type_not_declared',
   'page_unbuilt',
@@ -56,6 +58,8 @@ export const BUILD_GUARD_CODES = Object.freeze([
   'record_kind_unsupported',
   'record_name_empty',
   'ref_unresolved',
+  // A removal naming an element an earlier removal of the same value already took out (#575).
+  'removal_element_gone',
   'reset_from_unknown',
   'slot_missing',
   'slot_picture_unfit',
@@ -116,7 +120,9 @@ export const SITE_CODES = Object.freeze({
   read_back_mismatch: 'the site keeps another value than the one written',
   door_not_available: 'the plugin on the site has no door the write needs',
   sheets_unreadable:
-    'the stylesheets the site serves could not be read: no page or no sheet answered, too large, or past the deadline'
+    'the stylesheets the site serves could not be read: no page or no sheet answered, too large, or past the deadline',
+  no_page_written: 'the doors refused every page of the plan: the site wrote no page',
+  site_not_serving: 'the written site does not answer at its root when read as a visitor'
 })
 
 /**
