@@ -17,6 +17,11 @@
 // have written, for the fix rounds; when no part gives a JSON object, the round is not a document, as a whole answer
 // would be. Cancel: every part watches the run's Stop flag; a part that ends the round (a cancel, a failed call) stops
 // the others, and the round ends with the first failure, or as cancelled.
+//
+// A leading part (2026-11-20, the planner's framed plan): a part marked `leads` is asked first and alone; the others
+// then start together, each with the first message its `firstUserFor(value)` makes from the leading part's answer
+// (null: that part has nothing to write, and counts as an empty answer without a call). A leading part with no JSON
+// object makes the round not a document. The leading part is the last one, so the fix rounds continue its conversation.
 import { objectOf } from './bench-answer.js'
 
 /** The turn numbers each part owns: far above the calls one conversation may make (BENCH_HARNESS.maxTurns, 150). */
@@ -72,6 +77,11 @@ export async function writeInParts(ctx, { parts, history, reading, save }) {
     })
   async function writePart({ about, firstUser }, p) {
     if (done[p]) return done[p]
+    if (firstUser === null) {
+      const entry = { part: p, about, from: range(p).from, answer: '{}' }
+      await record(entry)
+      return entry
+    }
     let result = await ask(p, { firstUser })
     if (result.ended) return result
     let parsed = objectOf(result.answer, step)
@@ -93,8 +103,28 @@ export async function writeInParts(ctx, { parts, history, reading, save }) {
     await record(entry)
     return entry
   }
+  // A leading part goes first and alone; the others are made from its answer.
+  const lead = parts.findIndex((part) => part.leads === true)
+  let toRun = parts
+  if (lead >= 0) {
+    const led = await writePart(parts[lead], lead)
+    if (led.ended) {
+      await saving.catch(() => {})
+      return { ended: led.ended }
+    }
+    const value = led.error ? null : objectOf(led.answer, step).value
+    if (value === null) {
+      await saving.catch(() => {})
+      return { notADoc: { answer: led.answer, error: led.error ?? 'the leading part gave no JSON object' } }
+    }
+    toRun = parts.map((part, p) =>
+      p === lead || typeof part.firstUserFor !== 'function'
+        ? part
+        : { ...part, firstUser: part.firstUserFor(value) }
+    )
+  }
   const settled = await Promise.allSettled(
-    parts.map((part, p) =>
+    toRun.map((part, p) =>
       writePart(part, p).then(
         (out) => {
           if (out.ended) stop.abort()

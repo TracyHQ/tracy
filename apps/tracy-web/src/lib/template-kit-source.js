@@ -466,6 +466,50 @@ export function wholeKitFirstMessage({ kit, brief, visualReviewText }) {
   return { text, inFirstMessage: parts.ids() }
 }
 
+/** The kit's index: the parts a first message carries with harness kitIndexInFirstMessage (kitIndexFirstMessage). */
+export const KIT_INDEX_PARTS = Object.freeze(['contents', 'site', 'pageGroups', 'pages'])
+
+/**
+ * The first user message of a run that gets the kit's index in it (harness `kitIndexInFirstMessage`): "contents",
+ * "site", "pageGroups" and "pages" below, by id; every page group, page, block and large site part is still read with
+ * the part tool, and the image tool stays, so the visual review is done as before. Why: a planner given only
+ * "contents" read the site, the page groups and the pages first, a turn each, and each turn spent its own reasoning
+ * (local stand, 15/11/2026: four reading turns, 54k tokens, five and a half minutes before the plan); on dev (lat18,
+ * 19/11/2026) BXR London's six reading turns took 398 s. The whole kit in the first message (wholeKitFirstMessage) put
+ * all the reasoning into the turn that writes the plan and hit the 128k output cap; the index leaves the blocks, most of
+ * the kit, to the tool. Returns the message and the part ids it carries, for the part tool (`kitTools` `inFirstMessage`).
+ * @param {{ kit: { ref: string, doc: any }, brief: object, visualReviewText?: string }} input
+ * @returns {{ text: string, inFirstMessage: string[] }}
+ */
+export function kitIndexFirstMessage({ kit, brief, visualReviewText }) {
+  const { readPart, openImage } = KIT_TOOL_NAMES
+  const parts = kitParts(kit.doc)
+  const template = kit.doc.template ? ` (template ${kit.doc.template.name} ${kit.doc.template.version})` : ''
+  const hasLooks = [...list(kit.doc.pages), ...list(kit.doc.blocks)].some((item) => lookTextOf(item.look))
+  const carried = KIT_INDEX_PARTS.filter((id) => id === 'contents' || parts.has(id))
+  const text = [
+    `Input 2, the template kit, is ${kit.ref}${template}. Its index is in this message, below, as one JSON object by part id: ${carried.map((id) => `"${id}"`).join(', ')}. Read every other part with your two tools as your work reaches it: a page group id, a page id, a block id, or a large site part named in "site" by its own id (such as "site.fixedTexts").`,
+    '',
+    `- ${readPart} answers parts of the kit as JSON. Give it one id, or several as ids (a list) to read them in one call. A part is sent once per conversation: a part already in this message, or read before, is answered as such, and you read it there.`,
+    ...(hasLooks
+      ? [
+          `- "contents" also gives the look of every page and block that has one, and a page or block part carries its own: plan from these looks.`
+        ]
+      : []),
+    `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}. ${visualReviewText || 'Open an image only where your instructions say a look cannot settle a decision.'}`,
+    '- You may call the tools several times in the same turn: ask for every part and image you need next at once, rather than one per turn.',
+    '',
+    "The template kit's index, by part id:",
+    '',
+    `{${carried.map((id) => `${JSON.stringify(id)}:${id === 'contents' ? JSON.stringify(parts.contents) : parts.read(id)}`).join(',')}}`,
+    '',
+    'Input 1, the brief, is this JSON:',
+    '',
+    JSON.stringify(brief)
+  ].join('\n')
+  return { text, inFirstMessage: carried }
+}
+
 const NO_IMAGES_LINE =
   '- Kit images are not available to you in this run, and there is no image tool. Where your instructions say to open an image, plan from the looks instead: every page and block has one.'
 

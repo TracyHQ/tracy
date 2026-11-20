@@ -18,8 +18,14 @@ export const USAGE = `usage: node scripts/site-planner-bench.mjs <command>
       [--no-caps]                         run without the USD budget (a step of a chain build)
       [--require-visual-review]           verify delivered kit images before accepting a WO plan
       [--kit-in-first-message]            send the whole kit in the first message; the image tool stays (frozen with the run)
+      [--kit-index-in-first-message]      send the kit's site, page groups and pages in the first message, blocks by
+                                          tool (frozen with the run; not with --kit-in-first-message)
+      [--first-draft-effort <effort>]     round 0 thinks at low, high or max (fix rounds keep the run's; frozen)
       [--parallel-pages <n>]              plan round 0 in n parts at the same time, by page groups (1 to 8), frozen
                                           with the run; 1 or absent plans it as one conversation
+      [--framed-parts <n>]                plan round 0 as a frame (the whole site and a decision for every page),
+                                          then its kept pages in n parts at the same time (1 to 7), frozen with the
+                                          run; not with --parallel-pages above 1, --plan-turns or --kit-in-first-message
       [--plan-turns]                      plan round 0 in turns of one conversation: the whole site, then one page
                                           group a turn (frozen with the run; not with --parallel-pages above 1)
   list [--limit <n>]                      the newest runs
@@ -56,8 +62,11 @@ export async function runCli(argv, deps) {
         'no-caps': { type: 'boolean' },
         'require-visual-review': { type: 'boolean' },
         'kit-in-first-message': { type: 'boolean' },
+        'kit-index-in-first-message': { type: 'boolean' },
+        'first-draft-effort': { type: 'string' },
         'parallel-pages': { type: 'string' },
         'plan-turns': { type: 'boolean' },
+        'framed-parts': { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -173,8 +182,11 @@ async function startRun(d, values) {
     noCaps: values['no-caps'] === true,
     requireVisualReview: values['require-visual-review'] === true,
     kitInFirstMessage: values['kit-in-first-message'] === true,
+    kitIndexInFirstMessage: values['kit-index-in-first-message'] === true,
+    ...(values['first-draft-effort'] !== undefined ? { firstDraftEffort: values['first-draft-effort'] } : {}),
     ...(values['parallel-pages'] !== undefined ? { parallelPages: Number(values['parallel-pages']) } : {}),
     ...(values['plan-turns'] === true ? { planTurns: true } : {}),
+    ...(values['framed-parts'] !== undefined ? { framedParts: Number(values['framed-parts']) } : {}),
     ...(d.index ? { index: d.index } : {})
   })
   if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)

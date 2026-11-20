@@ -94,7 +94,7 @@ export function planningParts(kit, parallelPages) {
 }
 
 /** `groups` in order cut into `k` runs of consecutive groups whose heaviest is as light as it can be. */
-function groupRuns(groups, weights, k) {
+export function groupRuns(groups, weights, k) {
   if (k === 1) return [groups]
   const n = groups.length
   const before = [0]
