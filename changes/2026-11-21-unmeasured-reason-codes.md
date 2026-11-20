@@ -1,0 +1,3 @@
+- **A chain build's write diagnostics say why a final-check group was unmeasured, as a fixed code (and the host's error code), never its words** — David (WO pipeline) · #716 · `fix/wo-unmeasured-reason-codes` · 2026-11-21
+  **Affects:** Rebuild and deploy tracy-web. `/api/ops/wo/chain-builds` write diagnostics: unmeasured groups gain `why` (and `hostCode` when the host gave an error code). No prose is stored.
+  **Why / Measured:** Dev lat20 and lat21 (20/11/2026): Arabian Tea House's 34 page-check groups were unmeasured and nothing said why, so whether the build was complete could not be judged. Case REG-PR-716-unmeasured-reason-codes.
