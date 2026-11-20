@@ -30,7 +30,9 @@ test('every PHP image carries the same patched-PHP floor', () => {
 })
 
 const php = spawnSync('php', ['-v']).status === 0
-test('the floor refuses unpatched bases and accepts the 19 Nov 2026 releases', { skip: !php && 'no php on PATH' }, () => {
+test('the floor refuses unpatched bases and accepts the 19 Nov 2026 releases', {
+  skip: !php && 'no php on PATH'
+}, () => {
   const run = (id) => {
     // Replace PHP_VERSION_ID with a fixed id and force the ini check to pass, so only the floor decides.
     const code = floorLine
