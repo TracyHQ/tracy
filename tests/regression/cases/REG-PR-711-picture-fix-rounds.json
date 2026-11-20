@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-711-picture-fix-rounds",
+  "kind": "fix",
+  "title": "A picture fix round keeps every frame the picker does not change as the earlier rounds finished it",
+  "pr": 711,
+  "area": "website-opportunities/site-pictures",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A fix round changing one frame's photo makes only that frame and its twin again; every other frame, wait, return, row and rung stays.",
+    "A later finish of a finished manifest draws, looks and climbs nothing again."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-pictures-fix-round-carry.test.mjs",
+      "apps/tracy-web/test/site-pictures-ladder.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a fix round makes again only the frame whose photo changes; every other frame keeps what it finished",
+      "round 0 (no finished manifest before it) is made from the code half as before",
+      "the ladder state reads the rows a manifest dropped and the rungs it took, and drops further rows from what is left",
+      "a later round keeps the picture an earlier ladder kept as its best rejected one: no rung, draw or look again"
+    ]
+  }
+}
