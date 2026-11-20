@@ -1,6 +1,7 @@
 // A copy entry under a block that does not own its slot is moved to the block that owns it on the same page, or left
-// out (site-planner/plan-slot-owners.js), so R01 has nothing left to fail on it; what is right, and what R01 judges
-// otherwise, stays as it was. An invented kit; no model, no database.
+// out when that block writes it already (site-planner/plan-slot-owners.js), so R01 has nothing left to fail on it; a
+// slot in no block of the kit, or whose own block is not kept, stays with the planner and R01. An invented kit; no
+// model, no database.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { checkPlan } from '../src/site-planner/plan-check/check-plan.js'
@@ -33,7 +34,7 @@ const kit = {
 const copy = (slot) => ({ slot, text: `text of ${slot}` })
 const plan = (blocks) => ({ pages: [{ id: 'page-home', decision: 'keep', blocks }] })
 
-test('a slot under the wrong block moves to its own block on the page; one in no block of the kit is left out', () => {
+test('a slot under the wrong block moves to its own block on the page; one in no block of the kit stays for R01', () => {
   const before = plan([
     { block: 'block-160', decision: 'keep', copy: [copy('article-2.10')] },
     {
@@ -51,16 +52,23 @@ test('a slot under the wrong block moves to its own block on the page; one in no
   assert.equal(b160.copy[1].text, 'text of article-2.9')
   assert.deepEqual(
     b165.copy.map((c) => c.slot),
-    ['article-3.1']
+    ['article-3.1', 'category-8.0']
   )
   // The plan given is not changed.
   assert.equal(before.pages[0].blocks[1].copy.length, 3)
   // R01 has nothing left to say about these slots.
   const r01 = checkPlan({ plan: after, kit, brief: {}, briefRef: null }).rules?.find((r) => r.id === 'R01')
-  for (const f of r01?.failures ?? []) assert.doesNotMatch(f.where, /article-2\.9|category-8\.0/, f.detail)
+  assert.ok(
+    (r01?.failures ?? []).every((f) => !/article-2\.9/.test(f.where)),
+    'R01 has nothing left on the moved slot'
+  )
+  assert.ok(
+    (r01?.failures ?? []).some((f) => /category-8\.0/.test(f.where)),
+    'a slot in no block of the kit is still R01'
+  )
 })
 
-test('a slot whose own block is not kept on the page, or already writes it, is left out of the wrong block', () => {
+test('a slot its own kept block writes already is left out of the wrong block; one whose block is hidden stays', () => {
   const after = withSlotsInTheirBlocks(
     plan([
       { block: 'block-160', decision: 'hide' },
@@ -72,10 +80,10 @@ test('a slot whose own block is not kept on the page, or already writes it, is l
   )
   const [b160, b165, b170, b165b] = after.pages[0].blocks
   assert.equal('copy' in b160, false, 'a decision with no copy list gets none')
-  // block-160 is hidden: article-2.9 is left out; article-3.1, under block-170, is block-165's and moves there.
+  // block-160 is hidden: article-2.9 stays for R01; article-3.1, under block-170, is block-165's and moves there.
   assert.deepEqual(
     b165.copy.map((c) => c.slot),
-    ['article-3.1']
+    ['article-2.9', 'article-3.1']
   )
   assert.deepEqual(
     b170.copy.map((c) => c.slot),

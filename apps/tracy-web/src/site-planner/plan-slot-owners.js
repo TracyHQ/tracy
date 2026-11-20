@@ -1,7 +1,8 @@
-// A copy entry named under a block that does not own its slot (R01 "slot belongs to block X", "slot id not in the kit
-// for this block"), put right by code before the plan is checked: moved to the decision of the block that owns the slot
-// on the same page (or in sharedBlocks), when that block is kept there and does not write the slot already; otherwise
-// left out, since the write step can write a slot only under its own block. Pure: inputs in, new values out.
+// A copy entry named under a block that does not own its slot (R01 "slot belongs to block X"), put right by code before
+// the plan is checked: moved to the decision of the block that owns the slot on the same page (or in sharedBlocks), when
+// that block is kept there; left out when that block already writes the slot. Anything else stays with the planner and
+// R01: a slot id in no block of the kit (it may be a kit gap the planner should name), and a slot whose own block is not
+// kept on the page. Pure: inputs in, new values out.
 //
 // Why: R01 on a slot in the wrong block was the failure a chain plan most often still had after its last fix round
 // (dev: BXR London lat18, article-2.9 under block-165 instead of block-160; Arabian Tea House lat20, category-8.0
@@ -55,10 +56,14 @@ export function withSlotsInTheirBlocks(plan, kit) {
           stays.push(entry)
           continue
         }
-        changed = true
         const owner = slotOwner.get(slot)
         const target = owner ? (keptIn(decisions, owner) ?? keptIn(shared, owner)) : null
-        if (target && !target.copy.some((c) => c?.slot === slot)) target.copy.push(entry)
+        if (!target) {
+          stays.push(entry)
+          continue
+        }
+        changed = true
+        if (!target.copy.some((c) => c?.slot === slot)) target.copy.push(entry)
       }
       d.copy = stays
     }
