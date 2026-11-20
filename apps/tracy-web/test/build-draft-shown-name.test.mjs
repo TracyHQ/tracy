@@ -144,10 +144,12 @@ test(
       const withSite = {
         loadKit: (slug) => ({
           ...kits.loadKit(slug),
-          site: { platform: 'joomla', design: 'club', quickstart: 'quickstart/club/j6/1.0.0' }
+          // The kit's own AI quickstart release (ADR 0045), as this server read it: never the demo's release.
+          site: { platform: 'joomla', quickstart: 'ai-quickstart/club/j6' }
         })
       }
-      const start = draftSiteStarter({ pool: db.pool, config, kits: withSite, request })
+      const releases = async () => [{ tag: 'ai-quickstart/club/j6', platform: 'joomla' }]
+      const start = draftSiteStarter({ pool: db.pool, config, kits: withSite, request, releases })
       const plan = { ...build.snapshot.plan, look: { template: { slug: 'club' } } }
       await start({
         accountId,

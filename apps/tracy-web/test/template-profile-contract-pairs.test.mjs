@@ -54,6 +54,11 @@ test('an owed pair is not red while missing, and red once it is paid', () => {
   assert.match(got[0], /listed as owed but is no longer missing/)
 })
 
+test('an AI quickstart release has no profile row to pair: its blank site contract is never a problem', () => {
+  const blank = new Map([['ai-quickstart/zq-kit/j6@1.0.0', {}]])
+  assert.deepEqual(contractPairProblems({ releases: {} }, blank), [])
+})
+
 test('the repository: every release pairs its newest contract and row, apart from the owed list', () => {
   const owedFile = path.join(import.meta.dirname, '../../../scripts/lib/profile-rows-owed.json')
   const { owed } = JSON.parse(readFileSync(owedFile, 'utf8'))

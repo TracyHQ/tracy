@@ -9,7 +9,9 @@
  * the profile table only when it can read GitHub (`TRACY_RELEASES_GITHUB_TOKEN`), which CI has not, so a
  * half-done cut — a contract captured and the row forgotten, or the other way — went green. This check reads
  * the repo alone: for each release, its newest contract needs an exact row, and its newest row an exact
- * contract. EmDash carries no contract profile and is skipped. A release cut with NEITHER is still only seen
+ * contract. EmDash carries no contract profile and is skipped. An AI quickstart's release (`ai-quickstart/...`,
+ * ADR 0045) is skipped too: its contract is the blank site contract, its look is its kit's, and no customer picks it
+ * in the gallery, so it has no profile row to pair. A release cut with NEITHER is still only seen
  * by the readiness check on the release folder (`scripts/template-customization-question-readiness.mjs`),
  * which is why that check runs on the local pack before upload (docs/references/quickstart-release.md).
  */
@@ -52,7 +54,7 @@ export function contractPairProblems(table, contracts, { owed = [] } = {}) {
   for (const key of contracts.keys()) {
     const at = key.lastIndexOf('@')
     const release = key.slice(0, at)
-    if (!CONTRACT_CMS.test(release)) continue
+    if (!CONTRACT_CMS.test(release) || release.startsWith('ai-quickstart/')) continue
     contractVersions.set(release, [...(contractVersions.get(release) ?? []), key.slice(at + 1)])
   }
   const releases = table?.releases ?? {}

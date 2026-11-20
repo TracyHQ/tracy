@@ -1,8 +1,8 @@
 // The copy rules measured on a real blank site (#584) that bind the draft write (#597), points 5 and 6, each a named
 // test on the memory site after a run:
 //
-//   5  two plans containers on one page: the JA Boxing kit declares one per page (`holds.copies.perPage`), so the plan
-//      stops; a kit declaring two gives each holding copy its own position `tracy-tabs-<container id>`; the page
+//   5  two plans containers on one page: the JA Boxing kit declares one per page (`holds.copies.perPage`), so the second
+//      is left out and listed (#575); a kit declaring two gives each holding copy its own position `tracy-tabs-<container id>`; the page
 //      title block 162 is ONE copy for the site, its demo rows cut to the rows written; the social footer 171 is one
 //      copy on every page; block 160 lists the category the build made, not the demo's catid 9
 //   6  an empty button is hidden the way the contract declares (a setting, an element removed), an unused social row
@@ -47,8 +47,14 @@ function twoContainers() {
   return order
 }
 
-test('rule 5: two plans containers on one page stop the plan, as the kit declares one per page', () => {
-  assert.throws(() => planOf(twoContainers()), refusal('container_copies_per_page'))
+test('rule 5: two plans containers on one page: the kit declares one per page, so the second is left out and listed', () => {
+  const plan = planOf(twoContainers())
+  assert.ok(plan.ops.some((op) => op.key === 'copy:plans.plans-b3'))
+  assert.ok(!plan.ops.some((op) => op.key === 'copy:plans.plans-b6'))
+  assert.deepEqual(
+    plan.skippedItems.filter((s) => s.code === 'container_copies_per_page').map((s) => s.op),
+    ['copy:plans.plans-b6']
+  )
 })
 
 test('rule 5: a kit declaring two containers per page gives each holding copy its own position', async () => {
