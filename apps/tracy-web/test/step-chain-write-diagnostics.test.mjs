@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createStepChainEngine } from '../src/sites/brief-engines/step-chain.js'
 import {
+  causesOf,
   hostCodeOf,
   MAX_WRITE_DIAGNOSTICS_BYTES,
   stepNineDiagnostics,
@@ -225,4 +226,28 @@ test('the unmeasured reasons of the site check are sorted into their codes', () 
   assert.equal(unmeasuredCode('something new'), 'other')
   assert.equal(unmeasuredCode(undefined), null)
   assert.equal(hostCodeOf('The host gave no verdicts: no answer'), null)
+})
+
+test("each group's failures are counted by the build step that causes them, as step names", () => {
+  const fail = (causingStep) => ({ causingStep, reason: 'words never stored', level: 'block' })
+  const causes = causesOf([
+    { name: 'unaddressable-items', status: 'red', failures: [fail(8), fail(8), fail(6)] },
+    { name: 'read-back', status: 'red', causingStep: 9, failures: [{}, fail(3)] },
+    { name: 'reachable-pages', status: 'green', failures: [] },
+    { name: 'not-a-group', status: 'red', failures: [fail(9)] }
+  ])
+  assert.deepEqual(causes, {
+    'unaddressable-items': { pictures: 2, copy: 1 },
+    'read-back': { write: 1, planner: 1 }
+  })
+  const d = stepNineDiagnostics({
+    report: { status: 'stopped' },
+    siteCheck: {
+      status: 'red',
+      counts: { block: 3 },
+      groups: [{ name: 'unaddressable-items', status: 'red', failures: [fail(8), fail(8), fail(0)] }]
+    }
+  })
+  assert.deepEqual(d.finalCheck.causes, { 'unaddressable-items': { pictures: 2, template: 1 } })
+  assert.equal(JSON.stringify(d).includes('words never stored'), false)
 })

@@ -1,6 +1,7 @@
 // Structural evidence only: never persist checker prose, model prompts, measured values or raw errors.
 import { KIT_GROUPS, PAGE_READ_GROUPS, ROUTE_GROUPS, SITE_CHECK_GROUPS } from './site-check/site-check.js'
 import { PAGE_CHECK_GROUPS } from './site-check/page-groups.js'
+import { stepName } from './lib/site-build-steps.js'
 import { CHECK_GROUP_KINDS, NEVER_SENT, SENT_KINDS } from './write-step/repair-pass/repair-kinds.js'
 
 const GROUPS = new Set(
@@ -105,6 +106,25 @@ export function hostCodeOf(reason) {
   return m ? m[1] : null
 }
 
+/**
+ * How many failures of each group each build step causes (site-build-steps.js names: template, brand, planner, copy,
+ * pictures, write), counted over every failure, not only the faults kept: which step to fix for a group, by number.
+ */
+export function causesOf(groups) {
+  const out = {}
+  for (const g of list(groups)) {
+    const failures = list(g?.failures)
+    if (!failures.length || !GROUPS.has(g.name)) continue
+    const tally = {}
+    for (const f of failures) {
+      const step = stepName(f?.causingStep ?? g.causingStep)
+      tally[step] = (tally[step] ?? 0) + 1
+    }
+    out[g.name] = tally
+  }
+  return out
+}
+
 /** A bounded staff-only summary retained after temporary step files have been removed. */
 export function stepNineDiagnostics(step) {
   let truncated = false
@@ -119,6 +139,7 @@ export function stepNineDiagnostics(step) {
           status: known(value.status, STATUSES),
           counts: counts(value.counts),
           groupCount: list(value.groups).length,
+          causes: causesOf(value.groups),
           groups: take(value.groups, 40).map((g) => ({
             name: known(g.name, GROUPS),
             status: known(g.status, STATUSES),

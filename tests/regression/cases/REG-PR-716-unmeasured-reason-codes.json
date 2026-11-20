@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-716-unmeasured-reason-codes",
   "kind": "fix",
-  "title": "An unmeasured final-check group in the write diagnostics says why as a fixed code, never its words",
+  "title": "The write diagnostics say why a final-check group was unmeasured (a fixed code) and which build step causes each group's failures, never their words",
   "pr": 716,
   "area": "website-opportunities/step-chain",
   "cms": ["jo", "wp", "em"],
@@ -13,7 +13,8 @@
   ],
   "expect": [
     "Unmeasured groups carry a fixed why code and a host error code when it is one; prose, paths and secrets never appear.",
-    "Every unmeasured reason the site check gives sorts into its code."
+    "Every unmeasured reason the site check gives sorts into its code.",
+    "Each failing group's failures are counted by causing step name (template, brand, planner, copy, pictures, write)."
   ],
   "selectors": {},
   "run": {
@@ -27,7 +28,8 @@
     "needs": [],
     "tests": [
       "an unmeasured group says why as a fixed code and the host error code, never its words",
-      "the unmeasured reasons of the site check are sorted into their codes"
+      "the unmeasured reasons of the site check are sorted into their codes",
+      "each group's failures are counted by the build step that causes them, as step names"
     ]
   }
 }
