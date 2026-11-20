@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-717-plan-back-to-one",
+  "kind": "fix",
+  "title": "A chain build plans round 0 in one conversation at the run's effort, with the kit index in its first message",
+  "pr": 717,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The chain's planner run has no --framed-parts, --parallel-pages or --first-draft-effort; it has the visual review and the kit index."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-plan-parts.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the chain's planner run plans its first draft in one conversation, with the visual review, reading the kit by tools",
+      "the chain's planner run gets the kit index in its first message and thinks its first draft at the run's effort",
+      "the chain's planner run plans its first draft as one conversation, not as a frame with parts after it"
+    ]
+  }
+}
