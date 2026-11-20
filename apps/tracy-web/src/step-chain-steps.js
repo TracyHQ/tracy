@@ -56,23 +56,24 @@ const stepError = (message, usd = 0) => Object.assign(new Error(message), { usd 
  *   benchCli?: Partial<Record<'brand' | 'plan' | 'copy' | 'pictures', Function>> }} deps `keepFiles`: leave a
  *   run's files on disk after it ends
  */
-/** How many parts the copy step's first draft is written in at once (site-writer/writer-parts.js). */
-export const COPY_PARTS = 8
-
-/** How many parts the planner's first draft is planned in at once (site-planner/plan-parts.js). */
-export const PLAN_PARTS = 5
+/**
+ * How many parts the copy step's first draft is written in at once (site-writer/writer-parts.js). Five: eight (#710,
+ * dev lat20, 20/11/2026) waited 331 s against 370 s at BXR London and 269 s against 222 s at Arabian Tea House, at
+ * about four times the spend (0.83 against 0.22 USD), since every part reads the kit and reasons from the start.
+ */
+export const COPY_PARTS = 5
 
 /**
- * The chain's planner run arguments, without the budget flag.
+ * The chain's planner run arguments, without the budget flag: round 0 in one conversation.
  *
- * - `--parallel-pages`: the first draft in PLAN_PARTS parts planned at the same time, by page groups (#645). On dev
- *   (16/11/2026) round 0 took 357 to 753 s, of which one writing turn took 158 to 495 s; and from lat13 to lat17
- *   (17–19/11/2026) the plan step was 7 to 14.5 minutes, the longest of every build. In parts, each part writes its own
- *   page groups (the first part the whole-site fields too), so round 0 waits on its heaviest part. Each part's first
- *   message is the run's own, so the provider's cache reuses it. The merged plan is checked once, as before. Five since
- *   20/11/2026: the first part plans the whole site alone and four plan the page groups, weighed by what the planner
- *   writes for them (plan-parts.js groupWeights). With three (lat19, 19/11/2026), round 0 took 451 s at Arabian Tea
- *   House (398 s in one conversation) and 509 s at BXR London (588 s), waiting on one heavy part each time.
+ * - Not `--parallel-pages`: planned in parts (#708, #710), round 0 was no faster and the plan was worse. Each part
+ *   reasoned 30k to 75k tokens, about what one conversation reasons for the whole site, so the parts reasoned about
+ *   four times as much in all, and the part with the whole site's fields read the kit for 307 s. Round 0 (dev):
+ *   Arabian Tea House 398 s in one conversation (lat18), 451 s in three parts (lat19), 421 s in five (lat20); BXR
+ *   London 588 s, 509 s, 502 s. The parts' decisions did not agree: a page path one part renamed was still linked by
+ *   another's button (a 404), more pages were kept (22 against 8), BXR's plan still had 238 failures after its first
+ *   fix round (11 in one conversation), and the final site check found unreachable pages in every build planned in
+ *   parts (none in lat18). The planner bench still plans in parts when a run asks for it.
  * - Not `--kit-in-first-message`: with the whole kit in its first message the planner put all its reasoning into the
  *   turn that writes the plan, and on the local stand (run15, 15/11/2026) that turn hit the 128k output cap (104k of
  *   reasoning) and the build lost its plan; read part by part, the reasoning is spread over turns.
@@ -82,9 +83,7 @@ export const planArgs = (kitRef, revisionId) => [
   kitRef,
   '--brief-revision',
   revisionId,
-  '--require-visual-review',
-  '--parallel-pages',
-  String(PLAN_PARTS)
+  '--require-visual-review'
 ]
 
 export function createStepChainSteps(deps) {
@@ -250,10 +249,7 @@ export function createStepChainSteps(deps) {
       // standing against 11; the copy step's spend doubles (0.19 against 0.09 USD). Five since 19/11/2026: on dev the
       // copy step became BXR London's longest (8.9 to 10.2 minutes) and its round 0 waited on its heaviest of three
       // parts (367 s against 177 s for the lightest); each part's first message is the same cached fixed part.
-      // Eight since 20/11/2026, the most the writer takes: on dev (lat18, 19/11/2026) the copy step's first draft waited
-      // on its heaviest of five parts, 364 s against 82 s for the lightest (BXR London; 213 s against 58 s at Arabian
-      // Tea House), and that draft is on the build's critical path (plan round 0, then the draft, then the final copy).
-      // Its parts spend about nine tenths of what they write on reasoning, which grows with the pages a part writes.
+      // Eight were tried on 20/11/2026 and were no faster at four times the spend (COPY_PARTS).
       '--parallel-pages',
       String(COPY_PARTS)
     ]

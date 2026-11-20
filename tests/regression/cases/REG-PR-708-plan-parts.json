@@ -12,8 +12,7 @@
     "S2: Confirm every test named in run.tests reports ok."
   ],
   "expect": [
-    "The chain's planner run is started with --parallel-pages 5 and the visual review, without the whole kit in its first message.",
-    "5 is a value the planner bench takes; a kit with fewer groups gets fewer parts, the whole site's part first."
+    "The chain's planner run is started without --parallel-pages (one conversation), with the visual review, without the whole kit in its first message (parts measured slower or no faster and worse on dev, lat19 and lat20)."
   ],
   "selectors": {},
   "run": {
@@ -26,8 +25,7 @@
     ],
     "needs": [],
     "tests": [
-      "the chain's planner run plans its first draft in parts, with the visual review, reading the kit by tools",
-      "the number of parts is one the planner bench takes and plans in parts; a kit with fewer groups gets fewer parts, the whole site first"
+      "the chain's planner run plans its first draft in one conversation, with the visual review, reading the kit by tools"
     ]
   }
 }

@@ -12,7 +12,7 @@
     "S2: Confirm every test named in run.tests reports ok."
   ],
   "expect": [
-    "The chain's copy parts are the writer's own ceiling and a value it takes.",
+    "The chain's copy parts are a value the writer takes, below its ceiling.",
     "A finished picture round records its round times as whole milliseconds and its frame task count."
   ],
   "selectors": {},
@@ -27,7 +27,7 @@
     ],
     "needs": [],
     "tests": [
-      "the copy step's first draft is written in the most parts the writer takes",
+      "the copy step's first draft is written in parts the writer takes, below its ceiling",
       "a finished round records where its time went: whole milliseconds, and how many frame tasks it ran"
     ]
   }
