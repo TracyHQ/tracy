@@ -29,7 +29,7 @@ test('only the joomla and wordpress image hashes take tracy-prefork.conf; demos 
   const src = web('build.sh')
   const web_files = /^WEB_FILES="([^"]*)"/m.exec(src)?.[1]
   assert.ok(web_files && !web_files.includes('tracy-prefork.conf'), 'shared WEB_FILES must not carry it')
-  const arm = /\*\/joomla\.Dockerfile\|\*\/wordpress\.Dockerfile\) input_files="\$input_files \$APACHE_FILES"/
+  const arm = /\*\/joomla\.Dockerfile\|\*\/wordpress\.Dockerfile\) input_files="\$input_files \$APACHE_FILES[^"]*"/
   assert.match(src, arm)
   assert.match(src, /^APACHE_FILES="tracy-prefork\.conf"/m)
   assert.ok(!/demos\.Dockerfile\)[^;]*APACHE_FILES/.test(src))
