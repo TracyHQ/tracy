@@ -43,6 +43,7 @@ export async function startWriterRun({
   startedBy,
   pagesPerTurn = DEFAULT_PAGES_PER_TURN,
   parallelPages,
+  splitShared = false,
   effort,
   index,
   noCaps = false,
@@ -125,6 +126,8 @@ export async function startWriterRun({
       ...harness,
       pagesPerTurn,
       ...(parallelPages > 1 ? { parallelPages } : {}),
+      // Frozen with the run: whether a heavy "shared" is split into shared block parts (writer-parts.js writingUnits).
+      ...(parallelPages > 1 && splitShared === true ? { splitShared: true } : {}),
       ...(requireVisualReview ? { visualReview: WRITER_VISUAL_POLICY } : {}),
       // A base copy is round 0 (site-writer/bench-worker.js baseCopyOf); fewer fix rounds end the run sooner.
       ...(baseCopy !== undefined ? { baseCopy } : {}),

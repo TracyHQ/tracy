@@ -72,6 +72,11 @@ test('with planTurns on, the plan step plans round 0 in turns and records the sw
 
 test('a switch adds its flag only to its own step', () => {
   assert.deepEqual(trialArgs('plan', { planTurns: true }), { argv: ['--plan-turns'], names: ['planTurns'] })
+  assert.deepEqual(trialArgs('copy', { splitShared: true }), {
+    argv: ['--split-shared'],
+    names: ['splitShared']
+  })
+  assert.deepEqual(trialArgs('plan', { splitShared: true }), { argv: [], names: [] })
   for (const step of ['copy', 'pictures'])
     assert.deepEqual(trialArgs(step, { planTurns: true }), { argv: [], names: [] })
   assert.deepEqual(trialArgs('plan', {}), { argv: [], names: [] })

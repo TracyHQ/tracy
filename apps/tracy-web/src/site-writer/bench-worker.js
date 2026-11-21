@@ -125,11 +125,13 @@ export const SITE_WRITER_STEP = Object.freeze({
   // Parallel parts: each part's only user message, or null when the run writes round 0 as before.
   parts: ({ row, ready }) => {
     if (!writesInParts(row.harness) || baseCopyOf(row)) return null
-    const pages = writingParts(ready.input, row.harness.parallelPages)
+    const pages = writingParts(ready.input, row.harness.parallelPages, {
+      splitShared: row.harness.splitShared === true
+    })
     if (pages.length < 2) return null
     return partMessages(ready.input, pages).map((message, part) => ({
       about: pages[part],
-      firstUser: partVisualMessage(message, pages[part], row, ready)
+      firstUser: partVisualMessage(message, pages[part], row, ready, pages)
     }))
   },
   mergeParts: mergePartAnswers,
@@ -182,9 +184,9 @@ function visualMessage(message, row, ready) {
 }
 
 // A part's visual instruction names only the images of the blocks its pages print; none when they print no block.
-function partVisualMessage(message, pages, row, ready) {
+function partVisualMessage(message, pages, row, ready, all = [pages]) {
   if (row.harness?.visualReview !== WRITER_VISUAL_POLICY) return message
-  const plan = planOfPages(row.plan, pages)
+  const plan = planOfPages(row.plan, pages, all)
   if (!writerVisualRequirements(plan, ready.kit.doc).required.length) return message
   return `${writerVisualInstruction(plan, ready.kit.doc)}\n\n${message}`
 }

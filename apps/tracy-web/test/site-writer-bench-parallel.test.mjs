@@ -335,6 +335,24 @@ test(
 )
 
 test(
+  'the split of a heavy "shared" is frozen with a run of parts that asks for it, and with no other run',
+  opts,
+  async () => {
+    const { pool } = db
+    const cases = [
+      [{ parallelPages: 2, pagesPerTurn: 'all', splitShared: true }, true],
+      [{ parallelPages: 2, pagesPerTurn: 'all' }, false],
+      [{ parallelPages: 1, splitShared: true }, false]
+    ]
+    for (const [over, frozen] of cases) {
+      const started = await startRun(pool, kits.index, over)
+      const run = await readRun(pool, started.id)
+      assert.equal(run.harness.splitShared === true, frozen, JSON.stringify(over))
+    }
+  }
+)
+
+test(
   'parallel pages: the parts are in flight at the same time, merged into one checked copy, their cost summed',
   opts,
   async () => {

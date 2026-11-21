@@ -22,6 +22,8 @@ export const USAGE = `usage: node scripts/site-writer-bench.mjs <command>
       [--pages-per-turn <n|all>]          pages per writing turn, frozen with the run (default all: one turn)
       [--parallel-pages <n>]              write the first draft in n parts at the same time (1 to 8), frozen with
                                           the run (default: off, one conversation as before)
+      [--split-shared]                    with --parallel-pages, a "shared" heavier than the average part gives up its
+                                          heaviest shared blocks as parts of their own (writer-parts.js writingUnits)
       [--base-copy <path>]                a site-copy.json taken as round 0 with no model call: checked against this
                                           plan, then fixed in the fix rounds (a chain's draft copy on a final plan)
       [--max-fix-rounds <n>]              fewer fix rounds than the step's 2, frozen with the run (0: first draft only)
@@ -60,6 +62,7 @@ export async function runCli(argv, deps) {
         effort: { type: 'string' },
         'pages-per-turn': { type: 'string' },
         'parallel-pages': { type: 'string' },
+        'split-shared': { type: 'boolean' },
         'base-copy': { type: 'string' },
         'max-fix-rounds': { type: 'string' },
         limit: { type: 'string' },
@@ -185,6 +188,7 @@ async function startRun(d, values) {
     ...(values.effort !== undefined ? { effort: values.effort } : {}),
     ...(perTurn !== undefined ? { pagesPerTurn: perTurn === 'all' ? 'all' : Number(perTurn) } : {}),
     ...(parts !== undefined ? { parallelPages: Number(parts) } : {}),
+    ...(values['split-shared'] === true ? { splitShared: true } : {}),
     ...(baseCopy ? { baseCopy: baseCopy.value } : {}),
     ...(fixRounds !== undefined ? { maxFixRounds: Number(fixRounds) } : {}),
     ...(d.index ? { index: d.index } : {})
