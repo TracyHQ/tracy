@@ -19,6 +19,7 @@ import { checkR23 } from './rules-kept-rows.js'
 import { checkR24 } from './rules-labels.js'
 import { checkR10h, checkR19 } from './rules-map-judgement.js'
 import { checkR26 } from './rules-social-icons.js'
+import { checkR27 } from './rules-cowork-hides.js'
 import { checkR04 } from './rules-menu.js'
 import { checkR08, checkR09, checkR11 } from './rules-notices-forms.js'
 import { checkR20 } from './rules-page-titles.js'
@@ -33,7 +34,7 @@ import { checkR21 } from './rules-trade-hidden.js'
 
 // The checker's version, stored on every bench run next to the prompt hash. Bump it whenever a rule, a rule title,
 // a failure text or the result shape changes, so two runs scored by different checkers are never compared as equal.
-export const CHECKER_VERSION = 'site-plan-check/11'
+export const CHECKER_VERSION = 'site-plan-check/12'
 
 const RUN_ORDER = [
   checkR00,
@@ -68,6 +69,7 @@ const RUN_ORDER = [
   checkR24,
   checkR25,
   checkR26,
+  checkR27,
   checkR10h
 ]
 
@@ -75,7 +77,7 @@ const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 
 // briefRef (optional): a name the brief is known by (its file name or revision id). R10a only uses it to decide
 // whether plan.brief obviously names the brief; it stands in for the brief file path the script compared.
-export function checkPlan({ plan, kit, brief, briefRef = '' } = {}) {
+export function checkPlan({ plan, kit, brief, briefRef = '', coworkHides = null } = {}) {
   const { R, list } = createRuleSet()
   const inputErrors = [
     [plan, 'plan'],
@@ -97,6 +99,9 @@ export function checkPlan({ plan, kit, brief, briefRef = '' } = {}) {
     kit: obj(kit),
     brief: obj(brief),
     briefRef,
+    // The Claude Cowork plugin's hide review of the kit's Joomla contract (lib/cowork-hide-review.js), for R27; null
+    // skips it.
+    coworkHides,
     ...k,
     ...b,
     ...p,

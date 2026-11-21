@@ -167,6 +167,7 @@ export const altMatchesPictureGroup = {
         seen: said,
         shared: first.shared,
         causingStep: theWriters ? COPY_STEP : WRITE_STEP,
+        kind: theWriters ? 'writer-alt' : 'template-alt',
         reason: theWriters
           ? `The alt does not describe the picture placed: step 8's looker saw "${said}", and the alt shares ${first.shared.length ? `only ${first.shared.join(', ')}` : 'no main word'} with it. The writer rewrites this alt from the picture.`
           : `The alt printed is not words the writer wrote for this run, and it does not describe the picture placed (step 8's looker saw "${said}"): the write step left the template's or the demo's alt on this picture.`

@@ -3,7 +3,7 @@
 // counting each group's failures by them (step-chain-write-diagnostics.js kindsOf), never by their words.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { differsKind } from '../src/site-check/read-back.js'
+import { differsKind, pluginRefusedKind } from '../src/site-check/read-back.js'
 import { unaddressableKind } from '../src/site-check/write-findings.js'
 import { kindsOf, stepNineDiagnostics } from '../src/step-chain-write-diagnostics.js'
 
@@ -12,6 +12,15 @@ test('a read-back difference is empty, cut short, the ordered words with markup,
   assert.equal(differsKind('Train with us every day', 'Train with us'), 'differs-shortened')
   assert.equal(differsKind('Train with us', '<p>Train with us</p>'), 'differs-markup')
   assert.equal(differsKind('Train with us', 'Join the club'), 'differs-other')
+})
+
+test("a plugin refusal carries the plugin's own error code", () => {
+  assert.equal(
+    pluginRefusedKind('VALUE_TOO_LONG: the text is longer than the field (limit 60, actual 74)'),
+    'plugin-refused-value-too-long'
+  )
+  assert.equal(pluginRefusedKind('the plugin said no'), 'plugin-refused')
+  assert.equal(pluginRefusedKind(undefined), 'plugin-refused')
 })
 
 test('an item the write step left out is sorted by why it had nothing to write to', () => {
@@ -27,6 +36,25 @@ test('an item the write step left out is sorted by why it had nothing to write t
     'painted-setting'
   )
   assert.equal(unaddressableKind('the kit names no writable setting for this frame'), 'no-writable-setting')
+  assert.equal(
+    unaddressableKind(
+      'pictures: the plan wants a picture here and the picture step left it without one: no photo fits'
+    ),
+    'picture-left-empty'
+  )
+  assert.equal(unaddressableKind('pictures: the kit has no image slot module-3.1'), 'picture-no-image-slot')
+  assert.equal(
+    unaddressableKind('pictures: the kit slot module-3.1 requires transparency; its JPEG file is opaque'),
+    'picture-not-transparent'
+  )
+  assert.equal(
+    unaddressableKind(
+      'pictures: owner photo p-1 is already shown in block-2.1 of the same block block-2, the two cuts sharing 90%'
+    ),
+    'picture-repeated-in-block'
+  )
+  assert.equal(unaddressableKind('pictures: source returned'), 'picture-source-gone')
+  assert.equal(unaddressableKind('pictures: twin chain from block-2.1 has no placed source'), 'picture-twin')
   assert.equal(unaddressableKind('pictures: something new'), 'picture-other')
   assert.equal(unaddressableKind('the contract has no slot for it'), 'no-slot')
   assert.equal(unaddressableKind(undefined), 'other')

@@ -1,0 +1,1 @@
+{"id":"REG-PR-721-fault-samples","verdict":"PASS","commit":"547b3204fc7d9307a9514ad2fb70c317665d56c1","ran_at":"2026-11-21T10:12:25.118Z","evidence":"tests/regression/.runs/2026-11-21-547b3204f/REG-PR-721-fault-samples.log"}

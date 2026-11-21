@@ -3,6 +3,7 @@ import { test } from 'node:test'
 import { createStepChainEngine } from '../src/sites/brief-engines/step-chain.js'
 import {
   causesOf,
+  sampleFaults,
   hostCodeOf,
   MAX_WRITE_DIAGNOSTICS_BYTES,
   stepNineDiagnostics,
@@ -250,4 +251,34 @@ test("each group's failures are counted by the build step that causes them, as s
   })
   assert.deepEqual(d.finalCheck.causes, { 'unaddressable-items': { pictures: 2, template: 1 } })
   assert.equal(JSON.stringify(d).includes('words never stored'), false)
+})
+
+test('the faults kept are taken in turn from every group, so a group listed late is seen too', () => {
+  const failures = (group, n) =>
+    Array.from({ length: n }, (_, i) => ({ slot: `article-${group.length}.${i}`, level: 'block' }))
+  const groups = [
+    { name: 'unaddressable-items', status: 'red', failures: failures('unaddressable-items', 30) },
+    { name: 'read-back', status: 'red', failures: failures('read-back', 3) },
+    { name: 'alt-matches-picture', status: 'red', failures: failures('alt-matches-picture', 2) }
+  ]
+  assert.deepEqual(
+    sampleFaults(groups)
+      .slice(0, 7)
+      .map((f) => f.group),
+    [
+      'unaddressable-items',
+      'read-back',
+      'alt-matches-picture',
+      'unaddressable-items',
+      'read-back',
+      'alt-matches-picture',
+      'unaddressable-items'
+    ]
+  )
+  const d = stepNineDiagnostics({
+    report: { status: 'stopped' },
+    siteCheck: { status: 'red', counts: { block: 35 }, groups }
+  })
+  const kept = new Set(d.finalCheck.faults.map((f) => f.group))
+  assert.ok(kept.has('read-back') && kept.has('alt-matches-picture'), [...kept].join(', '))
 })

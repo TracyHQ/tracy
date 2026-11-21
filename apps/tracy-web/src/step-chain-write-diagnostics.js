@@ -139,6 +139,19 @@ export function kindsOf(groups) {
   return out
 }
 
+/**
+ * The failures kept as faults, taken in turn from every group (its first, then every group's second, ...), so a group
+ * listed late is seen as well as one listed first. Before (dev lat23, 21/11/2026) the faults kept were the first in
+ * group order, almost all one group's (unaddressable items), and none showed where the read-back or alt blocks were.
+ */
+export function sampleFaults(groups) {
+  const lists = list(groups).map((g) => list(g?.failures).map((f) => ({ ...f, group: g.name })))
+  const out = []
+  for (let i = 0; lists.some((l) => i < l.length); i++)
+    for (const l of lists) if (i < l.length) out.push(l[i])
+  return out
+}
+
 /** A bounded staff-only summary retained after temporary step files have been removed. */
 export function stepNineDiagnostics(step) {
   let truncated = false
@@ -166,10 +179,7 @@ export function stepNineDiagnostics(step) {
               : {}),
             ...(g.status === 'unmeasured' && hostCodeOf(g.reason) ? { hostCode: hostCodeOf(g.reason) } : {})
           })),
-          faults: take(
-            list(value.groups).flatMap((g) => list(g.failures).map((f) => ({ ...f, group: g.name }))),
-            24
-          ).map(fault)
+          faults: take(sampleFaults(value.groups), 24).map(fault)
         }
       : null
   const repair = step?.repair

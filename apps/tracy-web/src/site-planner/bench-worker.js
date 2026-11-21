@@ -53,6 +53,8 @@ import { withKitCharacterLimits } from './plan-kit-limits.js'
 import { withSlotsInTheirBlocks } from './plan-slot-owners.js'
 import { framedPartMessage, frameInstruction, framesPlan, mergeFramedPlan } from './plan-frame.js'
 import { mergePlanParts, partFirstMessages, planningParts, plansInParts } from './plan-parts.js'
+import { openContentMap } from '../lib/content-map-source.js'
+import { coworkHideReview } from '../lib/cowork-hide-review.js'
 import {
   firstTurnMessage,
   groupTurnCheck,
@@ -93,7 +95,8 @@ export const SITE_PLANNER_STEP = Object.freeze({
         plan: doc,
         kit: ready.kit.doc,
         brief: row.brief,
-        briefRef: briefRefOf(row.brief_source)
+        briefRef: briefRefOf(row.brief_source),
+        coworkHides: ready.coworkHides ?? null
       })
       return row.harness?.visualReview === VISUAL_REVIEW_POLICY
         ? withVisualReview(result, { plan: doc, kit: ready.kit.doc, kitRef: row.kit.ref, history })
@@ -173,7 +176,13 @@ export const SITE_PLANNER_STEP = Object.freeze({
       kit: ready.kit.doc,
       read: (plan) => normalizedPlan(plan, ready.kit.doc),
       check: (plan) =>
-        checkPlan({ plan, kit: ready.kit.doc, brief: row.brief, briefRef: briefRefOf(row.brief_source) })
+        checkPlan({
+          plan,
+          kit: ready.kit.doc,
+          brief: row.brief,
+          briefRef: briefRefOf(row.brief_source),
+          coworkHides: ready.coworkHides ?? null
+        })
     }),
   prepare,
   agentRequest
@@ -278,11 +287,17 @@ async function prepare({ pool, secret, index, kitImages }, row) {
       code: 'SITE_PLANNER_DOOR_CHANGED',
       reason: `the door now uses ${door.snapshot.providerId} ${door.snapshot.model}, the run was started on ${row.door?.providerId} ${row.door?.model}`
     }
+  // What the site's Claude Cowork plugin can take off (lib/cowork-hide-review.js), for the check's R27: read once a
+  // claim. Only the Joomla plugin keeps a hide review; another platform's plan skips R27.
+  const coworkHides =
+    kit.platform === 'joomla'
+      ? coworkHideReview(kit.doc, openContentMap(kit.ref, index ? { index } : {})?.doc ?? null)
+      : null
   // A model given no images (door.js) plans from the looks: no image zip, no image tool.
-  if (!door.snapshot.images) return { ok: true, kit, door: door.door, images: null }
+  if (!door.snapshot.images) return { ok: true, kit, door: door.door, images: null, coworkHides }
   const images = await kitImages.ensure(kit)
   if (!images.ok) return images
-  return { ok: true, kit, door: door.door, images: images.images }
+  return { ok: true, kit, door: door.door, images: images.images, coworkHides }
 }
 
 const briefRefOf = (source) => String(source?.revisionId ?? source?.name ?? '')

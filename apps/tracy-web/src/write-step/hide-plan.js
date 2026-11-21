@@ -130,7 +130,7 @@ function templateLookOf(frame) {
  * (`drives`) and the block that lists it (`listedIn`). Null when the kit does not say, or when a kept page or a block that
  * stays prints it; otherwise the places that took it off the site with them.
  */
-function printedOnlyOnDropped(slot, { kit, plan, dropped }) {
+export function printedOnlyOnDropped(slot, { kit, plan, dropped }) {
   if (neverShown(kit, slot)) return { pages: [], unseen: true }
   const field = each(kit?.storedFields).find((f) => f?.slot === slot)
   const drives = each(field?.drives).filter((d) => typeof d?.page === 'string')
