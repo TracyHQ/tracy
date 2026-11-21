@@ -96,6 +96,11 @@ export const RULE_TITLES = [
     'R26',
     'A kept social row links a profile its icon can draw (its own network, or one the template icon family has); otherwise it is hidden'
   ],
+  [
+    'r27',
+    'R27',
+    'A hide is one the site can take off: its receiver empties the slot (alone, or with another slot of its row), or the write step removes its element or its whole row'
+  ],
   ['r10h', 'R10h', 'Judgement items (needs reviewer): listed as skip']
 ]
 
