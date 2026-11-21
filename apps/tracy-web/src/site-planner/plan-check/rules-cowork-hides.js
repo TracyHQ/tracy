@@ -1,5 +1,5 @@
-// R27 a hide is one the site can take off (2026-11-20). The Joomla receiver empties only the slots its review lists
-// (lib/receiver-hide-review.js), a `withRow` one only with another slot of its row; the write step's `rows.remove` door
+// R27 a hide is one the site can take off (2026-11-20). The Claude Cowork plugin on Joomla empties only the slots its
+// review lists (lib/cowork-hide-review.js), a `withRow` one only with another slot of its row; the write step's `rows.remove` door
 // takes a slot of an HTML field and a row the plan hides whole. Any other hide is refused, and the slot keeps the demo's
 // words or picture: the final check's `unaddressable-items` (`contract-has-no-slot`) or the read-back's `plugin-refused`
 // (a `withRow` picture hidden alone). The plan is told here, so a fix round writes that slot, or gives it a picture.
@@ -9,7 +9,7 @@
 // takes them off another way: links and menu labels (their doors), a frame the template paints (writable: false), a slot
 // in a list row past the row count the plan keeps (the row goes), a slot whose stored field prints only on pages the plan
 // drops, and a kit without a review (another platform).
-import { slotKeyOf } from '../../lib/receiver-hide-review.js'
+import { slotKeyOf } from '../../lib/cowork-hide-review.js'
 import { droppedBlocks, printedOnlyOnDropped } from '../../write-step/hide-plan.js'
 import { arr, obj, str } from './rule-set.js'
 
@@ -18,7 +18,7 @@ const TEMPLATE_FILE = /^\/?(?:media\/)?templates\//
 export function checkR27(ctx) {
   const {
     R,
-    receiver,
+    coworkHides,
     plan,
     kit,
     keptDecisions,
@@ -31,8 +31,8 @@ export function checkR27(ctx) {
     W
   } = ctx
   const r = R.r27
-  if (!receiver) {
-    r.skip('cannot check: the kit has no receiver review (no Joomla content map)')
+  if (!coworkHides) {
+    r.skip('cannot check: the kit has no Claude Cowork plugin hide review (no Joomla content map)')
     return
   }
   const menuLabels = new Set(
@@ -54,10 +54,10 @@ export function checkR27(ctx) {
       return [...parts.copy, ...parts.pics].map((c) => slotKeyOf(str(c.slot ?? c.frame)))
     })
   )
-  const heldRows = new Set([...writtenKeys].map((k) => receiver.rowOf.get(k)).filter(Boolean))
+  const heldRows = new Set([...writtenKeys].map((k) => coworkHides.rowOf.get(k)).filter(Boolean))
   const rowGoes = (key) => {
-    const row = receiver.rowOf.get(key)
-    const words = row ? (receiver.rowWords.get(row) ?? []) : []
+    const row = coworkHides.rowOf.get(key)
+    const words = row ? (coworkHides.rowWords.get(row) ?? []) : []
     return words.length > 0 && !heldRows.has(row) && words.every((k) => hiddenKeys.has(k))
   }
   for (const x of keptDecisions) {
@@ -69,18 +69,18 @@ export function checkR27(ctx) {
     for (const h of parts.hidden) {
       const slot = str(h.slot)
       const key = slotKeyOf(slot)
-      if (!slot || !receiver.known.has(key)) continue
+      if (!slot || !coworkHides.known.has(key)) continue
       if (linkIx?.has?.(slot) || menuLabels.has(slot)) continue
       const frame = frameById?.get?.(slot)
       if (frame?.writable === false && TEMPLATE_FILE.test(str(frame.picture))) continue
       const row = slotRow?.get?.(slot)
       if (row && rowsOf.has(row.list) && row.row >= rowsOf.get(row.list)) continue
       if (unshown(slot)) continue
-      const partners = receiver.withRow.get(key)
+      const partners = coworkHides.withRow.get(key)
       if (
-        receiver.empty.has(key) ||
-        receiver.alone.has(key) ||
-        receiver.inHtml.has(key) ||
+        coworkHides.empty.has(key) ||
+        coworkHides.alone.has(key) ||
+        coworkHides.inHtml.has(key) ||
         rowGoes(key) ||
         partners?.some((p) => hiddenKeys.has(p))
       ) {
@@ -97,7 +97,7 @@ export function checkR27(ctx) {
       }
       r.fail(
         W(x, `hidden ${slot}`),
-        "the site cannot take this off: its receiver never empties this slot (an article's title or picture column, a setting outside any row), so it would keep the demo; write it, or give it a picture",
+        "the site cannot take this off: the Claude Cowork plugin never empties this slot (an article's title or picture column, a setting outside any row), so it would keep the demo; write it, or give it a picture",
         'plan'
       )
     }

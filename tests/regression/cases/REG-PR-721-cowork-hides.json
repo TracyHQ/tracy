@@ -1,7 +1,7 @@
 {
-  "id": "REG-PR-721-receiver-hides",
+  "id": "REG-PR-721-cowork-hides",
   "kind": "fix",
-  "title": "The plan check fails a hide the Joomla receiver cannot take off (R27)",
+  "title": "The plan check fails a hide the Claude Cowork plugin cannot take off on Joomla (R27)",
   "pr": 721,
   "area": "website-opportunities/site-planner",
   "cms": ["jo"],
@@ -12,7 +12,7 @@
     "S2: Confirm every test named in run.tests reports ok."
   ],
   "expect": [
-    "The ported hide review lists the same slots, tier by tier, as the plugin's review for JA Diner 1.0.8 and JA Boxing 1.0.10.",
+    "The ported hide review lists the same slots, tier by tier, as the Claude Cowork plugin review for JA Diner 1.0.8 and JA Boxing 1.0.10.",
     "A hidden article title or intro picture fails R27; a hidden sentence of an HTML field passes, as the rows door takes it.",
     "A picture the receiver takes only with its row fails when hidden alone and passes once another slot of the row is hidden."
   ],
@@ -23,14 +23,14 @@
       "--test",
       "--test-reporter=tap",
       "--test-concurrency=1",
-      "apps/tracy-web/test/site-plan-check-receiver-hides.test.mjs"
+      "apps/tracy-web/test/site-plan-check-cowork-hides.test.mjs"
     ],
     "needs": [],
     "tests": [
       "the port lists what the plugin's review lists: JA Diner 1.0.8 and JA Boxing 1.0.10, tier by tier",
       "an article's title hidden is refused; a sentence of its HTML text goes by the door; a kit with no review skips",
-      "a picture the receiver never empties (an article's intro image) cannot be hidden",
-      "a picture the receiver takes only with its row fails alone and passes once another slot of the row goes too"
+      "a picture the plugin never empties (an article's intro image) cannot be hidden",
+      "a picture the plugin takes only with its row fails alone and passes once another slot of the row goes too"
     ]
   }
 }

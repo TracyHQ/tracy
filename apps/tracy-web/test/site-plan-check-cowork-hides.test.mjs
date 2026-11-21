@@ -1,21 +1,21 @@
-// R27 a hide is one the site can take off (site-planner/plan-check/rules-receiver-hides.js): the Joomla receiver empties only
-// what its review lists (lib/receiver-hide-review.js, the plugin script's port), and the write step's `rows.remove` door takes
+// R27 a hide is one the site can take off (site-planner/plan-check/rules-cowork-hides.js): the Claude Cowork plugin on
+// Joomla empties only what its review lists (lib/cowork-hide-review.js, the plugin script's port), and the write step's `rows.remove` door takes
 // a slot of an HTML field or a row hidden whole; any other hide is refused and leaves the demo on the page. Inputs: the JA
 // Boxing 1.0.10 kit and content map committed in the repo, the checker's passing plan (_site-plan-check.mjs); no model, no
 // database.
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
-import { hideableSlots, receiverHideReview } from '../src/lib/receiver-hide-review.js'
+import { coworkHideReview, hideableSlots } from '../src/lib/cowork-hide-review.js'
 import { checkPlan } from '../src/site-planner/plan-check/check-plan.js'
 import { brief, decisionOf, kit, plan } from './_site-plan-check.mjs'
 
 const CONTRACTS = '../../../packages/cms/tracy-joomla-quickstart/contracts'
 const read = (rel) => JSON.parse(readFileSync(new URL(`${CONTRACTS}/${rel}`, import.meta.url), 'utf8'))
 const boxingMap = read('ja-boxing/j6/1.0.10/content-map.json')
-const receiver = () => receiverHideReview(kit(), boxingMap)
-const r27 = (p, withReceiver = receiver()) =>
-  checkPlan({ plan: p, kit: kit(), brief: brief(), receiver: withReceiver }).rules.find((r) => r.id === 'R27')
+const review = () => coworkHideReview(kit(), boxingMap)
+const r27 = (p, coworkHides = review()) =>
+  checkPlan({ plan: p, kit: kit(), brief: brief(), coworkHides }).rules.find((r) => r.id === 'R27')
 const CLASS_BODY = 'body-classes_advanced-boxing'
 const hide = (d, slot) => d.hiddenSlots.push({ slot, why: 'nothing true to say here' })
 const unhide = (d, slot) => (d.hiddenSlots = d.hiddenSlots.filter((h) => h.slot !== slot))
@@ -31,7 +31,7 @@ test("the port lists what the plugin's review lists: JA Diner 1.0.8 and JA Boxin
   assert.deepEqual(count(diner), [38, 258, 43])
   assert.deepEqual(count(hideableSlots(kit(), boxingMap)), [54, 517, 218])
   // A video's thumbnail picture of an exercise row goes only with another slot of that row.
-  assert.deepEqual(receiver().withRow.get('article-16.33'), ['article-16.34', 'article-16.35'])
+  assert.deepEqual(review().withRow.get('article-16.33'), ['article-16.34', 'article-16.35'])
 })
 
 test("an article's title hidden is refused; a sentence of its HTML text goes by the door; a kit with no review skips", () => {
@@ -52,7 +52,7 @@ test("an article's title hidden is refused; a sentence of its HTML text goes by 
   assert.equal(r27(p, null).status, 'skip')
 })
 
-test("a picture the receiver never empties (an article's intro image) cannot be hidden", () => {
+test("a picture the plugin never empties (an article's intro image) cannot be hidden", () => {
   const p = plan()
   const d = decisionOf(p, CLASS_BODY)
   unhide(d, 'article-16.4')
@@ -65,7 +65,7 @@ test("a picture the receiver never empties (an article's intro image) cannot be 
   )
 })
 
-test('a picture the receiver takes only with its row fails alone and passes once another slot of the row goes too', () => {
+test('a picture the plugin takes only with its row fails alone and passes once another slot of the row goes too', () => {
   const p = plan()
   const d = decisionOf(p, CLASS_BODY)
   unhide(d, 'article-16.4')

@@ -1,12 +1,12 @@
-// What the Joomla receiver (the Claude Cowork plugin) lets a site empty, read the way the plugin reads it: its review
+// What the Claude Cowork plugin on Joomla (com_claudecowork) lets a site empty, read the way the plugin reads it: its review
 // `joomla/cowork/lib/hideable-slots.json` is made by the plugin's `scripts/hideable-slots.mjs` from this repo's template
 // kit and the contract's content map (and its presentation lock, for rows), and a slot the review does not list is never
-// emptied (QuickstartContract.php loadHideable: "a slot is emptied only where the receiver's review lists it").
+// emptied (QuickstartContract.php loadHideable: "a slot is emptied only where the review lists it").
 // `hideableSlots` below is that script's function of the same name, kept to the same rules (its `reviewedRows`, the rows
 // the review takes whole, is not needed here), so the planner knows before the write what the site will refuse to take
 // off. A change to the plugin's script is a change here.
 //
-// Why: a hide the receiver refuses leaves the demo's words or picture on the page (the final check's
+// Why: a hide the plugin refuses leaves the demo's words or picture on the page (the final check's
 // `contract-has-no-slot`: dev lat24b, 21/11/2026, 28 blocks at BXR London and 11 at Arabian Tea House). The plan check
 // reads this review so a plan never asks for one (R27); the checker's own passing JA Boxing plan hid a class title.
 //
@@ -74,7 +74,7 @@ function contactTier(slot, map) {
 }
 
 /**
- * The plugin script's `hideableSlots`: the slots the receiver empties, by tier.
+ * The plugin script's `hideableSlots`: the slots the plugin empties, by tier.
  * @returns {{ measured: string[], unmeasured: string[], withRow: Record<string, string[]> }}
  */
 export function hideableSlots(kit, map) {
@@ -136,7 +136,7 @@ export function hideableSlots(kit, map) {
 }
 
 /**
- * The receiver's review as the planner reads it: whether a slot of the content map may be emptied alone, only with another
+ * The plugin's review as the planner reads it: whether a slot of the content map may be emptied alone, only with another
  * slot of its row, or never; and what the write step's `rows.remove` door takes instead (lib/plan-rows.js `slotsToRemove`):
  * a slot of an HTML field (its element or text goes), and a row whose every word and picture the plan hides. Null for a kit
  * whose contract has no content map.
@@ -144,7 +144,7 @@ export function hideableSlots(kit, map) {
  *   inHtml: Set<string>, rowOf: Map<string, string>, rowWords: Map<string, string[]> } | null} `rowWords`: by row, the
  *   slots holding words or a picture (no address), which must all go for the door to take the row
  */
-export function receiverHideReview(kit, map) {
+export function coworkHideReview(kit, map) {
   if (!map || !Array.isArray(map.slots)) return null
   const { measured, unmeasured, withRow } = hideableSlots(kit, map)
   const rowOfKey = new Map()
