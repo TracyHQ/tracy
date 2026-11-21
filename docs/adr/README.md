@@ -71,6 +71,7 @@ ambiguous, and there is no way to detect it by machine.
 | [0042](0042-site-writer-trial-bench-copy-contract-and-check.md) | Site writer trial bench: the `site-copy/1` copy file, the copy notebook, returns to planner, and the script-only copy check `site-copy-check/2` (W01 to W11); code never edits writer text, two fix rounds | (binding) |
 | [0043](0043-picture-step-manifest-check-and-fallback-ladder.md) | Picture step: the `site-pictures/1` picture manifest, the script-only picture check `site-pictures-check/1` (P01 to P13), the code and AI split (picker, drawer, looker) and the fallback ladder after two fix rounds | (binding) |
 | [0044](0044-write-step-and-site-check.md) | Write step and site check: one writer with several plugin actions, hidden means removed, one owner per slot, a fresh bench site per run with the contract read from the kit, partial rewrite by difference, read-back in the site check | (binding) |
+| [0045](0045-progressive-site-plan-pipeline.md) | Progressive site plan: copy and pictures start on each page group the plan has settled | proposed |
 
 ## Inheritance — `tracy-infra` ADRs still binding here
 
