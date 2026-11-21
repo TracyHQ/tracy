@@ -169,6 +169,8 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
     // A whole document is recorded under the step's document name ("plan"), as the round's reading always has been.
     reading.form = isChangeList(read.value) ? 'changes' : docColumn
     reading.droppedText = read.droppedText
+    // A change list kept in part (bench-answer.js salvagedChangeList): how many of its edits were kept and lost.
+    if (read.repaired) reading.answerRepaired = read.repaired
     let doc = read.value
     let changes
     // Ask once more within the round: record why first, so a resumed round still knows, then send `message`.
