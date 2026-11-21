@@ -80,6 +80,18 @@ export function keptBlocks(k) {
     }
   ]
   const classBody = keepHidingAll(k, 'body-classes_advanced-boxing')
+  // The class's name is the article's title, a column the Claude Cowork plugin never empties (plan check R27): the plan
+  // writes it with the business's own class instead of hiding it.
+  classBody.hiddenSlots = classBody.hiddenSlots.filter((h) => h.slot !== 'article-16.4')
+  classBody.copy = [
+    {
+      slot: 'article-16.4',
+      says: 'the name of the class',
+      factIds: ['f-tennis'],
+      basis: 'brief',
+      maxCharacters: 35
+    }
+  ]
   const video = classBody.pictures.find((p) => p.frame === 'article-16.11')
   if (video) {
     delete video.size
