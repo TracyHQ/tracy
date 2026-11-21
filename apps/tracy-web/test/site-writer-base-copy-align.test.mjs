@@ -54,3 +54,23 @@ test("a plan label the final plan rewrote takes the final plan's words; a slot t
     ['block-2.3: slot is missing']
   )
 })
+
+test("an entry marked as a plan label on a slot the plan gives no label words is the writer's, words unchanged", () => {
+  const final = plan()
+  const header = decisionOf(final, 'block-1').copy[0]
+  delete header.text
+  header.says = 'a short invitation to join'
+  const draft = copy()
+  assert.match(
+    w02(draft, final)
+      .failures.map((f) => f.detail)
+      .join('\n'),
+    /block-1\.1: owner is "plan-label"/
+  )
+  const out = align(draft, final)
+  assert.deepEqual(out.owned, ['block-1.1'])
+  const entry = out.copy.slots.find((s) => s.slot === 'block-1.1')
+  assert.equal(entry.owner, 'writer')
+  assert.equal(entry.text, draft.slots.find((s) => s.slot === 'block-1.1').text)
+  assert.equal(w02(out.copy, final).status, 'pass')
+})

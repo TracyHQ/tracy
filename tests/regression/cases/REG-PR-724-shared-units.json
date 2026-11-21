@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-724-shared-units",
+  "kind": "feat",
+  "title": "The draft copy can split a heavy shared unit into shared block parts, behind a chain trial",
+  "pr": 724,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A shared unit heavier than the average part gives up its heaviest shared blocks as units of their own, and the heaviest part gets lighter.",
+    "Each part's narrowed plan, notes and message hold only its own shared blocks.",
+    "Light shared blocks, one part, or a run without the setting are cut exactly as before."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-writer-shared-units.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a heavy",
+      "each part plans, notes and is told only its own shared blocks",
+      "light shared blocks, one part, or a run that does not ask for the split are cut exactly as before"
+    ]
+  }
+}

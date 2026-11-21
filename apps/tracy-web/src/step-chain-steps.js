@@ -103,10 +103,10 @@ export const planArgs = (kitRef, revisionId) => [
 
 /**
  * The bench flags a chain step adds for the staff measurement switches that are on (`chainTrials` of the WO settings,
- * `CHAIN_TRIALS`), and the names of those switches for the step's record. Only the planner has one today: `planTurns`
- * plans round 0 in writing turns of one conversation (site-planner/plan-turns.js), stage 1 of ADR 0045, which the chain
- * never ran before 21/11/2026; with the switch, a build that plans in turns and one that does not can be measured side
- * by side on dev, where a merge and a revert per setting gave one build each and the spread of one setting between two
+ * `CHAIN_TRIALS`), and the names of those switches for the step's record. `planTurns` plans round 0 in writing turns
+ * of one conversation (site-planner/plan-turns.js), stage 1 of ADR 0045 (measured slower and worse on dev, trial t1,
+ * 21/11/2026); `splitShared` lets the draft copy split a heavy "shared" into shared block parts (writer-parts.js
+ * writingUnits). With a switch, a build with it and one without can be measured side by side on dev, where a merge and a revert per setting gave one build each and the spread of one setting between two
  * builds (BXR London round 0: 546 s and 761 s on the same prompt, lat24b and lat25) was larger than what was measured.
  * @param {'plan' | 'copy' | 'pictures'} step @param {Record<string, boolean> | null | undefined} trials
  * @returns {{ argv: string[], names: string[] }}
@@ -114,6 +114,7 @@ export const planArgs = (kitRef, revisionId) => [
 export function trialArgs(step, trials) {
   const on = (name) => trials?.[name] === true
   if (step === 'plan' && on('planTurns')) return { argv: ['--plan-turns'], names: ['planTurns'] }
+  if (step === 'copy' && on('splitShared')) return { argv: ['--split-shared'], names: ['splitShared'] }
   return { argv: [], names: [] }
 }
 
@@ -414,11 +415,12 @@ export function createStepChainSteps(deps) {
     // and spend, or null when it made no copy.
     async copyDraft(ctx, { kit, plan }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'copy-draft')
-      const argv = [...copyArgs(ctx, kit, plan), '--max-fix-rounds', '0', ...NO_CAPS]
+      const trial = trialArgs('copy', (await readWoOpsSettings(pool)).settings.chainTrials)
+      const argv = [...copyArgs(ctx, kit, plan), ...trial.argv, '--max-fix-rounds', '0', ...NO_CAPS]
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
       const ran = await benchRun('copy', argv, dir, signal, same)
       const file = path.join(dir, 'site-copy.json')
-      return (await exists(file)) ? { file, usd: ran.usd, runId: ran.runId } : null
+      return (await exists(file)) ? { file, usd: ran.usd, runId: ran.runId, trials: trial.names } : null
     },
 
     async copy(ctx, { kit, plan, base = null }, { signal }) {
@@ -441,16 +443,22 @@ export function createStepChainSteps(deps) {
         const ran = await benchRun('copy', argv, dir, signal, same)
         const file = path.join(dir, 'site-copy.json')
         return answerOf(
-          { ...ran, usd: Number(ran.usd ?? 0) + Number(base.usd ?? 0), draftRunId: base.runId },
+          {
+            ...ran,
+            usd: Number(ran.usd ?? 0) + Number(base.usd ?? 0),
+            draftRunId: base.runId,
+            trials: base.trials ?? []
+          },
           { file },
           exists(file)
         )
       }
-      const argv = [...copyArgs(ctx, kit, plan), ...NO_CAPS]
+      const trial = trialArgs('copy', (await readWoOpsSettings(pool)).settings.chainTrials)
+      const argv = [...copyArgs(ctx, kit, plan), ...trial.argv, ...NO_CAPS]
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
       const ran = await benchRun('copy', argv, dir, signal, same)
       const file = path.join(dir, 'site-copy.json')
-      return answerOf(ran, { file }, exists(file))
+      return answerOf({ ...ran, trials: trial.names }, { file }, exists(file))
     },
 
     async pictures(ctx, { kit, plan }, { signal }) {

@@ -141,6 +141,7 @@ export function timingHarness(value) {
     ...(typeof harness.effort === 'string' ? { effort: harness.effort } : {}),
     ...(Number.isInteger(harness.parallelPages) ? { parallelPages: harness.parallelPages } : {}),
     ...(harness.planTurns === true ? { planTurns: true } : {}),
+    ...(harness.splitShared === true ? { splitShared: true } : {}),
     ...(Number.isInteger(harness.maxFixRounds) ? { maxFixRounds: harness.maxFixRounds } : {}),
     ...(harness.baseCopy ? { baseCopy: true } : {})
   }

@@ -81,12 +81,29 @@ export const PART_WEIGHTS = Object.freeze({
   navLabel: 20
 })
 
-/** The block decisions a page of the writing order prints: the shared blocks for "shared", a kept page's own. */
-function printedOn(plan, page) {
+/**
+ * A unit of the writing order that is one shared block written apart from the others (`shared:<block id>`, see
+ * writingUnits): its block id, or null.
+ */
+const SHARED_UNIT = 'shared:'
+const sharedBlockOf = (unit) =>
+  typeof unit === 'string' && unit.startsWith(SHARED_UNIT) ? unit.slice(SHARED_UNIT.length) : null
+
+/** The shared blocks the units of a split write apart from "shared". */
+export const peeledOf = (units) => new Set(arr(units).flat().map(sharedBlockOf).filter(Boolean))
+
+/**
+ * The block decisions a unit of the writing order prints: for "shared", the shared blocks no `shared:<block id>` unit
+ * writes (`peeled`); for such a unit, its one shared block; for a page, the kept page's own.
+ */
+function printedOn(plan, page, peeled = new Set()) {
+  const block = sharedBlockOf(page)
   const decisions =
     page === 'shared'
-      ? arr(plan?.sharedBlocks)
-      : arr(arr(plan?.pages).find((p) => isObject(p) && p.decision === 'keep' && p.id === page)?.blocks)
+      ? arr(plan?.sharedBlocks).filter((d) => !peeled.has(d?.block))
+      : block
+        ? arr(plan?.sharedBlocks).filter((d) => d?.block === block)
+        : arr(arr(plan?.pages).find((p) => isObject(p) && p.decision === 'keep' && p.id === page)?.blocks)
   return decisions.filter((d) => isObject(d) && d.decision !== 'hide')
 }
 
@@ -112,9 +129,8 @@ function slotChars(input) {
   return chars
 }
 
-/** The estimated characters written for each page, in writing order. */
-export function pageWeights(input) {
-  const { plan } = input
+/** The estimated characters one block decision writes: its texts, its list rows' texts, an alt per picture. */
+function decisionWeigher(input) {
   const chars = slotChars(input)
   const copyChars = (copy) =>
     arr(copy).reduce(
@@ -122,15 +138,23 @@ export function pageWeights(input) {
       0
     )
   const pictures = (x) => arr(x?.pictures).length * PART_WEIGHTS.alt
+  return (d) => {
+    let weight = copyChars(d.copy) + pictures(d)
+    for (const l of arr(d.lists))
+      for (const item of arr(l.items)) weight += copyChars(item?.copy) + pictures(item)
+    return weight
+  }
+}
+
+/** The estimated characters written for each page, in writing order. */
+export function pageWeights(input) {
+  const { plan } = input
+  const weigh = decisionWeigher(input)
   const legal = new Set(createdLegal(plan).map((l) => l.id))
   const weights = new Map()
   for (const page of pagesInWritingOrder(plan)) {
     let weight = 0
-    for (const d of printedOn(plan, page)) {
-      weight += copyChars(d.copy) + pictures(d)
-      for (const l of arr(d.lists))
-        for (const item of arr(l.items)) weight += copyChars(item?.copy) + pictures(item)
-    }
+    for (const d of printedOn(plan, page)) weight += weigh(d)
     if (page === 'shared') {
       const dropdowns = arr(input.mainMenu).reduce((n, g) => n + arr(g?.dropdown).length, 0)
       weight += (arr(input.footerHeadings).length + dropdowns) * PART_WEIGHTS.navLabel
@@ -142,11 +166,50 @@ export function pageWeights(input) {
 }
 
 /**
- * The writing order cut into `parallelPages` runs of consecutive pages whose heaviest is as light as it can be (fewer
- * when the site has fewer pages). Every page is in exactly one part; joined in order, the parts are the writing order.
+ * The units the writing order is cut into, with their weights: the pages of the writing order (pageWeights), except
+ * that a "shared" unit heavier than the average part gives up its heaviest shared blocks, one `shared:<block id>` unit
+ * each, right after it, until it is no heavier than the average part or has one block left. A part can then write some
+ * shared blocks beside a page. Without that, "shared" was always one part alone and the slowest: Arabian Tea House's
+ * sixteen shared blocks (a menu list of 90 slots among them) took 247 to 420 s while the other parts took 31 to 225 s,
+ * on every chain build measured on dev (lat21 to t1, 21/11/2026), and eight parts were no faster than five (lat20).
+ * A site whose shared blocks are no heavier than the average part is cut exactly as before, and so is a run that does
+ * not ask for the split (`splitShared`, a run setting frozen with it, harness.splitShared: measured beside runs without
+ * it before it is the default).
+ * @returns {Map<string, number>} unit id to weight, in writing order
  */
-export function writingParts(input, parallelPages) {
+export function writingUnits(input, parallelPages, { splitShared = false } = {}) {
   const weights = pageWeights(input)
+  const k = Math.max(1, Math.min(parallelPages, weights.size))
+  if (!splitShared || k === 1 || !weights.has('shared')) return weights
+  const average = [...weights.values()].reduce((a, b) => a + b, 0) / k
+  const weigh = decisionWeigher(input)
+  const blocks = printedOn(input.plan, 'shared')
+    .filter((d) => typeof d.block === 'string')
+    .map((d) => ({ block: d.block, weight: weigh(d) }))
+  let shared = weights.get('shared')
+  const peeled = new Set()
+  for (const b of blocks.toSorted((x, y) => y.weight - x.weight || x.block.localeCompare(y.block))) {
+    if (shared <= average || peeled.size >= blocks.length - 1 || b.weight <= 0) break
+    peeled.add(b.block)
+    shared -= b.weight
+  }
+  if (!peeled.size) return weights
+  const out = new Map()
+  for (const [unit, weight] of weights) {
+    out.set(unit, unit === 'shared' ? shared : weight)
+    if (unit === 'shared')
+      for (const b of blocks) if (peeled.has(b.block)) out.set(`${SHARED_UNIT}${b.block}`, b.weight)
+  }
+  return out
+}
+
+/**
+ * The writing units (writingUnits) cut into `parallelPages` runs of consecutive units whose heaviest is as light as it
+ * can be (fewer when the site has fewer units). Every unit is in exactly one part; joined in order, the parts are the
+ * writing units.
+ */
+export function writingParts(input, parallelPages, { splitShared = false } = {}) {
+  const weights = writingUnits(input, parallelPages, { splitShared })
   const pages = [...weights.keys()]
   const k = Math.max(1, Math.min(parallelPages, pages.length))
   if (k === 1) return [pages]
@@ -190,11 +253,11 @@ const stringsIn = (value) => {
  * visitor question, key message, story, end action and search intents, the footer headings' points (shared turn),
  * and the `says` of a created legal page and of the not-found page. Labels, ids and picture wishes are left out.
  */
-export function notesOf(plan, pages) {
+export function notesOf(plan, pages, peeled = new Set()) {
   const notes = []
   const says = (copy) => arr(copy).flatMap((c) => stringsIn(c?.says))
   for (const page of pages) {
-    for (const d of printedOn(plan, page)) {
+    for (const d of printedOn(plan, page, peeled)) {
       notes.push(...says(d.copy))
       for (const l of arr(d.lists))
         for (const item of arr(l.items))
@@ -227,7 +290,8 @@ export function notesOf(plan, pages) {
  */
 export function ownWordsByPart(plan, parts) {
   const own = arr(plan?.site?.voice?.ownWords).filter((s) => typeof s === 'string' && s.trim() !== '')
-  const notes = parts.map((pages) => notesOf(plan, pages).join('\n'))
+  const peeled = peeledOf(parts)
+  const notes = parts.map((pages) => notesOf(plan, pages, peeled).join('\n'))
   const out = parts.map(() => [])
   let next = 0
   for (const phrase of own) {
@@ -289,7 +353,7 @@ export function sharedNoteRuns(input, parts) {
   const named = (run) => run.slice(1).some((w, i) => names.has(`${run[i]} ${w}`))
   const runsOf = (pages) => {
     const runs = new Map()
-    for (const words of notesOf(plan, pages).flatMap(phrasesOf)) {
+    for (const words of notesOf(plan, pages, peeledOf(parts)).flatMap(phrasesOf)) {
       for (let i = 0; i + NOTE_RUN_WORDS <= words.length; i++) {
         const run = words.slice(i, i + NOTE_RUN_WORDS)
         if (contentWords(run) < 2 || run.some((w) => PLAN_WORDS.has(w)) || named(run)) continue
@@ -330,11 +394,18 @@ export function partMessage({ pages, part, voice, own, runs }) {
   const total = pages.length
   const othersOwn = own.flatMap((list, p) => (p === part ? [] : list))
   const { mine, others } = runs[part]
+  const peeled = [...peeledOf(pages)]
   return [
     `# Writing part ${part + 1} of ${total}, written at the same time as the others`,
     '',
     `Write these pages now, in this order: ${pages[part].join(', ')}.`,
     '',
+    ...(peeled.length
+      ? [
+          `The shared blocks are written in more than one part. A page named ${SHARED_UNIT}<block id> is that one shared block (its slots, list rows and alts); "shared" is every other shared block (${peeled.join(', ')} excepted), with the main menu dropdowns and the footer headings.`,
+          ''
+        ]
+      : []),
     `The site is written in ${total} parts at the same time, each in a conversation of its own from the same fixed part. Code puts the answers of the parts together into one copy file, and the copy check reads it as one site. The other parts write these pages, so write nothing for them:`,
     ...pages.flatMap((list, p) => (p === part ? [] : [`- part ${p + 1}: ${list.join(', ')}`])),
     '',
@@ -379,11 +450,18 @@ export function partMessages(input, pages) {
   return pages.map((_, part) => `${fixed}\n${partMessage({ pages, part, voice, own, runs })}`)
 }
 
-/** The plan narrowed to these pages' blocks: the shared blocks only for the part that writes "shared". */
-export function planOfPages(plan, pages) {
+/**
+ * The plan narrowed to these units' blocks: the shared blocks only for the part that writes "shared" (without those a
+ * `shared:<block id>` unit of any part writes: `all`, every unit of the split), and each such block for its own unit.
+ */
+export function planOfPages(plan, pages, all = pages) {
+  const peeled = peeledOf(all)
+  const mine = peeledOf(pages)
   return {
     ...plan,
-    sharedBlocks: pages.includes('shared') ? arr(plan?.sharedBlocks) : [],
+    sharedBlocks: arr(plan?.sharedBlocks).filter((d) =>
+      peeled.has(d?.block) ? mine.has(d?.block) : pages.includes('shared')
+    ),
     pages: arr(plan?.pages).filter((p) => isObject(p) && pages.includes(p.id))
   }
 }
