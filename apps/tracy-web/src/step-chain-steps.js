@@ -121,6 +121,15 @@ export function trialArgs(step, trials) {
 export function createStepChainSteps(deps) {
   const { pool, config, secret, kitImages, brandWiring, picturesStoreDir } = deps
   const { fetchImpl = fetch, sleep = realSleep, log = console } = deps
+  // The staff measurement switches a build runs with (trialArgs): read once, when its first step starts, and kept for
+  // every later step of the same build. Each step read them when it started before 21/11/2026, so a switch turned off
+  // after a build's plan step had started was off again for its draft copy minutes later, and a side-by-side trial of a
+  // copy switch (trial s1) measured the switch off in both arms.
+  const trialsOfBuild = new WeakMap()
+  const trialsOf = async (ctx) => {
+    if (!trialsOfBuild.has(ctx)) trialsOfBuild.set(ctx, (await readWoOpsSettings(pool)).settings.chainTrials)
+    return trialsOfBuild.get(ctx)
+  }
   const benches = {
     brand: {
       cli: brandCli,
@@ -337,6 +346,7 @@ export function createStepChainSteps(deps) {
     },
     // The template kit (the template profile the release is sealed with), fetched and checked before anything forks.
     async kit(ctx) {
+      await trialsOf(ctx)
       const ref = ctx.contract?.id
       if (!ref || !readableKits().some((k) => k.ref === ref))
         throw stepError(`no readable template kit for ${ref ?? ctx.quickstart}`)
@@ -389,8 +399,8 @@ export function createStepChainSteps(deps) {
             onDraft({ file })
           }
         : null
-      // The staff measurement switches read when the step starts (trialArgs): a switch turned later is the next build's.
-      const trial = trialArgs('plan', (await readWoOpsSettings(pool)).settings.chainTrials)
+      // The build's staff measurement switches (trialsOf): a switch turned after its first step is the next build's.
+      const trial = trialArgs('plan', await trialsOf(ctx))
       const ran = await benchRun(
         'plan',
         [...planArgs(kit.ref, revisionOf(ctx)), ...trial.argv, ...NO_CAPS],
@@ -415,7 +425,7 @@ export function createStepChainSteps(deps) {
     // and spend, or null when it made no copy.
     async copyDraft(ctx, { kit, plan }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'copy-draft')
-      const trial = trialArgs('copy', (await readWoOpsSettings(pool)).settings.chainTrials)
+      const trial = trialArgs('copy', await trialsOf(ctx))
       const argv = [...copyArgs(ctx, kit, plan), ...trial.argv, '--max-fix-rounds', '0', ...NO_CAPS]
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
       const ran = await benchRun('copy', argv, dir, signal, same)
@@ -453,7 +463,7 @@ export function createStepChainSteps(deps) {
           exists(file)
         )
       }
-      const trial = trialArgs('copy', (await readWoOpsSettings(pool)).settings.chainTrials)
+      const trial = trialArgs('copy', await trialsOf(ctx))
       const argv = [...copyArgs(ctx, kit, plan), ...trial.argv, ...NO_CAPS]
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
       const ran = await benchRun('copy', argv, dir, signal, same)

@@ -107,3 +107,47 @@ test('the settings keep only known switches that are on, and the door refuses an
     assert.equal(parsed.error, 'INVALID_CHAIN_TRIALS')
   }
 })
+
+test('a build keeps the switches read at its first step: turned off after its plan started, its draft copy still splits', async () => {
+  let settings = { planTurns: false, splitShared: true }
+  const pool = fakePool(null)
+  const query = pool.query
+  pool.query = async (sql, params) =>
+    /from wo_ops_setting/.test(sql)
+      ? { rows: [{ settings: { chainTrials: settings }, updated_by: null, updated_at: null }] }
+      : query(sql, params)
+  const runs = []
+  const cli = async (argv, io) => {
+    if (argv[0] === 'run') {
+      runs.push(argv.slice(1))
+      io.out('fresh-run')
+      return 0
+    }
+    if (argv[0] === 'get' || argv[0] === 'cancel') return 0
+    throw new Error(`unexpected bench command ${argv[0]}`)
+  }
+  const steps = createStepChainSteps({
+    config: {},
+    pool,
+    benchCli: { plan: cli, copy: cli },
+    sleep: async () => {}
+  })
+  const signal = new AbortController().signal
+  const build = { runId: `trial-${Math.random()}`, brief: { researchRevisionId: 'revision-1' } }
+  const next = { runId: `trial-${Math.random()}`, brief: { researchRevisionId: 'revision-1' } }
+  const plan = { file: null }
+  try {
+    const planned = await steps.plan(build, { kit }, { signal })
+    plan.file = planned.value.file
+    // The switch goes off for the next build while this one plans.
+    settings = { splitShared: false }
+    await steps.copyDraft(build, { kit, plan }, { signal })
+    await steps.copyDraft(next, { kit, plan }, { signal })
+    const [, thisDraft, nextDraft] = runs
+    assert.ok(thisDraft.includes('--split-shared'), 'the build that started with the switch on')
+    assert.ok(!nextDraft.includes('--split-shared'), 'a build that started after it went off')
+  } finally {
+    await steps.dispose(build)
+    await steps.dispose(next)
+  }
+})

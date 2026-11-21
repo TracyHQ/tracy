@@ -1,0 +1,1 @@
+{"id":"REG-PR-725-trials-per-build","verdict":"PASS","commit":"a51c28c778f3846d23a1b85875a27247819842a5","ran_at":"2026-11-21T15:46:50.697Z","evidence":"tests/regression/.runs/2026-11-21-a51c28c77/REG-PR-725-trials-per-build.log"}

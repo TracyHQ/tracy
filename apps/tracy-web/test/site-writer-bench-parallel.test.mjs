@@ -339,6 +339,7 @@ test(
   opts,
   async () => {
     const { pool } = db
+    await assignWriterDoor(pool)
     const cases = [
       [{ parallelPages: 2, pagesPerTurn: 'all', splitShared: true }, true],
       [{ parallelPages: 2, pagesPerTurn: 'all' }, false],
