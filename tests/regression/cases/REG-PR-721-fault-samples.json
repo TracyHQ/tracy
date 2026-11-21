@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-721-fault-samples",
   "kind": "fix",
-  "title": "The chain's write diagnostics keep faults from every check group in turn",
+  "title": "The chain's write diagnostics keep faults from every check group in turn; picture and plugin refusals carry finer kind codes",
   "pr": 721,
   "area": "website-opportunities/step-chain",
   "cms": ["jo", "wp", "em"],
@@ -11,7 +11,10 @@
     "S1: In the TCH checkout with dependencies installed, run run.cmd.",
     "S2: Confirm every test named in run.tests reports ok."
   ],
-  "expect": ["Faults are taken in turn from every group, so a small group listed late is kept."],
+  "expect": [
+    "Faults are taken in turn from every group, so a small group listed late is kept.",
+    "A picture left out is sorted into its own kind (left empty, too narrow, no image slot, not transparent, repeated in its block, source gone, twin), and a plugin refusal carries the plugin's error code."
+  ],
   "selectors": {},
   "run": {
     "cmd": [
@@ -19,9 +22,14 @@
       "--test",
       "--test-reporter=tap",
       "--test-concurrency=1",
-      "apps/tracy-web/test/step-chain-write-diagnostics.test.mjs"
+      "apps/tracy-web/test/step-chain-write-diagnostics.test.mjs",
+      "apps/tracy-web/test/site-check-failure-kinds.test.mjs"
     ],
     "needs": [],
-    "tests": ["the faults kept are taken in turn from every group, so a group listed late is seen too"]
+    "tests": [
+      "the faults kept are taken in turn from every group, so a group listed late is seen too",
+      "a plugin refusal carries the plugin's own error code",
+      "an item the write step left out is sorted by why it had nothing to write to"
+    ]
   }
 }

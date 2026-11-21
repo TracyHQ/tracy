@@ -58,6 +58,15 @@ function tally() {
 }
 
 /**
+ * A plugin refusal as a fixed code: `plugin-refused`, and the plugin's own error code after it when the refusal starts
+ * with one (contract-write.js refusalWords: "CODE: message (limit L, actual A)"), as words joined by dashes.
+ */
+export function pluginRefusedKind(reason) {
+  const code = /^([A-Z][A-Z0-9_]{2,40})\b/.exec(String(reason ?? ''))?.[1]
+  return code ? `plugin-refused-${code.toLowerCase().replaceAll('_', '-')}`.slice(0, 41) : 'plugin-refused'
+}
+
+/**
  * What kind of difference a written line shows against what was ordered, as a fixed code for the chain's diagnostics
  * (step-chain-write-diagnostics.js `kinds`): empty on the site, the ordered words cut short, the words with markup
  * around them, or other.
@@ -90,7 +99,11 @@ function judge(line, held) {
   if (line.status === 'failed')
     return {
       result: 'failed',
-      failure: { ...base, kind: 'plugin-refused', reason: `The plugin refused this slot: ${line.reason}` }
+      failure: {
+        ...base,
+        kind: pluginRefusedKind(line.reason),
+        reason: `The plugin refused this slot: ${line.reason}`
+      }
     }
   // A slot that left the stored field with its row is listed by inspect under `removedSlots`, not `slots`: what a hidden
   // line ordered, and what a line meant to be written never may.

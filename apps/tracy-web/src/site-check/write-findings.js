@@ -58,6 +58,13 @@ export function unaddressableKind(reason) {
   const r = String(reason ?? '')
   if (/px wide; the kit slot .* takes at least/.test(r)) return 'picture-too-narrow'
   if (/holds a file the uploads do not list/.test(r)) return 'picture-not-uploaded'
+  if (/the plan wants a picture here and the picture step left it without one/.test(r))
+    return 'picture-left-empty'
+  if (/the kit has no image slot/.test(r)) return 'picture-no-image-slot'
+  if (/requires transparency/.test(r)) return 'picture-not-transparent'
+  if (/is already shown in .* of the same block/.test(r)) return 'picture-repeated-in-block'
+  if (/source returned|its source .* is hidden/.test(r)) return 'picture-source-gone'
+  if (/\btwin\b/.test(r)) return 'picture-twin'
   if (/colour roles is not drawn yet/.test(r)) return 'painted-setting'
   if (/names no writable setting/.test(r)) return 'no-writable-setting'
   if (/no slot|not in the content map|has no slot|no such slot/i.test(r)) return 'no-slot'
