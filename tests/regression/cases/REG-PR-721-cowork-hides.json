@@ -14,7 +14,7 @@
   "expect": [
     "The ported hide review lists the same slots, tier by tier, as the Claude Cowork plugin review for JA Diner 1.0.8 and JA Boxing 1.0.10.",
     "A hidden article title or intro picture fails R27; a hidden sentence of an HTML field passes, as the rows door takes it.",
-    "A picture the receiver takes only with its row fails when hidden alone and passes once another slot of the row is hidden."
+    "A picture the plugin takes only with its row fails when hidden alone and passes once another slot of the row is hidden."
   ],
   "selectors": {},
   "run": {
