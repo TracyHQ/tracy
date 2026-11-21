@@ -12,7 +12,7 @@
     "S2: Confirm every test named in run.tests reports ok."
   ],
   "expect": [
-    "The chain's planner run has no --framed-parts, --parallel-pages or --first-draft-effort; it has the visual review and the kit index."
+    "The chain's planner run has no --framed-parts, --parallel-pages or --first-draft-effort; it has the visual review and no kit index in its first message (lat23)."
   ],
   "selectors": {},
   "run": {
@@ -26,7 +26,7 @@
     "needs": [],
     "tests": [
       "the chain's planner run plans its first draft in one conversation, with the visual review, reading the kit by tools",
-      "the chain's planner run gets the kit index in its first message and thinks its first draft at the run's effort",
+      "the chain's planner run reads the kit by tool from its contents and thinks its first draft at the run's effort",
       "the chain's planner run plans its first draft as one conversation, not as a frame with parts after it"
     ]
   }

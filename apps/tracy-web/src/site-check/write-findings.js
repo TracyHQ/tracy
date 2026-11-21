@@ -49,6 +49,23 @@ export const lookGuardFindingsGroup = {
 }
 
 /**
+ * Why the write step had nothing to write an item to, as a fixed code for the chain's diagnostics: a picture narrower
+ * than its slot takes, a file the uploads do not list, a template setting with colour roles not drawn yet, a frame with
+ * no writable setting, an item no slot of the contract takes, or other (picture-stage.js, picture-package.js,
+ * write-step.js).
+ */
+export function unaddressableKind(reason) {
+  const r = String(reason ?? '')
+  if (/px wide; the kit slot .* takes at least/.test(r)) return 'picture-too-narrow'
+  if (/holds a file the uploads do not list/.test(r)) return 'picture-not-uploaded'
+  if (/colour roles is not drawn yet/.test(r)) return 'painted-setting'
+  if (/names no writable setting/.test(r)) return 'no-writable-setting'
+  if (/no slot|not in the content map|has no slot|no such slot/i.test(r)) return 'no-slot'
+  if (/^pictures: /.test(r)) return 'picture-other'
+  return 'other'
+}
+
+/**
  * `unaddressable-items`: every item the write step left out because it had nothing to write to, and every hide the plugin refused
  * because the contract has no slot for it, one block each.
  */
@@ -75,12 +92,14 @@ export const unaddressableItemsGroup = {
         ...items.map((item) => ({
           slot: item.slot,
           ...(item.key ? { key: item.key } : {}),
+          kind: unaddressableKind(item.reason),
           causingStep: stepOf(item.step),
           measured: 'not written',
           reason: `Nothing to write it to: ${item.reason}`
         })),
         ...refused.map((item) => ({
           slot: item.slot,
+          kind: 'contract-has-no-slot',
           causingStep: TEMPLATE_STEP,
           measured: 'not removed',
           reason: `The template's contract has no slot for this, so the plan's hide could not be done (a new contract, issue #369): ${item.reason}`

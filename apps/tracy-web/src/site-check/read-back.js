@@ -57,6 +57,21 @@ function tally() {
   }
 }
 
+/**
+ * What kind of difference a written line shows against what was ordered, as a fixed code for the chain's diagnostics
+ * (step-chain-write-diagnostics.js `kinds`): empty on the site, the ordered words cut short, the words with markup
+ * around them, or other.
+ */
+export function differsKind(ordered, held) {
+  const want = String(ordered ?? '').trim()
+  const got = String(held ?? '').trim()
+  if (!got) return 'differs-empty'
+  const plain = got.replace(/<[^>]*>/g, '').trim()
+  if (want && plain !== got && plain === want.replace(/<[^>]*>/g, '').trim()) return 'differs-markup'
+  if (want.length > got.length && want.startsWith(got)) return 'differs-shortened'
+  return 'differs-other'
+}
+
 /** One line against its read: its result word and, when it is not a match, a failure. */
 function judge(line, held) {
   const base = {
@@ -68,11 +83,14 @@ function judge(line, held) {
   }
   // A line the write step refused never reached the site: it blocks as a refused write does, in the step's own words.
   if (line.status === 'refused')
-    return { result: 'failed', failure: { ...base, reason: `The write step refused this: ${line.reason}` } }
+    return {
+      result: 'failed',
+      failure: { ...base, kind: 'write-refused', reason: `The write step refused this: ${line.reason}` }
+    }
   if (line.status === 'failed')
     return {
       result: 'failed',
-      failure: { ...base, reason: `The plugin refused this slot: ${line.reason}` }
+      failure: { ...base, kind: 'plugin-refused', reason: `The plugin refused this slot: ${line.reason}` }
     }
   // A slot that left the stored field with its row is listed by inspect under `removedSlots`, not `slots`: what a hidden
   // line ordered, and what a line meant to be written never may.
@@ -84,16 +102,20 @@ function judge(line, held) {
           failure: {
             ...base,
             measured: 'removed',
+            kind: 'removed',
             reason: 'The slot left the stored field with its row, so what was ordered is not on the site'
           }
         }
   if (!held.found)
     return {
       result: 'unread',
-      failure: { ...base, reason: 'The site does not have this slot' }
+      failure: { ...base, kind: 'missing', reason: 'The site does not have this slot' }
     }
   if (typeof held.value !== 'string')
-    return { result: 'unread', failure: { ...base, reason: `The read gave no current value (${held.why})` } }
+    return {
+      result: 'unread',
+      failure: { ...base, kind: 'no-value', reason: `The read gave no current value (${held.why})` }
+    }
   // A slot gone with its unpublished block or menu item is read on that row (`published`), not on the slot, which still holds
   // its words in a row no page prints.
   if (line.status === 'hidden' && line.readFrom)
@@ -101,7 +123,11 @@ function judge(line, held) {
       ? { result: 'match' }
       : {
           result: 'differs',
-          failure: { ...base, reason: 'The plan hides this and what holds it is still published' }
+          failure: {
+            ...base,
+            kind: 'hidden-still-published',
+            reason: 'The plan hides this and what holds it is still published'
+          }
         }
   // A hide no kept page prints keeps its words on purpose (hide-lines.js `unshown`): a visitor never reads them. Before
   // (dev, JA Diner 16/11/2026) four category titles printed only on dropped blog pages, and a masthead background the kit
@@ -117,6 +143,7 @@ function judge(line, held) {
           result: 'differs',
           failure: {
             ...base,
+            kind: 'hidden-link-kept',
             reason: 'The plan hides this link and the words that held it still hold a link'
           }
         }
@@ -126,12 +153,23 @@ function judge(line, held) {
       ? { result: 'match' }
       : {
           result: 'differs',
-          failure: { ...base, reason: 'The plan hides this slot and it still holds words' }
+          failure: {
+            ...base,
+            kind: 'hidden-words-kept',
+            reason: 'The plan hides this slot and it still holds words'
+          }
         }
   // A heading the write step gave real emphasis tags is held to what it stored, not to the codes it sent (emphasis-stage.js).
   return sameValue(line.stored ?? line.ordered, held.value, held.slot)
     ? { result: 'match' }
-    : { result: 'differs', failure: { ...base, reason: 'The site does not hold what was ordered' } }
+    : {
+        result: 'differs',
+        failure: {
+          ...base,
+          kind: differsKind(line.stored ?? line.ordered, held.value),
+          reason: 'The site does not hold what was ordered'
+        }
+      }
 }
 
 async function run({ report, read }) {
