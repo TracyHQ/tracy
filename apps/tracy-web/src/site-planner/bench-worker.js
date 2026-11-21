@@ -25,6 +25,7 @@ import { withStockScreensDropped } from '../lib/stock-screens.js'
 import { SITE_PLANNER_STORE } from './bench-store.js'
 import { sitePlannerDoor } from './door.js'
 import { PLANNER_BRIEF_VIEW, plannerBriefView } from './brief-view.js'
+import { withFullFactIds } from './plan-fact-ids.js'
 import { kitImagesFor } from './kit-images.js'
 import {
   FIRST_MESSAGE_PARTS,
@@ -105,14 +106,16 @@ export const SITE_PLANNER_STEP = Object.freeze({
     failureListText
   }),
   // After the model, before the checker, on a whole plan and on the plan a fix round's change list leaves (normalizedPlan).
-  readAnswer: (value, { ready }) =>
+  readAnswer: (value, { row, ready }) =>
     value && typeof value === 'object' && !isChangeList(value)
-      ? normalizedPlan(value, ready?.kit?.doc)
+      ? normalizedPlan(value, ready?.kit?.doc, row?.brief)
       : value,
   changes: Object.freeze({
-    applyValidChanges: (previous, list, { ready } = {}) => {
+    applyValidChanges: (previous, list, { row, ready } = {}) => {
       const applied = PLAN_CHANGE_RULES.applyValidChanges(previous, list)
-      return applied.ok ? { ...applied, doc: normalizedPlan(applied.doc, ready?.kit?.doc) } : applied
+      return applied.ok
+        ? { ...applied, doc: normalizedPlan(applied.doc, ready?.kit?.doc, row?.brief) }
+        : applied
     },
     oversized: oversizedReplacements,
     smallEditsMessage,
@@ -155,10 +158,15 @@ export const SITE_PLANNER_STEP = Object.freeze({
   },
   mergeParts: (values, { row, ready }) =>
     framesPlan(row.harness)
-      ? normalizedPlan(mergeFramedPlan(values, ready.kit.doc, row.harness.framedParts).plan, ready.kit.doc)
+      ? normalizedPlan(
+          mergeFramedPlan(values, ready.kit.doc, row.harness.framedParts).plan,
+          ready.kit.doc,
+          row.brief
+        )
       : normalizedPlan(
           mergePlanParts(values, planningParts(ready.kit.doc, row.harness.parallelPages), ready.kit.doc),
-          ready.kit.doc
+          ready.kit.doc,
+          row.brief
         ),
   // Writing turns of one conversation (plan-turns.js), only for a run started with harness.planTurns: turn 1's message
   // (the run's own first message, then what the turn decides), each page group's, then the merge of the turns' plans
@@ -174,7 +182,7 @@ export const SITE_PLANNER_STEP = Object.freeze({
     groupTurnCheck({
       answers,
       kit: ready.kit.doc,
-      read: (plan) => normalizedPlan(plan, ready.kit.doc),
+      read: (plan) => normalizedPlan(plan, ready.kit.doc, row.brief),
       check: (plan) =>
         checkPlan({
           plan,
@@ -316,8 +324,13 @@ function writesInTurns({ row, ready }) {
 // - the label of a link the decision hides, written by the same decision, is hidden with it, unless several kit blocks
 //   print it, and a page control (a tab, a form's submit) whose words the decision writes is kept, whether the decision
 //   hid it or left it undecided (plan-hidden-links.js);
-// - a field of a kept list row that the decision both writes and hides is written (plan-row-fields.js).
-function normalizedPlan(plan, kit) {
+// - a field of a kept list row that the decision both writes and hides is written (plan-row-fields.js);
+// - a fact id the planner shortened is made whole when exactly one fact of the brief starts with it (plan-fact-ids.js).
+function normalizedPlan(plan, kit, brief) {
+  return withFullFactIds(normalizedForKit(plan, kit), brief)
+}
+
+function normalizedForKit(plan, kit) {
   return withWrittenRowFieldsShown(
     withHiddenLinkLabels(
       withDemoVideosHidden(

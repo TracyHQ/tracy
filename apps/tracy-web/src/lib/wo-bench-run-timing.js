@@ -112,6 +112,28 @@ export function failureSamplesIn(list, { reasons = true } = {}) {
 export const errorCodeOf = (error) =>
   /^[A-Z][A-Z0-9_]{2,63}(?=:|$)/.exec(String(error ?? '').trim())?.[0] ?? null
 
+/** A page id a part names: the plan's page ids, `shared`, `notFound`, a created legal page. */
+const PAGE_ID = /^[A-Za-z][A-Za-z0-9_:.-]{0,119}$/
+
+/**
+ * The pages each part of a round written in parallel parts wrote (the round's `reading.parallelParts`), by part
+ * number: which part's model turns (n from part × 1000) carried which pages. Ids only, never a part's answer. Null for
+ * a round not written in parts.
+ * @returns {{ part: number, pages: string[] }[] | null}
+ */
+export function partsOf(value) {
+  const parts = json(value)
+  if (!Array.isArray(parts) || !parts.length) return null
+  return parts
+    .filter((p) => p && Number.isInteger(p.part))
+    .map((p) => ({
+      part: p.part,
+      pages: (Array.isArray(p.about) ? p.about : [p.about]).filter(
+        (x) => typeof x === 'string' && PAGE_ID.test(x)
+      )
+    }))
+}
+
 /** The harness settings that change a run's timing, and nothing else of the harness. */
 export function timingHarness(value) {
   const harness = json(value) ?? {}
@@ -184,7 +206,7 @@ export async function benchRunTiming(pool, bench, runId) {
   if (!run) return { ok: false, error: 'NO_SUCH_RUN' }
   const rounds = (
     await pool.query(
-      `select round, state, started_at, finished_at, cost_usd, failure_list, error, ${t.phases ?? 'null'} as phases from ${t.round} where run_id = $1 order by round`,
+      `select round, state, started_at, finished_at, cost_usd, failure_list, error, ${t.phases ?? 'null'} as phases, reading->'parallelParts' as parts from ${t.round} where run_id = $1 order by round`,
       [runId]
     )
   ).rows
@@ -216,6 +238,7 @@ export async function benchRunTiming(pool, bench, runId) {
       failureCodes: failureCodesIn(r.failure_list),
       failureSamples: failureSamplesIn(r.failure_list, { reasons: bench !== 'pictures' }),
       ...(errorCodeOf(r.error) ? { errorCode: errorCodeOf(r.error) } : {}),
+      ...(partsOf(r.parts) ? { parts: partsOf(r.parts) } : {}),
       ...(phasesOf(r.phases) ? { phases: phasesOf(r.phases) } : {})
     })),
     turns: turns.map((x) => {

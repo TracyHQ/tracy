@@ -34,8 +34,13 @@ test("the port lists what the plugin's review lists: JA Diner 1.0.8 and JA Boxin
   assert.deepEqual(review().withRow.get('article-16.33'), ['article-16.34', 'article-16.35'])
 })
 
-test("an article's title hidden is refused; a sentence of its HTML text goes by the door; a kit with no review skips", () => {
+test('the passing plan writes the class title; hidden, it is refused; a sentence of its HTML text goes by the door; no review skips', () => {
   const p = plan()
+  assert.equal(r27(p).status, 'pass')
+  assert.equal(r27(p, null).status, 'skip')
+  const d = decisionOf(p, CLASS_BODY)
+  d.copy = d.copy.filter((c) => c.slot !== 'article-16.4')
+  hide(d, 'article-16.4')
   const result = r27(p)
   assert.equal(result.status, 'fail')
   assert.deepEqual(
@@ -44,18 +49,13 @@ test("an article's title hidden is refused; a sentence of its HTML text goes by 
   )
   assert.match(result.failures[0].detail, /never empties this slot/)
   assert.equal(result.failures[0].cause, 'plan')
-  // Written instead of hidden, the title passes; article-16.3, a text node of the full text, was never in question.
-  const d = decisionOf(p, CLASS_BODY)
-  unhide(d, 'article-16.4')
-  d.copy = [{ slot: 'article-16.4', text: 'Advanced Boxing' }]
-  assert.equal(r27(p).status, 'pass')
-  assert.equal(r27(p, null).status, 'skip')
+  // article-16.3, a text node of the full text the plan hides too, is taken by the rows door: never in question.
+  assert.ok(d.hiddenSlots.some((h) => h.slot === 'article-16.3'))
 })
 
 test("a picture the plugin never empties (an article's intro image) cannot be hidden", () => {
   const p = plan()
   const d = decisionOf(p, CLASS_BODY)
-  unhide(d, 'article-16.4')
   unpicture(d, 'article-16.5')
   hide(d, 'article-16.5')
   const result = r27(p)
@@ -68,7 +68,6 @@ test("a picture the plugin never empties (an article's intro image) cannot be hi
 test('a picture the plugin takes only with its row fails alone and passes once another slot of the row goes too', () => {
   const p = plan()
   const d = decisionOf(p, CLASS_BODY)
-  unhide(d, 'article-16.4')
   unhide(d, 'article-16.34')
   unpicture(d, 'article-16.33')
   hide(d, 'article-16.33')

@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-723-change-list-salvage",
+  "kind": "fix",
+  "title": "A change list that is not valid JSON keeps its valid edits; a whole document is read as before",
+  "pr": 723,
+  "area": "website-opportunities/site-planner",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A change list that is not valid JSON keeps its valid edits; a whole document is read as before."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/bench-answer-salvage.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a valid change list is read as it always was, with nothing marked repaired",
+      "one broken edit in the middle of a list costs only that edit",
+      "a list cut off in the middle keeps its whole edits; brackets and quotes inside values never end an edit",
+      "a whole document that is not JSON, two lists, or a list with no whole edit stay unread"
+    ]
+  }
+}

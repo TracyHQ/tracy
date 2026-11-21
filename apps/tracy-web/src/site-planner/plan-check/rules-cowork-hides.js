@@ -10,7 +10,7 @@
 // in a list row past the row count the plan keeps (the row goes), a slot whose stored field prints only on pages the plan
 // drops, and a kit without a review (another platform).
 import { slotKeyOf } from '../../lib/cowork-hide-review.js'
-import { droppedBlocks, printedOnlyOnDropped } from '../../write-step/hide-plan.js'
+import { droppedBlocks, printedOnlyOnDropped } from '../../lib/plan-dropped-places.js'
 import { arr, obj, str } from './rule-set.js'
 
 const TEMPLATE_FILE = /^\/?(?:media\/)?templates\//
@@ -41,7 +41,7 @@ export function checkR27(ctx) {
       ...arr(g?.items).map((it) => it?.labelSlot)
     ])
   )
-  // The write step's own reading (write-step/hide-plan.js): a slot printed only where the plan drops is not taken off.
+  // The write step's own reading (lib/plan-dropped-places.js): a slot printed only where the plan drops is not taken off.
   const dropped = droppedBlocks(plan, kit)
   const unshown = (slot) => printedOnlyOnDropped(slot, { kit, plan, dropped }) !== null
   const hiddenKeys = new Set(
