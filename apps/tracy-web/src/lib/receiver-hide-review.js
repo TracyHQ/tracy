@@ -1,9 +1,10 @@
 // What the Joomla receiver (the Claude Cowork plugin) lets a site empty, read the way the plugin reads it: its review
 // `joomla/cowork/lib/hideable-slots.json` is made by the plugin's `scripts/hideable-slots.mjs` from this repo's template
 // kit and the contract's content map (and its presentation lock, for rows), and a slot the review does not list is never
-// emptied (QuickstartContract.php loadHideable: "a slot is emptied only where the receiver's review lists it"). The
-// functions below are that script's `hideableSlots` and `reviewedRows`, kept to the same rules, so the planner knows
-// before the write what the site will refuse to take off. A change to the plugin's script is a change here.
+// emptied (QuickstartContract.php loadHideable: "a slot is emptied only where the receiver's review lists it").
+// `hideableSlots` below is that script's function of the same name, kept to the same rules (its `reviewedRows`, the rows
+// the review takes whole, is not needed here), so the planner knows before the write what the site will refuse to take
+// off. A change to the plugin's script is a change here.
 //
 // Why: a hide the receiver refuses leaves the demo's words or picture on the page (the final check's
 // `contract-has-no-slot`: dev lat24b, 21/11/2026, 28 blocks at BXR London and 11 at Arabian Tea House). The plan check
