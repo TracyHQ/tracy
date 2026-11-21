@@ -14,7 +14,7 @@
   "expect": [
     "With planTurns on in chainTrials, the plan step starts its planner run with --plan-turns and records the switch; off or unset, the run starts with the same arguments as before.",
     "The settings keep only known switches that are on and refuse an unknown name or a value that is not a boolean.",
-    "A bench round keeps the first three failures of each rule, with quoted words, long numbers and addresses masked, and no reason for a picture round."
+    "A bench round keeps the first three failures of each rule, with quoted words, long numbers and addresses masked, and no reason for a picture round; a round that made no document gives its error code only."
   ],
   "selectors": {},
   "run": {
@@ -31,7 +31,8 @@
       "with planTurns on, the plan step plans round 0 in turns and records the switch; off, it starts as before",
       "the settings keep only known switches that are on, and the door refuses an unknown name or a value that is not a boolean",
       "a round keeps the first three failures of each rule, with the business's words, numbers and addresses masked",
-      "a picture round also says where its own time went (its manifest's timing), as numbers only"
+      "a picture round also says where its own time went (its manifest's timing), as numbers only",
+      "a round that made no document says why by its code only, never by the answer the message quotes"
     ]
   }
 }

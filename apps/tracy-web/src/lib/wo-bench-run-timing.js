@@ -105,6 +105,13 @@ export function failureSamplesIn(list, { reasons = true } = {}) {
   return out
 }
 
+/**
+ * Why a round ended without a document, as its code only (`SITE_PLANNER_ANSWER_NOT_JSON`, `SITE_WRITER_CHANGES_NOT_APPLIED`):
+ * the message after it can quote the answer. Null for a round with no error.
+ */
+export const errorCodeOf = (error) =>
+  /^[A-Z][A-Z0-9_]{2,63}(?=:|$)/.exec(String(error ?? '').trim())?.[0] ?? null
+
 /** The harness settings that change a run's timing, and nothing else of the harness. */
 export function timingHarness(value) {
   const harness = json(value) ?? {}
@@ -177,7 +184,7 @@ export async function benchRunTiming(pool, bench, runId) {
   if (!run) return { ok: false, error: 'NO_SUCH_RUN' }
   const rounds = (
     await pool.query(
-      `select round, state, started_at, finished_at, cost_usd, failure_list, ${t.phases ?? 'null'} as phases from ${t.round} where run_id = $1 order by round`,
+      `select round, state, started_at, finished_at, cost_usd, failure_list, error, ${t.phases ?? 'null'} as phases from ${t.round} where run_id = $1 order by round`,
       [runId]
     )
   ).rows
@@ -208,6 +215,7 @@ export async function benchRunTiming(pool, bench, runId) {
       failures: failuresIn(r.failure_list),
       failureCodes: failureCodesIn(r.failure_list),
       failureSamples: failureSamplesIn(r.failure_list, { reasons: bench !== 'pictures' }),
+      ...(errorCodeOf(r.error) ? { errorCode: errorCodeOf(r.error) } : {}),
       ...(phasesOf(r.phases) ? { phases: phasesOf(r.phases) } : {})
     })),
     turns: turns.map((x) => {

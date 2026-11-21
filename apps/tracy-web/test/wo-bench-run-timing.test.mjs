@@ -5,6 +5,7 @@ import { test } from 'node:test'
 import {
   benchRunTiming,
   benchRunsBetween,
+  errorCodeOf,
   failureCodesIn,
   failureSamplesIn,
   failuresIn,
@@ -227,4 +228,14 @@ test("a round keeps the first three failures of each rule, with the business's w
   assert.equal(samples.R10b[0].reason, 'leads to …url… or call #, mail …@…')
   assert.equal(Object.keys(samples).length, 3)
   assert.equal(maskedReason('x'.repeat(500)).length, 200)
+})
+
+test('a round that made no document says why by its code only, never by the answer the message quotes', () => {
+  assert.equal(
+    errorCodeOf('SITE_PLANNER_ANSWER_NOT_JSON: Unexpected token } in "the club\'s hours" at 1200'),
+    'SITE_PLANNER_ANSWER_NOT_JSON'
+  )
+  assert.equal(errorCodeOf('SITE_WRITER_CHANGES_NOT_APPLIED'), 'SITE_WRITER_CHANGES_NOT_APPLIED')
+  for (const error of [null, '', 'the model said no', 'lowercase_code: x'])
+    assert.equal(errorCodeOf(error), null)
 })
