@@ -1,0 +1,2 @@
+{"id":"REG-PR-724-plan-label-owner","verdict":"PASS","commit":"d6ddb988e3750dc759fd8548a61dfa5a6a55e65e","ran_at":"2026-11-21T15:26:42.731Z","evidence":"tests/regression/.runs/2026-11-21-d6ddb988e/REG-PR-724-plan-label-owner.log"}
+{"id":"REG-PR-724-shared-units","verdict":"PASS","commit":"d6ddb988e3750dc759fd8548a61dfa5a6a55e65e","ran_at":"2026-11-21T15:26:43.017Z","evidence":"tests/regression/.runs/2026-11-21-d6ddb988e/REG-PR-724-shared-units.log"}
