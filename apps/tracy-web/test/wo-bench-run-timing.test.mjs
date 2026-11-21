@@ -7,6 +7,7 @@ import {
   benchRunsBetween,
   errorCodeOf,
   failureCodesIn,
+  partsOf,
   failureSamplesIn,
   failuresIn,
   LIST_LIMIT,
@@ -238,4 +239,18 @@ test('a round that made no document says why by its code only, never by the answ
   assert.equal(errorCodeOf('SITE_WRITER_CHANGES_NOT_APPLIED'), 'SITE_WRITER_CHANGES_NOT_APPLIED')
   for (const error of [null, '', 'the model said no', 'lowercase_code: x'])
     assert.equal(errorCodeOf(error), null)
+})
+
+test('a round written in parallel parts says which pages each part wrote, by id only', () => {
+  const reading = [
+    { part: 0, about: ['shared', 'page-home'], from: 0, answer: '{"slots": [{"text": "secret words"}]}' },
+    { part: 1, about: ['page-about-us', 'not an id!'], from: 1000, answer: '{}' },
+    { part: 'x', about: ['page-x'] }
+  ]
+  assert.deepEqual(partsOf(reading), [
+    { part: 0, pages: ['shared', 'page-home'] },
+    { part: 1, pages: ['page-about-us'] }
+  ])
+  assert.equal(JSON.stringify(partsOf(JSON.stringify(reading))).includes('secret'), false)
+  for (const none of [null, [], '{"a": 1}']) assert.equal(partsOf(none), null)
 })

@@ -198,7 +198,7 @@ export const OPS_B_ROUTES = [
     path: '/api/ops/wo/bench-runs/:bench/:runId',
     summary: 'Read where one bench run of a chain build spent its time',
     description:
-      'One planner, writer or picture bench run (`bench` is `plan`, `copy` or `pictures`; a chain build step records its `runId`, and the copy step its `draftRunId`): the run, each round with its duration and failure count, in all and by rule code, with why a round made no document (`errorCode`, the code only), the first three failures of each rule (`failureSamples`: where, and, except for a picture round, the reason with quoted words, long numbers, e-mail and web addresses masked; a picture round also its phase times: code, icon ranking, looker, drawer), and each model turn with its duration, tokens and the names of the tools it called. No prompt, answer or measured value. Staff seat required.',
+      'One planner, writer or picture bench run (`bench` is `plan`, `copy` or `pictures`; a chain build step records its `runId`, and the copy step its `draftRunId`): the run, each round with its duration and failure count, in all and by rule code, with why a round made no document (`errorCode`, the code only), the pages each part of a round written in parallel parts wrote (`parts`, page ids only), the first three failures of each rule (`failureSamples`: where, and, except for a picture round, the reason with quoted words, long numbers, e-mail and web addresses masked; a picture round also its phase times: code, icon ranking, looker, drawer), and each model turn with its duration, tokens and the names of the tools it called. No prompt, answer or measured value. Staff seat required.',
     audience: ['team'],
     auth: 'admin',
     internal: true,
