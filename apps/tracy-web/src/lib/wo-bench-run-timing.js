@@ -1,8 +1,10 @@
 // Where a bench run's time went, for staff (GET /api/ops/wo/bench-runs/:bench/:runId): its rounds and its model turns,
-// each with when it started and how long it took, the tokens it used and the tools a turn called. Structural only, like
-// the chain's write diagnostics: no prompt, no answer, no checker prose, no measured value. The benches have no screen
-// and their runs are read with a command line inside tracy-web; a host with no shell for the person measuring (dev on
-// 19/11/2026) still needs to see why a plan step took 7 or 14 minutes.
+// each with when it started and how long it took, the tokens it used and the tools a turn called. Structural, like the
+// chain's write diagnostics: no prompt, no answer, no measured value. The benches have no screen and their runs are read
+// with a command line inside tracy-web; a host with no shell for the person measuring (dev on 19/11/2026) still needs to
+// see why a plan step took 7 or 14 minutes. Of the checker's failures only a few per rule are kept (failureSamplesIn):
+// where each one is, and its reason with quoted words, long numbers and addresses masked, since a count alone did not say
+// what 466 R02 failures of one round were (BXR London, dev lat24b, 21/11/2026).
 
 /** The bench a chain step runs, by the step's name, and the tables its runs, rounds and turns are kept in. */
 export const BENCH_TABLES = Object.freeze({
@@ -66,6 +68,39 @@ export function failureCodesIn(list) {
   for (const line of String(list ?? '').split('\n')) {
     const code = RULE_LINE.exec(line)?.[1]
     if (code) out[code] = (out[code] ?? 0) + 1
+  }
+  return out
+}
+
+/** How many failures of each rule a round's samples keep, and how long a kept place or reason may be. */
+export const SAMPLES_PER_RULE = 3
+const SAMPLE_CHARS = 200
+
+/** A failure's reason with what could be the business's own words or contacts masked: quoted text, numbers, addresses. */
+export function maskedReason(text) {
+  return String(text ?? '')
+    .replace(/"[^"\n]*"|“[^”\n]*”|«[^»\n]*»/g, '"…"')
+    .replace(/\S+@\S+\.\S+/g, '…@…')
+    .replace(/https?:\/\/\S+/g, '…url…')
+    .replace(/\+?\d[\d\s().-]{5,}\d/g, '#')
+    .slice(0, SAMPLE_CHARS)
+}
+
+/**
+ * The first few failures of each rule a round's failure list names ("<rule> | <title> | <where> | <detail>", one a line):
+ * by rule code, each with where it is and, unless `reasons` is false, its masked reason. The picture bench keeps no
+ * reason: the looker's says what it saw on the business's own photo.
+ * @returns {Record<string, { where: string, reason?: string }[]>}
+ */
+export function failureSamplesIn(list, { reasons = true } = {}) {
+  const out = {}
+  for (const line of String(list ?? '').split('\n')) {
+    const code = RULE_LINE.exec(line)?.[1]
+    if (!code) continue
+    const kept = (out[code] ??= [])
+    if (kept.length >= SAMPLES_PER_RULE) continue
+    const [, , where = '', ...rest] = line.split(' | ')
+    kept.push({ where: maskedReason(where), ...(reasons ? { reason: maskedReason(rest.join(' | ')) } : {}) })
   }
   return out
 }
@@ -172,6 +207,7 @@ export async function benchRunTiming(pool, bench, runId) {
       costUsd: count(r.cost_usd),
       failures: failuresIn(r.failure_list),
       failureCodes: failureCodesIn(r.failure_list),
+      failureSamples: failureSamplesIn(r.failure_list, { reasons: bench !== 'pictures' }),
       ...(phasesOf(r.phases) ? { phases: phasesOf(r.phases) } : {})
     })),
     turns: turns.map((x) => {

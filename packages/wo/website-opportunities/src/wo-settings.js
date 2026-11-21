@@ -158,8 +158,24 @@ export const DEFAULT_WO_OPS_SETTINGS = Object.freeze({
   // `researchDailyCapCents`. Spent → strangers are asked to sign in; signed-in research is untouched.
   researchPublicDailyCapCents: 500,
   // Research again pressed on `/find`: how many such runs one place may have a UTC day (0 closes the button).
-  publicResearchAgainPerPlacePerDay: 1
+  publicResearchAgainPerPlacePerDay: 1,
+  // Staff measurement switches of the chain build (`CHAIN_TRIALS`): each one a chain build reads when its step starts and
+  // records with its bench run, so two settings can be measured side by side on one deployment without a merge. None by
+  // default; no screen sets them, only `PUT /api/ops/wo/settings`.
+  chainTrials: Object.freeze({})
 })
+
+/**
+ * The chain build's measurement switches (`chainTrials`), each a bench flag a step adds to its run when it is on:
+ * `planTurns` plans round 0 in writing turns of one conversation (site-planner/plan-turns.js, ADR 0045 stage 1).
+ */
+export const CHAIN_TRIALS = Object.freeze(['planTurns'])
+
+/** A stored or sent `chainTrials`: only the known switches that are on. */
+function chainTrialsOf(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {}
+  return Object.fromEntries(CHAIN_TRIALS.filter((name) => raw[name] === true).map((name) => [name, true]))
+}
 
 /**
  * The allowed range of each public Find limit; outside it `PUT` answers `INVALID_PUBLIC_FIND_LIMIT`.
@@ -398,7 +414,8 @@ export function normalizeWoOpsSettings(raw) {
         key,
         clampInt(src[key], min, max, DEFAULT_WO_OPS_SETTINGS[key])
       ])
-    )
+    ),
+    chainTrials: chainTrialsOf(src.chainTrials)
   }
 }
 
@@ -636,6 +653,20 @@ export function parseWoOpsSettingsInput(body) {
   }
   const retention = demoRetentionRefusal(candidate)
   if (retention) return { ok: false, error: 'INVALID_DEMO_RETENTION', message: retention }
+  if (candidate.chainTrials !== undefined) {
+    const trials = candidate.chainTrials
+    const fine =
+      trials &&
+      typeof trials === 'object' &&
+      !Array.isArray(trials) &&
+      Object.entries(trials).every(([name, on]) => CHAIN_TRIALS.includes(name) && typeof on === 'boolean')
+    if (!fine)
+      return {
+        ok: false,
+        error: 'INVALID_CHAIN_TRIALS',
+        message: `chainTrials must be an object of true or false switches, named from: ${CHAIN_TRIALS.join(', ')}.`
+      }
+  }
   for (const [key, [min, max]] of Object.entries(PUBLIC_FIND_RANGES)) {
     const value = candidate[key]
     if (value !== undefined && !(Number.isInteger(value) && value >= min && value <= max))
