@@ -125,6 +125,20 @@ export function causesOf(groups) {
   return out
 }
 
+/** How many failures of each kind each group found, by the fixed kind codes the groups give (never their words). */
+export function kindsOf(groups) {
+  const out = {}
+  for (const g of list(groups)) {
+    if (!GROUPS.has(g?.name)) continue
+    const tally = {}
+    for (const f of list(g.failures))
+      if (typeof f?.kind === 'string' && /^[a-z][a-z0-9-]{1,40}$/.test(f.kind))
+        tally[f.kind] = (tally[f.kind] ?? 0) + 1
+    if (Object.keys(tally).length) out[g.name] = tally
+  }
+  return out
+}
+
 /** A bounded staff-only summary retained after temporary step files have been removed. */
 export function stepNineDiagnostics(step) {
   let truncated = false
@@ -140,6 +154,7 @@ export function stepNineDiagnostics(step) {
           counts: counts(value.counts),
           groupCount: list(value.groups).length,
           causes: causesOf(value.groups),
+          kinds: kindsOf(value.groups),
           groups: take(value.groups, 40).map((g) => ({
             name: known(g.name, GROUPS),
             status: known(g.status, STATUSES),

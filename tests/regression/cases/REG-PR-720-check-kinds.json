@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-720-check-kinds",
+  "kind": "fix",
+  "title": "Read-back and unaddressable failures carry a fixed kind code the chain diagnostics count; the chain plans without the kit index",
+  "pr": 720,
+  "area": "website-opportunities/site-check",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Each read-back difference and left-out item gets its kind code.",
+    "The diagnostics count each group's failures by kind, never by their words.",
+    "The chain's planner run has no kit index in its first message."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-check-failure-kinds.test.mjs",
+      "apps/tracy-web/test/step-chain-plan-parts.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a read-back difference is empty, cut short, the ordered words with markup, or other",
+      "an item the write step left out is sorted by why it had nothing to write to",
+      "the diagnostics count each group by its kinds, never its words",
+      "the chain's planner run reads the kit by tool from its contents and thinks its first draft at the run's effort"
+    ]
+  }
+}

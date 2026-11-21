@@ -1,0 +1,3 @@
+{"id":"REG-PR-720-check-kinds","verdict":"PASS","commit":"277b9c736382ad84de6f7789f54f48bd86a3bfe1","ran_at":"2026-11-21T02:08:14.033Z","evidence":"tests/regression/.runs/2026-11-21-277b9c736/REG-PR-720-check-kinds.log"}
+{"id":"REG-PR-713-plan-index-effort","verdict":"PASS","commit":"277b9c736382ad84de6f7789f54f48bd86a3bfe1","ran_at":"2026-11-21T02:08:15.207Z","evidence":"tests/regression/.runs/2026-11-21-277b9c736/REG-PR-713-plan-index-effort.log"}
+{"id":"REG-PR-717-plan-back-to-one","verdict":"PASS","commit":"277b9c736382ad84de6f7789f54f48bd86a3bfe1","ran_at":"2026-11-21T02:08:15.780Z","evidence":"tests/regression/.runs/2026-11-21-277b9c736/REG-PR-717-plan-back-to-one.log"}

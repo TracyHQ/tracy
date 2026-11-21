@@ -86,18 +86,18 @@ export const COPY_PARTS = 5
  * - Not `--kit-in-first-message`: with the whole kit in its first message the planner put all its reasoning into the
  *   turn that writes the plan, and on the local stand (run15, 15/11/2026) that turn hit the 128k output cap (104k of
  *   reasoning) and the build lost its plan; read part by part, the reasoning is spread over turns.
- * - `--kit-index-in-first-message` (20/11/2026): the kit's site, page groups and pages come in the first message, the
- *   blocks still by tool. A planner given only "contents" spent its first reading turns on those three, each turn with
- *   its own reasoning; on dev (lat18) BXR London's reading turns took 398 s of a 588 s round 0. Measured on its own
- *   with one conversation from lat23 (it ran with the framed plan in lat22).
+ * - Not `--kit-index-in-first-message` (#713): with the kit's site, page groups and pages in the first message, the
+ *   planner did not read less; it moved its thinking into the reading turns. Dev lat23 against lat21 (21/11/2026, one
+ *   conversation at max both): round 0 546 s against 463 s at Arabian Tea House (reading 347 s against 264 s, 82k
+ *   reasoning against 63k) and 621 s against 568 s at BXR London (eight reading turns, 490 s). The planner bench keeps
+ *   it for runs that ask.
  */
 export const planArgs = (kitRef, revisionId) => [
   '--kit',
   kitRef,
   '--brief-revision',
   revisionId,
-  '--require-visual-review',
-  '--kit-index-in-first-message'
+  '--require-visual-review'
 ]
 
 export function createStepChainSteps(deps) {
