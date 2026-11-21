@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-718-egress-enroll-persist",
+  "kind": "fix",
+  "title": "A site network missing from TRACY-FLEET-EGRESS after a reboot is enrolled and persisted by the host timer",
+  "pr": 718,
+  "area": "fleet/egress",
+  "cms": ["wp", "jo"],
+  "needs": ["node", "bash"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/egress-enroll.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "A lost 10.240.x site network is enrolled and the ruleset saved; non-site networks untouched; a failed save or missing chain exits non-zero; bootstrap.sh installs and enables tracy-egress-enroll.timer; provision.sh no longer swallows a failed save."
+  ],
+  "selectors": {
+    "script": "packages/fleet/tracy-fleet-operation/scripts/provision/egress-enroll.sh",
+    "tests": "packages/fleet/tracy-fleet-operation/test/egress-enroll.test.mjs"
+  },
+  "evidence": "21/11/2026 kernel reboot of both DO fleet hosts: 12 production and 20 dev site networks were outside TRACY-FLEET-EGRESS because provision.sh's netfilter-persistent save runs inside tracy-host where the command does not exist.",
+  "fence": "A site network made by provision stays behind the egress fence across a reboot of the host.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/egress-enroll.test.mjs"
+    ],
+    "tests": [
+      "a site network missing from DOCKER-USER after a reboot is enrolled and the ruleset saved",
+      "bootstrap installs the script and enables the timer; the timer runs at boot and every 5 minutes"
+    ]
+  }
+}
