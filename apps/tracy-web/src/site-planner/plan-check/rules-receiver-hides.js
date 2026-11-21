@@ -1,9 +1,8 @@
 // R27 a hide is one the site can take off (2026-11-20). The Joomla receiver empties only the slots its review lists
 // (lib/receiver-hide-review.js), a `withRow` one only with another slot of its row; the write step's `rows.remove` door
 // takes a slot of an HTML field and a row the plan hides whole. Any other hide is refused, and the slot keeps the demo's
-// words or picture: the final check's `unaddressable-items` (`contract-has-no-slot`, dev lat24b 21/11/2026: 28 at BXR
-// London, 11 at Arabian Tea House) and the read-back's `plugin-refused` (a `withRow` picture hidden alone). The plan is
-// told here, so a fix round writes that slot, or gives it a picture, instead.
+// words or picture: the final check's `unaddressable-items` (`contract-has-no-slot`) or the read-back's `plugin-refused`
+// (a `withRow` picture hidden alone). The plan is told here, so a fix round writes that slot, or gives it a picture.
 //
 // Only what the write step would surely refuse fails (write-step/hide-plan.js `hideOrders`): a slot of the contract's
 // content map, still holding words or a picture, under a kept block of a kept page. Not checked, because the write step

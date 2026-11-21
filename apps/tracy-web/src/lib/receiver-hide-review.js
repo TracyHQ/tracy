@@ -5,11 +5,9 @@
 // functions below are that script's `hideableSlots` and `reviewedRows`, kept to the same rules, so the planner knows
 // before the write what the site will refuse to take off. A change to the plugin's script is a change here.
 //
-// Why: dev lat24b (21/11/2026) the final check's largest group was hides the plugin refused (`contract-has-no-slot`):
-// 28 at BXR London and 11 at Arabian Tea House. The plans hid pictures the review never lists (an article's
-// `images.image_intro`, `images.image_fulltext`, a video thumbnail in `attribs`) and pictures it lists only with their
-// row (`withRow`: the exercise rows of JA Boxing's class pages), keeping the rest of the row. Each refused hide left the
-// demo's picture on the page.
+// Why: a hide the receiver refuses leaves the demo's words or picture on the page (the final check's
+// `contract-has-no-slot`: dev lat24b, 21/11/2026, 28 blocks at BXR London and 11 at Arabian Tea House). The plan check
+// reads this review so a plan never asks for one (R27); the checker's own passing JA Boxing plan hid a class title.
 //
 //   measured    a frame the kit emptied, and the block held (canHide: true).
 //   unmeasured  a word slot the kit has no verdict on.
