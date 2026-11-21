@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-721-fault-samples",
+  "kind": "fix",
+  "title": "The chain's write diagnostics keep faults from every check group in turn",
+  "pr": 721,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": ["Faults are taken in turn from every group, so a small group listed late is kept."],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-write-diagnostics.test.mjs"
+    ],
+    "needs": [],
+    "tests": ["the faults kept are taken in turn from every group, so a group listed late is seen too"]
+  }
+}

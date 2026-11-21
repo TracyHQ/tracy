@@ -1,0 +1,3 @@
+- **The chain's write diagnostics keep faults from every final-check group in turn, and an alt failure says whether its alt is the writer's or a template's** — David (WO pipeline) · #721 · `fix/wo-fault-samples` · 2026-11-21
+  **Affects:** Rebuild and deploy tracy-web. `/api/ops/wo/chain-builds` write diagnostics: `faults` sampled across groups; `alt-matches-picture` failures gain `kind` (`writer-alt`, `template-alt`).
+  **Why / Measured:** Dev lat23 (21/11/2026): the faults kept were almost all the first group's (unaddressable items), so the slots of ATH's 8 alt blocks and BXR's 17 read-back blocks never showed. Case REG-PR-721-fault-samples.
