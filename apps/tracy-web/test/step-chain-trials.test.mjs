@@ -79,7 +79,12 @@ test('a switch adds its flag only to its own step', () => {
 })
 
 test('the settings keep only known switches that are on, and the door refuses an unknown name or a value that is not a boolean', () => {
-  assert.deepEqual(CHAIN_TRIALS, ['planTurns'])
+  // Every switch the settings accept is one a step acts on: none would be stored and silently do nothing.
+  for (const name of CHAIN_TRIALS)
+    assert.ok(
+      ['plan', 'copy', 'pictures'].some((step) => trialArgs(step, { [name]: true }).names.includes(name)),
+      `${name} has a step`
+    )
   assert.deepEqual(normalizeWoOpsSettings({}).chainTrials, {})
   assert.deepEqual(
     normalizeWoOpsSettings({ chainTrials: { planTurns: true, framedParts: true } }).chainTrials,
