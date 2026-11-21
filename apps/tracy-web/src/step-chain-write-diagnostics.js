@@ -1,6 +1,7 @@
 // Structural evidence only: never persist checker prose, model prompts, measured values or raw errors.
 import { KIT_GROUPS, PAGE_READ_GROUPS, ROUTE_GROUPS, SITE_CHECK_GROUPS } from './site-check/site-check.js'
 import { PAGE_CHECK_GROUPS } from './site-check/page-groups.js'
+import { stepName } from './lib/site-build-steps.js'
 import { CHECK_GROUP_KINDS, NEVER_SENT, SENT_KINDS } from './write-step/repair-pass/repair-kinds.js'
 
 const GROUPS = new Set(
@@ -78,6 +79,52 @@ const fault = (v) => ({
   level: ['block', 'warn'].includes(v?.level) ? v.level : null
 })
 
+/**
+ * Why a group could not tell, as a fixed code (never its text): the site check's unmeasured reasons
+ * (site-check/*.js GroupUnmeasured, site-check.js statusOf and measure), sorted by what they say. Dev lat20 and lat21
+ * (20/11/2026): Arabian Tea House's page checks were all unmeasured and the diagnostics could not say why.
+ */
+const UNMEASURED = [
+  ['no-host', /^No host was given/],
+  ['no-pages', /lists no page/],
+  ['host-no-verdicts', /^The host gave no verdicts/],
+  ['host-no-verdict', /^The host gave no verdict for /],
+  ['host-skipped', /^The host could not judge /],
+  ['host-no-reading', /^The host answered no /],
+  ['read-refused', /was refused:|only reads;/],
+  ['missing-input', /^No (kit|page reader|pictures|manifest|copy|plan)\b|was given, so/],
+  ['nothing-checked', /^Nothing was measured \(0 checked\)/],
+  ['timeout', /tim(ed|e) ?out|deadline|aborted/i]
+]
+export function unmeasuredCode(reason) {
+  if (typeof reason !== 'string' || !reason) return null
+  return UNMEASURED.find(([, test]) => test.test(reason))?.[0] ?? 'other'
+}
+/** A code-like word the host gave with "no verdicts" (an error code such as HOST_TIMEOUT), never prose. */
+export function hostCodeOf(reason) {
+  const m = /^The host gave no verdicts: ([A-Z][A-Z0-9_]{2,40})$/.exec(String(reason ?? ''))
+  return m ? m[1] : null
+}
+
+/**
+ * How many failures of each group each build step causes (site-build-steps.js names: template, brand, planner, copy,
+ * pictures, write), counted over every failure, not only the faults kept: which step to fix for a group, by number.
+ */
+export function causesOf(groups) {
+  const out = {}
+  for (const g of list(groups)) {
+    const failures = list(g?.failures)
+    if (!failures.length || !GROUPS.has(g.name)) continue
+    const tally = {}
+    for (const f of failures) {
+      const step = stepName(f?.causingStep ?? g.causingStep)
+      tally[step] = (tally[step] ?? 0) + 1
+    }
+    out[g.name] = tally
+  }
+  return out
+}
+
 /** A bounded staff-only summary retained after temporary step files have been removed. */
 export function stepNineDiagnostics(step) {
   let truncated = false
@@ -92,12 +139,17 @@ export function stepNineDiagnostics(step) {
           status: known(value.status, STATUSES),
           counts: counts(value.counts),
           groupCount: list(value.groups).length,
+          causes: causesOf(value.groups),
           groups: take(value.groups, 40).map((g) => ({
             name: known(g.name, GROUPS),
             status: known(g.status, STATUSES),
             checked: number(g.checked),
             failureCount: list(g.failures).length,
-            ms: number(g.ms)
+            ms: number(g.ms),
+            ...(g.status === 'unmeasured' && unmeasuredCode(g.reason)
+              ? { why: unmeasuredCode(g.reason) }
+              : {}),
+            ...(g.status === 'unmeasured' && hostCodeOf(g.reason) ? { hostCode: hostCodeOf(g.reason) } : {})
           })),
           faults: take(
             list(value.groups).flatMap((g) => list(g.failures).map((f) => ({ ...f, group: g.name }))),
