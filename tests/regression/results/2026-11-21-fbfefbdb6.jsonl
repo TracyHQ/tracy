@@ -1,0 +1,3 @@
+{"id":"REG-PR-723-plan-fact-ids","verdict":"PASS","commit":"fbfefbdb69ba213ed5c17c45277c05b2f6eb796d","ran_at":"2026-11-21T12:26:40.730Z","evidence":"tests/regression/.runs/2026-11-21-fbfefbdb6/REG-PR-723-plan-fact-ids.log"}
+{"id":"REG-PR-723-change-list-salvage","verdict":"PASS","commit":"fbfefbdb69ba213ed5c17c45277c05b2f6eb796d","ran_at":"2026-11-21T12:26:41.120Z","evidence":"tests/regression/.runs/2026-11-21-fbfefbdb6/REG-PR-723-change-list-salvage.log"}
+{"id":"REG-PR-723-base-copy-align","verdict":"PASS","commit":"fbfefbdb69ba213ed5c17c45277c05b2f6eb796d","ran_at":"2026-11-21T12:26:41.658Z","evidence":"tests/regression/.runs/2026-11-21-fbfefbdb6/REG-PR-723-base-copy-align.log"}
