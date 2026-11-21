@@ -41,6 +41,7 @@ import { siteWriterDoor } from './door.js'
 import { writerInput } from './writer-input.js'
 import { writerPrompt } from './writer-prompt.js'
 import { firstUserMessage, mergeTurnAnswers, nextTurnMessage } from './writer-turns.js'
+import { alignBaseCopy } from './base-copy-align.js'
 import { mergePartAnswers, partMessages, planOfPages, writesInParts, writingParts } from './writer-parts.js'
 import { kitImagesFor } from '../lib/template-kit-images.js'
 import { kitTools } from '../lib/template-kit-source.js'
@@ -111,8 +112,16 @@ export const SITE_WRITER_STEP = Object.freeze({
     const message = nextTurnMessage(ready.input, answers, row.harness?.pagesPerTurn)
     return message === null ? null : visualMessage(message, row, ready)
   },
+  // A base copy written on an earlier plan (a chain build's draft) is first matched to this run's plan (base-copy-align.js).
   mergeTurns: (answers, ctx) =>
-    answers.length === 0 && baseCopyOf(ctx?.row) ? baseCopyOf(ctx.row) : mergeTurnAnswers(answers),
+    answers.length === 0 && baseCopyOf(ctx?.row)
+      ? alignBaseCopy(baseCopyOf(ctx.row), {
+          plan: ctx.row.plan,
+          kit: ctx.ready?.kit?.doc,
+          brief: ctx.row.brief,
+          contentMap: ctx.ready?.contentMap ?? null
+        }).copy
+      : mergeTurnAnswers(answers),
   // Parallel parts: each part's only user message, or null when the run writes round 0 as before.
   parts: ({ row, ready }) => {
     if (!writesInParts(row.harness) || baseCopyOf(row)) return null
