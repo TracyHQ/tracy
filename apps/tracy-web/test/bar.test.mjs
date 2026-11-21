@@ -745,7 +745,8 @@ test(
     const res = await fetchDemo()
     assert.equal(res.status, 200)
     assert.equal(calls.length, 1)
-    assert.equal(res.headers.get('x-robots-tag'), null, 'a demo is public, not a draft')
+    // Public, but kept out of search engines (17/11/2026): a demo's pages are sample content.
+    assert.equal(res.headers.get('x-robots-tag'), 'noindex, nofollow', 'a demo is public but noindex')
     const text = await res.text()
     // The advertisement badge script, served from THIS deployment's own origin — never the
     // hardcoded `cowork.tracy.site` default the badge falls back to when nothing is passed.
@@ -812,7 +813,35 @@ test('a demo installed without a badge is proxied untouched — no advertisement
   assert.equal(text, '<html><body>hi</body></html>')
   assert.doesNotMatch(text, /tracy-badge\.js/)
   assert.doesNotMatch(text, /dashboard\/badge\.js/)
+  // Untouched in body, but still a demo: kept out of search engines like every other one.
+  assert.equal(res.headers.get('x-robots-tag'), 'noindex, nofollow')
 })
+
+test(
+  'a demo robots.txt is its own, proxied: a crawler must be let in to read the noindex header',
+  dbOpts,
+  async () => {
+    const { pool } = db
+    await seedDemo(pool, {
+      label: 'kinetic-wordpress',
+      platform: 'wordpress',
+      tag: 'quickstart/ja-kinetic/wp'
+    })
+    const { app, calls } = harness(pool, {
+      templateOfTag: async () => null,
+      fetchImpl: async () =>
+        new Response('User-agent: *\nAllow: /\n', { headers: { 'content-type': 'text/plain' } })
+    })
+    const res = await app.fetch(
+      new Request('http://kinetic-wordpress.tracy.test/robots.txt', {
+        headers: { host: 'kinetic-wordpress.tracy.test' }
+      })
+    )
+    assert.equal(res.status, 200)
+    assert.equal(await res.text(), 'User-agent: *\nAllow: /\n')
+    assert.equal(calls.length, 1)
+  }
+)
 
 test('a published customer site keeps the managed pill', dbOpts, async () => {
   const { pool } = db
@@ -827,6 +856,36 @@ test('a published customer site keeps the managed pill', dbOpts, async () => {
   const text = await res.text()
   assert.match(text, /data-variant="managed"/)
   assert.doesNotMatch(text, /data-create-href/)
+  // The demo noindex (17/11/2026) never reaches a customer's published site.
+  assert.equal(res.headers.get('x-robots-tag'), null)
+})
+
+test('proxySite: noindex follows publish for a customer site and is always on for a demo', async () => {
+  const page = async (input) => {
+    const res = await proxySite(new Request('http://shop.tracy.test/'), new URL('http://shop-web-1/'), {
+      sameHost: true,
+      viewerHost: 'shop.tracy.test',
+      viewerProto: 'http',
+      badgeUrl: 'http://tracy.test/dashboard/badge.js',
+      badgeOrigin: 'http://tracy.test',
+      label: 'shop',
+      fetchImpl: async () =>
+        new Response('<html><body>hi</body></html>', { headers: { 'content-type': 'text/html' } }),
+      ...input
+    })
+    await res.body?.cancel()
+    return res.headers.get('x-robots-tag')
+  }
+  assert.equal(await page({ publish: 'published' }), null, 'published customer site')
+  assert.equal(
+    await page({ publish: 'published', demo: false }),
+    null,
+    'published customer site, demo: false'
+  )
+  assert.equal(await page({ publish: 'draft' }), 'noindex, nofollow', 'draft customer site')
+  assert.equal(await page({ publish: 'published', demo: true, variant: 'advert' }), 'noindex, nofollow')
+  assert.equal(await page({ publish: 'published', demo: true, variant: 'none' }), 'noindex, nofollow')
+  assert.equal(await page({ publish: 'draft', demo: true, variant: 'advert' }), 'noindex, nofollow')
 })
 
 // ── #339: the seat's CMS tier and role reach the site's Access plugin ─────────────────────────

@@ -155,7 +155,8 @@ export const SITE_ADDRESS_ROUTES = [
       'badge (`/badge.js`, with the viewer’s email only when they hold a seat) on a customer site, the ' +
       'Tracy badge (`/tracy-badge.js`, opening the demo’s own template) on a demo, and nothing on a ' +
       'demo installed without a badge. A site that is not published also gets `x-robots-tag: noindex, ' +
-      'nofollow`.\n\n' +
+      'nofollow`, and so does every page of a demo, published or not: a demo is open to everyone but ' +
+      'kept out of search engines.\n\n' +
       '**Comment picker preview ticket** (only when `TRACY_COMMENT_PICKER=1`). The `tracy_preview` query ' +
       'parameter is removed before the site is asked. On a GET the browser marks as an iframe navigation ' +
       '(`Sec-Fetch-Dest: iframe`), a ticket signed for this site, naming an allowed parent origin, ' +

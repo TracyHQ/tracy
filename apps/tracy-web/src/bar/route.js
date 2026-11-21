@@ -600,6 +600,8 @@ export function barRoutes({
       // `config.origin` is what this deployment claims to be when nothing is in front at all.
       viewerProto,
       publish: site.publish,
+      // A public demo is noindex even though it is published (`site-proxy.js` `noindex`).
+      demo: site.demo === true,
       variant,
       badgeUrl: config.badgeUrl,
       badgeScriptUrl: `${String(config.origin ?? '').replace(/\/+$/, '')}/tracy-badge.js`,
