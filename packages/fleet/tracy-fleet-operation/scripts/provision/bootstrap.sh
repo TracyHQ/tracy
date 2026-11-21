@@ -64,6 +64,14 @@ if ! dpkg -s iptables-persistent >/dev/null 2>&1; then
   DEBIAN_FRONTEND=noninteractive apt-get install -y -qq iptables-persistent
 fi
 netfilter-persistent save >/dev/null
+# provision.sh enrols each new site's network LIVE, from inside the tracy-host container, which cannot
+# persist the host's rules. This timer does (egress-enroll.sh says why): boot + every 5 minutes.
+HERE="$(cd "$(dirname "$0")" && pwd)"
+install -m 0700 "$HERE/egress-enroll.sh" /usr/local/sbin/tracy-egress-enroll.sh
+install -m 0644 "$HERE/tracy-egress-enroll.service" "$HERE/tracy-egress-enroll.timer" /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable --now tracy-egress-enroll.timer >/dev/null
+/usr/local/sbin/tracy-egress-enroll.sh
 
 echo "== 3b. Shared fleet network =="
 # 🔒 ON A DEMO-ONLY MACHINE NOBODY CREATES THIS NETWORK FOR YOU. Every site compose declares

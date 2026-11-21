@@ -930,7 +930,12 @@ fi
 if [ "${TRACY_EGRESS_FENCE:-on}" != "off" ]; then
   iptables -C DOCKER-USER -s "$SITE_NET" -j TRACY-FLEET-EGRESS 2>/dev/null ||
     iptables -I DOCKER-USER -s "$SITE_NET" -j TRACY-FLEET-EGRESS
-  netfilter-persistent save >/dev/null 2>&1 || true
+  # Persisting is the HOST's job (tracy-egress-enroll.timer, from bootstrap.sh): this script runs in
+  # the tracy-host container, where netfilter-persistent does not exist and `save || true` failed
+  # silently for every site made since 11/09 — a reboot then left them unfenced (21/11/2026).
+  if command -v netfilter-persistent >/dev/null 2>&1; then
+    netfilter-persistent save >/dev/null || echo "!! netfilter-persistent save failed — the host timer will persist $SITE_NET" >&2
+  fi
 fi
 # Ownership matters on the real host: every CMS writes cache, logs and uploads as the web user.
 # It cannot be set through a Docker Desktop bind mount on macOS, which is only ever a test
