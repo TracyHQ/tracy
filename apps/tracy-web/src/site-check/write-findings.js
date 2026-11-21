@@ -61,7 +61,7 @@ export function unaddressableKind(reason) {
   if (/colour roles is not drawn yet/.test(r)) return 'painted-setting'
   if (/names no writable setting/.test(r)) return 'no-writable-setting'
   if (/no slot|not in the content map|has no slot|no such slot/i.test(r)) return 'no-slot'
-  if (/^pictures: /.test(r)) return 'picture-other'
+  if (r.startsWith('pictures: ')) return 'picture-other'
   return 'other'
 }
 
