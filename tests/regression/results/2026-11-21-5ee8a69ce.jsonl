@@ -1,0 +1,1 @@
+{"id":"REG-PR-719-egress-enroll-persist-main","verdict":"PASS","commit":"5ee8a69cedc65cd95a13d5d9f8b085d41a49b09f","ran_at":"2026-11-21T02:07:45.136Z","evidence":"tests/regression/.runs/2026-11-21-5ee8a69ce/REG-PR-719-egress-enroll-persist-main.log"}
