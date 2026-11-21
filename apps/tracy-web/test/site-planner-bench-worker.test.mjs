@@ -5,6 +5,8 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { BENCH_RUNS_AT_ONCE } from '../src/lib/bench-sql.js'
+import { openContentMap } from '../src/lib/content-map-source.js'
+import { coworkHideReview } from '../src/lib/cowork-hide-review.js'
 import { readRun, turnsOf } from '../src/site-planner/bench-store.js'
 import { BENCH_QUEUE, createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { openKit } from '../src/site-planner/kit-source.js'
@@ -76,12 +78,16 @@ test(
     const [round] = run.rounds
     assert.equal(round.state, 'checked')
     assert.deepEqual(round.plan, plan())
+    // A Joomla kit with a content map: the bench checks hides against the Claude Cowork plugin's review (R27).
+    const kitDoc = openKit(KIT_REF).doc
     const expected = checkPlan({
       plan: plan(),
-      kit: openKit(KIT_REF).doc,
+      kit: kitDoc,
       brief: brief(),
-      briefRef: 'harbour-sport-club.json'
+      briefRef: 'harbour-sport-club.json',
+      coworkHides: coworkHideReview(kitDoc, openContentMap(KIT_REF).doc)
     })
+    assert.equal(expected.rules.find((r) => r.id === 'R27').status, 'pass')
     assert.deepEqual(round.checkResult, expected)
     assert.equal(round.failureList, failureListText(expected))
     assert.equal(round.costUsd, 1.75)
