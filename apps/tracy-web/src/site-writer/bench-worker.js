@@ -92,7 +92,11 @@ export const SITE_WRITER_STEP = Object.freeze({
     failureListText
   }),
   changes: Object.freeze({
-    applyValidChanges,
+    // A fix round's corrected entries, then the copy matched to the plan where code knows the one right answer.
+    applyValidChanges: (previous, list, ctx = {}) => {
+      const applied = applyValidChanges(previous, list, ctx)
+      return applied.ok ? { ...applied, doc: alignedToPlan(applied.doc, ctx) } : applied
+    },
     // Corrected entries replace only the texts they name; there is no large replacement to refuse.
     oversized: () => [],
     smallEditsMessage: () => '',
@@ -115,12 +119,7 @@ export const SITE_WRITER_STEP = Object.freeze({
   // A base copy written on an earlier plan (a chain build's draft) is first matched to this run's plan (base-copy-align.js).
   mergeTurns: (answers, ctx) =>
     answers.length === 0 && baseCopyOf(ctx?.row)
-      ? alignBaseCopy(baseCopyOf(ctx.row), {
-          plan: ctx.row.plan,
-          kit: ctx.ready?.kit?.doc,
-          brief: ctx.row.brief,
-          contentMap: ctx.ready?.contentMap ?? null
-        }).copy
+      ? alignedToPlan(baseCopyOf(ctx.row), ctx)
       : mergeTurnAnswers(answers),
   // Parallel parts: each part's only user message, or null when the run writes round 0 as before.
   parts: ({ row, ready }) => {
@@ -167,12 +166,25 @@ export const fingerprintOf = (row, kitDoc) => ({
   promptSha256: row.prompt_sha256
 })
 
-// A whole answer becomes the copy file; a fix round's corrected entries become a change list.
+// The copy matched to the run's plan where W02 has one right answer (base-copy-align.js), after every answer.
+function alignedToPlan(copy, { row, ready } = {}) {
+  return alignBaseCopy(copy, {
+    plan: row?.plan,
+    kit: ready?.kit?.doc,
+    brief: row?.brief,
+    contentMap: ready?.contentMap ?? null
+  }).copy
+}
+
+// A whole answer becomes the copy file, matched to the plan; a fix round's corrected entries become a change list.
 function readAnswer(value, { round, row, ready }) {
   if (isChangeList(value)) return value
   return (
     asChangeList(value, { round }) ??
-    assembleCopy(value, { fingerprint: fingerprintOf(row, ready.kit.doc), index: ready.index })
+    alignedToPlan(
+      assembleCopy(value, { fingerprint: fingerprintOf(row, ready.kit.doc), index: ready.index }),
+      { row, ready }
+    )
   )
 }
 
