@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-723-base-copy-align",
+  "kind": "fix",
+  "title": "A chain build's draft copy is matched to the final plan before the copy run checks it",
+  "pr": 723,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A draft copy that still matches the final plan is left as it is.",
+    "A slot the final plan hides after the draft was written keeps no words, and W02 passes.",
+    "A plan label the final plan rewrote takes the final plan's words; a slot the draft never wrote is still reported missing."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-writer-base-copy-align.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a draft that still matches the final plan comes back as the same object",
+      "a slot the final plan hides after the draft was written keeps no words, so W02 has nothing to send back",
+      "a plan label the final plan rewrote takes the final plan's words; a slot the draft never wrote stays missing"
+    ]
+  }
+}
