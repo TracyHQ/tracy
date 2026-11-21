@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-722-chain-trials",
+  "kind": "feat",
+  "title": "Staff measurement switches of the chain build, and the first failures of each rule on the bench-run door",
+  "pr": 722,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "With planTurns on in chainTrials, the plan step starts its planner run with --plan-turns and records the switch; off or unset, the run starts with the same arguments as before.",
+    "The settings keep only known switches that are on and refuse an unknown name or a value that is not a boolean.",
+    "A bench round keeps the first three failures of each rule, with quoted words, long numbers and addresses masked, and no reason for a picture round."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-trials.test.mjs",
+      "apps/tracy-web/test/wo-bench-run-timing.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "with planTurns on, the plan step plans round 0 in turns and records the switch; off, it starts as before",
+      "the settings keep only known switches that are on, and the door refuses an unknown name or a value that is not a boolean",
+      "a round keeps the first three failures of each rule, with the business's words, numbers and addresses masked",
+      "a picture round also says where its own time went (its manifest's timing), as numbers only"
+    ]
+  }
+}
