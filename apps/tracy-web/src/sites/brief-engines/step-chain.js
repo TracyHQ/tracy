@@ -101,10 +101,16 @@ const round = (n, places) => Math.round(n * 10 ** places) / 10 ** places
 /** When each running step started, ISO, from the clock readings the run keeps (`active`). */
 const sinceOf = (active) =>
   Object.fromEntries([...active].map(([step, ms]) => [step, new Date(ms).toISOString()]))
-/** The bench run ids a step answered with (its run, and the copy step's draft run), for its record. */
+/**
+ * The bench run ids a step answered with (its run, and the copy step's draft run), and the staff measurement switches it
+ * ran with (step-chain-steps.js trialArgs), for its record.
+ */
 const runIdsOf = (x) => ({
   ...(typeof x?.runId === 'string' ? { runId: x.runId } : {}),
-  ...(typeof x?.draftRunId === 'string' ? { draftRunId: x.draftRunId } : {})
+  ...(typeof x?.draftRunId === 'string' ? { draftRunId: x.draftRunId } : {}),
+  ...(Array.isArray(x?.trials) && x.trials.length
+    ? { trials: x.trials.filter((t) => typeof t === 'string') }
+    : {})
 })
 
 const messageOf = (error) => String(error instanceof Error ? error.message : error).slice(0, 300)

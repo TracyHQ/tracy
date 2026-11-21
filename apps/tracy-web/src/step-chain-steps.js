@@ -11,13 +11,13 @@
 import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
+import { readWoOpsSettings } from 'website-opportunities/src/wo-settings.js'
 import { runCli as brandCli } from './brand-step/brand-cli.js'
 import { brandRunDir } from './brand-step/brand-wiring.js'
 import { hostCall } from './host/client.js'
 import { CHAIN_BENCH_CHECK_FAILED, chainBenchFailure } from './lib/chain-bench-verdict.js'
 import { openContentMap } from './lib/content-map-source.js'
 import { defaultContracts } from './lib/contracts.js'
-import { stepNineDiagnostics } from './step-chain-write-diagnostics.js'
 import { readReleases, templateOfTag } from './lib/quickstart-releases.js'
 import { openKit, readableKits } from './lib/template-kit-source.js'
 import { demoSelfNames } from './ops/quickstarts.js'
@@ -29,6 +29,7 @@ import { runCli as plannerCli } from './site-planner/bench-cli.js'
 import { runCli as writerCli } from './site-writer/bench-cli.js'
 import { designSystemSiteReaders } from './sites/design-system-site-readers.js'
 import { siteByKey } from './sites/store.js'
+import { stepNineDiagnostics } from './step-chain-write-diagnostics.js'
 import { mintSeatSession } from './workspace/seat-door.js'
 import { httpSiteDoor } from './write-step/bench-site-door.js'
 import { siteFileReader } from './write-step/site-file.js'
@@ -99,6 +100,22 @@ export const planArgs = (kitRef, revisionId) => [
   revisionId,
   '--require-visual-review'
 ]
+
+/**
+ * The bench flags a chain step adds for the staff measurement switches that are on (`chainTrials` of the WO settings,
+ * `CHAIN_TRIALS`), and the names of those switches for the step's record. Only the planner has one today: `planTurns`
+ * plans round 0 in writing turns of one conversation (site-planner/plan-turns.js), stage 1 of ADR 0045, which the chain
+ * never ran before 21/11/2026; with the switch, a build that plans in turns and one that does not can be measured side
+ * by side on dev, where a merge and a revert per setting gave one build each and the spread of one setting between two
+ * builds (BXR London round 0: 546 s and 761 s on the same prompt, lat24b and lat25) was larger than what was measured.
+ * @param {'plan' | 'copy' | 'pictures'} step @param {Record<string, boolean> | null | undefined} trials
+ * @returns {{ argv: string[], names: string[] }}
+ */
+export function trialArgs(step, trials) {
+  const on = (name) => trials?.[name] === true
+  if (step === 'plan' && on('planTurns')) return { argv: ['--plan-turns'], names: ['planTurns'] }
+  return { argv: [], names: [] }
+}
 
 export function createStepChainSteps(deps) {
   const { pool, config, secret, kitImages, brandWiring, picturesStoreDir } = deps
@@ -273,10 +290,14 @@ export function createStepChainSteps(deps) {
    * A bench step's answer: its output when the run succeeded; when it failed, an error that still carries the output it
    * made (if any), so the chain uses the best version rather than nothing.
    */
-  async function answerOf({ usd, failure, checkFailures, runId, draftRunId }, value, made) {
+  async function answerOf({ usd, failure, checkFailures, runId, draftRunId, trials }, value, made) {
     // The bench run ids go on the chain's step record, so staff can read where a step's time went
-    // (GET /api/ops/wo/bench-runs/:bench/:runId).
-    const ids = { ...(runId ? { runId } : {}), ...(draftRunId ? { draftRunId } : {}) }
+    // (GET /api/ops/wo/bench-runs/:bench/:runId), and so do the measurement switches the step ran with.
+    const ids = {
+      ...(runId ? { runId } : {}),
+      ...(draftRunId ? { draftRunId } : {}),
+      ...(trials?.length ? { trials } : {})
+    }
     if (!failure) return { value, usd, ...ids }
     throw Object.assign(
       stepError(failure, usd),
@@ -367,9 +388,11 @@ export function createStepChainSteps(deps) {
             onDraft({ file })
           }
         : null
+      // The staff measurement switches read when the step starts (trialArgs): a switch turned later is the next build's.
+      const trial = trialArgs('plan', (await readWoOpsSettings(pool)).settings.chainTrials)
       const ran = await benchRun(
         'plan',
-        [...planArgs(kit.ref, revisionOf(ctx)), ...NO_CAPS],
+        [...planArgs(kit.ref, revisionOf(ctx)), ...trial.argv, ...NO_CAPS],
         dir,
         signal,
         { revisionId: revisionOf(ctx), kitRef: kit.ref },
@@ -383,7 +406,7 @@ export function createStepChainSteps(deps) {
       if (!rows[0]?.plan) throw stepError(ran.failure ?? `the planner run ${ran.runId} left no plan`, ran.usd)
       const file = path.join(dir, 'plan.json')
       await writeFile(file, `${JSON.stringify(rows[0].plan, null, 2)}\n`)
-      return answerOf(ran, { file }, true)
+      return answerOf({ ...ran, trials: trial.names }, { file }, true)
     },
 
     // The copy step's first draft on the plan's checked first draft, written while the planner fixes its plan: one

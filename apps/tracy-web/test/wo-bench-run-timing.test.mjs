@@ -5,10 +5,14 @@ import { test } from 'node:test'
 import {
   benchRunTiming,
   benchRunsBetween,
+  errorCodeOf,
   failureCodesIn,
+  failureSamplesIn,
   failuresIn,
   LIST_LIMIT,
+  maskedReason,
   phasesOf,
+  SAMPLES_PER_RULE,
   toolsOf
 } from '../src/lib/wo-bench-run-timing.js'
 
@@ -74,7 +78,11 @@ test("a planner run's rounds and turns: durations, tokens, tool names, never the
       ms: 420_000,
       costUsd: 0.18,
       failures: 2,
-      failureCodes: { R07: 1, R10b: 1 }
+      failureCodes: { R07: 1, R10b: 1 },
+      failureSamples: {
+        R07: [{ where: 'block-1', reason: 'detail' }],
+        R10b: [{ where: 'block-2', reason: 'detail' }]
+      }
     }
   ])
   assert.deepEqual(out.turns[0], {
@@ -113,6 +121,8 @@ test("a picture round also says where its own time went (its manifest's timing),
   const out = await benchRunTiming(pool, 'pictures', RUN)
   assert.deepEqual(out.rounds[0].phases, { code: 41_000, iconRanking: 9_000, looker: 95_000, drawer: 30_000 })
   assert.equal(out.rounds[0].failures, 1)
+  // Where the failure is, never what the looker saw on the photo.
+  assert.deepEqual(out.rounds[0].failureSamples, { L01: [{ where: 'block-96.1' }] })
   assert.equal(JSON.stringify(out).includes('waterfront'), false)
   assert.deepEqual(phasesOf({ looker: 5, note: 'text', 'bad key': 3, drawer: -1 }), { looker: 5 })
   assert.equal(phasesOf(null), null)
@@ -195,4 +205,37 @@ test('tool names and failure counts are read defensively', () => {
     R10b: 1
   })
   assert.deepEqual(failureCodesIn(null), {})
+})
+
+test("a round keeps the first three failures of each rule, with the business's words, numbers and addresses masked", () => {
+  const lines = [
+    ...Array.from(
+      { length: 5 },
+      (_, i) =>
+        `R02 | Fact ids exist | page page-home / block hero @ $.copy[${i}] | fact id f-coach-${i} not in brief.facts`
+    ),
+    'W06 | Words stand on facts | block-160.2 | the words "Our club since 1998" rest on no fact',
+    'R10b | Every link | block-7.link-1 | leads to https://example.test/book or call +971 50 000 1234, mail book@example.test',
+    'no rule here | anything'
+  ].join('\n')
+  const samples = failureSamplesIn(lines)
+  assert.equal(samples.R02.length, SAMPLES_PER_RULE)
+  assert.deepEqual(samples.R02[0], {
+    where: 'page page-home / block hero @ $.copy[0]',
+    reason: 'fact id f-coach-0 not in brief.facts'
+  })
+  assert.deepEqual(samples.W06, [{ where: 'block-160.2', reason: 'the words "…" rest on no fact' }])
+  assert.equal(samples.R10b[0].reason, 'leads to …url… or call #, mail …@…')
+  assert.equal(Object.keys(samples).length, 3)
+  assert.equal(maskedReason('x'.repeat(500)).length, 200)
+})
+
+test('a round that made no document says why by its code only, never by the answer the message quotes', () => {
+  assert.equal(
+    errorCodeOf('SITE_PLANNER_ANSWER_NOT_JSON: Unexpected token } in "the club\'s hours" at 1200'),
+    'SITE_PLANNER_ANSWER_NOT_JSON'
+  )
+  assert.equal(errorCodeOf('SITE_WRITER_CHANGES_NOT_APPLIED'), 'SITE_WRITER_CHANGES_NOT_APPLIED')
+  for (const error of [null, '', 'the model said no', 'lowercase_code: x'])
+    assert.equal(errorCodeOf(error), null)
 })
