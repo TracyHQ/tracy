@@ -1,0 +1,8 @@
+[Unit]
+Description=Enrol every Tracy site network in TRACY-FLEET-EGRESS and persist it (provision/egress-enroll.sh)
+After=docker.service netfilter-persistent.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/tracy-egress-enroll.sh
