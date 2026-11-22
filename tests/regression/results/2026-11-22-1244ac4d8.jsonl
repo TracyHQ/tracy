@@ -1,0 +1,2 @@
+{"id":"REG-PR-727-split-default","verdict":"PASS","commit":"1244ac4d86536c4482fbb9ce72965ba9f1ac5ccd","ran_at":"2026-11-22T01:51:16.550Z","evidence":"tests/regression/.runs/2026-11-22-1244ac4d8/REG-PR-727-split-default.log"}
+{"id":"REG-PR-725-trials-per-build","verdict":"PASS","commit":"1244ac4d86536c4482fbb9ce72965ba9f1ac5ccd","ran_at":"2026-11-22T01:51:17.093Z","evidence":"tests/regression/.runs/2026-11-22-1244ac4d8/REG-PR-725-trials-per-build.log"}
