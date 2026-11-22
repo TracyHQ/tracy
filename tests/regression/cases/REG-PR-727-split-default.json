@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-727-split-default",
+  "kind": "feat",
+  "title": "The chain's draft copy splits a heavy shared unit by default; the staff switch wholeShared keeps it whole",
+  "pr": 727,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The chain's draft copy starts with --split-shared unless the build started with wholeShared on; wholeShared adds no flag of its own."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-trials.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a switch adds its flag only to its own step",
+      "a build keeps the switches read at its first step: turned on after its plan started, its draft copy still splits"
+    ]
+  }
+}
