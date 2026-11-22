@@ -222,6 +222,45 @@ test('the groups: an older report or host is unmeasured, nothing to hold is no m
 
 // Card AH: a word the row wrote that another block on the same page also prints ("Coach") found the wrong list, and a block was
 // measured on a page that does not print it. Invented club and names.
+test('a list sharing one value with a row of a hidden tab is not that row: the row is not found, never a wrong count', () => {
+  // Dev lat28 (22/11/2026): the drinks tab of a menu is hidden until opened, and a two-dish row of the shown breakfast tab
+  // shares one price with it. Names and prices are invented.
+  const card = (text) => ({ chars: text.length, text, pictures: 0 })
+  const r = {
+    slots: [
+      { slot: 'block-9.1', key: 'module-9.1', status: 'written', ordered: 'Mint Cooler' },
+      { slot: 'block-9.2', key: 'module-9.2', status: 'written', ordered: '25 AED' },
+      { slot: 'block-9.3', key: 'module-9.3', status: 'written', ordered: 'Date Shake' },
+      { slot: 'block-9.4', key: 'module-9.4', status: 'written', ordered: '38 AED' }
+    ],
+    rows: [
+      {
+        block: 'block-9',
+        list: 'block-9.dish',
+        plan: 2,
+        demo: 10,
+        kept: 2,
+        keptKeys: ['module-9.1', 'module-9.2', 'module-9.3', 'module-9.4']
+      }
+    ]
+  }
+  const shown = page('/', {
+    lists: [
+      { selector: 'div.row>div.dish', items: [card('Sweet Noodles 25 AED'), card('Arabic Coffee 30 AED')] }
+    ]
+  })
+  const { checked, failures, unread } = judgeListRows(r, [shown])
+  assert.equal(checked, 0)
+  assert.deepEqual(failures, [])
+  assert.deepEqual(unread, ['block-9.dish'])
+  // The drinks tab opened: both drinks are found and the count holds.
+  const opened = page('/', {
+    lists: [{ selector: 'div.tab>div.dish', items: [card('Mint Cooler 25 AED'), card('Date Shake 38 AED')] }]
+  })
+  assert.deepEqual(judgeListRows(r, [shown, opened]).failures, [])
+  assert.equal(judgeListRows(r, [shown, opened]).checked, 1)
+})
+
 test('list-rows reads only the row block, only on pages that print it, and leaves out words another block there writes', async () => {
   const card = (text) => ({ chars: text.length, text, pictures: 1 })
   const lines = [

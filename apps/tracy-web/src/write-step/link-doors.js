@@ -135,6 +135,8 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
     const group = label.group?.id
     const inRow = group ? slotList.filter((s) => s.group?.id === group && holdsAddress(s)) : []
     if (inRow.length === 1) return inRow[0].key
+    const parallel = parallelAddress(label)
+    if (parallel) return parallel
     const anchor = anchorParent(label.xpath)
     if (!anchor) return null
     const sameAnchor = slotList.filter(
@@ -145,6 +147,34 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
         anchorParent(s.xpath) === anchor
     )
     return sameAnchor.length === 1 ? sameAnchor[0].key : null
+  }
+
+  /**
+   * The address in the same entry of parallel lists as its label: `slideshow[button2][i]` goes with `slideshow[btn-link2][i]`,
+   * the list of the same number when the entry holds several addresses. Before (dev lat28, 22/11/2026), JA Diner's two
+   * slides give their second buttons one demo address, so each button's link matched both slides' address slots, and the
+   * plan's two targets were refused as one shared address.
+   */
+  function parallelAddress(label) {
+    const path = Array.isArray(label?.jsonPath) ? label.jsonPath : null
+    if (!path || path.length < 2 || !/^\d+$/.test(String(path.at(-1)))) return null
+    const prefix = JSON.stringify(path.slice(0, -2).map(String))
+    const entry = slotList.filter(
+      (s) =>
+        s.entity === label.entity &&
+        s.column === label.column &&
+        holdsAddress(s) &&
+        Array.isArray(s.jsonPath) &&
+        s.jsonPath.length === path.length &&
+        String(s.jsonPath.at(-1)) === String(path.at(-1)) &&
+        JSON.stringify(s.jsonPath.slice(0, -2).map(String)) === prefix
+    )
+    if (entry.length === 1) return entry[0].key
+    const numberOf = (field) => /(\d+)\]?$/.exec(String(field))?.[1] ?? null
+    const number = numberOf(path.at(-2))
+    if (!number) return null
+    const named = entry.filter((s) => numberOf(s.jsonPath.at(-2)) === number)
+    return named.length === 1 ? named[0].key : null
   }
 
   /**

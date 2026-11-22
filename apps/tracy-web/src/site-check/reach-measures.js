@@ -97,6 +97,10 @@ export function judgeListRows(report, measures, { pagesOf } = {}) {
     }
     const othersOn = (path) =>
       lines.filter((l) => entityOf(l.key) !== entity && printsOn(l.key, path)).map((l) => words(l.ordered))
+    // A list holds this row's words only when it holds at least two of them (one, when one is left): one shared value, a
+    // price two menus both print, is no sign of this list. Before (dev lat28, 22/11/2026), JA Diner's drinks tab is hidden
+    // until a visitor opens it, the host measures only lists it can see, and a two-dish row of the breakfast tab sharing
+    // "25 AED" was taken for the drinks: "the page prints 2" of eight drinks the page prints.
     const found = each(measures)
       .filter((m) => !printedOn || printedOn.has(pathOfMeasure(m.path)))
       .flatMap((m) => {
@@ -106,8 +110,10 @@ export function judgeListRows(report, measures, { pagesOf } = {}) {
         const said = own.filter((w) => !others.includes(w))
         return each(m.lists).map((list) => ({ m, list, said }))
       })
-      .filter(({ list, said }) =>
-        said.some((w) => each(list.items).some((it) => holdsWord(words(it.text), w)))
+      .filter(
+        ({ list, said }) =>
+          new Set(said.filter((w) => each(list.items).some((it) => holdsWord(words(it.text), w)))).size >=
+          Math.min(2, new Set(said).size)
       )
     if (!found.length) {
       unread.push(row.list)

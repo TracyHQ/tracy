@@ -166,6 +166,20 @@ test('an alt the writer did not write is not blamed on the writer: the write ste
   assert.match(group.failures[0].reason, /not words the writer wrote/)
 })
 
+test("a heading the template prints as a picture's alt is not the writer's alt: not measured, with why", async () => {
+  // Dev lat28 (22/11/2026): JA Diner's About galleries print their section's heading as the alt of each picture.
+  const slots = lines().map((l) =>
+    l.slot === 'block-5.9' ? { ...l, ordered: 'Opening hours for members' } : l
+  )
+  const check = await gate({ slots, alts: { kids: 'Opening hours for members' } })
+  const [group] = check.groups
+  assert.deepEqual(group.failures, [])
+  assert.equal(group.checked, 1)
+  const kids = group.notMeasured.find((n) => n.slot === 'block-5.2')
+  assert.match(kids.reason, /prints the words of the heading block-5\.9 as this picture's alt/)
+  assert.equal(check.status, 'green')
+})
+
 test('without the step 8 manifest, a page reader or a kit the group cannot tell; with no written picture it has nothing to do', async () => {
   for (const over of [{ pictures: null }, { pictures: { version: 'site-plan/3' } }]) {
     const [group] = (await gate(over)).groups

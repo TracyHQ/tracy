@@ -133,6 +133,35 @@ test('a frame whose drawn pictures were all rejected is emptied rather than keep
   assert.match(line('block-2.lost').reason, /the picture step left this frame without a picture/)
 })
 
+test('a frame the kit cannot hide keeps its demo picture and says so, never an empty picture tag', async () => {
+  // Dev lat28 (22/11/2026): JA Boxing's exercise cards are a list row whose picture slot carries no canHide, while the
+  // block's frame says the kit measured that the row loses its picture; emptied, each printed a broken <img src="/">.
+  const kit = pictureKit()
+  const hero = kit.doc.blocks.find((b) => b.id === 'block-2')
+  hero.slots.push({ id: 'block-2.lost', role: 'business.photo', type: 'image', maxCharacters: 255 })
+  hero.frames = [...(hero.frames ?? []), { id: 'block-2.lost', kind: 'photo', canHide: false }]
+  const pictures = picturePackage()
+  pictures.problems = [
+    {
+      where: 'block-2.lost',
+      detail: 'no picture is left for this frame after: draw rejected; redraw rejected'
+    }
+  ]
+  const lost = ['module-2.lost']
+  const { report, site, line } = await runPictures({
+    files: { pictures },
+    kit,
+    site: { contract: { extraKeys: [...PICTURE_KEYS, ...lost], overSlot: hideable(lost) } }
+  })
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  assert.ok(
+    !site.of('content.contract').some((c) => (c.params.empty_slots ?? []).includes('module-2.lost')),
+    'the frame is not emptied'
+  )
+  assert.equal(line('block-2.lost').closing, 'demo-remains')
+  assert.match(line('block-2.lost').reason, /does not let block-2\.lost be emptied/)
+})
+
 for (const capability of ['measured', 'unmeasured']) {
   test(`native ${capability} permission clears a rejected picture through the full write step`, async () => {
     const kit = pictureKit()

@@ -143,11 +143,14 @@ function drawPlaced({ idx }, s, frameId, p, { alt, tileDraw, attempt }, res) {
 // avoid the faults of the earlier ones). One whose only faults are minor wins; with none, the best of the others is
 // placed despite the looker, because a checker's rejection never leaves the demo in a frame (owner's rule 2026-11-07).
 // An owner photo another frame of its pages now shows is passed over.
-function bestRejectedRung(s, frameId, p) {
+// `minorOnly` (the `best-minor` rung): only a picture whose faults are all minor, else the rung is skipped, so the
+// any-photo rung after it is tried before a hard rejection is kept.
+function bestRejectedRung(s, frameId, p, { minorOnly = false } = {}) {
   const used = s.onPages(frameId)
   const usable = (p.rejected ?? []).filter((r) => r.entry.file && !(r.entry.asset && used.has(r.entry.asset)))
   if (!usable.length) return { skip: 'no picture of this frame was made' }
   const minor = usable.filter((r) => onlyMinorFaults(r.faults))
+  if (minorOnly && !minor.length) return { skip: 'every rejected picture of this frame has a hard fault' }
   const pool = minor.length ? minor : usable
   const best = pool.reduce((a, b) => (b.faults.length <= a.faults.length ? b : a))
   p.done = true
@@ -235,6 +238,7 @@ function hideRung({ idx }, s, frameId) {
 
 /** Run one rung for a frame that is not a drawing (climbTo runs those in three parts). */
 function runRung(ctx, s, frameId, p, rung) {
+  if (rung === 'best-minor') return bestRejectedRung(s, frameId, p, { minorOnly: true })
   if (rung === 'best-rejected') return bestRejectedRung(s, frameId, p)
   if (rung === 'next-photo') return nextPhotoRung(ctx, s, frameId, p)
   if (rung === 'fewer-rows') return fewerRowsRung(ctx, s, frameId)

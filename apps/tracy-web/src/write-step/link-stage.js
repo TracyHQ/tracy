@@ -57,7 +57,12 @@ async function readAddresses({ call, kit, leads }) {
   return { rows, articles: rowless.length ? await articleRows(call) : new Map() }
 }
 
-/** Several links on one address go when the plan sends them one way; the plan's own link slots are settled first. */
+/**
+ * Several links on one address go when the plan sends them one way; the plan's own link slots are settled first. When the
+ * plan sends them different ways, the first link's target is written to the address and every link of it leads there, its
+ * line saying so: before (dev lat28, 22/11/2026), JA Diner's two slides share one address for their second button, the plan
+ * sent them to two pages, and both buttons kept the template's address.
+ */
 function settleShared(orders, values) {
   const rounds = new Map()
   for (const order of orders.values())
@@ -67,17 +72,14 @@ function settleShared(orders, values) {
     }
   for (const round of rounds.values()) {
     const { keys } = round[0]
-    const urls = new Set([
-      ...round.map((o) => o.url),
-      ...keys.filter((k) => values.has(k)).map((k) => values.get(k))
-    ])
-    if (urls.size > 1) {
-      const reason = `these links share one address on the site (${keys.join(', ')}) and the plan sends them to different places`
-      for (const order of round) Object.assign(order, failed(reason), { via: null })
-      continue
+    // A plan link slot of the address already holds its value (settled first): it decides, else the first link of the round.
+    const url = keys.filter((k) => values.has(k)).map((k) => values.get(k))[0] ?? round[0].url
+    for (const key of keys) values.set(key, url)
+    for (const order of round) {
+      if (order.url !== url)
+        order.shared = `this link shares one address on the site (${keys.join(', ')}) with a link the plan sends to ${url}, so it leads there too`
+      Object.assign(order, { via: 'slot', url, keys: [keys[0]], alsoKeys: keys.slice(1) })
     }
-    for (const key of keys) values.set(key, round[0].url)
-    for (const order of round) Object.assign(order, { via: 'slot', keys: [keys[0]], alsoKeys: keys.slice(1) })
   }
 }
 

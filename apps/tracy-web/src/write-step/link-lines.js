@@ -120,7 +120,7 @@ export function lineResult(order, done) {
     const alsoKeys = (order.alsoKeys ?? []).filter((other) => written.has(other))
     return {
       status: 'written',
-      reason: null,
+      reason: order.shared ?? null,
       key,
       ordered: order.url,
       ...(alsoKeys.length ? { alsoKeys } : {})

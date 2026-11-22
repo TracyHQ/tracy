@@ -68,11 +68,15 @@ const page = (v) =>
   !v.split('/').includes('..')
     ? v
     : null
+// A slot is a content map key (`module-106.2`) or a kit id (`block-106.2`, `body-classes_group-boxing.link-4`,
+// `menuItem-189.0`): before (dev lat28, 22/11/2026) only content map keys were kept, so most faults of the final check named
+// no slot and could not be traced to one.
 const slot = (v) =>
   typeof v === 'string' &&
-  /^(?:module|article|contact|menu|category|component|custom|site|image)-\d+(?:-[a-zA-Z0-9_-]+)?(?:[.:][a-zA-Z0-9_-]+)*$/.test(
+  (/^(?:module|article|contact|menu|menuItem|category|component|custom|site|image|tag|user)-\d+(?:-[a-zA-Z0-9_-]+)?(?:[.:][a-zA-Z0-9_-]+)*$/.test(
     v
-  ) &&
+  ) ||
+    /^(?:block|body)-[a-zA-Z0-9_]+(?:-[a-zA-Z0-9_]+)*(?:[.:][a-zA-Z0-9_-]+)*$/.test(v)) &&
   v.length <= 100
     ? v
     : null

@@ -15,11 +15,16 @@
 //
 // A disagreeing alt blocks on its slot. It is the writer's (step 6) when the alt is words the write report says the writer wrote;
 // otherwise the page prints an alt nobody in the run wrote (the template's or the demo's, left by the write step), step 9.
+// An alt that is the words of a heading the writer wrote (a kit slot whose role is a heading, title, label or name) is the
+// template printing that heading as the picture's alt: no step writes an alt for that picture, so it is not measured, with
+// that reason. Before (dev lat28, 22/11/2026), JA Diner's two About galleries print their section's small heading as the
+// alt of each of their eight pictures, and the eight blocked on the writer, who has no alt to rewrite there.
 import { compareAlt } from '../lib/alt-compare.js'
 import {
   attr,
   bodyOf,
   decoded,
+  kitSlotKinds,
   pictureKey,
   printedSlotsOf,
   slotsOnPages,
@@ -29,6 +34,8 @@ import { WRITE_STEP } from '../lib/site-build-steps.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 
 const PICTURES_VERSION = 'site-pictures/1'
+/** The roles of words a template may print as a picture's alt that no step writes as one. */
+const HEADING_ROLE = /(?:heading|title|label|name)$/
 const COPY_STEP = 6
 const TAG = /<[a-z][a-z0-9-]*\b[^>]*>/gi
 const PICTURE = /<picture\b[\s\S]*?<\/picture\s*>/gi
@@ -118,12 +125,21 @@ export const altMatchesPictureGroup = {
       if (!html.has(path)) html.set(path, await pageHtml(path).catch(() => null))
       return html.get(path)
     }
-    const writerWords = new Set(
-      (Array.isArray(report?.slots) ? report.slots : [])
-        .filter((l) => l?.owner === 'writer' && l.status === 'written' && typeof l.ordered === 'string')
-        .map((l) => wordsKey(l.ordered))
-        .filter(Boolean)
+    const writerLines = (Array.isArray(report?.slots) ? report.slots : []).filter(
+      (l) => l?.owner === 'writer' && l.status === 'written' && typeof l.ordered === 'string'
     )
+    const writerWords = new Set(writerLines.map((l) => wordsKey(l.ordered)).filter(Boolean))
+    // The writer's headings by their words: an alt printed with those words is the template's choice, not an alt.
+    const roles = kitSlotKinds(kit)
+    const headings = new Map()
+    const alts = new Set()
+    for (const l of writerLines) {
+      const key = wordsKey(l.ordered)
+      if (!key) continue
+      if (HEADING_ROLE.test(String(roles.get(l.slot)?.role ?? ''))) {
+        if (!headings.has(key)) headings.set(key, l.slot)
+      } else alts.add(key)
+    }
     const notMeasured = []
     const failures = []
     let checked = 0
@@ -159,6 +175,15 @@ export const altMatchesPictureGroup = {
       const compared = withAlt.map((p) => ({ ...p, ...compareAlt(p.alt, said) }))
       if (compared.some((c) => c.agrees)) continue
       const [first] = compared
+      const heading = headings.get(wordsKey(first.alt))
+      if (heading && !alts.has(wordsKey(first.alt))) {
+        checked--
+        notMeasured.push({
+          slot: s.slot,
+          reason: `the template prints the words of the heading ${heading} as this picture's alt; no step writes an alt for this picture`
+        })
+        continue
+      }
       const theWriters = writerWords.has(wordsKey(first.alt))
       failures.push({
         page: first.path,
