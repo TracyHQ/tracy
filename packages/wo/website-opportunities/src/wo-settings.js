@@ -168,9 +168,10 @@ export const DEFAULT_WO_OPS_SETTINGS = Object.freeze({
 /**
  * The chain build's measurement switches (`chainTrials`), each a bench flag a step adds to its run when it is on:
  * `planTurns` plans round 0 in writing turns of one conversation (site-planner/plan-turns.js, ADR 0045 stage 1);
- * `wholeShared` keeps the chain's draft copy's "shared" one part (the split into shared block parts is the default).
+ * `wholeShared` keeps the chain's draft copy's "shared" one part (the split into shared block parts is the default);
+ * `sevenParts` writes the chain's draft copy in seven parts instead of five.
  */
-export const CHAIN_TRIALS = Object.freeze(['planTurns', 'wholeShared'])
+export const CHAIN_TRIALS = Object.freeze(['planTurns', 'wholeShared', 'sevenParts'])
 
 /** A stored or sent `chainTrials`: only the known switches that are on. */
 function chainTrialsOf(raw) {
