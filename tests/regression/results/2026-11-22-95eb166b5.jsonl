@@ -1,0 +1,1 @@
+{"id":"REG-PR-730-fault-reasons","verdict":"PASS","commit":"95eb166b5de92f930cf220c4b11f94855d70b5b5","ran_at":"2026-11-22T17:05:59.974Z","evidence":"tests/regression/.runs/2026-11-22-95eb166b5/REG-PR-730-fault-reasons.log"}
