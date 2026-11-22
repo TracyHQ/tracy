@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-731-valid-output",
+  "kind": "fix",
+  "title": "A built site shows no template picture, masthead words or broken image where the business has its own",
+  "pr": 731,
+  "area": "website-opportunities/step-chain",
+  "cms": [
+    "jo",
+    "wp",
+    "em"
+  ],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A frame whose own pictures all had a hard fault shows an owner photo looked at as any real photo; a frame the kit cannot hide is never emptied; each kept page's masthead entry takes the written description and background; a heading printed as an alt, step 8's alt over the writer's, and a list sharing one value with a hidden tab's row no longer block the final check."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-pictures-ladder.test.mjs",
+      "apps/tracy-web/test/write-step-closing-ladder.test.mjs",
+      "apps/tracy-web/test/write-step-menu-item-entries.test.mjs",
+      "apps/tracy-web/test/site-check-alt-matches-picture.test.mjs",
+      "apps/tracy-web/test/write-step-slot-dispute.test.mjs",
+      "apps/tracy-web/test/site-check-reach.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a frame whose own pictures all have a hard fault shows a real photo of the business, looked at as any real photo",
+      "a frame the kit cannot hide keeps its demo picture and says so, never an empty picture tag",
+      "each kept page's masthead entry takes the default description and a written background",
+      "a heading the template prints as a picture's alt is not the writer's alt: not measured, with why",
+      "step 8's alt over the writer's words on that alt is the rule, not a dispute; the writer's words still lose",
+      "a list sharing one value with a row of a hidden tab is not that row: the row is not found, never a wrong count"
+    ]
+  }
+}
