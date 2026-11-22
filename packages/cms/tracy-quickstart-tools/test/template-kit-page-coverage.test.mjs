@@ -600,3 +600,27 @@ test('a picture frame takes its faces class from a person entry, or from a same-
   assert.deepEqual([b.frames[0].faces, b.frames[0].classReason], [false, 'a lake (person)'])
   assert.equal(c.frames[0].faces, true)
 })
+
+test('gate: a clickable without a target that reach-accepts.json explains is counted and listed, an unmatched reason fails', () => {
+  const b = build()
+  b.source = { entity: 'article-5', contains: [] }
+  const merged = { ...b, links: b.links.filter((l) => l.element !== 'button') }
+  const failed = []
+  const add = (part, where, reason, extra = {}) => failed.push({ part, where, reason, ...extra })
+  const kit = { blocks: [merged] }
+  const explained = [
+    { check: 'linksWithoutTarget', where: 'blocks[body-pool] article-5.7', reason: 'a plain button', by: 'x' }
+  ]
+  assert.equal(linksWithoutTarget({ kit, map: MAP, readings, fail: add, accepts: explained }), 1)
+  assert.deepEqual(failed, [])
+  assert.deepEqual(kit.checkAccepts.slotCoverage, [
+    { part: 'linksWithoutTarget', where: 'blocks[body-pool] article-5.7', reason: 'a plain button', by: 'x' }
+  ])
+  const stale = [{ check: 'linksWithoutTarget', where: 'blocks[nowhere] *', reason: 'old' }]
+  assert.equal(linksWithoutTarget({ kit, map: MAP, readings, fail: add, accepts: stale }), 1)
+  assert.deepEqual(
+    failed.map((f) => `${f.part} ${f.where}`),
+    ['linksWithoutTarget blocks[body-pool] article-5.7', 'checkAcceptsUnmatched blocks[nowhere] *']
+  )
+  assert.deepEqual(kit.checkAccepts.slotCoverage, [])
+})

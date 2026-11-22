@@ -2,13 +2,13 @@
 
 **Phase reached (end of session 10, 2026-11-19): P8 done to a publishable local cut; PR #700 is a draft. Nothing is published.**
 
-**Release folder: `<evidence-dir>/p23/release`** (tag `tracy-essence/emdash-0.x`, version 0.1.0, built from pack 23, cut from commit `53310897a` (the user's `0cc82df7a` and `bdf9e4a48` on top of pack 22's work); the package files of the commit to publish equal pack 23 except `contracts/`, `perf/`, `tests/regression/` and this file. **Commit to publish: the head of the branch (the one whose subject is "docs(emdash): JA Essence STATUS for pack 23").**
+**Release folder: `<evidence-dir>/p24/release`** (pack 23 plus the re-packed kit zip, see the kit note below) (tag `tracy-essence/emdash-0.x`, version 0.1.0, built from pack 23, cut from commit `53310897a` (the user's `0cc82df7a` and `bdf9e4a48` on top of pack 22's work); the package files of the commit to publish equal pack 23 except `contracts/`, `perf/`, `tests/regression/` and this file. **Commit to publish: the head of the branch (the one whose subject is "docs(emdash): JA Essence STATUS for pack 23").**
 
 | File | sha256 |
 |---|---|
 | tracy-essence-emdash-quickstart-0.1.0.zip | `2d97939f7e9b2bf1d94b9b97574c6721b16f6c6f064b43dbce4f0d0458f57ec3` |
 | tracy-essence-emdash-state-0.1.0.tar.gz | `f20a9a80397772c5bbf4e91b5e4c91273a96748e63fb3018cb1fc9f6a04d7dc5` |
-| template-kit-tracy-essence-0.1.0.zip (its `template-kit.json` is byte-identical to `contracts/0.1.0/template-kit.json`, `approval.by` `hano-xbt`, approved 2026-11-19) | `2421534ef37ba718a642cf28a0d74d360dd16cc70504bb2a1295ef807137a4d0` |
+| template-kit-tracy-essence-0.1.0.zip (its `template-kit.json` is byte-identical to `contracts/0.1.0/template-kit.json`, `approval.by` `hano-xbt`, approved 2026-11-19) | `38f221dea7e6e64a1a710e7cdfdeb1edb0294c12b055590ef8fa316cbb91502c` |
 | design-system-roles.json (0 unresolved) | `4a66c8d6f65adab7026e83b01dea8a4d2ab5a9830e6cca9ee5a7d28d85be5752` |
 | tracy_setting.json (tracy-setting/v1, written by hand) | `a9fce78438178194a7b3605564261633b2a6a08c0a8cf9024840015c761f22c6` |
 | manifest.json | `7daee63c70d9c8130411f2cccc60fd735d51619858831c4600acddbbb0c213d3` |
@@ -31,6 +31,8 @@
 **Session 10 re-cut (pack 23):** the user's three commits changed two source files, one test marker and the inventory, so the zip was cut again from HEAD; 16 of 16 gates pass on it (`qa.2` and the manifest agree). The regression case `REG-PR-700-emdash-essence-0-1-0` runs five test files none of which the user's commits touched, so its result line stands. `qa.contract.json` did not change, so the render map row stands. The template kit inputs did not change: the kit zip of pack 22 is kept, `approval: null`. Final checks: biome format over every changed file clean, `check-emdash-inventory` current, `check-language` clean, `check-test-quality` clean, `brief-quickstart-first` 118 of 118.
 
 **Session 10, owner approvals (2026-11-19):** kit approved (`template-kit/cli.mjs approve --by hano-xbt`), approved `template-kit.json` in `contracts/0.1.0/`, kit zip re-packed by that command and placed in the release folder (the theme zip, state tar, manifest, SHA256SUMS, VERIFICATION.json and `tracy_setting.json` do not name the kit and did not change; the theme zip is untouched, `SHA256SUMS` verifies). No release gate reads the kit; customization readiness 0 FAIL and Design System readiness 0 FAIL re-run on the folder. Commit to publish: the head of the branch (subject "feat(emdash): JA Essence template kit approved by the owner").
+
+**Kit self-checks (2026-11-22, branch `fix/emdash-essence-kit-self-checks`):** the dev road held Publish at `template-kit` / `kit-incomplete` (itemsListsWithoutCardFields 15, slotCoverage 3). The kit tool now takes a reason from `reach-accepts.json` for `itemsListsWithoutCardFields` and `linksWithoutTarget` too (D46); the five reasons are in the kit work folder and in `checkAccepts` of the kit; 175 looks were written for the packed 1440 shots; the image set did not change, so the owner's approval (`hano-xbt`) still holds. `templateKitStep` on the committed kit with its content map answers `kit-approved`. The theme zip, state tar and every other release file are the pack 23 ones; only `template-kit-tracy-essence-0.1.0.zip` changed.
 
 **Design System readiness (`scripts/template-design-system-readiness.mjs` on the release folder): 46 PASS, 0 FAIL** (ROLE-1 pass, flow 64 of 64, preview rows for Moxie and Figma, light and dark, 16 pages). Customization readiness: 0 FAIL (LANG-2 pass, no font finding). Role scan 0 unresolved. `scan.mjs`: see D43.
 

@@ -171,3 +171,37 @@ test('a phone slot holding a tel: address is the link address, not a number prin
   href.sample = '951-925-0780'
   assert.equal(reachChecks(kit).phoneNotCallable, 1, 'a number in no link is still counted')
 })
+
+test('an items list with no card fields is counted, and a person’s reason explains it without hiding the count', () => {
+  const kit = {
+    blocks: [
+      {
+        id: 'body-tag_a',
+        links: [],
+        slots: [],
+        lists: [{ id: 'body-tag_a.items', rowKind: 'items', rowSlots: [] }]
+      },
+      {
+        id: 'body-cat',
+        links: [],
+        slots: [],
+        lists: [{ id: 'body-cat.items', rowKind: 'items', rowSlots: [{ field: 'title' }] }]
+      }
+    ]
+  }
+  assert.equal(reachChecks(kit).itemsListsWithoutCardFields, 1)
+  assert.equal(kit.checks.itemsListsWithoutCardFields, 1)
+  assert.equal(kit.coverage.failures[0].where, 'blocks[body-tag_a].lists[body-tag_a.items]')
+  const accepts = [
+    {
+      check: 'itemsListsWithoutCardFields',
+      where: 'blocks[body-tag_*].lists[*]',
+      reason: 'no item list',
+      by: null
+    }
+  ]
+  assert.equal(reachChecks(kit, { accepts }).itemsListsWithoutCardFields, 1)
+  assert.equal(kit.checks.itemsListsWithoutCardFields, 1)
+  assert.deepEqual(kit.coverage.failures, [])
+  assert.equal(kit.checkAccepts.itemsListsWithoutCardFields.length, 1)
+})

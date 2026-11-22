@@ -9,6 +9,8 @@
 //                       with no map-location setting slot on its entity. The map then stays at the demo's place
 //   phoneNotCallable    a phone number the page prints outside any link: a `contact.phone` slot (or a contact block's printed
 //                       mobile field) that no link of its block shows as its words, so no address can make it `tel:`
+//   itemsListsWithoutCardFields  an items list with no card fields (the content map declares no item list for its listing page):
+//                       counted by kit.mjs while the kit is built and here again, so a person's reason can explain it
 // Each count goes to `kit.checks`; the first failing links, blocks and slots of each go to `kit.coverage.failures`
 // (`{part, where, reason}`), where the Road to live step and /ops name them. A failure a person explained in
 // `reach-accepts.json` (check-accepts.mjs) is still counted, and listed in `kit.checkAccepts.<part>` instead.
@@ -132,6 +134,19 @@ function uncallablePhonesOf(kit) {
   return out
 }
 
+/** The items lists without card fields (kit.mjs itemsListChecks counts them while the kit is built), each by its place. */
+function listsWithoutCardFieldsOf(kit) {
+  const out = []
+  for (const b of each(kit?.blocks))
+    for (const l of each(b?.lists))
+      if (l?.rowKind === 'items' && !each(l?.rowSlots).length)
+        out.push({
+          where: `blocks[${b.id}].lists[${l.id}]`,
+          reason: `the items list ${l.id} of block ${b.id} declares no card fields: the content map has no item list for it`
+        })
+  return out
+}
+
 /**
  * Count the checks on `kit` (changed in place: `checks`, `checkAccepts` and `coverage.failures`) and return the counts.
  * @param {object} kit
@@ -141,7 +156,8 @@ export function reachChecks(kit, { accepts = [] } = {}) {
   const found = {
     deadControls: deadControlsOf(kit),
     mapLocationUnmapped: unmappedMapsOf(kit),
-    phoneNotCallable: uncallablePhonesOf(kit)
+    phoneNotCallable: uncallablePhonesOf(kit),
+    itemsListsWithoutCardFields: listsWithoutCardFieldsOf(kit)
   }
   return settleCheckParts(kit, found, { accepts, named: NAMED })
 }
