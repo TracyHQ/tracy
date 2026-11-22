@@ -342,7 +342,7 @@ export function coverageGate(kit, { map, readings = new Map(), gapAccepts = {}, 
   // Against the page's own reading: every element printing the block's content is a slot of its own, and every
   // clickable element whose label is a slot says what it opens (page-coverage.mjs).
   parts.textsWithoutSlot = textsWithoutSlot({ kit, map, readings, fail })
-  parts.linksWithoutTarget = linksWithoutTarget({ kit, map, readings, fail })
+  parts.linksWithoutTarget = linksWithoutTarget({ kit, map, readings, fail, accepts })
   parts.linksWithoutLabelSlot = linksWithoutLabelSlot({ kit, map, fail })
   parts.imagesWithoutFrame = imagesWithoutFrame({ kit, map, readings, fail })
   parts.audioSourcesUnresolved = audioSourceChecks({ kit, map, fail })

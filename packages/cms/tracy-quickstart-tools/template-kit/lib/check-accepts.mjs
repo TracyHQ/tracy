@@ -18,7 +18,13 @@ export const ACCEPTABLE_CHECKS = [
   'phoneNotCallable',
   'rowPartsUnpaired',
   // A page without a title slot (page-titles.mjs), counted in the coverage gate: explained in checkAccepts.slotCoverage.
-  'pageTitleSlots'
+  'pageTitleSlots',
+  // A clickable whose label a slot prints but that has no declared address (page-coverage.mjs), counted in the coverage
+  // gate: explained in checkAccepts.slotCoverage, as the page titles are.
+  'linksWithoutTarget',
+  // An items list whose card fields the content map does not declare (kit.mjs itemsListChecks), for a platform whose map
+  // has no item lists for a listing page.
+  'itemsListsWithoutCardFields'
 ]
 export const UNMATCHED_PART = 'checkAcceptsUnmatched'
 

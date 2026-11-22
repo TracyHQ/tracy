@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-725-emdash-essence-kit-self-checks",
+  "kind": "fix",
+  "title": "JA Essence EmDash 0.1.0: the template kit passes the Template kit road step (self-checks explained by a reason, a look on every 1440 shot) and the approval still holds",
+  "pr": 725,
+  "area": "emdash-theme/tracy-essence",
+  "cms": [
+    "em"
+  ],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout, run run.cmd from run.cwd: the kit tool's check-accept and reach tests and the web test that runs the road step on the committed JA Essence kit.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A clickable with a label slot and no declared target that reach-accepts.json explains is counted and listed in checkAccepts.slotCoverage; an explanation matching nothing fails as checkAcceptsUnmatched.",
+    "An items list with no card fields is counted by the reach checks and an explanation lists it without hiding the count.",
+    "The committed JA Essence kit.json is judged kit-approved by the road step, with the content map beside it."
+  ],
+  "selectors": {
+    "road step": "apps/tracy-web/src/lib/template-kit/road-step.js templateKitStep",
+    "accepts": "packages/cms/tracy-quickstart-tools/template-kit/lib/check-accepts.mjs"
+  },
+  "evidence": "Road step run on the committed kit (22/11/2026): state done, code kit-approved, approvedBy hano-xbt.",
+  "fence": "The kit self-check accept mechanism and the committed JA Essence kit contract",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-page-coverage.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-reach-checks.test.mjs",
+      "apps/tracy-web/test/template-kit-essence-road.test.mjs"
+    ],
+    "cwd": ".",
+    "needs": [],
+    "tests": [
+      "gate: a clickable without a target that reach-accepts.json explains is counted and listed, an unmatched reason fails",
+      "an items list with no card fields is counted, and a person’s reason explains it without hiding the count",
+      "the JA Essence kit passes the Template kit road step as approved",
+      "the JA Essence kit explains each self-check failure it keeps with a reason"
+    ]
+  }
+}

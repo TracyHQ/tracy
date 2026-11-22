@@ -472,6 +472,11 @@
         "390": "page-home-390",
         "1440": "page-home-1440"
       },
+      "look": {
+        "image": "page-home-1440",
+        "sha256": "f623388a7f204fe378c92799d0825a1aaf3a63588a3ab3f5ab1adf7f9a878320",
+        "text": "A header with social icons, a centred logo and a button over a menu bar, then a slider of three illustrated post tiles with overlaid headings and a row of three small post links. A narrow centred list of six post cards follows, each with a thumbnail, tag, heading, byline, paragraph and read more link, then numbered pagination, a row of five illustrations with a button, and the footer."
+      },
       "aliases": [],
       "from": [
         "front page",
@@ -509,6 +514,11 @@
       "images": {
         "390": "page-contact-390",
         "1440": "page-contact-1440"
+      },
+      "look": {
+        "image": "page-contact-1440",
+        "sha256": "b376c86a679fcb9c7f802e97da095e0d06e2433bca7095b4ab2810dc3ffcd2f1",
+        "text": "A boxed white card with a large centred heading and a short intro, then a contact form with three single line fields, a large message box, a checkbox and one send button. Under it a row of five illustrations with slider dots and one button, then the footer with a logo, a dark button and a link row."
       },
       "aliases": [],
       "from": [
@@ -548,6 +558,11 @@
         "390": "page-category_blog-health-390",
         "1440": "page-category_blog-health-1440"
       },
+      "look": {
+        "image": "page-category_blog-health-1440",
+        "sha256": "fef681f00f152d6895a54a5e7f3252fdcc3db2b78fc5881d6e344a65757f2c18",
+        "text": "A category page with a centred heading, a count line and a short intro, then a grid of nine cards in three columns, each with an illustration, a small tag, a centred title and a meta line. Page numbers sit under the grid, followed by a heading over a five image strip with a button, and the footer."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -585,6 +600,11 @@
       "images": {
         "390": "page-category_blog-design-390",
         "1440": "page-category_blog-design-1440"
+      },
+      "look": {
+        "image": "page-category_blog-design-1440",
+        "sha256": "793ec8dbe0df8596af352d8de0a803c436a30483967c222157308cdaff97508f",
+        "text": "A category page with a centred heading, a count line and a short intro. Below it is one wide featured card with text over a darkened image, then a long single column list of five cards, each with a square illustration beside a title and an excerpt under it. Then come page numbers, a five image strip with a button, and the footer."
       },
       "aliases": [],
       "from": [
@@ -624,6 +644,11 @@
         "390": "page-category_blog-fashion-390",
         "1440": "page-category_blog-fashion-1440"
       },
+      "look": {
+        "image": "page-category_blog-fashion-1440",
+        "sha256": "1661fde37937919776db9c752f4ff0a4f590bffd4addcd35643c9211ce4e80f2",
+        "text": "A category page with a centred heading, a count line and a short intro. Below are two small illustrated cards, then one full width featured card with text over a darkened illustration, then two rows of three cards with illustration, tag, title and meta. A heading over a five image strip with a button follows, then the footer."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -662,6 +687,11 @@
         "390": "page-category_resources-390",
         "1440": "page-category_resources-1440"
       },
+      "look": {
+        "image": "page-category_resources-1440",
+        "sha256": "15d04c110104ae2bb535a469209534917803864b9a50d7095413d0c1bb6abaef",
+        "text": "A centred category heading with a post count and a short intro, then a grid of six post cards in three columns, each with an illustration, a tag, a centred heading and a byline. A More Read heading follows with a row of five illustrations, slider dots and one button, then the footer with a logo, a dark button and a link row."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -699,6 +729,11 @@
       "images": {
         "390": "page-category_resources-2-390",
         "1440": "page-category_resources-2-1440"
+      },
+      "look": {
+        "image": "page-category_resources-2-1440",
+        "sha256": "f3e77077e7a0c5404a511e3941c99320195af896ab0ab22d96a904576893fcfb",
+        "text": "A centred category heading with a post count and a short intro line, then five post cards in a three column grid, each with an illustration, a small tag, a centred heading and a byline. Below sit a More Read heading, a row of five illustrations with slider dots and one button, and the footer."
       },
       "aliases": [],
       "from": [
@@ -739,6 +774,11 @@
       "images": {
         "390": "page-our-authors-390",
         "1440": "page-our-authors-1440"
+      },
+      "look": {
+        "image": "page-our-authors-1440",
+        "sha256": "bf9b61e0791fd863e00c4d7c9f734bb066eaf0b19707d52222e497d2da77ca9d",
+        "text": "A grid of six people cards in three columns, each with a portrait photo, a centred name, a role line and a short cut off bio. Round numbered pagination and a page counter sit below, then a row of five illustrations with slider dots and one button, and the footer with a logo, a dark button and a link row."
       },
       "aliases": [],
       "from": [
@@ -781,6 +821,11 @@
         "390": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-390",
         "1440": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440",
+        "sha256": "c2f732e79e263766685da2b16646867dc0663b889bc143e11e081add74760a56",
+        "text": "A slim header, then a split article page: a main column with a large illustration, tag, title, byline, text, a quote, subheadings, an inline illustration, a bullet list, a row of three small images, a next button and share icons with tags. The sidebar stacks latest articles, a newsletter box, a numbered list and tags."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -818,6 +863,11 @@
       "images": {
         "390": "page-home-390",
         "1440": "page-home-1440"
+      },
+      "look": {
+        "image": "page-home-1440",
+        "sha256": "f623388a7f204fe378c92799d0825a1aaf3a63588a3ab3f5ab1adf7f9a878320",
+        "text": "A header with social icons, a centred logo and a button over a menu bar, then a slider of three illustrated post tiles with overlaid headings and a row of three small post links. A narrow centred list of six post cards follows, each with a thumbnail, tag, heading, byline, paragraph and read more link, then numbered pagination, a row of five illustrations with a button, and the footer."
       },
       "aliases": [],
       "from": [
@@ -859,6 +909,11 @@
         "390": "page-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-design-390",
         "1440": "page-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-design-1440"
       },
+      "look": {
+        "image": "page-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-design-1440",
+        "sha256": "7675552f3fdad2a98114a70c602da34c71a32f6d094bf76310ae67ec31b6555e",
+        "text": "A slim header, then a split article page: a main column with a large illustration, tag, title, byline, text, a quote, subheadings, an inline illustration, a bullet list, three small images, previous and next buttons and share icons with tags. The sidebar stacks latest articles, a newsletter box, a numbered list and tags."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -896,6 +951,11 @@
       "images": {
         "390": "page-home-390",
         "1440": "page-home-1440"
+      },
+      "look": {
+        "image": "page-home-1440",
+        "sha256": "f623388a7f204fe378c92799d0825a1aaf3a63588a3ab3f5ab1adf7f9a878320",
+        "text": "A header with social icons, a centred logo and a button over a menu bar, then a slider of three illustrated post tiles with overlaid headings and a row of three small post links. A narrow centred list of six post cards follows, each with a thumbnail, tag, heading, byline, paragraph and read more link, then numbered pagination, a row of five illustrations with a button, and the footer."
       },
       "aliases": [],
       "from": [
@@ -937,6 +997,11 @@
         "390": "page-blog_beauty-in-simplicity-exploring-line-art-390",
         "1440": "page-blog_beauty-in-simplicity-exploring-line-art-1440"
       },
+      "look": {
+        "image": "page-blog_beauty-in-simplicity-exploring-line-art-1440",
+        "sha256": "57d3ca824fdb95f5dbdf1f0552e43cb1e828a080857fbc815f65a002cbec239d",
+        "text": "A two column article page with a wide main card holding an illustration, a tag, a title, a pull quote, subheadings, an inline illustration, a short list, three images in a row and prev and next buttons, beside a sidebar of latest posts, a newsletter box, a numbered post list, tags and social icons. Then two author article cards, a four item list, a five image strip with a button and a footer."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -974,6 +1039,11 @@
       "images": {
         "390": "page-home-390",
         "1440": "page-home-1440"
+      },
+      "look": {
+        "image": "page-home-1440",
+        "sha256": "f623388a7f204fe378c92799d0825a1aaf3a63588a3ab3f5ab1adf7f9a878320",
+        "text": "A header with social icons, a centred logo and a button over a menu bar, then a slider of three illustrated post tiles with overlaid headings and a row of three small post links. A narrow centred list of six post cards follows, each with a thumbnail, tag, heading, byline, paragraph and read more link, then numbered pagination, a row of five illustrations with a button, and the footer."
       },
       "aliases": [],
       "from": [
@@ -1015,6 +1085,11 @@
         "390": "page-blog_beyond-black-and-white-adding-colors-to-line-art-blog-design-390",
         "1440": "page-blog_beyond-black-and-white-adding-colors-to-line-art-blog-design-1440"
       },
+      "look": {
+        "image": "page-blog_beyond-black-and-white-adding-colors-to-line-art-blog-design-1440",
+        "sha256": "bba5933bc95b0297925ffbabdf312d0e5de7a4cfbe53786601be60373806e7d1",
+        "text": "A split article page opening with an image slider with arrows and thumbnails, then a tag, a large title, a quote, subheadings, an illustration, a list, three images in a row, a prev button and share icons, next to a sidebar of latest posts, newsletter form, numbered posts, tags and social icons. Below are two author cards, a row of three reading cards, an image strip with a button and a footer."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -1052,6 +1127,11 @@
       "images": {
         "390": "page-home-390",
         "1440": "page-home-1440"
+      },
+      "look": {
+        "image": "page-home-1440",
+        "sha256": "f623388a7f204fe378c92799d0825a1aaf3a63588a3ab3f5ab1adf7f9a878320",
+        "text": "A header with social icons, a centred logo and a button over a menu bar, then a slider of three illustrated post tiles with overlaid headings and a row of three small post links. A narrow centred list of six post cards follows, each with a thumbnail, tag, heading, byline, paragraph and read more link, then numbered pagination, a row of five illustrations with a button, and the footer."
       },
       "aliases": [],
       "from": [
@@ -1093,6 +1173,11 @@
         "390": "page-blog_capturing-essence-expressive-line-art-techniques-blog-health-390",
         "1440": "page-blog_capturing-essence-expressive-line-art-techniques-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_capturing-essence-expressive-line-art-techniques-blog-health-1440",
+        "sha256": "b59d02cf3353e0f5ccce125e202d4a0af44138e6e5adb041f4720c8169abbcde",
+        "text": "A split article page with an illustration slider with arrows and thumbnails, a tag, a large title, a blue pull quote, two subheadings, an inline illustration, a list, three images in a row and share icons on the left, and a sidebar of latest posts, a newsletter form, numbered posts, tags and social icons on the right. Below are two author cards, three reading cards, an image strip and a footer."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -1130,6 +1215,11 @@
       "images": {
         "390": "page-home-390",
         "1440": "page-home-1440"
+      },
+      "look": {
+        "image": "page-home-1440",
+        "sha256": "f623388a7f204fe378c92799d0825a1aaf3a63588a3ab3f5ab1adf7f9a878320",
+        "text": "A header with social icons, a centred logo and a button over a menu bar, then a slider of three illustrated post tiles with overlaid headings and a row of three small post links. A narrow centred list of six post cards follows, each with a thumbnail, tag, heading, byline, paragraph and read more link, then numbered pagination, a row of five illustrations with a button, and the footer."
       },
       "aliases": [],
       "from": [
@@ -1171,6 +1261,11 @@
         "390": "page-blog_dancing-with-lines-dynamic-line-art-expressions-blog-health-390",
         "1440": "page-blog_dancing-with-lines-dynamic-line-art-expressions-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_dancing-with-lines-dynamic-line-art-expressions-blog-health-1440",
+        "sha256": "95745ecf0837564c16f12ab5e1e1037e4e94950768a8145f6e04f49f2c6b02e1",
+        "text": "A split article page with a lead illustration, a tag, a large title, a blue pull quote, two subheadings, an inline illustration, a list, three images in a row, prev and next buttons and share icons on the left, and a sidebar of latest posts, newsletter form, numbered posts, tag cloud and social icons. Then two author cards, a four item list, an image strip with a button and a footer."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -1208,6 +1303,11 @@
       "images": {
         "390": "page-home-390",
         "1440": "page-home-1440"
+      },
+      "look": {
+        "image": "page-home-1440",
+        "sha256": "f623388a7f204fe378c92799d0825a1aaf3a63588a3ab3f5ab1adf7f9a878320",
+        "text": "A header with social icons, a centred logo and a button over a menu bar, then a slider of three illustrated post tiles with overlaid headings and a row of three small post links. A narrow centred list of six post cards follows, each with a thumbnail, tag, heading, byline, paragraph and read more link, then numbered pagination, a row of five illustrations with a button, and the footer."
       },
       "aliases": [],
       "from": [
@@ -1249,6 +1349,11 @@
         "390": "page-blog_embracing-minimalism-line-art-creations-blog-health-390",
         "1440": "page-blog_embracing-minimalism-line-art-creations-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_embracing-minimalism-line-art-creations-blog-health-1440",
+        "sha256": "e89f6a6f5af1b2d5d7b89658381d2a678e290428eac9f9cec2fba8786812d5de",
+        "text": "A two column article page opening with a video still with a play button, then a tag, a large title, a pull quote, subheadings, an illustration, a list, three images in a row, prev and next buttons and share icons, beside a sidebar of latest posts, a newsletter box, numbered posts, tags and social icons. Below are two author cards, three reading cards, an image strip and a footer."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -1288,6 +1393,11 @@
       "images": {
         "390": "page-blog_drawing-with-elegance-the-art-of-line-work-blog-health-390",
         "1440": "page-blog_drawing-with-elegance-the-art-of-line-work-blog-health-1440"
+      },
+      "look": {
+        "image": "page-blog_drawing-with-elegance-the-art-of-line-work-blog-health-1440",
+        "sha256": "b69f1e3290f4216c4d00a1d84689e9a706692b0f1ad35c21a71f500f64610b11",
+        "text": "A two column article page: the main card has a lead illustration, a tag, a title, a pull quote, subheadings, an inline illustration, a list, three images in a row, prev and next buttons and share icons; the sidebar holds latest posts, a newsletter box, a numbered list, tags and icons. Below come two author cards with an illustration and a photo, a four item list, an image strip and a footer."
       },
       "aliases": [],
       "from": [
@@ -1329,6 +1439,11 @@
         "390": "page-blog_mindful-eating-for-weight-management-blog-health-390",
         "1440": "page-blog_mindful-eating-for-weight-management-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_mindful-eating-for-weight-management-blog-health-1440",
+        "sha256": "07fe56ed7745e0066e18dfc00d2ba2d2d07ed8feaf4822378744c387f711ad49",
+        "text": "A two column article page: the main card has a top illustration, tag, large heading, text, a pull quote, subheadings, a wide illustration, a list and three small images; the sidebar holds latest posts, a signup box, a numbered list, tags and social icons. Below come two article cards, a four item list, a five image strip with a button and the footer."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -1369,6 +1484,11 @@
         "390": "page-blog_essential-nutrients-for-optimal-health-blog-health-390",
         "1440": "page-blog_essential-nutrients-for-optimal-health-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_essential-nutrients-for-optimal-health-blog-health-1440",
+        "sha256": "0fd6c25f6c65584570ffca16a75c24f1673e7025a1c804fc37f88f9d75252a3f",
+        "text": "A header, then a category tag, large title and author line over a wide illustration. A split body follows: the article with a quote, two subheadings, a large illustration, a list, three small pictures in a row, prev and next links, share icons, beside a sidebar with an author card, three latest posts and a newsletter box. Then three post cards, a row of five pictures with a button, and a footer."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -1406,6 +1526,11 @@
       "images": {
         "390": "page-home-390",
         "1440": "page-home-1440"
+      },
+      "look": {
+        "image": "page-home-1440",
+        "sha256": "f623388a7f204fe378c92799d0825a1aaf3a63588a3ab3f5ab1adf7f9a878320",
+        "text": "A header with social icons, a centred logo and a button over a menu bar, then a slider of three illustrated post tiles with overlaid headings and a row of three small post links. A narrow centred list of six post cards follows, each with a thumbnail, tag, heading, byline, paragraph and read more link, then numbered pagination, a row of five illustrations with a button, and the footer."
       },
       "aliases": [],
       "from": [
@@ -1449,6 +1574,11 @@
         "390": "page-blog_mental-health-and-well-being-strategies-blog-health-390",
         "1440": "page-blog_mental-health-and-well-being-strategies-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_mental-health-and-well-being-strategies-blog-health-1440",
+        "sha256": "6e707e99e3f8e9ee07d27223c3a5701f2417e60c999ee7e7b36e58097ed486a6",
+        "text": "A single wide column article with no sidebar: a large top illustration, tag, heading, text, a pull quote, a subheading, a full width illustration, a list and three large images, then Prev and Next buttons and share icons. Below are a short list of three author articles, three article cards in a row, a five image strip with a button and the footer."
+      },
       "aliases": [],
       "from": [
         "/",
@@ -1488,6 +1618,11 @@
       "images": {
         "390": "page-blog_from-lines-to-life-mastering-the-art-of-line-drawing-390",
         "1440": "page-blog_from-lines-to-life-mastering-the-art-of-line-drawing-1440"
+      },
+      "look": {
+        "image": "page-blog_from-lines-to-life-mastering-the-art-of-line-drawing-1440",
+        "sha256": "48bb5dc05c3a11d8dc8ffc77c328cae85cda18d96d7f4d1ac9ab5b8c4ad71e97",
+        "text": "A header, then a split article page: a main card with a top illustration of three people, category tag, two line title, quote, two subheadings, a large illustration, a list, three small pictures, prev and next links, share icons, and a sidebar with latest posts, a newsletter box, numbered posts, tags and icons."
       },
       "aliases": [],
       "from": [
@@ -1529,6 +1664,11 @@
         "390": "page-blog_the-power-of-lines-creating-impactful-line-art-390",
         "1440": "page-blog_the-power-of-lines-creating-impactful-line-art-1440"
       },
+      "look": {
+        "image": "page-blog_the-power-of-lines-creating-impactful-line-art-1440",
+        "sha256": "75a9223bc13abc1124581c83e7ddc9a878a8a70cba27d976de56408af0e972ff",
+        "text": "An article page with a main column and a right sidebar. The main column has an illustration, a title, a quote, subheadings, a large illustration, a list, three small images, prev and next buttons and share icons. The sidebar has a latest list, a newsletter box, a numbered list, tags and icons. Below come two author cards, a compact two by two list, a five image strip and the footer."
+      },
       "aliases": [],
       "from": [
         "/category/blog-health",
@@ -1568,6 +1708,11 @@
       "images": {
         "390": "page-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-health-390",
         "1440": "page-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-health-1440"
+      },
+      "look": {
+        "image": "page-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-health-1440",
+        "sha256": "76ccb154a4a07927ee39f052e45ecc26d67757e388f0e35b9eadac7ef5b51b60",
+        "text": "A header, then a split article page: a main card with a top line art illustration, category tag, two line title, quote, two subheadings, a large illustration, a list, three small pictures, prev and next links, share icons, and a sidebar with latest posts, a newsletter box, numbered posts, tags and icons."
       },
       "aliases": [],
       "from": [
@@ -1609,6 +1754,11 @@
         "390": "page-blog_harmony-in-lines-balancing-elements-in-line-art-blog-health-390",
         "1440": "page-blog_harmony-in-lines-balancing-elements-in-line-art-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_harmony-in-lines-balancing-elements-in-line-art-blog-health-1440",
+        "sha256": "9f9c8b25e8f5a3f51dc7f147f9aeebf93a890b4b4d74f90882e6f97eb9104b0d",
+        "text": "A header, then a split article page: a main card with a top portrait illustration, category tag, two line title, quote, two subheadings, a large illustration, a list, three small pictures, prev and next links, share icons, and a sidebar with latest posts, a newsletter box, numbered posts, tags and icons."
+      },
       "aliases": [],
       "from": [
         "/category/blog-health",
@@ -1648,6 +1798,11 @@
       "images": {
         "390": "page-blog_sketching-stories-narrative-elements-in-line-art-blog-design-390",
         "1440": "page-blog_sketching-stories-narrative-elements-in-line-art-blog-design-1440"
+      },
+      "look": {
+        "image": "page-blog_sketching-stories-narrative-elements-in-line-art-blog-design-1440",
+        "sha256": "03413ec734da6b37e949eda5e6d5029c6e0cd3998175b659f6af82a2042cb5bd",
+        "text": "An article page with a main column and a right sidebar. The main column has an illustration with a play icon, a title, a quote, subheadings, a large illustration, a list, three small images, prev and next buttons and share icons. The sidebar has a latest list, a newsletter box, a numbered list, tags and icons. Below come two author cards, three related cards, a five image strip and the footer."
       },
       "aliases": [],
       "from": [
@@ -1689,6 +1844,11 @@
         "390": "page-blog_the-beauty-of-symmetry-symmetrical-line-art-designs-390",
         "1440": "page-blog_the-beauty-of-symmetry-symmetrical-line-art-designs-1440"
       },
+      "look": {
+        "image": "page-blog_the-beauty-of-symmetry-symmetrical-line-art-designs-1440",
+        "sha256": "d52cc9e18e34506daa1ba171d35c55424855d9778f96dc84e51910cf4325a0e2",
+        "text": "An article page with a main column and a right sidebar. The main column has an illustration, a title, a quote, subheadings, a large illustration, a list, three small images, prev and next buttons and share icons. The sidebar has a latest list, a newsletter box, a numbered list, tags and icons."
+      },
       "aliases": [],
       "from": [
         "/category/blog-design",
@@ -1729,6 +1889,11 @@
         "390": "page-blog_organic-geometry-exploring-geometric-line-art-blog-design-390",
         "1440": "page-blog_organic-geometry-exploring-geometric-line-art-blog-design-1440"
       },
+      "look": {
+        "image": "page-blog_organic-geometry-exploring-geometric-line-art-blog-design-1440",
+        "sha256": "7f9bafe15c6b1f60475a6ce3654ee44c3ea4454f675d6de0bc61b3e01846b50b",
+        "text": "A two column article page: the main card has a top line art illustration, tag, large heading, text, a pull quote, subheadings, a wide illustration, a list and three small images; the sidebar has latest posts, a signup box, a numbered list, tags and social icons. Then two article cards, a four item list, a five image strip with a button and the footer."
+      },
       "aliases": [],
       "from": [
         "/category/blog-design",
@@ -1766,6 +1931,11 @@
       "images": {
         "390": "page-category_blog-design-390",
         "1440": "page-category_blog-design-1440"
+      },
+      "look": {
+        "image": "page-category_blog-design-1440",
+        "sha256": "793ec8dbe0df8596af352d8de0a803c436a30483967c222157308cdaff97508f",
+        "text": "A category page with a centred heading, a count line and a short intro. Below it is one wide featured card with text over a darkened image, then a long single column list of five cards, each with a square illustration beside a title and an excerpt under it. Then come page numbers, a five image strip with a button, and the footer."
       },
       "aliases": [],
       "from": [
@@ -1807,6 +1977,11 @@
         "390": "page-blog_line-art-portraits-capturing-emotions-with-lines-390",
         "1440": "page-blog_line-art-portraits-capturing-emotions-with-lines-1440"
       },
+      "look": {
+        "image": "page-blog_line-art-portraits-capturing-emotions-with-lines-1440",
+        "sha256": "8b4a8887da5a4a9953fe826464a8912cc849d6cd8693786b45f305ed4b8e3c9d",
+        "text": "An article in a white card with a right sidebar: top illustration, tag, two line heading, text, a pull quote, subheadings, a wide illustration, a bullet list and a row of three images, then Prev and Next buttons and share icons. The sidebar stacks latest posts, a signup box, a numbered list, tags and social icons. Two article cards, a four item list and a photo strip follow."
+      },
       "aliases": [],
       "from": [
         "/category/blog-design",
@@ -1846,6 +2021,11 @@
       "images": {
         "390": "page-blog_nature-s-intricacy-botanical-line-art-explorations-blog-design-390",
         "1440": "page-blog_nature-s-intricacy-botanical-line-art-explorations-blog-design-1440"
+      },
+      "look": {
+        "image": "page-blog_nature-s-intricacy-botanical-line-art-explorations-blog-design-1440",
+        "sha256": "3da251fe946951eafd0517f88c86ff86a7364fb3caa0f61e952bb41e3426e6d2",
+        "text": "A two column article page: a main card with a top illustration, tag, two line heading, text, a pull quote, subheadings, a wide illustration, a list and three small images, beside a sidebar of latest posts, a signup box, a numbered list, tags and social icons. Below are two article cards, a four item list, a five image strip with a button and the footer."
       },
       "aliases": [],
       "from": [
@@ -1887,6 +2067,11 @@
         "390": "page-blog_natural-remedies-for-common-ailments-blog-fashion-390",
         "1440": "page-blog_natural-remedies-for-common-ailments-blog-fashion-1440"
       },
+      "look": {
+        "image": "page-blog_natural-remedies-for-common-ailments-blog-fashion-1440",
+        "sha256": "8687b775e5dd9fa81d3041064dfdd8b830e8a01f2ef4e52b831a7ccd45042cbc",
+        "text": "A two column article page that opens with an image slider with arrows and thumbnails, then a tag, heading, text, a pull quote, a wide illustration, a list, three small images and one Prev button. The sidebar holds latest posts, a signup box, a numbered list, tags and icons. Below sit two author cards, three article cards, a five image strip and the footer."
+      },
       "aliases": [],
       "from": [
         "/category/blog-fashion",
@@ -1927,6 +2112,11 @@
         "390": "page-blog_fitness-tips-for-a-healthy-lifestyle-blog-fashion-390",
         "1440": "page-blog_fitness-tips-for-a-healthy-lifestyle-blog-fashion-1440"
       },
+      "look": {
+        "image": "page-blog_fitness-tips-for-a-healthy-lifestyle-blog-fashion-1440",
+        "sha256": "b494474bfef6b1f9f4f8da5e75187dfea09658cbf53637d4d15a944fa7ddf94d",
+        "text": "A header, then a split article page: a main card with an illustration that has a play button, category tag, title, quote, two subheadings, a large illustration, a list, three small pictures, prev and next links, share icons, and a sidebar with latest posts, a newsletter box, numbered posts, tags and icons."
+      },
       "aliases": [],
       "from": [
         "/category/blog-fashion",
@@ -1964,6 +2154,11 @@
       "images": {
         "390": "page-category_blog-fashion-390",
         "1440": "page-category_blog-fashion-1440"
+      },
+      "look": {
+        "image": "page-category_blog-fashion-1440",
+        "sha256": "1661fde37937919776db9c752f4ff0a4f590bffd4addcd35643c9211ce4e80f2",
+        "text": "A category page with a centred heading, a count line and a short intro. Below are two small illustrated cards, then one full width featured card with text over a darkened illustration, then two rows of three cards with illustration, tag, title and meta. A heading over a five image strip with a button follows, then the footer."
       },
       "aliases": [],
       "from": [
@@ -2005,6 +2200,11 @@
         "390": "page-blog_healthy-eating-tips-for-busy-professionals-390",
         "1440": "page-blog_healthy-eating-tips-for-busy-professionals-1440"
       },
+      "look": {
+        "image": "page-blog_healthy-eating-tips-for-busy-professionals-1440",
+        "sha256": "bf54d09c1109c9b0da70722c8827ea19473987950d2731f81c6b460fe3ca3ffb",
+        "text": "A two column article page: a main card with a top illustration, tag, large heading, text, a pull quote, two subheadings, a wide illustration, a list and three small images, beside a sidebar of latest posts, a signup box, a numbered list, tags and social icons. Below sit two article cards, a four item list, a five image strip with one button and the footer."
+      },
       "aliases": [],
       "from": [
         "/category/blog-fashion",
@@ -2044,6 +2244,11 @@
       "images": {
         "390": "page-blog_exercise-routines-for-overall-fitness-390",
         "1440": "page-blog_exercise-routines-for-overall-fitness-1440"
+      },
+      "look": {
+        "image": "page-blog_exercise-routines-for-overall-fitness-1440",
+        "sha256": "4af6ae57cd7ae106cb3a8dd5e15d7a44e3f878887c9971a49f150d228943110b",
+        "text": "A header, then a split article page: a main card with a top illustration, category tag, title, quote, two subheadings, a large illustration, a list, three small pictures, prev and next links, share icons, and a sidebar with latest posts, a newsletter box, numbered posts, tags and icons."
       },
       "aliases": [],
       "from": [
@@ -2085,6 +2290,11 @@
         "390": "page-blog_harmony-in-lines-balancing-elements-in-line-art-blog-fashion-390",
         "1440": "page-blog_harmony-in-lines-balancing-elements-in-line-art-blog-fashion-1440"
       },
+      "look": {
+        "image": "page-blog_harmony-in-lines-balancing-elements-in-line-art-blog-fashion-1440",
+        "sha256": "91eae771694346f05d243e206742acf42bc6f072d1171f942504e26aff008a2f",
+        "text": "A header, then a split article page: a main card with a top portrait illustration, category tag, two line title, quote, two subheadings, a large illustration, a list, three small pictures, prev and next links, share icons, and a sidebar with latest posts, a newsletter box, numbered posts, tags and icons."
+      },
       "aliases": [],
       "from": [
         "/category/blog-fashion",
@@ -2124,6 +2334,11 @@
       "images": {
         "390": "page-blog_dancing-with-lines-dynamic-line-art-expressions-blog-fashion-390",
         "1440": "page-blog_dancing-with-lines-dynamic-line-art-expressions-blog-fashion-1440"
+      },
+      "look": {
+        "image": "page-blog_dancing-with-lines-dynamic-line-art-expressions-blog-fashion-1440",
+        "sha256": "e8a167f3256f6cb52e10ba0436c9c069d1dc4accb31b753b62849ad2e7b2eb0e",
+        "text": "A two column article page: a main card with a lead illustration, a tag, a large title, a pull quote, subheadings, a second illustration, a short list, three images in a row, prev and next buttons and share icons, and a sidebar of latest posts, a newsletter box, a numbered list, tags and social icons. Below are two author cards, a four item reading list, an image strip and a footer."
       },
       "aliases": [],
       "from": [
@@ -2165,6 +2380,11 @@
         "390": "page-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion-390",
         "1440": "page-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion-1440"
       },
+      "look": {
+        "image": "page-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion-1440",
+        "sha256": "abe78ca85e63c851291eb183e553996539eff4569d807b51cce73e6a474d3c6f",
+        "text": "A header, then a split article page: a main card with a top line art illustration, category tag, two line title, quote, two subheadings, a large illustration, a list, three small pictures, prev and next links, share icons, and a sidebar with latest posts, a newsletter box, numbered posts, tags and icons."
+      },
       "aliases": [],
       "from": [
         "/category/blog-fashion",
@@ -2204,6 +2424,11 @@
       "images": {
         "390": "page-blog_vintage-inspired-martini-cocktail-glasses-390",
         "1440": "page-blog_vintage-inspired-martini-cocktail-glasses-1440"
+      },
+      "look": {
+        "image": "page-blog_vintage-inspired-martini-cocktail-glasses-1440",
+        "sha256": "c9dc3f4e79e6ffcfac585746bb2310b87573b1c698c14c4687fabb2613142573",
+        "text": "An article page with a main column and a right sidebar. The main column has an illustration, a title, a quote, subheadings, a large illustration, a list, three small images, a single next button and share icons. The sidebar has a latest list, a newsletter box, a numbered list, tags and icons. Below come two author cards, a compact two by two list with thumbnails, a five image strip and the footer."
       },
       "aliases": [],
       "from": [
@@ -2245,6 +2470,11 @@
         "390": "page-blog_capturing-essence-expressive-line-art-techniques-resources-390",
         "1440": "page-blog_capturing-essence-expressive-line-art-techniques-resources-1440"
       },
+      "look": {
+        "image": "page-blog_capturing-essence-expressive-line-art-techniques-resources-1440",
+        "sha256": "701c7142f7fb577a32525bd22069d5cc6798ebc2d2badb87252ae9e7e4ec3c9e",
+        "text": "A split article page with an illustration slider with arrows and thumbnails, a tag, a large title, a pull quote, subheadings, an illustration, a list, three images in a row, a prev button and share icons, beside a sidebar of latest posts, a newsletter form, numbered posts, a tag cloud and social icons. Below sit two author cards, three reading cards, a five image strip with a button and a footer."
+      },
       "aliases": [],
       "from": [
         "/category/resources",
@@ -2284,6 +2514,11 @@
       "images": {
         "390": "page-blog_sketching-stories-narrative-elements-in-line-art-resources-390",
         "1440": "page-blog_sketching-stories-narrative-elements-in-line-art-resources-1440"
+      },
+      "look": {
+        "image": "page-blog_sketching-stories-narrative-elements-in-line-art-resources-1440",
+        "sha256": "ae3f541e6c54b5716793705a1a7ce37d9a26fd25954006751060d2ae6e22cdc9",
+        "text": "An article page with a main column and a right sidebar. The main column has an illustration with a play icon, a title, a quote, subheadings, a large illustration, a list, three small images, prev and next buttons and share icons. The sidebar has a latest list, a newsletter box, a numbered list, tags and icons. Below come two author cards, three related cards, a five image strip and the footer."
       },
       "aliases": [],
       "from": [
@@ -2325,6 +2560,11 @@
         "390": "page-blog_whimsical-wonders-imaginative-line-art-creations-resources-390",
         "1440": "page-blog_whimsical-wonders-imaginative-line-art-creations-resources-1440"
       },
+      "look": {
+        "image": "page-blog_whimsical-wonders-imaginative-line-art-creations-resources-1440",
+        "sha256": "f45aa28a5b972202ffb20ee15bad2b28c0d08ae1f055166da7ac1f8b0a963fa4",
+        "text": "An article page with a main column and a right sidebar. The main column has a line art illustration, a title, a quote, subheadings, a large illustration, a list, three small images, prev and next buttons and share icons. The sidebar has a latest list, a newsletter box, a numbered list, tags and social icons. Below come two author cards, a compact two by two list, a five image strip and the footer."
+      },
       "aliases": [],
       "from": [
         "/category/resources",
@@ -2364,6 +2604,11 @@
       "images": {
         "390": "page-blog_architectural-wonders-line-art-in-buildings-and-landscapes-resources-390",
         "1440": "page-blog_architectural-wonders-line-art-in-buildings-and-landscapes-resources-1440"
+      },
+      "look": {
+        "image": "page-blog_architectural-wonders-line-art-in-buildings-and-landscapes-resources-1440",
+        "sha256": "8c86d050c2ab3f41270d339cb6af8e42abd98757c0e6a57b7ece63207783408c",
+        "text": "A split article page: on the left an illustration, a tag, a large title, a quote, two subheadings, an inline illustration, a bullet list, a row of three images, prev and next buttons and share icons; on the right sidebar cards for latest posts, a newsletter form, a numbered list and tags. Below come two author article cards, a four item reading list, an image strip and a footer."
       },
       "aliases": [],
       "from": [
@@ -2405,6 +2650,11 @@
         "390": "page-blog_nature-s-intricacy-botanical-line-art-explorations-resources-390",
         "1440": "page-blog_nature-s-intricacy-botanical-line-art-explorations-resources-1440"
       },
+      "look": {
+        "image": "page-blog_nature-s-intricacy-botanical-line-art-explorations-resources-1440",
+        "sha256": "f210b3ed8e673cf3084e39ab55bbaf64e29ccc660fd19f12112d89e4ea2c9fc6",
+        "text": "An article card with a right sidebar: top illustration, tag, heading, text, a pull quote, a wide illustration, a bullet list, three small images, Prev and Next buttons and share icons. The sidebar shows latest posts, a signup box, a numbered list, tags and social icons. Under it come two article cards, a four item list, a photo strip with one button and the footer."
+      },
       "aliases": [],
       "from": [
         "/category/resources",
@@ -2444,6 +2694,11 @@
       "images": {
         "390": "page-blog_abstract-wonders-exploring-line-art-composition-resources-390",
         "1440": "page-blog_abstract-wonders-exploring-line-art-composition-resources-1440"
+      },
+      "look": {
+        "image": "page-blog_abstract-wonders-exploring-line-art-composition-resources-1440",
+        "sha256": "3e0b5828dc55ee961e7f4befec4bc62b361fd349733d5716f656a19b9a38a1d5",
+        "text": "A slim header, then a split article page: a main column with a large illustration, tag, title, byline, text, a quote, subheadings, an inline illustration, a bullet list, a row of three small images, a next button and share icons with tags. The sidebar stacks latest articles, a newsletter box, a numbered list and tags."
       },
       "aliases": [],
       "from": [
@@ -2485,6 +2740,11 @@
         "390": "page-blog_natural-remedies-for-common-ailments-resources-2-390",
         "1440": "page-blog_natural-remedies-for-common-ailments-resources-2-1440"
       },
+      "look": {
+        "image": "page-blog_natural-remedies-for-common-ailments-resources-2-1440",
+        "sha256": "f1aeabbda832765436ed27f614614c9f8101c64f81c13576bb1ef12147d87bfc",
+        "text": "An article with a right sidebar, topped by an image slider with side arrows and small thumbnails, then heading, text, a pull quote, a wide illustration, a bullet list, three images and a Prev button. The sidebar stacks latest posts, a signup box, a numbered list, tags and social icons. Then two author cards, a row of three cards and a photo strip."
+      },
       "aliases": [],
       "from": [
         "/category/resources-2",
@@ -2524,6 +2784,11 @@
       "images": {
         "390": "page-blog_fitness-tips-for-a-healthy-lifestyle-resources-2-390",
         "1440": "page-blog_fitness-tips-for-a-healthy-lifestyle-resources-2-1440"
+      },
+      "look": {
+        "image": "page-blog_fitness-tips-for-a-healthy-lifestyle-resources-2-1440",
+        "sha256": "3cec8460c3f6c4bfc52049ae08f5cdcf99404aa835710cd2884336a5d4b6d743",
+        "text": "A header, then a split article page: a main card with an illustration that has a play button, category tag, title, quote, two subheadings, a large illustration, a list, three small pictures, prev and next links, share icons, and a sidebar with latest posts, a newsletter box, numbered posts, tags and icons."
       },
       "aliases": [],
       "from": [
@@ -2565,6 +2830,11 @@
         "390": "page-blog_mindful-eating-for-weight-management-resources-2-390",
         "1440": "page-blog_mindful-eating-for-weight-management-resources-2-1440"
       },
+      "look": {
+        "image": "page-blog_mindful-eating-for-weight-management-resources-2-1440",
+        "sha256": "09e67937ea034ca4996b115e5ae39cab7b13cc21a0cd0767c1fc5c50a4671382",
+        "text": "An article card beside a right sidebar: top illustration, tag, heading, meta line, text, a pull quote, a wide illustration, a bullet list, three small images, Prev and Next buttons and share icons. The sidebar has latest posts, a signup box, a numbered list, tags and social icons. Two article cards, a four item list and a photo strip with a button follow."
+      },
       "aliases": [],
       "from": [
         "/category/resources-2",
@@ -2604,6 +2874,11 @@
       "images": {
         "390": "page-blog_essential-nutrients-for-optimal-health-resources-2-390",
         "1440": "page-blog_essential-nutrients-for-optimal-health-resources-2-1440"
+      },
+      "look": {
+        "image": "page-blog_essential-nutrients-for-optimal-health-resources-2-1440",
+        "sha256": "4fe67bd20c44fe60484ad800b41dbe2ca9e97aeb6f3b0ff7428139fd485ce184",
+        "text": "A header, then a category tag, large title and author line over a wide illustration. A split body follows: the article with a quote, two subheadings, a large illustration, a list, three small pictures in a row, prev and next links, share icons, beside a sidebar with an author card, three latest posts and a newsletter box. Then three post cards, a row of five pictures with a button, and a footer."
       },
       "aliases": [],
       "from": [
@@ -2647,6 +2922,11 @@
         "390": "page-blog_mental-health-and-well-being-strategies-resources-2-390",
         "1440": "page-blog_mental-health-and-well-being-strategies-resources-2-1440"
       },
+      "look": {
+        "image": "page-blog_mental-health-and-well-being-strategies-resources-2-1440",
+        "sha256": "230a5b2c27aba6fcbf77aac12d4d048bf3094d1075731c88a07d90252e5b442a",
+        "text": "A wide one column article without a sidebar: big top illustration, tag, heading, text, a pull quote, a subheading, a full width illustration, a bullet list, three large images and a single Next button with share icons. Then a three item author list, a row of three article cards, a five image strip with one button and the footer."
+      },
       "aliases": [],
       "from": [
         "/category/resources-2",
@@ -2683,6 +2963,11 @@
       "images": {
         "390": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-390",
         "1440": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440"
+      },
+      "look": {
+        "image": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440",
+        "sha256": "c2f732e79e263766685da2b16646867dc0663b889bc143e11e081add74760a56",
+        "text": "A slim header, then a split article page: a main column with a large illustration, tag, title, byline, text, a quote, subheadings, an inline illustration, a bullet list, a row of three small images, a next button and share icons with tags. The sidebar stacks latest articles, a newsletter box, a numbered list and tags."
       },
       "aliases": [],
       "from": [
@@ -2722,6 +3007,11 @@
         "390": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-390",
         "1440": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440",
+        "sha256": "c2f732e79e263766685da2b16646867dc0663b889bc143e11e081add74760a56",
+        "text": "A slim header, then a split article page: a main column with a large illustration, tag, title, byline, text, a quote, subheadings, an inline illustration, a bullet list, a row of three small images, a next button and share icons with tags. The sidebar stacks latest articles, a newsletter box, a numbered list and tags."
+      },
       "aliases": [],
       "from": [
         "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
@@ -2759,6 +3049,11 @@
       "images": {
         "390": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-390",
         "1440": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440"
+      },
+      "look": {
+        "image": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440",
+        "sha256": "c2f732e79e263766685da2b16646867dc0663b889bc143e11e081add74760a56",
+        "text": "A slim header, then a split article page: a main column with a large illustration, tag, title, byline, text, a quote, subheadings, an inline illustration, a bullet list, a row of three small images, a next button and share icons with tags. The sidebar stacks latest articles, a newsletter box, a numbered list and tags."
       },
       "aliases": [],
       "from": [
@@ -2798,6 +3093,11 @@
         "390": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-390",
         "1440": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440",
+        "sha256": "c2f732e79e263766685da2b16646867dc0663b889bc143e11e081add74760a56",
+        "text": "A slim header, then a split article page: a main column with a large illustration, tag, title, byline, text, a quote, subheadings, an inline illustration, a bullet list, a row of three small images, a next button and share icons with tags. The sidebar stacks latest articles, a newsletter box, a numbered list and tags."
+      },
       "aliases": [],
       "from": [
         "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
@@ -2834,6 +3134,11 @@
       "images": {
         "390": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-390",
         "1440": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440"
+      },
+      "look": {
+        "image": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440",
+        "sha256": "c2f732e79e263766685da2b16646867dc0663b889bc143e11e081add74760a56",
+        "text": "A slim header, then a split article page: a main column with a large illustration, tag, title, byline, text, a quote, subheadings, an inline illustration, a bullet list, a row of three small images, a next button and share icons with tags. The sidebar stacks latest articles, a newsletter box, a numbered list and tags."
       },
       "aliases": [],
       "from": [
@@ -2873,6 +3178,11 @@
         "390": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-390",
         "1440": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440"
       },
+      "look": {
+        "image": "page-blog_abstract-wonders-exploring-line-art-composition-blog-health-1440",
+        "sha256": "c2f732e79e263766685da2b16646867dc0663b889bc143e11e081add74760a56",
+        "text": "A slim header, then a split article page: a main column with a large illustration, tag, title, byline, text, a quote, subheadings, an inline illustration, a bullet list, a row of three small images, a next button and share icons with tags. The sidebar stacks latest articles, a newsletter box, a numbered list and tags."
+      },
       "aliases": [],
       "from": [
         "/blog/abstract-wonders-exploring-line-art-composition-blog-health",
@@ -2911,6 +3221,11 @@
       "images": {
         "390": "page-blog_outlining-creativity-line-art-for-illustrations-and-designs-390",
         "1440": "page-blog_outlining-creativity-line-art-for-illustrations-and-designs-1440"
+      },
+      "look": {
+        "image": "page-blog_outlining-creativity-line-art-for-illustrations-and-designs-1440",
+        "sha256": "97803cd1797466c1ed4a159b70d607556ed2111b702fa3aecdd0b12c6d639364",
+        "text": "An article page split into a wide main column and a right sidebar. The main column has an illustration, a title, a quote, subheadings, a large illustration, a list, a row of three small images, prev and next buttons and share icons. The sidebar has a latest list, a newsletter box, a numbered list, tags and icons. Below come two author cards, a two by two list, a five image strip and the footer."
       },
       "aliases": [],
       "from": [
@@ -2952,6 +3267,11 @@
         "390": "page-blog_whimsical-wonders-imaginative-line-art-creations-blog-design-390",
         "1440": "page-blog_whimsical-wonders-imaginative-line-art-creations-blog-design-1440"
       },
+      "look": {
+        "image": "page-blog_whimsical-wonders-imaginative-line-art-creations-blog-design-1440",
+        "sha256": "abbb2d8d346ec135a1f37e19dcd2db0e00354cde7948ed276498cf50414b2159",
+        "text": "An article page with a main column and a right sidebar. The main column has a line art illustration, a title, a quote, subheadings, a large illustration, a list, three small images, a single next button and share icons. The sidebar has a latest list, a newsletter box, a numbered list, tags and social icons. Below come two author cards, a compact two by two list, a five image strip and the footer."
+      },
       "aliases": [],
       "from": [
         "/blog/architectural-wonders-line-art-in-buildings-and-landscapes-blog-design",
@@ -2992,6 +3312,11 @@
         "390": "page-blog_beyond-black-and-white-adding-colors-to-line-art-blog-normal-design-390",
         "1440": "page-blog_beyond-black-and-white-adding-colors-to-line-art-blog-normal-design-1440"
       },
+      "look": {
+        "image": "page-blog_beyond-black-and-white-adding-colors-to-line-art-blog-normal-design-1440",
+        "sha256": "40bda7af4992a308e99030b443cc5a32cd489bda2cf237f69744e0a1822c9797",
+        "text": "A two column article page that starts with a photo slider with side arrows and thumbnails, then the title, a pull quote, subheadings, an illustration, a short list, three images and a prev button, beside a sidebar of latest posts, a newsletter box, a numbered list, a tag cloud and social icons. Then two author cards, three reading cards in a row, an image strip and a footer."
+      },
       "aliases": [],
       "from": [
         "/author/maxine-palmer",
@@ -3029,6 +3354,11 @@
       "images": {
         "390": "page-category_blog-normal-design-390",
         "1440": "page-category_blog-normal-design-1440"
+      },
+      "look": {
+        "image": "page-category_blog-normal-design-1440",
+        "sha256": "b809c0254c93dce73bc300b8768ad8d5709af972301df9b37ee9ce05f33bf802",
+        "text": "A category page split into a main column and a right sidebar. The main column starts with a featured card with text over a darkened photo, then two large cards each with a wide photo, a tag, a title, meta, an excerpt and a row of tags. The sidebar has a latest list with thumbnails, a newsletter box, tags and social icons. A five image strip with a button and the footer close the page."
       },
       "aliases": [],
       "from": [
@@ -3071,6 +3401,11 @@
         "390": "page-blog_embracing-minimalism-line-art-creations-blog-normal-health-390",
         "1440": "page-blog_embracing-minimalism-line-art-creations-blog-normal-health-1440"
       },
+      "look": {
+        "image": "page-blog_embracing-minimalism-line-art-creations-blog-normal-health-1440",
+        "sha256": "0a42701c510b7aa0783dde68ba3ef253fff7a9dc2f6227e7b6c1edd40e965fb2",
+        "text": "A header with menu and button, then a split article page: a main card with a photo that has a play button, a category tag, title, quote, two subheadings, two large illustrations, a list, prev and next links, share icons, and a sidebar with latest posts, a newsletter box, numbered posts, tags and icons."
+      },
       "aliases": [],
       "from": [
         "/blog/capturing-essence-expressive-line-art-techniques-blog-health",
@@ -3108,6 +3443,11 @@
       "images": {
         "390": "page-category_blog-normal-health-390",
         "1440": "page-category_blog-normal-health-1440"
+      },
+      "look": {
+        "image": "page-category_blog-normal-health-1440",
+        "sha256": "6aced467e80ed28c722eb259de1f7e1d44e01beacb3a33d552cc1c2de7205378",
+        "text": "A boxed two column page: on the left a long list of four large post cards, each with a wide photo, a tag, a heading, a byline, a short paragraph and tag chips. The right sidebar holds a latest posts list with thumbnails, a newsletter box with an email field and button, a tag cloud and social icons. Below come a row of five illustrations with one button, then the footer."
       },
       "aliases": [],
       "from": [
@@ -3150,6 +3490,11 @@
         "390": "page-blog_capturing-essence-expressive-line-art-techniques-blog-normal-health-390",
         "1440": "page-blog_capturing-essence-expressive-line-art-techniques-blog-normal-health-1440"
       },
+      "look": {
+        "image": "page-blog_capturing-essence-expressive-line-art-techniques-blog-normal-health-1440",
+        "sha256": "6498b0f19e87c900a706e526e1a570006ff3ce030fcb22d109cc1d8530693ea0",
+        "text": "A two column article page: the main card has an illustration slider with arrows and thumbnails, a title, a pull quote, two subheadings each followed by a large illustration, a short list, a prev button and share icons; the sidebar holds latest posts, a newsletter box, a numbered list, tags and social icons. Then two author cards, three reading cards in a row, an image strip and a footer."
+      },
       "aliases": [],
       "from": [
         "/author/eula-ward",
@@ -3189,6 +3534,11 @@
       "images": {
         "390": "page-blog_harmony-in-lines-balancing-elements-in-line-art-blog-normal-health-390",
         "1440": "page-blog_harmony-in-lines-balancing-elements-in-line-art-blog-normal-health-1440"
+      },
+      "look": {
+        "image": "page-blog_harmony-in-lines-balancing-elements-in-line-art-blog-normal-health-1440",
+        "sha256": "95816c67304d9edc6726ab0ef1e437417d65d741247c66085f6957dbed9a5360",
+        "text": "A header, then a split article page: a main card with a wide top photo, category tag, two line title, quote, two subheadings each with a large illustration, a list, prev and next links, share icons, and a sidebar with latest posts, a newsletter box, numbered posts, tags and icons."
       },
       "aliases": [],
       "from": [
@@ -3230,6 +3580,11 @@
         "390": "page-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design-390",
         "1440": "page-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design-1440"
       },
+      "look": {
+        "image": "page-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design-1440",
+        "sha256": "13ad51ae54e07eeab32e2409fc70af168f32827e5894183eb667c98c64730096",
+        "text": "A slim header, then a split article page: a main column with a wide photo, tag, title, byline, text, a quote, two subheadings with illustrations, a bullet list, previous and next buttons and share icons with tags. The sidebar stacks latest articles, a newsletter box, a numbered list and tags. Below come two author cards, a four item list, an image strip with a button and the footer."
+      },
       "aliases": [],
       "from": [
         "/blog/beyond-black-and-white-adding-colors-to-line-art-blog-normal-design",
@@ -3270,6 +3625,11 @@
         "390": "page-blog_organic-geometry-exploring-geometric-line-art-blog-normal-design-390",
         "1440": "page-blog_organic-geometry-exploring-geometric-line-art-blog-normal-design-1440"
       },
+      "look": {
+        "image": "page-blog_organic-geometry-exploring-geometric-line-art-blog-normal-design-1440",
+        "sha256": "652d807e82edd7276ae90c2d3151ac530a940e3144494662ddfecbaf10e676b5",
+        "text": "An article with a right sidebar, opening with a wide photo, then tag, heading, text, a pull quote, two subheadings each followed by a wide illustration, a bullet list, one Next button and share icons. The sidebar holds latest posts, a signup box, a numbered list, tags and social icons. Below are two article cards, a four item list and a five image strip."
+      },
       "aliases": [],
       "from": [
         "/category/blog-normal-design",
@@ -3309,6 +3669,11 @@
         "390": "page-blog_drawing-with-elegance-the-art-of-line-work-blog-normal-health-390",
         "1440": "page-blog_drawing-with-elegance-the-art-of-line-work-blog-normal-health-1440"
       },
+      "look": {
+        "image": "page-blog_drawing-with-elegance-the-art-of-line-work-blog-normal-health-1440",
+        "sha256": "274ea5344d8a32266ca6a5af5f9be77a633053f06c887db219842bd4b2fafeef",
+        "text": "A split article page with a wide lead photo, a tag, a large title, a pull quote, two subheadings each followed by a large illustration, a short list, a next button and share icons, beside a sidebar of latest posts, a newsletter form, numbered posts, a tag cloud and social icons. Then two author cards, a four item reading list, a five image strip with a button and a footer."
+      },
       "aliases": [],
       "from": [
         "/category/blog-normal-health",
@@ -3337,6 +3702,11 @@
       "images": {
         "390": "header-390",
         "1440": "header-1440"
+      },
+      "look": {
+        "image": "header-1440",
+        "sha256": "b620af6cd13476818bfb1945141b5b573d2b062fccea2b29b6cbd9888665dcf2",
+        "text": "A two row header: the top row has four small social icons on the left, a centred text logo and a coloured button with an icon on the right. Under a thin line, the second row has a menu icon and a theme toggle on the left, four centred menu links with one dropdown, and a search icon on the right."
       },
       "slots": [
         {
@@ -3677,6 +4047,11 @@
       "images": {
         "390": "block-home-strip-390",
         "1440": "block-home-strip-1440"
+      },
+      "look": {
+        "image": "block-home-strip-1440",
+        "sha256": "a6c8d8b127dfce69f22733b585fd186ba616debefdfa54ec5215949073712ef4",
+        "text": "A boxed row of three equal post cards, each a full illustration with a dark overlay and a centred category tag, title and author and date line on top. Two small dots sit centred below the row."
       },
       "slots": [
         {
@@ -5167,6 +5542,11 @@
         "390": "block-home-div-390",
         "1440": "block-home-div-1440"
       },
+      "look": {
+        "image": "block-home-div-1440",
+        "sha256": "c80aee544765972ccc680bffe256787bacf3b24f7bf395ef0270e4ee8bed4591",
+        "text": "A compact row of three posts side by side, each with a small square illustration on the left and a two or three line title with a date beside it. A thin divider line runs underneath."
+      },
       "slots": [
         {
           "id": "posts.abstract-wonders-exploring-line-art-composition-resources.title",
@@ -5474,6 +5854,11 @@
       "images": {
         "390": "block-home-home-blog-390",
         "1440": "block-home-home-blog-1440"
+      },
+      "look": {
+        "image": "block-home-home-blog-1440",
+        "sha256": "30ed9ba4a57e701848cd71fb451be7bb8432a096ac0057b6b13342b37929c315",
+        "text": "A long single column list of six post cards. Each white card has a square illustration on the left with a category tag, title and author, date and view line beside it, then a short excerpt and a read more link. A page counter and numbered pager buttons sit at the bottom."
       },
       "slots": [
         {
@@ -6796,6 +7181,11 @@
         "390": "part-gallery-390",
         "1440": "part-gallery-1440"
       },
+      "look": {
+        "image": "part-gallery-1440",
+        "sha256": "99ce9069262f5eb5ea7864107424bcd2e6041f2b5618aa3212518d7661b457bd",
+        "text": "A boxed row of five square illustrations side by side with rounded corners, two small slider dots under them and one centred button below. Compact and airy."
+      },
       "slots": [
         {
           "id": "gallery.gallery.gallery_title",
@@ -7043,6 +7433,11 @@
       "images": {
         "390": "footer-390",
         "1440": "footer-1440"
+      },
+      "look": {
+        "image": "footer-1440",
+        "sha256": "32b80bd13df4929e0526e4d4a84854b393d7d19cee64d38f256fa5ca66701b9c",
+        "text": "A light footer with a script logo and a two line tagline on the left and a wide dark button with a short line under it on the right. Below a thin divider sit a centred row of five category links and a copyright line."
       },
       "slots": [
         {
@@ -7575,6 +7970,11 @@
         "390": "block-contact-contact-layout-390",
         "1440": "block-contact-contact-layout-1440"
       },
+      "look": {
+        "image": "block-contact-contact-layout-1440",
+        "sha256": "25618899d348d04db761a078e3e277139d984666c76e311507b504669a012ebf",
+        "text": "A boxed contact form on a white card, with a large centred heading and a short intro paragraph. Below are full width fields for name, email and subject, a tall message box, a copy checkbox and one send button at the bottom left."
+      },
       "slots": [
         {
           "id": "contact.contact-layout.title",
@@ -7922,6 +8322,11 @@
       "images": {
         "390": "body-category_blog-health-390",
         "1440": "body-category_blog-health-1440"
+      },
+      "look": {
+        "image": "body-category_blog-health-1440",
+        "sha256": "282191bdcab830ab72bfa4373bc986dce85f50d93dbe3253b0a4ab741142049d",
+        "text": "A centred category heading with an article count and a short intro paragraph, then a boxed grid of nine article cards in three columns, each with an illustration, a small tag, a title and a byline row. Below sit a page counter, round pagination buttons and a large heading starting another section."
       },
       "slots": [
         {
@@ -9111,6 +9516,11 @@
         "390": "body-category_blog-design-390",
         "1440": "body-category_blog-design-1440"
       },
+      "look": {
+        "image": "body-category_blog-design-1440",
+        "sha256": "4d7de3e29a2d26723af95b1ca77bdccdc3b0c3f4f4e886e6afd7440d715c2fee",
+        "text": "A category page with a centred heading, an article count and a short intro. A wide featured post sits on a dark illustration with its tag, title, meta line and excerpt, followed by a single column list of five post cards, each with a square illustration beside the title, an excerpt and a read more link, then a page counter and pager."
+      },
       "slots": [
         {
           "id": "posts.vintage-inspired-martini-cocktail-glasses.excerpt",
@@ -9996,6 +10406,11 @@
       "images": {
         "390": "body-category_blog-fashion-390",
         "1440": "body-category_blog-fashion-1440"
+      },
+      "look": {
+        "image": "body-category_blog-fashion-1440",
+        "sha256": "f462bd267dc78e36b161b8536172c93fff07078107d1b57ccb926c74f9d9c75e",
+        "text": "A category page with a centred heading, an article count and a short intro, then two post cards, one wide featured post on a dark illustration with title, excerpt and read more link, and six more cards in a three column grid. Each card has an illustration, a tag, a centred title and an author, date and view line. A large heading for more posts closes the shot."
       },
       "slots": [
         {
@@ -11209,6 +11624,11 @@
         "390": "body-category_resources-390",
         "1440": "body-category_resources-1440"
       },
+      "look": {
+        "image": "body-category_resources-1440",
+        "sha256": "c1b0fccaa413e61e6f12028e24f5c2d3950c703f57ef9db160938d59e1dc1267",
+        "text": "A centred category heading with an article count and a short intro paragraph, then a boxed grid of six article cards in three columns, each with a line art illustration, a small tag, a centred title and a byline row. A large heading below starts another section; airy spacing throughout."
+      },
       "slots": [
         {
           "id": "category_info.resources.title",
@@ -12072,6 +12492,11 @@
         "390": "body-category_resources-390",
         "1440": "body-category_resources-1440"
       },
+      "look": {
+        "image": "body-category_resources-1440",
+        "sha256": "c1b0fccaa413e61e6f12028e24f5c2d3950c703f57ef9db160938d59e1dc1267",
+        "text": "A centred category heading with an article count and a short intro paragraph, then a boxed grid of six article cards in three columns, each with a line art illustration, a small tag, a centred title and a byline row. A large heading below starts another section; airy spacing throughout."
+      },
       "slots": [
         {
           "id": "category_info.resources-2.title",
@@ -12803,6 +13228,11 @@
       "images": {
         "390": "block-our-authors-authors-390",
         "1440": "block-our-authors-authors-1440"
+      },
+      "look": {
+        "image": "block-our-authors-authors-1440",
+        "sha256": "81ac935cb396addd7945d973f968b19ce94bea621bf29053a9231ef379821067",
+        "text": "A grid of six author cards in three columns and two rows. Each white card has a large portrait photo, a centred name, a short role line and a two line bio snippet cut off with an ellipsis."
       },
       "slots": [],
       "lists": [],
@@ -13901,6 +14331,11 @@
         "390": "block-our-authors-authors-pager-390",
         "1440": "block-our-authors-authors-pager-1440"
       },
+      "look": {
+        "image": "block-our-authors-authors-pager-1440",
+        "sha256": "51ceb836a9575be5cc6e56b3dd212b93434c6f22bf5dc44c5b98adc5c5cdd97d",
+        "text": "A centred row of round pager buttons with first, previous, two page numbers, next and last, and a small page counter label beneath."
+      },
       "slots": [],
       "lists": [],
       "frames": [],
@@ -14002,6 +14437,11 @@
       "images": {
         "390": "block-blog_abstract-wonders-exploring-line-art-composition-blog-health-post-grid-390",
         "1440": "block-blog_abstract-wonders-exploring-line-art-composition-blog-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_abstract-wonders-exploring-line-art-composition-blog-health-post-grid-1440",
+        "sha256": "b244dc0dd8a6b18ec7cabecca6d2140a59120e79448eed0d33f76524a4dee515",
+        "text": "A split article page: a wide main column with a large illustration, category tag, title, byline, body text, a pull quote, subheadings, an inline illustration, a short bullet list, a row of three small illustrations, a Next button, share icons and tag chips. A narrow sidebar holds a latest posts list, a newsletter signup box, a numbered featured list and tags, and below sit two article cards."
       },
       "slots": [
         {
@@ -15645,6 +16085,11 @@
         "390": "block-blog_abstract-wonders-exploring-line-art-composition-blog-health-more-read-390",
         "1440": "block-blog_abstract-wonders-exploring-line-art-composition-blog-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_abstract-wonders-exploring-line-art-composition-blog-health-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading over a two column list of four compact post links, each with a small square illustration on the left, a two line title and a view count with an eye icon."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -15912,6 +16357,11 @@
       "images": {
         "390": "body-author_alfonso-cortez-390",
         "1440": "body-author_alfonso-cortez-1440"
+      },
+      "look": {
+        "image": "body-author_alfonso-cortez-1440",
+        "sha256": "7fc418410d49f91a7753e07ab79432b210c529519687cd40d34a529e3ae1a123",
+        "text": "An airy author page: a round portrait photo beside the name and role, with a short centred bio below. Then a grid of four post cards in three columns, each with an illustration, a category tag, a centred title and a date and view line."
       },
       "slots": [
         {
@@ -16388,6 +16838,11 @@
       "images": {
         "390": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-design-post-grid-390",
         "1440": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-design-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-design-post-grid-1440",
+        "sha256": "cc2aabb5709b7a5e381125bd83ef1819052bd2f6ebfa8ecd6792b5b839605820",
+        "text": "A split article page: a wide main column with a large illustration, category tag, title, byline, body text, a pull quote, subheadings, an inline illustration, a bullet list, a row of three small illustrations, Prev and Next buttons, share icons and tag chips. A narrow sidebar stacks a latest posts list, a newsletter signup box, a numbered featured list and tags, with two article cards below."
       },
       "slots": [
         {
@@ -17908,6 +18363,11 @@
         "390": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-design-more-read-390",
         "1440": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-design-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-design-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading over a two column list of four compact post links, each with a small square illustration on the left, a two line title and a view count with an eye icon."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -18175,6 +18635,11 @@
       "images": {
         "390": "body-author_eula-ward-390",
         "1440": "body-author_eula-ward-1440"
+      },
+      "look": {
+        "image": "body-author_eula-ward-1440",
+        "sha256": "d20cad52d80905793cd84e61873a20bc6f6c2875fb23ae7eacd653d6b9c5b105",
+        "text": "An author page with a round portrait photo beside the name and role and a short centred bio. A grid of four post cards in three columns follows, each with an image, a small media icon, a category tag, a title and a date and view line, then round pager buttons and a page counter."
       },
       "slots": [
         {
@@ -18698,6 +19163,11 @@
       "images": {
         "390": "block-blog_beauty-in-simplicity-exploring-line-art-post-grid-390",
         "1440": "block-blog_beauty-in-simplicity-exploring-line-art-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_beauty-in-simplicity-exploring-line-art-post-grid-1440",
+        "sha256": "3c2fb5220822c3bac34026dbe6ef96f7c4dfc29050a21dcb40c0719832320310",
+        "text": "A split article page: a wide main column with a large illustration, category tag, one line title, byline, body text, a pull quote, subheadings, an inline illustration, a bullet list, a row of three small illustrations, Prev and Next buttons, share icons and tag chips. A narrow sidebar stacks a latest posts list, a newsletter signup box, a numbered list and tags, with two article cards below."
       },
       "slots": [
         {
@@ -20117,6 +20587,11 @@
         "390": "block-blog_beauty-in-simplicity-exploring-line-art-more-read-390",
         "1440": "block-blog_beauty-in-simplicity-exploring-line-art-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_beauty-in-simplicity-exploring-line-art-more-read-1440",
+        "sha256": "5b990f135a90ad717d7a91af869839464b819679c0a032714d4578760460b7b3",
+        "text": "A large heading over a two column list of four compact post links, each with a small square illustration on the left, a two line title and a view count with an eye icon."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -20384,6 +20859,11 @@
       "images": {
         "390": "body-author_alfonso-cortez-390",
         "1440": "body-author_alfonso-cortez-1440"
+      },
+      "look": {
+        "image": "body-author_alfonso-cortez-1440",
+        "sha256": "7fc418410d49f91a7753e07ab79432b210c529519687cd40d34a529e3ae1a123",
+        "text": "An airy author page: a round portrait photo beside the name and role, with a short centred bio below. Then a grid of four post cards in three columns, each with an illustration, a category tag, a centred title and a date and view line."
       },
       "slots": [
         {
@@ -20890,6 +21370,11 @@
       "images": {
         "390": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-design-post-grid-390",
         "1440": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-design-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-design-post-grid-1440",
+        "sha256": "54bddbb2af0aae8af8266d8e0d5620275f537e2f6eb8900856be66966b746656",
+        "text": "A split article layout: the wide left column has an illustration slider with arrows, a tag, a large title, author line, body text, a quote, subheadings, a large illustration, a bullet list, a row of three images, a back button, share icons."
       },
       "slots": [
         {
@@ -22721,6 +23206,11 @@
         "390": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-design-more-read-390",
         "1440": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-design-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-design-more-read-1440",
+        "sha256": "24ba1aecd7dea4bd9b7da8307061e77193e649691ab4856b9c127145373ce12f",
+        "text": "A section heading at the top left above three white cards side by side. Each card has a rounded illustration, a small centred category tag, a two line title and a date with a view count. The layout is airy."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -23048,6 +23538,11 @@
       "images": {
         "390": "body-author_eula-ward-390",
         "1440": "body-author_eula-ward-1440"
+      },
+      "look": {
+        "image": "body-author_eula-ward-1440",
+        "sha256": "d20cad52d80905793cd84e61873a20bc6f6c2875fb23ae7eacd653d6b9c5b105",
+        "text": "An author page with a round portrait photo beside the name and role and a short centred bio. A grid of four post cards in three columns follows, each with an image, a small media icon, a category tag, a title and a date and view line, then round pager buttons and a page counter."
       },
       "slots": [
         {
@@ -23542,6 +24037,11 @@
       "images": {
         "390": "block-blog_capturing-essence-expressive-line-art-techniques-blog-health-post-grid-390",
         "1440": "block-blog_capturing-essence-expressive-line-art-techniques-blog-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_capturing-essence-expressive-line-art-techniques-blog-health-post-grid-1440",
+        "sha256": "5c11350719fb5a71817ce5a9a2f864e29bc35c2b7985b69a480f93a1671cd082",
+        "text": "A split article layout: the wide left column has an illustration slider with arrows, a tag, a large title, author line, body text, a quote, subheadings, a large illustration, a bullet list, a row of three images, a back button, share icons."
       },
       "slots": [
         {
@@ -25239,6 +25739,11 @@
         "390": "block-blog_capturing-essence-expressive-line-art-techniques-blog-health-more-read-390",
         "1440": "block-blog_capturing-essence-expressive-line-art-techniques-blog-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_capturing-essence-expressive-line-art-techniques-blog-health-more-read-1440",
+        "sha256": "a8282b4612f054707605c0401272bc016a9ba9405d2e3342e31b4699f8b9686c",
+        "text": "A section heading at the top left above three white cards side by side. Each card has a rounded illustration, a small centred category tag, a two line title and a date with a view count. The layout is airy."
+      },
       "slots": [
         {
           "id": "category_info.blog-design.title",
@@ -25595,6 +26100,11 @@
       "images": {
         "390": "body-author_eula-ward-390",
         "1440": "body-author_eula-ward-1440"
+      },
+      "look": {
+        "image": "body-author_eula-ward-1440",
+        "sha256": "d20cad52d80905793cd84e61873a20bc6f6c2875fb23ae7eacd653d6b9c5b105",
+        "text": "An author page with a round portrait photo beside the name and role and a short centred bio. A grid of four post cards in three columns follows, each with an image, a small media icon, a category tag, a title and a date and view line, then round pager buttons and a page counter."
       },
       "slots": [
         {
@@ -26120,6 +26630,11 @@
       "images": {
         "390": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-health-post-grid-390",
         "1440": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-health-post-grid-1440",
+        "sha256": "1aaab4198dfc5d19039e01c2bd7401edac5d8eaae81e064da53b3f0b5393eb0d",
+        "text": "A long split article layout: a main column with a wide illustration, a category tag, a large title, a byline, body text, a pull quote, subheadings, a second illustration, a bullet list, a row of three images, prev and next buttons, share icons and tags. A right sidebar stacks latest posts, a newsletter box, a numbered post list, a tag cloud and four social icons, and two post cards sit below."
       },
       "slots": [
         {
@@ -27513,6 +28028,11 @@
         "390": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-health-more-read-390",
         "1440": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-health-more-read-1440",
+        "sha256": "ce0b36a65189f01002befe86899ba226cc5af1e4c6d7969343c89317de3bb8ad",
+        "text": "A large heading over a compact list of four posts in two columns. Each post has a small square illustration on the left, a two line title and a view count with an eye icon."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -27780,6 +28300,11 @@
       "images": {
         "390": "body-author_eula-ward-390",
         "1440": "body-author_eula-ward-1440"
+      },
+      "look": {
+        "image": "body-author_eula-ward-1440",
+        "sha256": "d20cad52d80905793cd84e61873a20bc6f6c2875fb23ae7eacd653d6b9c5b105",
+        "text": "An author page with a round portrait photo beside the name and role and a short centred bio. A grid of four post cards in three columns follows, each with an image, a small media icon, a category tag, a title and a date and view line, then round pager buttons and a page counter."
       },
       "slots": [
         {
@@ -28315,6 +28840,11 @@
       "images": {
         "390": "block-blog_embracing-minimalism-line-art-creations-blog-health-post-grid-390",
         "1440": "block-blog_embracing-minimalism-line-art-creations-blog-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_embracing-minimalism-line-art-creations-blog-health-post-grid-1440",
+        "sha256": "87fbda182dc9344d610102e9cc0093c87ee4752b60b68e613663b25c62ff75c1",
+        "text": "A long split article layout: a main column with a wide illustration carrying a play button, a category tag, a large title, a byline, body text, a pull quote, subheadings, a second illustration, a bullet list, a row of three images, prev and next buttons, share icons and tags. A right sidebar stacks latest posts, a newsletter box, a numbered post list and tags, and two post cards sit below."
       },
       "slots": [
         {
@@ -29709,6 +30239,11 @@
         "390": "block-blog_embracing-minimalism-line-art-creations-blog-health-more-read-390",
         "1440": "block-blog_embracing-minimalism-line-art-creations-blog-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_embracing-minimalism-line-art-creations-blog-health-more-read-1440",
+        "sha256": "de8a9592c0b82ce58eafb632883536b65ad731581dde7afd4b5b9f8e4a782aa5",
+        "text": "A large heading over a row of three white cards. Each card has a wide illustration, a small centred category tag, a centred two line title and a date with a view count."
+      },
       "slots": [
         {
           "id": "chrome.chrome.more_read_list_title",
@@ -30131,6 +30666,11 @@
       "images": {
         "390": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-health-post-grid-390",
         "1440": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-health-post-grid-1440",
+        "sha256": "2f9c072c3d60afdf899e4fc19643c86773aac0fbe069beb0ac43bdb76459f535",
+        "text": "A long split article layout: a main column with a wide illustration, a category tag, a large title, a byline, body text, a pull quote, subheadings, a second illustration, a bullet list, a row of three images, prev and next buttons, share icons and tags. A right sidebar stacks latest posts, a newsletter box, a numbered post list, a tag cloud and social icons, and two post cards sit below."
       },
       "slots": [
         {
@@ -31458,6 +31998,11 @@
         "390": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-health-more-read-390",
         "1440": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-health-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading over a compact list of four posts in two columns. Each post has a small square illustration on the left, a two line title and a view count with an eye icon."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -31725,6 +32270,11 @@
       "images": {
         "390": "block-blog_mindful-eating-for-weight-management-blog-health-post-grid-390",
         "1440": "block-blog_mindful-eating-for-weight-management-blog-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_mindful-eating-for-weight-management-blog-health-post-grid-1440",
+        "sha256": "da0963c47372aea8e48543b81c5f666d6569172e220367dad9f5619ead7fb96f",
+        "text": "A split layout: a wide main column holds an article with a top illustration, category tag, title, byline, pull quote, subheadings, a second illustration, a bullet list, three square pictures, Prev and Next buttons, share icons and tag pills, followed by two article cards under a heading."
       },
       "slots": [
         {
@@ -33144,6 +33694,11 @@
         "390": "block-blog_mindful-eating-for-weight-management-blog-health-more-read-390",
         "1440": "block-blog_mindful-eating-for-weight-management-blog-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_mindful-eating-for-weight-management-blog-health-more-read-1440",
+        "sha256": "5b990f135a90ad717d7a91af869839464b819679c0a032714d4578760460b7b3",
+        "text": "A heading above a compact two column list of four articles, each with a small square illustration beside a two line title and a view count."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -33411,6 +33966,11 @@
       "images": {
         "390": "block-blog_essential-nutrients-for-optimal-health-blog-health-post-top-390",
         "1440": "block-blog_essential-nutrients-for-optimal-health-blog-health-post-top-1440"
+      },
+      "look": {
+        "image": "block-blog_essential-nutrients-for-optimal-health-blog-health-post-top-1440",
+        "sha256": "1f179d10b7b46a7f72e981505a2afb000cb0b25fd9002d1f3a8e7f6d9cd2c8a6",
+        "text": "A category tag, a large title and a byline above a full width illustration, then a split layout. The main column holds body text, a pull quote, subheadings, an illustration, a bullet list, a row of three images, prev and next buttons, share icons and tags; the right sidebar has an author box with a round photo, a short list of three posts and a newsletter box with an email field and button."
       },
       "slots": [
         {
@@ -34228,6 +34788,11 @@
         "390": "block-blog_essential-nutrients-for-optimal-health-blog-health-more-read-390",
         "1440": "block-blog_essential-nutrients-for-optimal-health-blog-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_essential-nutrients-for-optimal-health-blog-health-more-read-1440",
+        "sha256": "de8a9592c0b82ce58eafb632883536b65ad731581dde7afd4b5b9f8e4a782aa5",
+        "text": "A large heading over a row of three white cards. Each card has a wide illustration, a small centred category tag, a centred two line title and a date with a view count."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -34586,6 +35151,11 @@
       "images": {
         "390": "body-author_eula-ward-390",
         "1440": "body-author_eula-ward-1440"
+      },
+      "look": {
+        "image": "body-author_eula-ward-1440",
+        "sha256": "d20cad52d80905793cd84e61873a20bc6f6c2875fb23ae7eacd653d6b9c5b105",
+        "text": "An author page with a round portrait photo beside the name and role and a short centred bio. A grid of four post cards in three columns follows, each with an image, a small media icon, a category tag, a title and a date and view line, then round pager buttons and a page counter."
       },
       "slots": [
         {
@@ -35225,6 +35795,11 @@
         "390": "block-blog_mental-health-and-well-being-strategies-blog-health-article-390",
         "1440": "block-blog_mental-health-and-well-being-strategies-blog-health-article-1440"
       },
+      "look": {
+        "image": "block-blog_mental-health-and-well-being-strategies-blog-health-article-1440",
+        "sha256": "d0af814d9f34423d3fb778138833d1d196b0de1a6eb5fa1faf17cf1e53f5b5c5",
+        "text": "A single column article under a wide illustration, with a category tag, a large title, a byline and paragraphs broken up by a pull quote, two subheadings, a second wide illustration, a bullet list and a row of three square pictures. At the bottom there are Prev and Next buttons, three round share icons on the left and a set of tag pills on the right."
+      },
       "slots": [
         {
           "id": "posts.mental-health-and-well-being-strategies-blog-health.title",
@@ -35779,6 +36354,11 @@
         "390": "block-blog_mental-health-and-well-being-strategies-blog-health-author-latest-390",
         "1440": "block-blog_mental-health-and-well-being-strategies-blog-health-author-latest-1440"
       },
+      "look": {
+        "image": "block-blog_mental-health-and-well-being-strategies-blog-health-author-latest-1440",
+        "sha256": "3a35944b14698840de5bfd14c2ee2f0af0ffb257f9e3ae89b6439fc7c6491591",
+        "text": "A white box with a heading and a compact list of three articles stacked down the left side, each with a small square illustration beside a two line title, a date and a view count. The right side of the box is empty."
+      },
       "slots": [
         {
           "id": "posts.natural-remedies-for-common-ailments-resources-2.title",
@@ -36019,6 +36599,11 @@
       "images": {
         "390": "block-blog_mental-health-and-well-being-strategies-blog-health-more-read-390",
         "1440": "block-blog_mental-health-and-well-being-strategies-blog-health-more-read-1440"
+      },
+      "look": {
+        "image": "block-blog_mental-health-and-well-being-strategies-blog-health-more-read-1440",
+        "sha256": "58afff1658f514c8e3a75111cff18300c6bc32ec35f344c57a5866dd4df08cb6",
+        "text": "A heading above three cards in a row, each with a wide illustration, a small centred category pill, a centred two line title and a date with a view count underneath. Airy with plenty of white space."
       },
       "slots": [
         {
@@ -36378,6 +36963,11 @@
       "images": {
         "390": "block-blog_from-lines-to-life-mastering-the-art-of-line-drawing-post-grid-390",
         "1440": "block-blog_from-lines-to-life-mastering-the-art-of-line-drawing-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_from-lines-to-life-mastering-the-art-of-line-drawing-post-grid-1440",
+        "sha256": "cd4a375ec40b09f6e9ec9507cf2d3865a3f8ad4dc9190f80aead49fbe2819caf",
+        "text": "A split blog post layout. The wide left column has a large illustration, a category tag, the title, author and date, then text, a pull quote, subheadings, another illustration, a bullet list, a row of three square images, prev and next buttons, share icons. The narrow right column stacks latest posts, a newsletter box, a numbered post list and tags, and two author article cards close the page."
       },
       "slots": [
         {
@@ -37768,6 +38358,11 @@
         "390": "block-blog_from-lines-to-life-mastering-the-art-of-line-drawing-more-read-390",
         "1440": "block-blog_from-lines-to-life-mastering-the-art-of-line-drawing-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_from-lines-to-life-mastering-the-art-of-line-drawing-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading over a two column list of four related posts. Each post has a small square illustration on the left, with a two line title and a view count on the right. Airy, with no buttons."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -38035,6 +38630,11 @@
       "images": {
         "390": "block-blog_the-power-of-lines-creating-impactful-line-art-post-grid-390",
         "1440": "block-blog_the-power-of-lines-creating-impactful-line-art-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_the-power-of-lines-creating-impactful-line-art-post-grid-1440",
+        "sha256": "ee6948efac0d6573e4e3e4fa5c192189a3b5ca99687329809aa39c9fccef8d96",
+        "text": "Split layout: a wide article column with a large illustration, a tag, large title, author line, text, a pull quote, two subheadings, an illustration, a bullet list, three small pictures, Prev and Next buttons, share icons and tags. A narrow sidebar has a thumbnail list, a newsletter form, a numbered list, tags and four social icons. Two article cards sit below."
       },
       "slots": [
         {
@@ -39425,6 +40025,11 @@
         "390": "block-blog_the-power-of-lines-creating-impactful-line-art-more-read-390",
         "1440": "block-blog_the-power-of-lines-creating-impactful-line-art-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_the-power-of-lines-creating-impactful-line-art-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A section with a large heading at top left over a compact two by two list of posts, each with a small square illustration on the left and a two line title and view count beside it."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -39692,6 +40297,11 @@
       "images": {
         "390": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-health-post-grid-390",
         "1440": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-health-post-grid-1440",
+        "sha256": "2b999abef35e7b66ae1c5fc8655e1c46b51d686e23d2f587bbd14626a9abbfe9",
+        "text": "A split layout: a wide post column opens with a line art illustration, a category tag, a two line title and an author line, then paragraphs, a quote, subheadings, a large illustration, a bullet list, three images in a row, prev and next buttons, share icons."
       },
       "slots": [
         {
@@ -41115,6 +41725,11 @@
         "390": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-health-more-read-390",
         "1440": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-health-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A heading above a two column list of four compact items. Each item has a small square illustration on the left and a two line title with a view count on the right."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -41382,6 +41997,11 @@
       "images": {
         "390": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-health-post-grid-390",
         "1440": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-health-post-grid-1440",
+        "sha256": "9b292e3d81a547cf8c2c389ad67f19dca6cd22db6ef26ebec77831add71ef8e6",
+        "text": "A split article layout. The main column shows a line art portrait banner, a tag, the title and meta line, text, a pull quote, subheadings, an illustration, a bullet list, a row of three images, prev and next buttons, share icons and tags. A sidebar on the right stacks a latest posts list, a newsletter box, numbered featured posts, a tag cloud and social icons, and two article cards follow below."
       },
       "slots": [
         {
@@ -42721,6 +43341,11 @@
         "390": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-health-more-read-390",
         "1440": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-health-more-read-1440",
+        "sha256": "ce0b36a65189f01002befe86899ba226cc5af1e4c6d7969343c89317de3bb8ad",
+        "text": "A large heading over a two column list of four related posts. Each post has a small square illustration on the left, with a two line title and a view count on the right. Airy, with no buttons."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -42988,6 +43613,11 @@
       "images": {
         "390": "block-blog_sketching-stories-narrative-elements-in-line-art-blog-design-post-grid-390",
         "1440": "block-blog_sketching-stories-narrative-elements-in-line-art-blog-design-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_sketching-stories-narrative-elements-in-line-art-blog-design-post-grid-1440",
+        "sha256": "e6dbb16f5e2e1b785d878b2f2056f3860bac35d570030994564fc617c9ce38c1",
+        "text": "Split layout: a wide article column with a large illustration with a play button, a tag, large title, author line, text, a pull quote, two subheadings, an illustration, a bullet list, three small pictures, Prev and Next buttons, share icons and tags. A narrow sidebar has a thumbnail list, a newsletter form, a numbered list, tags and four social icons. Two article cards sit below."
       },
       "slots": [
         {
@@ -44194,6 +44824,11 @@
         "390": "block-blog_sketching-stories-narrative-elements-in-line-art-blog-design-more-read-390",
         "1440": "block-blog_sketching-stories-narrative-elements-in-line-art-blog-design-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_sketching-stories-narrative-elements-in-line-art-blog-design-more-read-1440",
+        "sha256": "de8a9592c0b82ce58eafb632883536b65ad731581dde7afd4b5b9f8e4a782aa5",
+        "text": "A section with a large heading at top left over a row of three boxed cards, each with an illustration, a small category tag, a centred two line title and a date with a view count."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -44552,6 +45187,11 @@
       "images": {
         "390": "block-blog_the-beauty-of-symmetry-symmetrical-line-art-designs-post-grid-390",
         "1440": "block-blog_the-beauty-of-symmetry-symmetrical-line-art-designs-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_the-beauty-of-symmetry-symmetrical-line-art-designs-post-grid-1440",
+        "sha256": "a10b08c500b07fb108aae86dc1d2bcf381aa834ae8b147c385ec7198446ab535",
+        "text": "Split layout: a wide article column with a large illustration, a tag, large title, author line, text, a pull quote, two subheadings, an illustration, a bullet list, three small pictures, Prev and Next buttons, share icons and tags. A narrow sidebar has a thumbnail list, a newsletter form, a numbered list, tags and four social icons. Two article cards sit below."
       },
       "slots": [
         {
@@ -45857,6 +46497,11 @@
         "390": "block-blog_the-beauty-of-symmetry-symmetrical-line-art-designs-more-read-390",
         "1440": "block-blog_the-beauty-of-symmetry-symmetrical-line-art-designs-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_the-beauty-of-symmetry-symmetrical-line-art-designs-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A section with a large heading at top left over a compact two by two list of posts, each with a small square illustration on the left and a two line title and view count beside it."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -46124,6 +46769,11 @@
       "images": {
         "390": "block-blog_organic-geometry-exploring-geometric-line-art-blog-design-post-grid-390",
         "1440": "block-blog_organic-geometry-exploring-geometric-line-art-blog-design-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_organic-geometry-exploring-geometric-line-art-blog-design-post-grid-1440",
+        "sha256": "9160f136a4a255c5331c74f43660ecf06cc452699e6c217de76e93de37ca285d",
+        "text": "A split article layout. On the left is a wide line art illustration, a tag, a large title, a byline, body text, a quote, two subheadings, a large illustration, a short bullet list, a row of three images, Prev and Next buttons, share icons and tags. On the right is a sidebar with a latest posts list, a blue newsletter box, a numbered post list and tags. Two article cards run along the bottom."
       },
       "slots": [
         {
@@ -47591,6 +48241,11 @@
         "390": "block-blog_organic-geometry-exploring-geometric-line-art-blog-design-more-read-390",
         "1440": "block-blog_organic-geometry-exploring-geometric-line-art-blog-design-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_organic-geometry-exploring-geometric-line-art-blog-design-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading above a compact two by two grid of four posts. Each post has a small square thumbnail on the left with a two line title and a view count beside it."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -47858,6 +48513,11 @@
       "images": {
         "390": "body-author_eula-ward-390",
         "1440": "body-author_eula-ward-1440"
+      },
+      "look": {
+        "image": "body-author_eula-ward-1440",
+        "sha256": "d20cad52d80905793cd84e61873a20bc6f6c2875fb23ae7eacd653d6b9c5b105",
+        "text": "An author page with a round portrait photo beside the name and role and a short centred bio. A grid of four post cards in three columns follows, each with an image, a small media icon, a category tag, a title and a date and view line, then round pager buttons and a page counter."
       },
       "slots": [
         {
@@ -48288,6 +48948,11 @@
       "images": {
         "390": "block-blog_line-art-portraits-capturing-emotions-with-lines-post-grid-390",
         "1440": "block-blog_line-art-portraits-capturing-emotions-with-lines-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_line-art-portraits-capturing-emotions-with-lines-post-grid-1440",
+        "sha256": "e081586dfb0acaf079027fb7abbd96c66c63c288565c6e5d27950a8baa2b0aa6",
+        "text": "A split blog post layout with an illustration of a teacher on a screen and a student at the top of the main column, then a tag, title, meta line, text, a pull quote, subheadings, an illustration, a bullet list, three square images, prev and next buttons, share icons."
       },
       "slots": [
         {
@@ -49673,6 +50338,11 @@
         "390": "block-blog_line-art-portraits-capturing-emotions-with-lines-more-read-390",
         "1440": "block-blog_line-art-portraits-capturing-emotions-with-lines-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_line-art-portraits-capturing-emotions-with-lines-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading over a two column list of four related posts. Each post has a small square illustration on the left, with a two line title and a view count on the right. Airy, with no buttons."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -49940,6 +50610,11 @@
       "images": {
         "390": "block-blog_nature-s-intricacy-botanical-line-art-explorations-blog-design-post-grid-390",
         "1440": "block-blog_nature-s-intricacy-botanical-line-art-explorations-blog-design-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_nature-s-intricacy-botanical-line-art-explorations-blog-design-post-grid-1440",
+        "sha256": "e16ad56b34ca015d8a75d17851683d5d7a3fc8b0168ac3f36f63351e7ab5c485",
+        "text": "A split article layout. On the left is a wide illustration, a tag, a large title, a byline, body text, a quote, two subheadings, a large illustration, a short bullet list, a row of three images, Prev and Next buttons, share icons and tags. On the right is a sidebar with a latest posts list, a blue newsletter box, a numbered post list and tags. Two article cards run along the bottom."
       },
       "slots": [
         {
@@ -51243,6 +51918,11 @@
         "390": "block-blog_nature-s-intricacy-botanical-line-art-explorations-blog-design-more-read-390",
         "1440": "block-blog_nature-s-intricacy-botanical-line-art-explorations-blog-design-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_nature-s-intricacy-botanical-line-art-explorations-blog-design-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading above a compact two by two grid of four posts. Each post has a small square thumbnail on the left with a two line title and a view count beside it."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -51510,6 +52190,11 @@
       "images": {
         "390": "block-blog_natural-remedies-for-common-ailments-blog-fashion-post-grid-390",
         "1440": "block-blog_natural-remedies-for-common-ailments-blog-fashion-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_natural-remedies-for-common-ailments-blog-fashion-post-grid-1440",
+        "sha256": "227c7b85dc7046c2d052458f9c952f1bd8341c2d57a4303a0e13e82d7634bbcf",
+        "text": "A split layout: a wide main column opens with an image slider with arrows, then a category tag, title, byline, pull quote, subheadings, a second illustration, a bullet list, three square pictures, a Prev button, share icons and tag pills, followed by two article cards under a heading."
       },
       "slots": [
         {
@@ -53057,6 +53742,11 @@
         "390": "block-blog_natural-remedies-for-common-ailments-blog-fashion-more-read-390",
         "1440": "block-blog_natural-remedies-for-common-ailments-blog-fashion-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_natural-remedies-for-common-ailments-blog-fashion-more-read-1440",
+        "sha256": "45c29f2874de108c1915766100f2db951a7b48fb003c3e001b0a484e5ebeb9e1",
+        "text": "A heading above three cards in a row, each with a wide illustration, a small centred category pill, a centred two line title and a date with a view count underneath. Airy with plenty of white space."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -53355,6 +54045,11 @@
       "images": {
         "390": "block-blog_fitness-tips-for-a-healthy-lifestyle-blog-fashion-post-grid-390",
         "1440": "block-blog_fitness-tips-for-a-healthy-lifestyle-blog-fashion-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_fitness-tips-for-a-healthy-lifestyle-blog-fashion-post-grid-1440",
+        "sha256": "1b54f386a549407e60412a210c06bfa4ea3579e8e89fae5c745871ab6819ea77",
+        "text": "A split layout: a wide post column opens with an illustration carrying a play button, a category tag, a title and an author line, then paragraphs, a quote, subheadings, a large illustration, a bullet list, three images in a row, prev and next buttons, share icons."
       },
       "slots": [
         {
@@ -54690,6 +55385,11 @@
         "390": "block-blog_fitness-tips-for-a-healthy-lifestyle-blog-fashion-more-read-390",
         "1440": "block-blog_fitness-tips-for-a-healthy-lifestyle-blog-fashion-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_fitness-tips-for-a-healthy-lifestyle-blog-fashion-more-read-1440",
+        "sha256": "e2442a48cea0b442f225b9210b4b99d4f676a64e7722c76a643bcad0de02f820",
+        "text": "A heading on the left above a row of three white cards. Each card has an illustration, a small category tag, a centred title of two lines and a line with a date and a view count. Airy spacing."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -55048,6 +55748,11 @@
       "images": {
         "390": "body-author_alfonso-cortez-390",
         "1440": "body-author_alfonso-cortez-1440"
+      },
+      "look": {
+        "image": "body-author_alfonso-cortez-1440",
+        "sha256": "7fc418410d49f91a7753e07ab79432b210c529519687cd40d34a529e3ae1a123",
+        "text": "An airy author page: a round portrait photo beside the name and role, with a short centred bio below. Then a grid of four post cards in three columns, each with an illustration, a category tag, a centred title and a date and view line."
       },
       "slots": [
         {
@@ -55543,6 +56248,11 @@
       "images": {
         "390": "block-blog_healthy-eating-tips-for-busy-professionals-post-grid-390",
         "1440": "block-blog_healthy-eating-tips-for-busy-professionals-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_healthy-eating-tips-for-busy-professionals-post-grid-1440",
+        "sha256": "e3bce1c6bdfc1a3b566ecbdba0c9db4d7599156f8dbb3edbe1008e6e322e9c27",
+        "text": "A split blog post layout with an illustration of two people shaking hands at the top of the main column, then a tag, title, meta line, paragraphs, a pull quote, subheadings, an illustration, a bullet list, three square images, prev and next buttons, share icons and tags. The sidebar stacks latest posts, a newsletter box, numbered featured posts and tags, and two article cards end the page."
       },
       "slots": [
         {
@@ -56915,6 +57625,11 @@
         "390": "block-blog_healthy-eating-tips-for-busy-professionals-more-read-390",
         "1440": "block-blog_healthy-eating-tips-for-busy-professionals-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_healthy-eating-tips-for-busy-professionals-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading over a two column list of four related posts. Each post has a small square illustration on the left, with a two line title and a view count on the right. Airy, with no buttons."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -57182,6 +57897,11 @@
       "images": {
         "390": "block-blog_exercise-routines-for-overall-fitness-post-grid-390",
         "1440": "block-blog_exercise-routines-for-overall-fitness-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_exercise-routines-for-overall-fitness-post-grid-1440",
+        "sha256": "a7b5209b59e39e6b48b0da6308572acd359acd3005b75d82e92e85eaf36fb2a0",
+        "text": "A split layout: a wide post column opens with an illustration, a category tag, a title and an author line, then paragraphs, a quote, subheadings, a large illustration, a bullet list, three images in a row, prev and next buttons, share icons."
       },
       "slots": [
         {
@@ -58549,6 +59269,11 @@
         "390": "block-blog_exercise-routines-for-overall-fitness-more-read-390",
         "1440": "block-blog_exercise-routines-for-overall-fitness-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_exercise-routines-for-overall-fitness-more-read-1440",
+        "sha256": "5b990f135a90ad717d7a91af869839464b819679c0a032714d4578760460b7b3",
+        "text": "A heading above a two column list of four compact items. Each item has a small square illustration on the left and a two line title with a view count on the right."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -58816,6 +59541,11 @@
       "images": {
         "390": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-fashion-post-grid-390",
         "1440": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-fashion-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-fashion-post-grid-1440",
+        "sha256": "90c12d9d172ec8e6ffa5b42c72feacddb300c11f656bf308fc21d3c0cf2ec594",
+        "text": "A split single post layout. On the wide left are a line art portrait banner, a tag, the title, author and date, paragraphs, a pull quote, two subheadings, an illustration, a bullet list, three square images, prev and next buttons, share icons and tags. The right sidebar holds latest posts, a newsletter signup box, a numbered post list and tags, with two article cards at the bottom."
       },
       "slots": [
         {
@@ -60163,6 +60893,11 @@
         "390": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-fashion-more-read-390",
         "1440": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-fashion-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-fashion-more-read-1440",
+        "sha256": "ce0b36a65189f01002befe86899ba226cc5af1e4c6d7969343c89317de3bb8ad",
+        "text": "A large heading over a two column list of four related posts. Each post has a small square illustration on the left, with a two line title and a view count on the right. Airy, with no buttons."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -60430,6 +61165,11 @@
       "images": {
         "390": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-fashion-post-grid-390",
         "1440": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-fashion-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-fashion-post-grid-1440",
+        "sha256": "4ef13919f166c0e284eb8d8b5e949b73bd725809501cedb614aa2580c50cc020",
+        "text": "A split article layout: the wide left column opens with a large illustration, then a tag, a large title, author line, body text, a quote, subheadings, a second illustration, a bullet list, a row of three images, back and next buttons, share icons and tags. The right sidebar stacks four recent posts, a newsletter form, a numbered list and tags; two illustrated article cards follow below."
       },
       "slots": [
         {
@@ -61777,6 +62517,11 @@
         "390": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-fashion-more-read-390",
         "1440": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-fashion-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_dancing-with-lines-dynamic-line-art-expressions-blog-fashion-more-read-1440",
+        "sha256": "ce0b36a65189f01002befe86899ba226cc5af1e4c6d7969343c89317de3bb8ad",
+        "text": "A section heading above a compact two by two list of four posts. Each item has a small rounded illustration on the left with a two line title and a view count beside it."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -62044,6 +62789,11 @@
       "images": {
         "390": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion-post-grid-390",
         "1440": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion-post-grid-1440",
+        "sha256": "0f2ab5a10136711ba05ab0bf474a19aa9d8848f33737492c650120df7c9c03a1",
+        "text": "A split layout: a wide post column opens with a line art illustration, a category tag, a two line title and an author line, then paragraphs, a quote, subheadings, a large illustration, a bullet list, three images in a row, prev and next buttons, share icons."
       },
       "slots": [
         {
@@ -63423,6 +64173,11 @@
         "390": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion-more-read-390",
         "1440": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_fluid-lines-infinite-possibilities-line-art-inspirations-blog-fashion-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A heading above a two column list of four compact items. Each item has a small square illustration on the left and a two line title with a view count on the right."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -63690,6 +64445,11 @@
       "images": {
         "390": "block-blog_vintage-inspired-martini-cocktail-glasses-post-grid-390",
         "1440": "block-blog_vintage-inspired-martini-cocktail-glasses-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_vintage-inspired-martini-cocktail-glasses-post-grid-1440",
+        "sha256": "35cf9a304f269853b4b9394b2cbd266ece39b58ad99af768422939c77582c36b",
+        "text": "Split layout: a wide article column with a large illustration, a tag, large title, author line, text, a pull quote, two subheadings, an illustration, a bullet list, three small pictures, a Next button, share icons and tags. A narrow sidebar has a thumbnail list, a newsletter form, a numbered list, tags and four social icons. Two article cards sit below."
       },
       "slots": [
         {
@@ -66660,6 +67420,11 @@
         "390": "block-blog_vintage-inspired-martini-cocktail-glasses-more-read-390",
         "1440": "block-blog_vintage-inspired-martini-cocktail-glasses-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_vintage-inspired-martini-cocktail-glasses-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A section with a large heading at top left over a compact two by two list of posts, each with a small square illustration on the left and a two line title and view count beside it."
+      },
       "slots": [
         {
           "id": "chrome.chrome.more_read_title",
@@ -67011,6 +67776,11 @@
       "images": {
         "390": "block-blog_capturing-essence-expressive-line-art-techniques-resources-post-grid-390",
         "1440": "block-blog_capturing-essence-expressive-line-art-techniques-resources-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_capturing-essence-expressive-line-art-techniques-resources-post-grid-1440",
+        "sha256": "4b95c00cd75e51a15212666d86b17e2b45512a86333e6069d30beea7c236b30f",
+        "text": "A split article layout: the wide left column has an illustration slider with arrows, a tag, a large title, author line, body text, a quote, subheadings, a large illustration, a bullet list, a row of three images, a back button, share icons."
       },
       "slots": [
         {
@@ -68425,6 +69195,11 @@
         "390": "block-blog_capturing-essence-expressive-line-art-techniques-resources-more-read-390",
         "1440": "block-blog_capturing-essence-expressive-line-art-techniques-resources-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_capturing-essence-expressive-line-art-techniques-resources-more-read-1440",
+        "sha256": "a8282b4612f054707605c0401272bc016a9ba9405d2e3342e31b4699f8b9686c",
+        "text": "A section heading at the top left above three white cards side by side. Each card has a rounded illustration, a small centred category tag, a two line title and a date with a view count. The layout is airy."
+      },
       "slots": [
         {
           "id": "category_info.blog-design.title",
@@ -68781,6 +69556,11 @@
       "images": {
         "390": "block-blog_sketching-stories-narrative-elements-in-line-art-resources-post-grid-390",
         "1440": "block-blog_sketching-stories-narrative-elements-in-line-art-resources-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_sketching-stories-narrative-elements-in-line-art-resources-post-grid-1440",
+        "sha256": "b23964f34be4ee955661bc877bb34fc0585af309248b131afe6b3a11d592231c",
+        "text": "Split layout: a wide article column with a large illustration with a play button, a tag, large title, author line, text, a pull quote, two subheadings, an illustration, a bullet list, three small pictures, Prev and Next buttons, share icons and tags. A narrow sidebar has a thumbnail list, a newsletter form, a numbered list, tags and four social icons. Two article cards sit below."
       },
       "slots": [
         {
@@ -69999,6 +70779,11 @@
         "390": "block-blog_sketching-stories-narrative-elements-in-line-art-resources-more-read-390",
         "1440": "block-blog_sketching-stories-narrative-elements-in-line-art-resources-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_sketching-stories-narrative-elements-in-line-art-resources-more-read-1440",
+        "sha256": "de8a9592c0b82ce58eafb632883536b65ad731581dde7afd4b5b9f8e4a782aa5",
+        "text": "A section with a large heading at top left over a row of three boxed cards, each with an illustration, a small category tag, a centred two line title and a date with a view count."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -70357,6 +71142,11 @@
       "images": {
         "390": "block-blog_whimsical-wonders-imaginative-line-art-creations-resources-post-grid-390",
         "1440": "block-blog_whimsical-wonders-imaginative-line-art-creations-resources-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_whimsical-wonders-imaginative-line-art-creations-resources-post-grid-1440",
+        "sha256": "f125b1b16758ef5422b900f16e21fb8a415dfd57237f18574b10149423485c2d",
+        "text": "A long post in a split layout. The wide main column has a large illustration, a category tag, the title and author line, body text with a pull quote, subheadings, a list, a row of three images, prev and next buttons, and share icons. The narrow sidebar holds a latest posts list, a newsletter box, a numbered list of featured posts, a tag cloud and four social icons."
       },
       "slots": [
         {
@@ -71677,6 +72467,11 @@
         "390": "block-blog_whimsical-wonders-imaginative-line-art-creations-resources-more-read-390",
         "1440": "block-blog_whimsical-wonders-imaginative-line-art-creations-resources-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_whimsical-wonders-imaginative-line-art-creations-resources-more-read-1440",
+        "sha256": "ce0b36a65189f01002befe86899ba226cc5af1e4c6d7969343c89317de3bb8ad",
+        "text": "A large heading on the left, then a compact list of four posts in two columns. Each post has a small square illustration, a two line title beside it and a small view count under the title."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -71944,6 +72739,11 @@
       "images": {
         "390": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-resources-post-grid-390",
         "1440": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-resources-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-resources-post-grid-1440",
+        "sha256": "922975223640d89b1172d0a05070eb83d3bbdb0d1b102976563ccb92462401e3",
+        "text": "A split article page: a wide main column with a large illustration, category tag, title, byline, body text, a pull quote, subheadings, an inline illustration, a bullet list, a row of three small illustrations, Prev and Next buttons, share icons and tag chips. A narrow sidebar stacks a latest posts list, a newsletter signup box, a numbered featured list and tags, with two article cards below."
       },
       "slots": [
         {
@@ -73282,6 +74082,11 @@
         "390": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-resources-more-read-390",
         "1440": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-resources-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-resources-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading over a two column list of four compact post links, each with a small square illustration on the left, a two line title and a view count with an eye icon."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -73549,6 +74354,11 @@
       "images": {
         "390": "block-blog_nature-s-intricacy-botanical-line-art-explorations-resources-post-grid-390",
         "1440": "block-blog_nature-s-intricacy-botanical-line-art-explorations-resources-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_nature-s-intricacy-botanical-line-art-explorations-resources-post-grid-1440",
+        "sha256": "99dc25d90b9873ef9ca64d72ca418d8516d4073d2ba424ab511c3c06d1602703",
+        "text": "A split article layout. On the left is a wide illustration, a tag, a large title, a byline, body text, a quote, two subheadings, a large illustration, a short bullet list, a row of three images, Prev and Next buttons, share icons and tags. On the right is a sidebar with a latest posts list, a blue newsletter box, a numbered post list and tags. Two article cards run along the bottom."
       },
       "slots": [
         {
@@ -74864,6 +75674,11 @@
         "390": "block-blog_nature-s-intricacy-botanical-line-art-explorations-resources-more-read-390",
         "1440": "block-blog_nature-s-intricacy-botanical-line-art-explorations-resources-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_nature-s-intricacy-botanical-line-art-explorations-resources-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading above a compact two by two grid of four posts. Each post has a small square thumbnail on the left with a two line title and a view count beside it."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -75131,6 +75946,11 @@
       "images": {
         "390": "block-blog_abstract-wonders-exploring-line-art-composition-resources-post-grid-390",
         "1440": "block-blog_abstract-wonders-exploring-line-art-composition-resources-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_abstract-wonders-exploring-line-art-composition-resources-post-grid-1440",
+        "sha256": "096f900b3ee9b1c47609266a07b2d2e6e1e58b849b2d7ac9a2991394c5a28c98",
+        "text": "A split article page: a wide main column with a large illustration, category tag, title, byline, body text, a pull quote, subheadings, an inline illustration, a short bullet list, a row of three small illustrations, a Next button, share icons and tag chips. A narrow sidebar holds a latest posts list, a newsletter signup box, a numbered featured list and tags, and below sit two article cards."
       },
       "slots": [
         {
@@ -76483,6 +77303,11 @@
         "390": "block-blog_abstract-wonders-exploring-line-art-composition-resources-more-read-390",
         "1440": "block-blog_abstract-wonders-exploring-line-art-composition-resources-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_abstract-wonders-exploring-line-art-composition-resources-more-read-1440",
+        "sha256": "5b539715bb607261c67a77e2adde326f9190194fc89c4b987e3014fefc373212",
+        "text": "A large heading over a two column list of four compact post links, each with a small square illustration on the left, a two line title and a view count with an eye icon."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -76750,6 +77575,11 @@
       "images": {
         "390": "block-blog_natural-remedies-for-common-ailments-resources-2-post-grid-390",
         "1440": "block-blog_natural-remedies-for-common-ailments-resources-2-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_natural-remedies-for-common-ailments-resources-2-post-grid-1440",
+        "sha256": "7ccca9b70863b8b5c21c0bdd3ca83617aa10a627d41109dc52293463475eeef6",
+        "text": "A split article layout. On the left is a wide image slider with arrows, then a tag, a large title, a byline, body text, a quote, two subheadings, an illustration, a short bullet list, a row of three images, a Prev button, share icons. On the right is a sidebar with a latest posts list, a blue newsletter box, a numbered post list and tags. Two article cards run along the bottom."
       },
       "slots": [
         {
@@ -78404,6 +79234,11 @@
         "390": "block-blog_natural-remedies-for-common-ailments-resources-2-more-read-390",
         "1440": "block-blog_natural-remedies-for-common-ailments-resources-2-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_natural-remedies-for-common-ailments-resources-2-more-read-1440",
+        "sha256": "45c29f2874de108c1915766100f2db951a7b48fb003c3e001b0a484e5ebeb9e1",
+        "text": "A large heading on the left above a row of three white cards. Each card has an illustration on top, a small centred category tag, a two line title, and a date with a view count. Airy spacing."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -78702,6 +79537,11 @@
       "images": {
         "390": "block-blog_fitness-tips-for-a-healthy-lifestyle-resources-2-post-grid-390",
         "1440": "block-blog_fitness-tips-for-a-healthy-lifestyle-resources-2-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_fitness-tips-for-a-healthy-lifestyle-resources-2-post-grid-1440",
+        "sha256": "99b0e1b1e8863b4b5e022c7b41be6c0ede6c85a13e9bad19f119c5ff1bedc7d9",
+        "text": "A split layout: a wide post column opens with an illustration carrying a play button, a category tag, a title and an author line, then paragraphs, a quote, subheadings, a large illustration, a bullet list, three images in a row, prev and next buttons, share icons."
       },
       "slots": [
         {
@@ -80152,6 +80992,11 @@
         "390": "block-blog_fitness-tips-for-a-healthy-lifestyle-resources-2-more-read-390",
         "1440": "block-blog_fitness-tips-for-a-healthy-lifestyle-resources-2-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_fitness-tips-for-a-healthy-lifestyle-resources-2-more-read-1440",
+        "sha256": "e2442a48cea0b442f225b9210b4b99d4f676a64e7722c76a643bcad0de02f820",
+        "text": "A heading on the left above a row of three white cards. Each card has an illustration, a small category tag, a centred title of two lines and a line with a date and a view count. Airy spacing."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -80510,6 +81355,11 @@
       "images": {
         "390": "block-blog_mindful-eating-for-weight-management-resources-2-post-grid-390",
         "1440": "block-blog_mindful-eating-for-weight-management-resources-2-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_mindful-eating-for-weight-management-resources-2-post-grid-1440",
+        "sha256": "14d352e08ff47eaf7e5a3c1f729d900568424ccac3a605afaa6918d1e8d8ca41",
+        "text": "A split layout: a wide main column holds an article with a top illustration, category tag, title, byline, pull quote, subheadings, a second illustration, a bullet list, three square pictures, Prev and Next buttons, share icons and tag pills, followed by two article cards under a heading."
       },
       "slots": [
         {
@@ -81862,6 +82712,11 @@
         "390": "block-blog_mindful-eating-for-weight-management-resources-2-more-read-390",
         "1440": "block-blog_mindful-eating-for-weight-management-resources-2-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_mindful-eating-for-weight-management-resources-2-more-read-1440",
+        "sha256": "5b990f135a90ad717d7a91af869839464b819679c0a032714d4578760460b7b3",
+        "text": "A heading above a compact two column list of four articles, each with a small square illustration beside a two line title and a view count."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -82129,6 +82984,11 @@
       "images": {
         "390": "block-blog_essential-nutrients-for-optimal-health-resources-2-post-top-390",
         "1440": "block-blog_essential-nutrients-for-optimal-health-resources-2-post-top-1440"
+      },
+      "look": {
+        "image": "block-blog_essential-nutrients-for-optimal-health-resources-2-post-top-1440",
+        "sha256": "7fba07d71b7b81e834d7660a37c49b3afdf0e950849953981a36cad5ea771e26",
+        "text": "A post with a category tag, a large title and an author and date line above a full width illustration. Below it a split layout: a wide article column with paragraphs, a quote, subheadings, a large illustration, a bullet list, a row of three images, prev and next buttons, share icons. A narrow sidebar holds an author card, a list of three recent articles and a coloured newsletter box and a button."
       },
       "slots": [
         {
@@ -83193,6 +84053,11 @@
         "390": "block-blog_essential-nutrients-for-optimal-health-resources-2-more-read-390",
         "1440": "block-blog_essential-nutrients-for-optimal-health-resources-2-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_essential-nutrients-for-optimal-health-resources-2-more-read-1440",
+        "sha256": "de8a9592c0b82ce58eafb632883536b65ad731581dde7afd4b5b9f8e4a782aa5",
+        "text": "A heading on the left above a row of three white cards. Each card has an illustration, a small category tag, a centred title of two lines and a line with a date and a view count. Airy spacing."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -83551,6 +84416,11 @@
       "images": {
         "390": "block-blog_mental-health-and-well-being-strategies-resources-2-article-390",
         "1440": "block-blog_mental-health-and-well-being-strategies-resources-2-article-1440"
+      },
+      "look": {
+        "image": "block-blog_mental-health-and-well-being-strategies-resources-2-article-1440",
+        "sha256": "76addf268b51c115d8485ce6c8d436f28fadbe340f087d28d23cad886cb6fd02",
+        "text": "A single column article under a wide illustration, with a category tag, a large title, a byline and paragraphs broken up by a pull quote, two subheadings, a second wide illustration, a bullet list and a row of three square pictures. At the bottom there is one Next button, three round share icons on the left and a set of tag pills on the right."
       },
       "slots": [
         {
@@ -84089,6 +84959,11 @@
         "390": "block-blog_mental-health-and-well-being-strategies-resources-2-author-latest-390",
         "1440": "block-blog_mental-health-and-well-being-strategies-resources-2-author-latest-1440"
       },
+      "look": {
+        "image": "block-blog_mental-health-and-well-being-strategies-resources-2-author-latest-1440",
+        "sha256": "3a35944b14698840de5bfd14c2ee2f0af0ffb257f9e3ae89b6439fc7c6491591",
+        "text": "A white box with a heading and a compact list of three articles stacked down the left side, each with a small square illustration beside a two line title, a date and a view count. The right side of the box is empty."
+      },
       "slots": [
         {
           "id": "posts.natural-remedies-for-common-ailments-resources-2.title",
@@ -84329,6 +85204,11 @@
       "images": {
         "390": "block-blog_mental-health-and-well-being-strategies-resources-2-more-read-390",
         "1440": "block-blog_mental-health-and-well-being-strategies-resources-2-more-read-1440"
+      },
+      "look": {
+        "image": "block-blog_mental-health-and-well-being-strategies-resources-2-more-read-1440",
+        "sha256": "58afff1658f514c8e3a75111cff18300c6bc32ec35f344c57a5866dd4df08cb6",
+        "text": "A heading above three cards in a row, each with a wide illustration, a small centred category pill, a centred two line title and a date with a view count underneath. Airy with plenty of white space."
       },
       "slots": [
         {
@@ -84688,6 +85568,11 @@
       "images": {
         "390": "body-tag_design-390",
         "1440": "body-tag_design-1440"
+      },
+      "look": {
+        "image": "body-tag_design-1440",
+        "sha256": "1aa2073f2c1a99f3e912dcf9c70ccaa4976cb01fd9b54d7620aa7ef9ca0f9b61",
+        "text": "A centred tag heading with an article count, then a boxed grid of nine article cards in three columns, each with an illustration, a small tag, a centred title and a byline row. A page counter and a row of round pagination buttons sit centred below."
       },
       "slots": [
         {
@@ -85999,6 +86884,11 @@
         "390": "body-tag_design-390",
         "1440": "body-tag_design-1440"
       },
+      "look": {
+        "image": "body-tag_design-1440",
+        "sha256": "1aa2073f2c1a99f3e912dcf9c70ccaa4976cb01fd9b54d7620aa7ef9ca0f9b61",
+        "text": "A centred tag heading with an article count, then a boxed grid of nine article cards in three columns, each with an illustration, a small tag, a centred title and a byline row. A page counter and a row of round pagination buttons sit centred below."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -87149,6 +88039,11 @@
       "images": {
         "390": "body-tag_design-390",
         "1440": "body-tag_design-1440"
+      },
+      "look": {
+        "image": "body-tag_design-1440",
+        "sha256": "1aa2073f2c1a99f3e912dcf9c70ccaa4976cb01fd9b54d7620aa7ef9ca0f9b61",
+        "text": "A centred tag heading with an article count, then a boxed grid of nine article cards in three columns, each with an illustration, a small tag, a centred title and a byline row. A page counter and a row of round pagination buttons sit centred below."
       },
       "slots": [
         {
@@ -88301,6 +89196,11 @@
         "390": "body-tag_design-390",
         "1440": "body-tag_design-1440"
       },
+      "look": {
+        "image": "body-tag_design-1440",
+        "sha256": "1aa2073f2c1a99f3e912dcf9c70ccaa4976cb01fd9b54d7620aa7ef9ca0f9b61",
+        "text": "A centred tag heading with an article count, then a boxed grid of nine article cards in three columns, each with an illustration, a small tag, a centred title and a byline row. A page counter and a row of round pagination buttons sit centred below."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -89452,6 +90352,11 @@
         "390": "body-tag_video-390",
         "1440": "body-tag_video-1440"
       },
+      "look": {
+        "image": "body-tag_video-1440",
+        "sha256": "c410f2a7b27f93c7b6fd13c74b114372906b0a5000d39761fe93ea52338e63ce",
+        "text": "A centred tag heading with an article count, then a boxed grid of eight article cards in three columns, the last row holding two. Each card has an illustration or photo with a small media icon in the corner, a small tag, a centred title and a byline row."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -90543,6 +91448,11 @@
         "390": "body-tag_video-390",
         "1440": "body-tag_video-1440"
       },
+      "look": {
+        "image": "body-tag_video-1440",
+        "sha256": "c410f2a7b27f93c7b6fd13c74b114372906b0a5000d39761fe93ea52338e63ce",
+        "text": "A centred tag heading with an article count, then a boxed grid of eight article cards in three columns, the last row holding two. Each card has an illustration or photo with a small media icon in the corner, a small tag, a centred title and a byline row."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -91447,6 +92357,11 @@
       "images": {
         "390": "block-blog_outlining-creativity-line-art-for-illustrations-and-designs-post-grid-390",
         "1440": "block-blog_outlining-creativity-line-art-for-illustrations-and-designs-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_outlining-creativity-line-art-for-illustrations-and-designs-post-grid-1440",
+        "sha256": "286400c2479accc3d77099181614910a9b98892cb13e4a64b9629180aaa61012",
+        "text": "A split article layout. On the left is a wide illustration of people, a tag, a large title, a byline, body text, a quote, two subheadings, a large illustration, a short bullet list, a row of three images, Prev and Next buttons, share icons and tags. On the right is a sidebar with a latest posts list, a blue newsletter box, a numbered post list and tags. Two article cards run along the bottom."
       },
       "slots": [
         {
@@ -92739,6 +93654,11 @@
         "390": "block-blog_outlining-creativity-line-art-for-illustrations-and-designs-more-read-390",
         "1440": "block-blog_outlining-creativity-line-art-for-illustrations-and-designs-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_outlining-creativity-line-art-for-illustrations-and-designs-more-read-1440",
+        "sha256": "ce0b36a65189f01002befe86899ba226cc5af1e4c6d7969343c89317de3bb8ad",
+        "text": "A large heading above a compact two by two grid of four posts. Each post has a small square thumbnail on the left with a two line title and a view count beside it."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -93006,6 +93926,11 @@
       "images": {
         "390": "block-blog_whimsical-wonders-imaginative-line-art-creations-blog-design-post-grid-390",
         "1440": "block-blog_whimsical-wonders-imaginative-line-art-creations-blog-design-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_whimsical-wonders-imaginative-line-art-creations-blog-design-post-grid-1440",
+        "sha256": "9764d48b20f711161cc182d9b56bc79b2616cf168b3fd09f790a011a9ee12123",
+        "text": "Split layout: a wide article column with a large illustration, a tag, large title, author line, text, a pull quote, two subheadings, an illustration, a bullet list, three small pictures, a Next button, share icons and tags. A narrow sidebar has a thumbnail list, a newsletter form, a numbered list, tags and four social icons. Two article cards sit below."
       },
       "slots": [
         {
@@ -94283,6 +95208,11 @@
         "390": "block-blog_whimsical-wonders-imaginative-line-art-creations-blog-design-more-read-390",
         "1440": "block-blog_whimsical-wonders-imaginative-line-art-creations-blog-design-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_whimsical-wonders-imaginative-line-art-creations-blog-design-more-read-1440",
+        "sha256": "ce0b36a65189f01002befe86899ba226cc5af1e4c6d7969343c89317de3bb8ad",
+        "text": "A section with a large heading at top left over a compact two by two list of posts, each with a small square illustration on the left and a two line title and view count beside it."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -94550,6 +95480,11 @@
       "images": {
         "390": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-normal-design-post-grid-390",
         "1440": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-normal-design-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-normal-design-post-grid-1440",
+        "sha256": "38f479ce3367e48f75cb6ae4cff97dae2e8b6686076456981a2f28baa821914c",
+        "text": "A split article layout: the wide left column opens with a photo slider with arrows and thumbnails, then a tag, a large title, author line, body text, a quote, subheadings, a large illustration, a bullet list, a row of three images, a back button, share icons and tags. The right sidebar stacks four recent posts, a newsletter form, a numbered list and tags; two article cards follow below."
       },
       "slots": [
         {
@@ -95993,6 +96928,11 @@
         "390": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-normal-design-more-read-390",
         "1440": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-normal-design-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_beyond-black-and-white-adding-colors-to-line-art-blog-normal-design-more-read-1440",
+        "sha256": "24ba1aecd7dea4bd9b7da8307061e77193e649691ab4856b9c127145373ce12f",
+        "text": "A section heading at the top left above three white cards side by side. Each card has a rounded illustration, a small centred category tag, a two line title and a date with a view count. The layout is airy."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -96320,6 +97260,11 @@
       "images": {
         "390": "body-category_blog-normal-design-390",
         "1440": "body-category_blog-normal-design-1440"
+      },
+      "look": {
+        "image": "body-category_blog-normal-design-1440",
+        "sha256": "c70bdc3620e055193f51c0750f56b4c93d2aba5765885908eaacd08f7be6e1d7",
+        "text": "A split layout: a wide column of three stacked article cards, the first with its title and excerpt laid over a dark photo, the others with a large photo, tag, title, byline, excerpt and tag chips. A narrow sidebar holds a latest articles list with thumbnails, a coloured newsletter box with an email field and button, a tag cloud and four round social icons."
       },
       "slots": [
         {
@@ -97405,6 +98350,11 @@
       "images": {
         "390": "block-blog_embracing-minimalism-line-art-creations-blog-normal-health-post-grid-390",
         "1440": "block-blog_embracing-minimalism-line-art-creations-blog-normal-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_embracing-minimalism-line-art-creations-blog-normal-health-post-grid-1440",
+        "sha256": "7cb02780388ab2ed9188a31d7197509ae782dc8b7df18c46118e1b11c8b6d8f3",
+        "text": "A long split article layout: a main column with a wide food photo carrying a play button, a category tag, a large title, a byline, body text, a pull quote, two subheadings each followed by a large illustration, a bullet list, prev and next buttons, share icons and tags. A right sidebar stacks latest posts, a newsletter box, a numbered post list and tags, and two post cards sit below."
       },
       "slots": [
         {
@@ -98496,6 +99446,11 @@
         "390": "block-blog_embracing-minimalism-line-art-creations-blog-normal-health-more-read-390",
         "1440": "block-blog_embracing-minimalism-line-art-creations-blog-normal-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_embracing-minimalism-line-art-creations-blog-normal-health-more-read-1440",
+        "sha256": "d3d05f4c52c3bd42363eef4ca4b3897eea01dd0731c6e8763f80083d6678f24f",
+        "text": "A large heading over a row of three white cards. Each card has a wide illustration, a small centred category tag, a centred two line title and a date with a view count."
+      },
       "slots": [
         {
           "id": "category_info.blog-health.title",
@@ -98854,6 +99809,11 @@
       "images": {
         "390": "body-category_blog-normal-health-390",
         "1440": "body-category_blog-normal-health-1440"
+      },
+      "look": {
+        "image": "body-category_blog-normal-health-1440",
+        "sha256": "8d50facba95ad64acee1deeda7e518a4c2bba4b5a1b84d3914fedc213d6ddd72",
+        "text": "A split layout with a wide column of four stacked article cards, each with a large photo, a small tag, a title, a byline, an excerpt and a row of tag chips. A narrow sidebar holds a latest articles list with thumbnails, a coloured newsletter box with an email field and button, a tag cloud and four round social icons."
       },
       "slots": [
         {
@@ -99900,6 +100860,11 @@
       "images": {
         "390": "block-blog_capturing-essence-expressive-line-art-techniques-blog-normal-health-post-grid-390",
         "1440": "block-blog_capturing-essence-expressive-line-art-techniques-blog-normal-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_capturing-essence-expressive-line-art-techniques-blog-normal-health-post-grid-1440",
+        "sha256": "c018a2156d410dfef1e4a54144097c50c34f24c800984ebfe2ce4e516464c54a",
+        "text": "A split article layout: the wide left column has an illustration slider with arrows and thumbnails, a tag, a large title, author line, body text, a quote, two subheadings each followed by a large illustration, a bullet list, a back button, share icons and tags. The right sidebar stacks four recent posts, a newsletter form, a numbered list of four posts and tags; two article cards follow below."
       },
       "slots": [
         {
@@ -101194,6 +102159,11 @@
         "390": "block-blog_capturing-essence-expressive-line-art-techniques-blog-normal-health-more-read-390",
         "1440": "block-blog_capturing-essence-expressive-line-art-techniques-blog-normal-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_capturing-essence-expressive-line-art-techniques-blog-normal-health-more-read-1440",
+        "sha256": "17d5295c4abf1a9a0f4be84697c6d6ea522cf0944fb68faaf703c77c2c4dcd20",
+        "text": "A section heading at the top left above three white cards side by side. Each card has a rounded illustration, a small centred category tag, a two line title and a date with a view count. The layout is airy."
+      },
       "slots": [
         {
           "id": "category_info.blog-design.title",
@@ -101550,6 +102520,11 @@
       "images": {
         "390": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-normal-health-post-grid-390",
         "1440": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-normal-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-normal-health-post-grid-1440",
+        "sha256": "b29674c94ded9aa32ef88f490dcfd45930c14a132790fef67a849e21a2ad9d90",
+        "text": "A split article layout opening with a wide photo of a person exercising, then a tag, the title and meta line, text, a pull quote, two subheadings each followed by a large illustration, a bullet list, prev and next buttons, share icons and tags. The right sidebar holds latest posts, a newsletter signup box, numbered featured posts, a tag cloud and social icons, with two article cards below."
       },
       "slots": [
         {
@@ -102777,6 +103752,11 @@
         "390": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-normal-health-more-read-390",
         "1440": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-normal-health-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_harmony-in-lines-balancing-elements-in-line-art-blog-normal-health-more-read-1440",
+        "sha256": "7751c0b83bf7d1795d6b101349e89402cdc1da01c84c0cc25b996dd88abf73f2",
+        "text": "A large heading over a two column list of four related posts. Each post has a small square illustration on the left, with a two line title and a view count on the right. Airy, with no buttons."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -103044,6 +104024,11 @@
       "images": {
         "390": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design-post-grid-390",
         "1440": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design-post-grid-1440",
+        "sha256": "d63202296d62aac817744e2513a966ad9a4c0f479d1365726cc8385b0e34a20f",
+        "text": "A split article page: a wide main column with a top food photo, category tag, title, byline, body text, a pull quote, subheadings, two large inline illustrations, a bullet list, Prev and Next buttons, share icons and tag chips. A narrow sidebar stacks a latest posts list, a newsletter signup box, a numbered featured list, a tag cloud and social icons, with two article cards below."
       },
       "slots": [
         {
@@ -104262,6 +105247,11 @@
         "390": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design-more-read-390",
         "1440": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_architectural-wonders-line-art-in-buildings-and-landscapes-blog-normal-design-more-read-1440",
+        "sha256": "869bc6588a7e80176c1bf260786b47bf726efaae0dad6e71e34d2ef6aae5f951",
+        "text": "A large heading over a two column list of four compact post links, each with a small square illustration on the left, a two line title and a view count with an eye icon."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -104529,6 +105519,11 @@
       "images": {
         "390": "block-blog_organic-geometry-exploring-geometric-line-art-blog-normal-design-post-grid-390",
         "1440": "block-blog_organic-geometry-exploring-geometric-line-art-blog-normal-design-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_organic-geometry-exploring-geometric-line-art-blog-normal-design-post-grid-1440",
+        "sha256": "2fbb15f58cf62709d3c8e9e5669495595242429180255e3ffb35d0837d3ec95a",
+        "text": "A split article layout. On the left is a wide photo, a tag, a large title, a byline, body text, a quote, two subheadings, each followed by a large illustration, a short bullet list, a Next button, share icons and tags. On the right is a sidebar with a latest posts list, a blue newsletter box, a numbered post list, a tag cloud and social icons. Two article cards run along the bottom."
       },
       "slots": [
         {
@@ -105757,6 +106752,11 @@
         "390": "block-blog_organic-geometry-exploring-geometric-line-art-blog-normal-design-more-read-390",
         "1440": "block-blog_organic-geometry-exploring-geometric-line-art-blog-normal-design-more-read-1440"
       },
+      "look": {
+        "image": "block-blog_organic-geometry-exploring-geometric-line-art-blog-normal-design-more-read-1440",
+        "sha256": "869bc6588a7e80176c1bf260786b47bf726efaae0dad6e71e34d2ef6aae5f951",
+        "text": "A large heading above a compact two by two grid of four posts. Each post has a small square thumbnail on the left with a two line title and a view count beside it."
+      },
       "slots": [
         {
           "id": "posts.capturing-essence-expressive-line-art-techniques-blog-health.title",
@@ -106024,6 +107024,11 @@
       "images": {
         "390": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-normal-health-post-grid-390",
         "1440": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-normal-health-post-grid-1440"
+      },
+      "look": {
+        "image": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-normal-health-post-grid-1440",
+        "sha256": "f8ccc350e45134b0891f61df212337bbf700daae2def4a89b2720ac919ea7c30",
+        "text": "A long split article layout: a main column with a wide food photo, a category tag, a large title, a byline, body text, a pull quote, two subheadings each followed by a large illustration, a bullet list, a next button, share icons and tags. A right sidebar stacks latest posts, a newsletter box, a numbered post list, a tag cloud and social icons, and two post cards sit below."
       },
       "slots": [
         {
@@ -107165,6 +108170,11 @@
       "images": {
         "390": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-normal-health-more-read-390",
         "1440": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-normal-health-more-read-1440"
+      },
+      "look": {
+        "image": "block-blog_drawing-with-elegance-the-art-of-line-work-blog-normal-health-more-read-1440",
+        "sha256": "869bc6588a7e80176c1bf260786b47bf726efaae0dad6e71e34d2ef6aae5f951",
+        "text": "A large heading over a compact list of four posts in two columns. Each post has a small square illustration on the left, a two line title and a view count with an eye icon."
       },
       "slots": [
         {
@@ -116659,7 +117669,26 @@
     }
   ],
   "checkAccepts": {
-    "slotCoverage": [],
+    "slotCoverage": [
+      {
+        "part": "linksWithoutTarget",
+        "where": "blocks[part-gallery] gallery.gallery.gallery_title",
+        "reason": "The \"@Grazia on instagram\" button under the picture strip is drawn with the strip's link field (gallery_link), which the demo leaves empty, so the demo prints it without an address; the content map lists no slot for an empty address, so the kit cannot declare a target until the customer gives one.",
+        "by": "session-11"
+      },
+      {
+        "part": "pageTitleSlots",
+        "where": "pages[page-tag_technology]",
+        "reason": "The title of a tag page is the tag's own name, printed from the taxonomy term, which the EmDash content map does not list as a slot; the term is renamed in the admin under Taxonomies, not through a content field.",
+        "by": "session-11"
+      },
+      {
+        "part": "pageTitleSlots",
+        "where": "pages[page-tag_travel]",
+        "reason": "The title of a tag page is the tag's own name, printed from the taxonomy term, which the EmDash content map does not list as a slot; the term is renamed in the admin under Taxonomies, not through a content field.",
+        "by": "session-11"
+      }
+    ],
     "deadControls": [
       {
         "where": "links[header.link-4]",
@@ -116669,7 +117698,84 @@
     ],
     "mapLocationUnmapped": [],
     "phoneNotCallable": [],
-    "rowPartsUnpaired": []
+    "rowPartsUnpaired": [],
+    "itemsListsWithoutCardFields": [
+      {
+        "where": "blocks[body-author_faith-singleton].lists[body-author_faith-singleton.items]",
+        "reason": "An author page lists that author's articles as the same post cards the category pages print. The EmDash content map declares no item list for an author archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-author_trevor-patrick].lists[body-author_trevor-patrick.items]",
+        "reason": "An author page lists that author's articles as the same post cards the category pages print. The EmDash content map declares no item list for an author archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-author_alfonso-cortez].lists[body-author_alfonso-cortez.items]",
+        "reason": "An author page lists that author's articles as the same post cards the category pages print. The EmDash content map declares no item list for an author archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-author_maxine-palmer].lists[body-author_maxine-palmer.items]",
+        "reason": "An author page lists that author's articles as the same post cards the category pages print. The EmDash content map declares no item list for an author archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-author_eula-ward].lists[body-author_eula-ward.items]",
+        "reason": "An author page lists that author's articles as the same post cards the category pages print. The EmDash content map declares no item list for an author archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-author_laverne-robbins].lists[body-author_laverne-robbins.items]",
+        "reason": "An author page lists that author's articles as the same post cards the category pages print. The EmDash content map declares no item list for an author archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-author_adrian-perez].lists[body-author_adrian-perez.items]",
+        "reason": "An author page lists that author's articles as the same post cards the category pages print. The EmDash content map declares no item list for an author archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-author_shelia-ortiz].lists[body-author_shelia-ortiz.items]",
+        "reason": "An author page lists that author's articles as the same post cards the category pages print. The EmDash content map declares no item list for an author archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-author_woodrow-ortega].lists[body-author_woodrow-ortega.items]",
+        "reason": "An author page lists that author's articles as the same post cards the category pages print. The EmDash content map declares no item list for an author archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-tag_design].lists[body-tag_design.items]",
+        "reason": "A tag page lists the articles carrying that tag as the same post cards the category pages print. The EmDash content map declares no item list for a tag archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-tag_health].lists[body-tag_health.items]",
+        "reason": "A tag page lists the articles carrying that tag as the same post cards the category pages print. The EmDash content map declares no item list for a tag archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-tag_lifestyle].lists[body-tag_lifestyle.items]",
+        "reason": "A tag page lists the articles carrying that tag as the same post cards the category pages print. The EmDash content map declares no item list for a tag archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-tag_technology].lists[body-tag_technology.items]",
+        "reason": "A tag page lists the articles carrying that tag as the same post cards the category pages print. The EmDash content map declares no item list for a tag archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-tag_video].lists[body-tag_video.items]",
+        "reason": "A tag page lists the articles carrying that tag as the same post cards the category pages print. The EmDash content map declares no item list for a tag archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      },
+      {
+        "where": "blocks[body-tag_travel].lists[body-tag_travel.items]",
+        "reason": "A tag page lists the articles carrying that tag as the same post cards the category pages print. The EmDash content map declares no item list for a tag archive (its pages are routes of the theme, not entries), so the kit has no card fields for it; a plan keeps the page as the template draws it and writes the articles through the posts.",
+        "by": "session-11"
+      }
+    ]
   },
   "coverage": {
     "shownTextSlots": 116,
@@ -116689,23 +117795,7 @@
       "orphanTexts": 0,
       "pageTitleSlots": 2
     },
-    "failures": [
-      {
-        "part": "linksWithoutTarget",
-        "where": "blocks[part-gallery] gallery.gallery.gallery_title",
-        "reason": "the clickable \"@Grazia on instagram\" has a label slot but no declared target"
-      },
-      {
-        "part": "pageTitleSlots",
-        "where": "pages[page-tag_technology]",
-        "reason": "/tag/technology: no page title slot prints \"Technology\""
-      },
-      {
-        "part": "pageTitleSlots",
-        "where": "pages[page-tag_travel]",
-        "reason": "/tag/travel: no page title slot prints \"Travel\""
-      }
-    ],
+    "failures": [],
     "notForCustomers": [
       {
         "page": "page-author_faith-singleton",
@@ -116796,6 +117886,7 @@
       }
     }
   ],
+  "settledAt": "2026-11-22T00:14:13.770Z",
   "packOf": {
     "images": 350,
     "note": "the full set is made again by `cli.mjs build`"
