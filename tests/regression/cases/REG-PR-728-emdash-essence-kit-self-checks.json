@@ -4,9 +4,7 @@
   "title": "JA Essence EmDash 0.1.0: the template kit passes the Template kit road step (self-checks explained by a reason, a look on every 1440 shot) and the approval still holds",
   "pr": 728,
   "area": "emdash-theme/tracy-essence",
-  "cms": [
-    "em"
-  ],
+  "cms": ["em"],
   "needs": [],
   "flaky_model": false,
   "steps": [
