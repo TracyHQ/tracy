@@ -47,6 +47,11 @@ export const PAGE_READ_GROUPS = [
 ]
 
 const READ_OPERATIONS = new Set(['inspect', 'read'])
+/** A refused answer's code, when it gives one in a code's shape; otherwise `no-code`. */
+const codeOf = (answer) =>
+  [answer?.code, answer?.error].find(
+    (c) => typeof c === 'string' && /^[A-Za-z][A-Za-z0-9_.-]{1,63}$/.test(c)
+  ) ?? 'no-code'
 /** Actions that only read by what they are (the plugin marks `content.get` and `content.list` as writing nothing) and take no operation. */
 const READ_ACTIONS = new Set(['content.get', 'content.list'])
 
@@ -59,9 +64,11 @@ function readsOnly(door, siteKey) {
     const id = JSON.stringify([action, params])
     if (!answers.has(id)) answers.set(id, door.apply({ siteKey, action, params }))
     const answer = await answers.get(id)
+    // The plugin's code goes first, in brackets, so the chain's diagnostics can keep it without the message
+    // (step-chain-write-diagnostics.js refusalOf).
     if (!answer?.ok)
       throw new GroupUnmeasured(
-        `${action} ${params.operation ?? ''} was refused: ${answer?.message ?? answer?.error ?? answer?.code ?? 'no answer'}`
+        `${action} ${params.operation ?? ''} was refused (${codeOf(answer)}): ${answer?.message ?? answer?.error ?? answer?.code ?? 'no answer'}`
       )
     return answer
   }

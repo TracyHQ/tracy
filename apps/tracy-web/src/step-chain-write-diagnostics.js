@@ -91,7 +91,7 @@ const UNMEASURED = [
   ['host-no-verdict', /^The host gave no verdict for /],
   ['host-skipped', /^The host could not judge /],
   ['host-no-reading', /^The host answered no /],
-  ['read-refused', /was refused:|only reads;/],
+  ['read-refused', /was refused[ :(]|only reads;/],
   ['missing-input', /^No (kit|page reader|pictures|manifest|copy|plan)\b|was given, so/],
   ['nothing-checked', /^Nothing was measured \(0 checked\)/],
   ['timeout', /tim(ed|e) ?out|deadline|aborted/i]
@@ -100,6 +100,20 @@ export function unmeasuredCode(reason) {
   if (typeof reason !== 'string' || !reason) return null
   return UNMEASURED.find(([, test]) => test.test(reason))?.[0] ?? 'other'
 }
+/**
+ * What a read the site check sent was refused with (site-check.js readsOnly): the action, its operation and the
+ * plugin's code, never the message. Dev s2a and t1b (21–22/11/2026): every page group of Arabian Tea House's final check
+ * was unmeasured as `read-refused` within a second of starting, and nothing said which read or why.
+ * @returns {{ action: string, operation: string | null, code: string } | null}
+ */
+export function refusalOf(reason) {
+  const m =
+    /^([a-z][a-z0-9_.]{0,63}) ([a-z][a-z0-9_]{0,31})? ?was refused \(([A-Za-z][A-Za-z0-9_.-]{1,63})\)/.exec(
+      String(reason ?? '')
+    )
+  return m ? { action: m[1], operation: m[2] ?? null, code: m[3] } : null
+}
+
 /** A code-like word the host gave with "no verdicts" (an error code such as HOST_TIMEOUT), never prose. */
 export function hostCodeOf(reason) {
   const m = /^The host gave no verdicts: ([A-Z][A-Z0-9_]{2,40})$/.exec(String(reason ?? ''))
@@ -177,7 +191,8 @@ export function stepNineDiagnostics(step) {
             ...(g.status === 'unmeasured' && unmeasuredCode(g.reason)
               ? { why: unmeasuredCode(g.reason) }
               : {}),
-            ...(g.status === 'unmeasured' && hostCodeOf(g.reason) ? { hostCode: hostCodeOf(g.reason) } : {})
+            ...(g.status === 'unmeasured' && hostCodeOf(g.reason) ? { hostCode: hostCodeOf(g.reason) } : {}),
+            ...(g.status === 'unmeasured' && refusalOf(g.reason) ? { refused: refusalOf(g.reason) } : {})
           })),
           faults: take(sampleFaults(value.groups), 24).map(fault)
         }
