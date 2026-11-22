@@ -74,6 +74,7 @@ test('a switch adds its flag only to its own step', () => {
   assert.deepEqual(trialArgs('plan', { planTurns: true }), { argv: ['--plan-turns'], names: ['planTurns'] })
   // wholeShared takes the default split away in copyArgs: it adds no flag of its own.
   assert.deepEqual(trialArgs('copy', { wholeShared: true }), { argv: [], names: ['wholeShared'] })
+  assert.deepEqual(trialArgs('copy', { sevenParts: true }), { argv: [], names: ['sevenParts'] })
   assert.deepEqual(trialArgs('plan', { wholeShared: true }), { argv: [], names: [] })
   for (const step of ['copy', 'pictures'])
     assert.deepEqual(trialArgs(step, { planTurns: true }), { argv: [], names: [] })
@@ -147,5 +148,44 @@ test('a build keeps the switches read at its first step: turned on after its pla
   } finally {
     await steps.dispose(build)
     await steps.dispose(next)
+  }
+})
+
+test('with sevenParts on, the draft copy is written in seven parts, and the split of "shared" stays', async () => {
+  const runs = []
+  const cli = async (argv, io) => {
+    if (argv[0] === 'run') {
+      runs.push(argv.slice(1))
+      io.out('fresh-run')
+      return 0
+    }
+    if (argv[0] === 'get' || argv[0] === 'cancel') return 0
+    throw new Error(`unexpected bench command ${argv[0]}`)
+  }
+  for (const [chainTrials, parts] of [
+    [{ sevenParts: true }, '7'],
+    [null, '5']
+  ]) {
+    const pool = fakePool(chainTrials)
+    const steps = createStepChainSteps({
+      config: {},
+      pool,
+      benchCli: { plan: cli, copy: cli },
+      sleep: async () => {}
+    })
+    const ctx = { runId: `trial-${Math.random()}`, brief: { researchRevisionId: 'revision-1' } }
+    try {
+      const planned = await steps.plan(ctx, { kit }, { signal: new AbortController().signal })
+      await steps.copyDraft(
+        ctx,
+        { kit, plan: { file: planned.value.file } },
+        { signal: new AbortController().signal }
+      )
+      const draft = runs.at(-1)
+      assert.equal(draft[draft.indexOf('--parallel-pages') + 1], parts)
+      assert.ok(draft.includes('--split-shared'))
+    } finally {
+      await steps.dispose(ctx)
+    }
   }
 })

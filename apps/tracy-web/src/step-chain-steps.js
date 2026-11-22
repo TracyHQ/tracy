@@ -65,6 +65,15 @@ const stepError = (message, usd = 0) => Object.assign(new Error(message), { usd 
 export const COPY_PARTS = 5
 
 /**
+ * The draft copy's parts under the staff switch `sevenParts` (trial). Each page reasons about as much whatever its
+ * size (Arabian Tea House, lat21 to lat27, 21–22/11/2026: 15k to 72k reasoning tokens a page, home with 143 slots and
+ * reservation with 18 alike), and "shared" about as much as two pages. With five parts, splitting "shared" puts two
+ * pages in one part: reservation with contact was the slowest part of three split drafts (42k to 72k tokens, 161 to
+ * 452 s). Seven give each Arabian Tea House page a part of its own beside the two halves of "shared".
+ */
+export const COPY_PARTS_TRIAL = 7
+
+/**
  * The chain's planner run arguments, without the budget flag: round 0 in one conversation, at the run's effort (max).
  *
  * - Not `--parallel-pages`: planned in parts (#708, #710), round 0 was no faster and the plan was worse. Each part
@@ -114,8 +123,10 @@ export const planArgs = (kitRef, revisionId) => [
 export function trialArgs(step, trials) {
   const on = (name) => trials?.[name] === true
   if (step === 'plan' && on('planTurns')) return { argv: ['--plan-turns'], names: ['planTurns'] }
-  // `wholeShared` takes away the default `--split-shared` (copyArgs reads the switch itself): no flag of its own.
-  if (step === 'copy' && on('wholeShared')) return { argv: [], names: ['wholeShared'] }
+  // `wholeShared` takes away the default `--split-shared`, and `sevenParts` writes the draft in seven parts
+  // (COPY_PARTS_TRIAL): copyArgs reads both switches itself, so neither adds a flag of its own.
+  const copyNames = ['wholeShared', 'sevenParts'].filter(on)
+  if (step === 'copy' && copyNames.length) return { argv: [], names: copyNames }
   return { argv: [], names: [] }
 }
 
@@ -293,7 +304,7 @@ export function createStepChainSteps(deps) {
       // parts (367 s against 177 s for the lightest); each part's first message is the same cached fixed part.
       // Eight were tried on 20/11/2026 and were no faster at four times the spend (COPY_PARTS).
       '--parallel-pages',
-      String(COPY_PARTS),
+      String(trials?.sevenParts === true ? COPY_PARTS_TRIAL : COPY_PARTS),
       // A heavy "shared" gives up its heaviest shared blocks as parts of their own (writer-parts.js writingUnits), unless
       // the build's staff switch `wholeShared` keeps it whole. "shared" led every draft measured before (Arabian Tea
       // House: 228 to 509 s alone against 28 to 225 s for the other parts, lat21 to s1, 21/11/2026). Side by side on dev
