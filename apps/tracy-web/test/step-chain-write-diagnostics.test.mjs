@@ -5,6 +5,7 @@ import {
   causesOf,
   sampleFaults,
   hostCodeOf,
+  FINAL_FAULTS,
   MAX_WRITE_DIAGNOSTICS_BYTES,
   refusalOf,
   stepNineDiagnostics,
@@ -84,6 +85,13 @@ test('a failed final check retains fault identities and skipped repairs without 
   assert.equal(diagnostic.repair.errorCount, 1)
   assert.equal(diagnostic.writersSettled, false)
   assert.equal(JSON.stringify(diagnostic).includes(privateText), false)
+  // The final check's fault keeps its reason, with the secret, the path and the address masked.
+  const reason = diagnostic.finalCheck.faults[0].reason
+  for (const secret of ['private-secret', '/Users/example', 'prompt@example.test'])
+    assert.equal(JSON.stringify(diagnostic).includes(secret), false, secret)
+  assert.equal(reason, 'Bearer … …path… …@…')
+  // The first check's faults keep none.
+  assert.equal('reason' in diagnostic.firstCheck.faults[0], false)
 })
 
 test('an early stopped write records its cause without pretending a site check ran', () => {
@@ -251,7 +259,12 @@ test("each group's failures are counted by the build step that causes them, as s
     }
   })
   assert.deepEqual(d.finalCheck.causes, { 'unaddressable-items': { pictures: 2, template: 1 } })
-  assert.equal(JSON.stringify(d).includes('words never stored'), false)
+  // The causes are step names only; the reason stays on the final check's faults alone, masked.
+  assert.equal(JSON.stringify(d.finalCheck.causes).includes('words'), false)
+  assert.deepEqual(
+    d.finalCheck.faults.map((f) => f.reason),
+    ['words never stored', 'words never stored', 'words never stored']
+  )
 })
 
 test('the faults kept are taken in turn from every group, so a group listed late is seen too', () => {
@@ -318,4 +331,26 @@ test('a refused read keeps its action, operation and the plugin code, never the 
   for (const words of ['private-site', 'private-secret', 'another writer'])
     assert.equal(text.includes(words), false, words)
   assert.equal(refusalOf('something else'), null)
+})
+
+test('the final check keeps up to sixty faults taken in turn by group, each with why it failed, within the size bound', () => {
+  const groups = ['text-fill', 'read-back', 'demo-words'].map((name) => ({
+    name,
+    status: 'red',
+    checked: 40,
+    failures: Array.from({ length: 40 }, (_, i) => ({
+      page: '/',
+      slot: `block-${i}.1`,
+      level: 'block',
+      reason: `The text of block-${i}.1 fills 41% of its box, under the 60% floor: "Our hand-made pastries"`
+    }))
+  }))
+  const check = { status: 'red', counts: { block: 120 }, groups }
+  const d = stepNineDiagnostics({ report: { status: 'stopped' }, firstCheck: check, siteCheck: check })
+  assert.ok(Buffer.byteLength(JSON.stringify(d)) <= MAX_WRITE_DIAGNOSTICS_BYTES)
+  const kept = d.finalCheck.faults
+  assert.ok(kept.length >= 40 && kept.length <= FINAL_FAULTS, `${kept.length} faults`)
+  assert.deepEqual(new Set(kept.map((f) => f.group)), new Set(['text-fill', 'read-back', 'demo-words']))
+  assert.equal(kept[0].reason, 'The text of block-0.1 fills 41% of its box, under the 60% floor: "…"')
+  assert.equal(JSON.stringify(d).includes('pastries'), false)
 })

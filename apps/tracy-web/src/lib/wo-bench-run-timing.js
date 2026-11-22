@@ -76,9 +76,15 @@ export function failureCodesIn(list) {
 export const SAMPLES_PER_RULE = 3
 const SAMPLE_CHARS = 200
 
-/** A failure's reason with what could be the business's own words or contacts masked: quoted text, numbers, addresses. */
+/**
+ * A failure's reason with what could be the business's own words or contacts, or a secret, masked: quoted text, long
+ * numbers, e-mail and web addresses, bearer tokens, file system paths and long opaque tokens.
+ */
 export function maskedReason(text) {
   return String(text ?? '')
+    .replace(/\bBearer\s+\S+/gi, 'Bearer …')
+    .replace(/(^|[\s(=:])\/(?:Users|home|tmp|var|opt|srv|private|root|etc)\/\S*/g, '$1…path…')
+    .replace(/\b[A-Za-z0-9_-]{32,}\b/g, '…')
     .replace(/"[^"\n]*"|“[^”\n]*”|«[^»\n]*»/g, '"…"')
     .replace(/\S+@\S+\.\S+/g, '…@…')
     .replace(/https?:\/\/\S+/g, '…url…')

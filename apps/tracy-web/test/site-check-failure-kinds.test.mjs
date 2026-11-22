@@ -85,5 +85,10 @@ test('the diagnostics count each group by its kinds, never its words', () => {
     siteCheck: { status: 'red', counts: { block: 7 }, groups }
   })
   assert.deepEqual(d.finalCheck.kinds, kindsOf(groups))
-  assert.equal(JSON.stringify(d).includes('private words'), false)
+  // The kinds are codes only; the words stay on the final check's own fault, as its masked reason.
+  assert.equal(JSON.stringify(d.finalCheck.kinds).includes('private words'), false)
+  assert.deepEqual(
+    d.finalCheck.faults.filter((f) => f.reason).map((f) => f.reason),
+    ['private words']
+  )
 })
