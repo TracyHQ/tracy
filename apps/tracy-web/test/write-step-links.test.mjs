@@ -267,7 +267,7 @@ test('a link with no slot of its own moves the slot of its block that holds its 
   assert.equal(line('block-2.link-1').key, 'module-2.40')
 })
 
-test('links that share one address move together when the plan agrees, and fail when it does not', async () => {
+test("links that share one address move together, to the first link's target when the plan sends them two ways", async () => {
   const shared = [
     { id: 'block-2.link-1', target: '/about', action: 'navigation' },
     { id: 'block-2.link-2', target: '/about', action: 'navigation' }
@@ -285,16 +285,23 @@ test('links that share one address move together when the plan agrees, and fail 
   assert.equal(sentChanges(agree.site)['module-2.41'], 'index.php?Itemid=101')
   assert.equal(agree.line('block-2.link-2').status, 'written')
 
+  // Dev lat28 (22/11/2026): two slides' second buttons share one address and the plan sent them to two pages. Both
+  // kept the template's address; now both lead where the first link leads, and the second's line says why.
   const differ = await run({
     links: shared,
     leads: { 'block-2.link-1': 'page-home', 'block-2.link-2': 'page-spin' },
     slots
   })
-  for (const link of ['block-2.link-1', 'block-2.link-2']) {
-    assert.equal(differ.line(link).status, 'failed')
-    assert.match(differ.line(link).reason, /share/)
-  }
-  assert.equal(sentChanges(differ.site)['module-2.40'], undefined)
+  assert.equal(sentChanges(differ.site)['module-2.40'], 'index.php?Itemid=101')
+  assert.equal(sentChanges(differ.site)['module-2.41'], 'index.php?Itemid=101')
+  assert.equal(differ.line('block-2.link-1').status, 'written')
+  assert.equal(differ.line('block-2.link-1').reason, null)
+  assert.equal(differ.line('block-2.link-2').status, 'written')
+  assert.equal(differ.line('block-2.link-2').ordered, 'index.php?Itemid=101')
+  assert.match(
+    differ.line('block-2.link-2').reason,
+    /shares one address on the site .* so it leads there too/
+  )
 })
 
 test('two links on one slot with different targets: the first is written, the second says so', async () => {
