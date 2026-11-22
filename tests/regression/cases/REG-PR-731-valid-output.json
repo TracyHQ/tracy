@@ -4,11 +4,7 @@
   "title": "A built site shows no template picture, masthead words or broken image where the business has its own",
   "pr": 731,
   "area": "website-opportunities/step-chain",
-  "cms": [
-    "jo",
-    "wp",
-    "em"
-  ],
+  "cms": ["jo", "wp", "em"],
   "needs": [],
   "flaky_model": false,
   "steps": [
