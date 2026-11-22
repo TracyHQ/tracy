@@ -1,0 +1,1 @@
+{"id":"REG-PR-726-read-refused","verdict":"PASS","commit":"ab71cd3bf9bdbb4c2f7f439f7de3e97572557040","ran_at":"2026-11-22T01:06:49.729Z","evidence":"tests/regression/.runs/2026-11-22-ab71cd3bf/REG-PR-726-read-refused.log"}
