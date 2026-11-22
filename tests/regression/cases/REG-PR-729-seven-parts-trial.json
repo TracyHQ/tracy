@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-729-seven-parts-trial",
+  "kind": "feat",
+  "title": "A staff switch writes the chain's draft copy in seven parts instead of five",
+  "pr": 729,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "With sevenParts on, the draft copy starts with --parallel-pages 7 and --split-shared; off, with --parallel-pages 5."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-trials.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "with sevenParts on, the draft copy is written in seven parts, and the split of \"shared\" stays"
+    ]
+  }
+}
