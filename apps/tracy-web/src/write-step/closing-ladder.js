@@ -6,6 +6,9 @@
 //   2. hidden: the slot is emptied with the existing contract empty, at the smallest unit that leaves no orphan: a slot of a list
 //      row goes with every slot of its row (a stat card with its label, a quote with its signature), a slot of no row alone;
 //   3. demo-remains: no unit slot can be emptied (the kit keeps it, or the site says it cannot), and the line says so.
+//      A picture frame the kit measured as one that cannot be hidden (`canHide: false` on the block's frame: the template
+//      still prints the picture's tag, or the row loses its shape) is never emptied: dev lat28 (22/11/2026), JA Boxing's
+//      twelve exercise cards printed an empty `<img src="/">`, a broken picture on three class pages.
 // "No customer content" means: a text or picture slot of a kept block no file fills (the writer returned it, or left it out of
 // the copy), a picture frame the picture step left without a picture, or a painted frame the write step could not draw (no brand
 // file to colour it, a drawing that failed). Every resolution is a line in `report.closing`.
@@ -53,6 +56,13 @@ export function closeDemoLeft({
 }) {
   const heldSlots = new Set(held)
   const kitSlots = kitSlotIndex(kit)
+  const keptFrames = new Set(
+    each(kit?.blocks).flatMap((b) =>
+      each(b?.frames)
+        .filter((f) => f?.canHide === false)
+        .map((f) => f.id)
+    )
+  )
   const onSite = new Map(each(reading?.slots).map((s) => [s?.key, s]))
   const returned = new Map(each(returns).map((r) => [r?.slot, r?.reason]))
   const empties = new Set(emptySlots)
@@ -93,7 +103,8 @@ export function closeDemoLeft({
     const keys = ids.map((id) => ({ id, key: contentMapKey(id) }))
     const nativeUnit = keys.map(({ key: k }) => onSite.get(k))
     const hideable = keys.every(
-      ({ id, key: k }) => slotCanEmpty(onSite.get(k), nativeUnit) && kitSlots.get(id)?.canHide !== false
+      ({ id, key: k }) =>
+        slotCanEmpty(onSite.get(k), nativeUnit) && kitSlots.get(id)?.canHide !== false && !keptFrames.has(id)
     )
     for (const { id, key: k } of keys) {
       done.add(id)

@@ -171,10 +171,17 @@ test('page and slot shapes are read in linear time and keep their meaning', () =
   }
   assert.deepEqual(kept('/', 'module-1'), ['/', 'module-1'])
   assert.deepEqual(kept('/blog/post-1/', 'menu-0--x.y:z'), ['/blog/post-1/', 'menu-0--x.y:z'])
+  // A kit id names its block too (dev lat28: the final check's faults on block-*, body-* and menuItem-* slots named none).
+  assert.deepEqual(kept('/', 'block-106.2'), ['/', 'block-106.2'])
+  assert.deepEqual(kept('/', 'body-classes_group-boxing.link-4'), ['/', 'body-classes_group-boxing.link-4'])
+  assert.deepEqual(kept('/', 'menuItem-189.0'), ['/', 'menuItem-189.0'])
+  assert.deepEqual(kept('/', 'block-'), ['/', null])
+  assert.deepEqual(kept('/', 'body-a b'), ['/', null])
   assert.deepEqual(kept('//double', 'menu-0-'), [null, null])
   assert.deepEqual(kept('/a/../b', 'menu-0-.x'), [null, null])
   const started = performance.now()
   assert.deepEqual(kept(`/${'-'.repeat(158)}!`, `menu-0-${'--'.repeat(45)}!`), [null, null])
+  assert.deepEqual(kept('/', `block-${'a-'.repeat(45)}!`), ['/', null])
   assert.ok(performance.now() - started < 200)
 })
 

@@ -150,10 +150,13 @@ export function createLooker({
   // What a look at a picture asks, and the key it is kept under: the picture, its display size and the frame's words.
   function questionOf(entry) {
     const frame = idx.frames.get(entry.frame)
-    const wish = idx.wishes.get(entry.frame)
+    // An any-real frame takes any real owner photo (spec #336): never failed for its scene. So does any frame the any-photo
+    // rung filled (ladder-reuse.js): every picture of its own wish was rejected, and it now shows a real photo of the
+    // business, judged by the rules of any picture (a whole face, nothing forbidden), not by the wish it could not meet.
+    const own = idx.wishes.get(entry.frame)
+    const anyReal = isAnyReal(own) || entry.reuse?.rung === 'any-photo'
+    const wish = anyReal && !isAnyReal(own) ? { ...own, match: 'any-real' } : own
     const words = lookWords(wish)
-    // An any-real frame takes any real owner photo (spec #336): never failed for its scene.
-    const anyReal = isAnyReal(wish)
     const box = { width: frame?.width ?? entry.width, height: frame?.height ?? entry.height }
     const realPart = entry.source === 'owner-photo-extended' ? (entry.realPart ?? null) : null
     const cutout = entry.cutout ? cutoutFacts(frame, entry) : null

@@ -14,10 +14,15 @@
 // A frame the plan wants filled is never left without a picture while one can be had (owner decision 06/11/2026, card
 // AJ): before `return`, a drawn frame is drawn again in other compositions (`redraw-alt`, the subject whole and centred
 // with a margin, in the frame's shape, at most REDRAW_ALT_TRIES), and any frame that is not a person keeps the best
-// picture the looker rejected for minor faults only (`best-rejected`, looker-call.js MINOR_FAULTS), else the best of
-// its rejected pictures, placed despite the looker: a checker's rejection never leaves the demo (owner's rule
-// 2026-11-07). Only a frame that got no picture at all is still returned, and the picture package names it as a problem
-// (contract-mapping.js).
+// picture the looker rejected for minor faults only (`best-minor`, looker-call.js MINOR_FAULTS). With none, a `specific`
+// or `any-real` frame takes any usable owner photo (`any-photo`, as a gallery tile does: heads whole, a clearly
+// different cut of a photo its page already shows), looked at as an any-real frame, so a real photo of the business is
+// never failed for its scene. Only then the best of its rejected pictures is kept (`best-rejected`), placed despite the
+// looker: a checker's rejection never leaves the demo (owner's rule 2026-11-07); the export still refuses a hard
+// rejection (contract-mapping.js), so that frame and a frame that got no picture at all are named as problems.
+// Before (dev lat28, 22/11/2026): the exercise cards of three JA Boxing class pages had only drawings rejected for
+// stray lettering, the export refused them, and the write step emptied the frames into twelve broken images; JA Diner's
+// hero kept no picture at all.
 
 /** The rungs per plan match. */
 export const RUNGS = Object.freeze({
@@ -28,10 +33,20 @@ export const RUNGS = Object.freeze({
     'fewer-rows',
     'hide',
     'redraw-alt',
+    'best-minor',
+    'any-photo',
     'best-rejected',
     'return'
   ]),
-  'any-real': Object.freeze(['next-photo', 'fewer-rows', 'hide', 'best-rejected', 'return']),
+  'any-real': Object.freeze([
+    'next-photo',
+    'fewer-rows',
+    'hide',
+    'best-minor',
+    'any-photo',
+    'best-rejected',
+    'return'
+  ]),
   person: Object.freeze(['hide', 'return']),
   cutout: Object.freeze(['draw', 'redraw', 'hide', 'redraw-alt', 'best-rejected', 'return']),
   // Historical gallery rungs remain explicit; rungsFor removes drawing for every documentary frame.

@@ -6,7 +6,9 @@
 // The "any-photo" rung after it always fills while the brief has at least ANY_PHOTO_MIN usable owner photos (owner
 // decision 04/11/2026): any usable owner photo, used on other pages or already twice, any region, keeping only the hard
 // rules: heads whole, never the photo of a neighbouring tile, never the very cut another frame of the page shows. The
-// looker still looks; a rejected picture is followed by the next photo, until every photo is tried.
+// looker still looks; a rejected picture is followed by the next photo, until every photo is tried. A `specific` or
+// `any-real` frame that is no gallery tile climbs it too, after every picture of its own was rejected (ladder-rungs.js):
+// its pick is looked at as an any-real frame's (looker-step.js).
 //
 // A photo may show again in the tile's own block only in a clearly different cut: the reuse cut shares at most
 // REUSE_MAX_OVERLAP and the any-photo cut at most ANY_PHOTO_MAX_OVERLAP with every other cut of the photo on its pages
@@ -123,7 +125,11 @@ export async function anyPhotoRung(ctx, s, frameId, p) {
       asset: a.id,
       reuse: { rung: 'any-photo', with: also, overlap: cut.overlap },
       ...s.extraOf(list),
-      reason: `owner photo ${a.id}${also.length ? `, also in ${also.join(', ')} on this page, cut another way` : ''}: a gallery tile is never hidden alone and no clearly different cut was left; after: ${s.story(frameId)}`
+      reason: `owner photo ${a.id}${also.length ? `, also in ${also.join(', ')} on this page, cut another way` : ''}: ${
+        ctx.idx.galleryTile(frameId)
+          ? 'a gallery tile is never hidden alone and no clearly different cut was left'
+          : 'no picture the plan asked for could be had, so the frame shows a real photo of the business'
+      }; after: ${s.story(frameId)}`
     })
   }
 }

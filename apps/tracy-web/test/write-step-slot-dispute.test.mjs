@@ -33,6 +33,30 @@ test('a plan hide against writer words: the plan wins, the words are not sent, e
   assert.equal(line('block-2.1').status, 'written')
 })
 
+test("step 8's alt over the writer's words on that alt is the rule, not a dispute; the writer's words still lose", () => {
+  const writer = {
+    slot: 'block-8.11',
+    owner: 'writer',
+    file: 'site-copy.json',
+    kind: 'text',
+    content: 'A coach by a court'
+  }
+  const picture = {
+    slot: 'block-8.11',
+    owner: 'picture',
+    file: 'site-pictures.json',
+    kind: 'text',
+    content: 'A lifeguard chair beside a pool'
+  }
+  const { owners, disputes, losers } = ownerTable([writer, picture])
+  assert.equal(owners.get('block-8.11'), picture)
+  assert.deepEqual(losers, [writer])
+  assert.deepEqual(disputes, [])
+  // A plan claim on the same slot is still a dispute.
+  const plan = { slot: 'block-8.11', owner: 'plan', file: 'plan.json', kind: 'hide', content: '(hide)' }
+  assert.equal(ownerTable([writer, picture, plan]).disputes.length, 1)
+})
+
 test('the owner table: the plan link wins on a slot the kit has as a link; a claim that fits nothing leaves the slot unowned', () => {
   const kit = {
     blocks: [

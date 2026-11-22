@@ -227,7 +227,7 @@ const PICTURE_PARTS = new Set(['picture', 'picture-painted'])
 const NOT_PRINTED_AS_WORDS = /(?:^|\.)(?:video|[a-z_]*_url)$/
 
 /** Each kit slot's type and role, by id. */
-function kitSlotKinds(kit) {
+export function kitSlotKinds(kit) {
   const kinds = new Map()
   for (const block of each(kit?.blocks)) {
     const rows = each(block?.lists).flatMap((l) => each(l?.rows).flatMap((r) => each(r?.slots)))

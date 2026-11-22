@@ -57,6 +57,7 @@ import { coordinatesOf, runPageSettings } from './page-settings-stage.js'
 import { runPhoneLinksStage, withPhoneLinks } from './phone-link-stage.js'
 import { phonesOf } from './phone-links.js'
 import { PICTURE_OWNER } from './picture-package.js'
+import { menuItemEntryTwins } from './menu-item-entries.js'
 import { preparePictureStage } from './picture-stage.js'
 import { planLinkTable } from './plan-link-table.js'
 import { runPrintedStage } from './printed-stage.js'
@@ -471,7 +472,21 @@ export async function runWriteStep(input) {
     const buttons = buttonClaims({ plan, kit: kit.doc, contentMap, claims: filing, file: kit.ref })
     for (const [slot, source] of buttons.twins)
       exported.mapping.changes[contentMapKey(slot)] = exported.mapping.changes[contentMapKey(source)]
-    const speaking = [...filing, ...buttons.claims]
+    // A kept page's own masthead entry takes what was written for its list (menu-item-entries.js): words through the copy's
+    // changes, a picture through the picture stage's, whose upload the twin shares.
+    const entries = menuItemEntryTwins({
+      plan,
+      kit: kit.doc,
+      contentMap,
+      claims: [...filing, ...buttons.claims]
+    })
+    for (const [slot, source] of entries.twins) {
+      const from = contentMapKey(source)
+      const values =
+        pictures.changes && from in pictures.changes ? pictures.changes : exported.mapping.changes
+      values[contentMapKey(slot)] = values[from]
+    }
+    const speaking = [...filing, ...buttons.claims, ...entries.claims]
     const keptClaims = new Set(speaking.filter((claim) => claim.kind !== 'hide').map((claim) => claim.slot))
     for (const claim of fromPlan) {
       if (!claim.hiddenList) continue

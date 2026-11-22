@@ -186,7 +186,12 @@ test('a written label, a label other blocks print and a link the plan decided st
       basis: 'trade',
       maxCharacters: 26
     })
-    assert.strictEqual(normalize(value, kit), value)
+    // The label written and hidden at once is written (plan-row-fields.js), and the link is not hidden with it.
+    const got = normalize(value, kit)
+      .pages.flatMap((page) => page.blocks)
+      .find((block) => block.block === contactBlock)
+    assert.ok(!got.hiddenSlots.some((h) => h.slot === mapLabel || h.slot === mapButton))
+    assert.ok(got.copy.some((entry) => entry.slot === mapLabel))
   }
   {
     // block-176.1 is printed by the header and by block-176: R24 wants it written, so hiding the link settles nothing.

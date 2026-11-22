@@ -20,7 +20,10 @@ const framesOnly = (view) => view.entries.filter((e) => e.list === 'frames')
 // Two showings neither of which took one of these rungs always fail.
 function reuseAllowed(idx, a, b) {
   const reused = a.reuse ? a : b.reuse ? b : null
-  if (!reused || !idx.galleryTile(reused.frame) || !a.crop || !b.crop) return false
+  // The any-photo rung is the last a `specific` or `any-real` frame climbs too (ladder-rungs.js), not only a gallery tile:
+  // its pick is held to the same clearly different cut.
+  const anyPhoto = reused?.reuse?.rung === 'any-photo'
+  if (!reused || (!anyPhoto && !idx.galleryTile(reused.frame)) || !a.crop || !b.crop) return false
   if (neighbours(idx.gallery(a.frame), idx.gallery(b.frame))) return false
   const crop = (e) => ({ x: e.crop.x, y: e.crop.y, width: e.crop.width, height: e.crop.height })
   const [x, y] = [crop(a), crop(b)]

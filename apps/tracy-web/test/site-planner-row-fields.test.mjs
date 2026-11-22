@@ -1,6 +1,7 @@
 // A field of a kept list row that the decision both writes and hides is written (site-planner/plan-row-fields.js):
 // R23 keeps every printed field of a kept row and R10g decides nothing twice. Dev corpus, 16/11/2026: a JA Boxing
-// class article's three feature descriptions were written and hidden at once (8 R10g and 6 R23 failures).
+// class article's three feature descriptions were written and hidden at once (8 R10g and 6 R23 failures). A slot
+// outside every row, written and hidden at once, is written too (dev lat27, 22/11/2026).
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
@@ -61,4 +62,23 @@ test('a row the decision does not show, a slot it only hides and a dropped page 
   assert.strictEqual(withWrittenRowFieldsShown(planOf(onlyHidden), kit).pages[0].blocks[0], onlyHidden)
   const dropped = { sharedBlocks: [], pages: [{ id: 'page-x', decision: 'drop', why: 'not needed' }] }
   assert.strictEqual(withWrittenRowFieldsShown(dropped, kit), dropped)
+})
+
+test('a slot outside every row that the decision both writes and hides is written, so no demo words stay', () => {
+  // article-2.1 is a heading of the class body, in no list row: its hide alone may be one the site cannot take (R27).
+  const decision = {
+    block,
+    decision: 'keep',
+    copy: [write('article-2.1')],
+    hiddenSlots: [
+      { slot: 'article-2.1', why: 'no fact' },
+      { slot: 'article-2.0', why: 'nothing to say' }
+    ]
+  }
+  const out = withWrittenRowFieldsShown(planOf(decision), kit).pages[0].blocks[0]
+  assert.deepEqual(
+    out.hiddenSlots.map((h) => h.slot),
+    ['article-2.0']
+  )
+  assert.deepEqual(out.copy, decision.copy)
 })

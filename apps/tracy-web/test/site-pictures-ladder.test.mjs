@@ -279,6 +279,16 @@ const ALT_DRAWS = [
   ['redraw-alt', 'rejected'],
   ['redraw-alt', 'skipped']
 ]
+// A frame whose every own picture had a hard fault tries each usable owner photo as any real photo (the any-photo rung,
+// six photos in this brief), and the fake looker rejects each of them here for a forbidden item.
+const ANY_PHOTOS = [
+  ['best-minor', 'skipped'],
+  ...Array.from({ length: 6 }, () => [
+    ['any-photo', 'placed'],
+    ['any-photo', 'rejected']
+  ]).flat(),
+  ['any-photo', 'skipped']
+]
 const byFrame = (doc) => new Map([...doc.frames, ...doc.siteSettings].map((e) => [e.frame, e]))
 const rungs = (doc, f) => doc.ladder.find((l) => l.frame === f)?.steps.map((s) => [s.rung, s.outcome]) ?? []
 
@@ -320,20 +330,26 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   // Not in a list row: hidden where the kit allows it, returned to the planner where it does not.
   assert.deepEqual(rungs(m, 'block-b.1'), [...drawAndPhotos, ['fewer-rows', 'skipped'], ['hide', 'hidden']])
   assert.equal(e.get('block-b.1').source, 'hide')
-  // A frame that cannot be hidden is drawn again in other compositions first; when every picture it got had a hard
-  // fault (here a wrong subject), the ladder keeps the best of them as best-rejected, but the export does not upload
-  // it: the frame keeps its demo picture and the picture package names the problem (ADR 0043 section 4, #568).
-  // Only a picture with minor faults alone is placed instead of the demo (the minor-fault test below).
+  // A frame that cannot be hidden is drawn again in other compositions first, then tries every owner photo as any real
+  // photo; when every picture it got had a hard fault (here a wrong subject, then a forbidden item), the ladder keeps the
+  // best of them as best-rejected, but the export does not upload it: the frame keeps its demo picture and the picture
+  // package names the problem (ADR 0043 section 4, #568). Only a picture with minor faults alone is placed instead of the
+  // demo (the minor-fault test below), and an owner photo the looker passes as any real photo (the any-photo test below).
   assert.deepEqual(rungs(m, 'block-c.1'), [
     ...drawAndPhotos,
     ['fewer-rows', 'skipped'],
     ['hide', 'skipped'],
     ...ALT_DRAWS,
+    ...ANY_PHOTOS,
     ['best-rejected', 'placed']
   ])
   assert.ok(!m.returns.some((r) => r.frame === 'block-c.1'), 'never returned')
-  assert.deepEqual(e.get('block-c.1').filledBy, { rung: 'best-rejected', faults: ['wrong subject'] })
-  assert.match(e.get('block-c.1').reason, /^placed despite looker: wrong subject, after: draw placed/)
+  assert.equal(e.get('block-c.1').filledBy.rung, 'best-rejected')
+  assert.equal(e.get('block-c.1').filledBy.faults.length, 1)
+  assert.match(
+    e.get('block-c.1').reason,
+    /^placed despite looker: (wrong subject|forbidden item), after: draw placed/
+  )
   const exported = exportPictureMapping({
     pictures: m,
     contract: kit().contract,
@@ -342,7 +358,7 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
     plan: plan(),
     brief: brief()
   })
-  const hard = /the retained picture still has the looker's hard rejection \(wrong subject\)/
+  const hard = /the retained picture still has the looker's hard rejection \((wrong subject|forbidden item)\)/
   assert.ok(exported.problems.some((x) => x.where === 'block-c.1' && hard.test(x.detail)))
   assert.equal(exported.mapping.changes['module-c.1'], undefined, 'the frame keeps its demo picture')
   assert.ok(
@@ -403,12 +419,17 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   // this save.
   assert.equal(doors.drawings.length, 10)
   assert.equal(m.drawer.calls.length, 10)
-  // Drawn pictures in the manifest: w, k and c (kept as best-rejected; the export does not upload c).
-  assert.equal(m.drawer.count, 3)
+  // Drawn pictures in the manifest: w and k. c keeps its latest rejected picture, an owner photo of the any-photo rung
+  // (best-rejected; the export does not upload it).
+  assert.equal(m.drawer.count, 2)
   assert.equal(m.drawer.model, DRAWER_MODEL)
   assert.ok(Math.abs(m.cost.drawer - 10 * DRAW_COST) < 1e-9, `${m.cost.drawer}`)
   assert.ok(m.timing.drawer >= 0)
-  const looksPaid = m.looker.calls.filter((c) => !c.cached).length * 0.0002
+  // Every look the door answered is paid once: the any-photo rung looks at its next photos ahead (ladder-step.js), and
+  // a cut taken ahead that changes by the time it is placed is looked at again, so the door answers more looks than the
+  // manifest keeps.
+  const looksPaid = doors.looks.length * 0.0002
+  assert.ok(m.looker.calls.length <= doors.looks.length)
   assert.ok(Math.abs(out.paid - (10 * DRAW_COST + looksPaid)) < 1e-9, `${out.paid}`)
   assert.equal(new Set(m.looker.calls.map((c) => `${c.frame} ${c.sha256}`)).size, m.looker.calls.length)
 
@@ -426,7 +447,7 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
     out.rule.failures.map((f) => f.where),
     ['block-c.1']
   )
-  assert.match(out.rule.failures[0].detail, /the looker rejected the picture \(wrong subject\)/)
+  assert.match(out.rule.failures[0].detail, /the looker rejected the picture \(forbidden item\)/)
 
   // Finished again (a later round, a resumed run): every drawing and look is read from the store, nothing is paid.
   const again = await fakeDoors({
@@ -534,7 +555,7 @@ test('a frame the plan wants filled that cannot be hidden keeps the best picture
     ['fewer-rows', 'skipped'],
     ['hide', 'skipped'],
     ...ALT_DRAWS,
-    ['best-rejected', 'placed']
+    ['best-minor', 'placed']
   ])
   assert.ok(!m.returns.some((r) => r.frame === 'block-c.1'), 'never returned')
   const c = byFrame(m).get('block-c.1')
@@ -562,6 +583,48 @@ test('a frame the plan wants filled that cannot be hidden keeps the best picture
   // The looker's rule notes the kept picture instead of failing it, and the package writes it.
   assert.ok(!out.rule.failures.some((f) => f.where === 'block-c.1'), JSON.stringify(out.rule.failures))
   assert.ok(out.rule.notes.some((n) => /block-c\.1: kept with minor faults/.test(n)))
+  const result = await check(out)
+  assert.deepEqual(
+    result.rules.filter((r) => r.status === 'fail').map((r) => [r.id, r.failures]),
+    []
+  )
+  const exported = exportPictureMapping({
+    pictures: m,
+    contract: kit().contract,
+    revision: 'r',
+    kit: kit(),
+    plan: plan(),
+    brief: brief()
+  })
+  assert.equal(exported.mapping.changes['module-c.1'], c.sitePath)
+  assert.ok(!exported.problems.some((x) => x.where === 'block-c.1'))
+})
+
+test('a frame whose own pictures all have a hard fault shows a real photo of the business, looked at as any real photo', async () => {
+  // Dev lat28 (22/11/2026): every drawing of a JA Boxing exercise card had stray lettering, the export refused them all,
+  // and twelve cards printed a broken image. Here every picture made for block-c.1's wish shows the wrong subject; an
+  // owner photo placed as any real photo is never failed for its scene, so the frame is filled and nothing is refused.
+  const doors = fakeDoors({ reject: new Set(['block-c.1']), faultOf: { 'block-c.1': 'wrong subject' } })
+  const { doc, finisher, check } = await setUp(doors, 'run-any-photo')
+  const out = await finisher.finish(doc, { lastRound: true })
+  const m = out.doc
+  assert.deepEqual(rungs(m, 'block-c.1').slice(-3), [
+    ['redraw-alt', 'skipped'],
+    ['best-minor', 'skipped'],
+    ['any-photo', 'placed']
+  ])
+  const c = byFrame(m).get('block-c.1')
+  assert.equal(c.source, 'owner-photo')
+  assert.equal(c.reuse?.rung, 'any-photo')
+  assert.equal(c.filledBy, undefined, 'a picture the looker passed, not a kept rejection')
+  assert.match(
+    c.reason,
+    /no picture the plan asked for could be had, so the frame shows a real photo of the business/
+  )
+  // The look of the owner photo asks for any real photo, without the wish's subject.
+  const last = doors.looks.filter((l) => l.frame === 'block-c.1').at(-1)
+  assert.match(last.text, /accepts any real photo/)
+  assert.ok(!out.rule.failures.some((f) => f.where === 'block-c.1'), JSON.stringify(out.rule.failures))
   const result = await check(out)
   assert.deepEqual(
     result.rules.filter((r) => r.status === 'fail').map((r) => [r.id, r.failures]),

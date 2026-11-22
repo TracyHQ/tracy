@@ -151,6 +151,8 @@ function fits(claim, kinds) {
 }
 
 const said = ({ owner, file, kind, content }) => ({ owner, file, kind, content })
+const isPictureAlt = (claim) => claim.owner === 'picture' && claim.kind === 'text'
+const isWriterWords = (claim) => claim.owner === 'writer' && claim.kind === 'text'
 
 /**
  * The owner of every slot. A dispute (two claims with different content on one slot) never stops the run: it is settled on
@@ -185,6 +187,10 @@ export function ownerTable(claims, { kit = null } = {}) {
     if (winner) owners.set(slot, winner)
     const lost = claims.filter((c) => c.slot === slot && c.content !== winner?.content)
     losers.push(...lost)
+    // The alt step 8 wrote from the picture it placed goes over the writer's words on that alt (ADR 0043 section 3f): that is
+    // the rule, not two files disagreeing. Before (dev lat28, 22/11/2026), JA Boxing's writer also wrote six alt slots as copy,
+    // and each was a blocking dispute of the final check.
+    if (winner && isPictureAlt(winner) && list.every((c) => c === winner || isWriterWords(c))) continue
     disputes.push({
       slot,
       claims: list.map(said),

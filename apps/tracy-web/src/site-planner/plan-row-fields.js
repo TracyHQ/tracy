@@ -7,11 +7,15 @@
 //
 // A row stays when the decision shows another field of it (written or framed, not hidden) and the row is within the
 // rows the decision keeps of its list (`rows`), as R23 reads it (plan-check/rules-kept-rows.js shownRows). A hidden
-// list, a row the decision cuts, or a slot outside every row stays with the planner. Returns the same plan when
-// nothing changed.
+// list or a row the decision cuts stays with the planner.
+//
+// A slot outside every row of its block that the decision both writes and hides is written too (2026-11-23). Writing it
+// is the one reading that leaves no demo: the hide alone may be one the site cannot take (R27), and then the slot keeps
+// the template's words. Dev lat27 (22/11/2026): Arabian Tea House's plan ended with block-94.8 written and hidden at
+// once (R10g) and the hide refused (R27), after two fix rounds. Returns the same plan when nothing changed.
 import { indexKit } from './plan-check/kit-index.js'
 import { decisionParts } from './plan-check/plan-index.js'
-import { shownRows } from './plan-check/rules-kept-rows.js'
+import { indexRows, shownRows } from './plan-check/rules-kept-rows.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 
@@ -35,6 +39,12 @@ export function withWrittenRowFieldsShown(plan, kit) {
       for (const row of list.shown)
         if (row.kept)
           for (const [, slots] of row.fields) for (const slot of slots) if (twice.has(slot)) unhide.add(slot)
+    // Every slot of any row of the block, kept, cut or in a hidden list: those are the rows' to decide.
+    const inRows = new Set()
+    for (const list of indexRows(ctx).byBlock.get(decision.block)?.values() ?? [])
+      for (const row of list.rows.values())
+        for (const [, slots] of row.fields) for (const slot of slots) inRows.add(slot)
+    for (const slot of twice) if (!inRows.has(slot)) unhide.add(slot)
     if (!unhide.size) return decision
     changed = true
     return { ...decision, hiddenSlots: each(decision.hiddenSlots).filter((h) => !unhide.has(h?.slot)) }
