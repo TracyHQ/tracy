@@ -1,8 +1,8 @@
 {
-  "id": "REG-PR-725-emdash-essence-kit-self-checks",
+  "id": "REG-PR-728-emdash-essence-kit-self-checks",
   "kind": "fix",
   "title": "JA Essence EmDash 0.1.0: the template kit passes the Template kit road step (self-checks explained by a reason, a look on every 1440 shot) and the approval still holds",
-  "pr": 725,
+  "pr": 728,
   "area": "emdash-theme/tracy-essence",
   "cms": [
     "em"
