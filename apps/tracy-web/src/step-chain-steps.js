@@ -105,8 +105,8 @@ export const planArgs = (kitRef, revisionId) => [
  * The bench flags a chain step adds for the staff measurement switches that are on (`chainTrials` of the WO settings,
  * `CHAIN_TRIALS`), and the names of those switches for the step's record. `planTurns` plans round 0 in writing turns
  * of one conversation (site-planner/plan-turns.js), stage 1 of ADR 0045 (measured slower and worse on dev, trial t1,
- * 21/11/2026); `splitShared` lets the draft copy split a heavy "shared" into shared block parts (writer-parts.js
- * writingUnits). With a switch, a build with it and one without can be measured side by side on dev, where a merge and a revert per setting gave one build each and the spread of one setting between two
+ * 21/11/2026); `wholeShared` keeps the draft copy's "shared" one part, as before the split of a heavy "shared" into
+ * shared block parts became the default (writer-parts.js writingUnits, copyArgs). With a switch, a build with it and one without can be measured side by side on dev, where a merge and a revert per setting gave one build each and the spread of one setting between two
  * builds (BXR London round 0: 546 s and 761 s on the same prompt, lat24b and lat25) was larger than what was measured.
  * @param {'plan' | 'copy' | 'pictures'} step @param {Record<string, boolean> | null | undefined} trials
  * @returns {{ argv: string[], names: string[] }}
@@ -114,7 +114,8 @@ export const planArgs = (kitRef, revisionId) => [
 export function trialArgs(step, trials) {
   const on = (name) => trials?.[name] === true
   if (step === 'plan' && on('planTurns')) return { argv: ['--plan-turns'], names: ['planTurns'] }
-  if (step === 'copy' && on('splitShared')) return { argv: ['--split-shared'], names: ['splitShared'] }
+  // `wholeShared` takes away the default `--split-shared` (copyArgs reads the switch itself): no flag of its own.
+  if (step === 'copy' && on('wholeShared')) return { argv: [], names: ['wholeShared'] }
   return { argv: [], names: [] }
 }
 
@@ -276,7 +277,7 @@ export function createStepChainSteps(deps) {
       () => false
     )
   /** The copy step's writer run arguments on a plan file, without the budget flag. */
-  function copyArgs(ctx, kit, plan) {
+  function copyArgs(ctx, kit, plan, trials = null) {
     return [
       '--plan-file',
       plan.file,
@@ -292,7 +293,14 @@ export function createStepChainSteps(deps) {
       // parts (367 s against 177 s for the lightest); each part's first message is the same cached fixed part.
       // Eight were tried on 20/11/2026 and were no faster at four times the spend (COPY_PARTS).
       '--parallel-pages',
-      String(COPY_PARTS)
+      String(COPY_PARTS),
+      // A heavy "shared" gives up its heaviest shared blocks as parts of their own (writer-parts.js writingUnits), unless
+      // the build's staff switch `wholeShared` keeps it whole. "shared" led every draft measured before (Arabian Tea
+      // House: 228 to 509 s alone against 28 to 225 s for the other parts, lat21 to s1, 21/11/2026). Side by side on dev
+      // (s2, s3, s4; 22/11/2026), split against whole, the heaviest part wrote about 15% fewer tokens (41k to 49k against
+      // 39k to 76k), the draft took 178 against 350 s, 366 against 172 s (one slow provider call) and 245 against 419 s,
+      // and the final check found 49 against 47 and 46 against 62 blocks.
+      ...(trials?.wholeShared === true ? [] : ['--split-shared'])
     ]
   }
 
@@ -425,8 +433,9 @@ export function createStepChainSteps(deps) {
     // and spend, or null when it made no copy.
     async copyDraft(ctx, { kit, plan }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'copy-draft')
-      const trial = trialArgs('copy', await trialsOf(ctx))
-      const argv = [...copyArgs(ctx, kit, plan), ...trial.argv, '--max-fix-rounds', '0', ...NO_CAPS]
+      const trials = await trialsOf(ctx)
+      const trial = trialArgs('copy', trials)
+      const argv = [...copyArgs(ctx, kit, plan, trials), ...trial.argv, '--max-fix-rounds', '0', ...NO_CAPS]
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
       const ran = await benchRun('copy', argv, dir, signal, same)
       const file = path.join(dir, 'site-copy.json')
@@ -463,8 +472,9 @@ export function createStepChainSteps(deps) {
           exists(file)
         )
       }
-      const trial = trialArgs('copy', await trialsOf(ctx))
-      const argv = [...copyArgs(ctx, kit, plan), ...trial.argv, ...NO_CAPS]
+      const trials = await trialsOf(ctx)
+      const trial = trialArgs('copy', trials)
+      const argv = [...copyArgs(ctx, kit, plan, trials), ...trial.argv, ...NO_CAPS]
       const same = { revisionId: revisionOf(ctx), kitRef: kit.ref, plan: await planOf(plan.file) }
       const ran = await benchRun('copy', argv, dir, signal, same)
       const file = path.join(dir, 'site-copy.json')

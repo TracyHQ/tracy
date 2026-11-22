@@ -72,11 +72,9 @@ test('with planTurns on, the plan step plans round 0 in turns and records the sw
 
 test('a switch adds its flag only to its own step', () => {
   assert.deepEqual(trialArgs('plan', { planTurns: true }), { argv: ['--plan-turns'], names: ['planTurns'] })
-  assert.deepEqual(trialArgs('copy', { splitShared: true }), {
-    argv: ['--split-shared'],
-    names: ['splitShared']
-  })
-  assert.deepEqual(trialArgs('plan', { splitShared: true }), { argv: [], names: [] })
+  // wholeShared takes the default split away in copyArgs: it adds no flag of its own.
+  assert.deepEqual(trialArgs('copy', { wholeShared: true }), { argv: [], names: ['wholeShared'] })
+  assert.deepEqual(trialArgs('plan', { wholeShared: true }), { argv: [], names: [] })
   for (const step of ['copy', 'pictures'])
     assert.deepEqual(trialArgs(step, { planTurns: true }), { argv: [], names: [] })
   assert.deepEqual(trialArgs('plan', {}), { argv: [], names: [] })
@@ -108,8 +106,8 @@ test('the settings keep only known switches that are on, and the door refuses an
   }
 })
 
-test('a build keeps the switches read at its first step: turned off after its plan started, its draft copy still splits', async () => {
-  let settings = { planTurns: false, splitShared: true }
+test('a build keeps the switches read at its first step: turned on after its plan started, its draft copy still splits', async () => {
+  let settings = { planTurns: false }
   const pool = fakePool(null)
   const query = pool.query
   pool.query = async (sql, params) =>
@@ -139,13 +137,13 @@ test('a build keeps the switches read at its first step: turned off after its pl
   try {
     const planned = await steps.plan(build, { kit }, { signal })
     plan.file = planned.value.file
-    // The switch goes off for the next build while this one plans.
-    settings = { splitShared: false }
+    // wholeShared goes on for the next build while this one plans.
+    settings = { wholeShared: true }
     await steps.copyDraft(build, { kit, plan }, { signal })
     await steps.copyDraft(next, { kit, plan }, { signal })
     const [, thisDraft, nextDraft] = runs
-    assert.ok(thisDraft.includes('--split-shared'), 'the build that started with the switch on')
-    assert.ok(!nextDraft.includes('--split-shared'), 'a build that started after it went off')
+    assert.ok(thisDraft.includes('--split-shared'), 'the build that started with the default split')
+    assert.ok(!nextDraft.includes('--split-shared'), 'a build that started after wholeShared went on')
   } finally {
     await steps.dispose(build)
     await steps.dispose(next)
