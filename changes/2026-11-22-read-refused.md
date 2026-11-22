@@ -1,0 +1,3 @@
+- **The chain's write diagnostics say which read the final check was refused, and the plugin's code** — David (WO pipeline) · #726 · `fix/wo-read-refused` · 2026-11-22
+  **Affects:** Rebuild and deploy tracy-web. A site check read the Claude Cowork plugin refuses is reported as `<action> <operation> was refused (<code>): <message>`. `/api/ops/wo/chain-builds` write diagnostics give such an unmeasured group `refused: {action, operation, code}`, never the message.
+  **Why / Measured:** Dev s2a and t1b (21–22/11/2026): every page group of Arabian Tea House's final check was unmeasured as `read-refused` within a second, and nothing said which read or why. Case REG-PR-726-read-refused.

@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-726-read-refused",
+  "kind": "fix",
+  "title": "A refused site check read keeps its action, operation and the plugin's code in the chain diagnostics",
+  "pr": 726,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A refused read keeps its action, operation and the plugin's code; no message text reaches the diagnostics."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-write-diagnostics.test.mjs"
+    ],
+    "needs": [],
+    "tests": ["a refused read keeps its action, operation and the plugin code, never the message"]
+  }
+}
