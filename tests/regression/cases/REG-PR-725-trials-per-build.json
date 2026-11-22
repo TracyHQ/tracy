@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-725-trials-per-build",
+  "kind": "fix",
+  "title": "A chain build keeps the measurement switches it read at its first step for all its steps",
+  "pr": 725,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A build whose plan started with splitShared on starts its draft copy with --split-shared after the switch went off; a build started after that runs without it."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-trials.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a build keeps the switches read at its first step: turned off after its plan started, its draft copy still splits"
+    ]
+  }
+}
