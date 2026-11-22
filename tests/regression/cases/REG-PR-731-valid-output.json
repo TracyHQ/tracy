@@ -12,7 +12,7 @@
     "S2: Confirm every test named in run.tests reports ok."
   ],
   "expect": [
-    "A frame whose own pictures all had a hard fault shows an owner photo looked at as any real photo; a frame the kit cannot hide is never emptied; each kept page's masthead entry takes the written description and background; a heading printed as an alt, step 8's alt over the writer's, and a list sharing one value with a hidden tab's row no longer block the final check; links sharing one address that the plan sends two ways both lead to the first link's target."
+    "A frame whose own pictures all had a hard fault shows an owner photo looked at as any real photo; a frame the kit cannot hide is never emptied; each kept page's masthead entry takes the written description and background; a heading printed as an alt, step 8's alt over the writer's, and a list sharing one value with a hidden tab's row no longer block the final check; links sharing one address that the plan sends two ways both lead to the first link's target; a slide's button writes its own slide's address."
   ],
   "selectors": {},
   "run": {
@@ -37,7 +37,8 @@
       "a heading the template prints as a picture's alt is not the writer's alt: not measured, with why",
       "step 8's alt over the writer's words on that alt is the rule, not a dispute; the writer's words still lose",
       "a list sharing one value with a row of a hidden tab is not that row: the row is not found, never a wrong count",
-      "links that share one address move together, to the first link's target when the plan sends them two ways"
+      "links that share one address move together, to the first link's target when the plan sends them two ways",
+      "two slides whose buttons share a demo address: each link writes the address of its own slide"
     ]
   }
 }

@@ -304,6 +304,35 @@ test("links that share one address move together, to the first link's target whe
   )
 })
 
+test('two slides whose buttons share a demo address: each link writes the address of its own slide', async () => {
+  // Dev lat28 (22/11/2026), JA Diner's slideshow: the second button of each slide has its own address field, one entry of
+  // parallel lists (`button2[i]` and `btn-link2[i]`, beside `btn-link1[i]`), and both hold the same demo address.
+  const field = (name, i) => ({ jsonPath: ['slideshow', `slideshow[${name}]`, i], column: 'params' })
+  const { site, line } = await run({
+    links: [
+      { id: 'block-2.link-1', target: '/about', action: 'navigation', labelId: 'block-2.30' },
+      { id: 'block-2.link-2', target: '/about', action: 'navigation', labelId: 'block-2.31' }
+    ],
+    leads: { 'block-2.link-1': 'page-home', 'block-2.link-2': 'page-spin' },
+    slots: [
+      wordSlot('module-2.30', field('button2', 0)),
+      wordSlot('module-2.31', field('button2', 1)),
+      urlSlot('module-2.32', { ...field('btn-link1', 0), sample: 'index.php?Itemid=12' }),
+      urlSlot('module-2.33', { ...field('btn-link1', 1), sample: 'index.php?Itemid=12' }),
+      urlSlot('module-2.34', { ...field('btn-link2', 0), sample: 'index.php?Itemid=12' }),
+      urlSlot('module-2.35', { ...field('btn-link2', 1), sample: 'index.php?Itemid=12' })
+    ]
+  })
+  assert.equal(line('block-2.link-1').key, 'module-2.34')
+  assert.equal(line('block-2.link-2').key, 'module-2.35')
+  assert.equal(sentChanges(site)['module-2.34'], 'index.php?Itemid=101')
+  assert.notEqual(sentChanges(site)['module-2.35'], 'index.php?Itemid=101')
+  assert.equal(line('block-2.link-2').status, 'written')
+  assert.equal(line('block-2.link-2').reason, null)
+  for (const untouched of ['module-2.32', 'module-2.33'])
+    assert.equal(sentChanges(site)[untouched], undefined)
+})
+
 test('two links on one slot with different targets: the first is written, the second says so', async () => {
   const { site, line } = await run({
     links: [
