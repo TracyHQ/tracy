@@ -6,6 +6,7 @@ import {
   sampleFaults,
   hostCodeOf,
   MAX_WRITE_DIAGNOSTICS_BYTES,
+  refusalOf,
   stepNineDiagnostics,
   unmeasuredCode
 } from '../src/step-chain-write-diagnostics.js'
@@ -281,4 +282,40 @@ test('the faults kept are taken in turn from every group, so a group listed late
   })
   const kept = new Set(d.finalCheck.faults.map((f) => f.group))
   assert.ok(kept.has('read-back') && kept.has('alt-matches-picture'), [...kept].join(', '))
+})
+
+test('a refused read keeps its action, operation and the plugin code, never the message', () => {
+  const unmeasured = (name, reason) => ({
+    name,
+    status: 'unmeasured',
+    checked: 0,
+    ms: 1,
+    reason,
+    failures: []
+  })
+  const check = {
+    status: 'unmeasured',
+    counts: { block: 0, unmeasured: 3 },
+    groups: [
+      unmeasured(
+        'read-back',
+        'contract inspect was refused (writer_busy): another writer holds site private-site'
+      ),
+      unmeasured('demo-words', 'content.list  was refused (no-code): Bearer private-secret'),
+      unmeasured('page-slug', 'content.list  was refused: an older wording')
+    ]
+  }
+  const d = stepNineDiagnostics({ report: { status: 'stopped' }, firstCheck: check, siteCheck: check })
+  assert.deepEqual(
+    d.finalCheck.groups.map((g) => [g.name, g.why, g.refused ?? null]),
+    [
+      ['read-back', 'read-refused', { action: 'contract', operation: 'inspect', code: 'writer_busy' }],
+      ['demo-words', 'read-refused', { action: 'content.list', operation: null, code: 'no-code' }],
+      ['page-slug', 'read-refused', null]
+    ]
+  )
+  const text = JSON.stringify(d)
+  for (const words of ['private-site', 'private-secret', 'another writer'])
+    assert.equal(text.includes(words), false, words)
+  assert.equal(refusalOf('something else'), null)
 })
