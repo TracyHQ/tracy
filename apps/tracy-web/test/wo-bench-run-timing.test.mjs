@@ -228,7 +228,9 @@ test("a round keeps the first three failures of each rule, with the business's w
   assert.deepEqual(samples.W06, [{ where: 'block-160.2', reason: 'the words "…" rest on no fact' }])
   assert.equal(samples.R10b[0].reason, 'leads to …url… or call #, mail …@…')
   assert.equal(Object.keys(samples).length, 3)
-  assert.equal(maskedReason('x'.repeat(500)).length, 200)
+  assert.equal(maskedReason('a slot of the page '.repeat(30)).length, 200)
+  // A long opaque token, a bearer token and a file system path are masked too.
+  assert.equal(maskedReason(`token ${'a1'.repeat(20)} Bearer abc /Users/me/x`), 'token … Bearer … …path…')
 })
 
 test('a round that made no document says why by its code only, never by the answer the message quotes', () => {

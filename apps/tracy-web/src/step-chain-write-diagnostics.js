@@ -1,4 +1,7 @@
-// Structural evidence only: never persist checker prose, model prompts, measured values or raw errors.
+// Structural evidence only: never persist model prompts, measured values or raw errors. Checker prose is kept for one
+// thing: the final check's faults keep their reason, masked (lib/wo-bench-run-timing.js maskedReason: quoted words, long
+// numbers, addresses, bearer tokens, paths and long tokens), so a build that ends with blocks says what to fix.
+import { maskedReason } from './lib/wo-bench-run-timing.js'
 import { KIT_GROUPS, PAGE_READ_GROUPS, ROUTE_GROUPS, SITE_CHECK_GROUPS } from './site-check/site-check.js'
 import { PAGE_CHECK_GROUPS } from './site-check/page-groups.js'
 import { stepName } from './lib/site-build-steps.js'
@@ -43,7 +46,9 @@ const SKIPS = new Set([
 ])
 const STAGES = new Set(['write', 'setup-checkpoint', 'first-check', 'session', 'turn', 'check'])
 const NOT_SENT = new Set(['time-limit', 'too-long', 'undo-unverified', 'open-turn', 'item-cap'])
-export const MAX_WRITE_DIAGNOSTICS_BYTES = 8192
+export const MAX_WRITE_DIAGNOSTICS_BYTES = 20480
+/** How many faults of the final check the diagnostics keep, each with its masked reason (taken in turn by group). */
+export const FINAL_FAULTS = 60
 const list = (v) => (Array.isArray(v) ? v : [])
 const known = (v, allowed) => (allowed.has(v) ? v : 'unknown')
 const number = (v) => (Number.isFinite(v) && v >= 0 ? Math.min(v, Number.MAX_SAFE_INTEGER) : null)
@@ -71,12 +76,13 @@ const slot = (v) =>
   v.length <= 100
     ? v
     : null
-const fault = (v) => ({
+const fault = (v, { withReason = false } = {}) => ({
   type: known(v?.kind ?? CHECK_GROUP_KINDS[v?.group], KINDS),
   group: known(v?.group, GROUPS),
   page: page(v?.page),
   slot: slot(v?.slot),
-  level: ['block', 'warn'].includes(v?.level) ? v.level : null
+  level: ['block', 'warn'].includes(v?.level) ? v.level : null,
+  ...(withReason && typeof v?.reason === 'string' && v.reason ? { reason: maskedReason(v.reason) } : {})
 })
 
 /**
@@ -174,7 +180,7 @@ export function stepNineDiagnostics(step) {
     if (rows.length > max) truncated = true
     return rows.slice(0, max)
   }
-  const check = (value) =>
+  const check = (value, final = false) =>
     value
       ? {
           status: known(value.status, STATUSES),
@@ -194,7 +200,11 @@ export function stepNineDiagnostics(step) {
             ...(g.status === 'unmeasured' && hostCodeOf(g.reason) ? { hostCode: hostCodeOf(g.reason) } : {}),
             ...(g.status === 'unmeasured' && refusalOf(g.reason) ? { refused: refusalOf(g.reason) } : {})
           })),
-          faults: take(sampleFaults(value.groups), 24).map(fault)
+          // The final check's faults also keep why each failed, masked (maskedReason): without it, dev builds that ended
+          // with 46 to 82 blocks (21–22/11/2026) said which groups failed, not what to fix.
+          faults: final
+            ? take(sampleFaults(value.groups), FINAL_FAULTS).map((f) => fault(f, { withReason: true }))
+            : take(sampleFaults(value.groups), 24).map((f) => fault(f))
         }
       : null
   const repair = step?.repair
@@ -208,7 +218,7 @@ export function stepNineDiagnostics(step) {
     },
     writersSettled: typeof step?.writersSettled === 'boolean' ? step.writersSettled : null,
     firstCheck: check(step?.firstCheck),
-    finalCheck: check(step?.siteCheck),
+    finalCheck: check(step?.siteCheck, true),
     repair: repair
       ? {
           status: known(repair.status, STATUSES),
