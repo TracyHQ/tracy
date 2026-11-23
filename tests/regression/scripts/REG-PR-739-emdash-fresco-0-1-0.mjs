@@ -35,6 +35,7 @@ for (const name of [
   'every set:html in src',
   'PAGE-5: no link field',
   'LANG-2: personalize labels names',
+  'LANG-2: a labels rule that lists fields',
   'ABOUT-2: every keptText id',
   'PAGE-8: the Blog page is covered',
   'DEF-1 and TEXT-1:',
