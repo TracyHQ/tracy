@@ -32,3 +32,35 @@ test('a plan address with spaces, http or a dotted phone number becomes one the 
     url: 'https://booking.example/a%20table'
   })
 })
+
+test("a path the plan names that is a kept page's slug or kit path is that page, never a bare path", () => {
+  // Dev lat30 (23/11/2026): two buttons were written as "/memberships" and answered 404 on a site without URL rewriting.
+  const site = {
+    plan: {
+      pages: [
+        { id: 'page-plans', decision: 'keep', slug: 'memberships' },
+        { id: 'page-about', decision: 'keep' },
+        { id: 'page-old', decision: 'drop', slug: 'old' }
+      ]
+    },
+    kit: {
+      pages: [
+        { id: 'page-plans', path: '/plans' },
+        { id: 'page-about', path: '/about-us' },
+        { id: 'page-old', path: '/old' }
+      ]
+    },
+    facts: new Map(),
+    rows: [],
+    articles: new Map()
+  }
+  const at = (target) => linkTarget(target, site)
+  assert.deepEqual(at('/memberships'), at('page-plans'), 'by the plan slug')
+  assert.deepEqual(at('/about-us'), at('page-about'), 'by the kit path')
+  assert.deepEqual(
+    at('/somewhere'),
+    { kind: 'address', url: '/somewhere' },
+    'no kept page: the address as given'
+  )
+  assert.deepEqual(at('/old'), { kind: 'address', url: '/old' }, 'a dropped page is not a kept page')
+})
