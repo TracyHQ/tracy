@@ -3486,22 +3486,6 @@
       }
     },
     {
-      "key": "features_intro.home-services.items[0].link",
-      "entity": "features_intro.home-services",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-services",
-        "field": "items",
-        "item": 0,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 1 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.home-services.items[0].bg_color",
       "entity": "features_intro.home-services",
       "target": {
@@ -3694,22 +3678,6 @@
       }
     },
     {
-      "key": "features_intro.home-services.items[1].link",
-      "entity": "features_intro.home-services",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-services",
-        "field": "items",
-        "item": 1,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 2 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.home-services.items[1].bg_color",
       "entity": "features_intro.home-services",
       "target": {
@@ -3900,22 +3868,6 @@
         "casing": "none",
         "overflow": "rewrite"
       }
-    },
-    {
-      "key": "features_intro.home-services.items[2].link",
-      "entity": "features_intro.home-services",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-services",
-        "field": "items",
-        "item": 2,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 3 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.home-services.items[2].bg_color",
@@ -4174,22 +4126,6 @@
       }
     },
     {
-      "key": "features_intro.home-events.items[0].link",
-      "entity": "features_intro.home-events",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-events",
-        "field": "items",
-        "item": 0,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 1 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.home-events.items[0].bg_color",
       "entity": "features_intro.home-events",
       "target": {
@@ -4368,22 +4304,6 @@
       "fit": {
         "measured": false
       }
-    },
-    {
-      "key": "features_intro.home-events.items[1].link",
-      "entity": "features_intro.home-events",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-events",
-        "field": "items",
-        "item": 1,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 2 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.home-events.items[1].bg_color",
@@ -4704,22 +4624,6 @@
       }
     },
     {
-      "key": "features_intro.home-visit.items[0].link",
-      "entity": "features_intro.home-visit",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-visit",
-        "field": "items",
-        "item": 0,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 1 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.home-visit.items[0].bg_color",
       "entity": "features_intro.home-visit",
       "target": {
@@ -4915,22 +4819,6 @@
         "casing": "none",
         "overflow": "rewrite"
       }
-    },
-    {
-      "key": "features_intro.home-visit.items[1].link",
-      "entity": "features_intro.home-visit",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-visit",
-        "field": "items",
-        "item": 1,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 2 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.home-visit.items[1].bg_color",
@@ -5506,22 +5394,6 @@
       }
     },
     {
-      "key": "features_intro.about-features.items[0].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 0,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 1 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.about-features.items[0].bg_color",
       "entity": "features_intro.about-features",
       "target": {
@@ -5695,22 +5567,6 @@
       "fit": {
         "measured": false
       }
-    },
-    {
-      "key": "features_intro.about-features.items[1].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 1,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 2 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.about-features.items[1].bg_color",
@@ -5888,22 +5744,6 @@
       }
     },
     {
-      "key": "features_intro.about-features.items[2].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 2,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 3 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.about-features.items[2].bg_color",
       "entity": "features_intro.about-features",
       "target": {
@@ -6077,22 +5917,6 @@
       "fit": {
         "measured": false
       }
-    },
-    {
-      "key": "features_intro.about-features.items[3].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 3,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 4 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.about-features.items[3].bg_color",
@@ -6270,22 +6094,6 @@
       }
     },
     {
-      "key": "features_intro.about-features.items[4].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 4,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 5 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.about-features.items[4].bg_color",
       "entity": "features_intro.about-features",
       "target": {
@@ -6459,22 +6267,6 @@
       "fit": {
         "measured": false
       }
-    },
-    {
-      "key": "features_intro.about-features.items[5].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 5,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 6 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.about-features.items[5].bg_color",
