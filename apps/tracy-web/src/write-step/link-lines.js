@@ -10,7 +10,12 @@ const ENDED = 'the run ended before this link was written'
 export const failed = (reason, extra = {}) => ({ status: 'failed', reason, key: null, ...extra })
 
 /** What becomes of a link whose door is known and whose address is `target`, before the writes. */
-export function lineOrder(claim, door, target, { hiddenKeys, leaving, goneKeys = new Set() }) {
+export function lineOrder(
+  claim,
+  door,
+  target,
+  { hiddenKeys, leaving, goneKeys = new Set(), droppedPaths = new Set() }
+) {
   const { slot: id, content: leadsTo } = claim
   const { link } = door
   if (door.via === 'audio-refused') return failed(door.reason)
@@ -56,6 +61,14 @@ export function lineOrder(claim, door, target, { hiddenKeys, leaving, goneKeys =
   }
   if (door.via === 'words') return { via: 'words', key: door.key, leadsTo }
   if (door.via === 'menu') return menuOrder(door, target)
+  // A listing card's link to its own item, whose page the plan drops: the write step unpublishes that page's article, so the
+  // card leaves the listing and its link with it (dev lat31b, 23/11/2026: two JA Boxing class cards were refused lines).
+  if (link?.action === 'go-to-item' && link.target && droppedPaths.has(slashless(link.target)))
+    return {
+      status: 'skipped',
+      key: null,
+      reason: `it opens ${link.target}, a page the plan drops: its article is unpublished, so the card leaves the listing with its link`
+    }
   return alreadyOpens(link, target) ?? noDoor(link, leadsTo)
 }
 

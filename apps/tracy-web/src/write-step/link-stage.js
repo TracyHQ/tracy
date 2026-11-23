@@ -9,7 +9,7 @@ import { iconsOf } from './kit-slot-routes.js'
 import { foreignItemLinks } from './item-page-links.js'
 import { audioDecisionProblem, isAudioSlot } from 'website-opportunities/domain/audio-source.mjs'
 import { keptBlocks } from './owner-table.js'
-import { audioBindingMatches, linkDoors } from './link-doors.js'
+import { audioBindingMatches, linkDoors, slashless } from './link-doors.js'
 import { failed, lineOrder, lineResult } from './link-lines.js'
 import { NO_LAST } from './no-last-report.js'
 import { articleOfPage, linkTarget } from './link-targets.js'
@@ -217,6 +217,21 @@ export async function prepareLinks({
     [...goneRowSlots({ plan, kit })].map((id) => contentMapKey(icons.get(id)?.field ?? id))
   )
   const orders = new Map()
+  // The paths of the pages the plan drops: their native articles are unpublished (hide-writes.js), so a listing card that
+  // opens one leaves the listing with it.
+  const keptIds = new Set(
+    each(plan?.pages)
+      .filter((p) => p?.decision === 'keep')
+      .map((p) => p.id)
+  )
+  const droppedPaths = new Set(
+    each(kit?.pages)
+      .filter(
+        (p) =>
+          typeof p?.path === 'string' && each(plan?.pages).some((q) => q?.id === p.id) && !keptIds.has(p.id)
+      )
+      .map((p) => slashless(p.path))
+  )
   const doors = new Map(claims.map((claim) => [claim.slot, doorOf(claim.slot)]))
   // A card sent to another card's item page leads to the page that lists them instead (item-page-links.js).
   const foreign = foreignItemLinks({ claims, kit, plan, taken })
@@ -247,7 +262,8 @@ export async function prepareLinks({
         {
           hiddenKeys,
           leaving,
-          goneKeys
+          goneKeys,
+          droppedPaths
         }
       )
     )
