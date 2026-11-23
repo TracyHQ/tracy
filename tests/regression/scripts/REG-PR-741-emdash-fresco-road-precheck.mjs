@@ -115,7 +115,7 @@ const misfit = slots
 c.eq('S5 content map: slots whose type does not fit their sample', misfit.join('; '), '')
 const kitIds = new Set(
   [
-    ...kitText.matchAll(/"(?:slot|urlSlot|labelSlot|labelId)": "([a-z_]+\.[a-z0-9-]+\.[a-z0-9_.\[\]-]+)"/g)
+    ...kitText.matchAll(/"(?:slot|urlSlot|labelSlot|labelId)": "([a-z_]+\.[a-z0-9-]+\.[a-z0-9_.[\]-]+)"/g)
   ].map((m) => m[1])
 )
 const stale = [...kitIds].filter(
