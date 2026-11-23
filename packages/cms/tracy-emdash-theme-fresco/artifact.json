@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Fresco",
-	"generatedAt": "2026-11-23T11:57:39.931Z",
+	"generatedAt": "2026-11-23T12:28:03.095Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,7 +75,7 @@
 		"docs/content-model.md": "sha256:7558b4fd54205310c7119e459a6f7963728c24785998d59fda0eb90d2552c4af",
 		"docs/content-rules.md": "sha256:130d52b0f8cbfb203becd266f36753a36f79bbbf7d3a5cecc008fc8a62b77898",
 		"docs/design-system.md": "sha256:c429943757da34bff44e350b1c2e68df2aa4d774db0bb9af428fea0d9f5c0609",
-		"docs/generated/inventory.json": "sha256:bc175f2869c76ce9aca76eba69f52ba4a618c32d1f8c9e068d5c2a244c1ea3c0",
+		"docs/generated/inventory.json": "sha256:85f0ed6a6b348410f45b4debde458a9232e19187601a5048e4050e0d9c2d60ee",
 		"docs/generated/inventory.md": "sha256:a6e05bf96740385f67b634dd47d5df4df6758b06aca9c96901e5683522ed44fd",
 		"docs/install.md": "sha256:6a2658c2c19c4f884e006207056b221ea8a9a4113a3c908f00ce5b2f3553981f",
 		"docs/languages.md": "sha256:46108a25ebd4d4826848ba520bfb599e1f3f99553b0bbe2d0cd73064da175cb5",
