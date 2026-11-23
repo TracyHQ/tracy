@@ -11,7 +11,10 @@ const opts = { skip: !process.env.TEST_DATABASE_URL && 'set TEST_DATABASE_URL' }
 before(db.open)
 beforeEach(db.reset)
 after(db.close)
-const NOW = Date.parse('2026-10-20T12:00:00Z')
+// The prefetch reads this clock, but claims compare the source's fetchedAt with Postgres now()
+// (30-day freshness), so a fixed date makes the suite fail once it is a month old.
+const NOW = Date.now()
+const DAY = 24 * 60 * 60 * 1000
 const candidate = (id, extra = {}) => ({
   provider: 'google-places',
   providerId: id,
@@ -189,9 +192,9 @@ test(
             i === 0
               ? { status: 'queued' }
               : i === 2
-                ? { status: 'complete', lastPostAt: '2026-10-19T00:00:00Z' }
+                ? { status: 'complete', lastPostAt: new Date(NOW - DAY).toISOString() }
                 : i === 3
-                  ? { status: 'queued', deferredUntil: '2026-10-21T00:00:00Z' }
+                  ? { status: 'queued', deferredUntil: new Date(NOW + DAY).toISOString() }
                   : { status: 'not_queued' }
         }
         return Object.fromEntries(handles.map(({ url }) => [url, observations[url]]))
