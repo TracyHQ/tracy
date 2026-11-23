@@ -6,7 +6,7 @@
  */
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { ROOT, checks, nodeTest, run } from './lib.mjs'
+import { checks, nodeTest, ROOT, run } from './lib.mjs'
 
 const PKG = 'packages/cms/tracy-emdash-theme-fresco'
 const c = checks()
