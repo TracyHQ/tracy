@@ -12,7 +12,7 @@
     "S2: Confirm every test named in run.tests reports ok."
   ],
   "expect": [
-    "A hero frame tries a real photo before it is hidden; per-menu-item entries sharing one photo are each printed once on their own page; an entry frame a twin fills or no kept page prints needs no picture; a caption in an address slot is not written."
+    "A hero frame tries a real photo before it is hidden; per-menu-item entries sharing one photo are each printed once on their own page; an entry frame a twin fills or no kept page prints needs no picture; a caption in an address slot is not written; a field repeating a class page's demo title takes its new title; a self-opening photo control the plan hides stays; a full-width hero frame is darkened for its text."
   ],
   "selectors": {},
   "run": {
@@ -24,7 +24,9 @@
       "apps/tracy-web/test/site-pictures-check.test.mjs",
       "apps/tracy-web/test/site-check-written-not-printed.test.mjs",
       "apps/tracy-web/test/write-step-menu-item-entries.test.mjs",
-      "apps/tracy-web/test/write-step-slot-dispute.test.mjs"
+      "apps/tracy-web/test/write-step-slot-dispute.test.mjs",
+      "apps/tracy-web/test/write-step-title-repeats.test.mjs",
+      "apps/tracy-web/test/write-step-hide-yields.test.mjs"
     ],
     "needs": [],
     "tests": [
@@ -32,7 +34,10 @@
       "a per-menu-item entry is shown only on its own page: three entries sharing one photo are each printed once",
       "each masthead entry prints on the page whose title is its entry, and an entry no page names prints nowhere",
       "an entry frame left empty needs no picture when a twin fills it or no kept page prints it",
-      "words the writer puts in an address slot are left out, never written as a link to a page that does not exist"
+      "words the writer puts in an address slot are left out, never written as a link to a page that does not exist",
+      "a field that repeats a kept class page's demo title takes the page's new title",
+      "a tab or a photo control the plan hides stays as it is; a frame the kit read on no page leaves with nothing; a \"Website\" line goes with its address",
+      "a frame spanning the page in a hero has text over it; a narrow one, or one in a section, has none unless marked"
     ]
   }
 }
