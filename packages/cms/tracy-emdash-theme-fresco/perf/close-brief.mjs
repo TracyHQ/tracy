@@ -15,7 +15,7 @@ let fix = '# fix — coordinator answers\n| Id | Status | Fix |\n|---|---|---|\n
 for (const [id] of todos) {
   const a = answers[id]
   if (!a) continue
-  fix += `| ${id} | ${a.status}: ${a.reason.replace(/\|/g, '\\|')} | ${a.status === 'done' ? (a.fix ?? 'see the answer') : 'none'} |\n`
+  fix += `| ${id} | ${a.status}: ${a.reason.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')} | ${a.status === 'done' ? (a.fix ?? 'see the answer') : 'none'} |\n`
 }
 mkdirSync(`${run}/notes`, { recursive: true })
 writeFileSync(`${run}/notes/fix-answers.md`, fix)
