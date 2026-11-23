@@ -468,6 +468,33 @@ test('the planned top-level News page leaves demo menu ancestors and restores th
   assert.equal(rows[2].parent_id, 1)
   assert.equal(rows[2].title, 'News from Harbor Club')
   assert.ok(out.lines.some((l) => l.part === 'page-menu-title' && l.status === 'written'))
+  // A menu title the copy writes is the plan's menu label: the page heading never replaces it (dev lat30).
+  const labelledRows = structuredClone(records)
+  const labelled = await runRouteStage({
+    door: {
+      apply: async ({ action, params }) => {
+        if (action === 'content.list') return { ok: true, items: labelledRows }
+        const row = labelledRows.find((r) => r.id === params.id)
+        if (action === 'content.get') return { ok: true, item: { ...row } }
+        if (action === 'content.update') {
+          Object.assign(row, params.fields)
+          return { ok: true, alias: row.alias }
+        }
+        throw new Error(action)
+      }
+    },
+    siteKey: SITE,
+    kit,
+    plan,
+    copySlots: [
+      { slot: 'block-162.9', items: ['News from Harbor Club'] },
+      { slot: 'menuItem-20.0', items: ['News'] }
+    ],
+    keptPages: [{ id: 'news', path: kit.pages[0].path }]
+  })
+  assert.equal(labelled.routes[0].outcome, 'written')
+  assert.notEqual(labelledRows[2].title, 'News from Harbor Club', 'the menu keeps the label the copy wrote')
+  assert.ok(!labelled.lines.some((l) => l.part === 'page-menu-title'))
   assert.equal(out.keptPages[0].path, '/news')
   assert.ok(out.lines.some((l) => l.part === 'page-menu-parent' && l.ordered === 1))
   const restored = await restoreRoutes({ door, siteKey: SITE, routes: out.routes })
