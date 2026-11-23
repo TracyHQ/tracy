@@ -543,3 +543,26 @@ test('an observed place or owner-post photo stays documentary even when its wish
     assert.equal(idx.documentaryFrame('block-2.1'), false, 'a generic cutout remains an illustration')
   }
 })
+
+test("a hero's frame tries a real photo of the business before it is hidden; any other frame keeps its order", () => {
+  // Dev lat28 and lat29 (22–23/11/2026): JA Diner's and JA Boxing's home heroes were hidden by the hide rung.
+  const frames = new Map([
+    ['hero.0', { id: 'hero.0', canHide: true, blockRole: 'hero' }],
+    ['section.0', { id: 'section.0', canHide: true, blockRole: 'section' }]
+  ])
+  const wishes = new Map([
+    ['hero.0', { frame: 'hero.0', match: 'specific' }],
+    ['section.0', { frame: 'section.0', match: 'specific' }]
+  ])
+  const idx = { frames, wishes, documentaryFrame: () => false, galleryTile: () => null }
+  const hero = rungsFor(idx, 'hero.0')
+  assert.ok(hero.indexOf('any-photo') < hero.indexOf('hide'), hero.join(' '))
+  assert.ok(hero.indexOf('best-minor') < hero.indexOf('any-photo'))
+  assert.deepEqual(
+    [...hero].sort(),
+    [...rungsFor(idx, 'section.0')].sort(),
+    'the same rungs, in another order'
+  )
+  const section = rungsFor(idx, 'section.0')
+  assert.ok(section.indexOf('hide') < section.indexOf('any-photo'), section.join(' '))
+})

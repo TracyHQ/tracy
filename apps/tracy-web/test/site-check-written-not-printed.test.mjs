@@ -109,6 +109,36 @@ test('a slot is printed when any page that shows it prints it', () => {
   ])
 })
 
+test('a per-menu-item entry is shown only on its own page: three entries sharing one photo are each printed once', () => {
+  // Dev lat29 (23/11/2026): JA Diner's masthead entries for About, Bookings and Contact took one photo; each page prints
+  // its own entry, and a block read as shown whole on every page left two of the three printed nowhere.
+  const kit = {
+    pages: [
+      { id: 'page-a', path: '/a', blocks: { 1440: ['block-6'] } },
+      { id: 'page-b', path: '/b', blocks: { 1440: ['block-6'] } },
+      { id: 'page-c', path: '/c', blocks: { 1440: ['block-6'] } }
+    ],
+    blocks: [
+      { id: 'block-6', slots: [], frames: [{ id: 'block-6.1' }, { id: 'block-6.2' }, { id: 'block-6.3' }] }
+    ]
+  }
+  const kept = [
+    { id: 'page-a', path: '/a' },
+    { id: 'page-b', path: '/b' },
+    { id: 'page-c', path: '/c' }
+  ]
+  const entryPages = { 'block-6.1': ['page-a'], 'block-6.2': ['page-b'], 'block-6.3': ['page-c'] }
+  const pages = new Map(
+    ['/a', '/b', '/c'].map((path) => [path, body(`<div style="background-image: url('/${PIC}')"></div>`)])
+  )
+  const slots = ['block-6.1', 'block-6.2', 'block-6.3'].map((slot) => picture(slot))
+  const own = slotsOnPages(kit, kept, entryPages)
+  assert.deepEqual(own.get('/b'), ['block-6.2'])
+  assert.deepEqual(sitePrints({ onPages: own, pages, slots }).notPrinted, [])
+  // Read as shown whole on every page, the one print of each page covers the first entry only.
+  assert.equal(sitePrints({ onPages: slotsOnPages(kit, kept), pages, slots }).notPrinted.length, 2)
+})
+
 const report = (slots) => ({ version: 'site-write-report/1', status: 'done', site: SITE, keptPages, slots })
 const gate = (site, slots = printedLines()) =>
   runSiteCheck({

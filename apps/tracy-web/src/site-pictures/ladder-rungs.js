@@ -75,14 +75,31 @@ export function rungsOf(wish, frame = null, galleryTile = false) {
   return RUNGS[wish?.match] ?? RUNGS.person
 }
 
+/**
+ * A hero's picture is the first thing a visitor sees: hidden, the page opens on a dark band. Its frame tries a real photo of
+ * the business (best-minor, any-photo) before it is hidden. Before (dev lat28 and lat29, 22–23/11/2026), JA Diner's and
+ * JA Boxing's home heroes were hidden by the hide rung, a black band under the heading, though both businesses have photos.
+ */
+const heroFirst = (rungs, frame) => {
+  if (frame?.blockRole !== 'hero' || !rungs.includes('hide') || !rungs.includes('any-photo')) return rungs
+  const early = rungs.filter((r) => r === 'best-minor' || r === 'any-photo')
+  const rest = rungs.filter((r) => !early.includes(r))
+  const at = rest.indexOf('hide')
+  return Object.freeze([...rest.slice(0, at), ...early, ...rest.slice(at)])
+}
+
 /** The rungs of one frame of the round's index. */
 export const rungsFor = (idx, frameId) => {
   const wish = idx.wishes.get(frameId)
+  const frame = idx.frames.get(frameId)
   if (idx.documentaryFrame?.(frameId)) {
     const rungs = idx.galleryTile?.(frameId) ? RUNGS.gallery : RUNGS['any-real']
-    return rungs.filter((rung) => !DRAW_RUNGS.has(rung))
+    return heroFirst(
+      rungs.filter((rung) => !DRAW_RUNGS.has(rung)),
+      frame
+    )
   }
-  return rungsOf(wish, idx.frames.get(frameId), Boolean(idx.galleryTile?.(frameId)))
+  return heroFirst(rungsOf(wish, frame, Boolean(idx.galleryTile?.(frameId))), frame)
 }
 
 /**

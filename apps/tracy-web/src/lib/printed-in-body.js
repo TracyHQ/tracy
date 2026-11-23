@@ -282,15 +282,23 @@ function slotIdsOf(block) {
  * @param {{ id: string, path: string }[]} pages the kept pages of a write report
  * @returns {Map<string, string[]>} page path to slot ids
  */
-export function slotsOnPages(kit, pages) {
+export function slotsOnPages(kit, pages, entryPages = null) {
   const blocks = new Map(each(kit?.blocks).map((b) => [b?.id, b]))
   const kitPages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
+  // A slot of a per-menu-item entry is shown only on its own page (write-step/menu-item-entries.js entryPagesOf).
+  const own = entryPages && typeof entryPages === 'object' ? entryPages : {}
+  const shownOn = (slot, page) => !Array.isArray(own[slot]) || own[slot].includes(page)
   const out = new Map()
   for (const page of each(pages)) {
     const found = kitPages.get(page?.id)
     if (!found || typeof page.path !== 'string') continue
     const ids = new Set(Object.values(found.blocks ?? {}).flatMap((list) => each(list)))
-    out.set(page.path, [...new Set([...ids].flatMap((id) => slotIdsOf(blocks.get(id))))])
+    out.set(
+      page.path,
+      [...new Set([...ids].flatMap((id) => slotIdsOf(blocks.get(id))))].filter((slot) =>
+        shownOn(slot, page.id)
+      )
+    )
   }
   return out
 }

@@ -536,7 +536,8 @@ A `person` frame climbs only hide and return (no other person's photo, never a d
 climbs draw, redraw, hide, redraw-alt, best-rejected and return; any other cut-out only hide and return (section 3d).
 A `specific` frame climbs redraw-alt, best-minor, any photo and best-rejected after hide, an `any-real` frame best-minor,
 any photo and best-rejected, and a gallery tile best-rejected before return (22/11/2026: a frame whose own pictures all
-had a hard fault shows a real photo of the business rather than nothing). A frame waiting for the drawer
+had a hard fault shows a real photo of the business rather than nothing). A frame of a kit block whose role is `hero`
+climbs best-minor and any photo before hide (23/11/2026: both dev heroes were hidden into a dark band). A frame waiting for the drawer
 starts at draw; a frame code placed starts at its first rung after the placement; a frame the picker placed climbs only
 in the last round (no picker round follows), from draw, when the looker rejects it or it still fails the check. A look
 that could not be read is no rejection: the picture fails L01 and the next round asks again. Each rung is recorded in

@@ -5,7 +5,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
-import { menuItemEntryTwins } from '../src/write-step/menu-item-entries.js'
+import { entryPagesOf, menuItemEntryTwins, neededEntry } from '../src/write-step/menu-item-entries.js'
 
 const CONTRACT = '../../../packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.8/'
 const read = (file) => JSON.parse(readFileSync(new URL(CONTRACT + file, import.meta.url), 'utf8'))
@@ -79,4 +79,33 @@ test('an entry a file speaks for keeps its own value, and nothing is copied when
   assert.equal(twins.get('block-106.23'), 'block-106.29')
   assert.equal(twins.get('block-106.21'), 'block-106.2')
   assert.deepEqual(menuItemEntryTwins({ plan: PLAN, kit: KIT, contentMap: MAP, claims: [] }).twins, new Map())
+})
+
+test('each masthead entry prints on the page whose title is its entry, and an entry no page names prints nowhere', () => {
+  const on = entryPagesOf({ kit: KIT, contentMap: MAP })
+  assert.deepEqual(on['block-106.29'], ['page-about-us'], 'the about background, entry 6')
+  assert.deepEqual(on['block-106.19'], ['page-about-us'], 'the about description, entry 6')
+  assert.deepEqual(on['block-106.23'], ['page-contact-us'], 'the contact background, entry 0')
+  assert.deepEqual(on['block-106.24'], [], 'the search background: no page of the kit has entry 1')
+  assert.equal(on['block-106.2'], undefined, 'the default is no entry')
+})
+
+test('an entry frame left empty needs no picture when a twin fills it or no kept page prints it', () => {
+  // Dev lat29 (23/11/2026): four masthead frames left empty blocked, two of them filled by twins, two of dropped pages.
+  const { twins } = menuItemEntryTwins({
+    plan: PLAN,
+    kit: KIT,
+    contentMap: MAP,
+    claims: [words('block-106.2', 'Emirati food in Jumeirah since 1997.'), picture('block-106.31')]
+  })
+  const context = {
+    twins,
+    entryPages: entryPagesOf({ kit: KIT, contentMap: MAP }),
+    kept: PLAN.pages.filter((p) => p.decision === 'keep').map((p) => p.id)
+  }
+  const empty = (slot) => ({ slot, owner: 'picture', reason: 'pictures: left without one' })
+  assert.equal(neededEntry(empty('block-106.29'), context), false, 'the about entry takes the bookings photo')
+  assert.equal(neededEntry(empty('block-106.26'), context), false, 'the login page is no kept page')
+  assert.equal(neededEntry(empty('block-96.1'), context), true, 'a frame of no entry still needs its picture')
+  assert.equal(neededEntry({ slot: 'block-106.26', owner: 'writer' }, context), true, 'only picture items')
 })
