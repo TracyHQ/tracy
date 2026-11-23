@@ -624,8 +624,8 @@
   "keptText": [
     "chrome/chrome.footer_about_title",
     "chrome/chrome.footer_reservations_button",
-    "chrome/chrome.footer_link",
-    "chrome/chrome.footer_links",
+    "chrome/chrome.footer_link_text",
+    "chrome/chrome.footer_links_text",
     "chrome/chrome.skip_label",
     "chrome/chrome.more_label",
     "chrome/chrome.not_found_text",

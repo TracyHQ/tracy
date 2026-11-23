@@ -31510,12 +31510,12 @@
       }
     },
     {
-      "key": "chrome.chrome.footer_link",
+      "key": "chrome.chrome.footer_link_text",
       "entity": "chrome.chrome",
       "target": {
         "collection": "chrome",
         "entry": "chrome",
-        "field": "footer_link"
+        "field": "footer_link_text"
       },
       "type": "url",
       "sample": "Reservation Policy",
@@ -31540,12 +31540,12 @@
       }
     },
     {
-      "key": "chrome.chrome.footer_links",
+      "key": "chrome.chrome.footer_links_text",
       "entity": "chrome.chrome",
       "target": {
         "collection": "chrome",
         "entry": "chrome",
-        "field": "footer_links"
+        "field": "footer_links_text"
       },
       "type": "text",
       "sample": "Privacy Policy\nHealth & Safety\nFAQ",

@@ -82,7 +82,7 @@
       "from": "the alt text of a picture of the second gallery strip of the home page: no page draws it in a box"
     },
     {
-      "slot": "chrome.chrome.footer_links",
+      "slot": "chrome.chrome.footer_links_text",
       "maxCharacters": 119,
       "from": "three plain lines, one list row each in the footer's About column; filled with running text until a row gains a line (perf/slot-measure.mjs): 39 characters per line at 1440 px (290 px box), 40 at 768 px, 44 at 390 px, so 3 × 39 plus the 2 line breaks"
     }

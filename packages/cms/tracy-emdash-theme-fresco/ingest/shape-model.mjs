@@ -155,7 +155,7 @@ model.routes = [
   ...model.routes.filter((r) => r.kind === 'page' && KEEP_PATHS.has(r.path)),
   { path: '/blog', kind: 'list', type: 'posts' }
 ]
-// the main menu without the Home demos, and the footer "About" menu (its links are `#` except one: see chrome.footer_links)
+// the main menu without the Home demos, and the footer "About" menu (its links are `#` except one: see chrome.footer_links_text)
 model.menus = model.menus.filter((m) => m.name === 'mainmenu')
 for (const m of model.menus) {
   m.name = 'primary'
@@ -304,9 +304,9 @@ model.types.push({
     'footer_hours_title',
     'footer_hours',
     'footer_links_title',
-    'footer_link',
+    'footer_link_text',
     'footer_link_to',
-    'footer_links',
+    'footer_links_text',
     'copyright',
     'skip_label',
     'menu_label',
@@ -362,9 +362,9 @@ model.records.push({
     footer_hours: lines(hours.content).join('\n'),
     footer_links_title: 'About',
     // the one linked entry of the "About" menu (the contact page) and the source's `#` entries, which print as plain text (DECISIONS D11)
-    footer_link: aboutMenu.filter((m) => /Itemid=117/.test(m.link)).map((m) => decode(m.title))[0] ?? '',
+    footer_link_text: aboutMenu.filter((m) => /Itemid=117/.test(m.link)).map((m) => decode(m.title))[0] ?? '',
     footer_link_to: aboutMenu.some((m) => /Itemid=117/.test(m.link)) ? '/contact' : '',
-    footer_links: aboutMenu
+    footer_links_text: aboutMenu
       .filter((m) => !/Itemid=117/.test(m.link))
       .map((m) => decode(m.title))
       .join('\n'),

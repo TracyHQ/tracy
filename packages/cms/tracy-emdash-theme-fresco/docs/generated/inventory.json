@@ -839,7 +839,7 @@
           "required": false
         },
         {
-          "slug": "footer_link",
+          "slug": "footer_link_text",
           "label": "Footer link",
           "type": "string",
           "required": false
@@ -851,7 +851,7 @@
           "required": false
         },
         {
-          "slug": "footer_links",
+          "slug": "footer_links_text",
           "label": "Footer links",
           "type": "string",
           "required": false
@@ -1282,9 +1282,9 @@
     "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
     "package.json": "sha256:60917531c8943ab8ff7dc25bc13da582235b772fe1555bb0212adf94b9f640fd",
     "pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
-    "seed/field-map.json": "sha256:03f7be89cc3139628e1b5432081262c1a2ef72d7a6015bd3fc5e5bcfd8e1423e",
+    "seed/field-map.json": "sha256:eecf767c0ef6ca26ba8c84a72c600960e634863982652e09e4ad91a5917010aa",
     "seed/media-map.json": "sha256:1cb781eaa3b99e31b41e6800f151d2f03e7988ab1f8741605b61993b4e9b6ab3",
-    "seed/seed.json": "sha256:462d9112b783268c26af4d6883f1436056fdcdbb5f0dc9d09ef336fdb91380e1",
+    "seed/seed.json": "sha256:6145087d7df097753d7be56120fc53476e9dbdf4c97dff88da95ed11a7cb55e5",
     "src/components/blocks/FeaturesAbout.astro": "sha256:fcb6689e1e9d4c84410f67636cd112ea98f87633acc12256c8e0d7a7d5ea618e",
     "src/components/blocks/FeaturesTiles.astro": "sha256:99c81c4ae36c5511b35a7ddab6b377c8549cf4051c256d1e978a7c25aedca65d",
     "src/components/blocks/GalleryCarousel.astro": "sha256:1020bdd1bdcb15e81093ab770b95b626fc428ec00eec495b4100b4a3d322bdcb",
@@ -1300,7 +1300,7 @@
     "src/components/blocks/Testimonials.astro": "sha256:fca9d7f273c84d3d90cabb20c10a2ecbf5e20d4d82041237b3ec7d310e6b03ca",
     "src/components/site/BookTable.astro": "sha256:ed6f33686ae921d5e47a1a379a65a0e7a82093304fb8b7e39042958f660378c8",
     "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
-    "src/components/site/Footer.astro": "sha256:4d62b603811b3f2e2af78b54f7df6fa22f4031a6742d288171ec5812b247be09",
+    "src/components/site/Footer.astro": "sha256:f412f956c140b4dc845c82111be561d7028a045efd53d77ec297d6e9d66f3537",
     "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
     "src/components/site/Header.astro": "sha256:0d20b8bbd53ea849615a92d047ed70f2852bf511260b28ada67e6b4bc86dfff7",
     "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",

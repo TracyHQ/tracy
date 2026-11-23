@@ -804,7 +804,7 @@
           "type": "text"
         },
         {
-          "name": "footer_link",
+          "name": "footer_link_text",
           "type": "text"
         },
         {
@@ -812,7 +812,7 @@
           "type": "text"
         },
         {
-          "name": "footer_links",
+          "name": "footer_links_text",
           "type": "text"
         },
         {
@@ -2550,9 +2550,9 @@
         "footer_hours_title": "Hours",
         "footer_hours": "MONDAY thru FRIDAY\n11am - 9pm\nSATURDAY/SUNDAY\n10am - 11pm",
         "footer_links_title": "About",
-        "footer_link": "Reservation Policy",
+        "footer_link_text": "Reservation Policy",
         "footer_link_to": "/contact",
-        "footer_links": "Privacy Policy\nHealth & Safety\nFAQ",
+        "footer_links_text": "Privacy Policy\nHealth & Safety\nFAQ",
         "copyright": "Copyright © {year} {name}. All Rights Reserved.",
         "skip_label": "Skip to content",
         "menu_label": "Menu",

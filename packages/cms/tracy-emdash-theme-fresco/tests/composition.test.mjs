@@ -53,9 +53,9 @@ test('the chrome entry carries every word the header and footer print', () => {
     'book_link',
     'menu_label',
     'close_label',
-    'footer_link',
+    'footer_link_text',
     'footer_link_to',
-    'footer_links',
+    'footer_links_text',
     'copyright',
     'topbar_address'
   ])

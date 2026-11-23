@@ -17,9 +17,9 @@ const lines = (v: unknown) =>
   String(v ?? '')
     .split('\n')
     .filter(Boolean)
-// the one linked entry (`footer_link`, going to `footer_link_to`) first, then the source's `#` entries as plain text, one per line (DECISIONS D11)
+// the one linked entry (`footer_link_text`, going to `footer_link_to`) first, then the source's `#` entries as plain text, one per line (DECISIONS D11)
 const links = [
-  { label: String(site.footer_link ?? ''), path: String(site.footer_link_to ?? '').trim() }
+  { label: String(site.footer_link_text ?? ''), path: String(site.footer_link_to ?? '').trim() }
 ].filter((l) => l.label)
 const live = await liveLinks(Astro.request, locale, [...links.map((l) => l.path), site.book_link])
 const Lines = (v: unknown) => lines(v)
@@ -51,8 +51,8 @@ const Lines = (v: unknown) => lines(v)
 			<div>
 				<h3 {...$c('footer_links_title')}>{site.footer_links_title}</h3>
 				<ul>
-					{links.map((l) => <li>{l.path && live(l.path) ? <a href={dataHref(l.path, (p) => href(locale, p))} {...$c('footer_link')}>{l.label}</a> : <span {...$c('footer_link')}>{l.label}</span>}</li>)}
-					{lines(site.footer_links).map((label) => <li {...$c('footer_links')}><span>{label}</span></li>)}
+					{links.map((l) => <li>{l.path && live(l.path) ? <a href={dataHref(l.path, (p) => href(locale, p))} {...$c('footer_link_text')}>{l.label}</a> : <span {...$c('footer_link_text')}>{l.label}</span>}</li>)}
+					{lines(site.footer_links_text).map((label) => <li {...$c('footer_links_text')}><span>{label}</span></li>)}
 				</ul>
 			</div>
 		</div>

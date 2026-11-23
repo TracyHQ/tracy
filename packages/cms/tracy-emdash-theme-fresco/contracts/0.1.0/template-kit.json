@@ -3287,7 +3287,7 @@
           "maxCharactersFrom": "kit frame (390px 30, 1440px 24)"
         },
         {
-          "id": "chrome.chrome.footer_links",
+          "id": "chrome.chrome.footer_links_text",
           "role": "editorial.menu_label",
           "type": "text",
           "maxCharacters": 119,
@@ -3492,7 +3492,7 @@
       "buttons": [
         {
           "labelSlot": "chrome.chrome.footer_reservations_button",
-          "urlSlot": "chrome.chrome.footer_link",
+          "urlSlot": "chrome.chrome.footer_link_text",
           "label": "Book your table",
           "link": "footer.link-3",
           "target": "/contact"
@@ -15423,7 +15423,7 @@
       "listedIn": "footer"
     },
     {
-      "slot": "chrome.chrome.footer_link",
+      "slot": "chrome.chrome.footer_link_text",
       "field": "",
       "type": "url",
       "sample": "Reservation Policy",
@@ -15437,7 +15437,7 @@
       "listedIn": null
     },
     {
-      "slot": "chrome.chrome.footer_links",
+      "slot": "chrome.chrome.footer_links_text",
       "field": "",
       "type": "text",
       "sample": "Privacy Policy Health & Safety FAQ",

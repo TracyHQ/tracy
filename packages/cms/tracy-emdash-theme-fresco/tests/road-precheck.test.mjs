@@ -6,6 +6,8 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
+import { chromeLabelsOf, isLabelText } from '../tools/personalize.mjs'
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const read = (p) => readFileSync(path.join(ROOT, p), 'utf8')
 const seed = JSON.parse(read('seed/seed.json'))
@@ -51,12 +53,14 @@ test('LANG-2: personalize labels names every collection that has an interface-wo
   }
 })
 
-test('LANG-2: a labels rule that lists fields lists every interface word its components render', () => {
-  // Read from the components that render the collection: a short text field of the seed, printed as `entry.<field>`,
-  // that no copy, facts, identity or rewrite rule writes and whose key is not an address, a switch, a number or a name
-  // is a word of the interface, and the rule must list it (the booking dialog kept "Book Table" in English once).
-  const notALabel =
-    /^_|(?:^|_)(?:url|urls|link|links|href|slug|email|phone|hotline|image|img|icon|logo|network|platform|size|align|key|mark|id|code|handle|show|brand|name|layout|variant|state|status|style|color|colour|form|type|columns|col|number|auto|time)(?:_|$)/i
+/**
+ * The interface words the components print from the collections a `labels` rule names, that the tool would not translate:
+ * a short text field of the seed, printed as `<entry>.<field>` or named as an edit attribute, that no copy, facts, identity or rewrite rule writes, whose
+ * key is not an enumeration or a name, and that `chromeLabelsOf` (the tool's own reading of the rules) does not offer.
+ */
+function untranslatedInterfaceWords(labelsMap) {
+  const enumeration =
+    /^_|(?:^|_)(?:id|key|code|handle|show|brand|name|layout|variant|state|status|style|color|colour|form|type|columns|col|number|auto|time|size|align|platform|network|mark|icon|logo|image|img|slug)(?:_|$)/i
   const code = []
   const walk = (dir) => {
     for (const f of readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
@@ -66,6 +70,19 @@ test('LANG-2: a labels rule that lists fields lists every interface word its com
   }
   walk('src')
   const components = code.join('\n')
+  const seedEntries = Object.entries(seed.content).flatMap(([collection, rows]) =>
+    rows.map((r) => ({
+      collection,
+      slug: r.slug,
+      locale: r.locale ?? seed.defaultLocale,
+      data: r.data ?? {}
+    }))
+  )
+  const offered = new Set(
+    chromeLabelsOf({ map: labelsMap, seedEntries, locale: seed.defaultLocale, patches: new Map() }).map(
+      (l) => l.id
+    )
+  )
   const owned = (collection, slug, field) =>
     [...map.copy, ...map.facts, ...(map.identity ?? [])].some(
       (r) => r.collection === collection && (r.slug === undefined || r.slug === slug) && r.field === field
@@ -77,23 +94,53 @@ test('LANG-2: a labels rule that lists fields lists every interface word its com
         ((r.fields ?? []).includes(field) || r.body === field || field in (r.lists ?? {}))
     )
   const missing = []
-  for (const rule of map.labels.filter((l) => Array.isArray(l.fields))) {
+  for (const rule of labelsMap.labels) {
     for (const entry of defaults(rule.collection)) {
       for (const [field, value] of Object.entries(entry.data ?? {})) {
-        if (typeof value !== 'string' || value.trim() === '' || value.length > 120) continue
-        if (field === 'title' || notALabel.test(field) || rule.fields.includes(field)) continue
-        if (!new RegExp(`entry\\.${field}\\b`).test(components)) continue
+        if (typeof value !== 'string' || value.trim() === '' || value.length > 120 || !isLabelText(value))
+          continue
+        // `title` is the entry's name in the admin; the two blocks that print it as an accessible name are listed below
+        if (field === 'title' || enumeration.test(field)) continue
+        if (!new RegExp(`[.'"]${field}\\b`).test(components)) continue
         if (owned(rule.collection, entry.slug, field)) continue
-        missing.push(`${rule.collection}/${entry.slug}.${field} ("${value.slice(0, 24)}")`)
+        if (!offered.has(`${rule.collection}/${entry.slug}.${field}`))
+          missing.push(`${rule.collection}/${entry.slug}.${field} ("${value.slice(0, 24)}")`)
       }
     }
   }
-  assert.deepEqual(missing, [], 'interface words the labels rule does not list')
-  // `title` is the entry's name in the admin; two blocks print it as the accessible name of their region
-  for (const collection of ['testimonials', 'gallery']) {
-    const rule = map.labels.find((l) => l.collection === collection)
-    assert.ok(rule.fields.includes('title'), `${collection}: the region's aria-label reads the title`)
-  }
+  return missing
+}
+
+test('LANG-2: every interface word the components print from a labels collection is one the tool translates', () => {
+  // The booking dialog kept "Book Table" in English once (book_btn missing from the rule) and the footer's
+  // "Privacy Policy" another time (a key ending in _link is read as an address): both are read from the tool itself.
+  assert.deepEqual(untranslatedInterfaceWords(map), [])
+  // `title` is printed as the accessible name of the testimonial and gallery regions
+  for (const collection of ['testimonials', 'gallery'])
+    assert.ok(map.labels.find((l) => l.collection === collection).fields.includes('title'))
+})
+
+test('LANG-2: the check above is not vacuous (a field taken out of a rule, or a key the tool reads as an address, is found)', () => {
+  const without = (collection, field) => ({
+    ...map,
+    labels: map.labels.map((l) =>
+      l.collection === collection && l.fields ? { ...l, fields: l.fields.filter((f) => f !== field) } : l
+    )
+  })
+  for (const [collection, field] of [
+    ['book_table', 'book_btn'],
+    ['book_table', 'order_btn'],
+    ['book_table', 'book_phone_title'],
+    ['teams', 'title_btn'],
+    ['features_intro', 'button'],
+    ['happyhours', 'hp_link_text']
+  ])
+    assert.ok(
+      untranslatedInterfaceWords(without(collection, field)).some(
+        (m) => m.startsWith(`${collection}/`) && m.includes(`.${field} `)
+      ),
+      `${collection}.${field} out of its rule is not found`
+    )
 })
 
 test('ABOUT-2: every keptText id names a demo field that exists, and DECISIONS.md gives the reason', (t) => {
