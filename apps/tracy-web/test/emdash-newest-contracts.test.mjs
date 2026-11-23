@@ -17,11 +17,15 @@ const ROOT = path.resolve(import.meta.dirname, '../../..')
 const SLOTS = path.join(ROOT, 'packages/design/tracy-ds-slot/templates')
 const parts = (v) => v.split('.').map(Number)
 const cmp = (a, b) => {
-  const x = parts(a), y = parts(b)
-  for (let i = 0; i < Math.max(x.length, y.length); i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) - (y[i] || 0)
+  const x = parts(a),
+    y = parts(b)
+  for (let i = 0; i < Math.max(x.length, y.length); i++)
+    if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) - (y[i] || 0)
   return 0
 }
-const emdashTags = Object.keys(TEMPLATE_PROFILES.releases).filter((tag) => /^tracy-[a-z-]+\/emdash-/.test(tag))
+const emdashTags = Object.keys(TEMPLATE_PROFILES.releases).filter((tag) =>
+  /^tracy-[a-z-]+\/emdash-/.test(tag)
+)
 const newest = (tag) => Object.keys(TEMPLATE_PROFILES.releases[tag]).sort(cmp).at(-1)
 const slotMax = (tag) => {
   const found = []
@@ -38,9 +42,15 @@ test('every EmDash tag with a profile row has its newest version covered by a co
     const version = newest(tag)
     const theme = tag.split('/')[0].replace(/^tracy-/, '')
     const dir = path.join(ROOT, 'packages/cms', `tracy-emdash-theme-${theme}`, 'contracts', version)
-    assert.ok(existsSync(dir), `${tag}@${version} has a profile row but no packages/cms/tracy-emdash-theme-${theme}/contracts/${version}/`)
+    assert.ok(
+      existsSync(dir),
+      `${tag}@${version} has a profile row but no packages/cms/tracy-emdash-theme-${theme}/contracts/${version}/`
+    )
     const max = slotMax(tag)
     assert.ok(max, `${tag} has no slot contract naming a maxVersion`)
-    assert.ok(cmp(max, version) >= 0, `${tag}@${version} has a profile row but its slot contracts stop at ${max}`)
+    assert.ok(
+      cmp(max, version) >= 0,
+      `${tag}@${version} has a profile row but its slot contracts stop at ${max}`
+    )
   }
 })
