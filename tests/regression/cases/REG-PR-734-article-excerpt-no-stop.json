@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-734-article-excerpt-no-stop",
+  "kind": "fix",
+  "title": "An unfaithful article body is replaced by its planned post's opening instead of stopping the whole write",
+  "pr": 734,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The write step writes the planned post's opening in place of an invented article body and goes on; the opening keeps whole sentences or words and passes the excerpt rule; a kept link's labelSlot is the kit's."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-copy-owner-post-excerpts.test.mjs",
+      "apps/tracy-web/test/site-planner-undecided-links.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the write step writes the planned post's own opening in place of an invented article body, and goes on",
+      "a post's opening within a limit keeps whole sentences, else whole words, and is a faithful excerpt",
+      "a kept link's labelSlot is the kit's: none or another slot is corrected, the kit's is left as it is"
+    ]
+  }
+}
