@@ -80,8 +80,14 @@ export function judgeListRows(report, measures, { pagesOf } = {}) {
   const failures = []
   const unread = []
   let checked = 0
+  // A module's per-menu-item entries (JA's masthead) are no list on a page: each page prints its own entry (the write report's
+  // `entryPages`). Before (dev lat29, 23/11/2026) JA Boxing's fourteen masthead entries were judged as a list on /classes.
+  const entries = new Set(
+    Object.keys(report?.entryPages ?? {}).map((id) => String(id).replace(/^block-/, 'module-'))
+  )
   for (const row of each(report?.rows)) {
     const keys = new Set(each(row.keptKeys))
+    if (keys.size && [...keys].every((key) => entries.has(key))) continue
     const entity = entityOf([...keys][0]) || String(row.block ?? '').replace(/^block-/, 'module-')
     const printedOn = pagesOf ? (pagesOf.get(entity) ?? new Set()) : null
     const own = lines

@@ -261,6 +261,38 @@ test('a list sharing one value with a row of a hidden tab is not that row: the r
   assert.equal(judgeListRows(r, [shown, opened]).checked, 1)
 })
 
+test("a module's per-menu-item entries are no list on a page, and are not judged as one", () => {
+  // Dev lat29 (23/11/2026): JA Boxing's masthead entries were judged as a fourteen-row list on /classes.
+  const card = (text) => ({ chars: text.length, text, pictures: 0 })
+  const r = {
+    slots: [
+      { slot: 'block-62.2', key: 'module-62.2', status: 'written', ordered: 'Classes in the club' },
+      { slot: 'block-62.3', key: 'module-62.3', status: 'written', ordered: 'Our coaches' }
+    ],
+    rows: [
+      {
+        block: 'block-62',
+        list: 'block-62.page',
+        plan: 2,
+        demo: 14,
+        kept: 2,
+        keptKeys: ['module-62.2', 'module-62.3']
+      }
+    ],
+    entryPages: { 'block-62.2': ['page-classes'], 'block-62.3': ['page-team'] }
+  }
+  const shown = page('/classes', {
+    lists: [
+      { selector: 'nav>li', items: [card('Classes in the club'), card('Our coaches'), card(''), card('')] }
+    ]
+  })
+  const judged = judgeListRows(r, [shown])
+  assert.deepEqual(judged.failures, [])
+  assert.deepEqual(judged.unread, [])
+  // Without the entries, the same rows are judged as a list.
+  assert.ok(judgeListRows({ ...r, entryPages: undefined }, [shown]).failures.length > 0)
+})
+
 test('list-rows reads only the row block, only on pages that print it, and leaves out words another block there writes', async () => {
   const card = (text) => ({ chars: text.length, text, pictures: 1 })
   const lines = [
