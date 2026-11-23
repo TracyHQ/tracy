@@ -50,6 +50,8 @@ import { plannerPrompt } from './planner-prompt.js'
 import { withHiddenLinkLabels, withHiddenListLinks } from './plan-hidden-links.js'
 import { withDemoVideosHidden } from './plan-demo-videos.js'
 import { withWrittenRowFieldsShown } from './plan-row-fields.js'
+import { withPageBlocksRepaired } from './plan-shape-repairs.js'
+import { withItemLinksToTheirItems, withUndecidedLinksSettled } from './plan-undecided-links.js'
 import { withKitCharacterLimits } from './plan-kit-limits.js'
 import { withSlotsInTheirBlocks } from './plan-slot-owners.js'
 import { framedPartMessage, frameInstruction, framesPlan, mergeFramedPlan } from './plan-frame.js'
@@ -325,17 +327,31 @@ function writesInTurns({ row, ready }) {
 //   print it, and a page control (a tab, a form's submit) whose words the decision writes is kept, whether the decision
 //   hid it or left it undecided (plan-hidden-links.js);
 // - a field of a kept list row that the decision both writes and hides is written (plan-row-fields.js);
-// - a fact id the planner shortened is made whole when exactly one fact of the brief starts with it (plan-fact-ids.js).
+// - a fact id the planner shortened is made whole when exactly one fact of the brief starts with it (plan-fact-ids.js);
+// - a page's blocks written under another name are its blocks, and a shared block decided again on a page is the shared
+//   decision's (plan-shape-repairs.js);
+// - a link left undecided that has one answer (a picture opening itself in place is hidden; a link to a kept page whose label
+//   is decided is kept) is decided, and a card's link that opens its own item leads to that item's kept page
+//   (plan-undecided-links.js).
 function normalizedPlan(plan, kit, brief) {
   return withFullFactIds(normalizedForKit(plan, kit), brief)
 }
 
 function normalizedForKit(plan, kit) {
-  return withWrittenRowFieldsShown(
-    withHiddenLinkLabels(
-      withDemoVideosHidden(
-        withKitCharacterLimits(
-          withHiddenListLinks(withSlotsInTheirBlocks(withStockScreensDropped(plan, kit), kit), kit),
+  return withItemLinksToTheirItems(
+    withUndecidedLinksSettled(
+      withWrittenRowFieldsShown(
+        withHiddenLinkLabels(
+          withDemoVideosHidden(
+            withKitCharacterLimits(
+              withHiddenListLinks(
+                withSlotsInTheirBlocks(withStockScreensDropped(withPageBlocksRepaired(plan), kit), kit),
+                kit
+              ),
+              kit
+            ),
+            kit
+          ),
           kit
         ),
         kit

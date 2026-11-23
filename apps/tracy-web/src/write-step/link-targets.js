@@ -109,6 +109,11 @@ export function linkTarget(leadsTo, site) {
     }
     return linkTarget(legal.use, site)
   }
+  // A path the plan names that is a kept page's (its slug, or its path in the kit) is that page: the site serves it only at
+  // its menu item's address, and a bare path answers 404 where the site has no URL rewriting. Before (dev lat30, 23/11/2026),
+  // two JA Boxing buttons were written as "/memberships" and answered 404.
+  const own = target.startsWith('/') && !target.startsWith('//') ? keptPageAt(target, site) : null
+  if (own) return linkTarget(own, site)
   if (ADDRESS.test(target)) return { kind: 'address', url: plainAddress(target) }
   const planned = each(plan?.pages).find((p) => p?.id === target)
   if (planned && planned.decision !== 'keep')
@@ -117,6 +122,23 @@ export function linkTarget(leadsTo, site) {
   if (!page || !planned)
     return failed(`${target} is neither a kept page, a contact fact, a legal page nor an address`)
   return pageAddress(page, site)
+}
+
+/** The kept page a site path names: one whose plan slug is the path's last part, or whose kit path is the path. */
+function keptPageAt(target, { plan, kit }) {
+  const path = String(target)
+    .split(/[?#]/, 1)[0]
+    .replace(/^\/+|\/+$/g, '')
+  if (!path) return null
+  const kept = each(plan?.pages).filter((p) => p?.decision === 'keep')
+  const last = path.split('/').at(-1)
+  const bySlug = kept.filter((p) => typeof p.slug === 'string' && p.slug.replace(/^\/+|\/+$/g, '') === last)
+  if (bySlug.length === 1) return bySlug[0].id
+  const keptIds = new Set(kept.map((p) => p.id))
+  const byPath = each(kit?.pages).filter(
+    (p) => keptIds.has(p?.id) && String(p.path ?? '').replace(/^\/+|\/+$/g, '') === path
+  )
+  return byPath.length === 1 ? byPath[0].id : null
 }
 
 export { articleOfPage }

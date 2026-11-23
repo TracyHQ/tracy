@@ -5,7 +5,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
-import { titleRepeatTwins } from '../src/write-step/title-repeats.js'
+import { storedRepeatTwins, titleRepeatTwins } from '../src/write-step/title-repeats.js'
 
 const CONTRACT = '../../../packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.11/'
 const read = (file) => JSON.parse(readFileSync(new URL(CONTRACT + file, import.meta.url), 'utf8'))
@@ -54,4 +54,25 @@ test('a repeat a file speaks for keeps it, and an unwritten title gives nothing'
   assert.equal(own.twins.size, 0)
   const none = titleRepeatTwins({ plan, kit: KIT, contentMap: MAP, claims: [] })
   assert.equal(none.twins.size, 0)
+})
+
+test("a stored field repeating a written heading of its module takes the heading's new words", () => {
+  // Dev lat30: JA Boxing's memberships section prints `main-section`, while the kit read the module title for it.
+  const claims = [words('block-184.0', 'Memberships at the club')]
+  const { twins, claims: made } = storedRepeatTwins({ kit: KIT, contentMap: MAP, claims })
+  assert.equal(twins.get('block-184.1'), 'block-184.0')
+  assert.deepEqual(
+    made.find((c) => c.slot === 'block-184.1'),
+    { ...claims[0], slot: 'block-184.1' }
+  )
+  // A field a file claims keeps it; nothing written gives nothing.
+  assert.equal(
+    storedRepeatTwins({
+      kit: KIT,
+      contentMap: MAP,
+      claims: [...claims, words('block-184.1', 'Plans')]
+    }).twins.has('block-184.1'),
+    false
+  )
+  assert.equal(storedRepeatTwins({ kit: KIT, contentMap: MAP, claims: [] }).twins.size, 0)
 })

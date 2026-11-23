@@ -115,6 +115,7 @@ export async function runRouteStage({
   const orders = routeOrders({ plan, kit, rows, menutype })
   const words = new Map(copySlots.map((s) => [s.slot, visibleText(s.items.join(' '))]))
   const titles = new Map(each(kit?.pages).map((p) => [p.id, words.get(p.titleSlot)]))
+  const labelled = new Set(copySlots.map((s) => s.slot))
   // content.update owns Joomla's tree move and its undo. Read the parent back before changing any address.
   for (const order of orders) {
     if (!order.move || order.reason) continue
@@ -163,9 +164,12 @@ export async function runRouteStage({
     }
     const item = await renameItem(call, applyId, order)
     if (item.outcome !== 'refused') landed.set(order.itemId, order.slug)
-    // Breadcrumbs print the menu title, rather than its SEO title. Use the writer's actual page heading.
+    // Breadcrumbs print the menu title, rather than its SEO title. Use the writer's actual page heading, unless a file wrote
+    // the item's title itself: that is the menu label the plan gave the page, which every menu prints, and the page heading
+    // would replace it with a longer line (dev lat30, 23/11/2026: JA Boxing's menu read "Classes for every level" and "The
+    // people behind BXR", and the copy's own labels were three "does not hold what was ordered" read-back blocks).
     let title = null
-    const name = titles.get(order.pageId)
+    const name = labelled.has(`menuItem-${order.itemId}.0`) ? null : titles.get(order.pageId)
     if (name) {
       try {
         await call('content.update', {

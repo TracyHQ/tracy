@@ -15,8 +15,8 @@
 //
 // A disagreeing alt blocks on its slot. It is the writer's (step 6) when the alt is words the write report says the writer wrote;
 // otherwise the page prints an alt nobody in the run wrote (the template's or the demo's, left by the write step), step 9.
-// An alt that is the words of a heading the writer wrote (a kit slot whose role is a heading, title, label or name) is the
-// template printing that heading as the picture's alt: no step writes an alt for that picture, so it is not measured, with
+// An alt that is the words of a heading the writer wrote (a kit slot whose role is a heading, title, label or name), or of a
+// name the brand step wrote, is the template printing that heading or name as the picture's alt: no step writes an alt for that picture, so it is not measured, with
 // that reason. Before (dev lat28, 22/11/2026), JA Diner's two About galleries print their section's small heading as the
 // alt of each of their eight pictures, and the eight blocked on the writer, who has no alt to rewrite there.
 import { compareAlt } from '../lib/alt-compare.js'
@@ -139,6 +139,14 @@ export const altMatchesPictureGroup = {
       if (HEADING_ROLE.test(String(roles.get(l.slot)?.role ?? ''))) {
         if (!headings.has(key)) headings.set(key, l.slot)
       } else alts.add(key)
+    }
+    // The brand step's words are names too (the business's name in a contact or a logo): a template that prints the contact's
+    // name as its picture's alt prints a name the run wrote, not the demo's. Before (dev lat30, 23/11/2026), JA Diner's
+    // contact picture, whose alt Joomla takes from the contact's name, was the one alt block left.
+    for (const l of Array.isArray(report?.slots) ? report.slots : []) {
+      if (l?.owner !== 'brand' || l.status !== 'written' || typeof l.ordered !== 'string') continue
+      const key = wordsKey(l.ordered)
+      if (key && !headings.has(key)) headings.set(key, l.slot)
     }
     const notMeasured = []
     const failures = []

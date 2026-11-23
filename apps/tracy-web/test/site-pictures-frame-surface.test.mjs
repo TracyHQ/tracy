@@ -12,6 +12,7 @@ import { wantsDark } from '../src/site-pictures/darken.js'
 import { acmFieldOf, acmLayoutOf, pictureElementIn } from '../src/site-pictures/frame-surface/acm-markup.js'
 import { colourOf, overlayOver, rulesOf } from '../src/site-pictures/frame-surface/css-overlays.js'
 import { joinSurface, measureSurface, stampSurface } from '../src/site-pictures/frame-surface/surface.js'
+import { mayEnlargeToMinWidth } from '../src/site-pictures/cut-photo.js'
 import { quickstartFilesOf, surfaceFor } from '../src/site-pictures/frame-surface/surface-cache.js'
 import { textOverOf } from '../src/site-pictures/frame-surface/text-over.js'
 import { faultsFor, lookMessage, readLook, surfaceFacts } from '../src/site-pictures/looker-call.js'
@@ -499,4 +500,34 @@ test('different destinations, releases and measurement inputs never borrow an in
   assert.deepEqual(await readdir(path.join(dir, 'kit-surface', 'fernhill_j6_1.0.0')), [
     `${held.installer.sha256}.json`
   ])
+})
+
+test('a frame the surface reads as a CSS background is joined as one, so the background enlargement applies', () => {
+  // Dev lat30 (23/11/2026): JA Boxing's home CTA band carried no shownAs in the kit, though the surface measured it.
+  const doc = {
+    blocks: [{ id: 'block-61', frames: [{ id: 'block-61.2', kind: 'photo', width: 1440, height: 512 }] }]
+  }
+  const surface = {
+    frames: {
+      'block-61.2': {
+        shownAs: 'background',
+        textOver: true,
+        textOverFrom: 'measured',
+        overlay: { strength: 0.8 }
+      }
+    }
+  }
+  const joined = joinSurface(doc, surface).blocks[0].frames[0]
+  assert.equal(joined.shownAs, 'background')
+  assert.equal(mayEnlargeToMinWidth(joined), true)
+  // A frame the kit already marks keeps its own mark; a surface that reads no background adds none.
+  const marked = { blocks: [{ id: 'b', frames: [{ id: 'b.1', shownAs: 'image', width: 1440 }] }] }
+  assert.equal(
+    joinSurface(marked, { frames: { 'b.1': { shownAs: 'background' } } }).blocks[0].frames[0].shownAs,
+    'image'
+  )
+  assert.equal(
+    joinSurface(doc, { frames: { 'block-61.2': { textOver: false } } }).blocks[0].frames[0].shownAs,
+    undefined
+  )
 })

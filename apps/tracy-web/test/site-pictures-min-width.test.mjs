@@ -6,6 +6,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { exportPictureMapping } from '../src/site-pictures/contract-mapping.js'
 import { cutPhoto, outputSizeFor } from '../src/site-pictures/cut-photo.js'
+import { cutPhotoAway } from '../src/site-pictures/reuse-crop.js'
 import { indexInputs } from '../src/site-pictures/picture-check/inputs-index.js'
 import { packageItems, packageProblems } from '../src/write-step/picture-package.js'
 import { scene } from './_generated-photos.mjs'
@@ -81,6 +82,25 @@ test('a full-width background band the template darkens or that carries text may
   const gated = await cutPhoto(short, wide, band({ textOver: true }), demo)
   assert.equal(gated.refused, 'unsharp')
   assert.equal(gated.sharpness.reason, 'too-narrow')
+})
+
+test('the any-photo and reuse cut of a background band may be enlarged to its minimum width as its first cut is', async () => {
+  // Dev lat30 (23/11/2026): JA Boxing's home CTA band (minimum 2000 px) was left with the template's picture: the any-photo
+  // rung held its region to the minimum width, so a 1920 px gym photo never gave a cut.
+  const band = (extra = {}) =>
+    frame({ id: 'block-c.0', width: 1440, height: 600, shownAs: 'background', minWidth: 1920, ...extra })
+  const demo = { width: 1920, height: 800 }
+  const wide = { ...asset, subjectBox: [0.1, 0.1, 0.8, 0.8] }
+  const photo = await scene('bakery', 1700, 1133, 4)
+  const cut = await cutPhotoAway(photo, wide, band({ textOver: true }), demo, [], {
+    maxOverlap: 0.5,
+    distinct: true
+  })
+  assert.equal(cut.ok, true, JSON.stringify(cut))
+  assert.ok(cut.width >= 1920, `${cut.width}`)
+  // The same band with no text over it and no overlay keeps the minimum width.
+  const locked = await cutPhotoAway(photo, wide, band(), demo, [], { maxOverlap: 0.5, distinct: true })
+  assert.equal(locked.ok, false)
 })
 
 const hex = (c) => c.repeat(64)
