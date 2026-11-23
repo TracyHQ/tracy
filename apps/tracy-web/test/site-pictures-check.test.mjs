@@ -8,6 +8,7 @@ import {
 } from '../src/site-pictures/picture-check/check-pictures.js'
 import { indexInputs } from '../src/site-pictures/picture-check/inputs-index.js'
 import { rungsFor } from '../src/site-pictures/ladder-rungs.js'
+import { hasTextOver } from '../src/site-pictures/darken.js'
 import { breaks, entryOf, inputs, ruleOf } from './_site-pictures-check.mjs'
 
 const ALL = ['P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08', 'P09', 'P10', 'P11', 'P12', 'P13']
@@ -565,4 +566,13 @@ test("a hero's frame tries a real photo of the business before it is hidden; any
   )
   const section = rungsFor(idx, 'section.0')
   assert.ok(section.indexOf('hide') < section.indexOf('any-photo'), section.join(' '))
+})
+
+test('a frame spanning the page in a hero has text over it; a narrow one, or one in a section, has none unless marked', () => {
+  // Dev lat29 (23/11/2026): JA Diner's masthead frames (1440 wide, hero block) carried no text-over mark.
+  assert.equal(hasTextOver({ blockRole: 'hero', width: 1440 }), true)
+  assert.equal(hasTextOver({ blockRole: 'hero', kindEvidence: { box: { width: 1440 } } }), true)
+  assert.equal(hasTextOver({ blockRole: 'hero', width: 216 }), false, 'a small picture beside the heading')
+  assert.equal(hasTextOver({ blockRole: 'section', width: 1440 }), false)
+  assert.equal(hasTextOver({ blockRole: 'section', width: 1440, textOver: true }), true)
 })

@@ -57,6 +57,7 @@ import { coordinatesOf, runPageSettings } from './page-settings-stage.js'
 import { runPhoneLinksStage, withPhoneLinks } from './phone-link-stage.js'
 import { phonesOf } from './phone-links.js'
 import { PICTURE_OWNER } from './picture-package.js'
+import { titleRepeatTwins } from './title-repeats.js'
 import { kitSlotKinds } from '../lib/printed-in-body.js'
 import { entryPagesOf, menuItemEntryTwins, neededEntry } from './menu-item-entries.js'
 import { preparePictureStage } from './picture-stage.js'
@@ -526,7 +527,16 @@ export async function runWriteStep(input) {
       })
     )
     unaddressable.splice(0, unaddressable.length, ...kept)
-    const speaking = [...filing, ...buttons.claims, ...entries.claims]
+    // A heading that repeats its page's demo title takes the page's new title (title-repeats.js).
+    const repeats = titleRepeatTwins({
+      plan,
+      kit: kit.doc,
+      contentMap,
+      claims: [...filing, ...buttons.claims, ...entries.claims]
+    })
+    for (const [slot, source] of repeats.twins)
+      exported.mapping.changes[contentMapKey(slot)] = exported.mapping.changes[contentMapKey(source)]
+    const speaking = [...filing, ...buttons.claims, ...entries.claims, ...repeats.claims]
     const keptClaims = new Set(speaking.filter((claim) => claim.kind !== 'hide').map((claim) => claim.slot))
     for (const claim of fromPlan) {
       if (!claim.hiddenList) continue

@@ -16,8 +16,19 @@ export const OVERLAY_MAX = 0.6
 const OVERLAY_STEP = 0.05
 const JPEG = { quality: 84, mozjpeg: false }
 
-/** Whether a kit frame has text over its picture. */
-export const hasTextOver = (frame) => frame?.shownAs === 'background' || frame?.textOver === true
+/** A frame at least this wide at desktop spans the page: in a hero, the hero's words sit over it. */
+const FULL_BLEED = 1200
+
+/**
+ * Whether a kit frame has text over its picture: the kit shows it as a background or marks it `textOver`, or it spans the
+ * page in a hero block (the picture index carries `blockRole`), whose heading sits over its picture. Before (dev lat29,
+ * 23/11/2026) JA Diner's masthead frames carried neither mark, their owner photos were never darkened, and the white
+ * heading read under 4.5:1 on About, Bookings and Contact.
+ */
+export const hasTextOver = (frame) =>
+  frame?.shownAs === 'background' ||
+  frame?.textOver === true ||
+  (frame?.blockRole === 'hero' && Number(frame?.width ?? frame?.kindEvidence?.box?.width) >= FULL_BLEED)
 
 /** Whether a picture of this frame must be dark enough for light text: text over it and no template overlay doing it. */
 export const wantsDark = (frame) => hasTextOver(frame) && !overlayCovers(frame)
