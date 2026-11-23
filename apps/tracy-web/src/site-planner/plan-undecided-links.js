@@ -129,3 +129,36 @@ export function withItemLinksToTheirItems(plan, kit) {
   if (!changed) return plan
   return { ...plan, ...(Array.isArray(plan.sharedBlocks) ? { sharedBlocks } : {}), pages }
 }
+
+/**
+ * A kept link's `labelSlot` is the kit's (R10b holds it to the kit's label slot of that link): a link entry that names none, or
+ * another slot, takes the kit's. There is one answer, and the planner's slip costs a fix round. Dev lat31b (23/11/2026):
+ * JA Boxing's header links named no label slot though the kit ties them to the masthead's titles.
+ * @param {any} plan
+ * @param {any} kit
+ */
+export function withKitLabelSlots(plan, kit) {
+  if (!plan || typeof plan !== 'object' || !kit || typeof kit !== 'object') return plan
+  const { linkLabelSlot, linkIx } = indexKit(kit)
+  let changed = false
+  const fix = (decision) => {
+    if (!decision || typeof decision !== 'object' || !Array.isArray(decision.links)) return decision
+    let moved = false
+    const links = decision.links.map((l) => {
+      if (!l || typeof l !== 'object' || !linkIx.has(l.link)) return l
+      const want = linkLabelSlot.get(l.link) ?? null
+      if ((l.labelSlot ?? null) === want && 'labelSlot' in l) return l
+      moved = true
+      return { ...l, labelSlot: want }
+    })
+    if (!moved) return decision
+    changed = true
+    return { ...decision, links }
+  }
+  const sharedBlocks = each(plan.sharedBlocks).map(fix)
+  const pages = each(plan.pages).map((p) =>
+    p?.decision === 'keep' && Array.isArray(p.blocks) ? { ...p, blocks: p.blocks.map(fix) } : p
+  )
+  if (!changed) return plan
+  return { ...plan, ...(Array.isArray(plan.sharedBlocks) ? { sharedBlocks } : {}), pages }
+}

@@ -51,7 +51,11 @@ import { withHiddenLinkLabels, withHiddenListLinks } from './plan-hidden-links.j
 import { withDemoVideosHidden } from './plan-demo-videos.js'
 import { withWrittenRowFieldsShown } from './plan-row-fields.js'
 import { withPageBlocksRepaired } from './plan-shape-repairs.js'
-import { withItemLinksToTheirItems, withUndecidedLinksSettled } from './plan-undecided-links.js'
+import {
+  withItemLinksToTheirItems,
+  withKitLabelSlots,
+  withUndecidedLinksSettled
+} from './plan-undecided-links.js'
 import { withKitCharacterLimits } from './plan-kit-limits.js'
 import { withSlotsInTheirBlocks } from './plan-slot-owners.js'
 import { framedPartMessage, frameInstruction, framesPlan, mergeFramedPlan } from './plan-frame.js'
@@ -332,20 +336,23 @@ function writesInTurns({ row, ready }) {
 //   decision's (plan-shape-repairs.js);
 // - a link left undecided that has one answer (a picture opening itself in place is hidden; a link to a kept page whose label
 //   is decided is kept) is decided, and a card's link that opens its own item leads to that item's kept page
-//   (plan-undecided-links.js).
+//   (plan-undecided-links.js), and a kept link's labelSlot is the kit's (plan-undecided-links.js withKitLabelSlots).
 function normalizedPlan(plan, kit, brief) {
   return withFullFactIds(normalizedForKit(plan, kit), brief)
 }
 
 function normalizedForKit(plan, kit) {
-  return withItemLinksToTheirItems(
-    withUndecidedLinksSettled(
-      withWrittenRowFieldsShown(
-        withHiddenLinkLabels(
-          withDemoVideosHidden(
-            withKitCharacterLimits(
-              withHiddenListLinks(
-                withSlotsInTheirBlocks(withStockScreensDropped(withPageBlocksRepaired(plan), kit), kit),
+  return withKitLabelSlots(
+    withItemLinksToTheirItems(
+      withUndecidedLinksSettled(
+        withWrittenRowFieldsShown(
+          withHiddenLinkLabels(
+            withDemoVideosHidden(
+              withKitCharacterLimits(
+                withHiddenListLinks(
+                  withSlotsInTheirBlocks(withStockScreensDropped(withPageBlocksRepaired(plan), kit), kit),
+                  kit
+                ),
                 kit
               ),
               kit

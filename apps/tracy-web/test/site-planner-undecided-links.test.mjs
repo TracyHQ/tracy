@@ -8,6 +8,7 @@ import { test } from 'node:test'
 import { withPageBlocksRepaired } from '../src/site-planner/plan-shape-repairs.js'
 import {
   withItemLinksToTheirItems,
+  withKitLabelSlots,
   withUndecidedLinksSettled
 } from '../src/site-planner/plan-undecided-links.js'
 
@@ -114,4 +115,25 @@ test("a card's link that opens its own item leads to that item's kept page, and 
   assert.equal(out.pages[0].blocks[0].links[0].leadsTo, 'page-classes_advanced-boxing')
   const dropped = make('drop')
   assert.equal(withItemLinksToTheirItems(dropped, KIT), dropped, 'a dropped item stays with the planner')
+})
+
+test("a kept link's labelSlot is the kit's: none or another slot is corrected, the kit's is left as it is", () => {
+  // Dev lat31b (23/11/2026): JA Boxing's header links named no label slot though the kit ties them to masthead titles.
+  const make = (labelSlot) => ({
+    sharedBlocks: [
+      {
+        block: 'block-160',
+        decision: 'keep',
+        links: [{ link: 'block-160.link-2', leadsTo: 'page-home', labelSlot }]
+      }
+    ],
+    pages: []
+  })
+  assert.equal(withKitLabelSlots(make(null), KIT).sharedBlocks[0].links[0].labelSlot, 'menuItem-189.0')
+  assert.equal(
+    withKitLabelSlots(make('block-160.6'), KIT).sharedBlocks[0].links[0].labelSlot,
+    'menuItem-189.0'
+  )
+  const right = make('menuItem-189.0')
+  assert.equal(withKitLabelSlots(right, KIT), right)
 })
