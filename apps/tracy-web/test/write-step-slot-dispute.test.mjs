@@ -92,6 +92,27 @@ test('words the writer puts in a picture slot or a url slot are not written, and
   assert.ok(!report.disputes.some((d) => d.slot === 'block-2.42'))
 })
 
+test('words for a field the template keeps empty are not sent: the site never fills it', async () => {
+  // Dev lat29/lat30 (23/11/2026): three SLOT_EMPTY_STATE refusals of JA Boxing fields whose demo is empty.
+  const kit = KIT()
+  kit.doc.blocks
+    .find((b) => b.id === 'block-2')
+    .slots.push({ id: 'block-2.43', type: 'text', role: 'editorial.paragraph', maxCharacters: 255 })
+  const c = copy()
+  c.slots.push({ slot: 'block-2.43', owner: 'writer', text: 'A line the demo never had', factIds: [] })
+  const { report, site } = await run(
+    { copy: c },
+    { extraKeys: ['module-2.43'] },
+    { kit, contentMap: { slots: [{ key: 'module-2.43', type: 'text', sample: '' }] } }
+  )
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  const sent = Object.assign({}, ...site.applies().map((a) => a.params.changes ?? {}))
+  assert.equal(sent['module-2.43'], undefined)
+  assert.ok(
+    report.copyNotWritten.some((u) => u.slot === 'block-2.43' && /keeps this field empty/.test(u.why))
+  )
+})
+
 test("step 8's alt over the writer's words on that alt is the rule, not a dispute; the writer's words still lose", () => {
   const writer = {
     slot: 'block-8.11',

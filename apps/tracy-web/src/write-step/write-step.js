@@ -371,15 +371,26 @@ export async function runWriteStep(input) {
     // dishes" and the like, each a 404; at lat30 JA Boxing's writer wrote words into a button's address and a picture slot,
     // three slot disputes. The report keeps them in `copyNotWritten`, a note on step 6, not a fault of the site.
     const roles = kitSlotKinds(kit.doc)
-    const typeOf = new Map(
-      (Array.isArray(contentMap?.slots) ? contentMap.slots : []).map((s) => [s?.key, s?.type])
+    const mapSlots = new Map(
+      (Array.isArray(contentMap?.slots) ? contentMap.slots : []).map((s) => [s?.key, s])
     )
+    const typeOf = new Map([...mapSlots].map(([key, s]) => [key, s?.type]))
     const wordsOf = (s) => (Array.isArray(s.items) ? s.items.join(' ') : String(s.text ?? '')).trim()
     const notWords = copyRead.view.slots
       .map((s) => {
         const words = wordsOf(s)
         if (!words) return null
         const type = typeOf.get(contentMapKey(s.slot))
+        // The site never fills a field the template keeps empty (QuickstartContract checkValue, SLOT_EMPTY_STATE): its
+        // occupancy shapes the layout. Dev lat29/lat30: JA Boxing's writer filled three such fields, three refusals.
+        const mapped = mapSlots.get(contentMapKey(s.slot))
+        if (
+          typeof mapped?.sample === 'string' &&
+          mapped.sample.trim() === '' &&
+          !mapped.siteIdentity &&
+          type !== 'image'
+        )
+          return { slot: s.slot, why: 'the template keeps this field empty, and the site never fills it' }
         if (type === 'image' && !IMAGE_PATH.test(words))
           return { slot: s.slot, why: 'words in a picture slot are no picture' }
         if (
