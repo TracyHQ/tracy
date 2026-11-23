@@ -6,7 +6,8 @@
 	@media (max-width: 575.98px) { .fr-search { padding: 48px 8px; } }
 	.fr-search-form label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 	.fr-search-row { display: flex; flex-wrap: wrap; gap: 8px; }
-	.fr-search-row input { flex: 1 1 240px; min-width: 0; padding: 10px 24px; background: rgba(255, 255, 255, .06); background: color-mix(in srgb, var(--ds-c-fg, #fff) 6%, transparent); border: 1px solid color-mix(in srgb, var(--ds-c-fg, #fff) 7%, transparent); border-radius: var(--ds-input-radius, 0); color: var(--color-heading); font: 400 14px/21px var(--font-body); appearance: none; }
+	.fr-search-row input { flex: 1 1 240px; min-width: 0; padding: 10px 24px; background: rgba(255, 255, 255, .06); border: 1px solid color-mix(in srgb, var(--ds-c-fg, #fff) 7%, transparent); border-radius: var(--ds-input-radius, 0); color: var(--color-heading); font: 400 14px/21px var(--font-body); appearance: none; }
+	@supports (color: color-mix(in srgb, red, red)) { .fr-search-row input { background: color-mix(in srgb, var(--ds-c-fg, #fff) 6%, transparent); } } /* the fill follows the system text colour; a browser without color-mix keeps the template fill above */
 	.fr-search-row input::placeholder { color: color-mix(in srgb, var(--ds-c-fg, #fff) 50%, transparent); opacity: 1; }
 	.fr-search-row input:focus { outline: 1px solid var(--color-accent); outline-offset: 0; border-color: var(--color-accent); }
 	.fr-search-results { margin-top: 48px; }
