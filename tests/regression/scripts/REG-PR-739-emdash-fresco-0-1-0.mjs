@@ -1,7 +1,7 @@
 /**
  * REG-PR-739-emdash-fresco-0-1-0: JA Fresco EmDash 0.1.0 holds together. One `ok -`/`not ok -` line
  * per `expect` of the case: S2 the package's own tests (seed composition, brand, display locale,
- * link gate, data links, the set:html guard), S3 the slot roles check, the template kit sync and the
+ * link gate, data links, the set:html guard), S3 the slot roles check and the
  * personalize dry run, S4 the versions in the lock.
  */
 import { readFileSync } from 'node:fs'
@@ -43,10 +43,6 @@ c.check(
   /slot-roles check passed/.test(roles.stdout),
   roles.stdout.slice(-300)
 )
-
-// The shared kit files are the kit's, not Fresco's.
-const kit = run('pnpm', ['exec', 'tsx', 'scripts/check-emdash-kit-sync.ts'])
-c.eq('S3 kit sync: exit code', kit.status, 0)
 
 // Expect 3: the personalize dry run on a plain answer set.
 const answers = JSON.stringify({

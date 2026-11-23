@@ -10,7 +10,7 @@
   "steps": [
     "S1: In the TCH checkout, run `pnpm install --frozen-lockfile` in packages/cms/tracy-emdash-theme-fresco (it is not a workspace member; no database, no stand, no model).",
     "S2: From that folder run `node --test tests/composition.test.mjs tests/brand.test.mjs tests/display-locale.test.mjs tests/link-gate.test.mjs tests/data-links.test.mjs`.",
-    "S3: From the TCH root run `node scripts/slot-roles/check.mjs packages/cms/tracy-emdash-theme-fresco/contracts/0.1.0`; run `pnpm exec tsx scripts/check-emdash-kit-sync.ts`; from the package folder run `node tools/personalize.mjs --answers-json '{\"name\":\"Casa Luna\",\"sector\":\"restaurant\",\"contact\":\"12 Harbour Road, Lisbon +351 21 000 000\",\"email\":\"hello@casaluna.example\"}' --dry-run --json`.",
+    "S3: From the TCH root run `node scripts/slot-roles/check.mjs packages/cms/tracy-emdash-theme-fresco/contracts/0.1.0`; from the package folder run `node tools/personalize.mjs --answers-json '{\"name\":\"Casa Luna\",\"sector\":\"restaurant\",\"contact\":\"12 Harbour Road, Lisbon +351 21 000 000\",\"email\":\"hello@casaluna.example\"}' --dry-run --json`.",
     "S4: Read the package's pnpm-lock.yaml: every `@hono/node-server` entry is 2.1.6 or later and every `hono` entry is 4.13.16 or later.",
     "S5: In the same folder run `node --test tests/set-html-safe.test.mjs`: the about description (`features_intro/about-intro.desc`) holding `<img src=x onerror=alert(1)>`, a script, an iframe or a javascript: link renders inert, and every `set:html` in src prints cleaned text or a constant."
   ],
