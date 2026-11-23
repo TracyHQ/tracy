@@ -57,12 +57,39 @@ test('words the writer puts in an address slot are left out, never written as a 
   assert.equal(sent['module-2.40'], undefined, 'the caption is not sent as an address')
   assert.equal(sent['module-2.41'], '/contact', 'an address is written')
   assert.ok(
-    report.unaddressable.some(
-      (u) => u.slot === 'block-2.40' && /words in an address slot are no address/.test(u.reason)
+    report.copyNotWritten.some(
+      (u) => u.slot === 'block-2.40' && /words in an address slot are no address/.test(u.why)
     ),
-    JSON.stringify(report.unaddressable)
+    JSON.stringify(report.copyNotWritten)
+  )
+  assert.ok(
+    !report.unaddressable.some((u) => u.slot === 'block-2.40'),
+    'a note on step 6, not a fault of the site'
   )
   assert.equal(line('block-2.41').status, 'written')
+})
+
+test('words the writer puts in a picture slot or a url slot are not written, and leave no dispute with its owner', async () => {
+  // Dev lat30 (23/11/2026): JA Boxing's writer wrote words into a button's address (a url slot) and a picture slot.
+  const kit = KIT()
+  kit.doc.blocks
+    .find((b) => b.id === 'block-2')
+    .slots.push({ id: 'block-2.42', type: 'text', role: 'editorial.paragraph', maxCharacters: 255 })
+  const c = copy()
+  c.slots.push({ slot: 'block-2.42', owner: 'writer', text: 'Sign up for a free trial', factIds: [] })
+  const { report, site } = await run(
+    { copy: c },
+    {
+      extraKeys: ['module-2.42'],
+      overSlot: (slot) => (slot.key === 'module-2.42' ? { type: 'url', sample: 'index.php?Itemid=168' } : {})
+    },
+    { kit, contentMap: { slots: [{ key: 'module-2.42', type: 'url', sample: 'index.php?Itemid=168' }] } }
+  )
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  const sent = Object.assign({}, ...site.applies().map((a) => a.params.changes ?? {}))
+  assert.equal(sent['module-2.42'], undefined)
+  assert.ok(report.copyNotWritten.some((u) => u.slot === 'block-2.42'))
+  assert.ok(!report.disputes.some((d) => d.slot === 'block-2.42'))
 })
 
 test("step 8's alt over the writer's words on that alt is the rule, not a dispute; the writer's words still lose", () => {

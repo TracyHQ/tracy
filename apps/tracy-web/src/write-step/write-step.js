@@ -137,6 +137,8 @@ function siteProblem({ reading, contract, changes }) {
  */
 /** What an address slot may hold: a scheme (https:, mailto:, tel:), a path, an anchor, a query or Joomla's index.php. */
 const ADDRESS = /^(?:[a-z][a-z0-9+.-]*:|\/|#|\?|index\.php)/i
+/** What a picture slot may hold: a file path of the site's images. */
+const IMAGE_PATH = /^\/?images\/\S+$/i
 
 export async function runWriteStep(input) {
   const { siteKey, kit, contentMap = null, files } = input
@@ -362,31 +364,40 @@ export async function runWriteStep(input) {
     })
     const provenanceProblems = exported.problems.filter((p) => p.code === 'ARTICLE_PROVENANCE')
     const refusedCopy = new Set(provenanceProblems.map((p) => p.where))
-    // Words in an address slot (a kit role ending in `_url`) are a link to a page that does not exist: before (dev lat29,
-    // 23/11/2026) the writer put a caption in each of JA Diner's About gallery link fields, and eight pictures linked to
-    // "/Guests dining on Emirati dishes" and the like, each a 404. They are left out; the slot keeps what it holds.
+    // Words in an address slot (a kit role ending in `_url`, or a content map slot of type url) are a link to a page that does
+    // not exist, and words in a picture slot (type image) are no picture: they are not written, and the slot keeps what it
+    // holds or what its own owner (the plan's link, step 8's picture) writes. Before (dev lat29, 23/11/2026) the writer put a
+    // caption in each of JA Diner's About gallery link fields, and eight pictures linked to "/Guests dining on Emirati
+    // dishes" and the like, each a 404; at lat30 JA Boxing's writer wrote words into a button's address and a picture slot,
+    // three slot disputes. The report keeps them in `copyNotWritten`, a note on step 6, not a fault of the site.
     const roles = kitSlotKinds(kit.doc)
-    const wordsOf = (s) => (Array.isArray(s.items) ? s.items.join(' ') : String(s.text ?? '')).trim()
-    const wordsAsAddress = copyRead.view.slots.filter(
-      (s) =>
-        String(roles.get(s.slot)?.role ?? '').endsWith('_url') &&
-        wordsOf(s) !== '' &&
-        !ADDRESS.test(wordsOf(s))
+    const typeOf = new Map(
+      (Array.isArray(contentMap?.slots) ? contentMap.slots : []).map((s) => [s?.key, s?.type])
     )
-    for (const s of wordsAsAddress) {
+    const wordsOf = (s) => (Array.isArray(s.items) ? s.items.join(' ') : String(s.text ?? '')).trim()
+    const notWords = copyRead.view.slots
+      .map((s) => {
+        const words = wordsOf(s)
+        if (!words) return null
+        const type = typeOf.get(contentMapKey(s.slot))
+        if (type === 'image' && !IMAGE_PATH.test(words))
+          return { slot: s.slot, why: 'words in a picture slot are no picture' }
+        if (
+          (String(roles.get(s.slot)?.role ?? '').endsWith('_url') || type === 'url') &&
+          !ADDRESS.test(words)
+        )
+          return {
+            slot: s.slot,
+            why: 'words in an address slot are no address: a visitor would follow them to a page that does not exist'
+          }
+        return null
+      })
+      .filter(Boolean)
+    for (const s of notWords) {
       refusedCopy.add(s.slot)
       delete exported.mapping.changes[contentMapKey(s.slot)]
     }
-    leaveOut(
-      wordsAsAddress.map((s) => ({
-        slot: s.slot,
-        key: contentMapKey(s.slot),
-        owner: 'writer',
-        step: 6,
-        reason:
-          'copy: words in an address slot are no address: a visitor would follow them to a page that does not exist'
-      }))
-    )
+    if (notWords.length) report.copyNotWritten = notWords
     leaveOut(
       provenanceProblems.map((p) => ({
         slot: String(p.where),
