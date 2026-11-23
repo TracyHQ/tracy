@@ -1,0 +1,28 @@
+---
+/**
+ * A run of pictures in an article body. One picture is drawn full width; two or more sit side by side in a row (the
+ * source's `full-box` and `row-small`). Receives a grouped node `{ _type: 'frImages', images: [image blocks] }` made by
+ * the Post view, since Portable Text is flat and a renderer sees one block at a time.
+ */
+import { bodyImageUrl } from '@/lib/media'
+
+const { node } = Astro.props
+const images = (node?.images ?? []) as any[]
+const shots = images
+  .map((b) => ({
+    src: bodyImageUrl(b.asset) ?? (typeof b.url === 'string' ? b.url : null),
+    alt: typeof b.alt === 'string' ? b.alt : '',
+    width: b.asset?.width ?? b.width ?? null,
+    height: b.asset?.height ?? b.height ?? null
+  }))
+  .filter((s) => s.src)
+---
+
+{shots.length === 1 && (
+	<div class="fr-prose-full"><img src={shots[0].src} alt={shots[0].alt} width={shots[0].width ?? 1280} height={shots[0].height ?? 600} loading="lazy" /></div>
+)}
+{shots.length > 1 && (
+	<div class="fr-prose-row">
+		{shots.map((s) => <div><img src={s.src} alt={s.alt} width={s.width ?? 700} height={s.height ?? 525} loading="lazy" /></div>)}
+	</div>
+)}

@@ -1,0 +1,35 @@
+---
+/** Gallery page: gallery-one (Type 2, mosaic) then gallery-two (Type 1, even grid). No masthead in the source. */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import GalleryGrid from '@/components/blocks/GalleryGrid.astro'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  path?: string
+  slug?: string
+}
+const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, one, two] = await Promise.all([
+  getEmDashEntry('pages', 'gallery', { locale }),
+  section('gallery', 'gallery-one', locale),
+  section('gallery', 'gallery-two', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'gallery' } : null)
+---
+
+<Base chrome={chrome} title={page.title ?? chrome.site.brand_name} currentPath="/gallery" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'gallery', toPath: () => '/gallery' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<h1 class="sr-only" {...$page("title")}>{page.title}</h1>
+		{one && <GalleryGrid entry={one} chrome={chrome} />}
+		{two && <GalleryGrid entry={two} chrome={chrome} />}
+	</main>
+</Base>

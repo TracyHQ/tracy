@@ -119,6 +119,7 @@ COPY packages/cms/tracy-emdash-theme-saas/contracts ./src/contracts/tracy-saas/e
 COPY packages/cms/tracy-emdash-theme-coffee/contracts ./src/contracts/tracy-coffee/emdash-0.x
 COPY packages/cms/tracy-emdash-theme-restaurant/contracts ./src/contracts/tracy-restaurant/emdash-0.x
 COPY packages/cms/tracy-emdash-theme-diner/contracts ./src/contracts/tracy-diner/emdash-0.x
+COPY packages/cms/tracy-emdash-theme-fresco/contracts ./src/contracts/tracy-fresco/emdash-0.x
 COPY packages/cms/tracy-emdash-theme-essence/contracts ./src/contracts/tracy-essence/emdash-0.x
 # What a Joomla quickstart ships translated for its own demo copy, beside the contracts (same release/version folders):
 # "Apply" with a language the template does not carry translates what the site holds, and a string the template already
@@ -151,9 +152,11 @@ COPY packages/cms/tracy-emdash-theme-coffee/seed/seed.json packages/cms/tracy-em
 COPY packages/cms/tracy-emdash-theme-coffee/template.config.json ./src/emdash-tool/tracy-coffee/template.config.json
 COPY packages/cms/tracy-emdash-theme-restaurant/seed/seed.json packages/cms/tracy-emdash-theme-restaurant/seed/personalize.json packages/cms/tracy-emdash-theme-restaurant/seed/questions.json packages/cms/tracy-emdash-theme-restaurant/seed/media-map.json packages/cms/tracy-emdash-theme-restaurant/seed/field-map.json ./src/emdash-tool/tracy-restaurant/seed/
 COPY packages/cms/tracy-emdash-theme-diner/seed/seed.json packages/cms/tracy-emdash-theme-diner/seed/personalize.json packages/cms/tracy-emdash-theme-diner/seed/questions.json packages/cms/tracy-emdash-theme-diner/seed/media-map.json packages/cms/tracy-emdash-theme-diner/seed/field-map.json ./src/emdash-tool/tracy-diner/seed/
-COPY packages/cms/tracy-emdash-theme-essence/seed/seed.json packages/cms/tracy-emdash-theme-essence/seed/personalize.json packages/cms/tracy-emdash-theme-essence/seed/questions.json packages/cms/tracy-emdash-theme-essence/seed/media-map.json packages/cms/tracy-emdash-theme-essence/seed/field-map.json ./src/emdash-tool/tracy-essence/seed/
+COPY packages/cms/tracy-emdash-theme-fresco/seed/seed.json packages/cms/tracy-emdash-theme-fresco/seed/personalize.json packages/cms/tracy-emdash-theme-fresco/seed/questions.json packages/cms/tracy-emdash-theme-fresco/seed/media-map.json packages/cms/tracy-emdash-theme-fresco/seed/field-map.json ./src/emdash-tool/tracy-fresco/seed/
 COPY packages/cms/tracy-emdash-theme-restaurant/template.config.json ./src/emdash-tool/tracy-restaurant/template.config.json
 COPY packages/cms/tracy-emdash-theme-diner/template.config.json ./src/emdash-tool/tracy-diner/template.config.json
+COPY packages/cms/tracy-emdash-theme-fresco/template.config.json ./src/emdash-tool/tracy-fresco/template.config.json
+COPY packages/cms/tracy-emdash-theme-essence/seed/seed.json packages/cms/tracy-emdash-theme-essence/seed/personalize.json packages/cms/tracy-emdash-theme-essence/seed/questions.json packages/cms/tracy-emdash-theme-essence/seed/media-map.json packages/cms/tracy-emdash-theme-essence/seed/field-map.json ./src/emdash-tool/tracy-essence/seed/
 COPY packages/cms/tracy-emdash-theme-essence/template.config.json ./src/emdash-tool/tracy-essence/template.config.json
 # Image-only placement measures and hashes the release's original demo files; metadata maps alone cannot prove ownership.
 # These are template seed files (about 45 MB across the six templates), never collected customer media.
@@ -167,9 +170,11 @@ COPY packages/cms/tracy-emdash-theme-coffee/seed/media ./src/emdash-tool/tracy-c
 COPY packages/cms/tracy-emdash-theme-coffee/seed/content-api-map.json ./src/emdash-tool/tracy-coffee/seed/content-api-map.json
 COPY packages/cms/tracy-emdash-theme-restaurant/seed/media ./src/emdash-tool/tracy-restaurant/seed/media
 COPY packages/cms/tracy-emdash-theme-diner/seed/media ./src/emdash-tool/tracy-diner/seed/media
-COPY packages/cms/tracy-emdash-theme-essence/seed/media ./src/emdash-tool/tracy-essence/seed/media
+COPY packages/cms/tracy-emdash-theme-fresco/seed/media ./src/emdash-tool/tracy-fresco/seed/media
 COPY packages/cms/tracy-emdash-theme-restaurant/seed/content-api-map.json ./src/emdash-tool/tracy-restaurant/seed/content-api-map.json
 COPY packages/cms/tracy-emdash-theme-diner/seed/content-api-map.json ./src/emdash-tool/tracy-diner/seed/content-api-map.json
+COPY packages/cms/tracy-emdash-theme-fresco/seed/content-api-map.json ./src/emdash-tool/tracy-fresco/seed/content-api-map.json
+COPY packages/cms/tracy-emdash-theme-essence/seed/media ./src/emdash-tool/tracy-essence/seed/media
 COPY packages/cms/tracy-emdash-theme-essence/seed/content-api-map.json ./src/emdash-tool/tracy-essence/seed/content-api-map.json
 # The content seeder's own modules (`lib/seeder.js`): "Apply" in the Add site popup writes a new site's words
 # with the planners and the door calls the seeder uses, not a second copy of their rules. Only the leaf
@@ -237,12 +242,15 @@ COPY packages/cms/tracy-emdash-theme-coffee/seed/personalize.json ./src/emdash-t
 COPY packages/cms/tracy-emdash-theme-coffee/seed/site-model.json ./src/emdash-templates/tracy-coffee/seed/site-model.json
 COPY packages/cms/tracy-emdash-theme-restaurant/artifact.json ./src/emdash-templates/tracy-restaurant/artifact.json
 COPY packages/cms/tracy-emdash-theme-diner/artifact.json ./src/emdash-templates/tracy-diner/artifact.json
-COPY packages/cms/tracy-emdash-theme-essence/artifact.json ./src/emdash-templates/tracy-essence/artifact.json
+COPY packages/cms/tracy-emdash-theme-fresco/artifact.json ./src/emdash-templates/tracy-fresco/artifact.json
 COPY packages/cms/tracy-emdash-theme-restaurant/seed/personalize.json ./src/emdash-templates/tracy-restaurant/seed/personalize.json
 COPY packages/cms/tracy-emdash-theme-diner/seed/personalize.json ./src/emdash-templates/tracy-diner/seed/personalize.json
-COPY packages/cms/tracy-emdash-theme-essence/seed/personalize.json ./src/emdash-templates/tracy-essence/seed/personalize.json
+COPY packages/cms/tracy-emdash-theme-fresco/seed/personalize.json ./src/emdash-templates/tracy-fresco/seed/personalize.json
 COPY packages/cms/tracy-emdash-theme-restaurant/seed/site-model.json ./src/emdash-templates/tracy-restaurant/seed/site-model.json
 COPY packages/cms/tracy-emdash-theme-diner/seed/site-model.json ./src/emdash-templates/tracy-diner/seed/site-model.json
+COPY packages/cms/tracy-emdash-theme-fresco/seed/site-model.json ./src/emdash-templates/tracy-fresco/seed/site-model.json
+COPY packages/cms/tracy-emdash-theme-essence/artifact.json ./src/emdash-templates/tracy-essence/artifact.json
+COPY packages/cms/tracy-emdash-theme-essence/seed/personalize.json ./src/emdash-templates/tracy-essence/seed/personalize.json
 COPY packages/cms/tracy-emdash-theme-essence/seed/site-model.json ./src/emdash-templates/tracy-essence/seed/site-model.json
 COPY packages/fleet/tracy-fleet-operation/scripts/provision/emdash/personalize ./src/emdash-templates
 # The built harness SPA (Plan 4 Task 2) — `dist/` is gitignored (built with `pnpm --filter

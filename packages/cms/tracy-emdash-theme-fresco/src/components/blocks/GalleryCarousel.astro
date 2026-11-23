@@ -1,0 +1,40 @@
+---
+/**
+ * acm gallery style-1: a looping strip of pictures with no arrows or dots: 1 picture under 480 px, 2 from 480, 3 from 768, `number_col`
+ * from 992. The alt text is the hover caption. It scrolls slowly and continuously (one picture per `auto_time` ms), stops under
+ * prefers-reduced-motion, and pauses on hover or keyboard focus.
+ */
+import { mediaUrl } from '@/lib/media'
+import { spacing } from '@/lib/layout'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any>
+}
+const { entry } = Astro.props
+const $g = stampFor(Astro.request, 'gallery', { id: entry.id, slug: entry.slug })
+const items: any[] = (entry.items ?? []).filter((i: any) => mediaUrl(i.gallery_image))
+const col = Math.min(6, Math.max(1, Number(entry.number_col) || 4))
+const play = String(entry.auto_play ?? '1') !== '0'
+const ms = Math.max(2000, Number(entry.auto_time) || 5000)
+const seconds = Math.round((items.length * ms) / 1000)
+---
+
+{items.length > 0 && (
+	<section class:list={['fr-section', spacing(entry.slug)]}>
+		<div class="fr-gal" data-fr-gallery data-play={play ? '1' : '0'} style={`--fr-gal-cols:${col};--fr-gal-dur:${seconds}s`} tabindex="0" role="region" aria-label={entry.title}>
+			<div class="fr-gal-track">
+				{[0, 1].map((copy) =>
+					items.map((it, i) => (
+						<div class="fr-gal-item" aria-hidden={copy ? 'true' : undefined}>
+							<div class="fr-gal-inner">
+								<img src={mediaUrl(it.gallery_image)} alt={copy ? '' : (it.gallery_alt ?? '')} width="720" height="720" loading="eager" decoding="async" {...(copy ? {} : $g(`items[${i}].gallery_image`))} />
+								{it.gallery_alt && <span aria-hidden="true" {...(copy ? {} : $g(`items[${i}].gallery_alt`))}>{it.gallery_alt}</span>}
+							</div>
+						</div>
+					))
+				)}
+			</div>
+		</div>
+	</section>
+)}

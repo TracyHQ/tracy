@@ -1,0 +1,21 @@
+/* acm teams style-1 (source: scss/_acm.scss:932-1040; measured on /about at 1440: card 408 wide, photo square, info padded 32). */
+@layer components {
+	.fr-team { list-style: none; margin: 0 -16px; padding: 0; display: grid; grid-template-columns: 1fr; }
+	.fr-member { padding: 0 16px; margin-bottom: 32px; text-align: center; }
+	.fr-member-pic { overflow: hidden; }
+	.fr-member-pic img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; transition: opacity .4s, transform .4s; }
+	.fr-member:hover .fr-member-pic img { opacity: .8; transform: scale(1.02); }
+	.fr-member-info { padding: 32px; background: var(--color-tint); border-radius: var(--ds-card-radius, 0); }
+	.fr-member-name { font-size: min(var(--h2-size), 32px); margin: 0; }
+	.fr-member-office { margin: 16px 0; color: var(--color-accent-text); }
+	.fr-member-desc { margin: 0 0 32px; }
+	.fr-member-social { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
+	.fr-social { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; min-width: 36px; border-radius: 50%; background: var(--color-tint-strong); color: var(--color-heading); }
+	.fr-team-action { text-align: center; }
+	@media (min-width: 768px) { .fr-team { grid-template-columns: 1fr 1fr; } }
+	@media (min-width: 768px) and (max-width: 991.98px) { .fr-team > li:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: 50%; } }
+	@media (min-width: 992px) {
+		.fr-team { grid-template-columns: repeat(var(--fr-team-cols), 1fr); }
+		.fr-team-action { margin-top: 48px; }
+	}
+}

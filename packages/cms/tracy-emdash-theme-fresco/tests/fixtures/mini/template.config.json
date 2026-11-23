@@ -1,0 +1,47 @@
+{
+  "id": "mini-atelier",
+  "label": "Mini Atelier",
+  "version": "0.0.1",
+  "locales": ["de", "fr"],
+  "defaultLocale": "de",
+  "site": {
+    "title": "Atelier Nord",
+    "tagline": "Möbel aus Holz"
+  },
+  "contentOrder": ["seiten", "kontakt"],
+  "forms": {
+    "file": "tests/fixtures/mini/forms.json",
+    "bindings": [
+      {
+        "form": "anfrage-{locale}",
+        "collection": "kontakt",
+        "slug": "kontakt",
+        "field": "formular_id"
+      }
+    ]
+  },
+  "mail": {
+    "fromEmail": "no-reply@atelier.example",
+    "fromName": "Atelier Nord"
+  },
+  "audit": {
+    "indexable": ["^/(?!suche)(?!404$).*"],
+    "noindex": ["^/suche"],
+    "notFound": ["^/404$"],
+    "canonicalQuery": ["page"]
+  },
+  "qa": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": null,
+        "dark": "dark"
+      },
+      "storageKey": "mini-theme"
+    },
+    "expectedStatus": {
+      "/404": 404
+    }
+  }
+}

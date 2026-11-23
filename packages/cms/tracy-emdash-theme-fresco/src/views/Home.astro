@@ -1,0 +1,76 @@
+---
+/**
+ * Home (DECISIONS D5): hero · services (features-intro 1) · explore (menu 1) · events (features-intro 2) · sea / land / sky (menu 1)
+ * · gallery strip (gallery 1) · desserts / tea (menu 1) · gallery strip · testimonials · visit us (features-intro 1).
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Hero from '@/components/blocks/Hero.astro'
+import FeaturesTiles from '@/components/blocks/FeaturesTiles.astro'
+import MenuList from '@/components/blocks/MenuList.astro'
+import GalleryCarousel from '@/components/blocks/GalleryCarousel.astro'
+import Testimonials from '@/components/blocks/Testimonials.astro'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const [
+  { entry: pageEntry },
+  hero,
+  services,
+  explore,
+  events,
+  sea,
+  land,
+  sky,
+  gallery1,
+  desserts,
+  tea,
+  gallery2,
+  testimonials,
+  visit
+] = await Promise.all([
+  getEmDashEntry('pages', 'home', { locale }),
+  section('hero', 'home-hero', locale),
+  section('features_intro', 'home-services', locale),
+  section('menu', 'home-explore', locale),
+  section('features_intro', 'home-events', locale),
+  section('menu', 'home-sea', locale),
+  section('menu', 'home-land', locale),
+  section('menu', 'home-sky', locale),
+  section('gallery', 'home-gallery-1', locale),
+  section('menu', 'home-desserts', locale),
+  section('menu', 'home-tea', locale),
+  section('gallery', 'home-gallery-2', locale),
+  section('testimonials', 'home-testimonials', locale),
+  section('features_intro', 'home-visit', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'home' } : null)
+---
+
+<Base chrome={chrome} title={page.title ?? chrome.site.brand_name} currentPath="/" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'home', toPath: () => '/' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		{hero && <Hero entry={hero} chrome={chrome} />}
+		{services && <FeaturesTiles entry={services} chrome={chrome} style={1} />}
+		{explore && <MenuList entry={explore} chrome={chrome} />}
+		{events && <FeaturesTiles entry={events} chrome={chrome} style={2} />}
+		{sea && <MenuList entry={sea} chrome={chrome} typeHeading />}
+		{land && <MenuList entry={land} chrome={chrome} typeHeading />}
+		{sky && <MenuList entry={sky} chrome={chrome} typeHeading />}
+		{gallery1 && <GalleryCarousel entry={gallery1} />}
+		{desserts && <MenuList entry={desserts} chrome={chrome} typeHeading />}
+		{tea && <MenuList entry={tea} chrome={chrome} typeHeading />}
+		{gallery2 && <GalleryCarousel entry={gallery2} />}
+		{testimonials && <Testimonials entry={testimonials} chrome={chrome} />}
+		{visit && <FeaturesTiles entry={visit} chrome={chrome} style={1} />}
+	</main>
+</Base>

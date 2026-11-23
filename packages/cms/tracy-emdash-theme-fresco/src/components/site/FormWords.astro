@@ -1,0 +1,26 @@
+---
+// Renders the Forms plugin's embed (the default slot) with the plugin's own English fallbacks in
+// the page language: honeypot label, Previous / Next (`src/lib/form-embed-words.ts`, LANG-2).
+// `tag` is the language the page is written in (a display tag such as `vi-VN`, or a locale key).
+// Shared by every Tracy EmDash template (kit `scripts/src/components/site/`), byte-identical.
+import { formWordsFor, localizeFormEmbed } from '@/lib/form-embed-words'
+
+interface Props {
+  tag: string
+}
+const html = Astro.slots.has('default') ? await Astro.slots.render('default') : ''
+---
+
+<Fragment set:html={localizeFormEmbed(html, formWordsFor(Astro.props.tag))} />
+
+<script>
+  // The plugin restores this attribute after submitting. Preserve the editor's label before
+  // its bubbling handler replaces the button text with the pending state.
+  document.addEventListener('submit', (event) => {
+    const form = event.target
+    if (!(form instanceof HTMLFormElement) || !form.matches('.ec-form')) return
+    if (form.hasAttribute('data-submit-label')) return
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')
+    if (button) form.dataset.submitLabel = button.textContent?.trim() ?? ''
+  }, true)
+</script>

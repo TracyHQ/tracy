@@ -1,0 +1,68 @@
+{
+  "_note": "Forms plugin definitions: the contact form of the source (Joomla com_contact: Name, Email, Phone, Subject, Message; the labels are the contact-info entry's, shown as placeholders like the source) and the newsletter band (AcyMailing, one email field; bound to the Forms plugin, which stores the submissions only, DECISIONS D13). Created by tools/seed-apply.mjs forms. Not carried: the confirmation line of the newsletter box (not in the source) and the 'Send a copy to yourself' checkbox (the Forms plugin sends no copy to the sender).",
+  "forms": [
+    {
+      "name": "Contact form (EN)",
+      "slug": "contact-en",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-en",
+              "type": "text",
+              "label": "Your name",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Your name"
+            },
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Email address",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Email address"
+            },
+            {
+              "id": "phone-en",
+              "type": "text",
+              "label": "Your phone",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Your phone"
+            },
+            {
+              "id": "subject-en",
+              "type": "text",
+              "label": "Subject",
+              "name": "subject",
+              "required": true,
+              "width": "half",
+              "placeholder": "Subject"
+            },
+            {
+              "id": "message-en",
+              "type": "textarea",
+              "label": "How we can help?",
+              "name": "message",
+              "required": true,
+              "width": "full",
+              "placeholder": "Write a comment"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Thank you for your message.",
+        "notifyEmails": ["hello@ja-fresco.example"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Send a message",
+        "retentionDays": 0
+      }
+    }
+  ]
+}

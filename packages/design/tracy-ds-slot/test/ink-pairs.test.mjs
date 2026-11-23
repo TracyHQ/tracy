@@ -98,6 +98,8 @@ function sides(name, profile) {
     if (name.startsWith('emdash-')) {
       const r = emdashCss(p, c)
       if ('refused' in r) return null
+      // a one-look contract (`modes: false`) has no derived side: the system's own side is the only one worn
+      if (!r.mode) return { [modeOf(p)]: r.vars }
       const other = r.mode === 'dark' ? 'light' : 'dark'
       return { [r.mode]: r.vars, [other]: r.derivedVars }
     }
