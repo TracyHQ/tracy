@@ -119,7 +119,14 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
   const excerptProblems = view.slots.flatMap((s) => {
     const excerpt = ownerPostExcerptFor(s, idx, brief)
     return excerpt && !excerpt.valid
-      ? [{ where: s.slot, code: 'ARTICLE_EXCERPT', detail: excerpt.detail }]
+      ? [
+          {
+            where: s.slot,
+            code: 'ARTICLE_EXCERPT',
+            detail: excerpt.detail,
+            ...(excerpt.excerpt ? { excerpt: excerpt.excerpt, postId: excerpt.postId } : {})
+          }
+        ]
       : []
   })
   const articleProblems = articleExportProblems({ kit, plan, brief, view })

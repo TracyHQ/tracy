@@ -159,6 +159,13 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
       reason:
         "a tab that opens a panel of this page has no slot and no address: it stays, doing what it does, and its words are its label slot's"
     }
+  if (via === 'unremovable-link')
+    return {
+      status: 'skipped',
+      key,
+      reason:
+        'the template prints this link with no slot the site can empty, so it stays as the template prints it; what it shows and where it leads are judged by the link checks'
+    }
   // Not emptied, on purpose: no kept page prints it. `printed: false` tells the read-back not to ask for an empty slot.
   if (via === 'unshown' && order.unseen)
     return {

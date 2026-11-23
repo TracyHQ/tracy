@@ -10,7 +10,12 @@ const ENDED = 'the run ended before this link was written'
 export const failed = (reason, extra = {}) => ({ status: 'failed', reason, key: null, ...extra })
 
 /** What becomes of a link whose door is known and whose address is `target`, before the writes. */
-export function lineOrder(claim, door, target, { hiddenKeys, leaving, goneKeys = new Set() }) {
+export function lineOrder(
+  claim,
+  door,
+  target,
+  { hiddenKeys, leaving, goneKeys = new Set(), droppedPaths = new Set() }
+) {
   const { slot: id, content: leadsTo } = claim
   const { link } = door
   if (door.via === 'audio-refused') return failed(door.reason)
@@ -56,6 +61,14 @@ export function lineOrder(claim, door, target, { hiddenKeys, leaving, goneKeys =
   }
   if (door.via === 'words') return { via: 'words', key: door.key, leadsTo }
   if (door.via === 'menu') return menuOrder(door, target)
+  // A listing card's link to its own item, whose page the plan drops: the write step unpublishes that page's article, so the
+  // card leaves the listing and its link with it (dev lat31b, 23/11/2026: two JA Boxing class cards were refused lines).
+  if (link?.action === 'go-to-item' && link.target && droppedPaths.has(slashless(link.target)))
+    return {
+      status: 'skipped',
+      key: null,
+      reason: `it opens ${link.target}, a page the plan drops: its article is unpublished, so the card leaves the listing with its link`
+    }
   return alreadyOpens(link, target) ?? noDoor(link, leadsTo)
 }
 
@@ -79,7 +92,30 @@ const alive = (target) => ({
  */
 export const refusedLine = (reason, extra = {}) => ({ status: 'refused', reason, key: null, ...extra })
 
+const digitsOf = (value) => String(value ?? '').replace(/[^0-9]/g, '')
+
+/**
+ * Whether the template prints this link's address from its own words: a phone link whose number is its label's digits, an
+ * e-mail link whose address is its label (a Joomla contact prints `tel:` and `mailto:` from the contact's own fields). The
+ * address then follows the words, whoever writes them. Dev lat31b (23/11/2026): JA Boxing's contact page printed the club's
+ * own number and address, yet both links were refused lines ("it keeps opening tel:#").
+ */
+export function addressFromLabel(link) {
+  const target = String(link?.target ?? '')
+  const label = String(link?.label ?? '').trim()
+  if (!label || !link?.labelId) return false
+  if (/^tel:/i.test(target)) return digitsOf(target).length >= 6 && digitsOf(target) === digitsOf(label)
+  if (/^mailto:/i.test(target)) return target.slice(7).trim().toLowerCase() === label.toLowerCase()
+  return false
+}
+
 function noDoor(link, leadsTo) {
+  if (addressFromLabel(link))
+    return {
+      status: 'skipped',
+      key: null,
+      reason: `the template prints this address from its words (${link.labelId}), so it follows them; no door of its own is needed`
+    }
   const keeps = link?.target ? ` and it keeps opening ${link.target}` : ''
   const dead = !link?.target && link?.action === 'page-control'
   return refusedLine(

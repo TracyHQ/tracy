@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { checkCopy } from '../src/site-writer/copy-check/check-copy.js'
 import { exportContractMapping } from '../src/lib/site-copy/contract-mapping.js'
+import { openingExcerpt, ownerPostExcerpt } from '../src/lib/site-copy/owner-post-excerpts.js'
 import { writerInput } from '../src/site-writer/writer-input.js'
 import { fixedPart } from '../src/site-writer/writer-turns.js'
 import { runStep } from './_write-step-run.mjs'
@@ -141,7 +142,8 @@ test('the writer receives the original-post rule and truthful length exception i
   assert.match(fixedPart(writerInput(input)), /no demo minimum length/)
 })
 
-test('the write step stops before applying invented article copy', async () => {
+test("the write step writes the planned post's own opening in place of an invented article body, and goes on", async () => {
+  // Dev lat31b (23/11/2026): one blog body that was no excerpt stopped the whole write; the site stayed the template.
   const input = fixture('Nobody left early.')
   input.plan.site.legalPages = []
   const { report, site } = await runStep(
@@ -149,8 +151,29 @@ test('the write step stops before applying invented article copy', async () => {
     {},
     { kit: { ref: 'demo-gym/j6/1.0.0', doc: input.kit } }
   )
-  assert.equal(report.status, 'stopped')
-  assert.equal(report.cause.code, 'BAD_FILE')
-  assert.match(report.cause.reason, /Article copy needs correction/)
-  assert.equal(site.applies().length, 0)
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  const sent = Object.assign({}, ...site.applies().map((a) => a.params.changes ?? {}))
+  assert.ok(!Object.values(sent).some((v) => String(v).includes('Nobody left early.')))
+  assert.equal(sent['module-2.2'], original)
+  assert.deepEqual(report.postExcerpts, [{ slot: 'block-2.2', post: 'owner-post' }])
+})
+
+test("a post's opening within a limit keeps whole sentences, else whole words, and is a faithful excerpt", () => {
+  const source = 'We opened in 1997 in Jumeirah. Breakfast is served all day! Come early on Fridays.'
+  assert.equal(openingExcerpt(source, 70), 'We opened in 1997 in Jumeirah. Breakfast is served all day!')
+  assert.equal(openingExcerpt(source, 20), 'We opened in 1997 in')
+  assert.equal(openingExcerpt(source, 500), source)
+  const facts = [{ id: 'p', field: 'posts', onSite: true, value: { kind: 'post', text: source } }]
+  for (const max of [20, 45, 70])
+    assert.equal(
+      ownerPostExcerpt({
+        role: 'article.lead',
+        plannedIds: ['p'],
+        citedIds: ['p'],
+        items: [openingExcerpt(source, max)],
+        facts
+      }).valid,
+      true,
+      `${max}`
+    )
 })

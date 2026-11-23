@@ -1,0 +1,1 @@
+{"id":"REG-PR-734-article-excerpt-no-stop","verdict":"PASS","commit":"1eaccf0b8efa37bd7a538aabf6d608c21ecabb65","ran_at":"2026-11-23T04:35:00.965Z","evidence":"tests/regression/.runs/2026-11-23-1eaccf0b8/REG-PR-734-article-excerpt-no-stop.log"}

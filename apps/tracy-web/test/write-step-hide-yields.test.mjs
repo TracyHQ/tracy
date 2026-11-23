@@ -295,7 +295,7 @@ test('a hidden link whose words the plan hides too takes the address the site ca
   assert.ok(!alone.emptySlots.includes('module-100.1'))
 })
 
-test('a tab or a photo control the plan hides stays as it is; a frame the kit read on no page leaves with nothing; a "Website" line goes with its address', () => {
+test('a tab, a photo control or a slotless credit link the plan hides stays as it is; a frame the kit read on no page leaves with nothing; a "Website" line goes with its address', () => {
   const tabKit = {
     pages: [{ id: 'page-home', path: '/', blocks: { 1440: ['block-97', 'block-106', 'body-contact'] } }],
     blocks: [
@@ -318,6 +318,13 @@ test('a tab or a photo control the plan hides stays as it is; a frame the kit re
             target: null,
             action: 'page-control',
             icon: { mechanism: 'image-file', file: 'item-1.jpg', classes: null, title: null, network: null }
+          },
+          // A credit the template prints in its own markup (dev lat31b, JA Boxing's footer): no slot holds it.
+          {
+            id: 'block-97.link-3',
+            label: 'Joomla!',
+            target: 'https://www.joomla.invalid',
+            action: 'navigation'
           }
         ]
       },
@@ -394,6 +401,7 @@ test('a tab or a photo control the plan hides stays as it is; a frame the kit re
     owners: new Map([
       hide('block-97.link-1'),
       hide('block-97.link-2'),
+      hide('block-97.link-3'),
       hide('block-106.24'),
       hide('contact-1.5'),
       hide('body-contact.link-5')
@@ -409,6 +417,11 @@ test('a tab or a photo control the plan hides stays as it is; a frame the kit re
     order.orders.get('block-97.link-2').via,
     'inpage',
     'a photo that opens itself stays its picture'
+  )
+  assert.equal(
+    order.orders.get('block-97.link-3').via,
+    'unremovable-link',
+    'no door holds the credit: it stays'
   )
   assert.deepEqual(order.orders.get('block-106.24'), {
     via: 'unshown',
@@ -436,6 +449,11 @@ test('a tab or a photo control the plan hides stays as it is; a frame the kit re
   }).hides
   assert.equal(lines.get('block-97.link-1').status, 'skipped')
   assert.equal(lines.get('block-97.link-2').status, 'skipped')
+  assert.equal(lines.get('block-97.link-3').status, 'skipped')
+  assert.match(
+    lines.get('block-97.link-3').reason,
+    /no slot the site can empty, so it stays as the template prints it/
+  )
   assert.equal(lines.get('block-106.24').status, 'hidden')
   assert.equal(lines.get('body-contact.link-5').status, 'hidden')
 })

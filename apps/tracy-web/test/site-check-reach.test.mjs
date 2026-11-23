@@ -293,6 +293,34 @@ test("a module's per-menu-item entries are no list on a page, and are not judged
   assert.ok(judgeListRows({ ...r, entryPages: undefined }, [shown]).failures.length > 0)
 })
 
+test('a list of tabs or slides is not counted from the page: one row shows at a time', () => {
+  // Dev lat31b (23/11/2026): JA Boxing's four training steps are tabs; the page showed one and "printed 2".
+  const card = (text) => ({ chars: text.length, text, pictures: 0 })
+  const r = {
+    slots: [
+      { slot: 'block-65.2', key: 'module-65.2', status: 'written', ordered: 'Warm up first' },
+      { slot: 'block-65.3', key: 'module-65.3', status: 'written', ordered: 'Punches on pads' }
+    ],
+    rows: [
+      {
+        block: 'block-65',
+        list: 'block-65.step',
+        plan: 4,
+        demo: 4,
+        kept: 4,
+        keptKeys: ['module-65.2', 'module-65.3']
+      }
+    ]
+  }
+  const shown = page('/', {
+    lists: [{ selector: 'ul.tabs>li', items: [card('Warm up first'), card('Punches on pads')] }]
+  })
+  assert.ok(judgeListRows(r, [shown]).failures.length > 0, 'counted as a list, it fails')
+  const tabbed = judgeListRows(r, [shown], { tabbed: new Set(['block-65.step']) })
+  assert.deepEqual(tabbed.failures, [])
+  assert.deepEqual(tabbed.unread, ['block-65.step'])
+})
+
 test('list-rows reads only the row block, only on pages that print it, and leaves out words another block there writes', async () => {
   const card = (text) => ({ chars: text.length, text, pictures: 1 })
   const lines = [

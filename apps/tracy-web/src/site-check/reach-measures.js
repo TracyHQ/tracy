@@ -75,7 +75,7 @@ export function blockPages(pages) {
  *   for only on the pages that print its block, and a word another block printed there also wrote is no sign of the row (card
  *   AH: "Coach" in another block found another list). Without it every page is read and every other block's words are left out.
  */
-export function judgeListRows(report, measures, { pagesOf } = {}) {
+export function judgeListRows(report, measures, { pagesOf, tabbed = new Set() } = {}) {
   const lines = each(report?.slots).filter((l) => l.status === 'written' && typeof l.ordered === 'string')
   const failures = []
   const unread = []
@@ -88,6 +88,11 @@ export function judgeListRows(report, measures, { pagesOf } = {}) {
   for (const row of each(report?.rows)) {
     const keys = new Set(each(row.keptKeys))
     if (keys.size && [...keys].every((key) => entries.has(key))) continue
+    // A list of tabs or slides shows one row at a time: the page cannot be counted (dev lat31b, JA Boxing's training steps).
+    if (tabbed.has(row.list)) {
+      unread.push(row.list)
+      continue
+    }
     const entity = entityOf([...keys][0]) || String(row.block ?? '').replace(/^block-/, 'module-')
     const printedOn = pagesOf ? (pagesOf.get(entity) ?? new Set()) : null
     const own = lines
@@ -170,8 +175,17 @@ export const listRowsGroup = {
     const read = await pagesRead(context)
     needs(read, 'lists', 'lists')
     const reading = await context.read('content.contract', { operation: 'inspect' })
+    // The kit's lists of tabs or slides (`minSource: slider-or-tab`): one row shows at a time.
+    const tabbed = new Set(
+      each(context.kit?.blocks).flatMap((b) =>
+        each(b?.lists)
+          .filter((l) => l?.minSource === 'slider-or-tab')
+          .map((l) => l.id)
+      )
+    )
     const { checked, failures, unread } = judgeListRows(context.report, read.measures, {
-      pagesOf: blockPages(reading.pages)
+      pagesOf: blockPages(reading.pages),
+      tabbed
     })
     if (!checked)
       throw new GroupUnmeasured(

@@ -419,14 +419,31 @@ export async function runWriteStep(input) {
       }))
     )
     extras = exported.extras
+    // An article body that is no faithful excerpt of its planned owner post is never written as the writer gave it. When the
+    // plan names that post, its opening within the slot's limit is written instead (faithful by construction); otherwise the
+    // body is left out and said on step 6. Before (dev lat31b, 23/11/2026) one such body stopped the whole write, and the
+    // site stayed the template.
     const inventedPosts = exported.problems.filter((p) => p.code === 'ARTICLE_EXCERPT')
-    if (inventedPosts.length)
-      return {
-        stop: {
-          code: 'BAD_FILE',
-          reason: `Article copy needs correction: ${inventedPosts.map((p) => `${p.where}: ${p.detail}`).join('; ')}`
-        }
-      }
+    const repairedPosts = []
+    for (const p of inventedPosts) {
+      const key = contentMapKey(String(p.where))
+      if (typeof p.excerpt === 'string' && p.excerpt) {
+        exported.mapping.changes[key] = p.excerpt
+        repairedPosts.push({ slot: String(p.where), post: p.postId ?? null })
+      } else delete exported.mapping.changes[key]
+    }
+    if (repairedPosts.length) report.postExcerpts = repairedPosts
+    leaveOut(
+      inventedPosts
+        .filter((p) => !(typeof p.excerpt === 'string' && p.excerpt))
+        .map((p) => ({
+          slot: String(p.where),
+          key: contentMapKey(String(p.where)),
+          owner: 'writer',
+          step: 6,
+          reason: `copy: ${p.detail}`
+        }))
+    )
     // A page the plan creates with no words in the copy is not created, and said once on step 6; every other page is written.
     const wordless = new Set(pagesWithoutCopy(plan, extras.pages))
     leaveOut(

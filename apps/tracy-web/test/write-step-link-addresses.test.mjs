@@ -4,6 +4,7 @@
 // "Unsupported CTA URL". Invented addresses.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { addressFromLabel, lineOrder } from '../src/write-step/link-lines.js'
 import { linkTarget, plainAddress } from '../src/write-step/link-targets.js'
 
 // The forms the plugin takes for a url slot, as its check writes them.
@@ -63,4 +64,44 @@ test("a path the plan names that is a kept page's slug or kit path is that page,
     'no kept page: the address as given'
   )
   assert.deepEqual(at('/old'), { kind: 'address', url: '/old' }, 'a dropped page is not a kept page')
+})
+
+test('a contact link whose address the template prints from its own words follows them: never a refused line', () => {
+  // Dev lat31b (23/11/2026): the club's number and address were on the page, yet both links were refused.
+  assert.equal(
+    addressFromLabel({
+      label: '(239) 555-0108',
+      labelId: 'contact-1.2',
+      target: 'tel:2395550108',
+      action: 'contact'
+    }),
+    true
+  )
+  assert.equal(
+    addressFromLabel({ label: 'sale@getfit.com', labelId: 'contact-1.3', target: 'mailto:sale@getfit.com' }),
+    true
+  )
+  // An address of its own, or no label slot: it is not the label's.
+  assert.equal(addressFromLabel({ label: 'Call us', labelId: 'block-2.1', target: 'tel:2395550108' }), false)
+  assert.equal(addressFromLabel({ label: '(239) 555-0108', target: 'tel:2395550108' }), false)
+  assert.equal(addressFromLabel({ label: 'Book', labelId: 'block-2.1', target: '/booking' }), false)
+})
+
+test("a card's link to its own item whose page the plan drops leaves with the card, never a refused line", () => {
+  // Dev lat31b (23/11/2026): two JA Boxing class cards opened a dropped class page and were refused lines.
+  const door = {
+    via: 'none',
+    link: { id: 'b.link-2', action: 'go-to-item', target: '/classes/advanced', label: 'Advanced' }
+  }
+  const claim = { slot: 'b.link-2', content: 'page-group' }
+  const target = {
+    kind: 'page',
+    url: 'index.php?Itemid=5',
+    page: { id: 'page-group', path: '/classes/group' }
+  }
+  const base = { hiddenKeys: new Map(), leaving: new Set() }
+  const dropped = lineOrder(claim, door, target, { ...base, droppedPaths: new Set(['classes/advanced']) })
+  assert.equal(dropped.status, 'skipped')
+  assert.match(dropped.reason, /a page the plan drops/)
+  assert.equal(lineOrder(claim, door, target, base).status, 'refused', 'its page kept: still refused')
 })

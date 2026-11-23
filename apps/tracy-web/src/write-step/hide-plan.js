@@ -17,6 +17,9 @@ const each = (value) => (Array.isArray(value) ? value : [])
 const slashless = (path) => String(path ?? '').replace(/^\/+|\/+$/g, '')
 const ADDRESS_MOVES = /\/(?:text\(\)(?:\[\d+\])?|@[A-Za-z-]+)$/
 const ANCHOR = /<a[\s>]|\(\(a /i
+/** A link the template prints to an address: a navigation link or a card's link to its item, never a control or a form. */
+const isAddressLink = (link) =>
+  Boolean(link?.target) && (link.action === 'navigation' || link.action === 'go-to-item') && !link.opens
 
 export { NEW_CONTRACT, droppedBlocks }
 
@@ -420,6 +423,12 @@ export function hideOrders({
     } else {
       const places = printedOnlyOnDropped(slot, { kit, plan, dropped: blocks })
       if (places) orders.set(slot, { via: 'unshown', key, ...places })
+      // A kit link to an address (a navigation link or a card's go-to-item link) that no door of the site holds (no address
+      // slot, no menu item, no words around it): nothing can take it off, and no contract slot is missing for the plan's words. It stays as the template prints it, and the link checks (dead-links, demo-links,
+      // plan-links) judge it on the page. Before (dev lat31b, 23/11/2026) JA Boxing's footer credits and the cards of a
+      // class whose article the write step unpublishes were seven "the contract has no slot" blocks.
+      else if (!held && isAddressLink(kitLinks.get(slot)) && doorOf(slot)?.via === 'none')
+        orders.set(slot, { via: 'unremovable-link', key })
       else failedAs(notEmptiable(key, held))
     }
   }

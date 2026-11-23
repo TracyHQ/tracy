@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-734-article-excerpt-no-stop",
+  "kind": "fix",
+  "title": "An unfaithful article body never stops the write, and slotless links, tab lists, label-derived contact links and cards of dropped pages are no faults",
+  "pr": 734,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The write step writes the planned post's opening in place of an invented article body and goes on; the opening keeps whole sentences or words and passes the excerpt rule; a kept link's labelSlot is the kit's; a slotless address link the plan hides stays; tab and slide lists are not counted; a contact link following its label and a card of a dropped page are skipped, not refused."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-copy-owner-post-excerpts.test.mjs",
+      "apps/tracy-web/test/site-planner-undecided-links.test.mjs",
+      "apps/tracy-web/test/write-step-hide-yields.test.mjs",
+      "apps/tracy-web/test/site-check-reach.test.mjs",
+      "apps/tracy-web/test/write-step-link-addresses.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the write step writes the planned post's own opening in place of an invented article body, and goes on",
+      "a post's opening within a limit keeps whole sentences, else whole words, and is a faithful excerpt",
+      "a kept link's labelSlot is the kit's: none or another slot is corrected, the kit's is left as it is",
+      "a tab, a photo control or a slotless credit link the plan hides stays as it is; a frame the kit read on no page leaves with nothing; a \"Website\" line goes with its address",
+      "a list of tabs or slides is not counted from the page: one row shows at a time",
+      "a contact link whose address the template prints from its own words follows them: never a refused line",
+      "a card's link to its own item whose page the plan drops leaves with the card, never a refused line"
+    ]
+  }
+}
