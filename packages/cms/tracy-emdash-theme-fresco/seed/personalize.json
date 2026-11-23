@@ -607,6 +607,18 @@
     },
     {
       "collection": "contact"
+    },
+    {
+      "collection": "masthead",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "collection": "pages",
+      "fields": [
+        "title"
+      ]
     }
   ],
   "trim": [
@@ -632,7 +644,7 @@
     "chrome/chrome.no_results",
     "contact/contact-info.heading",
     "contact/contact-info.form_title",
-    "contact/contact-info.form_intro",
+    "contact/contact-info.form_intro_text",
     "contact/contact-info.message_label",
     "features_intro/home-visit.section_title",
     "teams/about-team.section_title",

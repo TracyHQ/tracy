@@ -1069,7 +1069,7 @@
           "required": false
         },
         {
-          "slug": "form_intro",
+          "slug": "form_intro_text",
           "label": "Form intro",
           "type": "string",
           "required": false
@@ -1282,9 +1282,9 @@
     "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
     "package.json": "sha256:60917531c8943ab8ff7dc25bc13da582235b772fe1555bb0212adf94b9f640fd",
     "pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
-    "seed/field-map.json": "sha256:eecf767c0ef6ca26ba8c84a72c600960e634863982652e09e4ad91a5917010aa",
+    "seed/field-map.json": "sha256:b202b22d001d8f4991a6f669979afee8e1ed7709ba687cd3a3f95bb8c09b1f3c",
     "seed/media-map.json": "sha256:1cb781eaa3b99e31b41e6800f151d2f03e7988ab1f8741605b61993b4e9b6ab3",
-    "seed/seed.json": "sha256:6145087d7df097753d7be56120fc53476e9dbdf4c97dff88da95ed11a7cb55e5",
+    "seed/seed.json": "sha256:37b04d7f4f2d109981313a4747136fd7fd800669c3384b47ea30bf2a985a361c",
     "src/components/blocks/FeaturesAbout.astro": "sha256:fcb6689e1e9d4c84410f67636cd112ea98f87633acc12256c8e0d7a7d5ea618e",
     "src/components/blocks/FeaturesTiles.astro": "sha256:99c81c4ae36c5511b35a7ddab6b377c8549cf4051c256d1e978a7c25aedca65d",
     "src/components/blocks/GalleryCarousel.astro": "sha256:1020bdd1bdcb15e81093ab770b95b626fc428ec00eec495b4100b4a3d322bdcb",
@@ -1370,7 +1370,7 @@
     "src/views/About.astro": "sha256:b1f27b4793a59785370d82834b38e1c01ca69e69e6858beb99a1f15764b44f9d",
     "src/views/BlogList.astro": "sha256:6b917fbeb23fffd65a1cf900ea44ee5df6c5ad7226cae62dc62943b147ae7366",
     "src/views/Chiefs.astro": "sha256:f26ff542484fc63ba3a1a6272a8be53224aa6201501e344d8c61f400f1e89f8f",
-    "src/views/Contact.astro": "sha256:18f03a7b3e1d58028100b41f9f8639a1953bc45d216913ec4a9d70caa50e699d",
+    "src/views/Contact.astro": "sha256:148ed2e1fa178efcbb9bbb551a53e9fbbec1c62f2d285a421750b4c7c1bf8c07",
     "src/views/GalleryPage.astro": "sha256:3ecf156a88638bedac69996a51f8fbad743fbd0bb633e7d741ddeb0908fc7a05",
     "src/views/Home.astro": "sha256:d2c0b46f2af4276e7ea15cb57070f3788d60e194ce0d88a745a7372de68983aa",
     "src/views/MenuPage.astro": "sha256:646cfcd3768ed6a2822a3410f7fbefe42df32f33aa2711d7f2d632a7ecbf3d3b",

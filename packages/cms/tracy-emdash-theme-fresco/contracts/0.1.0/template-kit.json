@@ -3492,7 +3492,7 @@
       "buttons": [
         {
           "labelSlot": "chrome.chrome.footer_reservations_button",
-          "urlSlot": "chrome.chrome.footer_link_text",
+          "urlSlot": "chrome.chrome.book_link",
           "label": "Book your table",
           "link": "footer.link-3",
           "target": "/contact"
@@ -6007,7 +6007,7 @@
           "maxCharactersFrom": "kit frame (390px 31, 1440px 41)"
         },
         {
-          "id": "contact.contact-info.form_intro",
+          "id": "contact.contact-info.form_intro_text",
           "role": "editorial.paragraph",
           "type": "text",
           "sample": "Write a Message",
@@ -15668,7 +15668,7 @@
       "listedIn": "block-contact-contact-info"
     },
     {
-      "slot": "contact.contact-info.form_intro",
+      "slot": "contact.contact-info.form_intro_text",
       "field": "",
       "type": "text",
       "sample": "Write a Message",

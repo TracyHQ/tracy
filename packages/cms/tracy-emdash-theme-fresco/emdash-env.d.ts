@@ -312,7 +312,7 @@ export interface Contact {
   phone_label?: string;
   phone?: string;
   form_title?: string;
-  form_intro?: string;
+  form_intro_text?: string;
   name_label?: string;
   email_field_label?: string;
   phone_field_label?: string;

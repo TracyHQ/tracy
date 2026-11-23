@@ -58,9 +58,12 @@ test('LANG-2: personalize labels names every collection that has an interface-wo
  * a short text field of the seed, printed as `<entry>.<field>` or named as an edit attribute, that no copy, facts, identity or rewrite rule writes, whose
  * key is not an enumeration or a name, and that `chromeLabelsOf` (the tool's own reading of the rules) does not offer.
  */
+// Known and decided (D48): the alt text of the demo pictures of the two gallery blocks. Nothing else.
+const KNOWN_GAPS = /^gallery\/[a-z0-9-]+\.items\[\]\.gallery_alt$/
+
 function untranslatedInterfaceWords(labelsMap) {
   const enumeration =
-    /^_|(?:^|_)(?:id|key|code|handle|show|brand|name|layout|variant|state|status|style|color|colour|form|type|columns|col|number|auto|time|size|align|platform|network|mark|icon|logo|image|img|slug)(?:_|$)/i
+    /^_|(?:^|_)(?:id|key|code|handle|show|brand|name|layout|variant|state|status|style|color|colour|type|columns|col|number|auto|time|size|align|platform|network|mark|icon|logo|image|img|slug)(?:_|$)/i
   const code = []
   const walk = (dir) => {
     for (const f of readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
@@ -97,9 +100,33 @@ function untranslatedInterfaceWords(labelsMap) {
   for (const rule of labelsMap.labels) {
     for (const entry of defaults(rule.collection)) {
       for (const [field, value] of Object.entries(entry.data ?? {})) {
+        if (Array.isArray(value)) {
+          // the rows of a list: a short text property printed by a component, written by no rule, that the tool does not offer
+          value.forEach((row, i) => {
+            if (!row || typeof row !== 'object' || owned(rule.collection, entry.slug, field)) return
+            for (const [prop, text] of Object.entries(row)) {
+              if (
+                typeof text !== 'string' ||
+                text.length > 120 ||
+                !isLabelText(text) ||
+                enumeration.test(prop)
+              )
+                continue
+              if (!new RegExp(`[.'"]${prop}\\b`).test(components)) continue
+              const id = `${rule.collection}/${entry.slug}.${field}[].${prop}`
+              if (
+                !offered.has(`${rule.collection}/${entry.slug}.${field}.${i}.${prop}`) &&
+                !KNOWN_GAPS.test(id)
+              )
+                missing.push(`${id} ("${text.slice(0, 24)}")`)
+            }
+          })
+          continue
+        }
         if (typeof value !== 'string' || value.trim() === '' || value.length > 120 || !isLabelText(value))
           continue
-        // `title` is the entry's name in the admin; the two blocks that print it as an accessible name are listed below
+        if (/\.(jpe?g|png|webp|svg)$/i.test(value) || value.startsWith('images/')) continue
+        // `title` is the entry's name in the admin; the blocks that print it are listed in the test below
         if (field === 'title' || enumeration.test(field)) continue
         if (!new RegExp(`[.'"]${field}\\b`).test(components)) continue
         if (owned(rule.collection, entry.slug, field)) continue
@@ -115,9 +142,13 @@ test('LANG-2: every interface word the components print from a labels collection
   // The booking dialog kept "Book Table" in English once (book_btn missing from the rule) and the footer's
   // "Privacy Policy" another time (a key ending in _link is read as an address): both are read from the tool itself.
   assert.deepEqual(untranslatedInterfaceWords(map), [])
-  // `title` is printed as the accessible name of the testimonial and gallery regions
-  for (const collection of ['testimonials', 'gallery'])
-    assert.ok(map.labels.find((l) => l.collection === collection).fields.includes('title'))
+  // `title` is the entry's name in the admin, and words a visitor reads in these four: the heading of an inner page
+  // (masthead), the title of a page (pages), the accessible name of the testimonial and gallery regions
+  for (const collection of ['masthead', 'pages', 'testimonials', 'gallery'])
+    assert.ok(
+      map.labels.find((l) => l.collection === collection).fields.includes('title'),
+      `${collection} title`
+    )
 })
 
 test('LANG-2: the check above is not vacuous (a field taken out of a rule, or a key the tool reads as an address, is found)', () => {

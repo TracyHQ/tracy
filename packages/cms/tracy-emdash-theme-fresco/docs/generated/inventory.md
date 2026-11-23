@@ -248,7 +248,7 @@ Template: JA Fresco (tracy-fresco). Default locale: en. Locales: en.
 | phone_label | string | no | Phone label |
 | phone | string | no | Phone |
 | form_title | string | no | Form title |
-| form_intro | string | no | Form intro |
+| form_intro_text | string | no | Form intro |
 | name_label | string | no | Name label |
 | email_field_label | string | no | Email field label |
 | phone_field_label | string | no | Phone field label |

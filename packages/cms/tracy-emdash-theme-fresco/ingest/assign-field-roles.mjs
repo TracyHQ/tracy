@@ -61,11 +61,11 @@ const guess = (name, source) => {
       name
     ) &&
     !/(^|_)(title|desc)$/.test(name) &&
-    !/(related_text|not_found_text|no_results|form_intro)/.test(name)
+    !/(related_text|not_found_text|no_results|form_intro_text)/.test(name)
   )
     return ['editorial.button_label']
   if (
-    /(desc|description|text|intro|body|more_info|note|bio|dish_description|related_text|no_results|form_intro|info_desc)/.test(
+    /(desc|description|text|intro|body|more_info|note|bio|dish_description|related_text|no_results|form_intro_text|info_desc)/.test(
       name
     )
   )

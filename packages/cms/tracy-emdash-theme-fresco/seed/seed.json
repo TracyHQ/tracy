@@ -1221,7 +1221,7 @@
 					"type": "string"
 				},
 				{
-					"slug": "form_intro",
+					"slug": "form_intro_text",
 					"label": "Form intro",
 					"type": "string"
 				},
@@ -5103,7 +5103,7 @@
 					"phone_label": "Mobile",
 					"phone": "Free +92 (8800) 6802",
 					"form_title": "Always here to help you",
-					"form_intro": "Write a Message",
+					"form_intro_text": "Write a Message",
 					"name_label": "Your name",
 					"email_field_label": "Email address",
 					"phone_field_label": "Your phone",

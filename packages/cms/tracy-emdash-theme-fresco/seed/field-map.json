@@ -1073,7 +1073,7 @@
       "label": "Form title",
       "role": "editorial.heading"
     },
-    "contact.form_intro": {
+    "contact.form_intro_text": {
       "source": "text",
       "target": "string",
       "label": "Form intro",

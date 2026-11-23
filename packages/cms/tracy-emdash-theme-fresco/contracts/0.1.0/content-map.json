@@ -31517,10 +31517,13 @@
         "entry": "chrome",
         "field": "footer_link_text"
       },
-      "type": "url",
+      "type": "text",
       "sample": "Reservation Policy",
       "label": "Footer link",
-      "role": "editorial.menu_label"
+      "role": "editorial.menu_label",
+      "fit": {
+        "measured": false
+      }
     },
     {
       "key": "chrome.chrome.footer_link_to",
@@ -31530,14 +31533,11 @@
         "entry": "chrome",
         "field": "footer_link_to"
       },
-      "type": "text",
+      "type": "url",
       "sample": "/contact",
       "label": "Footer link address",
       "role": "editorial.navigation_url",
-      "customize": "keep",
-      "fit": {
-        "measured": false
-      }
+      "customize": "keep"
     },
     {
       "key": "chrome.chrome.footer_links_text",
@@ -32409,12 +32409,12 @@
       }
     },
     {
-      "key": "contact.contact-info.form_intro",
+      "key": "contact.contact-info.form_intro_text",
       "entity": "contact.contact-info",
       "target": {
         "collection": "contact",
         "entry": "contact-info",
-        "field": "form_intro"
+        "field": "form_intro_text"
       },
       "type": "text",
       "sample": "Write a Message",
