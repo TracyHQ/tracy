@@ -155,7 +155,7 @@ model.routes = [
   ...model.routes.filter((r) => r.kind === 'page' && KEEP_PATHS.has(r.path)),
   { path: '/blog', kind: 'list', type: 'posts' }
 ]
-// the main menu without the Home demos, and the footer "About" menu (its links are `#` except one: see chrome.footer_links)
+// the main menu without the Home demos, and the footer "About" menu (its links are `#` except one: see chrome.footer_links_text)
 model.menus = model.menus.filter((m) => m.name === 'mainmenu')
 for (const m of model.menus) {
   m.name = 'primary'
@@ -304,9 +304,9 @@ model.types.push({
     'footer_hours_title',
     'footer_hours',
     'footer_links_title',
-    'footer_link',
+    'footer_link_text',
     'footer_link_to',
-    'footer_links',
+    'footer_links_text',
     'copyright',
     'skip_label',
     'menu_label',
@@ -362,9 +362,9 @@ model.records.push({
     footer_hours: lines(hours.content).join('\n'),
     footer_links_title: 'About',
     // the one linked entry of the "About" menu (the contact page) and the source's `#` entries, which print as plain text (DECISIONS D11)
-    footer_link: aboutMenu.filter((m) => /Itemid=117/.test(m.link)).map((m) => decode(m.title))[0] ?? '',
+    footer_link_text: aboutMenu.filter((m) => /Itemid=117/.test(m.link)).map((m) => decode(m.title))[0] ?? '',
     footer_link_to: aboutMenu.some((m) => /Itemid=117/.test(m.link)) ? '/contact' : '',
-    footer_links: aboutMenu
+    footer_links_text: aboutMenu
       .filter((m) => !/Itemid=117/.test(m.link))
       .map((m) => decode(m.title))
       .join('\n'),
@@ -417,7 +417,7 @@ model.types = model.types.filter((t) => t.name !== 'text_slider')
       'phone_label',
       'phone',
       'form_title',
-      'form_intro',
+      'form_intro_text',
       'name_label',
       'email_field_label',
       'phone_field_label',
@@ -444,7 +444,7 @@ model.types = model.types.filter((t) => t.name !== 'text_slider')
       phone_label: 'Mobile',
       phone: c.mobile,
       form_title: 'Always here to help you',
-      form_intro: 'Write a Message',
+      form_intro_text: 'Write a Message',
       name_label: 'Your name',
       email_field_label: 'Email address',
       phone_field_label: 'Your phone',

@@ -308,6 +308,113 @@
       "field": "section_title",
       "brief": "the heading of one section of this restaurant's menu",
       "maxWords": 6
+    },
+    {
+      "collection": "hero",
+      "slug": "home-hero",
+      "field": "subtitle",
+      "brief": "a welcome line of three or four words for guests of this restaurant, no brand name",
+      "maxWords": 6
+    },
+    {
+      "collection": "hero",
+      "slug": "home-hero",
+      "field": "items",
+      "itemFields": [
+        "sub_title",
+        "title",
+        "desc",
+        "button",
+        "button_2"
+      ],
+      "brief": "the home page's opening: a welcome line of three or four words (sub_title), the main heading (title: the kind of restaurant this is and its name, two to five words), one inviting sentence about this restaurant's food (desc), and the captions of its two buttons (button: to the menu; button_2: to book a table; one to three words each), no year, address or number"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-services",
+      "field": "title",
+      "brief": "the name of the first service this restaurant offers its guests, two to four words",
+      "maxWords": 6
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-services",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description"
+      ],
+      "brief": "one service this restaurant offers its guests, of the same kind as its example: a short name (title, two to four words) and a short call to action (description, two or three words)"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro",
+      "field": "title",
+      "brief": "a short headline for the story of this restaurant's kitchen, no number",
+      "maxWords": 10
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro",
+      "field": "desc",
+      "brief": "a short paragraph welcoming guests to this restaurant and its kitchen, plain text without a list, no year, address or number",
+      "maxWords": 60
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-features",
+      "field": "section_title",
+      "brief": "a short headline about what guests get at this restaurant, no number",
+      "maxWords": 12
+    },
+    {
+      "collection": "menu",
+      "slug": "menu-columns",
+      "field": "section_desc",
+      "brief": "one sentence about the range of dishes of this restaurant, for every taste",
+      "maxWords": 20
+    },
+    {
+      "collection": "menu",
+      "slug": "menu-list-1",
+      "field": "menu_type",
+      "brief": "the name of one section of this restaurant's menu (starters, mains, desserts, drinks), one or two words",
+      "maxWords": 3
+    },
+    {
+      "collection": "happyhours",
+      "slug": "offer-hour-1",
+      "field": "hp_desc",
+      "brief": "one short sentence describing this restaurant's special offer, no price, day or hour",
+      "maxWords": 24
+    },
+    {
+      "collection": "happyhours",
+      "slug": "offer-hour-2",
+      "field": "hp_desc",
+      "brief": "one short sentence describing this restaurant's special offer, no price, day or hour",
+      "maxWords": 24
+    },
+    {
+      "collection": "happyhours",
+      "slug": "offer-hour-3",
+      "field": "hp_desc",
+      "brief": "one short sentence describing this restaurant's special offer, no price, day or hour",
+      "maxWords": 24
+    },
+    {
+      "collection": "book_table",
+      "slug": "book-table",
+      "field": "book_desc",
+      "brief": "one sentence inviting guests to book a table or just come along",
+      "maxWords": 22
+    },
+    {
+      "collection": "book_table",
+      "slug": "book-table",
+      "field": "order_title",
+      "brief": "a short heading above the online booking button, no third-party service name",
+      "maxWords": 5
     }
   ],
   "rewrite": [
@@ -427,11 +534,146 @@
       "slug": "about-testimonials",
       "field": "items",
       "why": "named guests of the demo restaurant"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-features",
+      "field": "items",
+      "why": "claims about the demo restaurant: its location, its farms, its delivery time, its chefs and its service"
     }
   ],
   "hide": [],
   "demoCompanyNames": [
     "JA Fresco",
     "Fresco"
+  ],
+  "labels": [
+    {
+      "collection": "features_intro",
+      "fields": [
+        "button",
+        "section_label",
+        "section_title"
+      ]
+    },
+    {
+      "collection": "menu",
+      "fields": [
+        "section_label",
+        "section_title"
+      ]
+    },
+    {
+      "collection": "gallery",
+      "fields": [
+        "section_label",
+        "section_title",
+        "title"
+      ]
+    },
+    {
+      "collection": "testimonials",
+      "fields": [
+        "section_label",
+        "section_title",
+        "title"
+      ]
+    },
+    {
+      "collection": "teams",
+      "fields": [
+        "section_label",
+        "section_title",
+        "title_btn"
+      ]
+    },
+    {
+      "collection": "happyhours",
+      "fields": [
+        "hp_link_text",
+        "hp_title",
+        "section_label",
+        "section_title"
+      ]
+    },
+    {
+      "collection": "book_table",
+      "fields": [
+        "book_btn",
+        "book_phone_title",
+        "order_btn",
+        "order_title"
+      ]
+    },
+    {
+      "collection": "chrome"
+    },
+    {
+      "collection": "contact"
+    },
+    {
+      "collection": "masthead",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "collection": "pages",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "collection": "hero",
+      "fields": [
+        "title"
+      ]
+    }
+  ],
+  "trim": [
+    {
+      "collection": "posts",
+      "slug": "blog",
+      "keep": 10,
+      "list": {
+        "collection": "pages",
+        "slug": "blog"
+      },
+      "why": "the Blog page is no header link (D20); this rule declares it for PAGE-8. The tool trims demo rows only for a customer who described the business, with a model to rewrite what stays, and keep 10 keeps all ten demo posts (they are rewritten by the rewrite rule), so it cuts nothing today"
+    }
+  ],
+  "keptText": [
+    "chrome/chrome.footer_about_title",
+    "chrome/chrome.footer_reservations_button",
+    "chrome/chrome.footer_link_text",
+    "chrome/chrome.footer_links_text",
+    "chrome/chrome.skip_label",
+    "chrome/chrome.more_label",
+    "chrome/chrome.not_found_text",
+    "chrome/chrome.no_results",
+    "contact/contact-info.heading",
+    "contact/contact-info.form_title",
+    "contact/contact-info.form_intro_text",
+    "contact/contact-info.message_label",
+    "features_intro/home-visit.section_title",
+    "teams/about-team.section_title",
+    "gallery/home-gallery-1.items",
+    "gallery/home-gallery-2.items"
+  ],
+  "forms": [
+    {
+      "slug": "contact",
+      "fields": {},
+      "brief": "the contact form of this restaurant"
+    }
+  ],
+  "terms": [
+    {
+      "taxonomy": "category",
+      "collections": [
+        "posts"
+      ],
+      "brief": "a group of news this restaurant publishes (kitchen stories, cooking tips, dishes, dining-room news)"
+    }
   ]
 }

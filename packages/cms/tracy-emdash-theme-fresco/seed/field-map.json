@@ -832,7 +832,7 @@
       "label": "Footer links title",
       "role": "editorial.heading"
     },
-    "chrome.footer_link": {
+    "chrome.footer_link_text": {
       "source": "text",
       "target": "string",
       "label": "Footer link",
@@ -844,7 +844,7 @@
       "label": "Footer link address",
       "role": "editorial.navigation_url"
     },
-    "chrome.footer_links": {
+    "chrome.footer_links_text": {
       "source": "text",
       "target": "string",
       "label": "Footer links",
@@ -1073,7 +1073,7 @@
       "label": "Form title",
       "role": "editorial.heading"
     },
-    "contact.form_intro": {
+    "contact.form_intro_text": {
       "source": "text",
       "target": "string",
       "label": "Form intro",

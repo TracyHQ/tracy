@@ -21,7 +21,7 @@ const EXACT = {
   'posts.cover': ['article.image'],
   'posts.author_avatar': ['person.image', { kind: 'person', name: 'author' }],
   'posts.author': ['person.name', { kind: 'person', name: 'author' }],
-  'chrome.footer_link': ['editorial.menu_label'],
+  'chrome.footer_link_text': ['editorial.menu_label'],
   'chrome.footer_link_to': ['editorial.navigation_url'],
   'posts.tags': ['editorial.menu_label'],
   'chrome.brand_name': ['business.name', B],
@@ -34,7 +34,7 @@ const EXACT = {
   'chrome.footer_email': ['contact.email', C],
   'chrome.footer_hours': ['contact.hours', C],
   'chrome.not_found_code': [],
-  'chrome.footer_links': ['editorial.menu_label'],
+  'chrome.footer_links_text': ['editorial.menu_label'],
   'chrome.book_link': ['editorial.navigation_url'],
   'chrome.title': ['editorial.heading'],
   'contact.address': ['contact.address', C],
@@ -61,11 +61,11 @@ const guess = (name, source) => {
       name
     ) &&
     !/(^|_)(title|desc)$/.test(name) &&
-    !/(related_text|not_found_text|no_results|form_intro)/.test(name)
+    !/(related_text|not_found_text|no_results|form_intro_text)/.test(name)
   )
     return ['editorial.button_label']
   if (
-    /(desc|description|text|intro|body|more_info|note|bio|dish_description|related_text|no_results|form_intro|info_desc)/.test(
+    /(desc|description|text|intro|body|more_info|note|bio|dish_description|related_text|no_results|form_intro_text|info_desc)/.test(
       name
     )
   )

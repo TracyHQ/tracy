@@ -206,9 +206,9 @@ Template: JA Fresco (tracy-fresco). Default locale: en. Locales: en.
 | footer_hours_title | string | no | Footer hours title |
 | footer_hours | string | no | Footer hours |
 | footer_links_title | string | no | Footer links title |
-| footer_link | string | no | Footer link |
+| footer_link_text | string | no | Footer link |
 | footer_link_to | string | no | Footer link address |
-| footer_links | string | no | Footer links |
+| footer_links_text | string | no | Footer links |
 | copyright | string | no | Copyright |
 | skip_label | string | no | Skip label |
 | menu_label | string | no | Menu label |
@@ -248,7 +248,7 @@ Template: JA Fresco (tracy-fresco). Default locale: en. Locales: en.
 | phone_label | string | no | Phone label |
 | phone | string | no | Phone |
 | form_title | string | no | Form title |
-| form_intro | string | no | Form intro |
+| form_intro_text | string | no | Form intro |
 | name_label | string | no | Name label |
 | email_field_label | string | no | Email field label |
 | phone_field_label | string | no | Phone field label |

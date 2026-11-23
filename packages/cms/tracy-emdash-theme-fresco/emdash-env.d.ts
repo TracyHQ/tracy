@@ -263,9 +263,9 @@ export interface Chrome {
   footer_hours_title?: string;
   footer_hours?: string;
   footer_links_title?: string;
-  footer_link?: string;
+  footer_link_text?: string;
   footer_link_to?: string;
-  footer_links?: string;
+  footer_links_text?: string;
   copyright?: string;
   skip_label?: string;
   menu_label?: string;
@@ -312,7 +312,7 @@ export interface Contact {
   phone_label?: string;
   phone?: string;
   form_title?: string;
-  form_intro?: string;
+  form_intro_text?: string;
   name_label?: string;
   email_field_label?: string;
   phone_field_label?: string;

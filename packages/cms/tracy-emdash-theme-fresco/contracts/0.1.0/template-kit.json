@@ -2895,7 +2895,7 @@
               "height": 360
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5CB0P16YZ95F4A98CA2.01M83BR5CC6BGR810D0899T0W9.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BBPFR0BSPNREPAP3ATW.01M84N9BBRAJX9YCCSXDN688F3.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -2927,7 +2927,7 @@
               "height": 360
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5EF6T2FE3366MPPXNHG.01M83BR5EG4BJAC89BCAQXFERS.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BDYS06CGBRPCDRN2KX4.01M84N9BE0N8FQJVB6VECDT1AN.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -2959,7 +2959,7 @@
               "height": 360
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5ANZCFFSG8C9Q1ACTMX.01M83BR5AXHRG8575SAW345YB3.jpg",
+          "picture": "_emdash/api/media/file/01M84N9B9N7Z0DZXCVX7F4MA5S.01M84N9BA04PQRSKMYSK6ZE8Z1.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -3287,7 +3287,23 @@
           "maxCharactersFrom": "kit frame (390px 30, 1440px 24)"
         },
         {
-          "id": "chrome.chrome.footer_links",
+          "id": "chrome.chrome.footer_link_text",
+          "role": "editorial.menu_label",
+          "type": "text",
+          "sample": "Reservation Policy",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "demoChars": {
+            "total": 18,
+            "lead": null,
+            "bullets": []
+          },
+          "maxCharacters": 39,
+          "maxCharactersFrom": "kit frame (390px 44, 1440px 39)"
+        },
+        {
+          "id": "chrome.chrome.footer_links_text",
           "role": "editorial.menu_label",
           "type": "text",
           "maxCharacters": 119,
@@ -3335,42 +3351,11 @@
           "position": 3,
           "label": "Reservation Policy",
           "target": "/contact",
-          "action": "navigation",
-          "fixedLabel": {
-            "rule": "template-words",
-            "reason": "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes"
-          }
+          "labelId": "chrome.chrome.footer_link_text",
+          "action": "navigation"
         }
       ],
       "fixedText": [
-        {
-          "text": "Reservation Policy",
-          "source": {
-            "kind": "template"
-          },
-          "canHide": false,
-          "reason": "a link or a button would be left with no words",
-          "measuredBy": "dom",
-          "evidence": {
-            "emptied": 1,
-            "blockBefore": {
-              "left": 0,
-              "top": 9288,
-              "width": 1440,
-              "height": 548
-            },
-            "blockAfter": {
-              "left": 0,
-              "top": 9288,
-              "width": 1440,
-              "height": 548
-            },
-            "heightChange": 0,
-            "textMoved": 9,
-            "textOverlaps": 0
-          },
-          "id": "footer.fixed-reservation-policy-aabe5c"
-        },
         {
           "text": "Copyright © 2026 JA Fresco. All Rights Reserved.",
           "source": {
@@ -3492,7 +3477,7 @@
       "buttons": [
         {
           "labelSlot": "chrome.chrome.footer_reservations_button",
-          "urlSlot": "chrome.chrome.footer_link",
+          "urlSlot": null,
           "label": "Book your table",
           "link": "footer.link-3",
           "target": "/contact"
@@ -3972,7 +3957,7 @@
               "top": 2761
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR534MCQ7AJ3JB35B0CKD.01M83BR536J1CD9SQ60QHQ3WXF.jpg",
+          "picture": "_emdash/api/media/file/01M84N9B0BD9XFYDEHR6RDVM96.01M84N9B0DJA2K1S24WNK7YG5F.jpg",
           "role": "editorial.illustration",
           "faces": null
         }
@@ -4087,7 +4072,7 @@
               "height": 296
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5YVHSJ9T2R6R1RP9NDR.01M83BR5YXFP0SNJABCG04KTG5.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BZW1C88S43J1ATYNBHA.01M84N9BZY896Y9WQ3T5X0CCE8.jpg",
           "role": null,
           "shownAs": "background",
           "painter": "div.fr-masthead",
@@ -4318,7 +4303,7 @@
               "height": 636
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR58J52DZHA4B3XDF9H43.01M83BR58MFM8KMBSET2Y86J5Z.jpg",
+          "picture": "_emdash/api/media/file/01M84N9B6HE09EQ9KMYYV8F1VN.01M84N9B6MKZHR6RKCKKDSQ8M4.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4350,7 +4335,7 @@
               "height": 310
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5ANZCFFSG8C9Q1ACTMX.01M83BR5AXHRG8575SAW345YB3.jpg",
+          "picture": "_emdash/api/media/file/01M84N9B9N7Z0DZXCVX7F4MA5S.01M84N9BA04PQRSKMYSK6ZE8Z1.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4382,7 +4367,7 @@
               "height": 310
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR59BZFAA2R6H6VN0K126.01M83BR59D464NZMCB1A7SP4G9.jpg",
+          "picture": "_emdash/api/media/file/01M84N9B7HMXG2EKBVR04YE1S0.01M84N9B7KYTN4G0R250TGNPHB.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4414,7 +4399,7 @@
               "height": 310
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR59ZYS8TTS4347R6D7ZA.01M83BR5A0JJXY955RZGBVM1DD.jpg",
+          "picture": "_emdash/api/media/file/01M84N9B8J34JXQ422VKJ3W1J9.01M84N9B8QD1P6HP4WRJZ34JKR.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4446,7 +4431,7 @@
               "height": 310
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5FDYYP1T8M90QCPPY46.01M83BR5FEJP66VJ11YDKJV7YM.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BF4EX5H82E39N62663W.01M84N9BF7E6TN632NVTTZ9CR9.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4478,7 +4463,7 @@
               "height": 310
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR4W28KJTJT641VNSN45M.01M83BR4W52MPEXBDTJGT3CDKP.jpg",
+          "picture": "_emdash/api/media/file/01M84N9ARE9EK3VSY9BPJMBWCY.01M84N9ARH6SXMPGX2E1DJTTVZ.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4510,7 +4495,7 @@
               "height": 310
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5BJQW9SQ7P9F22N67SG.01M83BR5BK1AB5PNV36X47BRW2.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BAR7CT964APNZGPTHWZ.01M84N9BAT6DKT71HSH9GF2SG8.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4542,7 +4527,7 @@
               "height": 636
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5EF6T2FE3366MPPXNHG.01M83BR5EG4BJAC89BCAQXFERS.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BDYS06CGBRPCDRN2KX4.01M84N9BE0N8FQJVB6VECDT1AN.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4574,7 +4559,7 @@
               "height": 310
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5CB0P16YZ95F4A98CA2.01M83BR5CC6BGR810D0899T0W9.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BBPFR0BSPNREPAP3ATW.01M84N9BBRAJX9YCCSXDN688F3.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4606,7 +4591,7 @@
               "height": 310
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR4TQY2RGP5PRXHGNW1VZ.01M83BR4TSJBRMDJXD4FB7PVC7.jpg",
+          "picture": "_emdash/api/media/file/01M84N9AQERJM1NEAPJTR2CJDW.01M84N9AQGAB98ENNV15N80GZH.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4688,7 +4673,7 @@
               "height": 408
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR58J52DZHA4B3XDF9H43.01M83BR58MFM8KMBSET2Y86J5Z.jpg",
+          "picture": "_emdash/api/media/file/01M84N9B6HE09EQ9KMYYV8F1VN.01M84N9B6MKZHR6RKCKKDSQ8M4.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4720,7 +4705,7 @@
               "height": 408
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5ANZCFFSG8C9Q1ACTMX.01M83BR5AXHRG8575SAW345YB3.jpg",
+          "picture": "_emdash/api/media/file/01M84N9B9N7Z0DZXCVX7F4MA5S.01M84N9BA04PQRSKMYSK6ZE8Z1.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4752,7 +4737,7 @@
               "height": 408
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR59BZFAA2R6H6VN0K126.01M83BR59D464NZMCB1A7SP4G9.jpg",
+          "picture": "_emdash/api/media/file/01M84N9B7HMXG2EKBVR04YE1S0.01M84N9B7KYTN4G0R250TGNPHB.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4784,7 +4769,7 @@
               "height": 408
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR59ZYS8TTS4347R6D7ZA.01M83BR5A0JJXY955RZGBVM1DD.jpg",
+          "picture": "_emdash/api/media/file/01M84N9B8J34JXQ422VKJ3W1J9.01M84N9B8QD1P6HP4WRJZ34JKR.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4816,7 +4801,7 @@
               "height": 408
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5FDYYP1T8M90QCPPY46.01M83BR5FEJP66VJ11YDKJV7YM.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BF4EX5H82E39N62663W.01M84N9BF7E6TN632NVTTZ9CR9.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4848,7 +4833,7 @@
               "height": 408
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR4W28KJTJT641VNSN45M.01M83BR4W52MPEXBDTJGT3CDKP.jpg",
+          "picture": "_emdash/api/media/file/01M84N9ARE9EK3VSY9BPJMBWCY.01M84N9ARH6SXMPGX2E1DJTTVZ.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4880,7 +4865,7 @@
               "height": 408
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5BJQW9SQ7P9F22N67SG.01M83BR5BK1AB5PNV36X47BRW2.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BAR7CT964APNZGPTHWZ.01M84N9BAT6DKT71HSH9GF2SG8.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4912,7 +4897,7 @@
               "height": 408
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5EF6T2FE3366MPPXNHG.01M83BR5EG4BJAC89BCAQXFERS.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BDYS06CGBRPCDRN2KX4.01M84N9BE0N8FQJVB6VECDT1AN.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -4944,7 +4929,7 @@
               "height": 408
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5CB0P16YZ95F4A98CA2.01M83BR5CC6BGR810D0899T0W9.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BBPFR0BSPNREPAP3ATW.01M84N9BBRAJX9YCCSXDN688F3.jpg",
           "role": null,
           "shownAs": "img",
           "painter": "img",
@@ -5065,7 +5050,7 @@
               "height": 296
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5YVHSJ9T2R6R1RP9NDR.01M83BR5YXFP0SNJABCG04KTG5.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BZW1C88S43J1ATYNBHA.01M84N9BZY896Y9WQ3T5X0CCE8.jpg",
           "role": null,
           "shownAs": "background",
           "painter": "div.fr-masthead",
@@ -5453,7 +5438,7 @@
               "top": 621
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5K0KJ7K188YWWFF3G7A.01M83BR5K2YK21QF5V5C7NKDEB.png",
+          "picture": "_emdash/api/media/file/01M84N9BKRZXXD3150CN5WM8KT.01M84N9BKTCTH4FF8CBYDFTZ7A.png",
           "role": "editorial.design_element",
           "faces": null
         },
@@ -5487,7 +5472,7 @@
               "height": 1015
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5KF73ERQZP2VNR4PEXR.01M83BR5KHWRXTEK45AJYAEJ7H.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BM90XD8STDF9SXVF1G7.01M84N9BMABZVY4084QK8YNGDH.jpg",
           "role": null,
           "shownAs": "background",
           "painter": "div.fr-hh",
@@ -5724,7 +5709,7 @@
               "top": 3114
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5K0KJ7K188YWWFF3G7A.01M83BR5K2YK21QF5V5C7NKDEB.png",
+          "picture": "_emdash/api/media/file/01M84N9BKRZXXD3150CN5WM8KT.01M84N9BKTCTH4FF8CBYDFTZ7A.png",
           "role": "editorial.design_element",
           "faces": null
         }
@@ -5869,7 +5854,7 @@
               "height": 296
             }
           },
-          "picture": "_emdash/api/media/file/01M83BR5YVHSJ9T2R6R1RP9NDR.01M83BR5YXFP0SNJABCG04KTG5.jpg",
+          "picture": "_emdash/api/media/file/01M84N9BZW1C88S43J1ATYNBHA.01M84N9BZY896Y9WQ3T5X0CCE8.jpg",
           "role": null,
           "shownAs": "background",
           "painter": "div.fr-masthead",
@@ -6007,7 +5992,7 @@
           "maxCharactersFrom": "kit frame (390px 31, 1440px 41)"
         },
         {
-          "id": "contact.contact-info.form_intro",
+          "id": "contact.contact-info.form_intro_text",
           "role": "editorial.paragraph",
           "type": "text",
           "sample": "Write a Message",
@@ -6989,106 +6974,106 @@
           "name": "--color-bg",
           "value": "#0a0b0a",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-surface",
           "value": "#1a191b",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-surface-warm",
           "value": "#212529",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-fg",
           "value": "rgba(255,255,255,0.8)",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-heading",
           "value": "#ffffff",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-meta",
           "value": "rgba(255,255,255,0.6)",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-line",
           "value": "rgba(255,255,255,0.102)",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-line-soft",
           "value": "rgba(255,255,255,0.051)",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-accent",
           "value": "#e6c9a2",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css",
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css",
           "brand": "primary"
         },
         {
           "name": "--color-accent-on",
           "value": "#0a0b0a",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-accent-text",
           "value": "#e6c9a2",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css",
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css",
           "brand": "primary"
         },
         {
           "name": "--color-accent-text-hover",
           "value": "#e6c9a2",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css",
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css",
           "brand": "primary"
         },
         {
           "name": "--color-ink",
           "value": "#1b1a1c",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-on-ink",
           "value": "#ffffff",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-tint",
           "value": "#ffffff",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-tint-strong",
           "value": "#ffffff",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css"
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css"
         },
         {
           "name": "--color-primary",
           "value": "#e6c9a2",
           "side": "base",
-          "declaredIn": "/_astro/NotFound.nY3FiRGA.css",
+          "declaredIn": "/_astro/NotFound.rRSq1H7B.css",
           "brand": "primary"
         },
         {
@@ -7125,85 +7110,85 @@
       ],
       "pictures": [
         {
-          "file": "_emdash/api/media/file/01M83BR58J52DZHA4B3XDF9H43.01M83BR58MFM8KMBSET2Y86J5Z.jpg",
+          "file": "_emdash/api/media/file/01M84N9B6HE09EQ9KMYYV8F1VN.01M84N9B6MKZHR6RKCKKDSQ8M4.jpg",
           "block": "block-gallery-gallery-two",
           "colour": "#e6c9a2",
           "share": 0.11
         },
         {
-          "file": "_emdash/api/media/file/01M83BR59ZYS8TTS4347R6D7ZA.01M83BR5A0JJXY955RZGBVM1DD.jpg",
+          "file": "_emdash/api/media/file/01M84N9B8J34JXQ422VKJ3W1J9.01M84N9B8QD1P6HP4WRJZ34JKR.jpg",
           "block": "block-gallery-gallery-two",
           "colour": "#e6c9a2",
           "share": 0.09
         },
         {
-          "file": "_emdash/api/media/file/01M83BR5BJQW9SQ7P9F22N67SG.01M83BR5BK1AB5PNV36X47BRW2.jpg",
+          "file": "_emdash/api/media/file/01M84N9BAR7CT964APNZGPTHWZ.01M84N9BAT6DKT71HSH9GF2SG8.jpg",
           "block": "block-gallery-gallery-two",
           "colour": "#e6c9a2",
           "share": 0.08
         },
         {
-          "file": "_emdash/api/media/file/01M83BR5CB0P16YZ95F4A98CA2.01M83BR5CC6BGR810D0899T0W9.jpg",
+          "file": "_emdash/api/media/file/01M84N9BBPFR0BSPNREPAP3ATW.01M84N9BBRAJX9YCCSXDN688F3.jpg",
           "block": "block-gallery-gallery-two",
           "colour": "#e6c9a2",
           "share": 0.04
         },
         {
-          "file": "_emdash/api/media/file/01M83BR5EF6T2FE3366MPPXNHG.01M83BR5EG4BJAC89BCAQXFERS.jpg",
+          "file": "_emdash/api/media/file/01M84N9BDYS06CGBRPCDRN2KX4.01M84N9BE0N8FQJVB6VECDT1AN.jpg",
           "block": "block-gallery-gallery-two",
           "colour": "#e6c9a2",
           "share": 0.06
         },
         {
-          "file": "_emdash/api/media/file/01M83BR5ANZCFFSG8C9Q1ACTMX.01M83BR5AXHRG8575SAW345YB3.jpg",
+          "file": "_emdash/api/media/file/01M84N9B9N7Z0DZXCVX7F4MA5S.01M84N9BA04PQRSKMYSK6ZE8Z1.jpg",
           "block": "block-gallery-gallery-two",
           "colour": "#e6c9a2",
           "share": 0.03
         },
         {
-          "file": "_emdash/api/media/file/01M83BR534MCQ7AJ3JB35B0CKD.01M83BR536J1CD9SQ60QHQ3WXF.jpg",
+          "file": "_emdash/api/media/file/01M84N9B0BD9XFYDEHR6RDVM96.01M84N9B0DJA2K1S24WNK7YG5F.jpg",
           "block": null,
           "colour": "#e6c9a2",
           "share": 0.09
         },
         {
-          "file": "_emdash/api/media/file/01M83BR44H2M1TXJSASASJTZMV.01M83BR44KSXSZXXGHD1QDQM1A.jpg",
+          "file": "_emdash/api/media/file/01M84N99ZEHK6FGW1NGEE2NWDC.01M84N99ZG57M1C273M3ZMPFRK.jpg",
           "block": "block-chiefs-bottom-large",
           "colour": "#e6c9a2",
           "share": 0.14
         },
         {
-          "file": "_emdash/api/media/file/01M83BR5G698A3V4JTNB85J05Z.01M83BR5G7C61K7SETE1TDBZCE.jpg",
+          "file": "_emdash/api/media/file/01M84N9BG91T40MF31DFJQ6ZEF.01M84N9BGBAR3PQTQ58M4R69HY.jpg",
           "block": "block-chiefs-bottom-large",
           "colour": "#e6c9a2",
           "share": 0.2
         },
         {
-          "file": "_emdash/api/media/file/01M83BR5GYTPYV95ZC3V4PK84V.01M83BR5GZP5SH90R9DDDYD2P0.jpg",
+          "file": "_emdash/api/media/file/01M84N9BH6F0Y6275KB4ST25M9.01M84N9BH7QCY3XKTEQT9Q6K09.jpg",
           "block": "block-chiefs-bottom-large",
           "colour": "#e6c9a2",
           "share": 0.2
         },
         {
-          "file": "_emdash/api/media/file/01M83BR5FDYYP1T8M90QCPPY46.01M83BR5FEJP66VJ11YDKJV7YM.jpg",
+          "file": "_emdash/api/media/file/01M84N9BF4EX5H82E39N62663W.01M84N9BF7E6TN632NVTTZ9CR9.jpg",
           "block": "block-gallery-gallery-two",
           "colour": "#e6c9a2",
           "share": 0.09
         },
         {
-          "file": "_emdash/api/media/file/01M83BR5HM165PRVZ8BF75G7FQ.01M83BR5HNK14D24F58H3N28FB.jpg",
+          "file": "_emdash/api/media/file/01M84N9BJ0VKPZDTZR8BAAPVK8.01M84N9BJ2HYGWVFBB3BNEZHRW.jpg",
           "block": "block-chiefs-bottom-large",
           "colour": "#e6c9a2",
           "share": 0.28
         },
         {
-          "file": "_emdash/api/media/file/01M83BR5J8KAXQEH7ARW1VPARZ.01M83BR5JA737JBA289PP6Z4JM.jpg",
+          "file": "_emdash/api/media/file/01M84N9BJSREX7X7V5SRMGR5YE.01M84N9BJV77HN9C3DPGK0CYPM.jpg",
           "block": "block-chiefs-bottom-large",
           "colour": "#e6c9a2",
           "share": 0.48
         },
         {
-          "file": "_emdash/api/media/file/01M83BR4775T01TQVR257CA738.01M83BR479GQ5HM3J246W3EMY0.jpg",
+          "file": "_emdash/api/media/file/01M84N9A2G064C81249WN4KWC5.01M84N9A2J13N83BK0SB9YDKX6.jpg",
           "block": "block-chiefs-bottom-large",
           "colour": "#e6c9a2",
           "share": 0.15
@@ -7495,7 +7480,7 @@
       "slot": "posts.valentines-day-at-soul-kitchen.cover",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR42K8N9CJ4MRCP7F1AVK.01M83BR42V",
+      "sample": "_emdash/api/media/file/01M84N99XD780V102248KFGRKJ.01M84N99XP",
       "listedIn": null
     },
     {
@@ -7516,7 +7501,7 @@
       "slot": "posts.valentines-day-at-soul-kitchen.author_avatar",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR44H2M1TXJSASASJTZMV.01M83BR44K",
+      "sample": "_emdash/api/media/file/01M84N99ZEHK6FGW1NGEE2NWDC.01M84N99ZG",
       "listedIn": null
     },
     {
@@ -7551,7 +7536,7 @@
       "slot": "posts.mother-s-day-lunch-special.cover",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR45MJVR83GJWJ3761K0R.01M83BR45P",
+      "sample": "_emdash/api/media/file/01M84N9A0JVFQD6C3W530JQT27.01M84N9A0M",
       "listedIn": null
     },
     {
@@ -7572,7 +7557,7 @@
       "slot": "posts.mother-s-day-lunch-special.author_avatar",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR44H2M1TXJSASASJTZMV.01M83BR44K",
+      "sample": "_emdash/api/media/file/01M84N99ZEHK6FGW1NGEE2NWDC.01M84N99ZG",
       "listedIn": null
     },
     {
@@ -7607,7 +7592,7 @@
       "slot": "posts.soul-kitchen-kumquat-thyme-cocktail.cover",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR46CDSEYMBX4ARW1MTSW.01M83BR46E",
+      "sample": "_emdash/api/media/file/01M84N9A1D1TBX0ZS4JNP10PEV.01M84N9A1F",
       "listedIn": null
     },
     {
@@ -7628,7 +7613,7 @@
       "slot": "posts.soul-kitchen-kumquat-thyme-cocktail.author_avatar",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4775T01TQVR257CA738.01M83BR479",
+      "sample": "_emdash/api/media/file/01M84N9A2G064C81249WN4KWC5.01M84N9A2J",
       "listedIn": null
     },
     {
@@ -7663,7 +7648,7 @@
       "slot": "posts.an-interview-with-chef-milo-ferndandes.cover",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR48JJEP22HEC6T9SSMNT.01M83BR495",
+      "sample": "_emdash/api/media/file/01M84N9A472BE8AX1MJQG1ZZZG.01M84N9A4A",
       "listedIn": null
     },
     {
@@ -7684,7 +7669,7 @@
       "slot": "posts.an-interview-with-chef-milo-ferndandes.author_avatar",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4775T01TQVR257CA738.01M83BR479",
+      "sample": "_emdash/api/media/file/01M84N9A2G064C81249WN4KWC5.01M84N9A2J",
       "listedIn": null
     },
     {
@@ -7719,7 +7704,7 @@
       "slot": "posts.culinary-journeys-around-the-world.cover",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4AH92G843TT8WF2YQC4.01M83BR4AK",
+      "sample": "_emdash/api/media/file/01M84N9A5AZD2G8NE2PACC7A7S.01M84N9A5C",
       "listedIn": null
     },
     {
@@ -7740,7 +7725,7 @@
       "slot": "posts.culinary-journeys-around-the-world.author_avatar",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4BTZ6Q5040BK3CYCFZB.01M83BR4BX",
+      "sample": "_emdash/api/media/file/01M84N9A687ZDTPSMN8MT87PZF.01M84N9A6A",
       "listedIn": null
     },
     {
@@ -7775,7 +7760,7 @@
       "slot": "posts.savoring-the-art-of-cooking.cover",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4D9P00CRCPXV9JRJQRN.01M83BR4DE",
+      "sample": "_emdash/api/media/file/01M84N9A7FRBE0TH1X4P1S76DG.01M84N9A7R",
       "listedIn": null
     },
     {
@@ -7796,7 +7781,7 @@
       "slot": "posts.savoring-the-art-of-cooking.author_avatar",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4BTZ6Q5040BK3CYCFZB.01M83BR4BX",
+      "sample": "_emdash/api/media/file/01M84N9A687ZDTPSMN8MT87PZF.01M84N9A6A",
       "listedIn": null
     },
     {
@@ -7831,7 +7816,7 @@
       "slot": "posts.farm-to-fork-sustainable-eating.cover",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4FFXY55SD03KVP5SPM0.01M83BR4FG",
+      "sample": "_emdash/api/media/file/01M84N9AAB24ATQ1J05428A399.01M84N9AAE",
       "listedIn": null
     },
     {
@@ -7852,7 +7837,7 @@
       "slot": "posts.farm-to-fork-sustainable-eating.author_avatar",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4BTZ6Q5040BK3CYCFZB.01M83BR4BX",
+      "sample": "_emdash/api/media/file/01M84N9A687ZDTPSMN8MT87PZF.01M84N9A6A",
       "listedIn": null
     },
     {
@@ -7887,7 +7872,7 @@
       "slot": "posts.rediscovering-heirloom-recipes.cover",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4G4FZN45M6QG16JW2H3.01M83BR4G5",
+      "sample": "_emdash/api/media/file/01M84N9AB894WZFJRKXY8ZWJN2.01M84N9ABA",
       "listedIn": null
     },
     {
@@ -7908,7 +7893,7 @@
       "slot": "posts.rediscovering-heirloom-recipes.author_avatar",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4GR3W4QV04K6F4EGVC2.01M83BR4GS",
+      "sample": "_emdash/api/media/file/01M84N9AC40RC37A4BDV84V7WW.01M84N9AC7",
       "listedIn": null
     },
     {
@@ -7943,7 +7928,7 @@
       "slot": "posts.gastronomic-adventures-with-exotic-dishes.cover",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4HGP4862V3P1MJ93QDR.01M83BR4HH",
+      "sample": "_emdash/api/media/file/01M84N9AD6W2RSHEV6FH2SRJY2.01M84N9ADA",
       "listedIn": null
     },
     {
@@ -7964,7 +7949,7 @@
       "slot": "posts.gastronomic-adventures-with-exotic-dishes.author_avatar",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4GR3W4QV04K6F4EGVC2.01M83BR4GS",
+      "sample": "_emdash/api/media/file/01M84N9AC40RC37A4BDV84V7WW.01M84N9AC7",
       "listedIn": null
     },
     {
@@ -7999,7 +7984,7 @@
       "slot": "posts.healthy-eating-for-body-and-soul.cover",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4J2Q1R7HECANNW4WFJR.01M83BR4J4",
+      "sample": "_emdash/api/media/file/01M84N9AE2S8385J112382MQ44.01M84N9AE3",
       "listedIn": null
     },
     {
@@ -8020,7 +8005,7 @@
       "slot": "posts.healthy-eating-for-body-and-soul.author_avatar",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4GR3W4QV04K6F4EGVC2.01M83BR4GS",
+      "sample": "_emdash/api/media/file/01M84N9AC40RC37A4BDV84V7WW.01M84N9AC7",
       "listedIn": null
     },
     {
@@ -8048,7 +8033,7 @@
       "slot": "hero.home-hero.items[0].image_decor",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4JM9KEY7KJV1DBPA0G5.01M83BR4JN",
+      "sample": "_emdash/api/media/file/01M84N9AEQMMDMZAKHQAC7BQB6.01M84N9AES",
       "listedIn": null
     },
     {
@@ -8103,7 +8088,7 @@
     {
       "slot": "hero.home-hero.items[0].btn_link_2",
       "field": "",
-      "type": "text",
+      "type": "url",
       "sample": "/contact",
       "listedIn": null
     },
@@ -8139,7 +8124,7 @@
       "slot": "features_intro.home-services.items[0].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4QWWEWV8W62RQB4C5VJ.01M83BR4QY",
+      "sample": "_emdash/api/media/file/01M84N9AM101XX5KXQ3MQ7R8RS.01M84N9AM3",
       "listedIn": null
     },
     {
@@ -8154,13 +8139,6 @@
       "field": "",
       "type": "text",
       "sample": "Learn More",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.home-services.items[0].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -8195,7 +8173,7 @@
       "slot": "features_intro.home-services.items[1].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4RXEY88EM2W92K2W2A3.01M83BR4RZ",
+      "sample": "_emdash/api/media/file/01M84N9AN7E29V12E39V7DDYZ8.01M84N9AN8",
       "listedIn": null
     },
     {
@@ -8210,13 +8188,6 @@
       "field": "",
       "type": "text",
       "sample": "See Menu",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.home-services.items[1].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -8251,7 +8222,7 @@
       "slot": "features_intro.home-services.items[2].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4SWC86RS34TMSMCG7F7.01M83BR4SX",
+      "sample": "_emdash/api/media/file/01M84N9APE3KP34J3E0R74JTKS.01M84N9APG",
       "listedIn": null
     },
     {
@@ -8266,13 +8237,6 @@
       "field": "",
       "type": "text",
       "sample": "Explore the Bar",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.home-services.items[2].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -8367,13 +8331,6 @@
       "listedIn": null
     },
     {
-      "slot": "features_intro.home-events.items[0].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
-      "listedIn": null
-    },
-    {
       "slot": "features_intro.home-events.items[0].bg_color",
       "field": "",
       "type": "text",
@@ -8384,7 +8341,7 @@
       "slot": "features_intro.home-events.items[0].img_bg",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4TQY2RGP5PRXHGNW1VZ.01M83BR4TS",
+      "sample": "_emdash/api/media/file/01M84N9AQERJM1NEAPJTR2CJDW.01M84N9AQG",
       "listedIn": null
     },
     {
@@ -8423,13 +8380,6 @@
       "listedIn": null
     },
     {
-      "slot": "features_intro.home-events.items[1].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
-      "listedIn": null
-    },
-    {
       "slot": "features_intro.home-events.items[1].bg_color",
       "field": "",
       "type": "text",
@@ -8440,7 +8390,7 @@
       "slot": "features_intro.home-events.items[1].img_bg",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4W28KJTJT641VNSN45M.01M83BR4W5",
+      "sample": "_emdash/api/media/file/01M84N9ARE9EK3VSY9BPJMBWCY.01M84N9ARH",
       "listedIn": null
     },
     {
@@ -8503,7 +8453,7 @@
       "slot": "features_intro.home-visit.items[0].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4Y0YZ4Q6JAS3YJ1F9TH.01M83BR4Y1",
+      "sample": "_emdash/api/media/file/01M84N9ATG90P8T3WPCE2Y2QZP.01M84N9ATJ",
       "listedIn": null
     },
     {
@@ -8518,13 +8468,6 @@
       "field": "",
       "type": "text",
       "sample": "4517 Washington Ave. Manchester, Kentucky 39495, USA<br/> Op",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.home-visit.items[0].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -8559,7 +8502,7 @@
       "slot": "features_intro.home-visit.items[1].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4ZNQ1CPPCGV7KSZDT1Q.01M83BR4ZQ",
+      "sample": "_emdash/api/media/file/01M84N9AWB3Q4YGEPGMAKJK07C.01M84N9AWD",
       "listedIn": null
     },
     {
@@ -8574,13 +8517,6 @@
       "field": "",
       "type": "text",
       "sample": "317 Pacific C Hwy Huntington, CA 92648<br/> Opening Hour: Mo",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.home-visit.items[1].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -8664,7 +8600,7 @@
       "slot": "features_intro.about-intro.img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4ZNQ1CPPCGV7KSZDT1Q.01M83BR4ZQ",
+      "sample": "_emdash/api/media/file/01M84N9AWB3Q4YGEPGMAKJK07C.01M84N9AWD",
       "listedIn": null
     },
     {
@@ -8741,7 +8677,7 @@
       "slot": "features_intro.about-features.items[0].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR517FJVECKHF0NBWF8CD.01M83BR518",
+      "sample": "_emdash/api/media/file/01M84N9AY0Z7ZM4MD04DSCPWDT.01M84N9AY2",
       "listedIn": null
     },
     {
@@ -8756,13 +8692,6 @@
       "field": "",
       "type": "text",
       "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem te",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.about-features.items[0].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -8797,7 +8726,7 @@
       "slot": "features_intro.about-features.items[1].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR51X5JRS7189QS55PX97.01M83BR51Y",
+      "sample": "_emdash/api/media/file/01M84N9AYQ0DYKGT3CEH3TZ3KW.01M84N9AYR",
       "listedIn": null
     },
     {
@@ -8812,13 +8741,6 @@
       "field": "",
       "type": "text",
       "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem te",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.about-features.items[1].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -8853,7 +8775,7 @@
       "slot": "features_intro.about-features.items[2].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5279C8TAZ8VZ24FYR5W.01M83BR528",
+      "sample": "_emdash/api/media/file/01M84N9AZ38FRBT675PC28HJAF.01M84N9AZ6",
       "listedIn": null
     },
     {
@@ -8868,13 +8790,6 @@
       "field": "",
       "type": "text",
       "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem te",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.about-features.items[2].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -8909,7 +8824,7 @@
       "slot": "features_intro.about-features.items[3].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR52EP1Z52DTCHNN000M6.01M83BR52F",
+      "sample": "_emdash/api/media/file/01M84N9AZG9P8FGATEAAF5B4RX.01M84N9AZJ",
       "listedIn": null
     },
     {
@@ -8924,13 +8839,6 @@
       "field": "",
       "type": "text",
       "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem te",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.about-features.items[3].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -8965,7 +8873,7 @@
       "slot": "features_intro.about-features.items[4].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR52NKA3NY4GQ69H1CRTE.01M83BR52P",
+      "sample": "_emdash/api/media/file/01M84N9AZTENTX1NJGD672VG6Y.01M84N9AZV",
       "listedIn": null
     },
     {
@@ -8980,13 +8888,6 @@
       "field": "",
       "type": "text",
       "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem te",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.about-features.items[4].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -9021,7 +8922,7 @@
       "slot": "features_intro.about-features.items[5].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR52WYPYMWVAZP6R1W0SN.01M83BR52Y",
+      "sample": "_emdash/api/media/file/01M84N9B024KF0MHXBZR5GZXCC.01M84N9B04",
       "listedIn": null
     },
     {
@@ -9036,13 +8937,6 @@
       "field": "",
       "type": "text",
       "sample": "Porro nemo veniam necessitatibus praesentium eligendi rem te",
-      "listedIn": null
-    },
-    {
-      "slot": "features_intro.about-features.items[5].link",
-      "field": "",
-      "type": "url",
-      "sample": "#",
       "listedIn": null
     },
     {
@@ -11961,7 +11855,7 @@
       "slot": "menu.menu-list-1.menu_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR534MCQ7AJ3JB35B0CKD.01M83BR536",
+      "sample": "_emdash/api/media/file/01M84N9B0BD9XFYDEHR6RDVM96.01M84N9B0D",
       "listedIn": "block-menu-menu-list-1"
     },
     {
@@ -12255,7 +12149,7 @@
       "slot": "menu.menu-list-2.menu_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR534MCQ7AJ3JB35B0CKD.01M83BR536",
+      "sample": "_emdash/api/media/file/01M84N9B0BD9XFYDEHR6RDVM96.01M84N9B0D",
       "listedIn": null
     },
     {
@@ -12570,7 +12464,7 @@
       "slot": "menu.menu-grid.items[0].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR58J52DZHA4B3XDF9H43.01M83BR58M",
+      "sample": "_emdash/api/media/file/01M84N9B6HE09EQ9KMYYV8F1VN.01M84N9B6M",
       "listedIn": null
     },
     {
@@ -12619,7 +12513,7 @@
       "slot": "menu.menu-grid.items[1].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR59BZFAA2R6H6VN0K126.01M83BR59D",
+      "sample": "_emdash/api/media/file/01M84N9B7HMXG2EKBVR04YE1S0.01M84N9B7K",
       "listedIn": null
     },
     {
@@ -12668,7 +12562,7 @@
       "slot": "menu.menu-grid.items[2].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR59ZYS8TTS4347R6D7ZA.01M83BR5A0",
+      "sample": "_emdash/api/media/file/01M84N9B8J34JXQ422VKJ3W1J9.01M84N9B8Q",
       "listedIn": null
     },
     {
@@ -12717,7 +12611,7 @@
       "slot": "menu.menu-grid.items[3].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4W28KJTJT641VNSN45M.01M83BR4W5",
+      "sample": "_emdash/api/media/file/01M84N9ARE9EK3VSY9BPJMBWCY.01M84N9ARH",
       "listedIn": null
     },
     {
@@ -12766,7 +12660,7 @@
       "slot": "menu.menu-grid.items[4].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4TQY2RGP5PRXHGNW1VZ.01M83BR4TS",
+      "sample": "_emdash/api/media/file/01M84N9AQERJM1NEAPJTR2CJDW.01M84N9AQG",
       "listedIn": null
     },
     {
@@ -12815,7 +12709,7 @@
       "slot": "menu.menu-grid.items[5].img_icon",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5ANZCFFSG8C9Q1ACTMX.01M83BR5AX",
+      "sample": "_emdash/api/media/file/01M84N9B9N7Z0DZXCVX7F4MA5S.01M84N9BA0",
       "listedIn": null
     },
     {
@@ -12892,7 +12786,7 @@
       "slot": "gallery.home-gallery-1.items[0].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR58J52DZHA4B3XDF9H43.01M83BR58M",
+      "sample": "_emdash/api/media/file/01M84N9B6HE09EQ9KMYYV8F1VN.01M84N9B6M",
       "listedIn": null
     },
     {
@@ -12927,7 +12821,7 @@
       "slot": "gallery.home-gallery-1.items[1].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR59BZFAA2R6H6VN0K126.01M83BR59D",
+      "sample": "_emdash/api/media/file/01M84N9B7HMXG2EKBVR04YE1S0.01M84N9B7K",
       "listedIn": null
     },
     {
@@ -12962,7 +12856,7 @@
       "slot": "gallery.home-gallery-1.items[2].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR59ZYS8TTS4347R6D7ZA.01M83BR5A0",
+      "sample": "_emdash/api/media/file/01M84N9B8J34JXQ422VKJ3W1J9.01M84N9B8Q",
       "listedIn": null
     },
     {
@@ -12997,7 +12891,7 @@
       "slot": "gallery.home-gallery-1.items[3].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4W28KJTJT641VNSN45M.01M83BR4W5",
+      "sample": "_emdash/api/media/file/01M84N9ARE9EK3VSY9BPJMBWCY.01M84N9ARH",
       "listedIn": null
     },
     {
@@ -13032,7 +12926,7 @@
       "slot": "gallery.home-gallery-1.items[4].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5BJQW9SQ7P9F22N67SG.01M83BR5BK",
+      "sample": "_emdash/api/media/file/01M84N9BAR7CT964APNZGPTHWZ.01M84N9BAT",
       "listedIn": null
     },
     {
@@ -13067,7 +12961,7 @@
       "slot": "gallery.home-gallery-1.items[5].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4TQY2RGP5PRXHGNW1VZ.01M83BR4TS",
+      "sample": "_emdash/api/media/file/01M84N9AQERJM1NEAPJTR2CJDW.01M84N9AQG",
       "listedIn": null
     },
     {
@@ -13151,7 +13045,7 @@
       "slot": "gallery.home-gallery-2.items[0].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5CB0P16YZ95F4A98CA2.01M83BR5CC",
+      "sample": "_emdash/api/media/file/01M84N9BBPFR0BSPNREPAP3ATW.01M84N9BBR",
       "listedIn": null
     },
     {
@@ -13186,7 +13080,7 @@
       "slot": "gallery.home-gallery-2.items[1].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5EF6T2FE3366MPPXNHG.01M83BR5EG",
+      "sample": "_emdash/api/media/file/01M84N9BDYS06CGBRPCDRN2KX4.01M84N9BE0",
       "listedIn": null
     },
     {
@@ -13221,7 +13115,7 @@
       "slot": "gallery.home-gallery-2.items[2].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5ANZCFFSG8C9Q1ACTMX.01M83BR5AX",
+      "sample": "_emdash/api/media/file/01M84N9B9N7Z0DZXCVX7F4MA5S.01M84N9BA0",
       "listedIn": null
     },
     {
@@ -13256,7 +13150,7 @@
       "slot": "gallery.home-gallery-2.items[3].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR58J52DZHA4B3XDF9H43.01M83BR58M",
+      "sample": "_emdash/api/media/file/01M84N9B6HE09EQ9KMYYV8F1VN.01M84N9B6M",
       "listedIn": null
     },
     {
@@ -13291,7 +13185,7 @@
       "slot": "gallery.home-gallery-2.items[4].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5BJQW9SQ7P9F22N67SG.01M83BR5BK",
+      "sample": "_emdash/api/media/file/01M84N9BAR7CT964APNZGPTHWZ.01M84N9BAT",
       "listedIn": null
     },
     {
@@ -13326,7 +13220,7 @@
       "slot": "gallery.home-gallery-2.items[5].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4TQY2RGP5PRXHGNW1VZ.01M83BR4TS",
+      "sample": "_emdash/api/media/file/01M84N9AQERJM1NEAPJTR2CJDW.01M84N9AQG",
       "listedIn": null
     },
     {
@@ -13403,7 +13297,7 @@
       "slot": "gallery.gallery-two.items[0].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR58J52DZHA4B3XDF9H43.01M83BR58M",
+      "sample": "_emdash/api/media/file/01M84N9B6HE09EQ9KMYYV8F1VN.01M84N9B6M",
       "listedIn": null
     },
     {
@@ -13438,7 +13332,7 @@
       "slot": "gallery.gallery-two.items[1].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5ANZCFFSG8C9Q1ACTMX.01M83BR5AX",
+      "sample": "_emdash/api/media/file/01M84N9B9N7Z0DZXCVX7F4MA5S.01M84N9BA0",
       "listedIn": null
     },
     {
@@ -13473,7 +13367,7 @@
       "slot": "gallery.gallery-two.items[2].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR59BZFAA2R6H6VN0K126.01M83BR59D",
+      "sample": "_emdash/api/media/file/01M84N9B7HMXG2EKBVR04YE1S0.01M84N9B7K",
       "listedIn": null
     },
     {
@@ -13508,7 +13402,7 @@
       "slot": "gallery.gallery-two.items[3].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR59ZYS8TTS4347R6D7ZA.01M83BR5A0",
+      "sample": "_emdash/api/media/file/01M84N9B8J34JXQ422VKJ3W1J9.01M84N9B8Q",
       "listedIn": null
     },
     {
@@ -13543,7 +13437,7 @@
       "slot": "gallery.gallery-two.items[4].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5FDYYP1T8M90QCPPY46.01M83BR5FE",
+      "sample": "_emdash/api/media/file/01M84N9BF4EX5H82E39N62663W.01M84N9BF7",
       "listedIn": null
     },
     {
@@ -13578,7 +13472,7 @@
       "slot": "gallery.gallery-two.items[5].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4W28KJTJT641VNSN45M.01M83BR4W5",
+      "sample": "_emdash/api/media/file/01M84N9ARE9EK3VSY9BPJMBWCY.01M84N9ARH",
       "listedIn": null
     },
     {
@@ -13613,7 +13507,7 @@
       "slot": "gallery.gallery-two.items[6].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5BJQW9SQ7P9F22N67SG.01M83BR5BK",
+      "sample": "_emdash/api/media/file/01M84N9BAR7CT964APNZGPTHWZ.01M84N9BAT",
       "listedIn": null
     },
     {
@@ -13648,7 +13542,7 @@
       "slot": "gallery.gallery-two.items[7].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5EF6T2FE3366MPPXNHG.01M83BR5EG",
+      "sample": "_emdash/api/media/file/01M84N9BDYS06CGBRPCDRN2KX4.01M84N9BE0",
       "listedIn": null
     },
     {
@@ -13683,7 +13577,7 @@
       "slot": "gallery.gallery-two.items[8].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5CB0P16YZ95F4A98CA2.01M83BR5CC",
+      "sample": "_emdash/api/media/file/01M84N9BBPFR0BSPNREPAP3ATW.01M84N9BBR",
       "listedIn": null
     },
     {
@@ -13760,7 +13654,7 @@
       "slot": "gallery.gallery-one.items[0].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR58J52DZHA4B3XDF9H43.01M83BR58M",
+      "sample": "_emdash/api/media/file/01M84N9B6HE09EQ9KMYYV8F1VN.01M84N9B6M",
       "listedIn": null
     },
     {
@@ -13795,7 +13689,7 @@
       "slot": "gallery.gallery-one.items[1].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5ANZCFFSG8C9Q1ACTMX.01M83BR5AX",
+      "sample": "_emdash/api/media/file/01M84N9B9N7Z0DZXCVX7F4MA5S.01M84N9BA0",
       "listedIn": null
     },
     {
@@ -13830,7 +13724,7 @@
       "slot": "gallery.gallery-one.items[2].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR59BZFAA2R6H6VN0K126.01M83BR59D",
+      "sample": "_emdash/api/media/file/01M84N9B7HMXG2EKBVR04YE1S0.01M84N9B7K",
       "listedIn": null
     },
     {
@@ -13865,7 +13759,7 @@
       "slot": "gallery.gallery-one.items[3].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR59ZYS8TTS4347R6D7ZA.01M83BR5A0",
+      "sample": "_emdash/api/media/file/01M84N9B8J34JXQ422VKJ3W1J9.01M84N9B8Q",
       "listedIn": null
     },
     {
@@ -13900,7 +13794,7 @@
       "slot": "gallery.gallery-one.items[4].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5FDYYP1T8M90QCPPY46.01M83BR5FE",
+      "sample": "_emdash/api/media/file/01M84N9BF4EX5H82E39N62663W.01M84N9BF7",
       "listedIn": null
     },
     {
@@ -13935,7 +13829,7 @@
       "slot": "gallery.gallery-one.items[5].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4W28KJTJT641VNSN45M.01M83BR4W5",
+      "sample": "_emdash/api/media/file/01M84N9ARE9EK3VSY9BPJMBWCY.01M84N9ARH",
       "listedIn": null
     },
     {
@@ -13970,7 +13864,7 @@
       "slot": "gallery.gallery-one.items[6].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5BJQW9SQ7P9F22N67SG.01M83BR5BK",
+      "sample": "_emdash/api/media/file/01M84N9BAR7CT964APNZGPTHWZ.01M84N9BAT",
       "listedIn": null
     },
     {
@@ -14005,7 +13899,7 @@
       "slot": "gallery.gallery-one.items[7].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5EF6T2FE3366MPPXNHG.01M83BR5EG",
+      "sample": "_emdash/api/media/file/01M84N9BDYS06CGBRPCDRN2KX4.01M84N9BE0",
       "listedIn": null
     },
     {
@@ -14040,7 +13934,7 @@
       "slot": "gallery.gallery-one.items[8].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5CB0P16YZ95F4A98CA2.01M83BR5CC",
+      "sample": "_emdash/api/media/file/01M84N9BBPFR0BSPNREPAP3ATW.01M84N9BBR",
       "listedIn": null
     },
     {
@@ -14075,7 +13969,7 @@
       "slot": "gallery.gallery-one.items[9].gallery_image",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4TQY2RGP5PRXHGNW1VZ.01M83BR4TS",
+      "sample": "_emdash/api/media/file/01M84N9AQERJM1NEAPJTR2CJDW.01M84N9AQG",
       "listedIn": null
     },
     {
@@ -14551,7 +14445,7 @@
       "slot": "teams.about-team.items[0].img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR44H2M1TXJSASASJTZMV.01M83BR44K",
+      "sample": "_emdash/api/media/file/01M84N99ZEHK6FGW1NGEE2NWDC.01M84N99ZG",
       "listedIn": null
     },
     {
@@ -14579,7 +14473,7 @@
       "slot": "teams.about-team.items[1].img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5G698A3V4JTNB85J05Z.01M83BR5G7",
+      "sample": "_emdash/api/media/file/01M84N9BG91T40MF31DFJQ6ZEF.01M84N9BGB",
       "listedIn": null
     },
     {
@@ -14607,7 +14501,7 @@
       "slot": "teams.about-team.items[2].img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5GYTPYV95ZC3V4PK84V.01M83BR5GZ",
+      "sample": "_emdash/api/media/file/01M84N9BH6F0Y6275KB4ST25M9.01M84N9BH7",
       "listedIn": null
     },
     {
@@ -14677,7 +14571,7 @@
       "slot": "teams.chiefs-team.items[0].img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR44H2M1TXJSASASJTZMV.01M83BR44K",
+      "sample": "_emdash/api/media/file/01M84N99ZEHK6FGW1NGEE2NWDC.01M84N99ZG",
       "listedIn": null
     },
     {
@@ -14705,7 +14599,7 @@
       "slot": "teams.chiefs-team.items[1].img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5G698A3V4JTNB85J05Z.01M83BR5G7",
+      "sample": "_emdash/api/media/file/01M84N9BG91T40MF31DFJQ6ZEF.01M84N9BGB",
       "listedIn": null
     },
     {
@@ -14733,7 +14627,7 @@
       "slot": "teams.chiefs-team.items[2].img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5GYTPYV95ZC3V4PK84V.01M83BR5GZ",
+      "sample": "_emdash/api/media/file/01M84N9BH6F0Y6275KB4ST25M9.01M84N9BH7",
       "listedIn": null
     },
     {
@@ -14761,7 +14655,7 @@
       "slot": "teams.chiefs-team.items[3].img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5HM165PRVZ8BF75G7FQ.01M83BR5HN",
+      "sample": "_emdash/api/media/file/01M84N9BJ0VKPZDTZR8BAAPVK8.01M84N9BJ2",
       "listedIn": null
     },
     {
@@ -14789,7 +14683,7 @@
       "slot": "teams.chiefs-team.items[4].img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5J8KAXQEH7ARW1VPARZ.01M83BR5JA",
+      "sample": "_emdash/api/media/file/01M84N9BJSREX7X7V5SRMGR5YE.01M84N9BJV",
       "listedIn": null
     },
     {
@@ -14817,7 +14711,7 @@
       "slot": "teams.chiefs-team.items[5].img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR4775T01TQVR257CA738.01M83BR479",
+      "sample": "_emdash/api/media/file/01M84N9A2G064C81249WN4KWC5.01M84N9A2J",
       "listedIn": null
     },
     {
@@ -14866,7 +14760,7 @@
       "slot": "happyhours.offer-hour-1.logo_img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5K0KJ7K188YWWFF3G7A.01M83BR5K2",
+      "sample": "_emdash/api/media/file/01M84N9BKRZXXD3150CN5WM8KT.01M84N9BKT",
       "listedIn": "block-happyhours-offer-hour-1"
     },
     {
@@ -14880,7 +14774,7 @@
       "slot": "happyhours.offer-hour-1.hp_img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5KF73ERQZP2VNR4PEXR.01M83BR5KH",
+      "sample": "_emdash/api/media/file/01M84N9BM90XD8STDF9SXVF1G7.01M84N9BMA",
       "listedIn": null
     },
     {
@@ -14957,7 +14851,7 @@
       "slot": "happyhours.offer-hour-2.logo_img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5K0KJ7K188YWWFF3G7A.01M83BR5K2",
+      "sample": "_emdash/api/media/file/01M84N9BKRZXXD3150CN5WM8KT.01M84N9BKT",
       "listedIn": "block-happyhours-offer-hour-2"
     },
     {
@@ -14971,7 +14865,7 @@
       "slot": "happyhours.offer-hour-2.hp_img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5RHVN1TJCKTVFQPZEDP.01M83BR5RJ",
+      "sample": "_emdash/api/media/file/01M84N9BS40ZHC4Q1TGKNSD8P8.01M84N9BS6",
       "listedIn": null
     },
     {
@@ -15048,7 +14942,7 @@
       "slot": "happyhours.offer-hour-3.logo_img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5K0KJ7K188YWWFF3G7A.01M83BR5K2",
+      "sample": "_emdash/api/media/file/01M84N9BKRZXXD3150CN5WM8KT.01M84N9BKT",
       "listedIn": null
     },
     {
@@ -15062,7 +14956,7 @@
       "slot": "happyhours.offer-hour-3.hp_img",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5TQGMJPW892ZA2B5QB6.01M83BR5TR",
+      "sample": "_emdash/api/media/file/01M84N9BVGK18SWH6V9Z1KCHMH.01M84N9BVJ",
       "listedIn": null
     },
     {
@@ -15223,7 +15117,7 @@
       "slot": "masthead.blog.background",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5YVHSJ9T2R6R1RP9NDR.01M83BR5YX",
+      "sample": "_emdash/api/media/file/01M84N9BZW1C88S43J1ATYNBHA.01M84N9BZY",
       "listedIn": null
     },
     {
@@ -15244,7 +15138,7 @@
       "slot": "masthead.contact.background",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5YVHSJ9T2R6R1RP9NDR.01M83BR5YX",
+      "sample": "_emdash/api/media/file/01M84N9BZW1C88S43J1ATYNBHA.01M84N9BZY",
       "listedIn": null
     },
     {
@@ -15265,7 +15159,7 @@
       "slot": "masthead.chiefs.background",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5YVHSJ9T2R6R1RP9NDR.01M83BR5YX",
+      "sample": "_emdash/api/media/file/01M84N9BZW1C88S43J1ATYNBHA.01M84N9BZY",
       "listedIn": null
     },
     {
@@ -15286,7 +15180,7 @@
       "slot": "masthead.about.background",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR5YVHSJ9T2R6R1RP9NDR.01M83BR5YX",
+      "sample": "_emdash/api/media/file/01M84N9BZW1C88S43J1ATYNBHA.01M84N9BZY",
       "listedIn": null
     },
     {
@@ -15307,7 +15201,7 @@
       "slot": "masthead.post.background",
       "field": "",
       "type": "image",
-      "sample": "_emdash/api/media/file/01M83BR61TV97BQ33W8KCA0TKK.01M83BR61V",
+      "sample": "_emdash/api/media/file/01M84N9C359T76CS3VS03G6EEZ.01M84N9C37",
       "listedIn": null
     },
     {
@@ -15423,21 +15317,21 @@
       "listedIn": "footer"
     },
     {
-      "slot": "chrome.chrome.footer_link",
+      "slot": "chrome.chrome.footer_link_text",
       "field": "",
-      "type": "url",
+      "type": "text",
       "sample": "Reservation Policy",
-      "listedIn": null
+      "listedIn": "footer"
     },
     {
       "slot": "chrome.chrome.footer_link_to",
       "field": "",
-      "type": "text",
+      "type": "url",
       "sample": "/contact",
       "listedIn": null
     },
     {
-      "slot": "chrome.chrome.footer_links",
+      "slot": "chrome.chrome.footer_links_text",
       "field": "",
       "type": "text",
       "sample": "Privacy Policy Health & Safety FAQ",
@@ -15668,7 +15562,7 @@
       "listedIn": "block-contact-contact-info"
     },
     {
-      "slot": "contact.contact-info.form_intro",
+      "slot": "contact.contact-info.form_intro_text",
       "field": "",
       "type": "text",
       "sample": "Write a Message",
@@ -15757,10 +15651,11 @@
     "deadControls": [],
     "mapLocationUnmapped": [],
     "phoneNotCallable": [],
+    "itemsListsWithoutCardFields": [],
     "rowPartsUnpaired": []
   },
   "coverage": {
-    "shownTextSlots": 165,
+    "shownTextSlots": 166,
     "parts": {
       "slotsMissing": 0,
       "linkLabelsOutsideBlock": 0,
@@ -15779,9 +15674,9 @@
     },
     "failures": [],
     "fields": {
-      "total": 1193,
+      "total": 1180,
       "measured": 0,
-      "notListed": 1018,
+      "notListed": 1004,
       "drivingSeveralControls": []
     }
   },

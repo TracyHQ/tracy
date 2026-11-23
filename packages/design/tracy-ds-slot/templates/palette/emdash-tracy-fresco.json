@@ -3,6 +3,10 @@
   "pages": ["/", "/menu", "/about", "/gallery"],
   "page": "#0a0b0a",
   "rules": [
+    ["body", "background-color", "bg", 0, "--color-bg"],
+    ["h1, h2, h3, h4, h5, h6", "color", "heading", 0, "--color-heading"],
+    ["a", "color", "accent-text", 0, "--color-accent-text"],
+    ["a:hover", "color", "accent-text", 0, "--color-accent-text-hover"],
     [".fr-hero-slide::before", "background-color", "bg", 0, "--color-bg"],
     [".fr-menu-type", "color", "heading", 0, "--color-heading"],
     [".fr-menu-type::after", "background-color", "accent", 0, "--color-accent"],
@@ -10,16 +14,15 @@
     [".fr-t-section", "background-color", "surface", 0, "--color-ink"],
     [".fr-t-desc", "color", "fg", 0, "--color-on-ink"],
     [".fr-t-nav", "color", "fg", 0, "--color-on-ink"],
-    [".fr-t-nav:hover", "color", "accent-text", 0, "--color-accent-text"],
     [".fr-fi2-mask", "background-color", "accent", 0, "--color-accent"],
     [".fr-gal-inner span", "color", "heading", 0, "--color-heading"],
-    ["body", "background-color", "bg", 0, "--color-bg"],
-    ["h1, h2, h3, h4, h5, h6", "color", "heading", 0, "--color-heading"],
-    ["a", "color", "accent-text", 0, "--color-accent-text"],
-    ["a:hover", "color", "accent-text", 0, "--color-accent-text-hover"],
-    [".fr-btn:hover, .fr-btn:focus-visible", "background-color", "accent", 0, "--color-accent"],
-    [".fr-btn.is-solid", "color", "on-accent", 0, "--color-accent-on"],
-    [".fr-btn.is-solid", "background-color", "accent", 0, "--color-accent"],
+    [
+      ".fr-btn:hover, .fr-btn:focus-visible, .fr-btn.is-solid",
+      "background-color",
+      "accent",
+      0,
+      "--color-accent"
+    ],
     [".fr-btn.is-light:hover, .fr-btn.is-light:focus-visible", "background-color", "band", 0],
     [".fr-section-title", "color", "accent-text", 0, "--color-accent-text"],
     [".fr-main-title", "color", "heading", 0, "--color-heading"],
@@ -59,7 +62,7 @@
     [".fr-section.is-band", "color", "fg", 0, "--color-on-ink"],
     [".fr-section.is-band", "background-color", "surface", 0, "--color-ink"],
     [
-      ".fr-section.is-band :is(h1, h2, h3, h4, .fr-main-title, .fr-menu-type, .fr-dish-price, .fr-menu-image-type)",
+      ".fr-section.is-band :is(h1, h2, h3, h4, .fr-main-title, .fr-menu-type, .fr-dish-price, .fr-menu-image-type, .fr-menu-image-price)",
       "color",
       "fg",
       0,
@@ -69,7 +72,7 @@
     [".fr-menu-image-type::after", "background-color", "accent", 0, "--color-accent"],
     [".fr-menu-image-price", "color", "heading", 0, "--color-heading"],
     [".fr-menu-card-price", "color", "accent-text", 0, "--color-accent"],
-    [".fr-menu-card-price", "background-color", "surface", 0, "--color-ink"],
+    [".fr-menu-card-price", "background-color", "surface", 0, "--color-surface-warm"],
     [".fr-lightbox", "background-color", "bg", 0, "--color-bg"],
     [".fr-lightbox-title", "color", "heading", 0, "--color-heading"],
     [".fr-lightbox-price", "color", "accent-text", 0, "--color-accent"],
@@ -92,10 +95,11 @@
   "colours": {
     "#0a0b0a": "bg",
     "#ffffff": "fg",
-    "#e6c9a2": "accent",
+    "#e6c9a2": "accent-text",
     "#1b1a1c": "surface",
     "#f8f9fa": "band",
     "#000000": "surface",
-    "#1a191b": "surface"
+    "#1a191b": "surface",
+    "#212529": "surface"
   }
 }

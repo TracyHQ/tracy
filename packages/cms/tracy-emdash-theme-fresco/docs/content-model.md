@@ -4,7 +4,7 @@ Read ../AGENTS.md and generated/inventory.md (the generated schema and counts de
 
 | Where | Collection (admin label) | What it holds |
 | --- | --- | --- |
-| Header, footer, top bar, 404, labels | `chrome` (one entry) | every word the template prints itself, incl. `book_label`, `footer_link` and `footer_link_to` (the one linked entry), `footer_links` (the plain-text entries, one per line), `copyright` (`{year}`, `{name}`), `logo_dark` |
+| Header, footer, top bar, 404, labels | `chrome` (one entry) | every word the template prints itself, incl. `book_label`, `footer_link_text` and `footer_link_to` (the one linked entry), `footer_links_text` (the plain-text entries, one per line), `copyright` (`{year}`, `{name}`), `logo_dark` |
 | Page records (title, visibility, header menu) | `pages` | one entry per page: home, about, gallery, chiefs, menu, offer, contact, blog |
 | Posts | `posts` + taxonomy `category` | title, excerpt, body, cover, author, avatar, tags, dates |
 | Home | `hero`, `features_intro`, `menu`, `gallery`, `testimonials` | entries `home-hero`, `home-services`, `home-explore`, `home-events`, `home-sea/-land/-sky`, `home-gallery-1/-2`, `home-desserts`, `home-tea`, `home-testimonials`, `home-visit` |

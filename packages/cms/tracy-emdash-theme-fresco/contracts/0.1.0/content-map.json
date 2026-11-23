@@ -3317,14 +3317,11 @@
         "item": 0,
         "sub": "btn_link_2"
       },
-      "type": "text",
+      "type": "url",
       "sample": "/contact",
       "label": "Items 1 \u2014 Btn link 2",
       "role": "editorial.navigation_url",
-      "customize": "keep",
-      "fit": {
-        "measured": false
-      }
+      "customize": "keep"
     },
     {
       "key": "hero.home-hero.items[0].btn_type_2",
@@ -3487,22 +3484,6 @@
         "casing": "none",
         "overflow": "rewrite"
       }
-    },
-    {
-      "key": "features_intro.home-services.items[0].link",
-      "entity": "features_intro.home-services",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-services",
-        "field": "items",
-        "item": 0,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 1 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.home-services.items[0].bg_color",
@@ -3697,22 +3678,6 @@
       }
     },
     {
-      "key": "features_intro.home-services.items[1].link",
-      "entity": "features_intro.home-services",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-services",
-        "field": "items",
-        "item": 1,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 2 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.home-services.items[1].bg_color",
       "entity": "features_intro.home-services",
       "target": {
@@ -3903,22 +3868,6 @@
         "casing": "none",
         "overflow": "rewrite"
       }
-    },
-    {
-      "key": "features_intro.home-services.items[2].link",
-      "entity": "features_intro.home-services",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-services",
-        "field": "items",
-        "item": 2,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 3 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.home-services.items[2].bg_color",
@@ -4177,22 +4126,6 @@
       }
     },
     {
-      "key": "features_intro.home-events.items[0].link",
-      "entity": "features_intro.home-events",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-events",
-        "field": "items",
-        "item": 0,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 1 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.home-events.items[0].bg_color",
       "entity": "features_intro.home-events",
       "target": {
@@ -4371,22 +4304,6 @@
       "fit": {
         "measured": false
       }
-    },
-    {
-      "key": "features_intro.home-events.items[1].link",
-      "entity": "features_intro.home-events",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-events",
-        "field": "items",
-        "item": 1,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 2 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.home-events.items[1].bg_color",
@@ -4707,22 +4624,6 @@
       }
     },
     {
-      "key": "features_intro.home-visit.items[0].link",
-      "entity": "features_intro.home-visit",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-visit",
-        "field": "items",
-        "item": 0,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 1 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.home-visit.items[0].bg_color",
       "entity": "features_intro.home-visit",
       "target": {
@@ -4918,22 +4819,6 @@
         "casing": "none",
         "overflow": "rewrite"
       }
-    },
-    {
-      "key": "features_intro.home-visit.items[1].link",
-      "entity": "features_intro.home-visit",
-      "target": {
-        "collection": "features_intro",
-        "entry": "home-visit",
-        "field": "items",
-        "item": 1,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 2 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.home-visit.items[1].bg_color",
@@ -5509,22 +5394,6 @@
       }
     },
     {
-      "key": "features_intro.about-features.items[0].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 0,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 1 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.about-features.items[0].bg_color",
       "entity": "features_intro.about-features",
       "target": {
@@ -5698,22 +5567,6 @@
       "fit": {
         "measured": false
       }
-    },
-    {
-      "key": "features_intro.about-features.items[1].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 1,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 2 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.about-features.items[1].bg_color",
@@ -5891,22 +5744,6 @@
       }
     },
     {
-      "key": "features_intro.about-features.items[2].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 2,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 3 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.about-features.items[2].bg_color",
       "entity": "features_intro.about-features",
       "target": {
@@ -6080,22 +5917,6 @@
       "fit": {
         "measured": false
       }
-    },
-    {
-      "key": "features_intro.about-features.items[3].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 3,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 4 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.about-features.items[3].bg_color",
@@ -6273,22 +6094,6 @@
       }
     },
     {
-      "key": "features_intro.about-features.items[4].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 4,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 5 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
-    },
-    {
       "key": "features_intro.about-features.items[4].bg_color",
       "entity": "features_intro.about-features",
       "target": {
@@ -6462,22 +6267,6 @@
       "fit": {
         "measured": false
       }
-    },
-    {
-      "key": "features_intro.about-features.items[5].link",
-      "entity": "features_intro.about-features",
-      "target": {
-        "collection": "features_intro",
-        "entry": "about-features",
-        "field": "items",
-        "item": 5,
-        "sub": "link"
-      },
-      "type": "url",
-      "sample": "#",
-      "label": "Items 6 \u2014 Link",
-      "role": "editorial.navigation_url",
-      "customize": "keep"
     },
     {
       "key": "features_intro.about-features.items[5].bg_color",
@@ -31510,17 +31299,20 @@
       }
     },
     {
-      "key": "chrome.chrome.footer_link",
+      "key": "chrome.chrome.footer_link_text",
       "entity": "chrome.chrome",
       "target": {
         "collection": "chrome",
         "entry": "chrome",
-        "field": "footer_link"
+        "field": "footer_link_text"
       },
-      "type": "url",
+      "type": "text",
       "sample": "Reservation Policy",
       "label": "Footer link",
-      "role": "editorial.menu_label"
+      "role": "editorial.menu_label",
+      "fit": {
+        "measured": false
+      }
     },
     {
       "key": "chrome.chrome.footer_link_to",
@@ -31530,22 +31322,19 @@
         "entry": "chrome",
         "field": "footer_link_to"
       },
-      "type": "text",
+      "type": "url",
       "sample": "/contact",
       "label": "Footer link address",
       "role": "editorial.navigation_url",
-      "customize": "keep",
-      "fit": {
-        "measured": false
-      }
+      "customize": "keep"
     },
     {
-      "key": "chrome.chrome.footer_links",
+      "key": "chrome.chrome.footer_links_text",
       "entity": "chrome.chrome",
       "target": {
         "collection": "chrome",
         "entry": "chrome",
-        "field": "footer_links"
+        "field": "footer_links_text"
       },
       "type": "text",
       "sample": "Privacy Policy\nHealth & Safety\nFAQ",
@@ -32409,12 +32198,12 @@
       }
     },
     {
-      "key": "contact.contact-info.form_intro",
+      "key": "contact.contact-info.form_intro_text",
       "entity": "contact.contact-info",
       "target": {
         "collection": "contact",
         "entry": "contact-info",
-        "field": "form_intro"
+        "field": "form_intro_text"
       },
       "type": "text",
       "sample": "Write a Message",

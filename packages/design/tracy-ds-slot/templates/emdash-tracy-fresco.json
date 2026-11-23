@@ -15,7 +15,9 @@
   "readsRolesNote": "src/styles/tokens.css and global.css read every standard role variable, or declare it unused with a reason (ds-not-used) or keep it (ds-keep); the type and shape tokens are read with the template's own value as the fallback",
   "modes": false,
   "modesNote": "the page is near-black in both states: `data-theme=\"dark\"` mirrors the system or QA dark state (an inline script in Base.astro) and no switch is drawn",
-  "selectors": {},
+  "selectors": {
+    "themeToggle": "[data-theme-toggle]"
+  },
   "roles": {
     "page": "body",
     "display": ".fr-masthead-title",
