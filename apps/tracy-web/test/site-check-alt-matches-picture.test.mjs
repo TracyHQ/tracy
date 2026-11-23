@@ -180,6 +180,20 @@ test("a heading the template prints as a picture's alt is not the writer's alt: 
   assert.equal(check.status, 'green')
 })
 
+test("the business's name the brand step wrote, printed as a picture's alt, is not a template alt", async () => {
+  // Dev lat30 (23/11/2026): Joomla prints a contact's name as the alt of its picture; the brand step wrote that name.
+  const slots = [
+    ...lines(),
+    { slot: 'contact-1.0', key: 'contact-1.0', owner: 'brand', status: 'written', ordered: 'Quay Swim Club' }
+  ]
+  const [group] = (await gate({ slots, alts: { kids: 'Quay Swim Club' } })).groups
+  assert.deepEqual(group.failures, [])
+  assert.match(
+    group.notMeasured.find((n) => n.slot === 'block-5.2').reason,
+    /words of the heading contact-1\.0/
+  )
+})
+
 test('without the step 8 manifest, a page reader or a kit the group cannot tell; with no written picture it has nothing to do', async () => {
   for (const over of [{ pictures: null }, { pictures: { version: 'site-plan/3' } }]) {
     const [group] = (await gate(over)).groups

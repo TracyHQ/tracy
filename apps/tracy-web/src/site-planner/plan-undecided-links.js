@@ -1,0 +1,89 @@
+// After the model, before the checker: a link of a kept block that the decision neither keeps nor hides (R10b) is decided by
+// code where only one answer stands, as the planner would give it:
+// - a control that acts inside its block with no words and no address (a gallery photo that opens itself in a lightbox:
+//   `page-control`, an `image-file` icon, no label, no target) is hidden; the write step keeps it as the control it is, and
+//   its picture is its frame's;
+// - a link whose kit target is a page the plan keeps, and whose label slot is none or one the plan writes, is kept
+//   leading to that page, with the kit's label slot (R10b holds `labelSlot` to the kit's).
+// Any other undecided link (its page dropped, its label undecided, an outside address) stays with the planner.
+//
+// Dev lat29 and lat30 (23/11/2026): JA Boxing's plan round 0 left 17 to 80 links undecided (R10b), the header's menu links and
+// the gallery controls among them, and its fix round took one to six minutes. Navigation blocks are the menus' (their items are
+// decided through mainMenu and footerMenu), as R10b reads them. Returns the same plan when nothing changed.
+import { indexKit } from './plan-check/kit-index.js'
+import { decisionParts } from './plan-check/plan-index.js'
+
+const each = (value) => (Array.isArray(value) ? value : [])
+const slashless = (path) => String(path ?? '').replace(/^\/+|\/+$/g, '')
+
+/** The kit link's control kind that carries nothing of its own: a picture opening itself in place. */
+const isOwnPicture = (link) =>
+  link?.action === 'page-control' &&
+  link.icon?.mechanism === 'image-file' &&
+  !link.label &&
+  !link.target &&
+  !link.opens
+
+/**
+ * @param {any} plan
+ * @param {any} kit
+ */
+export function withUndecidedLinksSettled(plan, kit) {
+  if (!plan || typeof plan !== 'object' || !kit || typeof kit !== 'object') return plan
+  const { blockIx, navGroups, linkLabelSlot } = indexKit(kit)
+  const navBlocks = new Set([...navGroups.values()].map((g) => g?.block))
+  const kept = new Set(
+    each(plan.pages)
+      .filter((p) => p?.decision === 'keep')
+      .map((p) => p.id)
+  )
+  const pageByPath = new Map(each(kit.pages).map((p) => [slashless(p?.path), p?.id]))
+  // Every slot a decision writes: a label the plan gives words (a hidden label would leave a button with no words).
+  const decided = new Set()
+  const decisions = [
+    ...each(plan.sharedBlocks),
+    ...each(plan.pages)
+      .filter((p) => p?.decision === 'keep')
+      .flatMap((p) => each(p.blocks))
+  ].filter((d) => d && typeof d === 'object')
+  for (const d of decisions) {
+    const parts = decisionParts(d)
+    const hidden = new Set(parts.hidden.map((h) => h.slot))
+    for (const c of parts.copy) if (!hidden.has(c.slot)) decided.add(c.slot)
+  }
+  let changed = false
+  const fix = (decision) => {
+    if (!decision || typeof decision !== 'object' || decision.decision !== 'keep') return decision
+    if (navBlocks.has(decision.block)) return decision
+    const block = blockIx.get(decision.block)
+    if (!block) return decision
+    const parts = decisionParts(decision)
+    const done = new Set([...parts.links.map((l) => l.link), ...parts.hidden.map((h) => h.slot)])
+    const links = []
+    const hidden = []
+    for (const [id, link] of block.links) {
+      if (done.has(id)) continue
+      if (isOwnPicture(link)) {
+        hidden.push({ slot: id, why: 'an in-page control with no words: its picture opens itself in place' })
+        continue
+      }
+      const page = link?.target ? pageByPath.get(slashless(link.target)) : null
+      const label = linkLabelSlot.get(id) ?? null
+      if (!page || !kept.has(page) || (label && !decided.has(label))) continue
+      links.push({ link: id, leadsTo: page, labelSlot: label })
+    }
+    if (!links.length && !hidden.length) return decision
+    changed = true
+    return {
+      ...decision,
+      ...(links.length ? { links: [...each(decision.links), ...links] } : {}),
+      ...(hidden.length ? { hiddenSlots: [...each(decision.hiddenSlots), ...hidden] } : {})
+    }
+  }
+  const sharedBlocks = each(plan.sharedBlocks).map(fix)
+  const pages = each(plan.pages).map((p) =>
+    p?.decision === 'keep' && Array.isArray(p.blocks) ? { ...p, blocks: p.blocks.map(fix) } : p
+  )
+  if (!changed) return plan
+  return { ...plan, ...(Array.isArray(plan.sharedBlocks) ? { sharedBlocks } : {}), pages }
+}
