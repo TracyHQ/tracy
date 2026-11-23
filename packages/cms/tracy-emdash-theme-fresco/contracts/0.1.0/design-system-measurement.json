@@ -8,9 +8,7 @@
   "machine": "linux-arm64",
   "measuredBy": "tdsr flow.mjs --cms emdash --template emdash-tracy-fresco",
   "flowVersion": "be7639324",
-  "modes": [
-    "native"
-  ],
+  "modes": ["native"],
   "systems": [
     "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
     "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
@@ -174,12 +172,7 @@
       "shot": "04-airbnb-phone.png"
     }
   ],
-  "controls": [
-    0,
-    0,
-    0,
-    0
-  ],
+  "controls": [0, 0, 0, 0],
   "evidence": null,
   "themeToggle": false,
   "preview": [
@@ -20856,5 +20849,23 @@
       }
     }
   ],
-  "previewMeasuredAt": "2026-11-23T14:03:29.179Z"
+  "previewMeasuredAt": "2026-11-23T14:09:01.693Z",
+  "previewPages": [
+    "/",
+    "/menu",
+    "/about",
+    "/gallery",
+    "/chiefs",
+    "/offer",
+    "/contact",
+    "/blog",
+    "/search",
+    "/search?q=food",
+    "/blog/valentines-day-at-soul-kitchen",
+    "/blog/mother-s-day-lunch-special",
+    "/blog/an-interview-with-chef-milo-ferndandes",
+    "/blog/culinary-journeys-around-the-world",
+    "/blog/savoring-the-art-of-cooking",
+    "/blog/farm-to-fork-sustainable-eating"
+  ]
 }
