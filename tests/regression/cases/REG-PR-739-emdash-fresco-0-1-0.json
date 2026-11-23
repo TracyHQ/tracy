@@ -15,7 +15,8 @@
     "S3: From the TCH root run `node scripts/slot-roles/check.mjs packages/cms/tracy-emdash-theme-fresco/contracts/0.1.0`; from the package folder run `node tools/personalize.mjs --answers-json '{\"name\":\"Casa Luna\",\"sector\":\"restaurant\",\"contact\":\"12 Harbour Road, Lisbon +351 21 000 000\",\"email\":\"hello@casaluna.example\"}' --dry-run --json`.",
     "S4: Read the package's pnpm-lock.yaml: every `@hono/node-server` entry is 2.1.6 or later and every `hono` entry is 4.13.16 or later.",
     "S5: In the same folder run `node --test tests/set-html-safe.test.mjs`: the about description (`features_intro/about-intro.desc`) holding `<img src=x onerror=alert(1)>`, a script, an iframe or a javascript: link renders inert, and every `set:html` in src prints cleaned text or a constant.",
-    "S6: In the same folder run `node --test tests/road-precheck.test.mjs`: no `link: \"#\"` in seed/seed.json or seed/site-model.json, `labels` of seed/personalize.json names every collection with an interface-word field, every `keptText` id names a seed field and has its reason in DECISIONS.md, the Blog page is covered by the trim rule of its posts (no trim on pages, empty hide), and no stylesheet reads `--ds-c-ink-raised` or paints `.fr-hh-badge` words with `--ds-c-bg`."
+    "S6: In the same folder run `node --test tests/road-precheck.test.mjs`: no `link: \"#\"` in seed/seed.json or seed/site-model.json, `labels` of seed/personalize.json names every collection with an interface-word field, every `keptText` id names a seed field and has its reason in DECISIONS.md, the Blog page is covered by the trim rule of its posts (no trim on pages, empty hide), and no stylesheet reads `--ds-c-ink-raised` or paints `.fr-hh-badge` words with `--ds-c-bg`.",
+    "S7: Read src/styles/pages/contact.css and search.css: the field fill outside @supports is `rgba(255, 255, 255, .06)`, with no `color-mix` fill in a plain rule."
   ],
   "expect": [
     "Every test of S2 reports ok: each section entry the views name exists in the seed, the router imports views that exist, every shipped font is local, has an OFL notice and the Vietnamese range, and the chrome entry carries every word the header and footer print.",
@@ -23,7 +24,8 @@
     "The personalize dry run reports `errors: 0` and lists the planned entries (`planned`); its exit code is 0, or 3 when no model key is set, because the copy and rewrite rules are then skipped by design (exit 3 means done with some copy skipped), and that is not a failure here.",
     "The lock has no `@hono/node-server` below 2.1.6 (GHSA-jpvv-r467-5p4w, GHSA-qv5m-9pm6-hqp3) and no `hono` below 4.13.16.",
     "The about description keeps its words and list items but loses event handlers, scripts, iframes, styles and script URLs; every `set:html` in the package goes through `cleanHtml` or prints a constant of the code.",
-    "The road pre-check findings of the first release stay fixed: no `#` link field in the seed, every interface-word collection in `labels`, every kept demo text declared with its reason, the Blog page covered by a trim rule that does not cut a page, and the stylesheets read only defined design-system roles."
+    "The road pre-check findings of the first release stay fixed: no `#` link field in the seed, every interface-word collection in `labels`, every kept demo text declared with its reason, the Blog page covered by a trim rule that does not cut a page, and the stylesheets read only defined design-system roles.",
+    "The contact and search field fill is the template's `rgba(255, 255, 255, .06)` in the plain rule and the system tint (`color-mix` of `--ds-c-fg`) only inside `@supports (color: color-mix(…))`, so a browser without `color-mix` draws see-through fields, not solid white ones (FORM-1)."
   ],
   "selectors": {
     "about description": "src/lib/about-desc.ts (aboutDesc)",
