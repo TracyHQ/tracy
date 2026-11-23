@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-733-valid-output-3",
+  "kind": "fix",
+  "title": "The last blocks of a JA Diner build and the largest JA Boxing groups are settled, and plan slips are decided by code",
+  "pr": 733,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo", "wp", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Spaced emphasis codes pass the look guard; a copy-written menu label stands; undecided links with one answer, plan shape slips and card links are settled by code; a plan path to a kept page links to the page; writer words in url, picture or empty fields are noted, not written; a stored field repeating a written heading takes its words; a brand name printed as an alt is not a template alt."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-guard-emphasis-codes.test.mjs",
+      "apps/tracy-web/test/write-step-page-routes.test.mjs",
+      "apps/tracy-web/test/site-planner-undecided-links.test.mjs",
+      "apps/tracy-web/test/write-step-link-addresses.test.mjs",
+      "apps/tracy-web/test/write-step-slot-dispute.test.mjs",
+      "apps/tracy-web/test/write-step-title-repeats.test.mjs",
+      "apps/tracy-web/test/site-check-alt-matches-picture.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a code written with spaces, stored as its tag, is still only a change of emphasis form",
+      "the planned top-level News page leaves demo menu ancestors and restores them before a rerun",
+      "a picture that opens itself is hidden, and a link to a kept page whose label is decided is kept",
+      "a page's blocks under another name are its blocks, and a shared block decided again on a page is the shared one's",
+      "a card's link that opens its own item leads to that item's kept page, and stays with the planner when it is dropped",
+      "a path the plan names that is a kept page's slug or kit path is that page, never a bare path",
+      "words the writer puts in a picture slot or a url slot are not written, and leave no dispute with its owner",
+      "words for a field the template keeps empty are not sent: the site never fills it",
+      "a stored field repeating a written heading of its module takes the heading's new words",
+      "the business's name the brand step wrote, printed as a picture's alt, is not a template alt"
+    ]
+  }
+}
