@@ -76,3 +76,43 @@ export function titleRepeatTwins({ plan, kit, contentMap, claims }) {
   }
   return { claims: out, twins }
 }
+
+/**
+ * A stored field that repeats a written heading's demo words, in the same entity, takes the heading's new words. The kit reads
+ * a printed heading as one slot when two fields hold the same words, and the page may print the other: JA Boxing's memberships
+ * section prints its `main-section` ("Memberships<br/><span>workshops</span>"), while the kit took the module title for it.
+ * Before (dev lat30, 23/11/2026) the written title was printed nowhere and the demo heading stayed on /memberships.
+ * Only a stored field no file claims, of type text, whose demo words are those of a written slot with a heading or title role.
+ * @param {{ kit: object, contentMap: { slots?: object[] } | null, claims: object[] }} input
+ * @returns {{ claims: object[], twins: Map<string, string> }}
+ */
+export function storedRepeatTwins({ kit, contentMap, claims }) {
+  const filed = new Map()
+  for (const c of each(claims)) if (!filed.has(c?.slot)) filed.set(c.slot, c)
+  const byKey = new Map(each(contentMap?.slots).map((s) => [s?.key, s]))
+  const roles = new Map()
+  for (const b of each(kit?.blocks))
+    for (const s of slotsOf(b)) if (typeof s?.id === 'string') roles.set(s.id, s.role)
+  const entityOf = (key) => key.slice(0, key.lastIndexOf('.'))
+  // The written headings by entity and demo words.
+  const written = new Map()
+  for (const [slot, c] of filed) {
+    if (c?.kind !== 'text' || !HEADING.test(String(roles.get(slot) ?? ''))) continue
+    const key = contentMapKey(slot)
+    const demo = wordsOf(byKey.get(key)?.sample)
+    if (demo) written.set(`${entityOf(key)} ${demo}`, c)
+  }
+  const out = []
+  const twins = new Map()
+  for (const field of each(kit?.storedFields)) {
+    const slot = field?.slot
+    if (typeof slot !== 'string' || filed.has(slot) || twins.has(slot)) continue
+    const key = contentMapKey(slot)
+    if (byKey.get(key)?.type !== 'text') continue
+    const source = written.get(`${entityOf(key)} ${wordsOf(byKey.get(key)?.sample)}`)
+    if (!source || source.slot === slot) continue
+    twins.set(slot, source.slot)
+    out.push({ ...source, slot })
+  }
+  return { claims: out, twins }
+}
