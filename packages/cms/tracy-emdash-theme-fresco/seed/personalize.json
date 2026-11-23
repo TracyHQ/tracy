@@ -322,9 +322,12 @@
       "field": "items",
       "itemFields": [
         "sub_title",
-        "desc"
+        "title",
+        "desc",
+        "button",
+        "button_2"
       ],
-      "brief": "the home page's opening: a welcome line of three or four words (sub_title) and one inviting sentence about this restaurant's food (desc), no brand name, year, address or number"
+      "brief": "the home page's opening: a welcome line of three or four words (sub_title), the main heading (title: the kind of restaurant this is and its name, two to five words), one inviting sentence about this restaurant's food (desc), and the captions of its two buttons (button: to the menu; button_2: to book a table; one to three words each), no year, address or number"
     },
     {
       "collection": "features_intro",
@@ -619,6 +622,12 @@
       "fields": [
         "title"
       ]
+    },
+    {
+      "collection": "hero",
+      "fields": [
+        "title"
+      ]
     }
   ],
   "trim": [
@@ -650,5 +659,21 @@
     "teams/about-team.section_title",
     "gallery/home-gallery-1.items",
     "gallery/home-gallery-2.items"
+  ],
+  "forms": [
+    {
+      "slug": "contact",
+      "fields": {},
+      "brief": "the contact form of this restaurant"
+    }
+  ],
+  "terms": [
+    {
+      "taxonomy": "category",
+      "collections": [
+        "posts"
+      ],
+      "brief": "a group of news this restaurant publishes (kitchen stories, cooking tips, dishes, dining-room news)"
+    }
   ]
 }

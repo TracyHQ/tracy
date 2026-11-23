@@ -243,3 +243,19 @@ test('IDENT-2: under a system the demo logo is drawn in the heading colour throu
   )
   assert.match(read('src/components/site/Header.astro'), /class="fr-logo-ink" role="img"/)
 })
+
+test("LANG-2: every form of tools/forms.json has a `forms` rule (its words are translated and its mailbox is the customer's), and the taxonomy and the hero words are covered", () => {
+  const forms = JSON.parse(read('tools/forms.json')).forms
+  assert.ok(forms.length > 0)
+  for (const form of forms) {
+    const base = form.slug.replace(/-[a-z]{2}(?:-[a-z]{2})?$/i, '')
+    assert.ok(
+      (map.forms ?? []).some((r) => r.slug === base),
+      `${form.slug} has no forms rule`
+    )
+  }
+  assert.ok((map.terms ?? []).some((r) => r.taxonomy === 'category' && r.collections.includes('posts')))
+  const hero = map.copy.find((c) => c.collection === 'hero' && c.field === 'items')
+  for (const prop of ['sub_title', 'title', 'desc', 'button', 'button_2'])
+    assert.ok(hero.itemFields.includes(prop), `hero ${prop}`)
+})

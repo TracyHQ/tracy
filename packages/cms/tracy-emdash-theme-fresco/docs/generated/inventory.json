@@ -1377,7 +1377,7 @@
     "src/views/NotFound.astro": "sha256:5e06ccd62d9c3f0e19e34a328e39bae37d9a66f9ad3f5062a13da27f402ed987",
     "src/views/Offer.astro": "sha256:2f04e1b152088da24dc53708236dd78f30341274924d17387845224d0b713a90",
     "src/views/Post.astro": "sha256:a837aeb30af1c6ae35db8740efda1a1035855f9975ed43617a23dca8629718a3",
-    "src/views/Search.astro": "sha256:ab44a9bf361f6f4c03f719fead88c9b195b1a78c08a95aa4cff76008281c7740",
+    "src/views/Search.astro": "sha256:aa5f18ddbc32af9d573a5f40cc546b9dab9005558c663fd3497a050d775446db",
     "template.config.json": "sha256:09871f79ca4f26827f4f8bad3da5680c7373bd052f726c50cf6c4d75dc955b37",
     "tools/forms.json": "sha256:1556e5870494f7795f554ee336b37a7674d78ed1f1b904a308e4785dee1195f9",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"

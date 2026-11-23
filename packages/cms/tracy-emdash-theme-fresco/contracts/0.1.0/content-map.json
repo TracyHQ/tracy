@@ -3317,14 +3317,11 @@
         "item": 0,
         "sub": "btn_link_2"
       },
-      "type": "text",
+      "type": "url",
       "sample": "/contact",
       "label": "Items 1 \u2014 Btn link 2",
       "role": "editorial.navigation_url",
-      "customize": "keep",
-      "fit": {
-        "measured": false
-      }
+      "customize": "keep"
     },
     {
       "key": "hero.home-hero.items[0].btn_type_2",

@@ -61,7 +61,7 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 			<div class="fr-container fr-fixed">
 				<div class="fr-search">
 					<form class="fr-search-form" action={href(locale, '/search')} method="get" role="search">
-						<label for="fr-q">{w.searchTerms}</label>
+						<label for="fr-q">{w.search}</label>
 						<div class="fr-search-row">
 							<input id="fr-q" type="search" name="q" value={q} placeholder={site.search_placeholder} autocomplete="off" />
 							<button type="submit" class="fr-btn is-solid" {...$c('search_button')}>{site.search_button}</button>
