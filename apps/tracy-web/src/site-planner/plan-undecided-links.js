@@ -87,3 +87,45 @@ export function withUndecidedLinksSettled(plan, kit) {
   if (!changed) return plan
   return { ...plan, ...(Array.isArray(plan.sharedBlocks) ? { sharedBlocks } : {}), pages }
 }
+
+/**
+ * A card's link that opens its own item (`go-to-item`: a listing card's title or button, whose kit target is the item's own
+ * page) leads there: the template prints the item's address in the card, and the write step has no door to move it. A plan
+ * that sends it elsewhere is corrected to the item's page when the plan keeps that page; a dropped item's card stays with
+ * the planner. Dev lat29 and lat30 (23/11/2026): JA Boxing's plan sent the advanced class card to the beginner page, and the
+ * write step refused the link ("it keeps opening /classes/advanced-boxing"), eleven refused lines at lat30.
+ * @param {any} plan
+ * @param {any} kit
+ */
+export function withItemLinksToTheirItems(plan, kit) {
+  if (!plan || typeof plan !== 'object' || !kit || typeof kit !== 'object') return plan
+  const { linkIx } = indexKit(kit)
+  const kept = new Set(
+    each(plan.pages)
+      .filter((p) => p?.decision === 'keep')
+      .map((p) => p.id)
+  )
+  const pageByPath = new Map(each(kit.pages).map((p) => [slashless(p?.path), p?.id]))
+  let changed = false
+  const fix = (decision) => {
+    if (!decision || typeof decision !== 'object' || !Array.isArray(decision.links)) return decision
+    let moved = false
+    const links = decision.links.map((l) => {
+      const kitLink = linkIx.get(l?.link)
+      if (kitLink?.action !== 'go-to-item' || !kitLink.target) return l
+      const own = pageByPath.get(slashless(kitLink.target))
+      if (!own || !kept.has(own) || l.leadsTo === own || !kept.has(l.leadsTo)) return l
+      moved = true
+      return { ...l, leadsTo: own }
+    })
+    if (!moved) return decision
+    changed = true
+    return { ...decision, links }
+  }
+  const sharedBlocks = each(plan.sharedBlocks).map(fix)
+  const pages = each(plan.pages).map((p) =>
+    p?.decision === 'keep' && Array.isArray(p.blocks) ? { ...p, blocks: p.blocks.map(fix) } : p
+  )
+  if (!changed) return plan
+  return { ...plan, ...(Array.isArray(plan.sharedBlocks) ? { sharedBlocks } : {}), pages }
+}

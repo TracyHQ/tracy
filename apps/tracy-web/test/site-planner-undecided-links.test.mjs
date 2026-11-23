@@ -6,7 +6,10 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { withPageBlocksRepaired } from '../src/site-planner/plan-shape-repairs.js'
-import { withUndecidedLinksSettled } from '../src/site-planner/plan-undecided-links.js'
+import {
+  withItemLinksToTheirItems,
+  withUndecidedLinksSettled
+} from '../src/site-planner/plan-undecided-links.js'
 
 const KIT = JSON.parse(
   readFileSync(
@@ -89,4 +92,26 @@ test("a page's blocks under another name are its blocks, and a shared block deci
     pages: [{ id: 'page-home', decision: 'keep', blocks: [{ block: 'block-156' }] }]
   }
   assert.equal(withPageBlocksRepaired(fine), fine)
+})
+
+test("a card's link that opens its own item leads to that item's kept page, and stays with the planner when it is dropped", () => {
+  // Dev lat29/lat30: the advanced class card was sent to the beginner page; the write step has no door to move a card's link.
+  const listing = (leadsTo) => ({
+    block: 'block-160',
+    decision: 'keep',
+    seen: 'the classes',
+    links: [{ link: 'block-160.link-2', labelSlot: 'menuItem-189.0', leadsTo }]
+  })
+  const make = (advanced) => ({
+    sharedBlocks: [],
+    pages: [
+      { id: 'page-home', decision: 'keep', blocks: [listing('page-classes_beginner-boxing')] },
+      { id: 'page-classes_advanced-boxing', decision: advanced, blocks: [] },
+      { id: 'page-classes_beginner-boxing', decision: 'keep', blocks: [] }
+    ]
+  })
+  const out = withItemLinksToTheirItems(make('keep'), KIT)
+  assert.equal(out.pages[0].blocks[0].links[0].leadsTo, 'page-classes_advanced-boxing')
+  const dropped = make('drop')
+  assert.equal(withItemLinksToTheirItems(dropped, KIT), dropped, 'a dropped item stays with the planner')
 })
