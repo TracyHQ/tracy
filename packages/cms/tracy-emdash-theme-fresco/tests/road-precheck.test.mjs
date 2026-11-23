@@ -142,16 +142,113 @@ test('LANG-2: every interface word the components print from a labels collection
   // The booking dialog kept "Book Table" in English once (book_btn missing from the rule) and the footer's
   // "Privacy Policy" another time (a key ending in _link is read as an address): both are read from the tool itself.
   assert.deepEqual(untranslatedInterfaceWords(map), [])
-  // `title` is the entry's name in the admin, and words a visitor reads in these four: the heading of an inner page
-  // (masthead), the title of a page (pages), the accessible name of the testimonial and gallery regions
-  for (const collection of ['masthead', 'pages', 'testimonials', 'gallery'])
-    assert.ok(
-      map.labels.find((l) => l.collection === collection).fields.includes('title'),
-      `${collection} title`
-    )
 })
 
-test('LANG-2: the check above is not vacuous (a field taken out of a rule, or a key the tool reads as an address, is found)', () => {
+// What the components print, collection by collection. A component says which collection it reads with `stampFor(request,
+// '<collection>', …)`; the variables `entry` (the stamped collection), `site` (chrome), `c` (contact), `page` and `p`
+// (pages) and `post` and `a` (posts) name the entry a field is read from, and an edit attribute `$x('<field>')` names the
+// field it makes editable. Any reference counts: visible text, aria-label, aria-labelledby target, alt, title, sr-only.
+const SECTION_COLLECTIONS = ['features_intro', 'menu', 'gallery', 'testimonials', 'teams', 'happyhours']
+const ENTRY_VARIABLES = {
+  site: 'chrome',
+  'chrome.site': 'chrome',
+  c: 'contact',
+  page: 'pages',
+  p: 'pages',
+  pageEntry: 'pages',
+  post: 'posts',
+  a: 'posts'
+}
+function printedFields() {
+  const printed = new Map()
+  const add = (collection, field, file) => {
+    if (!printed.has(collection)) printed.set(collection, new Map())
+    printed.get(collection).set(field, file)
+  }
+  const files = []
+  const walk = (dir) => {
+    for (const f of readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
+      if (f.isDirectory()) walk(path.join(dir, f.name))
+      else if (/\.(astro|ts)$/.test(f.name))
+        files.push([path.join(dir, f.name), read(path.join(dir, f.name))])
+    }
+  }
+  walk('src')
+  for (const [file, text] of files) {
+    const stamped = [...text.matchAll(/stampFor\([^,]+,\s*'([a-z_]+)'/g)].map((m) => m[1])
+    const own = file.endsWith('SectionHead.astro')
+      ? SECTION_COLLECTIONS
+      : stamped.filter((s) => !['pages', 'chrome', 'posts', 'contact'].includes(s))
+    for (const m of text.matchAll(/\b(entry|chrome\.site|site|c|page|p|post|a)\.([a-z_][a-z0-9_]*)\b/g)) {
+      if (m[1] === 'entry') for (const collection of own) add(collection, m[2], file)
+      else add(ENTRY_VARIABLES[m[1]], m[2], file)
+    }
+    for (const m of text.matchAll(/\$[a-zA-Z]+\('([a-z_][a-z0-9_]*)'\)/g))
+      for (const collection of own.length > 0 ? own : stamped) add(collection, m[1], file)
+  }
+  return printed
+}
+
+// Not interface words: switches, numbers, pictures, names and dates. (An address is no word by its value, never by its key:
+// `hp_link_text` is words although its key says link.)
+const NOT_WORDS =
+  /^_|(?:^|_)(?:id|key|code|handle|show|brand|name|layout|variant|state|status|style|color|colour|type|columns|col|number|auto|time|size|align|platform|network|mark|icon|logo|image|img|slug|video|date|created|cover|background|avatar)(?:_|$)/i
+
+// Printed on a page and written by no personalize rule: decided and listed in DECISIONS.md D48 (the demo post tags) and
+// the author names of the demo posts (names of people, not interface words).
+const PRINTED_AND_KEPT = ['posts.author', 'posts.tags']
+
+/** The (collection.field) pairs a component prints that no personalize rule or keptText entry covers. */
+function uncoveredPrintedFields(rules) {
+  const entries = Object.entries(seed.content).flatMap(([collection, rows]) =>
+    rows.map((r) => ({
+      collection,
+      slug: r.slug,
+      locale: r.locale ?? seed.defaultLocale,
+      data: r.data ?? {}
+    }))
+  )
+  const offered = new Set(
+    chromeLabelsOf({ map: rules, seedEntries: entries, locale: seed.defaultLocale, patches: new Map() }).map(
+      (l) => l.id
+    )
+  )
+  const covered = (collection, field) =>
+    [...offered].some((id) => id.startsWith(`${collection}/`) && id.split('.')[1] === field) ||
+    [...rules.copy, ...rules.facts, ...(rules.identity ?? []), ...(rules.blocks ?? [])].some(
+      (r) => r.collection === collection && r.field === field
+    ) ||
+    (rules.rewrite ?? []).some(
+      (r) =>
+        r.collection === collection &&
+        ((r.fields ?? []).includes(field) || r.body === field || field in (r.lists ?? {}))
+    ) ||
+    rules.keptText.some((id) => id.startsWith(`${collection}/`) && id.endsWith(`.${field}`))
+  const out = []
+  for (const [collection, fields] of printedFields()) {
+    const rows = entries.filter((e) => e.collection === collection && e.locale === seed.defaultLocale)
+    for (const [field, file] of fields) {
+      const words = rows.some((r) => {
+        const v = r.data[field]
+        return (
+          typeof v === 'string' &&
+          v.length <= 120 &&
+          isLabelText(v) &&
+          !/\.(jpe?g|png|webp|svg)$|^images\//.test(v)
+        )
+      })
+      if (!words || NOT_WORDS.test(field) || PRINTED_AND_KEPT.includes(`${collection}.${field}`)) continue
+      if (!covered(collection, field)) out.push(`${collection}.${field} (printed by ${file})`)
+    }
+  }
+  return out
+}
+
+test('LANG-2: every text a component prints (visible or as an accessible name) is covered by a personalize rule or a keptText entry', () => {
+  assert.deepEqual(uncoveredPrintedFields(map), [])
+})
+
+test('LANG-2: the derivation finds what is missing (hero.title, book_btn and a key the tool reads as an address are taken out in turn)', () => {
   const without = (collection, field) => ({
     ...map,
     labels: map.labels.map((l) =>
@@ -159,17 +256,19 @@ test('LANG-2: the check above is not vacuous (a field taken out of a rule, or a 
     )
   })
   for (const [collection, field] of [
+    ['hero', 'title'],
     ['book_table', 'book_btn'],
     ['book_table', 'order_btn'],
-    ['book_table', 'book_phone_title'],
     ['teams', 'title_btn'],
     ['features_intro', 'button'],
-    ['happyhours', 'hp_link_text']
+    ['happyhours', 'hp_link_text'],
+    ['testimonials', 'title'],
+    ['gallery', 'title'],
+    ['masthead', 'title'],
+    ['pages', 'title']
   ])
     assert.ok(
-      untranslatedInterfaceWords(without(collection, field)).some(
-        (m) => m.startsWith(`${collection}/`) && m.includes(`.${field} `)
-      ),
+      uncoveredPrintedFields(without(collection, field)).some((m) => m.startsWith(`${collection}.${field} `)),
       `${collection}.${field} out of its rule is not found`
     )
 })
