@@ -8,6 +8,7 @@ import {
 } from '../src/site-pictures/picture-check/check-pictures.js'
 import { indexInputs } from '../src/site-pictures/picture-check/inputs-index.js'
 import { rungsFor } from '../src/site-pictures/ladder-rungs.js'
+import { hasTextOver } from '../src/site-pictures/darken.js'
 import { breaks, entryOf, inputs, ruleOf } from './_site-pictures-check.mjs'
 
 const ALL = ['P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08', 'P09', 'P10', 'P11', 'P12', 'P13']
@@ -542,4 +543,36 @@ test('an observed place or owner-post photo stays documentary even when its wish
     assert.equal(ruleOf(i, 'P07').status, 'fail')
     assert.equal(idx.documentaryFrame('block-2.1'), false, 'a generic cutout remains an illustration')
   }
+})
+
+test("a hero's frame tries a real photo of the business before it is hidden; any other frame keeps its order", () => {
+  // Dev lat28 and lat29 (22–23/11/2026): JA Diner's and JA Boxing's home heroes were hidden by the hide rung.
+  const frames = new Map([
+    ['hero.0', { id: 'hero.0', canHide: true, blockRole: 'hero' }],
+    ['section.0', { id: 'section.0', canHide: true, blockRole: 'section' }]
+  ])
+  const wishes = new Map([
+    ['hero.0', { frame: 'hero.0', match: 'specific' }],
+    ['section.0', { frame: 'section.0', match: 'specific' }]
+  ])
+  const idx = { frames, wishes, documentaryFrame: () => false, galleryTile: () => null }
+  const hero = rungsFor(idx, 'hero.0')
+  assert.ok(hero.indexOf('any-photo') < hero.indexOf('hide'), hero.join(' '))
+  assert.ok(hero.indexOf('best-minor') < hero.indexOf('any-photo'))
+  assert.deepEqual(
+    [...hero].sort(),
+    [...rungsFor(idx, 'section.0')].sort(),
+    'the same rungs, in another order'
+  )
+  const section = rungsFor(idx, 'section.0')
+  assert.ok(section.indexOf('hide') < section.indexOf('any-photo'), section.join(' '))
+})
+
+test('a frame spanning the page in a hero has text over it; a narrow one, or one in a section, has none unless marked', () => {
+  // Dev lat29 (23/11/2026): JA Diner's masthead frames (1440 wide, hero block) carried no text-over mark.
+  assert.equal(hasTextOver({ blockRole: 'hero', width: 1440 }), true)
+  assert.equal(hasTextOver({ blockRole: 'hero', kindEvidence: { box: { width: 1440 } } }), true)
+  assert.equal(hasTextOver({ blockRole: 'hero', width: 216 }), false, 'a small picture beside the heading')
+  assert.equal(hasTextOver({ blockRole: 'section', width: 1440 }), false)
+  assert.equal(hasTextOver({ blockRole: 'section', width: 1440, textOver: true }), true)
 })

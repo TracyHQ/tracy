@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { ownerTable } from '../src/write-step/owner-table.js'
-import { copy, plan, runStep as run } from './_write-step-run.mjs'
+import { copy, KIT, plan, runStep as run } from './_write-step-run.mjs'
 
 const linkOn = (p, block, slot) => {
   const decision = p.pages.flatMap((page) => page.blocks ?? []).find((d) => d.block === block)
@@ -31,6 +31,38 @@ test('a plan hide against writer words: the plan wins, the words are not sent, e
   assert.equal(report.disputes[0].settled.owner, 'plan')
   assert.notEqual(site.held['module-2.3'], 'Words the plan hides')
   assert.equal(line('block-2.1').status, 'written')
+})
+
+test('words the writer puts in an address slot are left out, never written as a link to a page that does not exist', async () => {
+  // Dev lat29 (23/11/2026): a caption in each of JA Diner's About gallery link fields made eight links to 404 pages.
+  const kit = KIT()
+  kit.doc.blocks
+    .find((b) => b.id === 'block-2')
+    .slots.push(
+      { id: 'block-2.40', type: 'text', role: 'editorial.navigation_url', maxCharacters: 255 },
+      { id: 'block-2.41', type: 'text', role: 'editorial.navigation_url', maxCharacters: 255 }
+    )
+  const c = copy()
+  c.slots.push(
+    { slot: 'block-2.40', owner: 'writer', text: 'Guests dining on Emirati dishes', factIds: [] },
+    { slot: 'block-2.41', owner: 'writer', text: '/contact', factIds: [] }
+  )
+  const { report, site, line } = await run(
+    { copy: c },
+    { extraKeys: ['module-2.40', 'module-2.41'] },
+    { kit }
+  )
+  assert.equal(report.status, 'done', JSON.stringify(report.cause))
+  const sent = Object.assign({}, ...site.applies().map((a) => a.params.changes ?? {}))
+  assert.equal(sent['module-2.40'], undefined, 'the caption is not sent as an address')
+  assert.equal(sent['module-2.41'], '/contact', 'an address is written')
+  assert.ok(
+    report.unaddressable.some(
+      (u) => u.slot === 'block-2.40' && /words in an address slot are no address/.test(u.reason)
+    ),
+    JSON.stringify(report.unaddressable)
+  )
+  assert.equal(line('block-2.41').status, 'written')
 })
 
 test("step 8's alt over the writer's words on that alt is the rule, not a dispute; the writer's words still lose", () => {

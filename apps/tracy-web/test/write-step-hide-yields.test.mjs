@@ -295,7 +295,7 @@ test('a hidden link whose words the plan hides too takes the address the site ca
   assert.ok(!alone.emptySlots.includes('module-100.1'))
 })
 
-test('a tab the plan hides stays as the tab it is; a frame the kit read on no page leaves with nothing; a "Website" line goes with its address', () => {
+test('a tab or a photo control the plan hides stays as it is; a frame the kit read on no page leaves with nothing; a "Website" line goes with its address', () => {
   const tabKit = {
     pages: [{ id: 'page-home', path: '/', blocks: { 1440: ['block-97', 'block-106', 'body-contact'] } }],
     blocks: [
@@ -310,6 +310,14 @@ test('a tab the plan hides stays as the tab it is; a frame the kit read on no pa
             action: 'page-control',
             opens: { kind: 'panel', element: '#m' },
             labelId: 'block-100.32'
+          },
+          // A gallery photo that opens itself in a lightbox (dev lat29, JA Boxing block-166): no words, no address.
+          {
+            id: 'block-97.link-2',
+            label: null,
+            target: null,
+            action: 'page-control',
+            icon: { mechanism: 'image-file', file: 'item-1.jpg', classes: null, title: null, network: null }
           }
         ]
       },
@@ -385,6 +393,7 @@ test('a tab the plan hides stays as the tab it is; a frame the kit read on no pa
     kit: tabKit,
     owners: new Map([
       hide('block-97.link-1'),
+      hide('block-97.link-2'),
       hide('block-106.24'),
       hide('contact-1.5'),
       hide('body-contact.link-5')
@@ -396,6 +405,11 @@ test('a tab the plan hides stays as the tab it is; a frame the kit read on no pa
     rowsRemove: true
   })
   assert.equal(order.orders.get('block-97.link-1').via, 'inpage')
+  assert.equal(
+    order.orders.get('block-97.link-2').via,
+    'inpage',
+    'a photo that opens itself stays its picture'
+  )
   assert.deepEqual(order.orders.get('block-106.24'), {
     via: 'unshown',
     key: 'module-106.24',
@@ -421,6 +435,7 @@ test('a tab the plan hides stays as the tab it is; a frame the kit read on no pa
     settled: new Map()
   }).hides
   assert.equal(lines.get('block-97.link-1').status, 'skipped')
+  assert.equal(lines.get('block-97.link-2').status, 'skipped')
   assert.equal(lines.get('block-106.24').status, 'hidden')
   assert.equal(lines.get('body-contact.link-5').status, 'hidden')
 })

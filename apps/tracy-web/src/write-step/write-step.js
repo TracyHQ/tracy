@@ -57,7 +57,9 @@ import { coordinatesOf, runPageSettings } from './page-settings-stage.js'
 import { runPhoneLinksStage, withPhoneLinks } from './phone-link-stage.js'
 import { phonesOf } from './phone-links.js'
 import { PICTURE_OWNER } from './picture-package.js'
-import { menuItemEntryTwins } from './menu-item-entries.js'
+import { titleRepeatTwins } from './title-repeats.js'
+import { kitSlotKinds } from '../lib/printed-in-body.js'
+import { entryPagesOf, menuItemEntryTwins, neededEntry } from './menu-item-entries.js'
 import { preparePictureStage } from './picture-stage.js'
 import { planLinkTable } from './plan-link-table.js'
 import { runPrintedStage } from './printed-stage.js'
@@ -133,6 +135,9 @@ function siteProblem({ reading, contract, changes }) {
  *   the site answers at, so a full link to a renamed address on one of them is rewritten too (renamed-link-stage.js)
  * @returns {Promise<object>} the write report; `status` is done, stopped (`cause` says why) or cancelled
  */
+/** What an address slot may hold: a scheme (https:, mailto:, tel:), a path, an anchor, a query or Joomla's index.php. */
+const ADDRESS = /^(?:[a-z][a-z0-9+.-]*:|\/|#|\?|index\.php)/i
+
 export async function runWriteStep(input) {
   const { siteKey, kit, contentMap = null, files } = input
   // Every write of the run goes through this door (look-guard.js), and what it refuses is never sent.
@@ -357,6 +362,31 @@ export async function runWriteStep(input) {
     })
     const provenanceProblems = exported.problems.filter((p) => p.code === 'ARTICLE_PROVENANCE')
     const refusedCopy = new Set(provenanceProblems.map((p) => p.where))
+    // Words in an address slot (a kit role ending in `_url`) are a link to a page that does not exist: before (dev lat29,
+    // 23/11/2026) the writer put a caption in each of JA Diner's About gallery link fields, and eight pictures linked to
+    // "/Guests dining on Emirati dishes" and the like, each a 404. They are left out; the slot keeps what it holds.
+    const roles = kitSlotKinds(kit.doc)
+    const wordsOf = (s) => (Array.isArray(s.items) ? s.items.join(' ') : String(s.text ?? '')).trim()
+    const wordsAsAddress = copyRead.view.slots.filter(
+      (s) =>
+        String(roles.get(s.slot)?.role ?? '').endsWith('_url') &&
+        wordsOf(s) !== '' &&
+        !ADDRESS.test(wordsOf(s))
+    )
+    for (const s of wordsAsAddress) {
+      refusedCopy.add(s.slot)
+      delete exported.mapping.changes[contentMapKey(s.slot)]
+    }
+    leaveOut(
+      wordsAsAddress.map((s) => ({
+        slot: s.slot,
+        key: contentMapKey(s.slot),
+        owner: 'writer',
+        step: 6,
+        reason:
+          'copy: words in an address slot are no address: a visitor would follow them to a page that does not exist'
+      }))
+    )
     leaveOut(
       provenanceProblems.map((p) => ({
         slot: String(p.where),
@@ -486,7 +516,27 @@ export async function runWriteStep(input) {
         pictures.changes && from in pictures.changes ? pictures.changes : exported.mapping.changes
       values[contentMapKey(slot)] = values[from]
     }
-    const speaking = [...filing, ...buttons.claims, ...entries.claims]
+    // An entry frame the picture step left empty is no frame left without a picture when a twin fills it, or when no kept
+    // page prints it (dev lat29, 23/11/2026: JA Diner's masthead entries of the login and registration pages, and those
+    // of About and Contact that took the Bookings photo, were four blocking faults).
+    const kept = unaddressable.filter((item) =>
+      neededEntry(item, {
+        twins: entries.twins,
+        entryPages: entryPagesOf({ kit: kit.doc, contentMap }),
+        kept: keptPagesOf(plan, kit.doc).map((p) => p.id)
+      })
+    )
+    unaddressable.splice(0, unaddressable.length, ...kept)
+    // A heading that repeats its page's demo title takes the page's new title (title-repeats.js).
+    const repeats = titleRepeatTwins({
+      plan,
+      kit: kit.doc,
+      contentMap,
+      claims: [...filing, ...buttons.claims, ...entries.claims]
+    })
+    for (const [slot, source] of repeats.twins)
+      exported.mapping.changes[contentMapKey(slot)] = exported.mapping.changes[contentMapKey(source)]
+    const speaking = [...filing, ...buttons.claims, ...entries.claims, ...repeats.claims]
     const keptClaims = new Set(speaking.filter((claim) => claim.kind !== 'hide').map((claim) => claim.slot))
     for (const claim of fromPlan) {
       if (!claim.hiddenList) continue
@@ -525,6 +575,9 @@ export async function runWriteStep(input) {
     extras = withEveryMenuHide({ extras, owners: table.owners, contentMap })
     guard.know({ owners: table.owners, routes: brand.routes ?? null, copy, brief })
     report.keptPages = keptPagesOf(plan, kit.doc)
+    // The pages each per-menu-item entry prints on, for the checks that read which page shows which slot.
+    const entryPages = entryPagesOf({ kit: kit.doc, contentMap })
+    if (Object.keys(entryPages).length) report.entryPages = entryPages
     report.disputes = table.disputes
     report.unowned = unownedSlots({ plan, kit: kit.doc, owners: table.owners })
     const { changes, ...found } = routeChanges(exported.mapping.changes, kit.doc, view.slots)
@@ -925,6 +978,7 @@ export async function runWriteStep(input) {
         kit: kit.doc,
         lines: done.slots,
         keptPages: done.keptPages ?? [],
+        entryPages: report.entryPages ?? null,
         pageHtml: (path) => input.pageHtml({ siteKey, path })
       })
     )

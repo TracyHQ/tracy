@@ -104,3 +104,45 @@ export function menuItemEntryTwins({ plan, kit, contentMap, claims }) {
   }
   return { claims: out, twins }
 }
+
+/**
+ * The pages that print each entry of a module's per-menu-item lists: an entry prints only on the page whose title is its
+ * entry of the title list, and nowhere else. The site check reads a kit block as shown whole on every page that holds it;
+ * for these entries that is not so, and a picture the twins share is printed once per page (dev lat29, 23/11/2026: three
+ * masthead entries sharing one photo were read as two written and printed nowhere).
+ * @param {{ kit: object, contentMap: { slots?: object[] } | null }} input
+ * @returns {Record<string, string[]>} entry slot id -> the kit page ids that print it (none: printed on no page of the kit)
+ */
+export function entryPagesOf({ kit, contentMap }) {
+  const slots = each(contentMap?.slots)
+  const byKey = new Map(slots.map((s) => [s?.key, s]))
+  const pagesOf = new Map()
+  for (const page of each(kit?.pages)) {
+    if (typeof page?.titleSlot !== 'string') continue
+    const title = byKey.get(contentMapKey(page.titleSlot))
+    const at = entryOf(title)
+    if (!at || at.list !== 'title') continue
+    const key = `${title.entity} ${at.index}`
+    pagesOf.set(key, [...(pagesOf.get(key) ?? []), page.id])
+  }
+  const out = {}
+  for (const s of slots) {
+    const at = entryOf(s)
+    if (!at || typeof s.entity !== 'string') continue
+    out[slotIdOf(s.key)] = pagesOf.get(`${s.entity} ${at.index}`) ?? []
+  }
+  return out
+}
+
+/**
+ * Whether a frame the picture step left empty still needs a picture: not an entry a twin fills, nor one no kept page prints.
+ * Any other item is kept as it is.
+ * @param {{ slot: string, owner?: string }} item a left-out item of the write step
+ * @param {{ twins: Map<string, string>, entryPages: Record<string, string[]>, kept: string[] }} context
+ */
+export function neededEntry(item, { twins, entryPages, kept }) {
+  if (item?.owner !== 'picture') return true
+  if (twins.has(item.slot)) return false
+  const on = entryPages[item.slot]
+  return !Array.isArray(on) || on.some((id) => kept.includes(id))
+}

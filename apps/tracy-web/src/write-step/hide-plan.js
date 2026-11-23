@@ -385,8 +385,13 @@ export function hideOrders({
       // A tab that opens a panel of this page has no slot and no address: it stays, doing what it does; the plan that hides
       // it says it leads nowhere (JA Diner's menu tabs, 16/11/2026), and its words are its label's. A form's button is not one:
       // it follows its form (form-close.js).
+      // So does a picture that opens itself in a lightbox: the control is its picture (no words, no address), and the
+      // picture is its frame's to fill or hide. Before (dev lat29, 23/11/2026), JA Boxing's six gallery photo controls the
+      // plan hid were six "the contract has no slot" blocks.
       const control = kitLinks.get(slot)
-      if (actsInsidePage(control) && control.opens?.kind === 'panel') {
+      const isItsPicture =
+        control?.icon?.mechanism === 'image-file' && !control.label && !control.target && !control.opens
+      if (actsInsidePage(control) && (control.opens?.kind === 'panel' || isItsPicture)) {
         orders.set(slot, { via: 'inpage', key })
         continue
       }

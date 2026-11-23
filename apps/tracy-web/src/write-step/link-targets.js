@@ -42,6 +42,21 @@ function pageAddress(page, { kit, rows, articles }) {
 
 const socialUrl = (value) => (typeof value === 'object' ? value?.url : value)
 
+/**
+ * An address the plan names, in the one form the site's link slots take (the Joomla plugin's QuickstartContract checkValue:
+ * `https://` with no space, `tel:` with digits, a path, an anchor): spaces are encoded, `http://` becomes `https://`, and a
+ * phone number keeps its digits. Before (dev lat29, 23/11/2026), JA Diner's "Book a table" and "Get directions" buttons were
+ * refused as "Unsupported CTA URL" and kept the template's addresses.
+ * @param {string} target
+ */
+export function plainAddress(target) {
+  const text = String(target ?? '').trim()
+  if (/^tel:/i.test(text))
+    return `tel:${text.slice(4).trim().startsWith('+') ? '+' : ''}${digitsOf(text.slice(4))}`
+  if (/^https?:\/\//i.test(text)) return text.replace(/^http:\/\//i, 'https://').replace(/\s/g, '%20')
+  return text.replace(/\s/g, '%20')
+}
+
 /** The address of a contact fact, or the reason it has none. */
 function factAddress(channel, fact) {
   const words = `the fact ${fact.id}`
@@ -94,7 +109,7 @@ export function linkTarget(leadsTo, site) {
     }
     return linkTarget(legal.use, site)
   }
-  if (ADDRESS.test(target)) return { kind: 'address', url: target }
+  if (ADDRESS.test(target)) return { kind: 'address', url: plainAddress(target) }
   const planned = each(plan?.pages).find((p) => p?.id === target)
   if (planned && planned.decision !== 'keep')
     return failed(`the plan drops ${target}, so a link to it would die`)

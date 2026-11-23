@@ -15,7 +15,7 @@ export const writtenNotPrintedGroup = {
     if (typeof pageHtml !== 'function')
       throw new GroupUnmeasured('No page reader was given, so no page could be read as a visitor reads it.')
     if (!kit) throw new GroupUnmeasured('No kit was given, so which page shows which slot is not known.')
-    const onPages = slotsOnPages(kit, report?.keptPages)
+    const onPages = slotsOnPages(kit, report?.keptPages, report?.entryPages)
     if (!onPages.size) throw new GroupUnmeasured('The write report names no kept page the kit knows.')
     const slots = printedSlotsOf(report?.slots, kit)
     const pages = new Map()

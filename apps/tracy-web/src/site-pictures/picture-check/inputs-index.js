@@ -17,7 +17,11 @@ function indexKit(kit) {
     if (!isObject(b)) continue
     for (const f of arr(b.frames))
       if (isObject(f) && typeof f.id === 'string' && !frames.has(f.id))
-        frames.set(f.id, { ...f, blockId: b.id })
+        frames.set(f.id, {
+          ...f,
+          blockId: b.id,
+          ...(typeof b.role === 'string' ? { blockRole: b.role } : {})
+        })
   }
   for (const f of frames.values())
     if (typeof f.twinOf === 'string' && f.twinOf)

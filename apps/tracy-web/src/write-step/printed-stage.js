@@ -71,11 +71,11 @@ function nextText(text, { wanted, nativeKeys }) {
  *   pageHtml: (path: string) => Promise<string | null> }} input `lines`: the report's slot lines; `pageHtml`: a page as the site serves it
  * @returns {Promise<object>} the report's `printed` section
  */
-export async function runPrintedStage({ door, siteKey, kit, lines, keptPages, pageHtml }) {
+export async function runPrintedStage({ door, siteKey, kit, lines, keptPages, entryPages = null, pageHtml }) {
   const call = doorCall(door, siteKey)
   const slots = printedSlotsOf(lines, kit)
   const status = new Map(each(lines).map((l) => [l.slot, l.status]))
-  const onPages = slotsOnPages(kit, keptPages)
+  const onPages = slotsOnPages(kit, keptPages, entryPages)
   const pages = await readPages([...onPages.keys()], pageHtml)
   const native = sitePrints({ onPages, pages, slots, native: true })
   const mates = rowMates(kit)

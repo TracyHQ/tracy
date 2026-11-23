@@ -119,7 +119,7 @@ export const altMatchesPictureGroup = {
       )
     const seen = seenByFrame(pictures)
     const stepEight = pictureAltsByFrame(pictures)
-    const onPages = slotsOnPages(kit, report?.keptPages)
+    const onPages = slotsOnPages(kit, report?.keptPages, report?.entryPages)
     const html = new Map()
     const pageOf = async (path) => {
       if (!html.has(path)) html.set(path, await pageHtml(path).catch(() => null))
