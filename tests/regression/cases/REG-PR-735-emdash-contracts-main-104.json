@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-735-emdash-contracts-main-104",
+  "kind": "fix",
+  "title": "Main carries the contract folders and slot-contract maxVersion of JA Restaurant EmDash 1.0.4 and JA Diner EmDash 0.1.4, so the production road can measure the published versions",
+  "pr": 735,
+  "area": "templates/contracts",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the checkout after pnpm install, run run.cmd (no database, no network).",
+    "S2: Confirm the test reports ok."
+  ],
+  "expect": [
+    "For every EmDash tag in template-profiles.json, the newest version with a row has packages/cms/tracy-emdash-theme-<name>/contracts/<version>/.",
+    "A slot contract under packages/design/tracy-ds-slot/templates names a maxVersion for that tag at or above that version."
+  ],
+  "selectors": {
+    "profiles": "apps/tracy-web/src/lib/template-profiles.json releases[tag]",
+    "contracts": "packages/cms/tracy-emdash-theme-<name>/contracts/<version>/",
+    "slots": "packages/design/tracy-ds-slot/templates/*.json maxVersion[tag]"
+  },
+  "fence": "an EmDash version with a profile row on a branch also has its contract folder and slot-contract range there",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/emdash-newest-contracts.test.mjs"]
+  }
+}
