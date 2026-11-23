@@ -19,7 +19,7 @@ Package `packages/cms/tracy-emdash-theme-fresco`, id `tracy-fresco`, EmDash 1.1.
 - Locked dependencies: `@hono/node-server` 2.1.6 and `hono` 4.13.16 (`pnpm audit --prod`: no known vulnerabilities).
 - Publication scan (`scripts/opensource/scan.mjs` with a bsdtar stand-in for unzip): 0 hits left in this package after the allow-list rows added to `public-tree.json`; 239 blocking hits remain in other packages of the tree (not touched here).
 - Language policy: `node scripts/check-language-policy.mjs --base <origin/develop sha> --head <HEAD>` finds 1510 lines (UI words, questionnaire, kit fixtures); the reasoned `lines` rows are generated into `<evidence-dir>/language-policy-rows.json` (1281 rows) and added to `scripts/language-policy.json` in the last commit.
-- Regression case `tests/regression/cases/REG-PR-738-emdash-fresco-0-1-0.json` (feat).
+- Regression case `tests/regression/cases/REG-PR-739-emdash-fresco-0-1-0.json` (feat).
 - `pnpm build:check`: see "Gate results" below.
 
 ## Lead decisions applied (2026-11-19)
@@ -147,7 +147,7 @@ node perf/carry-notes.mjs <old-run> <run>; node tools/qa-notes.mjs merge <run> -
 
 - `origin/develop` (311 commits ahead) was merged in with a merge commit. Conflicts were all "both sides add a theme to the same list" (develop added JA Essence, this branch JA Fresco): kept both in `apps/tracy-web/Dockerfile`, `turbo.json` and `apps/tracy-web/turbo.json`, `emdash-tool.js` and its test, `scripts/check-emdash-kit-sync.ts`, `scripts/check-tests.ts`, `docs/references/vocabulary.md`; `scripts/language-policy.json` and `scripts/opensource/public-tree.json` were merged as JSON (union of both sides' entries, then formatted); `docs/README.md` was regenerated with `pnpm docs:index`.
 - The theme package is byte-identical after the merge in everything the pack ships (only this `STATUS.md` differs from the tree pack-57 was cut from), so the release folder `chain-57/release.1`, the contracts and the approved kit still match; develop changed nothing the pack depends on.
-- The regression case is `tests/regression/cases/REG-PR-738-emdash-fresco-0-1-0.json`.
+- The regression case is `tests/regression/cases/REG-PR-739-emdash-fresco-0-1-0.json`.
 - `check-all --skip boot-graph` after the merge: every gate passes except two. `turbo-config` names only the git-ignored local binary `scripts/opensource/.bin/gitleaks` (this machine). `tests` fails in twelve files, none changed by this branch: WordPress `wp-contact-mail`, `wp-ja-nova`, `identity`, `wp-ja-morgan`, `render`; Joomla `capture-contract` (PHP `dom` and `mbstring` are missing here); quickstart-tools `content-coverage-code-projection`, `content-coverage-inline-markup`, `template-kit-inline-markup-sidecar`; fleet `joomla-contract-fetch`; web `website-opportunities-dubai-ranking`, `copy-verify`.
 
 ## Twenty-first state (pack-58: about description sanitised; release folder re-cut)
@@ -156,4 +156,4 @@ node perf/carry-notes.mjs <old-run> <run>; node tools/qa-notes.mjs merge <run> -
 - **pack-58** (clean install port 4438, artifact hash `48b11a7e…`, contract `ba07ceec…` unchanged). Fast Gate `fg-64`: all 426 tiles byte-identical to pack-57's `fg-63`, readings carried. Four full-scope runs `f58-*`: every site tile byte-identical to `f57-*`; 13 source tiles of four source shots flickered and were re-read (three notes, D22 and D46, closed by their lens). Nine stand receipts, `visual-review` and `independent` (Opus, pass), 16/16 gates, no `reusedFrom`.
 - **Final release folder:** `<evidence-dir>/chain-58/release.1` (replaces `chain-57/release.1`); it holds `design-system-roles.json` and the approved kit zip (sha256 `c2d19904…`, unchanged).
 - **Kit:** re-captured on a clean install of pack-58: 70 images, `imagesSha256` `aa181ec3…` = the approved one, so the approval (D45) holds and `contracts/0.1.0/template-kit.json` is unchanged.
-- The regression case grades each of its expectations through `tests/regression/scripts/REG-PR-738-emdash-fresco-0-1-0.mjs`.
+- The regression case grades each of its expectations through `tests/regression/scripts/REG-PR-739-emdash-fresco-0-1-0.mjs`.

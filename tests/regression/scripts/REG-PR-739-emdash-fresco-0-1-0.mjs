@@ -1,5 +1,5 @@
 /**
- * REG-PR-738-emdash-fresco-0-1-0: JA Fresco EmDash 0.1.0 holds together. One `ok -`/`not ok -` line
+ * REG-PR-739-emdash-fresco-0-1-0: JA Fresco EmDash 0.1.0 holds together. One `ok -`/`not ok -` line
  * per `expect` of the case: S2 the package's own tests (seed composition, brand, display locale,
  * link gate, data links, the set:html guard), S3 the slot roles check, the template kit sync and the
  * personalize dry run, S4 the versions in the lock.

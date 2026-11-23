@@ -1,8 +1,8 @@
 {
-  "id": "REG-PR-738-emdash-fresco-0-1-0",
+  "id": "REG-PR-739-emdash-fresco-0-1-0",
   "kind": "feat",
   "title": "JA Fresco EmDash 0.1.0: the seed composes every page, the fonts and licences ship, the slot roles pass, the personalization map names its fields no vulnerable hono is locked and no editor text reaches the page unsanitised",
-  "pr": 738,
+  "pr": 739,
   "area": "templates/emdash/fresco",
   "cms": ["em"],
   "needs": [],
@@ -24,10 +24,10 @@
   "selectors": {
     "about description": "src/lib/about-desc.ts (aboutDesc)",
     "set:html guard": "tests/set-html-safe.test.mjs",
-    "grader": "tests/regression/scripts/REG-PR-738-emdash-fresco-0-1-0.mjs (one ok line per expect)"
+    "grader": "tests/regression/scripts/REG-PR-739-emdash-fresco-0-1-0.mjs (one ok line per expect)"
   },
   "run": {
-    "cmd": ["node", "tests/regression/scripts/REG-PR-738-emdash-fresco-0-1-0.mjs"],
+    "cmd": ["node", "tests/regression/scripts/REG-PR-739-emdash-fresco-0-1-0.mjs"],
     "needs": [],
     "timeout_s": 600
   }
