@@ -516,7 +516,7 @@ jobs:
       # Not configure-aws-credentials: it would export the key to every later step of the job.
       - name: Log in to ECR
         if: steps.keys.outputs.ready == 'yes'
-        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
+        uses: aws-actions/amazon-ecr-login@7290e214a610b32bc0eef81748948b6d466a8783 # v2.2.0
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ECR_PUSH_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ECR_PUSH_AWS_SECRET_ACCESS_KEY }}
