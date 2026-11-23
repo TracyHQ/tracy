@@ -548,6 +548,7 @@
     {
       "collection": "features_intro",
       "fields": [
+        "button",
         "section_label",
         "section_title"
       ]
@@ -563,21 +564,24 @@
       "collection": "gallery",
       "fields": [
         "section_label",
-        "section_title"
+        "section_title",
+        "title"
       ]
     },
     {
       "collection": "testimonials",
       "fields": [
         "section_label",
-        "section_title"
+        "section_title",
+        "title"
       ]
     },
     {
       "collection": "teams",
       "fields": [
         "section_label",
-        "section_title"
+        "section_title",
+        "title_btn"
       ]
     },
     {
@@ -592,7 +596,9 @@
     {
       "collection": "book_table",
       "fields": [
+        "book_btn",
         "book_phone_title",
+        "order_btn",
         "order_title"
       ]
     },

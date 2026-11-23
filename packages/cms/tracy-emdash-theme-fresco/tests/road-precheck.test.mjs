@@ -51,6 +51,51 @@ test('LANG-2: personalize labels names every collection that has an interface-wo
   }
 })
 
+test('LANG-2: a labels rule that lists fields lists every interface word its components render', () => {
+  // Read from the components that render the collection: a short text field of the seed, printed as `entry.<field>`,
+  // that no copy, facts, identity or rewrite rule writes and whose key is not an address, a switch, a number or a name
+  // is a word of the interface, and the rule must list it (the booking dialog kept "Book Table" in English once).
+  const notALabel =
+    /^_|(?:^|_)(?:url|urls|link|links|href|slug|email|phone|hotline|image|img|icon|logo|network|platform|size|align|key|mark|id|code|handle|show|brand|name|layout|variant|state|status|style|color|colour|form|type|columns|col|number|auto|time)(?:_|$)/i
+  const code = []
+  const walk = (dir) => {
+    for (const f of readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
+      if (f.isDirectory()) walk(path.join(dir, f.name))
+      else if (/\.(astro|ts)$/.test(f.name)) code.push(read(path.join(dir, f.name)))
+    }
+  }
+  walk('src')
+  const components = code.join('\n')
+  const owned = (collection, slug, field) =>
+    [...map.copy, ...map.facts, ...(map.identity ?? [])].some(
+      (r) => r.collection === collection && (r.slug === undefined || r.slug === slug) && r.field === field
+    ) ||
+    (map.rewrite ?? []).some(
+      (r) =>
+        r.collection === collection &&
+        (!Array.isArray(r.slugs) || r.slugs.includes(slug)) &&
+        ((r.fields ?? []).includes(field) || r.body === field || field in (r.lists ?? {}))
+    )
+  const missing = []
+  for (const rule of map.labels.filter((l) => Array.isArray(l.fields))) {
+    for (const entry of defaults(rule.collection)) {
+      for (const [field, value] of Object.entries(entry.data ?? {})) {
+        if (typeof value !== 'string' || value.trim() === '' || value.length > 120) continue
+        if (field === 'title' || notALabel.test(field) || rule.fields.includes(field)) continue
+        if (!new RegExp(`entry\\.${field}\\b`).test(components)) continue
+        if (owned(rule.collection, entry.slug, field)) continue
+        missing.push(`${rule.collection}/${entry.slug}.${field} ("${value.slice(0, 24)}")`)
+      }
+    }
+  }
+  assert.deepEqual(missing, [], 'interface words the labels rule does not list')
+  // `title` is the entry's name in the admin; two blocks print it as the accessible name of their region
+  for (const collection of ['testimonials', 'gallery']) {
+    const rule = map.labels.find((l) => l.collection === collection)
+    assert.ok(rule.fields.includes('title'), `${collection}: the region's aria-label reads the title`)
+  }
+})
+
 test('ABOUT-2: every keptText id names a demo field that exists, and DECISIONS.md gives the reason', (t) => {
   // DECISIONS.md is repository-only: the package does not ship it, so there the reasons cannot be read.
   if (!existsSync(path.join(ROOT, 'DECISIONS.md')))

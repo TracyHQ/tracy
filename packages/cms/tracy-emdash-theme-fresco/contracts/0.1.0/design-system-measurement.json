@@ -8,9 +8,7 @@
   "machine": "linux-arm64",
   "measuredBy": "tdsr flow.mjs --cms emdash --template emdash-tracy-fresco",
   "flowVersion": "6852f5b72",
-  "modes": [
-    "native"
-  ],
+  "modes": ["native"],
   "systems": [
     "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
     "refero:2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
@@ -810,12 +808,7 @@
       "shot": "16-linear-phone.png"
     }
   ],
-  "controls": [
-    0,
-    0,
-    0,
-    0
-  ],
+  "controls": [0, 0, 0, 0],
   "evidence": null,
   "themeToggle": false,
   "preview": [
