@@ -1,7 +1,7 @@
 /**
  * REG-PR-739-emdash-fresco-0-1-0: JA Fresco EmDash 0.1.0 holds together. One `ok -`/`not ok -` line
  * per `expect` of the case: S2 the package's own tests (seed composition, brand, display locale,
- * link gate, data links, the set:html guard), S3 the slot roles check and the
+ * link gate, data links, the set:html guard, the road pre-check findings), S3 the slot roles check and the
  * personalize dry run, S4 the versions in the lock.
  */
 import { readFileSync } from 'node:fs'
@@ -19,7 +19,8 @@ const t = nodeTest(
     'tests/display-locale.test.mjs',
     'tests/link-gate.test.mjs',
     'tests/data-links.test.mjs',
-    'tests/set-html-safe.test.mjs'
+    'tests/set-html-safe.test.mjs',
+    'tests/road-precheck.test.mjs'
   ],
   { cwd: PKG, extra: ['--test-concurrency=1'] }
 )
@@ -31,7 +32,12 @@ for (const name of [
   'the chrome entry carries every word',
   'aboutDesc: a pasted event handler',
   'aboutDesc: the seed description keeps',
-  'every set:html in src'
+  'every set:html in src',
+  'PAGE-5: no link field',
+  'LANG-2: personalize labels names',
+  'ABOUT-2: every keptText id',
+  'PAGE-8: the Blog page is covered',
+  'DEF-1 and TEXT-1:'
 ])
   c.passes('S2', t, name)
 
