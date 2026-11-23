@@ -12,7 +12,7 @@
 	.fr-hh-info { color: var(--color-heading); font-size: min(var(--h2-size), 32px); }
 	.fr-hh-info-inner { line-height: 1.4; }
 	.fr-hh-txt { display: block; margin: 32px 0; white-space: pre-line; }
-	.fr-hh-badge { background: var(--ds-c-success, #5cb85c); color: var(--ds-c-bg, #0a0b0a); text-transform: uppercase; }
+	.fr-hh-badge { background: var(--ds-c-success, #5cb85c); color: var(--color-accent-on); text-transform: uppercase; }
 	.fr-hh-badge-text { display: inline-block; font-size: var(--h3-size); line-height: 1.1; }
 	.fr-hh-link { margin-bottom: 24px; }
 

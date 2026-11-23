@@ -28,7 +28,7 @@
 	.fr-contact .ec-form .ec-form-field--half { grid-column: span 1; }
 	.fr-contact .ec-form .ec-form-label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 	.fr-contact .ec-form .ec-form-input,
-	.fr-contact .ec-form input[type="text"], .fr-contact .ec-form input[type="email"], .fr-contact .ec-form textarea { display: block; width: 100%; padding: 10px 24px; background: rgba(255, 255, 255, .06); border: 1px solid color-mix(in srgb, var(--ds-c-fg, #fff) 7%, transparent); border-radius: var(--ds-input-radius, 0); color: var(--color-heading); font: 400 14px/21px var(--font-body); box-sizing: border-box; appearance: none; }
+	.fr-contact .ec-form input[type="text"], .fr-contact .ec-form input[type="email"], .fr-contact .ec-form textarea { display: block; width: 100%; padding: 10px 24px; background: color-mix(in srgb, var(--ds-c-fg, #fff) 6%, transparent); border: 1px solid color-mix(in srgb, var(--ds-c-fg, #fff) 7%, transparent); border-radius: var(--ds-input-radius, 0); color: var(--color-heading); font: 400 14px/21px var(--font-body); box-sizing: border-box; appearance: none; }
 	.fr-contact .ec-form textarea, .fr-contact .ec-form textarea.ec-form-input { height: 246px; padding-top: 24px; resize: vertical; }
 	.fr-contact .ec-form ::placeholder { color: color-mix(in srgb, var(--ds-c-fg, #fff) 50%, transparent); opacity: 1; }
 	.fr-contact .ec-form .ec-form-input:focus, .fr-contact .ec-form textarea:focus { outline: 1px solid var(--color-accent); outline-offset: 0; border-color: var(--color-accent); }

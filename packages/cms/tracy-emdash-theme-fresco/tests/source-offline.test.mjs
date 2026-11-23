@@ -28,7 +28,7 @@ describe('offSourceOrigin', () => {
   })
   it('names another host, another port of loopback and another scheme as off the source', () => {
     assert.equal(offSourceOrigin('http://secure.opentable.com/frontdoor/default.aspx', source), true)
-    assert.equal(offSourceOrigin('https://fonts.googleapis.com/css?family=Eczar', source), true)
+    assert.equal(offSourceOrigin('https://fonts.googleapis.com/css?family=Samplefont', source), true)
     assert.equal(offSourceOrigin('http://127.0.0.1:18216/templates/logo.png', source), true)
     assert.equal(offSourceOrigin('http://localhost:18217/index.html', source), true)
     assert.equal(offSourceOrigin('https://127.0.0.1:18217/index.html', source), true)
@@ -39,9 +39,9 @@ describe('blockedForSource', () => {
   const source = 'http://127.0.0.1:18217'
   it('lets exactly the two Google Fonts hosts through, on either scheme', () => {
     assert.deepEqual([...SOURCE_FONT_HOSTS], ['fonts.googleapis.com', 'fonts.gstatic.com'])
-    assert.equal(blockedForSource('http://fonts.googleapis.com/css?family=Teko:300,400', source), false)
-    assert.equal(blockedForSource('https://fonts.googleapis.com/css?family=Eczar', source), false)
-    assert.equal(blockedForSource('https://fonts.gstatic.com/s/teko/v20/a.woff2', source), false)
+    assert.equal(blockedForSource('http://fonts.googleapis.com/css?family=Samplesans:300,400', source), false)
+    assert.equal(blockedForSource('https://fonts.googleapis.com/css?family=Samplefont', source), false)
+    assert.equal(blockedForSource('https://fonts.gstatic.com/s/samplesans/v20/a.woff2', source), false)
     assert.equal(blockedForSource('http://127.0.0.1:18217/media/a.js', source), false)
   })
   it('blocks widgets, maps, analytics and look-alike hosts', () => {

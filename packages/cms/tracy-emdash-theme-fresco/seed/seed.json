@@ -1494,20 +1494,17 @@
 						{
 							"img_icon": "images/joomlart/feature/item-1.jpg",
 							"title": "Full Service Catering",
-							"description": "Learn More",
-							"link": "#"
+							"description": "Learn More"
 						},
 						{
 							"img_icon": "images/joomlart/feature/item-2.jpg",
 							"title": "Explosion of Flavors",
-							"description": "See Menu",
-							"link": "#"
+							"description": "See Menu"
 						},
 						{
 							"img_icon": "images/joomlart/feature/item-3.jpg",
 							"title": "Signature Drinks",
-							"description": "Explore the Bar",
-							"link": "#"
+							"description": "Explore the Bar"
 						}
 					],
 					"section_label": "",
@@ -1529,15 +1526,13 @@
 							"bg_color": "primary",
 							"img_bg": "images/joomlart/gallery/item-6.jpg",
 							"title": "Your Private Event",
-							"action_title": "<h3>on sale now!</h3> <span>For $50</span>",
-							"link": "#"
+							"action_title": "<h3>on sale now!</h3> <span>For $50</span>"
 						},
 						{
 							"bg_color": "dark",
 							"img_bg": "images/joomlart/gallery/item-4.jpg",
 							"title": "Book A Table",
-							"action_title": "<h3>Monday - Friday</h3> <span>7:00 am - 22:00 pm</span>",
-							"link": "#"
+							"action_title": "<h3>Monday - Friday</h3> <span>7:00 am - 22:00 pm</span>"
 						}
 					],
 					"section_label": "",
@@ -1558,14 +1553,12 @@
 						{
 							"img_icon": "images/joomlart/hero/item-2.jpg",
 							"title": "Laguna Beach",
-							"description": "4517 Washington Ave. Manchester, Kentucky 39495, USA<br/>\nOpening Hour: Mon - Fri : 9.00am - 22.00pm, Holidays : Close",
-							"link": "#"
+							"description": "4517 Washington Ave. Manchester, Kentucky 39495, USA<br/>\nOpening Hour: Mon - Fri : 9.00am - 22.00pm, Holidays : Close"
 						},
 						{
 							"img_icon": "images/joomlart/hero/item-3.jpg",
 							"title": "San Francisco",
-							"description": "317 Pacific C Hwy Huntington, CA 92648<br/>\nOpening Hour: Mon - Fri : 9.00am - 22.00pm, Holidays : Close",
-							"link": "#"
+							"description": "317 Pacific C Hwy Huntington, CA 92648<br/>\nOpening Hour: Mon - Fri : 9.00am - 22.00pm, Holidays : Close"
 						}
 					],
 					"section_label": "Visit Us",
@@ -1607,43 +1600,37 @@
 							"img_icon": "images/joomlart/icons/ic-chef.png",
 							"font_icon": "",
 							"title": "We are located in the city center",
-							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
-							"link": "#"
+							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
 						},
 						{
 							"img_icon": "images/joomlart/icons/food-delivery.png",
 							"font_icon": "",
 							"title": "Fresh ingredients from organic farms",
-							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
-							"link": "#"
+							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
 						},
 						{
 							"img_icon": "images/joomlart/icons/menu.png",
 							"font_icon": "",
 							"title": "Own fast delivery. 30 min Maximum",
-							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
-							"link": "#"
+							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
 						},
 						{
 							"img_icon": "images/joomlart/icons/online-order.png",
 							"font_icon": "",
 							"title": "Professional, experienced chefs",
-							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
-							"link": "#"
+							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
 						},
 						{
 							"img_icon": "images/joomlart/icons/quality.png",
 							"font_icon": "",
 							"title": "The highest standards of service",
-							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
-							"link": "#"
+							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
 						},
 						{
 							"img_icon": "images/joomlart/icons/entrances.png",
 							"font_icon": "",
 							"title": "Healsy Food for healthy body",
-							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam.",
-							"link": "#"
+							"description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
 						}
 					],
 					"section_label": "",
