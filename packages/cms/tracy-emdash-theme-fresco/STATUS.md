@@ -157,3 +157,10 @@ node perf/carry-notes.mjs <old-run> <run>; node tools/qa-notes.mjs merge <run> -
 - **Final release folder:** `<evidence-dir>/chain-58/release.1` (replaces `chain-57/release.1`); it holds `design-system-roles.json` and the approved kit zip (sha256 `c2d19904…`, unchanged).
 - **Kit:** re-captured on a clean install of pack-58: 70 images, `imagesSha256` `aa181ec3…` = the approved one, so the approval (D45) holds and `contracts/0.1.0/template-kit.json` is unchanged.
 - The regression case grades each of its expectations through `tests/regression/scripts/REG-PR-739-emdash-fresco-0-1-0.mjs`.
+
+## Twenty-second state (pack-61: road pre-check findings fixed in the package; release folder re-cut)
+
+- The Road to live pre-check of `chain-58/release.1` blocked. TCQR ABOUT-2, LANG-2, PAGE-5, PAGE-8 and TDSR DEF-1, TEXT-1 are fixed in the package (D47-D51); the readiness checkers read them as passing on pack-61.
+- Re-cuts: pack-59 (the fixes), pack-60 (an independent review of pack-59 failed on a shipped test that read a repo-only file and on a PAGE-8 decision that overstated what the rule does), pack-61 (the review of pack-60 failed on the form-field fill: the build lowers a `color-mix` in a plain rule to a solid white fallback; the tint now sits in a hand-written `@supports`). Every site tile of pack-61 is byte-identical to pack-58's; the independent review of pack-61 passes.
+- **Release folder:** `<evidence-dir>/chain-61/release.1` (pack-61, artifact hash `c4256d26…`, contract `ba07ceec…`), 16/16 gates, `design-system-roles.json`, the approved kit zip (sha256 `c2d19904…`) and `tracy_setting.json`. **Kit:** re-captured on a clean install of pack-61, `imagesSha256` `aa181ec3…` = the approved one, so the approval (D45) holds.
+- **Pre-check on pack-61: BLOCKED** by TDSR rules the new measurement exposes (D52); TCQR is clear.
