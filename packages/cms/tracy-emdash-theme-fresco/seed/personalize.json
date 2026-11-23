@@ -612,7 +612,7 @@
         "collection": "pages",
         "slug": "blog"
       },
-      "why": "the ten demo posts are another restaurant's articles: with a model they are all kept and rewritten (rewrite), without one they go and the Blog page, which D20 keeps out of the header menu, stays published and empty"
+      "why": "the Blog page is no header link (D20); this rule declares it for PAGE-8. The tool trims demo rows only for a customer who described the business, with a model to rewrite what stays, and keep 10 keeps all ten demo posts (they are rewritten by the rewrite rule), so it cuts nothing today"
     }
   ],
   "keptText": [
