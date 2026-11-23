@@ -3,6 +3,20 @@
 // form of an emphasis (`((span))` to `<span>`) and nothing else: no word, no setting, no other tag.
 import { tagsToCodes } from '../lib/site-copy/emphasis-markup.js'
 
+/**
+ * Emphasis codes in one spelling: `((br /))` and `((br/))`, `(( span ))` and `((span))` are the same code. The emphasis stage
+ * writes a code the writer spelled with spaces as its tag, which reads back as the code without them: before (dev lat30,
+ * 23/11/2026) JA Diner's reservation article took its emphasis and the guard read the update as a change of its introtext.
+ */
+const canonicalCodes = (text) =>
+  text.replace(/\(\(\s*(\/?)\s*(br|span|p|ul|ol|li)\b([^()]*?)\s*\)\)/gi, (_whole, close, name, raw) => {
+    const tag = name.toLowerCase()
+    const attrs = String(raw ?? '')
+      .replace(/\/\s*$/, '')
+      .trim()
+    return `((${close}${tag}${attrs ? ` ${attrs}` : ''}${tag === 'br' ? '/' : ''}))`
+  })
+
 /** A value with every string's emphasis tags read as codes, JSON in a string read as data. */
 function normal(value) {
   if (typeof value === 'string') {
@@ -13,7 +27,7 @@ function normal(value) {
       } catch {
         // Not JSON: compared as text.
       }
-    return tagsToCodes(value)
+    return canonicalCodes(tagsToCodes(value))
   }
   if (Array.isArray(value)) return value.map(normal)
   if (value && typeof value === 'object')
