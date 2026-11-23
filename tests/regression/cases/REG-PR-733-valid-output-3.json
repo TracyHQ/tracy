@@ -12,7 +12,7 @@
     "S2: Confirm every test named in run.tests reports ok."
   ],
   "expect": [
-    "Spaced emphasis codes pass the look guard; a copy-written menu label stands; undecided links with one answer, plan shape slips and card links are settled by code; a plan path to a kept page links to the page; writer words in url, picture or empty fields are noted, not written; a stored field repeating a written heading takes its words; a brand name printed as an alt is not a template alt."
+    "Spaced emphasis codes pass the look guard; a copy-written menu label stands; undecided links with one answer, plan shape slips and card links are settled by code; a plan path to a kept page links to the page; writer words in url, picture or empty fields are noted, not written; a stored field repeating a written heading takes its words; a brand name printed as an alt is not a template alt; a hero frame tries a real photo before fewer rows; a worded row is never dropped by the ladder; a measured background band may be enlarged in any-photo cuts."
   ],
   "selectors": {},
   "run": {
@@ -27,7 +27,10 @@
       "apps/tracy-web/test/write-step-link-addresses.test.mjs",
       "apps/tracy-web/test/write-step-slot-dispute.test.mjs",
       "apps/tracy-web/test/write-step-title-repeats.test.mjs",
-      "apps/tracy-web/test/site-check-alt-matches-picture.test.mjs"
+      "apps/tracy-web/test/site-check-alt-matches-picture.test.mjs",
+      "apps/tracy-web/test/site-pictures-min-width.test.mjs",
+      "apps/tracy-web/test/site-pictures-frame-surface.test.mjs",
+      "apps/tracy-web/test/site-pictures-check.test.mjs"
     ],
     "needs": [],
     "tests": [
@@ -40,7 +43,11 @@
       "words the writer puts in a picture slot or a url slot are not written, and leave no dispute with its owner",
       "words for a field the template keeps empty are not sent: the site never fills it",
       "a stored field repeating a written heading of its module takes the heading's new words",
-      "the business's name the brand step wrote, printed as a picture's alt, is not a template alt"
+      "the business's name the brand step wrote, printed as a picture's alt, is not a template alt",
+      "a hero's frame tries a real photo of the business before it is hidden; any other frame keeps its order",
+      "a row whose words the plan writes is never dropped by the ladder; a pictures-only row may be",
+      "a frame the surface reads as a CSS background is joined as one, so the background enlargement applies",
+      "the any-photo and reuse cut of a background band may be enlarged to its minimum width as its first cut is"
     ]
   }
 }

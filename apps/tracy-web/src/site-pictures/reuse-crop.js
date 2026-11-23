@@ -6,7 +6,7 @@
 // then the most of the labelled subject. The last rung of a gallery tile ("any-photo") asks only for a cut that is not
 // the very cut of another tile (`maxOverlap` 1, `distinct`): heads stay whole all the same.
 
-import { MAX_ENLARGE, outputSizeFor, sizeOf, writeRect } from './cut-photo.js'
+import { MAX_ENLARGE, mayEnlargeToMinWidth, outputSizeFor, sizeOf, writeRect } from './cut-photo.js'
 import { cropOverlap, REUSE_MAX_OVERLAP } from './gallery-tiles.js'
 import { headBoxesOf } from './head-boxes.js'
 
@@ -120,10 +120,10 @@ export async function cutPhotoAway(bytes, asset, frame, demo, avoid, { maxOverla
   const shape = demo ?? box
   // The narrowest region the size limit lets through: its written width over its own width is at most MAX_ENLARGE,
   // and never narrower than the kit's minimum file width (card AI).
-  const minWidth = Math.max(
-    Math.ceil(outputSizeFor(demo, box, 1).width / MAX_ENLARGE),
-    Number.isInteger(frame.minWidth) ? frame.minWidth : 0
-  )
+  // A background band under text may be enlarged up to its minimum width (cut-photo.js mayEnlargeToMinWidth), as a first
+  // cut of it is: its region is held to the size limit only.
+  const floor = Number.isInteger(frame.minWidth) && !mayEnlargeToMinWidth(frame) ? frame.minWidth : 0
+  const minWidth = Math.max(Math.ceil(outputSizeFor(demo, box, 1).width / MAX_ENLARGE), floor)
   const r = reuseRegion(size, shape, avoid, {
     heads: headBoxesOf(asset),
     subject: Array.isArray(asset.subjectBox) ? asset.subjectBox : null,

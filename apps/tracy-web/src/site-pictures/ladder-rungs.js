@@ -84,7 +84,9 @@ const heroFirst = (rungs, frame) => {
   if (frame?.blockRole !== 'hero' || !rungs.includes('hide') || !rungs.includes('any-photo')) return rungs
   const early = rungs.filter((r) => r === 'best-minor' || r === 'any-photo')
   const rest = rungs.filter((r) => !early.includes(r))
-  const at = rest.indexOf('hide')
+  // Before fewer-rows too: a row this ladder drops keeps the words the plan writes in it, so a slide would keep its heading
+  // over an empty picture (dev lat30, 23/11/2026: JA Diner's two home slides, one dropped, one hidden, a black band).
+  const at = rest.findIndex((r) => r === 'fewer-rows' || r === 'hide')
   return Object.freeze([...rest.slice(0, at), ...early, ...rest.slice(at)])
 }
 
@@ -136,17 +138,29 @@ export function rowOf(plan, frameId) {
           .map((p) => p?.frame)
           .filter((f) => typeof f === 'string')
         if (frames.includes(frameId))
-          return { block: d.block, list: l.list, rows: Number(l.rows) || arr(l.items).length, frames }
+          return {
+            block: d.block,
+            list: l.list,
+            rows: Number(l.rows) || arr(l.items).length,
+            frames,
+            words: arr(item?.copy)
+              .map((c) => c?.slot)
+              .filter((slot) => typeof slot === 'string')
+          }
       }
   return null
 }
 
 /**
- * Whether the kit lets a list show one row fewer than `now`: the kit lists it, its rows are not content items of their
- * own (those belong to the planner), and one fewer is still at least its `min` (1 when it names none). Returns the
- * reason it may not, or null when it may.
+ * Whether the kit lets a list show one row fewer than `now`: the plan writes no words in the row, the kit lists it, its
+ * rows are not content items of their own (those belong to the planner), and one fewer is still at least its `min` (1
+ * when it names none). Returns the reason it may not, or null when it may.
  */
 export function fewerRowsRefusal(kit, row, now) {
+  // The write step takes rows off by the plan's count only, so a row whose words the plan writes stays on the page; the
+  // ladder dropping it would only empty its picture (dev lat30: a home slide kept its heading over a black band).
+  if (row.words?.length)
+    return `the plan writes words in this row (${row.words.join(', ')}), so the site keeps the row`
   const block = arr(kit?.blocks).find((b) => b?.id === row.block)
   const list = arr(block?.lists).find((l) => l?.id === row.list)
   if (!list) return `the kit does not list ${row.list}`

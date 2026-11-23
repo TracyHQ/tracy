@@ -121,7 +121,16 @@ export function joinSurface(doc, surface) {
             ...b,
             frames: b.frames.map((f) => {
               const s = of[f?.id] ?? { ...textOverOf(b, f), overlay: 'unknown' }
-              return { ...f, textOver: s.textOver, textOverFrom: s.textOverFrom, templateOverlay: s.overlay }
+              return {
+                ...f,
+                // The template prints this picture as a CSS background, as the surface measured it; the kit marks only the
+                // frames it paints. Before (dev lat30, 23/11/2026) JA Boxing's home CTA band was read as an ordinary frame,
+                // no photo was wide enough without the background enlargement, and the template's band stayed.
+                ...(f?.shownAs === undefined && s.shownAs === 'background' ? { shownAs: 'background' } : {}),
+                textOver: s.textOver,
+                textOverFrom: s.textOverFrom,
+                templateOverlay: s.overlay
+              }
             })
           }
         : b

@@ -7,7 +7,7 @@ import {
   failureListText
 } from '../src/site-pictures/picture-check/check-pictures.js'
 import { indexInputs } from '../src/site-pictures/picture-check/inputs-index.js'
-import { rungsFor } from '../src/site-pictures/ladder-rungs.js'
+import { fewerRowsRefusal, rowOf, rungsFor } from '../src/site-pictures/ladder-rungs.js'
 import { hasTextOver } from '../src/site-pictures/darken.js'
 import { breaks, entryOf, inputs, ruleOf } from './_site-pictures-check.mjs'
 
@@ -558,6 +558,8 @@ test("a hero's frame tries a real photo of the business before it is hidden; any
   const idx = { frames, wishes, documentaryFrame: () => false, galleryTile: () => null }
   const hero = rungsFor(idx, 'hero.0')
   assert.ok(hero.indexOf('any-photo') < hero.indexOf('hide'), hero.join(' '))
+  // Before fewer-rows too: a row the ladder drops keeps the plan's words over an empty picture (dev lat30).
+  assert.ok(hero.indexOf('any-photo') < hero.indexOf('fewer-rows'), hero.join(' '))
   assert.ok(hero.indexOf('best-minor') < hero.indexOf('any-photo'))
   assert.deepEqual(
     [...hero].sort(),
@@ -575,4 +577,34 @@ test('a frame spanning the page in a hero has text over it; a narrow one, or one
   assert.equal(hasTextOver({ blockRole: 'hero', width: 216 }), false, 'a small picture beside the heading')
   assert.equal(hasTextOver({ blockRole: 'section', width: 1440 }), false)
   assert.equal(hasTextOver({ blockRole: 'section', width: 1440, textOver: true }), true)
+})
+
+test('a row whose words the plan writes is never dropped by the ladder; a pictures-only row may be', () => {
+  // Dev lat30 (23/11/2026): a JA Diner home slide was dropped by fewer-rows and kept its heading over an empty picture.
+  const kit = { blocks: [{ id: 'b', lists: [{ id: 'b.slide', rowKind: 'slots', min: 1, max: 2 }] }] }
+  const plan = (copy) => ({
+    pages: [
+      {
+        id: 'p',
+        decision: 'keep',
+        blocks: [
+          {
+            block: 'b',
+            decision: 'keep',
+            lists: [
+              {
+                list: 'b.slide',
+                rows: 2,
+                items: [{ copy, pictures: [{ frame: 'b.0' }] }, { pictures: [{ frame: 'b.1' }] }]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  })
+  const worded = rowOf(plan([{ slot: 'b.2' }]), 'b.0')
+  assert.deepEqual(worded.words, ['b.2'])
+  assert.match(fewerRowsRefusal(kit, worded, 2), /the plan writes words in this row \(b\.2\)/)
+  assert.equal(fewerRowsRefusal(kit, rowOf(plan([]), 'b.0'), 2), null)
 })
