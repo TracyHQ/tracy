@@ -605,9 +605,14 @@
   ],
   "trim": [
     {
-      "collection": "pages",
-      "keep": 8,
-      "why": "the eight demo pages all stay: a page goes only when the customer unticks it (PAGE-8: the Blog page is no header link, D20, and is reached from the home page and the posts)"
+      "collection": "posts",
+      "slug": "blog",
+      "keep": 10,
+      "list": {
+        "collection": "pages",
+        "slug": "blog"
+      },
+      "why": "the ten demo posts are another restaurant's articles: with a model they are all kept and rewritten (rewrite), without one they go and the Blog page, which D20 keeps out of the header menu, stays published and empty"
     }
   ],
   "keptText": [

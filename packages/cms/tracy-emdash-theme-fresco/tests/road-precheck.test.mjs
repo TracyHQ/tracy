@@ -51,10 +51,16 @@ test('ABOUT-2: every keptText id names a demo field that exists, and DECISIONS.m
   }
 })
 
-test('PAGE-8: the trim rule on pages keeps every demo page (a page goes only when the customer unticks it)', () => {
-  const rule = map.trim.find((r) => r.collection === 'pages')
+test('PAGE-8: the Blog page is covered by the trim rule of its posts, and no trim rule cuts a page (PAGE-2)', () => {
+  const rule = map.trim.find((r) => r.slug === 'blog')
   assert.ok(rule)
-  assert.ok(rule.keep >= new Set(defaults('pages').map((e) => e.slug)).size)
+  assert.equal(rule.collection, 'posts')
+  assert.ok(rule.keep >= defaults('posts').length)
+  assert.deepEqual(
+    map.trim.filter((r) => r.collection === 'pages' || /_page$/.test(r.collection)),
+    []
+  )
+  assert.deepEqual(map.hide, [])
 })
 
 test('DEF-1 and TEXT-1: no invented design-system role, no ground role painted as text', () => {
