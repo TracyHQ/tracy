@@ -1,0 +1,41 @@
+---
+/** About: masthead · about-intro (features-intro 4) · about-features (features-intro 5) · testimonials · team (teams 1). */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Masthead from '@/components/blocks/Masthead.astro'
+import FeaturesAbout from '@/components/blocks/FeaturesAbout.astro'
+import Testimonials from '@/components/blocks/Testimonials.astro'
+import Teams from '@/components/blocks/Teams.astro'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, masthead, intro, features, testimonials, team] = await Promise.all([
+  getEmDashEntry('pages', 'about', { locale }),
+  section('masthead', 'about', locale),
+  section('features_intro', 'about-intro', locale),
+  section('features_intro', 'about-features', locale),
+  section('testimonials', 'about-testimonials', locale),
+  section('teams', 'about-team', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'about' } : null)
+---
+
+<Base chrome={chrome} title={page.title ?? masthead?.title ?? chrome.site.brand_name} currentPath="/about" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'about', toPath: () => '/about' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<Masthead entry={masthead} />
+		{intro && <FeaturesAbout entry={intro} chrome={chrome} style="style-4" />}
+		{features && <FeaturesAbout entry={features} chrome={chrome} style="style-5" />}
+		{testimonials && <Testimonials entry={testimonials} chrome={chrome} />}
+		{team && <Teams entry={team} chrome={chrome} />}
+	</main>
+</Base>

@@ -113,6 +113,11 @@ const EMDASH = [
     group: 'tests emdash-diner',
     args: '--only tests --tests-part standalone:diner',
     own: String.raw`packages/cms/tracy-emdash-theme-diner/`
+  },
+  {
+    group: 'tests emdash-fresco',
+    args: '--only tests --tests-part standalone:fresco',
+    own: String.raw`packages/cms/tracy-emdash-theme-fresco/`
   }
 ]
 

@@ -1,0 +1,1385 @@
+{
+  "format": 1,
+  "scope": "Source baseline only. No live IDs, credentials, entry bodies or runtime verification.",
+  "template": {
+    "id": "tracy-fresco",
+    "label": "JA Fresco",
+    "version": "0.1.0"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "collections": [
+    {
+      "slug": "pages",
+      "label": "Pages",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "view",
+          "label": "View",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 8
+    },
+    {
+      "slug": "posts",
+      "label": "Posts",
+      "routable": true,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "cover",
+          "label": "Cover",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "created",
+          "label": "Created",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author_avatar",
+          "label": "Author avatar",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "tags",
+          "label": "Tags",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 10
+    },
+    {
+      "slug": "hero",
+      "label": "hero",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subtitle",
+          "label": "Subtitle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "features_intro",
+      "label": "features intro",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "columns",
+          "label": "Columns",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "align",
+          "label": "Align",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "more_info",
+          "label": "More info",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "align_media",
+          "label": "Align media",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "intro_img",
+          "label": "Intro img",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "align_content",
+          "label": "Align content",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub_title",
+          "label": "Sub title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "info_title",
+          "label": "Info title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "info_desc",
+          "label": "Info desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "button",
+          "label": "Button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_link",
+          "label": "Btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_type",
+          "label": "Btn type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subtitle",
+          "label": "Subtitle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "img_video",
+          "label": "Img video",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "img",
+          "label": "Img",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "id_video",
+          "label": "Id video",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "desc",
+          "label": "Desc",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "button_link",
+          "label": "Button link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "type",
+          "label": "Type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_desc",
+          "label": "Section desc",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 5
+    },
+    {
+      "slug": "menu",
+      "label": "menu",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "columns",
+          "label": "Columns",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "menu_type",
+          "label": "Menu type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "align_media",
+          "label": "Align media",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "menu_image",
+          "label": "Menu image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "align",
+          "label": "Align",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_desc",
+          "label": "Section desc",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 10
+    },
+    {
+      "slug": "gallery",
+      "label": "gallery",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "number_col",
+          "label": "Number col",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "auto_play",
+          "label": "Auto play",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "auto_time",
+          "label": "Auto time",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "type_gallery",
+          "label": "Type gallery",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "col",
+          "label": "Col",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "colmb",
+          "label": "Colmb",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "coltb",
+          "label": "Coltb",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "coldt",
+          "label": "Coldt",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "gutter",
+          "label": "Gutter",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_desc",
+          "label": "Section desc",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 4
+    },
+    {
+      "slug": "testimonials",
+      "label": "testimonials",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "testimonial_title",
+          "label": "Testimonial title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "testimonial_desc",
+          "label": "Testimonial desc",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_desc",
+          "label": "Section desc",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "teams",
+      "label": "teams",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "number_column",
+          "label": "Number column",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title_btn",
+          "label": "Title btn",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_link",
+          "label": "Btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_desc",
+          "label": "Section desc",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "happyhours",
+      "label": "happyhours",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "logo_img",
+          "label": "Logo img",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "align_box",
+          "label": "Align box",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_img",
+          "label": "Hp img",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "hp_title",
+          "label": "Hp title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_desc",
+          "label": "Hp desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_info",
+          "label": "Hp info",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_badge",
+          "label": "Hp badge",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_link_text",
+          "label": "Hp link text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hp_link",
+          "label": "Hp link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_desc",
+          "label": "Section desc",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 3
+    },
+    {
+      "slug": "book_table",
+      "label": "book table",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "book_btn",
+          "label": "Book btn",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "book_btn_type",
+          "label": "Book btn type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "book_desc",
+          "label": "Book desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "book_phone_title",
+          "label": "Book phone title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "book_phone",
+          "label": "Book phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "order_title",
+          "label": "Order title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "order_btn",
+          "label": "Order btn",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "order_btn_link",
+          "label": "Order btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "order_btn_type",
+          "label": "Order btn type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "masthead",
+      "label": "Mastheads",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "background",
+          "label": "Background",
+          "type": "image",
+          "required": false
+        }
+      ],
+      "seedEntries": 5
+    },
+    {
+      "slug": "chrome",
+      "label": "Site chrome",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "brand_name",
+          "label": "Brand name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "topbar_address",
+          "label": "Topbar address",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "topbar_phone_label",
+          "label": "Topbar phone label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "topbar_phone",
+          "label": "Topbar phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_about_title",
+          "label": "Footer about title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_about",
+          "label": "Footer about",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_visit_title",
+          "label": "Footer visit title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_address",
+          "label": "Footer address",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_phone",
+          "label": "Footer phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_email",
+          "label": "Footer email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_reservations_title",
+          "label": "Footer reservations title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_reservations_button",
+          "label": "Footer reservations button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_hours_title",
+          "label": "Footer hours title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_hours",
+          "label": "Footer hours",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_links_title",
+          "label": "Footer links title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_link",
+          "label": "Footer link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_link_to",
+          "label": "Footer link address",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_links",
+          "label": "Footer links",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "copyright",
+          "label": "Copyright",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "skip_label",
+          "label": "Skip label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "menu_label",
+          "label": "Menu label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "close_label",
+          "label": "Close label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "prev_label",
+          "label": "Prev label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "next_label",
+          "label": "Next label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "more_label",
+          "label": "More label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "read_more",
+          "label": "Read more",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "by_label",
+          "label": "By label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "related_title",
+          "label": "Related title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "related_text",
+          "label": "Related text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "tags_label",
+          "label": "Tags label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "share_label",
+          "label": "Share label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_code",
+          "label": "Not found code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_title",
+          "label": "Not found title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_text",
+          "label": "Not found text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_back_label",
+          "label": "Not found back label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "book_label",
+          "label": "Book label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "book_link",
+          "label": "Book link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_label",
+          "label": "Search label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_placeholder",
+          "label": "Search placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_button",
+          "label": "Search button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "no_results",
+          "label": "No results",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "logo_dark",
+          "label": "Logo dark",
+          "type": "image",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "contact",
+      "label": "Contact",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "email_label",
+          "label": "Email label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email",
+          "label": "Email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "address_label",
+          "label": "Address label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "address",
+          "label": "Address",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone_label",
+          "label": "Phone label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone",
+          "label": "Phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_title",
+          "label": "Form title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_intro",
+          "label": "Form intro",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "name_label",
+          "label": "Name label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email_field_label",
+          "label": "Email field label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone_field_label",
+          "label": "Phone field label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subject_label",
+          "label": "Subject label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "message_label",
+          "label": "Message label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "submit_label",
+          "label": "Submit label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "socials",
+          "label": "Socials",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": "Primary",
+      "locale": "en",
+      "items": 7
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 4
+    }
+  ],
+  "formBindings": [
+    {
+      "form": "contact-{locale}",
+      "collection": "contact",
+      "slug": "contact-info",
+      "field": "form_id"
+    }
+  ],
+  "dependencies": {
+    "@astrojs/node": "11.1.13",
+    "@astrojs/react": "6.0.0",
+    "@cloudflare/kumo": "2.6.0",
+    "@emdash-cms/auth": "1.1.0",
+    "@emdash-cms/plugin-audit-log": "0.2.3",
+    "@emdash-cms/plugin-forms": "0.2.9",
+    "@phosphor-icons/react": "2.1.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.4.12",
+    "better-sqlite3": "12.11.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "emdash": "1.1.0",
+    "emdash-smtp": "0.3.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0",
+    "lucide-react": "1.45.0",
+    "radix-ui": "1.6.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3"
+  },
+  "dependencyNotice": "Declared pins only; enabled plugin registration is owned by astro.config.mjs. Native CMS capabilities need not be separate dependencies.",
+  "routeFiles": [
+    "src/pages/404.astro",
+    "src/pages/[...path].astro"
+  ],
+  "routeNotice": "Route source files only, not expanded URLs. Dynamic/catch-all dispatch and CMS routes require authored guidance and runtime crawl evidence.",
+  "sourceFiles": [
+    "src/components/blocks/FeaturesAbout.astro",
+    "src/components/blocks/FeaturesTiles.astro",
+    "src/components/blocks/GalleryCarousel.astro",
+    "src/components/blocks/GalleryGrid.astro",
+    "src/components/blocks/HappyHours.astro",
+    "src/components/blocks/Hero.astro",
+    "src/components/blocks/Masthead.astro",
+    "src/components/blocks/MenuCards.astro",
+    "src/components/blocks/MenuImageList.astro",
+    "src/components/blocks/MenuList.astro",
+    "src/components/blocks/SectionHead.astro",
+    "src/components/blocks/Teams.astro",
+    "src/components/blocks/Testimonials.astro",
+    "src/components/site/BookTable.astro",
+    "src/components/site/BrandLogo.astro",
+    "src/components/site/Footer.astro",
+    "src/components/site/FormWords.astro",
+    "src/components/site/Header.astro",
+    "src/components/site/PageOwner.astro",
+    "src/components/site/PostCard.astro",
+    "src/components/site/PostGlyph.astro",
+    "src/components/site/PostImages.astro",
+    "src/components/site/PostMeta.astro",
+    "src/components/site/ProseBlock.astro",
+    "src/components/site/ProseListItem.astro",
+    "src/components/site/ProseQuote.astro",
+    "src/fonts.json",
+    "src/layouts/Base.astro",
+    "src/lib/about-desc.ts",
+    "src/lib/brand.ts",
+    "src/lib/chrome-labels.ts",
+    "src/lib/chrome.ts",
+    "src/lib/content.ts",
+    "src/lib/data-links.ts",
+    "src/lib/demo-logo.ts",
+    "src/lib/display-locale.ts",
+    "src/lib/ds-slot.ts",
+    "src/lib/font-subsets.mjs",
+    "src/lib/form-embed-words.ts",
+    "src/lib/hreflang-plugin.ts",
+    "src/lib/hreflang.ts",
+    "src/lib/html.ts",
+    "src/lib/i18n.ts",
+    "src/lib/layout.ts",
+    "src/lib/link-gate.ts",
+    "src/lib/listed-children.ts",
+    "src/lib/media.ts",
+    "src/lib/menu-gate.ts",
+    "src/lib/newsletter-client.ts",
+    "src/lib/page-layout.json",
+    "src/lib/page-records.ts",
+    "src/lib/page-routes.json",
+    "src/lib/parent-gate.ts",
+    "src/lib/posts.ts",
+    "src/lib/prose-text.ts",
+    "src/lib/public-origin.ts",
+    "src/lib/stamps.ts",
+    "src/lib/tel.ts",
+    "src/lib/ui-words.ts",
+    "src/lib/ui.ts",
+    "src/lib/utils.ts",
+    "src/live.config.ts",
+    "src/middleware.ts",
+    "src/pages/404.astro",
+    "src/pages/[...path].astro",
+    "src/styles/blocks/features-about.css",
+    "src/styles/blocks/features.css",
+    "src/styles/blocks/gallery-grid.css",
+    "src/styles/blocks/gallery.css",
+    "src/styles/blocks/happyhours.css",
+    "src/styles/blocks/hero.css",
+    "src/styles/blocks/menu-image.css",
+    "src/styles/blocks/menu.css",
+    "src/styles/blocks/teams.css",
+    "src/styles/blocks/testimonials.css",
+    "src/styles/global.css",
+    "src/styles/pages/blog.css",
+    "src/styles/pages/contact.css",
+    "src/styles/pages/page.css",
+    "src/styles/pages/post.css",
+    "src/styles/pages/search.css",
+    "src/styles/tokens.css",
+    "src/views/About.astro",
+    "src/views/BlogList.astro",
+    "src/views/Chiefs.astro",
+    "src/views/Contact.astro",
+    "src/views/GalleryPage.astro",
+    "src/views/Home.astro",
+    "src/views/MenuPage.astro",
+    "src/views/NotFound.astro",
+    "src/views/Offer.astro",
+    "src/views/Post.astro",
+    "src/views/Search.astro"
+  ],
+  "inputs": {
+    "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
+    "package.json": "sha256:60917531c8943ab8ff7dc25bc13da582235b772fe1555bb0212adf94b9f640fd",
+    "pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
+    "seed/field-map.json": "sha256:03f7be89cc3139628e1b5432081262c1a2ef72d7a6015bd3fc5e5bcfd8e1423e",
+    "seed/media-map.json": "sha256:1cb781eaa3b99e31b41e6800f151d2f03e7988ab1f8741605b61993b4e9b6ab3",
+    "seed/seed.json": "sha256:2a8b4cd9684156efe44567a3be808a4804c3aa4cc0b87a4630782eb5ecd32fc5",
+    "src/components/blocks/FeaturesAbout.astro": "sha256:fcb6689e1e9d4c84410f67636cd112ea98f87633acc12256c8e0d7a7d5ea618e",
+    "src/components/blocks/FeaturesTiles.astro": "sha256:99c81c4ae36c5511b35a7ddab6b377c8549cf4051c256d1e978a7c25aedca65d",
+    "src/components/blocks/GalleryCarousel.astro": "sha256:1020bdd1bdcb15e81093ab770b95b626fc428ec00eec495b4100b4a3d322bdcb",
+    "src/components/blocks/GalleryGrid.astro": "sha256:8e045e90eadff470557768827951f81e87afd5cc8124dea3358266154a6db636",
+    "src/components/blocks/HappyHours.astro": "sha256:60e203b217459670c655f691048c3788634b535c97c1a18cff523dc431e9a4ca",
+    "src/components/blocks/Hero.astro": "sha256:387035812d730676ea4188e92a789605eac49c3608e98146a473ccc61cbc9e88",
+    "src/components/blocks/Masthead.astro": "sha256:08457666219cdc8df492f59d00c456d276ee9238cde90b6a4ed1152dd47738c4",
+    "src/components/blocks/MenuCards.astro": "sha256:258bec58f847514c896c92be36e0d9d9a3b4cc08c041fece1d7858a36e280d58",
+    "src/components/blocks/MenuImageList.astro": "sha256:45bec2210e82cd0e01d6ff16eeb8c9f0379e9d3c14b4881422d79817c73259f9",
+    "src/components/blocks/MenuList.astro": "sha256:b7fde2fa110df474aedf9c057990c43af3ac788c14e26acdc18a1c363e37af4e",
+    "src/components/blocks/SectionHead.astro": "sha256:bdf0b151218db0cb1bb2eb8c3da295bf2430e0629e6d682850b5cae3615d5acc",
+    "src/components/blocks/Teams.astro": "sha256:9abfd2108d089a059a2086a452d3d32d70400092456a420cd798b0e9591d733c",
+    "src/components/blocks/Testimonials.astro": "sha256:fca9d7f273c84d3d90cabb20c10a2ecbf5e20d4d82041237b3ec7d310e6b03ca",
+    "src/components/site/BookTable.astro": "sha256:ed6f33686ae921d5e47a1a379a65a0e7a82093304fb8b7e39042958f660378c8",
+    "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
+    "src/components/site/Footer.astro": "sha256:4d62b603811b3f2e2af78b54f7df6fa22f4031a6742d288171ec5812b247be09",
+    "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
+    "src/components/site/Header.astro": "sha256:f1720c7cf9461475e77c46e7e67a8a367fdf4e359c1b5649928f24b4b612bd33",
+    "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
+    "src/components/site/PostCard.astro": "sha256:45f2768e06630164dd107153b539a29798b1e41862cd0a6d534884db5b0b6e3f",
+    "src/components/site/PostGlyph.astro": "sha256:086a7abea74bb57cff76d00940e26e03affcde4bed52a4be91984072a7003137",
+    "src/components/site/PostImages.astro": "sha256:c27a78ed9cc3811aac8e102941a1dee00ce25230a51961e2a3848c0786aa28fa",
+    "src/components/site/PostMeta.astro": "sha256:f6c6bad83e580221f30e863c2136201dee7a95db6a6db5688572c099560a1327",
+    "src/components/site/ProseBlock.astro": "sha256:aae09606433eaaa875e7b16087bc404ed440e95c9fb56cf764ad2ea530364240",
+    "src/components/site/ProseListItem.astro": "sha256:e2c0293803a3cc1337b84ec79f684d76be0819335d31b5d2528abef0661e5404",
+    "src/components/site/ProseQuote.astro": "sha256:2d5ecd7987f911a2b7b2497143ab99c2feb4dc14c3fb417327a7a1ca782bda62",
+    "src/fonts.json": "sha256:25aaa0fcccd533a8b10db201f534c329349c9d01ae5ed737076f2b71b54ebed0",
+    "src/layouts/Base.astro": "sha256:ae69bcf81d19fb143ac71ffc168dea12d70f783767ff492f519077d9df17f672",
+    "src/lib/about-desc.ts": "sha256:2c4cfa4f6a39fc8df883f3c36452dbc5f6c2db7cf7a805d182af168f5d8c71c7",
+    "src/lib/brand.ts": "sha256:38f8c2adeaa1e083f4ef5cabdd8e2ceac7d9243b9481414e41212c6d493e8939",
+    "src/lib/chrome-labels.ts": "sha256:caf6017c4fda7d87717e8fffbe17bcbacc16d948849869dc9544b07b612a1b75",
+    "src/lib/chrome.ts": "sha256:cdaa8632bafed44cf7e662a46bfac3c36f4a0b579926b3502988321ebb6fdce5",
+    "src/lib/content.ts": "sha256:684f9fba7ecc3ea9332c640791e917a13a2805eb6fe818cd0004a1e06510e31c",
+    "src/lib/data-links.ts": "sha256:fb08660882cf4e99e35cddf7631c84d95405c9e72d0d761f83d1e935ef62910e",
+    "src/lib/demo-logo.ts": "sha256:250c407f7ecb16c20ae7aacdc37f56856a361aed87065dab44cc42ba4e8ad868",
+    "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
+    "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
+    "src/lib/font-subsets.mjs": "sha256:01c47a395f56e68deab656f0cb1e43abc75637349f8ac9c21883f0e578845abb",
+    "src/lib/form-embed-words.ts": "sha256:0f341c8e6aea0a904c3a60eb1f5644dc51edf5dbbdc79512a8249fbc82ec3a66",
+    "src/lib/hreflang-plugin.ts": "sha256:fb1993974b6296c4a677f4691b7038313c5eb3b222088f4c9160a52e744fbe0d",
+    "src/lib/hreflang.ts": "sha256:924561614f01c3e11fa8f6f06b17ef04e1212a47dc7d1bedd83bb64cfe0f5f98",
+    "src/lib/html.ts": "sha256:30442b05e2b16f22159c04d2dace659f7f553d40a0c6651e25bcb04078d8c5ef",
+    "src/lib/i18n.ts": "sha256:aaea1f019b9b16abf51a977a1b120e6078fd15280354f57c9f9d9960a7577d03",
+    "src/lib/layout.ts": "sha256:c7e937be965bfa2ed8814fc82192e7921d545b4ae06311ae7d9642a9d2ba7568",
+    "src/lib/link-gate.ts": "sha256:a7f420d3962a02c76bb99a21a4b9430e027ea2f383270d416858e2b45250e437",
+    "src/lib/listed-children.ts": "sha256:fb03fc5213623a76c22ae6ff13e9f5e6bee4b6a9884b4a9ea5e5e4cf695c13d3",
+    "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
+    "src/lib/menu-gate.ts": "sha256:1884514cd874f6edb1a845332a1da81afb4d85abebd65d287538a6a6a79d1441",
+    "src/lib/newsletter-client.ts": "sha256:12327d880e310238857cce2cf6e719fa53c758a2ec01831abf4ddab066ceb507",
+    "src/lib/page-layout.json": "sha256:d28d0a58253ced81cd362e3aeab602ae70c3226029a8a6f6b5328df262c87e09",
+    "src/lib/page-records.ts": "sha256:490bbe348ae80ac7e429e0342e2f898768e2c43c1331905b83c71e2f51eca1ea",
+    "src/lib/page-routes.json": "sha256:93277c17e4ab3b27bca344e42776532e98d0e740c16e706814fdd65480ef4e47",
+    "src/lib/parent-gate.ts": "sha256:299a77bee7cb473c869e6e3b9642c99afddf4097f492217a3d9be150bb9ca6bc",
+    "src/lib/posts.ts": "sha256:5c49d77c31b56f0ce5163572d37da6ed0f78a1bf9a51948a1a5261c19f2d753f",
+    "src/lib/prose-text.ts": "sha256:56f0adf1e841c5a2196f3fab4135ee9f38ce62a66c1e31924eac4fef9a223bff",
+    "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
+    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/tel.ts": "sha256:e4d78945f79f6e0f18ef5e21efe402133d4556fe3030885ca95907d8144c1077",
+    "src/lib/ui-words.ts": "sha256:e3e5d1dab8b3b981efd7b180c95e7bfa1ad573dc65252198c8c006814e3eecbf",
+    "src/lib/ui.ts": "sha256:f83d530f9d9b2c5107f21e14bb2bac40a9cca39733f2b661003250a2fe1171a9",
+    "src/lib/utils.ts": "sha256:0ca01a948ba414a7c7348bda63bf68803a73dbbb6f10b6e8183280e405d3aa13",
+    "src/live.config.ts": "sha256:52f0c8177d0e327ffdf28af8baf680d539d2aae444ba5ceace98baf095f7bf6c",
+    "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
+    "src/pages/[...path].astro": "sha256:496189285a1eac688bc19915c7c1164af5616efb0c644241af22bcd00ddfb8d5",
+    "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
+    "src/styles/blocks/features-about.css": "sha256:eb0e0e4d1cc4e7157ddc04d0a343d844df71b2ec42fb66e58f133ac3ce0fe24c",
+    "src/styles/blocks/features.css": "sha256:09c4afa326f60164f6da80bff6044d4453eb39eb0cfea0d0f820a22f0c498ed7",
+    "src/styles/blocks/gallery-grid.css": "sha256:cbf000e26686b8dac0b5f73f073d807242de4b70261451ddc826a187ad4d804c",
+    "src/styles/blocks/gallery.css": "sha256:3d3fdf8afcfa563331cfea12efde9738f8da85ccf7e1b6ffcc079c4b637153df",
+    "src/styles/blocks/happyhours.css": "sha256:1f1363823629602768523458085916d6cd4d68b95a69835a11ce04ae4efd216f",
+    "src/styles/blocks/hero.css": "sha256:dcc11d3752a20c0d77c65357f27562c9c2a7def3ecf2b710a8225ed50db8b05b",
+    "src/styles/blocks/menu-image.css": "sha256:1baaa4dda9533c2e103a2c1071b3b539abb3620fc8db4e1a58ae1cec46c58aab",
+    "src/styles/blocks/menu.css": "sha256:6c91c2978cf113ed41f3332f5765ea2467b5cb22ab17b311314402ed567e1ada",
+    "src/styles/blocks/teams.css": "sha256:ae988e67ca3b92bd56b95d398f97defa59d9824204dbe15252a1df8b13c1c818",
+    "src/styles/blocks/testimonials.css": "sha256:06fa479028bea2b065459ef1a223a5719a571a3d87ac29ff5b8fd258bd911221",
+    "src/styles/global.css": "sha256:10b49a894981a88b9ce78b71bdce04ef763572c29fb5f8a69217f2e4af03b391",
+    "src/styles/pages/blog.css": "sha256:d4a2e57dfe7e871d0e246f4813e7e66abd123e8121336e9fc0ee04b558886572",
+    "src/styles/pages/contact.css": "sha256:9e04fc4c6e22099d1183930a5b69467aab48bd277ae6bb27d34e7a335c271f9a",
+    "src/styles/pages/page.css": "sha256:107ed57a500fd8c0846b5e9a287abc322f79b79b0e9e1af97f9965bbb6793bd2",
+    "src/styles/pages/post.css": "sha256:ffafbc044eeb2f5a64f14c9146acdfbb64bfee18de2a49ceeea2e180803b925c",
+    "src/styles/pages/search.css": "sha256:f92321bd9117e3f03b9223263991e82d97146a04dd036b386f6a168215ac9fc5",
+    "src/styles/tokens.css": "sha256:9bfbe50f31d748d0e260fb49237ee566a7d5ed6c3dbd33b969518d014cd16277",
+    "src/views/About.astro": "sha256:b1f27b4793a59785370d82834b38e1c01ca69e69e6858beb99a1f15764b44f9d",
+    "src/views/BlogList.astro": "sha256:6b917fbeb23fffd65a1cf900ea44ee5df6c5ad7226cae62dc62943b147ae7366",
+    "src/views/Chiefs.astro": "sha256:f26ff542484fc63ba3a1a6272a8be53224aa6201501e344d8c61f400f1e89f8f",
+    "src/views/Contact.astro": "sha256:18f03a7b3e1d58028100b41f9f8639a1953bc45d216913ec4a9d70caa50e699d",
+    "src/views/GalleryPage.astro": "sha256:3ecf156a88638bedac69996a51f8fbad743fbd0bb633e7d741ddeb0908fc7a05",
+    "src/views/Home.astro": "sha256:d2c0b46f2af4276e7ea15cb57070f3788d60e194ce0d88a745a7372de68983aa",
+    "src/views/MenuPage.astro": "sha256:646cfcd3768ed6a2822a3410f7fbefe42df32f33aa2711d7f2d632a7ecbf3d3b",
+    "src/views/NotFound.astro": "sha256:5e06ccd62d9c3f0e19e34a328e39bae37d9a66f9ad3f5062a13da27f402ed987",
+    "src/views/Offer.astro": "sha256:2f04e1b152088da24dc53708236dd78f30341274924d17387845224d0b713a90",
+    "src/views/Post.astro": "sha256:a837aeb30af1c6ae35db8740efda1a1035855f9975ed43617a23dca8629718a3",
+    "src/views/Search.astro": "sha256:ab44a9bf361f6f4c03f719fead88c9b195b1a78c08a95aa4cff76008281c7740",
+    "template.config.json": "sha256:09871f79ca4f26827f4f8bad3da5680c7373bd052f726c50cf6c4d75dc955b37",
+    "tools/forms.json": "sha256:1556e5870494f7795f554ee336b37a7674d78ed1f1b904a308e4785dee1195f9",
+    "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
+  }
+}

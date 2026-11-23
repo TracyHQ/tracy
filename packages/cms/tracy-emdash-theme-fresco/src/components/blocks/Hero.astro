@@ -1,0 +1,45 @@
+---
+/** acm hero style-1: a background picture under a 70 percent page-colour wash, a centred title, description and up to two outline buttons; the sub-title runs vertically at the left from 1200 px. */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry, chrome } = Astro.props
+const $h = stampFor(Astro.request, 'hero', { id: entry.id, slug: entry.slug })
+const items: any[] = entry.items ?? []
+const live = await liveLinks(
+  Astro.request,
+  chrome.locale,
+  items.flatMap((i) => [i.btn_link, i.btn_link_2])
+)
+const link = (u: string) => dataHref(u, (p) => href(chrome.locale, p))
+const bg = (v: unknown) => {
+  const u = mediaUrl(v as any)
+  return u ? `background-image:url('${u}')` : undefined
+}
+---
+
+{items[0] && (
+	<section class="fr-hero" aria-label={entry.title}>
+		{items.slice(0, 1).map((it, i) => (
+			<div class="fr-hero-slide" style={bg(it.image_decor)}>
+				{it.sub_title && <div class="fr-vertical" aria-hidden="true" {...$h(`items[${i}].sub_title`)}><span>{it.sub_title}</span></div>}
+				<div class="fr-hero-content">
+					<h1 class="fr-hero-title" {...$h(`items[${i}].title`)}>{it.title}</h1>
+					<div class="fr-lead fr-hero-desc" {...$h(`items[${i}].desc`)}>{it.desc}</div>
+					<div class="fr-hero-actions">
+						{it.button && live(it.btn_link) && <a class="fr-btn" href={link(it.btn_link)!} {...$h(`items[${i}].button`)}>{it.button}</a>}
+						{it.button_2 && live(it.btn_link_2) && <a class="fr-btn" href={link(it.btn_link_2)!} {...$h(`items[${i}].button_2`)}>{it.button_2}</a>}
+					</div>
+				</div>
+			</div>
+		))}
+	</section>
+)}

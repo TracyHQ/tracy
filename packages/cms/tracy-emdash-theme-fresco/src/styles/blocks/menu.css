@@ -1,0 +1,27 @@
+/* acm menu style-1 (source: scss/_acm.scss:551-601; measured on the home at 1440: row 108-113 px, name 28/36, price 32/41.6). */
+@layer components {
+	.fr-section.is-band { background: var(--color-ink); color: var(--color-on-ink); }
+	.fr-section.is-band :is(h1, h2, h3, h4, .fr-main-title, .fr-menu-type, .fr-dish-price, .fr-menu-image-type) { color: var(--color-on-ink); }
+	.fr-menu-type { font-family: var(--font-display); font-size: var(--h1-size); line-height: 1.3; color: var(--color-heading); text-align: center; margin: 16px 0 0; }
+	.fr-menu-type { margin-bottom: 64px; }
+	@media (min-width: 576px) and (max-width: 991.98px) { .fr-menu-type { margin-bottom: 32px; } }
+	.fr-menu-type::after { content: ""; display: block; width: 2px; height: 40px; margin: 24px auto 0; background: var(--color-accent); }
+	@media (max-width: 575.98px) { .fr-menu-type { margin-bottom: 32px; } .fr-menu-type::after { height: 20px; margin-top: 12px; } }
+	.fr-menu-list { list-style: none; margin: -16px 0 0; padding: 0; display: grid; grid-template-columns: 1fr; margin-inline: -16px; }
+	@media (min-width: 1420px) { .fr-menu-list { margin-inline: -36px; } }
+	/* the three-column lists set the dish smaller (source: 24 / 28 px at 1440) */
+	@media (min-width: 992px) { .fr-menu-list.cols-3 .fr-dish-name { font-size: var(--h4-size); line-height: 1.3; } .fr-menu-list.cols-3 .fr-dish-price { font-size: var(--h3-size); line-height: 1.3; } }
+	@media (min-width: 768px) { .fr-menu-list.cols-2, .fr-menu-list.cols-3 { grid-template-columns: repeat(2, 1fr); } }
+	@media (min-width: 992px) { .fr-menu-list.cols-3 { grid-template-columns: repeat(3, 1fr); } }
+	.fr-dish { display: flex; justify-content: space-between; gap: 8px; padding: 16px 16px 10.8px; }
+	@media (max-width: 575.98px) { .fr-dish { gap: 24px; } .fr-menu-list { margin-top: -8px; margin-bottom: -8px; }  .fr-section:is(.top-large, .top-normal):has(.fr-menu-list) .fr-menu-type { margin-bottom: 24px; } .fr-section:is(.top-large, .top-normal):has(.fr-menu-list) .fr-menu-type::after { margin-top: 16px; } }
+	@media (min-width: 576px) { .fr-dish { gap: 32px; padding-bottom: 16px; } .fr-menu-list { margin-bottom: -16px; } }
+	@media (min-width: 1420px) { .fr-dish { gap: 48px; } }
+	@media (max-width: 575.98px) { .fr-menu-list.cols-3 .fr-dish-name { font-size: 22px; } .fr-menu-list.cols-3 .fr-dish-price { font-size: 24px; } }
+	@media (min-width: 768px) and (max-width: 991.98px) { .fr-menu-list.cols-3 .fr-dish-price { font-size: var(--h3-size); } }
+	@media (min-width: 1420px) { .fr-dish { padding-inline: 36px; } }
+	@media (max-width: 575.98px) { .fr-dish { padding: 8px 16px; } }
+	.fr-dish-name { font-size: var(--h3-size); line-height: 1.3; margin: 0 0 8px; }
+	.fr-dish-desc { font-size: 14px; line-height: 21px; text-transform: capitalize; margin: 0 0 16px; color: var(--color-fg); opacity: .7; }
+	.fr-dish-price { font-family: var(--font-display); font-size: var(--h2-size); line-height: 1.3; color: var(--color-heading); margin: 0 0 8px; white-space: nowrap; align-self: flex-start; display: block; }
+}

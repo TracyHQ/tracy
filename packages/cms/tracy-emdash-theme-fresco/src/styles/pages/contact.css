@@ -1,0 +1,45 @@
+/* Contact (Joomla com_contact, plain style). Measured on the source at 1440, 992, 768 and 390. Imported by global.css. */
+@layer components {
+	.fr-contact { display: grid; grid-template-columns: 1fr; gap: 24px; }
+	@media (min-width: 992px) { .fr-contact { grid-template-columns: 1fr 1fr; gap: 96px; } }
+	.fr-contact > * { min-width: 0; }
+	.fr-contact-info h2 { margin: 0 0 24px; font-size: var(--fr-h2); }
+	.fr-contact-intro { margin: 0 0 48px; }
+	.fr-contact-rows { margin: 0; padding: 0; list-style: none; }
+	.fr-contact-rows li { display: flex; align-items: center; margin-bottom: 24px; }
+	.fr-contact-icon { display: flex; align-items: center; justify-content: center; flex: none; width: 36px; height: 36px; margin-right: 16px; background: rgba(225, 225, 225, .15); color: var(--color-accent-text); } /* ds-keep: translucent shade, scrim or one-off glyph over a photograph or a dark panel: the pair keeps the template value under every system */
+	.fr-contact-icon svg { width: 20px; height: 20px; fill: currentColor; }
+	.fr-contact-text { display: block; font-size: 18px; line-height: 27px; color: var(--color-heading); }
+	.fr-contact-text a { color: var(--color-heading); }
+	.fr-contact-text a:hover, .fr-contact-text a:focus-visible { color: var(--color-accent-text-hover); }
+	.fr-contact-socials { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; }
+	.fr-contact-socials li { position: relative; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(225, 225, 225, .15); color: var(--color-accent-text); } /* ds-keep: translucent shade, scrim or one-off glyph over a photograph or a dark panel: the pair keeps the template value under every system */
+	.fr-contact-socials svg { width: 16px; height: 16px; fill: currentColor; }
+
+	.fr-contact-lead { margin-bottom: 48px; }
+	.fr-contact-lead h2 { margin: 0 0 16px; font-size: var(--fr-h2); }
+	.fr-contact-lead p { margin: 0; }
+	@media (max-width: 991.98px) { .fr-contact-lead { margin-bottom: 24px; } }
+
+	/* the Forms plugin's markup (and the disabled stand-in) in the source's field style: tinted, 1px border, 14 px text */
+	.fr-contact .ec-form { margin: 0; container-type: inline-size; }
+	.fr-contact .ec-form .ec-form-page { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 0; padding: 0; border: 0; min-width: 0; }
+	.fr-contact .ec-form .ec-form-field { grid-column: span 2; min-width: 0; }
+	.fr-contact .ec-form .ec-form-field--half { grid-column: span 1; }
+	.fr-contact .ec-form .ec-form-label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+	.fr-contact .ec-form .ec-form-input,
+	.fr-contact .ec-form input[type="text"], .fr-contact .ec-form input[type="email"], .fr-contact .ec-form textarea { display: block; width: 100%; padding: 10px 24px; background: rgba(255, 255, 255, .06); border: 1px solid color-mix(in srgb, var(--ds-c-fg, #fff) 7%, transparent); border-radius: var(--ds-input-radius, 0); color: var(--color-heading); font: 400 14px/21px var(--font-body); box-sizing: border-box; appearance: none; }
+	.fr-contact .ec-form textarea, .fr-contact .ec-form textarea.ec-form-input { height: 246px; padding-top: 24px; resize: vertical; }
+	.fr-contact .ec-form ::placeholder { color: color-mix(in srgb, var(--ds-c-fg, #fff) 50%, transparent); opacity: 1; }
+	.fr-contact .ec-form .ec-form-input:focus, .fr-contact .ec-form textarea:focus { outline: 1px solid var(--color-accent); outline-offset: 0; border-color: var(--color-accent); }
+	.fr-contact .ec-form .ec-form-error { display: block; margin-top: 4px; font-size: 13px; color: var(--color-accent-text); }
+	.fr-contact .ec-form .ec-form-error:empty { display: none; }
+	.fr-contact .ec-form .ec-form-nav { display: flex; gap: 12px; margin-top: 32px; }
+	.fr-contact .ec-form .ec-form-submit, .fr-contact .ec-form .ec-form-next, .fr-contact .ec-form .ec-form-prev { display: inline-block; padding: 10px 24px; border: 1px solid var(--color-accent); border-radius: var(--ds-btn-radius, 0); background: transparent; color: var(--color-accent-text); font: 400 14px/21px var(--font-body); letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: color .2s, background-color .2s; }
+	.fr-contact .ec-form .ec-form-submit:hover:not(:disabled), .fr-contact .ec-form .ec-form-submit:focus-visible:not(:disabled) { background: var(--color-accent); color: var(--color-accent-on); }
+	.fr-contact .ec-form .ec-form-submit:disabled { opacity: .6; cursor: not-allowed; }
+	.fr-contact .ec-form .ec-form-status { padding: 10px 14px; border-left: 3px solid var(--color-accent); background: var(--color-tint); }
+	.fr-contact .ec-form .ec-form-status:empty { display: none; }
+	.fr-contact .ec-form.is-disabled .ec-form-input { opacity: .6; cursor: not-allowed; }
+	@media (max-width: 575.98px) { .fr-contact .ec-form .ec-form-field--half { grid-column: span 2; } }
+}

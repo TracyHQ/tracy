@@ -1,0 +1,312 @@
+{
+  "schemaVersion": "tracy-content-coverage/v1",
+  "tool": {
+    "name": "@tracy/quickstart-tools content-coverage (emdash)",
+    "version": "1.8.0"
+  },
+  "platform": "emdash",
+  "contract": {
+    "id": "tracy-fresco/emdash-0.x/0.1.0",
+    "contentMapSha256": "3fcec71b692fa80b7838ab64ad550b550d012df6fc2cef609210e43501c1d245",
+    "presentationLockSha256": null
+  },
+  "measuredAt": "2026-11-22T14:39:02.351Z",
+  "viewports": [
+    "desktop",
+    "phone"
+  ],
+  "bound": {
+    "stamp": 935,
+    "menu": 167,
+    "clone": 33,
+    "entry": 312,
+    "media": 181,
+    "words": 151,
+    "route": 103
+  },
+  "lockedFiles": [],
+  "pages": {
+    "audited": 19,
+    "inMap": 18,
+    "notInMap": 1,
+    "failed": 0,
+    "failures": [],
+    "capReached": false
+  },
+  "counts": {
+    "text": {
+      "total": 582,
+      "matched": 572,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 6,
+      "core": 4,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 2
+    },
+    "images": {
+      "total": 129,
+      "matched": 128,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 1,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 0
+    },
+    "links": {
+      "total": 53,
+      "matched": 53,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 0,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 2
+    }
+  },
+  "coverage": {
+    "text": 99,
+    "images": 100,
+    "links": 100
+  },
+  "holes": [
+    {
+      "kind": "text",
+      "value": "Leave blank",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.fr-contact > div.fr-contact-form > form.ec-form > div.ec-form-field",
+      "pages": 1,
+      "firstPage": "/contact",
+      "accepted": "Label of the Forms plugin's hidden spam-trap field: interface wording of the plugin, not demo content a customer rewrites; it carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Page # of #",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.fr-main-body > div.fr-container > div.fr-pagination > p.fr-pagination-count",
+      "pages": 2,
+      "firstPage": "/blog",
+      "accepted": "Interface wording the template prints around a count or page number (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "facebook",
+      "class": "template",
+      "cause": "words in the template's own source (stamped contact.contact-info field socials: no slot holds these words)",
+      "evidence": "div.fr-contact-info > ul.fr-contact-socials > li > span.fr-sr",
+      "pages": 1,
+      "firstPage": "/contact",
+      "accepted": "Screen-reader name of a social glyph link on the contact page: the template's own accessible wording, not demo content a customer rewrites; it carries no business fact (DECISIONS D11)."
+    },
+    {
+      "kind": "text",
+      "value": "twitter",
+      "class": "template",
+      "cause": "words in the template's own source (stamped contact.contact-info field socials: no slot holds these words)",
+      "evidence": "div.fr-contact-info > ul.fr-contact-socials > li > span.fr-sr",
+      "pages": 1,
+      "firstPage": "/contact",
+      "accepted": "Screen-reader name of a social glyph link on the contact page: the template's own accessible wording, not demo content a customer rewrites; it carries no business fact (DECISIONS D11)."
+    },
+    {
+      "kind": "text",
+      "value": "youtube",
+      "class": "template",
+      "cause": "words in the template's own source (stamped contact.contact-info field socials: no slot holds these words)",
+      "evidence": "div.fr-contact-info > ul.fr-contact-socials > li > span.fr-sr",
+      "pages": 1,
+      "firstPage": "/contact",
+      "accepted": "Screen-reader name of a social glyph link on the contact page: the template's own accessible wording, not demo content a customer rewrites; it carries no business fact (DECISIONS D11)."
+    }
+  ],
+  "hygiene": [],
+  "sitePages": [
+    {
+      "entity": "pages.home",
+      "title": "Home",
+      "route": "/",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.contact",
+      "title": "Contact",
+      "route": "/contact",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.about",
+      "title": "About",
+      "route": "/about",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.gallery",
+      "title": "Gallery",
+      "route": "/gallery",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.chiefs",
+      "title": "Chiefs",
+      "route": "/chiefs",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.menu",
+      "title": "Menu",
+      "route": "/menu",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.offer",
+      "title": "Offer",
+      "route": "/offer",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.blog",
+      "title": "Blog",
+      "route": "/blog",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.valentines-day-at-soul-kitchen",
+      "title": "Valentines Day at Soul Kitchen",
+      "route": "/blog/valentines-day-at-soul-kitchen",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mother-s-day-lunch-special",
+      "title": "Mother\u2019s Day Lunch Special",
+      "route": "/blog/mother-s-day-lunch-special",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.soul-kitchen-kumquat-thyme-cocktail",
+      "title": "Soul Kitchen Kumquat & Thyme Cocktail",
+      "route": "/blog/soul-kitchen-kumquat-thyme-cocktail",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.an-interview-with-chef-milo-ferndandes",
+      "title": "An Interview with Chef Milo Ferndandes",
+      "route": "/blog/an-interview-with-chef-milo-ferndandes",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.culinary-journeys-around-the-world",
+      "title": "Culinary Journeys Around the World",
+      "route": "/blog/culinary-journeys-around-the-world",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.savoring-the-art-of-cooking",
+      "title": "Savoring the Art of Cooking",
+      "route": "/blog/savoring-the-art-of-cooking",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.farm-to-fork-sustainable-eating",
+      "title": "Farm to Fork Sustainable Eating",
+      "route": "/blog/farm-to-fork-sustainable-eating",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.rediscovering-heirloom-recipes",
+      "title": "Rediscovering Heirloom Recipes",
+      "route": "/blog/rediscovering-heirloom-recipes",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.gastronomic-adventures-with-exotic-dishes",
+      "title": "Gastronomic Adventures with Exotic Dishes",
+      "route": "/blog/gastronomic-adventures-with-exotic-dishes",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.healthy-eating-for-body-and-soul",
+      "title": "Healthy Eating for Body and Soul",
+      "route": "/blog/healthy-eating-for-body-and-soul",
+      "opens": "live",
+      "status": 200
+    }
+  ],
+  "labelRules": {
+    "version": "label-rules/1",
+    "roleVocabularyVersion": "place-content-roles/3",
+    "applies": true,
+    "r1": {
+      "facts": 497,
+      "slots": 1137,
+      "percent": 43.7
+    },
+    "rules": {
+      "R2": {
+        "title": "fact-like sample without a contact or price role",
+        "count": 0,
+        "keys": []
+      },
+      "R3": {
+        "title": "URL slot without a role",
+        "count": 0,
+        "keys": []
+      },
+      "R4": {
+        "title": "repeat or CTA not grouped",
+        "count": 0,
+        "keys": []
+      },
+      "R5": {
+        "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
+        "count": 0,
+        "keys": []
+      },
+      "R6": {
+        "title": "link or list item inside a fact slot",
+        "count": 0,
+        "keys": []
+      },
+      "R7": {
+        "title": "siblings with different roles",
+        "count": 0,
+        "keys": []
+      },
+      "R8": {
+        "title": "adjacent short slots on one line (a cut heading)",
+        "count": 0,
+        "keys": []
+      },
+      "R9": {
+        "title": "fact-like hole",
+        "count": 0,
+        "keys": []
+      }
+    }
+  }
+}

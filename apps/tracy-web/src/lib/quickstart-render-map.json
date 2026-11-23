@@ -1106,5 +1106,63 @@
         "/terms-of-service"
       ]
     }
+  },
+  "tracy-fresco": {
+    "revision": 33,
+    "sourceSha256": "2263586740c4ea801644569d81c074020caaa1addfee1a1e1ed0481b356e8b54",
+    "collections": {
+      "en:chrome": [
+        "/",
+        "/menu",
+        "/about",
+        "/gallery",
+        "/chiefs",
+        "/offer",
+        "/contact",
+        "/blog",
+        "/search",
+        "/search?q=food",
+        "/404",
+        "/blog/valentines-day-at-soul-kitchen",
+        "/blog/mother-s-day-lunch-special",
+        "/blog/an-interview-with-chef-milo-ferndandes",
+        "/blog/culinary-journeys-around-the-world",
+        "/blog/savoring-the-art-of-cooking",
+        "/blog/farm-to-fork-sustainable-eating"
+      ],
+      "en:pages": ["/", "/menu", "/about", "/gallery", "/chiefs", "/offer", "/contact", "/blog"],
+      "en:hero": ["/"],
+      "en:features_intro": ["/", "/about"],
+      "en:menu": ["/", "/menu"],
+      "en:gallery": ["/", "/gallery"],
+      "en:testimonials": ["/", "/about"],
+      "en:book_table": ["/"],
+      "en:masthead": [
+        "/about",
+        "/chiefs",
+        "/contact",
+        "/blog",
+        "/blog/valentines-day-at-soul-kitchen",
+        "/blog/mother-s-day-lunch-special",
+        "/blog/an-interview-with-chef-milo-ferndandes",
+        "/blog/culinary-journeys-around-the-world",
+        "/blog/savoring-the-art-of-cooking",
+        "/blog/farm-to-fork-sustainable-eating"
+      ],
+      "en:teams": ["/about", "/chiefs"],
+      "en:happyhours": ["/offer"],
+      "en:contact": ["/contact"],
+      "en:posts": [
+        "/blog",
+        "/search",
+        "/search?q=food",
+        "/blog/valentines-day-at-soul-kitchen",
+        "/blog/mother-s-day-lunch-special",
+        "/blog/an-interview-with-chef-milo-ferndandes",
+        "/blog/culinary-journeys-around-the-world",
+        "/blog/savoring-the-art-of-cooking",
+        "/blog/farm-to-fork-sustainable-eating"
+      ]
+    }
   }
 }

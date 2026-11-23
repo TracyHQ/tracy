@@ -1,0 +1,32 @@
+---
+/**
+ * The t4section chrome's centred title block: the module's own title (accent, 20 px), the big heading (`section_title`) and the
+ * lead text (`section_desc`, paragraphs split by a line break). Prints nothing when the entry has none of them.
+ */
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any>
+  collection: string
+}
+const { entry, collection } = Astro.props
+const $s = stampFor(Astro.request, collection, { id: entry.id, slug: entry.slug })
+const paras = String(entry.section_desc ?? '')
+  .split('\n')
+  .filter(Boolean)
+const has = entry.section_label || entry.section_title || paras.length > 0
+---
+
+{has && (
+	<div class="fr-container">
+		<div class="fr-section-title-wrap">
+			{entry.section_label && <h3 class="fr-section-title" {...$s('section_label')}><span>{entry.section_label}</span></h3>}
+			{entry.section_title && <span class="fr-main-title" {...$s('section_title')}>{entry.section_title}</span>}
+			{paras.length > 0 && (
+				<div class="fr-lead fr-top-desc" {...$s('section_desc')}>
+					{paras.map((p) => <p>{p}</p>)}
+				</div>
+			)}
+		</div>
+	</div>
+)}

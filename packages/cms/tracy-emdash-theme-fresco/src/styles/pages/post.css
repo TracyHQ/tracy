@@ -1,0 +1,64 @@
+/* A post (Joomla article page): the title band with the post's own picture, the body column, previous / next, share and tags,
+   Related Posts. Measured on the source at 1440, 992, 768 and 390. Imported by global.css. */
+@layer components {
+	/* the band: category chip above the title, meta line under it (source: .ja-masthead.blend-masthead) */
+	.fr-masthead:has(.fr-post-band-chip) .fr-masthead-title { margin: 32px 0 0; color: var(--color-heading); font-size: var(--display-size); }
+	.fr-masthead:has(.fr-post-band-chip) .fr-meta { margin-top: 16px; }
+	.fr-post-band-chip { position: absolute; top: 56px; left: 50%; transform: translateX(-50%); }
+	@media (max-width: 991.98px) { .fr-post-band-chip { top: 40px; } }
+
+	/* the column: the source pads the article 96 px each side at 1440 */
+	.fr-article { padding-inline: 96px; }
+	@media (max-width: 1199.98px) { .fr-article { padding-inline: 0; } }
+
+	.fr-prose { margin: 16px 0; }
+	.fr-prose > :first-child { margin-top: 0; }
+	.fr-prose p { margin: 0 0 16px; }
+	.fr-prose h2 { margin: 48px 0 24px; font-size: var(--fr-h2); }
+	.fr-prose h3 { margin: 32px 0 16px; }
+	.fr-prose a { color: var(--color-accent-text); }
+	.fr-prose a:hover { color: var(--color-accent-text-hover); }
+	.fr-prose blockquote p + p { margin: 24px 0 0; font-family: var(--font-body); font-size: 18px; line-height: 27px; letter-spacing: 0.5px; color: var(--ds-c-muted, #6c757d); }
+	.fr-prose blockquote { margin: 32px 0; padding: 0; border: 0; font-family: var(--font-display); font-size: 24px; line-height: 1.2; color: var(--color-accent-text); }
+	.fr-prose blockquote p { margin: 0; }
+	@media (min-width: 768px) and (max-width: 1199.98px) { .fr-prose blockquote p:first-child { font-size: 28px; line-height: 1.2; } }
+	.fr-prose ul, .fr-prose ol { margin: 0 0 16px; padding: 24px 0; list-style: none; }
+	.fr-prose ol { counter-reset: fr-ol; }
+	.fr-prose li + li { margin-top: 10px; }
+	.fr-prose ul > li::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 16px; border-radius: 50%; background: var(--color-accent); transform: translateY(-2px); }
+	.fr-prose ol > li { counter-increment: fr-ol; }
+	.fr-prose ol > li::before { content: counter(fr-ol) "."; margin-right: 12px; color: var(--color-accent-text); }
+	.fr-prose-full { margin: 24px 0; }
+	.fr-prose-full img { display: block; width: 100%; height: auto; }
+	.fr-prose-row { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 24px 0 32px; }
+	@media (min-width: 992px) { .fr-prose-row { grid-template-columns: repeat(2, 1fr); gap: 32px; } }
+	.fr-prose-row img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+
+	/* previous / next */
+	.fr-post-nav { display: flex; margin-top: 24px; }
+	.fr-post-nav a { border: 0; display: inline-flex; align-items: center; gap: 2px; padding: 8px 24px; background: var(--color-tint-strong); color: var(--color-fg); font-size: 18px; line-height: 27px; letter-spacing: 1px; transition: background-color .3s, color .3s; }
+	.fr-post-nav a:hover, .fr-post-nav a:focus-visible { background: var(--color-accent); color: var(--color-accent-on); }
+	.fr-post-nav .is-next { margin-left: auto; }
+	.fr-post-nav svg { position: relative; top: 4px; width: 14px; height: 14px; margin: -1px; fill: currentColor; }
+
+	/* share and tags */
+	.fr-article-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 48px; padding-top: 48px; border-top: 1px solid var(--color-line); }
+	@media (max-width: 767.98px) { .fr-article-foot { margin-top: 24px; padding-top: 24px; } }
+	.fr-article-foot h6 { margin: 0 0 16px; font-size: 18px; }
+	.fr-share ul, .fr-tags ul { display: flex; flex-wrap: wrap; margin: 0; padding: 0; list-style: none; }
+	.fr-share ul { gap: 6px; }
+	.fr-share li { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; color: var(--ds-c-fg, #fff); }
+	.fr-share svg { width: 16px; height: 16px; fill: #fff; } /* ds-keep: translucent shade, scrim or one-off glyph over a photograph or a dark panel: the pair keeps the template value under every system */
+	.fr-share li a { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border-radius: 50%; color: inherit; }
+	.fr-share li a:focus-visible { outline: 1px solid var(--color-accent); outline-offset: 2px; }
+	.fr-share .is-facebook { background: #3b5997; }
+	.fr-share .is-twitter { background: #00acee; }
+	.fr-share .is-linkedin { background: #007bb6; }
+	.fr-tags { text-align: right; }
+	.fr-tags ul { justify-content: flex-end; max-width: 400px; margin-left: auto; }
+	.fr-tags li { margin: 0 0 9px 9px; padding: 8px 16px; background: var(--color-tint-strong); color: var(--color-fg); font-size: 14px; line-height: 14px; }
+
+	/* Related Posts (module t4 main-bottom: no top gap, 128 px below) */
+		.fr-related { margin-top: 16px; padding-bottom: var(--gutter-xl); }
+	.fr-related .fr-section-title-wrap { margin-bottom: var(--gutter-lg); }
+}
