@@ -37,7 +37,10 @@ for (const name of [
   'LANG-2: personalize labels names',
   'ABOUT-2: every keptText id',
   'PAGE-8: the Blog page is covered',
-  'DEF-1 and TEXT-1:'
+  'DEF-1 and TEXT-1:',
+  'CON-1, CON-2, ICON-1, BORDER-1:',
+  'FORM-1: the contact and search fields',
+  'IDENT-2: under a system'
 ])
   c.passes('S2', t, name)
 
@@ -101,23 +104,6 @@ for (const [name, min] of [
     `S4 lock: no ${name} below ${min}`,
     found.every((v) => newer(v, min)),
     found
-  )
-}
-// FORM-1: the contact and search field fill is the template's rgba in the plain rule and the system tint only inside @supports
-// (the build lowers a color-mix in a plain rule to a solid fallback that draws white fields in a browser without color-mix).
-for (const file of ['contact', 'search']) {
-  const css = readFileSync(join(ROOT, PKG, `src/styles/pages/${file}.css`), 'utf8')
-  const plain = css.replace(/@supports[^{]*\{[^{}]*\{[^{}]*\}\s*\}/g, '')
-  c.check(
-    `S7 ${file}.css: the field fill is rgba(255, 255, 255, .06) in the plain rule`,
-    /background: rgba\(255, 255, 255, \.06\)/.test(plain)
-  )
-  c.check(`S7 ${file}.css: no color-mix fill outside @supports`, !/background: color-mix/.test(plain))
-  c.check(
-    `S7 ${file}.css: the tint follows the system inside @supports`,
-    /@supports \(color: color-mix\(in srgb, red, red\)\)[^\n]*background: color-mix\(in srgb, var\(--ds-c-fg, #fff\) 6%/.test(
-      css
-    )
   )
 }
 c.done()

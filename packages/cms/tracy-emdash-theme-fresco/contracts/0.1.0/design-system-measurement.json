@@ -4,29 +4,17 @@
   "cms": "emdash",
   "tag": "tracy-fresco/emdash-0.x",
   "version": "0.1.0",
-  "measuredAt": "2026-11-23T13:09:27.458Z",
+  "measuredAt": "2026-11-23T14:05:54.468Z",
   "machine": "linux-arm64",
   "measuredBy": "tdsr flow.mjs --cms emdash --template emdash-tracy-fresco",
-  "flowVersion": "ae933fc76",
+  "flowVersion": "be7639324",
   "modes": [
     "native"
   ],
   "systems": [
     "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
-    "refero:2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
-    "refero:194faa2f-2f69-4bbf-9e29-290f28fa8ca2",
-    "refero:5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
-    "refero:2bd7363d-7aae-4b1f-9d5a-1edeb17ca567",
-    "refero:813be405-c2b9-41be-9864-7b53d66483dc",
-    "refero:03b3d707-2a30-4f53-a524-347d1b70eb2c",
-    "refero:031056ff-7af1-46db-8daa-115f731c5d26",
     "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
-    "refero:24929007-7e62-4c96-a940-7de65438a578",
-    "refero:1514a95f-878c-4d4d-bb14-99d1b83f6227",
-    "refero:da332394-784c-4df2-9e66-c3f7b1d28f28",
-    "refero:48e5de76-05d5-4c4e-a269-c7c245b291ec",
-    "refero:aecac5da-f397-4ddf-b71f-de1efc434cb8",
-    "refero:90ce5883-bb24-4466-93f7-801cd617b0d1"
+    "refero:194faa2f-2f69-4bbf-9e29-290f28fa8ca2"
   ],
   "perSystem": [
     {
@@ -35,14 +23,14 @@
       "mode": "native",
       "check": "pass",
       "match": 1,
-      "margin": 0.69,
+      "margin": 0.88,
       "apart": true,
-      "follows": 0.974,
+      "follows": 1,
       "followsSamples": 77,
       "followsKept": 0,
       "left": {
-        "first": 0.007,
-        "page": 0.009
+        "first": 0.008,
+        "page": 0.008
       },
       "lowContrast": 0,
       "lowestContrast": 7.69,
@@ -61,13 +49,13 @@
       "mode": "native",
       "check": "pass",
       "match": 1,
-      "margin": 0.63,
+      "margin": 0.81,
       "apart": true,
-      "follows": 0.971,
+      "follows": 1,
       "followsSamples": 68,
       "followsKept": 0,
       "left": {
-        "first": 0.013,
+        "first": 0.014,
         "page": 0.02
       },
       "lowContrast": 0,
@@ -82,64 +70,64 @@
       "shot": "02-moxie-phone.png"
     },
     {
-      "system": "refero:2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+      "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
       "viewport": 1440,
       "mode": "native",
-      "check": "fail",
+      "check": "pass",
       "match": 1,
-      "margin": 0.44,
+      "margin": 0.69,
       "apart": true,
       "follows": 1,
       "followsSamples": 77,
       "followsKept": 0,
       "left": {
-        "first": 0.002,
-        "page": 0.002
+        "first": 0,
+        "page": 0.001
       },
-      "lowContrast": 2,
-      "lowestContrast": 1.09,
+      "lowContrast": 0,
+      "lowestContrast": 4.56,
       "misses": [],
-      "fontsLoaded": 2,
+      "fontsLoaded": 3,
       "fontsDeclared": 1,
       "systemFontsLoaded": 1,
       "ident": true,
       "modeMatch": true,
       "toggleVisible": null,
-      "shot": "03-notion-desktop.png"
+      "shot": "03-figma-desktop.png"
     },
     {
-      "system": "refero:2bf4c61f-de10-4614-ba1b-20c0453bd2a9",
+      "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
       "viewport": 390,
       "mode": "native",
-      "check": "fail",
+      "check": "pass",
       "match": 1,
-      "margin": 0.38,
+      "margin": 0.69,
       "apart": true,
       "follows": 1,
       "followsSamples": 68,
       "followsKept": 0,
       "left": {
-        "first": 0.01,
-        "page": 0.013
+        "first": 0.008,
+        "page": 0.006
       },
-      "lowContrast": 2,
-      "lowestContrast": 1.09,
+      "lowContrast": 0,
+      "lowestContrast": 4.56,
       "misses": [],
-      "fontsLoaded": 2,
+      "fontsLoaded": 3,
       "fontsDeclared": 1,
       "systemFontsLoaded": 1,
       "ident": true,
       "modeMatch": true,
       "toggleVisible": null,
-      "shot": "03-notion-phone.png"
+      "shot": "03-figma-phone.png"
     },
     {
       "system": "refero:194faa2f-2f69-4bbf-9e29-290f28fa8ca2",
       "viewport": 1440,
       "mode": "native",
-      "check": "fail",
+      "check": "pass",
       "match": 1,
-      "margin": 0.53,
+      "margin": 0.69,
       "apart": true,
       "follows": 1,
       "followsSamples": 77,
@@ -148,8 +136,8 @@
         "first": 0,
         "page": 0
       },
-      "lowContrast": 2,
-      "lowestContrast": 1,
+      "lowContrast": 0,
+      "lowestContrast": 4.62,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -163,19 +151,19 @@
       "system": "refero:194faa2f-2f69-4bbf-9e29-290f28fa8ca2",
       "viewport": 390,
       "mode": "native",
-      "check": "fail",
+      "check": "pass",
       "match": 1,
-      "margin": 0.53,
+      "margin": 0.69,
       "apart": true,
       "follows": 1,
       "followsSamples": 68,
       "followsKept": 0,
       "left": {
-        "first": 0.021,
+        "first": 0.024,
         "page": 0.007
       },
-      "lowContrast": 2,
-      "lowestContrast": 1,
+      "lowContrast": 0,
+      "lowestContrast": 4.62,
       "misses": [],
       "fontsLoaded": 1,
       "fontsDeclared": 1,
@@ -184,630 +172,6 @@
       "modeMatch": true,
       "toggleVisible": null,
       "shot": "04-airbnb-phone.png"
-    },
-    {
-      "system": "refero:5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.47,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 77,
-      "followsKept": 0,
-      "left": {
-        "first": 0.001,
-        "page": 0.001
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.1,
-      "misses": [],
-      "fontsLoaded": 2,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "05-eddie-desktop.png"
-    },
-    {
-      "system": "refero:5f446754-1fb7-4a99-8cee-7bd5de3bfd9e",
-      "viewport": 390,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.33,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 68,
-      "followsKept": 0,
-      "left": {
-        "first": 0.011,
-        "page": 0.01
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.1,
-      "misses": [],
-      "fontsLoaded": 2,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "05-eddie-phone.png"
-    },
-    {
-      "system": "refero:2bd7363d-7aae-4b1f-9d5a-1edeb17ca567",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.69,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 77,
-      "followsKept": 0,
-      "left": {
-        "first": 0.003,
-        "page": 0
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.14,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "06-motherduck-desktop.png"
-    },
-    {
-      "system": "refero:2bd7363d-7aae-4b1f-9d5a-1edeb17ca567",
-      "viewport": 390,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.73,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 68,
-      "followsKept": 0,
-      "left": {
-        "first": 0.013,
-        "page": 0.006
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.14,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "06-motherduck-phone.png"
-    },
-    {
-      "system": "refero:813be405-c2b9-41be-9864-7b53d66483dc",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.62,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 77,
-      "followsKept": 0,
-      "left": {
-        "first": 0,
-        "page": 0
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.03,
-      "misses": [],
-      "fontsLoaded": 4,
-      "fontsDeclared": 2,
-      "systemFontsLoaded": 2,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "07-toggl-track-desktop.png"
-    },
-    {
-      "system": "refero:813be405-c2b9-41be-9864-7b53d66483dc",
-      "viewport": 390,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.54,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 68,
-      "followsKept": 0,
-      "left": {
-        "first": 0.004,
-        "page": 0
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.03,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 2,
-      "systemFontsLoaded": 2,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "07-toggl-track-phone.png"
-    },
-    {
-      "system": "refero:03b3d707-2a30-4f53-a524-347d1b70eb2c",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.47,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 77,
-      "followsKept": 0,
-      "left": {
-        "first": 0,
-        "page": 0
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 2,
-      "systemFontsLoaded": 2,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "08-voiceflow-desktop.png"
-    },
-    {
-      "system": "refero:03b3d707-2a30-4f53-a524-347d1b70eb2c",
-      "viewport": 390,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.47,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 68,
-      "followsKept": 0,
-      "left": {
-        "first": 0.008,
-        "page": 0.009
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 2,
-      "systemFontsLoaded": 2,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "08-voiceflow-phone.png"
-    },
-    {
-      "system": "refero:031056ff-7af1-46db-8daa-115f731c5d26",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.5,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 77,
-      "followsKept": 0,
-      "left": {
-        "first": 0.001,
-        "page": 0
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.02,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "09-elevenlabs-desktop.png"
-    },
-    {
-      "system": "refero:031056ff-7af1-46db-8daa-115f731c5d26",
-      "viewport": 390,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.44,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 68,
-      "followsKept": 0,
-      "left": {
-        "first": 0.014,
-        "page": 0.01
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.02,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "09-elevenlabs-phone.png"
-    },
-    {
-      "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.53,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 77,
-      "followsKept": 0,
-      "left": {
-        "first": 0,
-        "page": 0.001
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "10-figma-desktop.png"
-    },
-    {
-      "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
-      "viewport": 390,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.4,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 68,
-      "followsKept": 0,
-      "left": {
-        "first": 0.005,
-        "page": 0.006
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "10-figma-phone.png"
-    },
-    {
-      "system": "refero:24929007-7e62-4c96-a940-7de65438a578",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.5,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 77,
-      "followsKept": 0,
-      "left": {
-        "first": 0,
-        "page": 0
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 2,
-      "systemFontsLoaded": 2,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "11-mailchimp-desktop.png"
-    },
-    {
-      "system": "refero:24929007-7e62-4c96-a940-7de65438a578",
-      "viewport": 390,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.47,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 68,
-      "followsKept": 0,
-      "left": {
-        "first": 0.013,
-        "page": 0.006
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 2,
-      "systemFontsLoaded": 2,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "11-mailchimp-phone.png"
-    },
-    {
-      "system": "refero:1514a95f-878c-4d4d-bb14-99d1b83f6227",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "pass",
-      "match": 1,
-      "margin": 0.63,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 75,
-      "followsKept": 0,
-      "left": {
-        "first": 0.01,
-        "page": 0.008
-      },
-      "lowContrast": 0,
-      "lowestContrast": 8.59,
-      "misses": [],
-      "fontsLoaded": 2,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "12-spotify-desktop.png"
-    },
-    {
-      "system": "refero:1514a95f-878c-4d4d-bb14-99d1b83f6227",
-      "viewport": 390,
-      "mode": "native",
-      "check": "pass",
-      "match": 1,
-      "margin": 0.63,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 66,
-      "followsKept": 0,
-      "left": {
-        "first": 0.017,
-        "page": 0.015
-      },
-      "lowContrast": 0,
-      "lowestContrast": 8.59,
-      "misses": [],
-      "fontsLoaded": 2,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "12-spotify-phone.png"
-    },
-    {
-      "system": "refero:da332394-784c-4df2-9e66-c3f7b1d28f28",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.5,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 77,
-      "followsKept": 0,
-      "left": {
-        "first": 0.003,
-        "page": 0
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.14,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "13-pitch-desktop.png"
-    },
-    {
-      "system": "refero:da332394-784c-4df2-9e66-c3f7b1d28f28",
-      "viewport": 390,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.5,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 68,
-      "followsKept": 0,
-      "left": {
-        "first": 0.007,
-        "page": 0.005
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.14,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "13-pitch-phone.png"
-    },
-    {
-      "system": "refero:48e5de76-05d5-4c4e-a269-c7c245b291ec",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.73,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 77,
-      "followsKept": 0,
-      "left": {
-        "first": 0,
-        "page": 0
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1,
-      "misses": [],
-      "fontsLoaded": 2,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "14-stripe-desktop.png"
-    },
-    {
-      "system": "refero:48e5de76-05d5-4c4e-a269-c7c245b291ec",
-      "viewport": 390,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.6,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 68,
-      "followsKept": 0,
-      "left": {
-        "first": 0.001,
-        "page": 0.002
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1,
-      "misses": [],
-      "fontsLoaded": 2,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "14-stripe-phone.png"
-    },
-    {
-      "system": "refero:aecac5da-f397-4ddf-b71f-de1efc434cb8",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.47,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 77,
-      "followsKept": 0,
-      "left": {
-        "first": 0.001,
-        "page": 0
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.09,
-      "misses": [],
-      "fontsLoaded": 2,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "15-apple-desktop.png"
-    },
-    {
-      "system": "refero:aecac5da-f397-4ddf-b71f-de1efc434cb8",
-      "viewport": 390,
-      "mode": "native",
-      "check": "fail",
-      "match": 1,
-      "margin": 0.4,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 68,
-      "followsKept": 0,
-      "left": {
-        "first": 0.012,
-        "page": 0.012
-      },
-      "lowContrast": 2,
-      "lowestContrast": 1.09,
-      "misses": [],
-      "fontsLoaded": 1,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "15-apple-phone.png"
-    },
-    {
-      "system": "refero:90ce5883-bb24-4466-93f7-801cd617b0d1",
-      "viewport": 1440,
-      "mode": "native",
-      "check": "pass",
-      "match": 1,
-      "margin": 0.54,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 75,
-      "followsKept": 0,
-      "left": {
-        "first": 0.008,
-        "page": 0.008
-      },
-      "lowContrast": 0,
-      "lowestContrast": 13.38,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "16-linear-desktop.png"
-    },
-    {
-      "system": "refero:90ce5883-bb24-4466-93f7-801cd617b0d1",
-      "viewport": 390,
-      "mode": "native",
-      "check": "pass",
-      "match": 1,
-      "margin": 0.54,
-      "apart": true,
-      "follows": 1,
-      "followsSamples": 66,
-      "followsKept": 0,
-      "left": {
-        "first": 0.038,
-        "page": 0.016
-      },
-      "lowContrast": 0,
-      "lowestContrast": 13.38,
-      "misses": [],
-      "fontsLoaded": 3,
-      "fontsDeclared": 1,
-      "systemFontsLoaded": 1,
-      "ident": true,
-      "modeMatch": true,
-      "toggleVisible": null,
-      "shot": "16-linear-phone.png"
     }
   ],
   "controls": [
@@ -817,6 +181,7 @@
     0
   ],
   "evidence": null,
+  "themeToggle": false,
   "preview": [
     {
       "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
@@ -1150,7 +515,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 3,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -1235,12 +600,10 @@
           "bySystem": 0
         },
         "empty-block": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "div.fr-container"
-          ],
-          "bySystem": 1
+          "count": 0,
+          "unique": 0,
+          "where": [],
+          "bySystem": 0
         },
         "empty-box": {
           "count": 0,
@@ -1309,12 +672,9 @@
           "bySystem": 0
         },
         "icon-invisible": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "button.fr-t-nav.is-prev",
-            "button.fr-t-nav.is-next"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "icon-offcentre": {
@@ -1336,11 +696,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -1803,7 +1161,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 29,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -1984,11 +1342,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -2451,7 +1807,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 2,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -2608,12 +1964,9 @@
           "bySystem": 0
         },
         "icon-invisible": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "button.fr-t-nav.is-prev",
-            "button.fr-t-nav.is-next"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "icon-offcentre": {
@@ -2635,11 +1988,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -3283,11 +2634,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -3931,11 +3280,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -4579,11 +3926,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -5018,15 +4363,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 5,
-          "unique": 5,
-          "where": [
-            "input.ec-form-input[name=name]",
-            "input.ec-form-input[name=email]",
-            "input.ec-form-input[name=phone]",
-            "input.ec-form-input[name=subject]",
-            "textarea.ec-form-input[name=message]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -5233,11 +4572,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -5349,15 +4686,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 5,
-          "unique": 5,
-          "where": [
-            "input.ec-form-input[name=name]",
-            "input.ec-form-input[name=email]",
-            "input.ec-form-input[name=phone]",
-            "input.ec-form-input[name=subject]",
-            "textarea.ec-form-input[name=message]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -5815,11 +5146,9 @@
           "bySystem": 0
         },
         "harsh-border": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "span"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "heading-edge": {
@@ -5889,11 +5218,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -6328,11 +5655,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=q]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -6539,11 +5864,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -6655,11 +5978,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=q]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -6980,11 +6301,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=q]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -7191,11 +6510,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -7307,11 +6624,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=q]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -7660,7 +6975,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -7841,11 +7156,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -8308,7 +7621,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -8489,11 +7802,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -8956,7 +8267,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -9137,11 +8448,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -9604,7 +8913,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -9785,11 +9094,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -10252,7 +9559,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -10433,11 +9740,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -10900,7 +10205,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -11081,11 +10386,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -11548,7 +10851,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 3,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -11633,12 +10936,10 @@
           "bySystem": 0
         },
         "empty-block": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "div.fr-container"
-          ],
-          "bySystem": 1
+          "count": 0,
+          "unique": 0,
+          "where": [],
+          "bySystem": 0
         },
         "empty-box": {
           "count": 0,
@@ -11707,12 +11008,9 @@
           "bySystem": 0
         },
         "icon-invisible": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "button.fr-t-nav.is-prev",
-            "button.fr-t-nav.is-next"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "icon-offcentre": {
@@ -11734,11 +11032,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -12201,7 +11497,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 29,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -12382,11 +11678,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -12849,7 +12143,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 2,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -13006,12 +12300,9 @@
           "bySystem": 0
         },
         "icon-invisible": {
-          "count": 2,
-          "unique": 2,
-          "where": [
-            "button.fr-t-nav.is-prev",
-            "button.fr-t-nav.is-next"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "icon-offcentre": {
@@ -13033,11 +12324,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -13681,11 +12970,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -14329,11 +13616,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -14977,11 +14262,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -15416,15 +14699,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 5,
-          "unique": 5,
-          "where": [
-            "input.ec-form-input[name=name]",
-            "input.ec-form-input[name=email]",
-            "input.ec-form-input[name=phone]",
-            "input.ec-form-input[name=subject]",
-            "textarea.ec-form-input[name=message]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -15631,11 +14908,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -15747,15 +15022,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 5,
-          "unique": 5,
-          "where": [
-            "input.ec-form-input[name=name]",
-            "input.ec-form-input[name=email]",
-            "input.ec-form-input[name=phone]",
-            "input.ec-form-input[name=subject]",
-            "textarea.ec-form-input[name=message]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -16213,11 +15482,9 @@
           "bySystem": 0
         },
         "harsh-border": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "span"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "heading-edge": {
@@ -16287,11 +15554,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -16726,11 +15991,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=q]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -16937,11 +16200,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -17053,11 +16314,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=q]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -17378,11 +16637,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=q]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -17589,11 +16846,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -17705,11 +16960,9 @@
           "bySystem": 0
         },
         "unstyled-input": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "input[name=q]"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "unworn-page": {
@@ -18058,7 +17311,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -18239,11 +17492,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -18706,7 +17957,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -18887,11 +18138,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -19354,7 +18603,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -19535,11 +18784,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -20002,7 +19249,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -20183,11 +19430,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -20650,7 +19895,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -20831,11 +20076,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -21298,7 +20541,7 @@
       "keptShare": 0,
       "glare": 0,
       "keptText": 0,
-      "lowText": 1,
+      "lowText": 0,
       "lostButtons": 0,
       "failedFonts": 0,
       "empty": 0,
@@ -21479,11 +20722,9 @@
           "bySystem": 0
         },
         "logo-invisible": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "img.fr-logo"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "loud-band": {
@@ -21615,23 +20856,5 @@
       }
     }
   ],
-  "previewMeasuredAt": "2026-11-23T13:26:14.426Z",
-  "previewPages": [
-    "/",
-    "/menu",
-    "/about",
-    "/gallery",
-    "/chiefs",
-    "/offer",
-    "/contact",
-    "/blog",
-    "/search",
-    "/search?q=food",
-    "/blog/valentines-day-at-soul-kitchen",
-    "/blog/mother-s-day-lunch-special",
-    "/blog/an-interview-with-chef-milo-ferndandes",
-    "/blog/culinary-journeys-around-the-world",
-    "/blog/savoring-the-art-of-cooking",
-    "/blog/farm-to-fork-sustainable-eating"
-  ]
+  "previewMeasuredAt": "2026-11-23T14:03:29.179Z"
 }

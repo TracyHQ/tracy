@@ -51,6 +51,7 @@ const phone = telHref(site.topbar_phone)
 		<a class="fr-brand" href={href(locale, '/')} aria-label={site.brand_name}>
 			<BrandLogo spots={logoSpots(logos, 'dark')} alt={logos.alt || site.brand_name} imgClass="fr-logo">
 				<img class="fr-logo" src={DEMO_LOGO} alt={site.brand_name} width="117" height="60" />
+				<span class="fr-logo-ink" role="img" aria-label={site.brand_name}></span>
 			</BrandLogo>
 		</a>
 		<nav class="fr-nav" aria-label={site.menu_label}>

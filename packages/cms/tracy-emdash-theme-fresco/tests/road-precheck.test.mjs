@@ -24,6 +24,18 @@ const hashLinks = (value, found = []) => {
   return found
 }
 
+const styles = () => {
+  const css = []
+  const walk = (dir) => {
+    for (const f of readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
+      if (f.isDirectory()) walk(path.join(dir, f.name))
+      else if (f.name.endsWith('.css')) css.push(read(path.join(dir, f.name)))
+    }
+  }
+  walk('src/styles')
+  return css.join('\n')
+}
+
 test('PAGE-5: no link field of the seed or the site model is a #', () => {
   assert.equal(hashLinks(seed).length, 0)
   assert.equal(hashLinks(model).length, 0)
@@ -60,22 +72,51 @@ test('PAGE-8: the Blog page is covered by the trim rule of its posts, and no tri
   assert.equal(rule.collection, 'posts')
   assert.ok(rule.keep >= defaults('posts').length)
   assert.deepEqual(
-    map.trim.filter((r) => r.collection === 'pages' || /_page$/.test(r.collection)),
+    map.trim.filter((r) => r.collection === 'pages' || r.collection.endsWith('_page')),
     []
   )
   assert.deepEqual(map.hide, [])
 })
 
 test('DEF-1 and TEXT-1: no invented design-system role, no ground role painted as text', () => {
-  const css = []
-  const walk = (dir) => {
-    for (const f of readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
-      if (f.isDirectory()) walk(path.join(dir, f.name))
-      else if (f.name.endsWith('.css')) css.push(read(path.join(dir, f.name)))
-    }
+  const css = styles()
+  assert.ok(!css.includes('--ds-c-ink-raised'))
+  assert.ok(!/\.fr-hh-badge \{[^}]*[^-]color: var\(--ds-c-bg/.test(css))
+})
+
+test('CON-1, CON-2, ICON-1, BORDER-1: text and controls read the role of their own ground', () => {
+  const css = styles()
+  // a section description follows the system's text colour, and the on-ink one on an ink band
+  assert.match(css, /\.fr-top-desc \{[^}]*color: var\(--ds-c-fg, rgba\(255, 255, 255, 0\.8\)\)/)
+  assert.match(
+    css,
+    /\.fr-section\.is-band :is\([^)]*\.fr-dish-desc[^)]*\.fr-top-desc\) \{ color: var\(--ds-c-on-ink,/
+  )
+  assert.match(css, /\.fr-t-nav \{[^}]*color: var\(--color-on-ink\)/)
+  assert.match(css, /\.fr-pagination li\.is-active > span \{[^}]*border-color: var\(--color-accent\)/)
+  // no text colour written as a bare white on a template ground
+  assert.ok(!/\.fr-top-desc \{[^}]*color: rgba\(255, 255, 255/.test(css))
+})
+
+test('FORM-1: the contact and search fields are painted from the slot, with the template value as fallback', () => {
+  for (const file of ['contact', 'search']) {
+    const css = read(`src/styles/pages/${file}.css`)
+    assert.match(css, /background: var\(--ds-c-surface, rgba\(255, 255, 255, \.06\)\)/)
+    assert.match(css, /border: 1px solid var\(--ds-c-border, rgba\(255, 255, 255, \.07\)\)/)
+    assert.match(css, /color: var\(--ds-c-fg, #fff\)/)
+    assert.ok(!/background: color-mix/.test(css), `${file}.css fills a field with a color-mix`)
   }
-  walk('src/styles')
-  const all = css.join('\n')
-  assert.ok(!all.includes('--ds-c-ink-raised'))
-  assert.ok(!/\.fr-hh-badge \{[^}]*[^-]color: var\(--ds-c-bg/.test(all))
+})
+
+test('IDENT-2: under a system the demo logo is drawn in the heading colour through a mask of the same picture', () => {
+  const css = read('src/styles/global.css')
+  assert.match(
+    css,
+    /html\[data-ds-worn\] \.fr-brand \.fr-logo-ink \{[^}]*background: linear-gradient\(var\(--ds-c-heading, #fff\)[^}]*mask: url\("\/brand\/logo\.png"\)/
+  )
+  assert.match(
+    css,
+    /html\[data-ds-worn\] \.fr-brand \.fr-logo\[src\$="brand\/logo\.png"\] \{ display: none; \}/
+  )
+  assert.match(read('src/components/site/Header.astro'), /class="fr-logo-ink" role="img"/)
 })

@@ -100,7 +100,7 @@
 	.fr-pagination ul { display: flex; gap: 5px; margin: 0; padding: 0; list-style: none; }
 	.fr-pagination li > a, .fr-pagination li > span { display: block; min-width: 40px; min-height: 40px; padding: 0 12px; border: 1px solid var(--color-line-soft); background: var(--color-tint); color: var(--color-heading); line-height: 40px; text-align: center; border-radius: 0; } /* ds-keep: zero corner of a square control: the template draws no rounding */
 	.fr-pagination li > a:hover, .fr-pagination li > a:focus-visible { background: var(--color-accent); color: var(--color-accent-on); }
-	.fr-pagination li.is-active > span { background: var(--color-accent); color: var(--color-accent-on); }
+	.fr-pagination li.is-active > span { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-on); }
 	.fr-pagination li.is-disabled { opacity: .4; }
 	.fr-pagination svg { display: inline-block; width: 12px; height: 12px; margin-top: -3px; vertical-align: middle; fill: currentColor; }
 	.fr-pagination-count { margin: 0; padding: 8px 24px; height: 40px; border: 1px solid var(--color-line-soft); background: var(--color-tint); color: var(--color-heading); line-height: 1.3; }
