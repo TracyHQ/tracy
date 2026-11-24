@@ -1,0 +1,150 @@
+{
+  "$comment": "Limits of text slots that no visible box measures (read by packages/cms/tracy-quickstart-tools/content-coverage/emdash-content-map.mjs into the content map). A number needs a real source: a box that was measured (how is said in `from`; Playwright, Chromium, 1440 / 768 / 390 px, on the live site of this theme, perf/slot-measure.mjs). A text no page draws in a box (an aria-label, a tooltip, a screen-reader-only word, a field the template never prints) has no number: it is declared `nonVisual` with where it is used, and the kit asks no limit of it.",
+  "limits": [
+    {
+      "slot": "settings.title",
+      "nonVisual": true,
+      "from": "the site title is used only in the document `<title>` and `og:site_name` (Base.astro `siteTitle`) and as the logo's alt text when neither the logo nor the business name has one (brand.ts): no page draws it in a box and the setting declares no maxLength (the business name the header prints is its own slot, chrome.brand_name, which is measured)"
+    },
+    {
+      "slot": "chrome.chrome.brand_name",
+      "maxCharacters": 24,
+      "from": "the business name is printed as the logo lockup in the header (Header.astro, `.mg-logo`, shown when the customer has no logo picture); filled with Latin running text until the lockup gains a row beyond today's one row (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 59 characters at 1440 px, 62 at 768 px, 24 at 390 px"
+    },
+    {
+      "slot": "chrome.chrome.by_label",
+      "nonVisual": true,
+      "from": "the word before the author's name in the post meta line (PostMeta.astro) sits in a `mg-sr` span, visible to screen readers only: no box draws it, so no box limits it"
+    },
+    {
+      "slot": "chrome.chrome.copyright",
+      "maxCharacters": 64,
+      "from": "the whole copyright line is one paragraph in the footer (Footer.astro, the template with {year} and {name} filled in); filled with Latin running text in the name until the line gains a row beyond today's one row (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): name of 187 characters at 1440 px, 93 at 768 px, 25 at 390 px, that is a 64-character line at 390 px with the 39 characters around the name"
+    },
+    {
+      "slot": "chrome.chrome.menu_label",
+      "nonVisual": true,
+      "from": "used only as the `aria-label` of the main navigation, of the menu button and of the off-canvas dialog (Header.astro); no page draws it, so no box limits it"
+    },
+    {
+      "slot": "chrome.chrome.theme_label",
+      "nonVisual": true,
+      "from": "used only as the `aria-label` and the `title` (browser tooltip) of the colour theme button, which shows two icons (Header.astro); no page draws it in a box"
+    },
+    {
+      "slot": "contact.contact-info.name_label",
+      "nonVisual": true,
+      "from": "printed only by the disabled fallback form of the contact page (Contact.astro, `dead` fields) as the placeholder and `aria-label` of an input, and only when the page has no Forms plugin form; the site's own form (installed with the template) prints the labels of the form entry instead, so no box on the page draws this text"
+    },
+    {
+      "slot": "contact.contact-info.subject_label",
+      "nonVisual": true,
+      "from": "printed only by the disabled fallback form of the contact page (Contact.astro, `dead` fields) as the placeholder and `aria-label` of an input, and only when the page has no Forms plugin form; the site's own form (installed with the template) prints the labels of the form entry instead, so no box on the page draws this text"
+    },
+    {
+      "slot": "contact.contact-info.message_label",
+      "nonVisual": true,
+      "from": "printed only by the disabled fallback form of the contact page (Contact.astro, `dead` fields) as the placeholder and `aria-label` of the message box, and only when the page has no Forms plugin form; the site's own form (installed with the template) prints the labels of the form entry instead, so no box on the page draws this text"
+    },
+    {
+      "slot": "slideshow.home-slideshow.items[1].title_dot",
+      "maxCharacters": 26,
+      "from": "the text of a slide tab under the home slideshow (Slideshow.astro, `.mg-slide-tabs button`, one line); filled with running text until the tab gains a row (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 35 characters at 1440 px; at 768 and 390 px the tabs are a horizontally scrolling strip that never wraps, and the content audit's own phone fit of the tab is 26 characters, the number taken"
+    },
+    {
+      "slot": "testimonials.footer-quote.items[0].desc",
+      "nonVisual": true,
+      "from": "the footer quote band (FooterQuote.astro) prints `content`, `name` and `name_position` of each item and never `desc`: no page draws this field"
+    },
+    {
+      "slot": "testimonials.footer-quote.items[1].desc",
+      "nonVisual": true,
+      "from": "the footer quote band (FooterQuote.astro) prints `content`, `name` and `name_position` of each item and never `desc`: no page draws this field"
+    },
+    {
+      "slot": "testimonials.home-cases.items[3].label",
+      "maxCharacters": 47,
+      "from": "the category chip of a case card (Cases.astro, `.mg-chip`, never wraps, sits on the card's top edge); filled with running text until the chip is wider than its card (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 62 characters at 1440 px, 55 at 768 px, 47 at 390 px"
+    },
+    {
+      "slot": "testimonials.home-cases.items[3].title",
+      "maxCharacters": 83,
+      "from": "the title of a case card (Cases.astro, `h4`); filled with running text until it gains a row beyond today's 3 rows (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 101 characters at 1440 px, 94 at 768 px, 83 at 390 px"
+    },
+    {
+      "slot": "testimonials.home-cases.items[3].desc",
+      "maxCharacters": 127,
+      "from": "the text of a case card (Cases.astro, `p`); filled with running text until it gains a row beyond today's rows (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 122 characters at 1440 px (3 rows), 137 at 768 px (4 rows), 124 at 390 px (4 rows); the home demo text of 127 characters fills exactly the 3 rows at 1440 px (running Latin text averages shorter words, so its 122 undercounts), so the number is 127"
+    },
+    {
+      "slot": "testimonials.services-cases.items[0].desc",
+      "maxCharacters": 127,
+      "from": "the text of a case card (Cases.astro, `p`, printed only when filled; empty in the demo, so no row to compare with): the same card as the home page's, measured by adding a paragraph to a services card and filling it until it exceeds the rows the home cards' text takes today, 3 rows at 1440 px and 4 below (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 122 characters at 1440 px, 137 at 768 px, 124 at 390 px; the home demo text of 127 characters fills exactly the 3 rows at 1440 px (running Latin text averages shorter words, so its 122 undercounts), so the number is 127"
+    },
+    {
+      "slot": "testimonials.services-cases.items[1].desc",
+      "maxCharacters": 127,
+      "from": "the text of a case card (Cases.astro, `p`, printed only when filled; empty in the demo, so no row to compare with): the same card as the home page's, measured by adding a paragraph to a services card and filling it until it exceeds the rows the home cards' text takes today, 3 rows at 1440 px and 4 below (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 122 characters at 1440 px, 137 at 768 px, 124 at 390 px; the home demo text of 127 characters fills exactly the 3 rows at 1440 px (running Latin text averages shorter words, so its 122 undercounts), so the number is 127"
+    },
+    {
+      "slot": "testimonials.services-cases.items[2].desc",
+      "maxCharacters": 127,
+      "from": "the text of a case card (Cases.astro, `p`, printed only when filled; empty in the demo, so no row to compare with): the same card as the home page's, measured by adding a paragraph to a services card and filling it until it exceeds the rows the home cards' text takes today, 3 rows at 1440 px and 4 below (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 122 characters at 1440 px, 137 at 768 px, 124 at 390 px; the home demo text of 127 characters fills exactly the 3 rows at 1440 px (running Latin text averages shorter words, so its 122 undercounts), so the number is 127"
+    },
+    {
+      "slot": "testimonials.services-praise.items[0].desc",
+      "nonVisual": true,
+      "from": "the praise cards (Praise.astro) print `member_description`, `name` and `member_position` of each item and never `desc`: no page draws this field"
+    },
+    {
+      "slot": "testimonials.services-praise.items[1].desc",
+      "nonVisual": true,
+      "from": "the praise cards (Praise.astro) print `member_description`, `name` and `member_position` of each item and never `desc`: no page draws this field"
+    },
+    {
+      "slot": "testimonials.services-praise.items[2].desc",
+      "nonVisual": true,
+      "from": "the praise cards (Praise.astro) print `member_description`, `name` and `member_position` of each item and never `desc`: no page draws this field"
+    },
+    {
+      "slot": "testimonials.services-praise.items[3].desc",
+      "nonVisual": true,
+      "from": "the praise cards (Praise.astro) print `member_description`, `name` and `member_position` of each item and never `desc`: no page draws this field"
+    },
+    {
+      "slot": "testimonials.services-praise.items[4].desc",
+      "nonVisual": true,
+      "from": "the praise cards (Praise.astro) print `member_description`, `name` and `member_position` of each item and never `desc`: no page draws this field"
+    },
+    {
+      "slot": "testimonials.services-praise.items[3].member_description",
+      "maxCharacters": 187,
+      "from": "the quote of a praise card (Praise.astro, `blockquote`, a box at least 200 px high); filled with running text until it gains a row beyond today's 5 rows (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 230 characters at 1440 and 768 px, 187 at 390 px"
+    },
+    {
+      "slot": "testimonials.services-praise.items[3].member_position",
+      "maxCharacters": 47,
+      "from": "the person's position under a praise card's name (Praise.astro, `span` in a centred column); filled with running text until it gains a row beyond today's one row (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 57 characters at 1440 and 768 px, 47 at 390 px"
+    },
+    {
+      "slot": "testimonials.services-praise.items[3].name",
+      "maxCharacters": 47,
+      "from": "the person's name under a praise card's picture (Praise.astro, `strong` in a centred column); filled with running text until it gains a row beyond today's one row (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 57 characters at 1440 and 768 px, 47 at 390 px"
+    },
+    {
+      "slot": "testimonials.services-praise.items[4].member_description",
+      "maxCharacters": 187,
+      "from": "the quote of a praise card (Praise.astro, `blockquote`, a box at least 200 px high); filled with running text until it gains a row beyond today's 5 rows (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 230 characters at 1440 and 768 px, 187 at 390 px"
+    },
+    {
+      "slot": "testimonials.services-praise.items[4].member_position",
+      "maxCharacters": 47,
+      "from": "the person's position under a praise card's name (Praise.astro, `span` in a centred column); filled with running text until it gains a row beyond today's one row (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 57 characters at 1440 and 768 px, 47 at 390 px"
+    },
+    {
+      "slot": "testimonials.services-praise.items[4].name",
+      "maxCharacters": 47,
+      "from": "the person's name under a praise card's picture (Praise.astro, `strong` in a centred column); filled with running text until it gains a row beyond today's one row (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 57 characters at 1440 and 768 px, 47 at 390 px"
+    }
+  ]
+}

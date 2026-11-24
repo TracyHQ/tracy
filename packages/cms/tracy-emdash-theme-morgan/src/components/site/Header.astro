@@ -50,7 +50,7 @@ const phone = telHref(site.topbar_phone)
 	<div class="mg-container mg-header-in">
 		<a class="mg-brand" href={href(locale, '/')} aria-label={site.brand_name}>
 			<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="mg-logo-img">
-				<span class="mg-logo">{site.brand_name}<b>.</b></span>
+				<span class="mg-logo"><span {...$c('brand_name')}>{site.brand_name}</span></span>
 			</BrandLogo>
 		</a>
 		<nav class="mg-nav" aria-label={site.menu_label}>
@@ -77,7 +77,7 @@ const phone = telHref(site.topbar_phone)
 	<div class="mg-offcanvas-backdrop" data-offcanvas-close></div>
 	<div class="mg-offcanvas-panel" role="dialog" aria-modal="true" aria-label={site.menu_label}>
 		<div class="mg-offcanvas-head">
-			<span class="mg-logo">{site.brand_name}<b>.</b></span>
+			<span class="mg-logo"><span {...$c('brand_name')}>{site.brand_name}</span></span>
 			<button type="button" class="mg-offcanvas-close" data-offcanvas-close aria-label={site.close_label}>×</button>
 		</div>
 		<ul>

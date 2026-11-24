@@ -175,6 +175,7 @@
 	.mg-clients img { display: block; margin: 0 auto; max-width: 100%; height: auto; opacity: var(--op, .3); }
 	html[data-theme="dark"] .mg-clients img { filter: invert(1); }
 	@media (max-width: 767.98px) { .mg-clients { grid-template-columns: repeat(3, 1fr); } }
+	@media (max-width: 575.98px) { .mg-clients { grid-template-columns: repeat(2, 1fr); } }
 
 	/* the dark quote band above the footer */
 	.mg-footer-quote { background: var(--ds-c-ink, #1b1b1b); color: #fff; padding: 100px 0; }

@@ -297,7 +297,7 @@ contract.layouts = [...byView.entries()].map(([view, ps]) => ({
 contract.design.parity = {
   selectors: {
     nav: { site: '.mg-nav li:nth-child(3) a', source: '.t3-megamenu .navbar-nav > li:nth-child(3) > a' },
-    footerTitle: { site: '.mg-footer h3', source: '.t3-footer .t3-module .module-title' },
+    footerTitle: { site: '.mg-footer .mg-footer-social h3', source: '.t3-footer #Mod127 .module-title' },
     ground: 'body'
   },
   properties: ['font-size', 'font-weight', 'letter-spacing', 'padding-top', 'padding-left'],
