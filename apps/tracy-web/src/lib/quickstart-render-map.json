@@ -1166,8 +1166,8 @@
     }
   },
   "tracy-morgan": {
-    "revision": 35,
-    "sourceSha256": "232674b8e1798d4c86447cbce1ba277093b20e04fafbbd152839bf00c8c200cd",
+    "revision": 36,
+    "sourceSha256": "2f965d03df8c13eedfac92bb8613bda562c029aca5baa8afcd34543f6cf09de5",
     "collections": {
       "en:chrome": [
         "/",

@@ -577,19 +577,19 @@
           "required": false
         },
         {
-          "slug": "footer_social_facebook",
+          "slug": "footer_social_facebook_url",
           "label": "Footer social facebook",
           "type": "string",
           "required": false
         },
         {
-          "slug": "footer_social_twitter",
+          "slug": "footer_social_twitter_url",
           "label": "Footer social twitter",
           "type": "string",
           "required": false
         },
         {
-          "slug": "footer_social_instagram",
+          "slug": "footer_social_instagram_url",
           "label": "Footer social instagram",
           "type": "string",
           "required": false
@@ -839,7 +839,7 @@
           "required": false
         },
         {
-          "slug": "website",
+          "slug": "website_url",
           "label": "Website",
           "type": "string",
           "required": false
@@ -1053,9 +1053,9 @@
     "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
     "package.json": "sha256:24061a8fb7202147de0b699c59c293bae31c3b87fb465cbd6840361ad27ad4ad",
     "pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
-    "seed/field-map.json": "sha256:c8cc18a03e1a1ce404acae43bb8550b7e7bdde65387037d48d7ebb95d2e5cfbf",
+    "seed/field-map.json": "sha256:210eb30343ba6fc2179f4b3dd3f622df9d99d00b8cb36a42af8c60295df2bd54",
     "seed/media-map.json": "sha256:c2d4d4ccd423b5daf1c2a878b5cf382c26cdba577133cfde7926da703826f349",
-    "seed/seed.json": "sha256:4dcd04c38caaa5df36a3b7d9a14b60033c84f33a066fe6c180f77b938ff0d5fd",
+    "seed/seed.json": "sha256:ee92ec5764448ad05cc5a3e6a47b0616dd6d93382ddc4665223f4bad7f55e4d2",
     "src/components/blocks/Accordion.astro": "sha256:468a925a41bf1679d89af45d0af33dc7816d712456b2e7eb7eec2324bb644ecb",
     "src/components/blocks/Cases.astro": "sha256:ae0e1be91cb5d68ce45508f75548da734ea331531a7ee8fbfb59b0965e11bc72",
     "src/components/blocks/Clients.astro": "sha256:64fea72fbc5160bbd5bf967ffe15a94a4844637a703579acbe3014ab6d1b57e0",
@@ -1072,9 +1072,9 @@
     "src/components/blocks/SectionHead.astro": "sha256:60f7225ecbf941bd0db1d3eec13f6b19f3fdd2701f21b72cfffe9fd7e6eaae6a",
     "src/components/blocks/Slideshow.astro": "sha256:70d319bf82cd61605949c773b8ed419528cd567be64edc3e35815af542b56da3",
     "src/components/blocks/Teams.astro": "sha256:fc5d102ad014852dcf5d2df97f037ca91067056c9383e0343358156b7b8659a0",
-    "src/components/site/BlogSidebar.astro": "sha256:c9267264b0d43c84d17e7b32d440958d4612f094a43ca8e791603234cab4ec61",
+    "src/components/site/BlogSidebar.astro": "sha256:0bba05f9908ab514469a4b9325c83b0129de6cd12c02895ae3a99857a34b626f",
     "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
-    "src/components/site/Footer.astro": "sha256:c1829076bbc570858b8058a1e41e32004939bbadd80958dc996ed56d966a38ff",
+    "src/components/site/Footer.astro": "sha256:74a6db7f7ddbca6bc8cdfea2b6cdb1f33c9ed5f2a08fe7bcd392eca2a2f75338",
     "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
     "src/components/site/Header.astro": "sha256:5666814128342565462af531753901f7c86ab8daf78098b6dd9f4cedaeeac27c",
     "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
@@ -1124,15 +1124,15 @@
     "src/pages/[...path].astro": "sha256:6c0ecd45180d9d49c4fa81ff5092607566984df2e37d6f1792456446239cb1a1",
     "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
     "src/styles/blocks.css": "sha256:f7568b39099cd3d165f17bdb55bf128e1fef15b818afc5026420cab624a22efa",
-    "src/styles/global.css": "sha256:d06733a1bd8ab0c6321393314fe99c65fe47c475392abf77853040d31b5328ac",
-    "src/styles/pages/blog.css": "sha256:299fb5ebf38f8af62f504d2da1d0294184a1d0c283cd19cd59273dbd3944f9a1",
+    "src/styles/global.css": "sha256:9007ae314fdbedad2131dfacfafc053e353631c9eaa74c2a86bbd97a53acc80a",
+    "src/styles/pages/blog.css": "sha256:c7991219202e20085a7623e0a6b50beeeb6af892ed3dac312e957f418f0f83a6",
     "src/styles/pages/contact.css": "sha256:ae21060736392d7ca51cdf0f193556602692209a4b2d3bb6d5de7c809a555ea3",
     "src/styles/pages/post.css": "sha256:859fee11eda98d1d08dd47e850f6f040381fdc3000996c53d82df53f99bbb70e",
     "src/styles/pages/search.css": "sha256:bbf98f22c40e89edca3af81ae427129e8b70aeca31c5d8b4231ff9359ed2d7cb",
     "src/styles/tokens.css": "sha256:117b312ff1b4d77007ddcbedcc1ef3dcfb8aa1803d50e91b258c5dffde087092",
     "src/views/About.astro": "sha256:728a54756a7000bdc7588950652198b53ecd08831f5007573c3fe4fd6a90ae74",
     "src/views/BlogList.astro": "sha256:03bbc226a781c1427d1dee5593ed549066701dcc66ac79191bd19e3840b96a62",
-    "src/views/Contact.astro": "sha256:46f8f4d029c27392b5d24afb75e86f66a3d4c12b5cfe6bf1849b26ffbdba4ee1",
+    "src/views/Contact.astro": "sha256:1e5019579111a2d02d4173697d47ef6ccb6c525ade888543ea286e8bee57895b",
     "src/views/Home.astro": "sha256:53c82f4fcf40f2e6ce67aefb62a2702d85b9ad98b3dad4d3b6f049d2b5025417",
     "src/views/NotFound.astro": "sha256:44f555eeb8aea4566095094304942253c9f29cbae6219920e951f5fb29d36670",
     "src/views/Post.astro": "sha256:0a54a5d7ac142f7cb1ff7670e7124de7aed4cb57c632bc3723eb16d22bcf750d",

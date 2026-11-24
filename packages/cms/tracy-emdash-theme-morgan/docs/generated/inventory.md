@@ -154,9 +154,9 @@ Template: JA Morgan (tracy-morgan). Default locale: en. Locales: en.
 | topbar_address | string | no | Topbar address |
 | topbar_phone | string | no | Topbar phone |
 | footer_social_title | string | no | Footer social title |
-| footer_social_facebook | string | no | Footer social facebook |
-| footer_social_twitter | string | no | Footer social twitter |
-| footer_social_instagram | string | no | Footer social instagram |
+| footer_social_facebook_url | string | no | Footer social facebook |
+| footer_social_twitter_url | string | no | Footer social twitter |
+| footer_social_instagram_url | string | no | Footer social instagram |
 | copyright | string | no | Copyright |
 | copyright_credit | string | no | Copyright credit |
 | skip_label | string | no | Skip label |
@@ -205,7 +205,7 @@ Template: JA Morgan (tracy-morgan). Default locale: en. Locales: en.
 | phone_label | string | no | Phone label |
 | phone | string | no | Phone |
 | website_label | string | no | Website label |
-| website | string | no | Website |
+| website_url | string | no | Website |
 | form_title | string | no | Form title |
 | form_intro_text | string | no | Form intro text |
 | name_label | string | no | Name label |
