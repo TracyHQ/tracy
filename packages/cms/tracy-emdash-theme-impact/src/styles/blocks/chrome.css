@@ -5,6 +5,10 @@
 	.im-header-top-in { display: flex; align-items: center; justify-content: space-between; padding-block: 40px; }
 	.im-brand { display: inline-block; color: inherit; }
 	.im-brand .im-logo { display: block; height: 61px; width: auto; max-width: 240px; object-fit: contain; }
+	/* the demo logo is a white wordmark with a coloured mark, made for the navy band; under a worn design system it is drawn in the system's on-ink colour through a mask of the same picture, so it reads on whatever ink the system gives */
+	.im-logo-ink { display: none; }
+	html[data-ds-worn] .im-brand .im-logo[src$="brand/logo.png"] { display: none; }
+	html[data-ds-worn] .im-brand .im-logo-ink { display: block; width: 211px; height: 61px; background: linear-gradient(var(--ds-c-on-ink, #fff), var(--ds-c-on-ink, #fff)); -webkit-mask: url("/brand/logo.png") center / contain no-repeat; mask: url("/brand/logo.png") center / contain no-repeat; }
 	.im-contact-top { display: none; list-style: none; margin: 0; padding: 0; gap: 64px; align-items: center; }
 	.im-contact-top li { display: flex; align-items: center; gap: 16px; }
 	.im-contact-icon { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; font-size: 24px; background: color-mix(in srgb, var(--color-on-ink) 10%, transparent); border-radius: 8px; color: var(--color-accent-text); }
@@ -13,9 +17,10 @@
 	.im-contact-sub { font-size: 16px; line-height: 26px; color: color-mix(in srgb, var(--color-on-ink) 70%, transparent); margin-bottom: 4px; }
 	.im-contact-title { font-size: 18px; line-height: 27px; font-weight: 500; color: var(--color-on-ink); letter-spacing: -0.01em; }
 	a.im-contact-title:hover { color: var(--color-accent-text-hover); }
-	@media (min-width: 992px) { .im-contact-top { display: flex; } .im-toggle { display: none; } }
+	@media (min-width: 992px) { .im-contact-top { display: flex; } }
 	@media (max-width: 991.98px) { .im-header-top-in { padding-block: 16px; } .im-brand .im-logo { height: 55px; } }
 	@media (max-width: 767.98px) { .im-brand .im-logo { height: 55px; } }
+	@media (min-width: 992px) { .im-toggle { display: none !important; } }
 	.im-toggle { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: color-mix(in srgb, var(--color-on-ink) 10%, transparent); border: 0; border-radius: 8px; color: var(--color-on-ink); cursor: pointer; font-size: 20px; }
 
 	.im-header-nav { display: none; background: var(--color-bg); border-bottom: 1px solid var(--color-line-soft); }

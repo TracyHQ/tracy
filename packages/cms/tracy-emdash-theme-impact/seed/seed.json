@@ -2106,7 +2106,7 @@
 				"locale": "en",
 				"data": {
 					"feature_title": "Stay connected",
-					"feature_desc": "Share in the latest transformations within our community\n\nand opportunities to get involved.",
+					"feature_desc": "Share in the latest transformations within our community\nand opportunities to get involved.",
 					"id_video": "5kozt0uDa4c",
 					"ft_video": "images/joomlart/gallery/contact-1.jpg",
 					"video_align": "left",
@@ -2236,22 +2236,22 @@
 						{
 							"font_icon": "fa fa-facebook",
 							"title": "",
-							"link": "#"
+							"link": ""
 						},
 						{
 							"font_icon": "fa fa-twitter",
 							"title": "",
-							"link": "#"
+							"link": ""
 						},
 						{
 							"font_icon": "fa fa-tiktok",
 							"title": "",
-							"link": "#"
+							"link": ""
 						},
 						{
 							"font_icon": "fa fa-pinterest",
 							"title": "",
-							"link": "#"
+							"link": ""
 						}
 					],
 					"section_label": "",
@@ -2272,22 +2272,22 @@
 						{
 							"font_icon": "fa fa-facebook",
 							"title": "",
-							"link": "#"
+							"link": ""
 						},
 						{
 							"font_icon": "fa fa-twitter",
 							"title": "",
-							"link": "#"
+							"link": ""
 						},
 						{
 							"font_icon": "fa fa-tiktok",
 							"title": "",
-							"link": "#"
+							"link": ""
 						},
 						{
 							"font_icon": "fa fa-pinterest",
 							"title": "",
-							"link": "#"
+							"link": ""
 						}
 					],
 					"section_label": "",

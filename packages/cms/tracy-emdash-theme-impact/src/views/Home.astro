@@ -45,7 +45,8 @@ const [{ entry: pageEntry }, hero, helpline, donor, fund, whatWeDo, meet, connec
 ])
 const page = (pageEntry?.data ?? {}) as Record<string, any>
 const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'home' } : null)
-const stories = donations.slice(0, 9)
+// the source module lists the Donations category by title, descending, nine cards
+const stories = [...donations].sort((a, b) => String(b.title).localeCompare(String(a.title), 'en', { sensitivity: 'base' })).slice(0, 9)
 const coming = events.filter((e) => e.featured).slice(0, 3)
 const latest = await livePosts(Astro.request, locale, posts.slice(0, 6))
 const $w = whatWeDo ? stampFor(Astro.request, 'features', { id: whatWeDo.id, slug: whatWeDo.slug }) : undefined

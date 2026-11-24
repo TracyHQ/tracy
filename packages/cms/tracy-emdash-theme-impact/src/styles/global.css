@@ -32,8 +32,8 @@
 	}
 	h1, h2, h3, h4, h5, h6 { margin: 0 0 8px; font-family: var(--font-display); font-weight: var(--ds-weight-display, 500); line-height: 1.2; color: var(--color-heading); }
 	h1 { font-size: var(--h1-size); letter-spacing: -0.02em; }
-	h2 { font-size: var(--h2-size); letter-spacing: -0.0225em; }
-	h3 { font-size: var(--h3-size); letter-spacing: -0.0143em; }
+	h2 { font-size: var(--h2-size); letter-spacing: -0.02em; }
+	h3 { font-size: var(--h3-size); letter-spacing: -0.01em; }
 	h4 { font-size: var(--h4-size); letter-spacing: -0.01em; }
 	h5 { font-size: var(--h5-size); letter-spacing: -0.0089em; }
 	h6 { font-size: var(--h6-size); letter-spacing: -0.01em; }
@@ -51,6 +51,9 @@
 	@media (min-width: 992px) { .im-container { max-width: 960px; } }
 	@media (min-width: 1200px) { .im-container { max-width: 1140px; } }
 	@media (min-width: 1400px) { .im-container { max-width: 1376px; } }
+
+	/* a customer's logo for one theme only (`logoSpots`, `src/lib/brand.ts`) */
+	html[data-theme="dark"] .brand-when-light, html:not([data-theme="dark"]) .brand-when-dark { display: none; }
 
 	/* the Font Awesome glyphs the demo uses: the font ships under src/fonts, the code points are the ones the source prints */
 	.im-fa { font-family: "FA Solid"; font-weight: 900; font-style: normal; line-height: 1; display: inline-block; -webkit-font-smoothing: antialiased; }

@@ -7,7 +7,7 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
   const slides = [...track.querySelectorAll<HTMLElement>('[data-slide]')]
   const dotsBox = root.querySelector<HTMLElement>('.im-dots')
   const perView = () => Math.max(1, Math.round(track.clientWidth / (slides[0]?.getBoundingClientRect().width || track.clientWidth)))
-  const pages = () => Math.max(1, slides.length - perView() + 1)
+  const pages = () => Math.max(1, Math.ceil(slides.length / perView()))
   const go = (i: number) => {
     const target = slides[Math.min(Math.max(i, 0), slides.length - 1)]
     if (target) track.scrollTo({ left: target.offsetLeft - track.offsetLeft, behavior: 'smooth' })
@@ -20,9 +20,10 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
   }
   const paint = () => {
     const at = index()
+    const page = Math.floor(at / perView())
     dotsBox?.querySelectorAll<HTMLElement>('.im-dot').forEach((d, i) => {
-      d.classList.toggle('is-active', i === at)
-      if (i === at) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current')
+      d.classList.toggle('is-active', i === page)
+      if (i === page) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current')
     })
     slides.forEach((s, i) => { if (root.classList.contains('im-hero')) s.setAttribute('aria-hidden', i === at ? 'false' : 'true') })
   }
@@ -35,7 +36,7 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
       dotsBox.append(b)
     }
   }
-  dotsBox?.querySelectorAll<HTMLElement>('.im-dot').forEach((d, i) => d.addEventListener('click', () => go(i)))
+  dotsBox?.querySelectorAll<HTMLElement>('.im-dot').forEach((d, i) => d.addEventListener('click', () => go(i * perView())))
   root.querySelector('[data-prev]')?.addEventListener('click', () => go(index() - 1))
   root.querySelector('[data-next]')?.addEventListener('click', () => go(index() + 1))
   track.addEventListener('scroll', () => requestAnimationFrame(paint), { passive: true })

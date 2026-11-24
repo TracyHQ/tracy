@@ -399,7 +399,8 @@
       "fields": [
         "title",
         "excerpt",
-        "body"
+        "body",
+        "location"
       ],
       "body": "body",
       "bodyWords": 160,
@@ -425,7 +426,8 @@
       "fields": [
         "title",
         "excerpt",
-        "body"
+        "body",
+        "event_location"
       ],
       "body": "body",
       "bodyWords": 120,
@@ -668,7 +670,8 @@
         "charity_label",
         "donation_label",
         "btn_block_label",
-        "btn_label"
+        "btn_label",
+        "label"
       ]
     },
     {
@@ -681,7 +684,8 @@
     {
       "collection": "hero",
       "fields": [
-        "title"
+        "title",
+        "button"
       ]
     },
     {

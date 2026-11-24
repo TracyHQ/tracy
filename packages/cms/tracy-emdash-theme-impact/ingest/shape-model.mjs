@@ -65,7 +65,11 @@ for (const [type, mods] of Object.entries(byType)) {
 model.records = model.records.filter((r) => !dropped.has(r))
 
 // A heading the source breaks by hand (`</br>`, `((/br))`) holds a line break in the field: a newline, never markup.
-const breaks = (t) => t.replace(/[ \t]*(?:<\/?br\s*\/?>|\(\(\/?br\)\))[ \t]*/gi, '\n').replace(/[ \t]{2,}/g, ' ')
+const breaks = (t) =>
+  t
+    .replace(/[ \t]*(?:<\/?br\s*\/?>|\(\(\/?br\)\))[ \t]*\r?\n?/gi, '\n')
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/\n{2,}/g, '\n')
 const mark = (v) =>
   typeof v === 'string'
     ? breaks(v).replace(/<span class=['"](?:hightlight|text-highlight)['"]>([\s\S]*?)<\/span>/g, '<mark>$1</mark>')
@@ -75,6 +79,14 @@ const mark = (v) =>
         ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, mark(x)]))
         : v
 for (const r of model.records) if (r.type !== 'pages' && r.type !== 'posts') r.values = mark(r.values)
+// A `#` link goes nowhere (DECISIONS D11): the field is empty and the view draws plain text.
+const noHash = (v) =>
+  Array.isArray(v)
+    ? v.map(noHash)
+    : v && typeof v === 'object'
+      ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, k === 'link' && x === '#' ? '' : noHash(x)]))
+      : v
+for (const r of model.records) r.values = noHash(r.values)
 
 // The model keeps a picture as a bare basename; the module's own parameters carry the whole path.
 const fullPath = (v) => String(v).split('#')[0]

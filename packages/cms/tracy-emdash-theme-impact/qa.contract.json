@@ -1,0 +1,1508 @@
+{
+  "schemaVersion": 1,
+  "id": "tracy-impact",
+  "revision": 1,
+  "pending": [
+    "Map every converted source page under `pages` (content, rules, states); measure `design.rules` per variant; declare `interactions`; then empty this list"
+  ],
+  "locales": [
+    "en"
+  ],
+  "defaultLocale": "en",
+  "source": {
+    "reference": "source/snapshot",
+    "files": [
+      {
+        "path": "about/index.html",
+        "sha256": "sha256:68190a7d01873d9d64b56d3826f4002e1d0a8c979b87b1308aef928cd1d694df",
+        "disposition": "converted"
+      },
+      {
+        "path": "blog/index.html",
+        "sha256": "sha256:451a9c38506f4c43af88e14e40398e50350c575677649f770577e5ffc0220892",
+        "disposition": "converted"
+      },
+      {
+        "path": "blog/index~start=9.html",
+        "sha256": "sha256:dd3cdf2d5437c92c9967927fe3eb3ee1c1bc0301bac0911def9fb25961a5367f",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/building-empathy-throughremote-user-research/index.html",
+        "sha256": "sha256:4bc0c03268cb6a3dbcf36aad5a7a6e4c8799f31c068dc774dbbbc6148867f41d",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/charity-branding-is-yourbrand-digital-ready/index.html",
+        "sha256": "sha256:2ad4b926545ae9112a8c345baf63aba7ed23ec33e1da3001d44cd9db71a137db",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/charity-of-the-month-plan-international-uk-2/index.html",
+        "sha256": "sha256:5875bf04fe93c5e3b1e049f3c6838d96432667b653eb10f84f20baa7d671aff3",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/donation-and-cleaning-program-foundation/index.html",
+        "sha256": "sha256:834534dfa78a0e6b49914fa1956d4d5a2835250567773e3d96a6f112ea50df7b",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation/index.html",
+        "sha256": "sha256:290938754ebb0e845c0ced61257ce6625710dde2f7585e1951eac4f5f4c0aa68",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during/index.html",
+        "sha256": "sha256:6f4973628cc308f8efeb2f720e7180721b499b92df29d9737f9908cf099a063a",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/index.html",
+        "sha256": "sha256:5cec4aaa4a8ec7f38acca3a2d1629aa112d74b797c6122471fce30f6c3eb4c1a",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/index~start=9.html",
+        "sha256": "sha256:05b2f4f79a5ea5cc41c36cfcb7652da699172d410da2092f45e4d09a85530b0a",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults/index.html",
+        "sha256": "sha256:69b28f28e6b973dec2095f9f1a332943758d50dafad830011a58b1fc20a3bab4",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled/index.html",
+        "sha256": "sha256:f0ccf430ab83b2137f7b290f19187d5642da35eb00467fddbd79a1ed0f8af37a",
+        "disposition": "converted"
+      },
+      {
+        "path": "category-blog/weve-reached-1-million-indonations-and-counting/index.html",
+        "sha256": "sha256:f4c0b5726beb973f09269ce80360b9dfb12d30aa47be10331e0a7036c955bfbf",
+        "disposition": "converted"
+      },
+      {
+        "path": "component/tags/tag/activism/index.html",
+        "sha256": "sha256:99ab3b3e16a182e66e2ec348122e7cab62f4337d919773db19dc3f3c31176816",
+        "disposition": "converted"
+      },
+      {
+        "path": "component/tags/tag/animals/index.html",
+        "sha256": "sha256:1e50167099994c23953998182308a8c56335b0cd4c6be9dd518c78df273ae97b",
+        "disposition": "converted"
+      },
+      {
+        "path": "component/tags/tag/charity/index.html",
+        "sha256": "sha256:84d7967a779223d230ce84a6d08ae4b1abfb6bec6999cb7dee2da668d1307791",
+        "disposition": "converted"
+      },
+      {
+        "path": "component/tags/tag/media/index.html",
+        "sha256": "sha256:d5fcb8191df7e95056ebebc626ac9299cbe936436fb3cc109eb426966cbcd06d",
+        "disposition": "converted"
+      },
+      {
+        "path": "component/tags/tag/nature/index.html",
+        "sha256": "sha256:e1433ceb4fea6d4d2912f8b1035894e4f04e3e7a5b5cdc78ea63b04cd2b25d00",
+        "disposition": "converted"
+      },
+      {
+        "path": "contact/index.html",
+        "sha256": "sha256:390abb51674bd69fc0683e5d142424499974b4ab8fe7de1aba009537fe1a39f8",
+        "disposition": "converted"
+      },
+      {
+        "path": "crawl.json",
+        "sha256": "sha256:a88c207cd52006651bcf7e467c73f4a8002eb7aeb6d88f0bf3207b63fe8bbe33",
+        "disposition": "asset"
+      },
+      {
+        "path": "donations/community-center/index.html",
+        "sha256": "sha256:0af08a2503d535e75ee761ae1efa8ce8ca7fa123d2588bf548ff94399ec8fcf3",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/endangered-species/index.html",
+        "sha256": "sha256:6bb45a85e4d68e34642ce8e660905b344ba894d59b8476706541a38fab96d460",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/exploring-the-world-of-feline-friends/index.html",
+        "sha256": "sha256:732ecc180f6a0cde55713f56f57a53f71a4a53db8468fbcdfa61a12030c6dc8d",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/index.html",
+        "sha256": "sha256:f1cd1b683a7894167884045e39f2d09c61f9de26a2d0a66ca66d711ec1f7e8c6",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/index~start=9.html",
+        "sha256": "sha256:ce00ceaec50c272af9a97d9a9b6ff0187a40d7c36e45efcff3feb5fa8f0ed359",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/indigenous-people/index.html",
+        "sha256": "sha256:38ef4da47d7cf216d7cae30cab5900e4a0c1447e42aa3494c275c2744814f72d",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/oil-pollution/index.html",
+        "sha256": "sha256:6916f917f9df802fd4631c755fe5def0f1f5f1fdb32d3f04cdb7b7837098bf9d",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/save-rainforests/index.html",
+        "sha256": "sha256:9f2fac2a8c18507b9873c3dca2781a09abe1b49b82500dc86bf484e1c0654886",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/saving-animal-preserve/index.html",
+        "sha256": "sha256:b7cfa61029c82e6611bbf5b211619472d456ffc73cc55db1b82244b368c645cc",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/saving-ensdangered-species/index.html",
+        "sha256": "sha256:7bf2f645ed49013deceb5166123db93348d0f0b5184f4ab6f9657483f7fec74d",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/sea-pollution/index.html",
+        "sha256": "sha256:65b80ca416b8f967defc1d775e00031d74acd97452ef3e114df73c7e7fec600c",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/surviving-the-harsh-polar-realms/index.html",
+        "sha256": "sha256:15b42d762d548c5eb50266d4187191c8bf936ecf180dec17e8210a6dc7c7d481",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/the-african-wildlife-chronicles/index.html",
+        "sha256": "sha256:de3981a5f44785f7310a12dd23f779b9482457d2f2192ca9d29575c4d6a026b2",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/the-mysteries-of-the-jungle-creatures/index.html",
+        "sha256": "sha256:705cbaa58e24dcf5e91a4c0502a178ad894db7f7d53b4cd1708f29e39e2c232b",
+        "disposition": "converted"
+      },
+      {
+        "path": "donations/water-treatment-projects/index.html",
+        "sha256": "sha256:59dd19cde1ec673be39e6f5eb6ccd00487d687f504ebaf83e1ca70ee77c2ea26",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/a-microscopic-marvel/index.html",
+        "sha256": "sha256:17684118c96947d6a93653f4f112c35dc1974207523486a116931544430c7523",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/afforestation-program/index.html",
+        "sha256": "sha256:b189e062380e1d3981aace64d743ed3944b4127965ffbaa8197fec07ef92670f",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/an-adventure-with-animals/index.html",
+        "sha256": "sha256:2ddba06147a1f14c3a27813797501aa5a8278772c8fb03813a98260bcaba26d4",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/charity-journey-to-africa/index.html",
+        "sha256": "sha256:24f64718fd2c8edeb2e9277d8b201915d7b61ee6a45a9d160779a35f98befa2e",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/feed-the-world/index.html",
+        "sha256": "sha256:2c095ad76cf8e86fdafde0735fd39aaaef9283c46a0bb41c5e16d30e9f150f6b",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/index.html",
+        "sha256": "sha256:c0b1a46c4e58243c02e296f3f88a8d131f7126f853e687c5efea2c9588b71b6a",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/index~start=5.html",
+        "sha256": "sha256:99e7ef2cedbc049a31cb8fcd7cca7ecc22a27d732cdf5f9bc38ba1067b2f8cfb",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/natures-hidden-gems/index.html",
+        "sha256": "sha256:c50ae962d44ae5a60c758efa7a562129bf3a0df8788476a19fa3f072fcb13d56",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/saving-nature/index.html",
+        "sha256": "sha256:bccf1c32f5dbf194b747b4dd36cd34552c03ab2e93d8a097b7086c06ff45df55",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/the-day-of-the-african-child/index.html",
+        "sha256": "sha256:b1a2d57f68faa6778f67e80bcb95e02e76bf223e1bf825f05022c57203b0d1a1",
+        "disposition": "converted"
+      },
+      {
+        "path": "events/unveiling-natures-best-kept-treasures/index.html",
+        "sha256": "sha256:349144e4a85c43c9a41da748d9f90315a0c4984b2ccff3f28d3a885264cbe395",
+        "disposition": "converted"
+      },
+      {
+        "path": "help-faqs/index.html",
+        "sha256": "sha256:c6c830b79f558213e8b9b409f0c61e0951ec0cc99bbc5d9fb4d07a045e2831a9",
+        "disposition": "converted"
+      },
+      {
+        "path": "images/joomlart/acm/activities-1.jpg",
+        "sha256": "sha256:adf5fd9e8705d41a6211229fce19cd5f8ea86c284ce18f26461fd7b8a9978c7f",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/acm/activities-2.jpg",
+        "sha256": "sha256:bc9474e1e0b7740434a6960c817765287e2355bce4e4239149eaa7c57829fcb9",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/acm/assistance_1.png",
+        "sha256": "sha256:fe06723b3ecd7f60de00ef7f2494b0fe67bea0e82780de674fb7a56dafb0e154",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/acm/assistance_2.png",
+        "sha256": "sha256:d41728f0f1d4c0c53c0db2d40c1552e950269e26b8a202d2f5cc994f1c8714ae",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/acm/assistance_3.png",
+        "sha256": "sha256:470378ecf54253eac28361a39ac91262be53ca86ca940c4ba21ff4731d290908",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/acm/out-mission.jpg",
+        "sha256": "sha256:3dc32d2a629e9b57ba945c9301d582435213eba9f1c0d8f7e8e2a71f3c2a03f2",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/authors/2.jpg",
+        "sha256": "sha256:e5639adf1703549f839f0cd9ba49334ce8c75060d118702aef62a8104b968ed2",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/authors/3.jpg",
+        "sha256": "sha256:9c3304b8cbe760a69435e56dd07da0ff630f16025b430645fcb80047ecb9b6f6",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/authors/4.jpg",
+        "sha256": "sha256:a4429b838bacd61004c7469afb19f4d2e84f00194fbf7b889e734b6628d9165f",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/authors/5.jpg",
+        "sha256": "sha256:77ffc6bb82206c3ab63ea069a2510c333878ee2ccf2f248e485def5da0de3656",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/authors/6.jpg",
+        "sha256": "sha256:c445ebd1bcd46d2739a48e91b76af58e4066df2980c967552b650e0a748b72de",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/authors/7.jpg",
+        "sha256": "sha256:153ebde8695fcb2db65122f8ff18a135883fdaf5f63bb74cd6ea1828fc1b02dc",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/authors/8.jpg",
+        "sha256": "sha256:0e232eb00c6e31f01296e1ee1757a67088f8b4f6ab03bffc37403681c3550b0a",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/authors/9.jpg",
+        "sha256": "sha256:1b9e5b378d64e70e7350649fb0513ca20cb7e0946b25aaba9fb1931990cfca31",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/detail-1.jpg",
+        "sha256": "sha256:246b98237740f127d2d2bbf7304c82bb3ca5232ba3e988186ef7d6194ab78727",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/detail-10.jpg",
+        "sha256": "sha256:19987b8e883b22b70f20886f5d745e3cee0779266dcfcc3010644310e8e99aa7",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/detail-2.jpg",
+        "sha256": "sha256:7aa19dbedf1c634bc197e4543e758cc57239015b97d5cb3af41f10aa13c4053a",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/detail-3.jpg",
+        "sha256": "sha256:f14f1fabfcb1ab3d95a0b54355311c7e1acc1836bd98b415b4da4e46fdda7317",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/detail-4.jpg",
+        "sha256": "sha256:823785e903f255aa70d7c3ce8467559159e454bfc269f425fa8a310d909d6557",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/detail-5.jpg",
+        "sha256": "sha256:661768b7a1088054fb06e5cf400ceb28a404c8f68cf82855f3c47b273adc1fe8",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/detail-6.jpg",
+        "sha256": "sha256:9527e5567283f79dd0210441e5c96f2de553e16c952e456a3dd1528d2f4807b3",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/detail-7.jpg",
+        "sha256": "sha256:601981129293c4d68abd16f71158c572595c09f5f3c8219f97aed869a6bcca2c",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/detail-8.jpg",
+        "sha256": "sha256:d43c859fc7cc7d92ebece59f8f7006cac78fb14a4592a85fd2720c80a0781993",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/detail-9.jpg",
+        "sha256": "sha256:3ad0a611db59123cd8a697fb13f89f5c432128cff4c32cd56e0ce43c49d7410e",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/item-1.jpg",
+        "sha256": "sha256:a61157f434fd44c729cce603d7812220a6d1b407718071bdc6e39a485fbc2067",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/item-2.jpg",
+        "sha256": "sha256:1d9e064e33ac5e6f90d267051a26f59b3be463e1aa5405420e1deaf0e391cafb",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/item-3.jpg",
+        "sha256": "sha256:c435c62d92a9b1edf51e79537f32d1928c6fc0c3f37eed593e5400c80e8b2736",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/item-4.jpg",
+        "sha256": "sha256:1a029c015788b70852178a1298320d139998ac4af09cf2dbd09ee354582e8e04",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/item-5.jpg",
+        "sha256": "sha256:3e6da424d85b0b47c29e9dcff4bdffa3835fc3888c26df45601ea76c6f73c898",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/item-6.jpg",
+        "sha256": "sha256:f0a66ac18314773c64ad43cd19c91c60330a515f44460dac4185a0feb83a15a9",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/animal/item-7.jpg",
+        "sha256": "sha256:c445bfaee2df5b6431431aef3c6dea405499c14e07ce44155bb857c6de1e072f",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/detail-1.jpg",
+        "sha256": "sha256:8825f41e0981d1dab93a179d6dee0829ab50fcc75383a2866cad725796d49b82",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/detail-2.jpg",
+        "sha256": "sha256:d2b4bc22db8592618bae445b5aebf48e5593fdf1a236ebfff05b6ea0780345a0",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/detail-3.jpg",
+        "sha256": "sha256:a5d6d8686307759afe5a542cb710e85234cbda894ac136aff1117e8ae2c9f899",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/detail-4.jpg",
+        "sha256": "sha256:1a7d116b5406ef9bd0c2ded19201a6d84ae7957f09fedd09ae9e18f5f22804db",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/detail-5.jpg",
+        "sha256": "sha256:192512313056584391e629aa308874ef9396017b72d3550c7601862fb21af912",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/detail-6.jpg",
+        "sha256": "sha256:1229970f3ae5645cacdb346dcd92d91beb13dc861715aef86a3cddc3f8d96a06",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/detail-7.jpg",
+        "sha256": "sha256:371c41aab9d9d71e0a75a9e0434fd20e35107fff216ed20cc17f49214f854916",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/detail-8.jpg",
+        "sha256": "sha256:e71b4c7449d1575f9a87be127184461275dca94ca7bf31ed2fa256cd1ca75e33",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/detail-9.jpg",
+        "sha256": "sha256:7de74dc6501f70d868c0b005bddc750223f8cddbda34454f12cf41cf0d6a0e1d",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/item-1.jpg",
+        "sha256": "sha256:084a77f9f66902dea2f94fd507afd6b1de5759d2e85282de0ed83ce7b17cfb19",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/item-2.jpg",
+        "sha256": "sha256:ba51a63138ea86fe80be8bb2ad4ad30242bac57443104f602d2505ce1d1a33c5",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/item-4.jpg",
+        "sha256": "sha256:212f4efc6a038c59b85a8f7ac0c415c9855a344ce15114ad79766151a6a74c96",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/item-6.jpg",
+        "sha256": "sha256:1ac9b53f6d22296c44e356f170c168bf157bf60e7caf6a9892ab54960c6d3de4",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/blog/children/item-9.jpg",
+        "sha256": "sha256:0d2445b689757f11af2b34e63d8e56f84f71dfd0e260c8aee1be28da474c7c06",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/cta/avatar-1.png",
+        "sha256": "sha256:205de586521090c42858dd9aee28c18a282b07844ac790aad506c9e95d7bd8a9",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-1.jpg",
+        "sha256": "sha256:4b38098fc104ecae954de968078a22c822b2426519618b1539bbfffe5d662e51",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-10.jpg",
+        "sha256": "sha256:d838ef9832d3152e04df2794267f7657c2a83bb3e1cbc066d0770725b20984e6",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-11.jpg",
+        "sha256": "sha256:9a0b95fca354696d629299d09286cec606be3d2ab2b6f171452479580542e486",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-12.jpg",
+        "sha256": "sha256:41c5b5cdb067c81279327860172a168e9747e2735fe9f61afd33d683848f53b3",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-13.jpg",
+        "sha256": "sha256:9da245f9a7eda0d5001db4d2c4ececead49d5b306ada81eea094def5bc8c2237",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-2.jpg",
+        "sha256": "sha256:4bd0201770856e26baea6498d6314e02f878cb545e4fb41345e59536f2321949",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-3.jpg",
+        "sha256": "sha256:2ea1701124b021ffa02a306f00f4a8bea0031c9c81cfc89ba12b1c0924dc5425",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-4.jpg",
+        "sha256": "sha256:f307cf0fb5b6c988ab4a53f66b210575528890d1f3835d5ce16d4576b8d4c22e",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-5.jpg",
+        "sha256": "sha256:ae9881bd469888e68b910e8df3c51bc08d8509e3795bcb4650707c3ad304632a",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-6.jpg",
+        "sha256": "sha256:fcc5a488f98028c0ea8abe793e62fa18fdd29477fb461d8cfcc7992c2aa6fec7",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-7.jpg",
+        "sha256": "sha256:52af9b721eec4bc958a47f6364f71a8a802822a567da2bcc3295749ccd602a71",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-8.jpg",
+        "sha256": "sha256:a2aeff2402823211702a89e23831973bc35f3d15af1a43300f5523dd12449d34",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/detail/detail-9.jpg",
+        "sha256": "sha256:b95f43e39e7c1af7633e4bf20fbd59ff65d37e43544fb18161ec915739a9e1f9",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-1.jpg",
+        "sha256": "sha256:367336b3c1c3971b4ad2c7b7b86a1af999ecc44703245b87d11bdc235e671f4c",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-10.jpg",
+        "sha256": "sha256:30f1be1d888faa1e9acfd8f3883bd2e8e7f7ad400b18376806edbe10065e001f",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-11.jpg",
+        "sha256": "sha256:2408fbf01a5eb7f6254da38c011c8e07ab1590f3ea568835c4fa56728be5e04d",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-12.jpg",
+        "sha256": "sha256:8e3c8dd34509bfc6509565626c717065b523145bc888b904cc316a1256dbfd45",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-13.jpg",
+        "sha256": "sha256:d1343f91128e10626dd3ddc7ec46cb01c344af5a2048d35c500bb7c2306d0d72",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-2.jpg",
+        "sha256": "sha256:ea4c1b5d59d4b792e3a2a0a1491bbb989489bd98283aee27b877c19b4f45ef69",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-3.jpg",
+        "sha256": "sha256:0b2760e29d3be42b1bc43be08c5a58a5e14b91c909b98ee6204da16307397319",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-4.jpg",
+        "sha256": "sha256:b69b8cf65910a665ec2ac933f18be989df232f46f2a66bbf7cc47705bf52b704",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-5.jpg",
+        "sha256": "sha256:5156758d5694115479b1b5effbc5695443030a4d2a5455b1a5ab247f3c3aa986",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-6.jpg",
+        "sha256": "sha256:cf450350641e1fe1a230bd8a69a42be4ce29b6df5183e0cbe9babcdf1392731a",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-7.jpg",
+        "sha256": "sha256:1f1b61f64343d14fdf44d2d53d84a9c6560e7a586d0682a96231a888eedebf10",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-8.jpg",
+        "sha256": "sha256:6e23ab9db4c25adddad5d4b570291f414cd699f407e91f09623e19ae23bf17cc",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/donate/intro/intro-9.jpg",
+        "sha256": "sha256:dc4f60631733f9e9c6dcd5140ac2d6ce3c15cc1225cab17aefe54d3ad8fbbafc",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/detail/detail-1.jpg",
+        "sha256": "sha256:3522e3c8f96aedd5272e6fcedc7359a07cf98f48b1ac3e576fa2e7ab66182aeb",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/detail/detail-2.jpg",
+        "sha256": "sha256:bf82939b4c258e70e47e403bde3f1100ace75393cea5a04550ab0b0e64cadc87",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/detail/detail-3.jpg",
+        "sha256": "sha256:09da20d929788e89f51c14d4840b9489fff8e69ebf150c509fc7688eb93ad3f2",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/detail/detail-4.jpg",
+        "sha256": "sha256:85170c44249dcebadaad79de827ab259629b3616db6ca6158e66e74ed5e091d9",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/detail/detail-5.jpg",
+        "sha256": "sha256:57f4d99fc3d1945ef65d77b33aa4cfed02dbe95656b006507452da91f32505f6",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/detail/detail-6.jpg",
+        "sha256": "sha256:e92bd6792d6fe824bad80305ae1199f548617864cf318ebaab3ec9896358782c",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/detail/detail-7.jpg",
+        "sha256": "sha256:a7fc15051d31cc2cd6e761957e1fd85b3623dd0391ff97f59e3f809c5c4bfc80",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/detail/detail-8.jpg",
+        "sha256": "sha256:e89cef55aa9037346965972a6fec1bd5e18b2af3a06ca3c358ef978c4452fefb",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/detail/detail-9.jpg",
+        "sha256": "sha256:7a030ae8b9bf113f386bf4c7588de686c0fb42c2e5f2888372d0a129262fc278",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/intro/intro-1.jpg",
+        "sha256": "sha256:9d48e30d2c2a7b5446b4456de73004cc7ca0435c8e6f2e2d0f2a746e1af954bc",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/events/intro/intro-2.jpg",
+        "sha256": "sha256:ffa8600e9e6401fe434406b87769b8ec8b4b9416fa0994f00372f7c2329084d1",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/features/bg-1.jpg",
+        "sha256": "sha256:424438e0cc91f849c3059079305be6eefe25dcfd770552f97abf1099ba7a0757",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/features/icon-1.png",
+        "sha256": "sha256:6a82fee98acf79a88fe87d5e0d3b54f8f9327062e4987eebd08d47f8ebc73c19",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/features/icon-2.png",
+        "sha256": "sha256:a4d3c8d712f21fde2a91ca489148d1133f8f021b7c255fa4b8d8957be8bd10e2",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/features/icon-3.png",
+        "sha256": "sha256:987f4d7ab53db919f4200c65ffdcd6af5981b2e90a3c96af96fc3db8f13d5dcf",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/features/icon-4.png",
+        "sha256": "sha256:def8480ed4f5ce608dd14bd8e372a50cffb3f415b6bab6c6e769c7d68ef2ff82",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/features/icon-5.png",
+        "sha256": "sha256:910ba83a0b4e9b640e3179c335cdd210b62b0fa6abcce7eecee5f28dbe42e4c9",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/features/icon-6.png",
+        "sha256": "sha256:af47e65380e6d705dd306ceca881ea8893db9860f1e1bb24623c3c37b6125414",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/features/icon-7.png",
+        "sha256": "sha256:81c5d632c108a3f5c2f006b9d04ab1983617be3c6eec7662181f11b27d1f2dcb",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/features/icon-8.png",
+        "sha256": "sha256:b19fdf5a71c055406075f63e6323dfed940c1219b6a720bd4e978ed36e01b8b4",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/features/icon-9.png",
+        "sha256": "sha256:4a915a459cceaf7224d03550abf4130054689be4d3a33a85a0d6ea076c56a873",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/gallery/bg-1.png",
+        "sha256": "sha256:b89dea5c89c00f81aad8c732ba95fe62083fbf80dc48ad29efd6b5f92370968d",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/gallery/contact-1.jpg",
+        "sha256": "sha256:0799d7adebe0e3399bb60ae44d65d93648e3c37cbc13382f764e4e6c7c946a62",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/gallery/detail-donate-1.jpg",
+        "sha256": "sha256:6dd8dcd05e1fabfe1535f5ac7abaf5225ecf4594dff59cdb7aaaa80e617ece77",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/gallery/detail-donate-2.jpg",
+        "sha256": "sha256:b21be515bc09111b057f3b8007b3e82139507be0c4e42978242fb6adf2432dad",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/gallery/detail-event-1.jpg",
+        "sha256": "sha256:344d11a50e54e9bb6bca07cde8c09c6534a7bf0b7286513e2b503d2b5905be40",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/hero/hero-1.jpg",
+        "sha256": "sha256:371b5083d08272485553e5ee80b80d1f538a5214d13914f7162187d53ab796f3",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/hero/item-1.jpg",
+        "sha256": "sha256:8bb4bf470e588b997bf20390a8546fbc5bb5965eb55cc67034a0d09e7928b609",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/hero/item-2.jpg",
+        "sha256": "sha256:99d961a9fbd5ca1c55491c70981be9e61ec37e5457bd2f20eb449fa93121cb90",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/logo/logo.png",
+        "sha256": "sha256:668d58db22587acf1d9d5c2fc128990e3ce51b463864282c6207a30d3b80660b",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/others/404.jpg",
+        "sha256": "sha256:a9fbeddf9c2c86b7d7ad820a7717a5f89007307a8081cc09dbf6c91598222844",
+        "disposition": "asset"
+      },
+      {
+        "path": "images/joomlart/others/offline.jpg",
+        "sha256": "sha256:a03f91ac70e8a0206ff1d2cd499cccc4495498778dc35296f6076bcf4f95cefe",
+        "disposition": "asset"
+      },
+      {
+        "path": "index.html",
+        "sha256": "sha256:2fe4e9041efec2dd00e6249de28b73a58a6d84d373faf0960938cfcc2aaf15e0",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/contact/index.html",
+        "sha256": "sha256:9fb4383476870d22b74f7afa44384c7398fb104ef38ade4dc4784ce8fc1c71d0",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/donations/index.html",
+        "sha256": "sha256:7115237b8f201bd8af97abbcc974be8727832d8089d1e4c9abef4e93324abd7d",
+        "disposition": "converted"
+      },
+      {
+        "path": "index.php/pages/user/registration-form/index.html",
+        "sha256": "sha256:a123f206a9f92c6b2289d1b68cab65a127fe036271d571acb6bee689c382f668",
+        "disposition": "converted"
+      },
+      {
+        "path": "media/com_acym/css/fonts/acymicon.svg",
+        "sha256": "sha256:c1517345b7347aedb7b09c247bf8af65bd699a433e47afb633af12f185007c64",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_acym/css/fonts/acymicon.ttf",
+        "sha256": "sha256:5704bb91a1565963c2e6db60bec527f88ea3bcb89a35b27eaa5b6a2c701e3f7c",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_acym/css/fonts/acymicon.woff",
+        "sha256": "sha256:13fe9ac8ec7ac204d630d4e827af4a4dd5a92f73eb00191156071d048dae3055",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_acym/css/module.min.css",
+        "sha256": "sha256:0cf604cecf69b3bed6295eb121fd9e821d6a8e33848e06b1fa346e2912f95900",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_finder/css/finder.min.css",
+        "sha256": "sha256:0376f10fb61436bda3ba56b432ee050ba691a3483118ab57aa7dc07eb42ea4cd",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_finder/js/finder.min.js",
+        "sha256": "sha256:a3ccb2cd02bb4362be9d0b1f737aec5f7304af71730a1e4017ba003854fce5d6",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/com_tags/js/tag-default.min.js",
+        "sha256": "sha256:7c97dc019c350c50f44a79b631a853a7c9dc409c2d252394eaab8201dcd25d27",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/plg_system_schedulerunner/js/run-schedule.min.js",
+        "sha256": "sha256:26ff971c169218fd254d5826a1c82d1fcf01340d35d09ef6f0f07eacde818a1e",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/css/fields/calendar.min.css",
+        "sha256": "sha256:e130941535508f3dbd044224def5004648c3f25644ea9f16c5cf2c22da79b958",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/images/select-bg.svg",
+        "sha256": "sha256:0aca0d7b534234c0f5c680504d4f37784c71c4733e272d9da6e4521b185cad6b",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/core.min.js",
+        "sha256": "sha256:045181e3f5ea2f3afd09831dd18ea871b8a98fcb8cb3233af395fe123bdd3934",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/fields/calendar-locales/date/gregorian/date-helper.min.js",
+        "sha256": "sha256:0b38b69c2d3cde558c1850edfa64674f7142b60e3d5a3e2502bbfd14e5e7731a",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/fields/calendar.min.js",
+        "sha256": "sha256:b4d8c60e15ad1dc5c7df10c7801571340052b80f34de7c8d6533fbe8c1888d06",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/fields/passwordstrength.min.js",
+        "sha256": "sha256:ba9b9bf4d2a0ccb718ad407262d5d25b5312860e038bdadf490c28a6a3c89026",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/fields/passwordview.min.js",
+        "sha256": "sha256:1ba2fcc7648c62b2c7cf2d539092cec381ee03631114f3e5a851b398a2c8ff25",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/fields/validate.min.js",
+        "sha256": "sha256:2eb3c772ac894af82059fcf115b2ee545599cacf490eae2826c6e71a069c1f37",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/joomla-hidden-mail.min.js",
+        "sha256": "sha256:1aacba2d5d0e5f070a52691efbf51b7183bba1fe42c6569ed5f2025c6e409f19",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/keepalive.min.js",
+        "sha256": "sha256:983c4e677c121da92edce183d530881200e0ce545ddca1174bdb3eedb7588619",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/system/js/messages.min.js",
+        "sha256": "sha256:09426cb3251a9408374f3f37bb5ec75a921c2e71d8717a83e7ab0acf16addf0a",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/38e3a3f821275bb909c49742ce31536a.css",
+        "sha256": "sha256:984dc00e2dd8d9e6fc36429fd1bee85f0af50e4cbbbc6a512b05a9461b3a5c4d",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/40da287f37bd90fa5d7ef09f29f3cb74.css",
+        "sha256": "sha256:927165157ca1c1ce20c2eb93b0993934160c523f937fa5a2c49c6b671c6f2f8e",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/415e16ae0d3e524816814e8bde846c16.css",
+        "sha256": "sha256:56cd4bd51ea8f84e02dc3eb84f3356924f637aefe7ce9a93e0b26cd4c4bbf7a7",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/4dec6588714b4c08b0f8130f64e85306.css",
+        "sha256": "sha256:984dc00e2dd8d9e6fc36429fd1bee85f0af50e4cbbbc6a512b05a9461b3a5c4d",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/6550412b5149f4552dce9dfbbb51a77c.css",
+        "sha256": "sha256:984dc00e2dd8d9e6fc36429fd1bee85f0af50e4cbbbc6a512b05a9461b3a5c4d",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/8573e74ae1c1a1f94841a1f059e31840.css",
+        "sha256": "sha256:56cd4bd51ea8f84e02dc3eb84f3356924f637aefe7ce9a93e0b26cd4c4bbf7a7",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/8a2890999e6a39f7fa4a6b732b769748.css",
+        "sha256": "sha256:2d432fd1ceb418282d91528e9d37a442a0f0c4a33ad535c2b5da95856487b23d",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/98b7e087ca667c28284aac461552a3e3.css",
+        "sha256": "sha256:e6fb89fbc806165d47aaafc5ce23632f38dfac7e3366698c622befaa9a42e5c0",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/d08ebba4dab9159427c94e3242ab0b4c.css",
+        "sha256": "sha256:984dc00e2dd8d9e6fc36429fd1bee85f0af50e4cbbbc6a512b05a9461b3a5c4d",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/f2fdf68265c2b6c13ad24b786caeafad.css",
+        "sha256": "sha256:e6fb89fbc806165d47aaafc5ce23632f38dfac7e3366698c622befaa9a42e5c0",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/css/fe9d38ddbf49b566c4b178c967e81c84.css",
+        "sha256": "sha256:ced19acd7b0b0b5172375f0fdd9aee6fdc9726c0ec809f49c5fbfb00c43c4ad8",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/js/12e7ae5ea314b23f076918142d97014d.js",
+        "sha256": "sha256:c1e558a8545552f4d587e05aa733a7ab03e22abd8077f27bc1383466a359ce5f",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/js/24285deb4c834029374ab66036074787.js",
+        "sha256": "sha256:3c091581987de1815a75dd45d105d63b3fceb87f49c68b3189db1c949503a43b",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/t4/optimize/js/750ad72db2299b55a92b62f4da1483db.js",
+        "sha256": "sha256:42d0255b4d7f0b4932207599bb9365dfa5a64e026e437f5e89f21386acd1f27f",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/awesomplete/css/awesomplete.css",
+        "sha256": "sha256:8570c166966479f18cd0be77bb56947a3abc05b914257698134e652274b5ffa8",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/awesomplete/js/awesomplete.min.js",
+        "sha256": "sha256:b88cd20ce7955245180991050108b764c14a17986e7eae2daee92273eb7f75df",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/bootstrap/js/collapse.min.js",
+        "sha256": "sha256:cf9de80f69ca7fb0965323fb377b2424b59d4ab961f5a7802e537c7effb98320",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/bootstrap/js/dropdown.min.js",
+        "sha256": "sha256:c5d8353d52ebbf41bba3c66d69981ca111fee195d1ef3ec50054d79c2abde84d",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/bootstrap/js/modal.min.js",
+        "sha256": "sha256:1a9326b0065dc08763f2323553814ef6f716c5948055f8d177d976eae684b9c1",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/joomla-custom-elements/css/joomla-alert.min.css",
+        "sha256": "sha256:df8eb5ad4051778586df18f3e6a7d3368820b8e8134751fa5ac845cead9318cb",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/jquery/js/jquery-noconflict.min.js",
+        "sha256": "sha256:b7bbe381cf509577690654422e09b73e9fdbb0b70d47028146147da7a7a0c5fa",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/jquery/js/jquery.min.js",
+        "sha256": "sha256:fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a",
+        "disposition": "asset"
+      },
+      {
+        "path": "media/vendor/jquery-migrate/js/jquery-migrate.min.js",
+        "sha256": "sha256:6fa409c2c72c30d7e21c407339c5a4802c3334660d9b1dc5e3ea2752bb6a4b62",
+        "disposition": "asset"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/Gbush/index.html",
+        "sha256": "sha256:cdce600e0d077f035c205a98df5f5e438a26a6046a214e4ce845ece0aa78f5cc",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/Gbush/index~start=3.html",
+        "sha256": "sha256:d9ec1c36625841835c8b2b0987c54228a32ee22f0d7902a24b6b45837dfdaad0",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/Jsteele/index.html",
+        "sha256": "sha256:18bcb4c37882a8b82768f2c121ffa1d678605cb9b7912b4f5a1d4bf825712335",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/Jsteele/index~start=3.html",
+        "sha256": "sha256:b0f89ccb98ea02fc369b6707e9a3f23b1cb484110ddaf2240912955c262b5683",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/clitchfield/index.html",
+        "sha256": "sha256:a87f55b061550aa0fff9cf2a5a7272280fcb848739a29c901897e6cd041c1008",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/clitchfield/index~start=3.html",
+        "sha256": "sha256:a7d66c64221a086c43aa604898135a22fdf542692f123a34b6dfe257737b6d1b",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/jsmith/index.html",
+        "sha256": "sha256:321b5f93f5863608d5e5bedf02f25f8bfcd19cd6e482473e5b33f572de9f61f8",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/jsmith/index~start=3.html",
+        "sha256": "sha256:07dde418dce94d52365aa0ac3b7f60c9a9ed5380b43ffb14f90721cd8c1f6bde",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/jsteve/index.html",
+        "sha256": "sha256:3cb12ea86a34af2cb5ef43837c9f3950e9d8f1a0ccc926300477538d3ce002f1",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/jsteve/index~start=3.html",
+        "sha256": "sha256:573d06fa9eea4ae0937d633a3c71385ac6c9fdf669eaedff1a72a3f3bc80c637",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/mbrown/index.html",
+        "sha256": "sha256:ae945db0cd073391cfcb4467d3f5b6a5a06567736f2edd32d3d543cc50fec4d5",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/rcoleman/index.html",
+        "sha256": "sha256:164f972119af9d3907d3928a6707c1757c34aec03a0e7eee521ec8147f81b46e",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/rcoleman/index~start=3.html",
+        "sha256": "sha256:88ba70c806136d742668e4a450526c52db76146b6bca355f85914d8fa0322e33",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/author/slee/index.html",
+        "sha256": "sha256:c0f383fa645f76a856fe81fe85db3e52deb659e49bc14b6b0c398fe21e4cf01b",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/index.html",
+        "sha256": "sha256:17daf8ca3cdfd9b9f93ded55397977b22ba9e2c31e51a8d0fbbd03a24bf8a653",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/author-listting/index~start=6.html",
+        "sha256": "sha256:8de14f301e4eb4e85a4a8b2e4ef89bbdfe9c71fc90cf8790d690975a60ef05c5",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/blog-detail/index.html",
+        "sha256": "sha256:d1b902e79e94088190af76076fafc9fbf9b27486ce4a6f0032238efcbc5b6498",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/category-blog/a-journey-of-discovery-and-learning/index.html",
+        "sha256": "sha256:2a2ee84b819c49d53c0dc564d36fa7cd01334d610ecb83dd27532740b0faa6a8",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/category-blog/a-journey-through-enchanted-lands/index.html",
+        "sha256": "sha256:3afe5aac21f8f624476cf04ba8dd2bc4f03fe1db48b8f244eaa916a5e7663f1a",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/category-blog/exciting-adventures-to-the-past-and-future/index.html",
+        "sha256": "sha256:cc73a4aedca9c470e63d183b131a43d3cf2e5f9dd59175ed7536872d15dc1128",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/category-blog/exploring-magical-worlds/index.html",
+        "sha256": "sha256:67d3d03a82f9769db548e5e91436adb24693722796fde8af1b56e98e5827a705",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/category-blog/exploring-the-beauty-of-the-animal-kingdom/index.html",
+        "sha256": "sha256:b6a212a40c83986042e61e3c1e0190a6593a1aebe5fed3762c19863deb984e79",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/category-blog/heartwarming-tales-of-kindness-and-togetherness/index.html",
+        "sha256": "sha256:7be4f961fb9d7f9753692f3b9ba8d983a0b050f7af1f2a5777abd348d21a27ca",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/category-blog/how-many-people-in-africa-don-t-have-food/index.html",
+        "sha256": "sha256:1c2e1be6930aa373eb391f6b7332ee312c256d62484bff2fc560253559d3b6a2",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/category-blog/index.html",
+        "sha256": "sha256:b6d20498441610b70b35c3ef1e6f74228724634bfc6f0f257ed1f453026b2db7",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/category-blog/legends-and-folktales-from-around-the-world/index.html",
+        "sha256": "sha256:3abc9307e521ee3c2929cb931fcba53be04df1df51090d4beafc60baa2c8a5cf",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/category-blog/silly-stories-and-jokes-for-young-readers/index.html",
+        "sha256": "sha256:da316ef4ada47b22219b77969b526bf71d6cdc86a8dabaa2a6ca07a47583d774",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/featured-articles/index.html",
+        "sha256": "sha256:47c2757adc70ae70fb423577f57d4d0382774a3e5bc3fd7d66cf4ebf31bd687f",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-content/featured-articles/index~start=9.html",
+        "sha256": "sha256:f397ac04c8494ff312e5e4d177f50dd4f8f6e8682b63c4b85ebdc02ba8396db2",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-page/error-page/index.html",
+        "sha256": "sha256:18f6a132a63f8d8f9e681953f9dded1b68b84abf3f2d8c3773039ddd20bbfdbe",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-page/offline-page/index.html",
+        "sha256": "sha256:29d6b0df99cfaf5b42b7ddc8cefd23c9d986ea5d05089967d12d160b5d982018",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-page/smart-search/index.html",
+        "sha256": "sha256:0226a90fb68531bb05b38846688a80560e8d29f5c478d98bab83bbee8e67d874",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/j-page/typography/index.html",
+        "sha256": "sha256:21ea3447a0688a2b14ebc2f6ec25ce4ea1060846f4118b2e1a0c81940c21e0dc",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/user/login-form/index.html",
+        "sha256": "sha256:34458674480fde7b6011fae689bc7ab061745aaa4c5426ec6521ec93c6193bcb",
+        "disposition": "converted"
+      },
+      {
+        "path": "pages/user/registration-form/index.html",
+        "sha256": "sha256:d647ee4acf7e989e6525f098d90aa415107da0ebfbfc6989149ad58da669ab43",
+        "disposition": "converted"
+      },
+      {
+        "path": "password-reset/index.html",
+        "sha256": "sha256:0aa8ddecaffa385ec6462bec1e6a0a78d5fe015e91f45bb9722e55583217a861",
+        "disposition": "converted"
+      },
+      {
+        "path": "plugins/system/jagooglemap/assets/markcluster.js",
+        "sha256": "sha256:d6ef15c7392e9ed5f97953bc133a501e7903d16c4cb4f13e291053b505d3d9ce",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/jagooglemap/assets/script.js",
+        "sha256": "sha256:611137a5feb93bcd3319539daaaf4b766023ed61ce3fb43dac1b09b9b15c24df",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/jagooglemap/assets/style.css",
+        "sha256": "sha256:a9c27baaccf88f88cab7a0fe0386263c8f23750dd00661fb4b0ed2ca17c3f9b2",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome/css/font-awesome.min.css",
+        "sha256": "sha256:799aeb25cc0373fdee0e1b1db7ad6c2f6a0e058dfadaa3379689f583213190bd",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.svg",
+        "sha256": "sha256:ad6157926c1622ba4e1d03d478f1541368524bfc46f51e42fe0d945f7ef323e4",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.ttf",
+        "sha256": "sha256:aa58f33f239a0fb02f5c7a6c45c043d7a9ac9a093335806694ecd6d4edc0d6a8",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.woff",
+        "sha256": "sha256:ba0c59deb5450f5cb41b3f93609ee2d0d995415877ddfa223e8a8a7533474f07",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.woff2",
+        "sha256": "sha256:2adefcbc041e7d18fcf2d417879dc5a09997aa64d675b7a3c4b6ce33da13f3fe",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/css/all.min.css",
+        "sha256": "sha256:3b961e8e82f12168fd8e04ab46f9b596aae9c7fa0ac8066112176957f336114b",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.ttf",
+        "sha256": "sha256:cda59d6efffa685830fd95b55f64ae9cb51279cd34b2410b69f84c7ec30157d9",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.woff",
+        "sha256": "sha256:f9217f66874b0c01cd8c10b6a295dbc4f609acb6f5adc41c37da46641b57eb02",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.woff2",
+        "sha256": "sha256:8ea8791754915a898a3100e63e32978a6d1763be6df8e73a39d3a90d691cdeef",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.ttf",
+        "sha256": "sha256:e8711bbb871afd8e9dea60e16d30f00c7e4837bbc9807065017475b849fa2313",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.woff",
+        "sha256": "sha256:cb9e9e693192413cde2b1f21c1dc1d44b6fe7b27cc2b458e8b359d18f9ff8f4e",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.woff2",
+        "sha256": "sha256:e42a88444448ac3d60549cc7c1ff2c8a9cac721034c073d80a14a44e79730cca",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.ttf",
+        "sha256": "sha256:af6397503fcefbd613976c21ad5c1e37298c18bbe07d096db03ccd3af6e05ba8",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.woff",
+        "sha256": "sha256:3f6d3488cf65374f6f676c315340b0ac2be832bd55240c809448e36ef9b96326",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.woff2",
+        "sha256": "sha256:9834b82ad26e2a37583d22676a12dd2eb0fe7c80356a2114d0db1aa8b3899537",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome6/css/all.min.css",
+        "sha256": "sha256:320d572dfb844e7152480b7b62374236c4896ccca3ac9d69bb03f3bc2034acb8",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-brands-400.ttf",
+        "sha256": "sha256:276af0307107fc3e28218f3d580d2636b2a85966a309b9c937c799f3e14f4ea2",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-brands-400.woff2",
+        "sha256": "sha256:4d46c3bcd49e008582f1c01ee88ed9a494d150643e3e947eb7710180808403c9",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-regular-400.ttf",
+        "sha256": "sha256:7caa2d8d6cc03c5ee9fc23eab7a193b4e3ce667469c3f955a35f957a14ac2b7e",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-regular-400.woff2",
+        "sha256": "sha256:003b55144f370c07c2bc6f8f80455bca7d61a2fb2766551883734249e953e700",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-solid-900.ttf",
+        "sha256": "sha256:23c4f99ee90741117109d813b937b9bc6e971a2781fede7aa975414acec4f53f",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-solid-900.woff2",
+        "sha256": "sha256:38e76ab3d359e772e9f2aab11fbb07a2e2209318183a89ced0a97d6b958a7a6f",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-v4compatibility.ttf",
+        "sha256": "sha256:e868f3012f72e15ee6e525366989549a8b60e42b484e4a22518ba657287b1740",
+        "disposition": "asset"
+      },
+      {
+        "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-v4compatibility.woff2",
+        "sha256": "sha256:d0cd8241178cb658c2dff876fd67ceaa926198c31449bfa1d9b5199cc57c1895",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_impact/css/darkmode.css",
+        "sha256": "sha256:4ece01a4f1499b86e0d353875bc86d300199381490e7faa17ea9b958a35d0224",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_impact/favicon.ico",
+        "sha256": "sha256:7bd9b59d14b126e8c5abcb1c89b60c79e2b2e17c15745fe8d385204d87c40765",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_impact/images/dt-bg.jpg",
+        "sha256": "sha256:9e872eccc9bdf5c0cd281e1dce83701ffa63395e94de3570e2f5b8c6108b57b2",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_impact/images/layer.png",
+        "sha256": "sha256:a10280ab087cb133770bf3e70cbdf1197ed433a511aa772af1b36ae7f39b6b4e",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_impact/js/darkmode.js",
+        "sha256": "sha256:0875eb2d30ce830b688ecf8e73a1d540703d5943392de9945c6027683b6403fe",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_impact/js/imagesloaded.pkgd.min.js",
+        "sha256": "sha256:37dbf4b6012d4e23cbc1cba50baa3572c93a5c371b9873fb5440cb84dfbf9902",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_impact/js/isotope.pkgd.min.js",
+        "sha256": "sha256:a04391e3162984fd7194871495177f509bab42cb7defcf319afdf26b5c4a4934",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_impact/js/owl-carousel/owl.carousel.min.css",
+        "sha256": "sha256:521410e1fc44780061e09adc980275fb5ea277fd5d9e538454214ec4379ff4bc",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_impact/js/owl-carousel/owl.carousel.min.js",
+        "sha256": "sha256:a53c43f834b32309b084ea9314df8307e9c78cee2202c6e07f216ae4ae5b704d",
+        "disposition": "asset"
+      },
+      {
+        "path": "templates/ja_impact/js/owl-carousel/owl.video.play.png",
+        "sha256": "sha256:0436045686fddf10ccbbe2568e0cbffb457e7de7d43d1115c0056e81e97149ff",
+        "disposition": "asset"
+      },
+      {
+        "path": "username-reminder-request/index.html",
+        "sha256": "sha256:0250212eae5c973b87c2e50ca3195e355f25fb4396fb5f9bbc390f87ae67af57",
+        "disposition": "converted"
+      }
+    ]
+  },
+  "variants": [
+    {
+      "id": "1440-light",
+      "width": 1440,
+      "height": 1000,
+      "theme": "light",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "1440-dark",
+      "width": 1440,
+      "height": 1000,
+      "theme": "dark",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "768-light",
+      "width": 768,
+      "height": 1024,
+      "theme": "light",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "768-dark",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "390-light",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "reducedMotion": "reduce"
+    },
+    {
+      "id": "390-dark",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "reducedMotion": "reduce"
+    }
+  ],
+  "design": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": null,
+        "dark": "dark"
+      }
+    },
+    "rules": []
+  },
+  "interactions": {},
+  "fonts": {
+    "selectors": [
+      "h1",
+      "h2",
+      "p",
+      "a",
+      "button",
+      "input"
+    ]
+  },
+  "pages": [],
+  "reviews": {
+    "build": {
+      "mode": "required"
+    },
+    "security": {
+      "mode": "required"
+    },
+    "visual-review": {
+      "mode": "required"
+    },
+    "font-review": {
+      "mode": "required"
+    },
+    "viewing-contexts": {
+      "mode": "required"
+    },
+    "editability": {
+      "mode": "required"
+    },
+    "forms": {
+      "mode": "not-applicable",
+      "reason": "template.config.json declares no form binding"
+    },
+    "recovery": {
+      "mode": "required"
+    },
+    "clean-install": {
+      "mode": "required"
+    },
+    "independent": {
+      "mode": "required"
+    }
+  },
+  "capabilities": [
+    "i18n"
+  ],
+  "distribution": {
+    "include": [
+      "package.json",
+      "pnpm-lock.yaml",
+      "pnpm-workspace.yaml",
+      "patches",
+      "template.config.json",
+      "astro.config.mjs",
+      "tsconfig.json",
+      "components.json",
+      "public",
+      "seed",
+      "src",
+      "tools",
+      "tests",
+      "docs",
+      "README.md",
+      "AGENTS.md",
+      "PROVENANCE.md",
+      "artifact.json",
+      ".env.example"
+    ],
+    "required": [
+      "public/favicon.svg",
+      "seed/seed.json",
+      "seed/media-map.json"
+    ]
+  }
+}

@@ -60,7 +60,8 @@ const target = (link: unknown) => telHref(link) ?? dataHref(link, (p) => href(lo
 			<div class="im-footnav-about">
 				<a class="im-brand" href={href(locale, '/')} aria-label={site.brand_name}>
 					<BrandLogo spots={logoSpots(logos, 'dark')} alt={logos.alt || site.brand_name} imgClass="im-logo">
-						<img class="im-logo" src={DEMO_LOGO} alt={site.brand_name} width="213" height="61" />
+						<img class="im-logo" src={DEMO_LOGO} alt={site.brand_name} width="211" height="61" />
+					<span class="im-logo-ink" role="img" aria-label={site.brand_name}></span>
 					</BrandLogo>
 				</a>
 				<p {...$c('footer_about')}>{site.footer_about}</p>

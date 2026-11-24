@@ -21,6 +21,9 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const img = mediaUrl(entry.cover)
 const pct = percent(entry.raise, entry.goal)
 const tag = String(entry.tags ?? '').split('\n')[0]
+// the source cuts the intro at 21 words and ends it with an ellipsis
+const plain = plainText(entry.excerpt, 600).split(/\s+/).filter(Boolean)
+const intro = plain.length > 21 ? `${plain.slice(0, 21).join(' ')} …` : plain.join(' ')
 const money = (v: unknown) => `${site.currency_symbol ?? ''}${v}`
 ---
 
@@ -33,7 +36,7 @@ const money = (v: unknown) => `${site.currency_symbol ?? ''}${v}`
 				{entry.location && <span class="im-donation-place" {...$d('location')}><Icon name="fa-solid fa-location-dot" />{entry.location}</span>}
 			</div>
 			<h3 class="im-donation-title"><a href={href(chrome.locale, articlePath('donations', entry.slug))} {...$d('title')}>{entry.title}</a></h3>
-			<p class="im-donation-intro" {...$d('excerpt')}>{plainText(entry.excerpt, 160)}</p>
+			<p class="im-donation-intro" {...$d('excerpt')}>{intro}</p>
 		</div>
 		<div class="im-donation-bottom">
 			<div class="im-progress-wrap">
