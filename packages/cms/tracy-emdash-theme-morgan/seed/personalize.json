@@ -451,25 +451,25 @@
     {
       "collection": "contact",
       "slug": "contact-info",
-      "field": "website",
+      "field": "website_url",
       "why": "the demo business’s own website address"
     },
     {
       "collection": "chrome",
       "slug": "chrome",
-      "field": "footer_social_facebook",
+      "field": "footer_social_facebook_url",
       "why": "the demo business’s social address"
     },
     {
       "collection": "chrome",
       "slug": "chrome",
-      "field": "footer_social_twitter",
+      "field": "footer_social_twitter_url",
       "why": "the demo business’s social address"
     },
     {
       "collection": "chrome",
       "slug": "chrome",
-      "field": "footer_social_instagram",
+      "field": "footer_social_instagram_url",
       "why": "the demo business’s social address"
     }
   ],

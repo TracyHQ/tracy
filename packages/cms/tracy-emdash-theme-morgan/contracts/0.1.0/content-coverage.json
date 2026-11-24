@@ -1,517 +1,433 @@
 {
-  "schemaVersion": "tracy-content-coverage/v1",
-  "tool": {
-    "name": "@tracy/quickstart-tools content-coverage (emdash)",
-    "version": "1.8.0"
+ "schemaVersion": "tracy-content-coverage/v1",
+ "tool": {
+  "name": "@tracy/quickstart-tools content-coverage (emdash)",
+  "version": "1.8.0"
+ },
+ "platform": "emdash",
+ "contract": {
+  "id": "tracy-morgan/emdash-0.x/0.1.0",
+  "contentMapSha256": "ae46cbcc62b7744a1a6a44a60c7db0980985d1058ed00bf0b18fad2a668d10f6",
+  "presentationLockSha256": null
+ },
+ "measuredAt": "2026-11-24T20:14:03.184Z",
+ "viewports": [
+  "desktop",
+  "phone"
+ ],
+ "bound": {
+  "stamp": 1773,
+  "clone": 156,
+  "menu": 67,
+  "entry": 309,
+  "composite": 1,
+  "words": 767,
+  "media": 265,
+  "route": 155
+ },
+ "lockedFiles": [],
+ "pages": {
+  "audited": 34,
+  "inMap": 30,
+  "notInMap": 4,
+  "failed": 0,
+  "failures": [],
+  "capReached": false
+ },
+ "counts": {
+  "text": {
+   "total": 644,
+   "matched": 634,
+   "locked": 0,
+   "capture": 0,
+   "captureLocked": 0,
+   "template": 5,
+   "core": 4,
+   "unknown": 1,
+   "catalogue": 0,
+   "ignored": 8
   },
-  "platform": "emdash",
-  "contract": {
-    "id": "tracy-morgan/emdash-0.x/0.1.0",
-    "contentMapSha256": "6bb0715cb1c9190a3e3a347603bd3d800611b3e790ff0bbf28e74cf314fe8f1f",
-    "presentationLockSha256": null
+  "images": {
+   "total": 182,
+   "matched": 182,
+   "locked": 0,
+   "capture": 0,
+   "captureLocked": 0,
+   "template": 0,
+   "core": 0,
+   "unknown": 0,
+   "catalogue": 0,
+   "ignored": 0
   },
-  "measuredAt": "2026-11-24T19:17:19.999Z",
-  "viewports": [
-    "desktop",
-    "phone"
-  ],
-  "bound": {
-    "stamp": 1602,
-    "clone": 133,
-    "menu": 67,
-    "entry": 309,
-    "composite": 1,
-    "words": 605,
-    "media": 265,
-    "route": 155
-  },
-  "lockedFiles": [],
-  "pages": {
-    "audited": 34,
-    "inMap": 30,
-    "notInMap": 4,
-    "failed": 0,
-    "failures": [],
-    "capReached": false
-  },
-  "counts": {
-    "text": {
-      "total": 650,
-      "matched": 632,
-      "locked": 0,
-      "capture": 0,
-      "captureLocked": 0,
-      "template": 5,
-      "core": 4,
-      "unknown": 9,
-      "catalogue": 0,
-      "ignored": 5
-    },
-    "images": {
-      "total": 182,
-      "matched": 182,
-      "locked": 0,
-      "capture": 0,
-      "captureLocked": 0,
-      "template": 0,
-      "core": 0,
-      "unknown": 0,
-      "catalogue": 0,
-      "ignored": 0
-    },
-    "links": {
-      "total": 102,
-      "matched": 94,
-      "locked": 0,
-      "capture": 0,
-      "captureLocked": 0,
-      "template": 0,
-      "core": 0,
-      "unknown": 8,
-      "catalogue": 0,
-      "ignored": 1
-    }
-  },
-  "coverage": {
-    "text": 97.8,
-    "images": 100,
-    "links": 92.2
-  },
-  "holes": [
-    {
-      "kind": "text",
-      "value": "Page # of #",
-      "class": "template",
-      "cause": "words in the template's own source",
-      "evidence": "div.mg-blog > div.mg-blog-main > div.mg-pagination > p.mg-pagination-count",
-      "pages": 5,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "link",
-      "value": "/blog?start=12",
-      "class": "unknown",
-      "cause": "an address no link slot, menu, page, term or source holds",
-      "evidence": "nav > ul > li > a",
-      "pages": 4,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "link",
-      "value": "/blog?start=18",
-      "class": "unknown",
-      "cause": "an address no link slot, menu, page, term or source holds",
-      "evidence": "nav > ul > li > a",
-      "pages": 4,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "link",
-      "value": "/blog?start=24",
-      "class": "unknown",
-      "cause": "an address no link slot, menu, page, term or source holds",
-      "evidence": "nav > ul > li > a",
-      "pages": 4,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "link",
-      "value": "/blog?start=6",
-      "class": "unknown",
-      "cause": "an address no link slot, menu, page, term or source holds",
-      "evidence": "nav > ul > li > a",
-      "pages": 4,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "link",
-      "value": "https://joomlart.com",
-      "class": "unknown",
-      "cause": "an address no link slot, menu, page, term or source holds",
-      "evidence": "div.mg-container > ul.mg-contact-cards > li.mg-contact-card > a",
-      "pages": 1,
-      "firstPage": "/contact-us"
-    },
-    {
-      "kind": "link",
-      "value": "https://www.joomlart.com/",
-      "class": "unknown",
-      "cause": "an address no link slot, menu, page, term or source holds",
-      "evidence": "div.mg-footer-col > ul.mg-social > li > a.is-facebook",
-      "pages": 102,
-      "firstPage": "/"
-    },
-    {
-      "kind": "text",
-      "value": "Business Growth Advice (3)",
-      "class": "unknown",
-      "cause": "words no slot, menu or source holds",
-      "evidence": "aside.mg-sidebar > section.mg-side-block > ul.mg-side-cats > li",
-      "pages": 30,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "text",
-      "value": "Business Insights (3)",
-      "class": "unknown",
-      "cause": "words no slot, menu or source holds",
-      "evidence": "aside.mg-sidebar > section.mg-side-block > ul.mg-side-cats > li",
-      "pages": 30,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "text",
-      "value": "Investment & Superannuation (3)",
-      "class": "unknown",
-      "cause": "words no slot, menu or source holds",
-      "evidence": "aside.mg-sidebar > section.mg-side-block > ul.mg-side-cats > li",
-      "pages": 30,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "text",
-      "value": "Investment Managment (9)",
-      "class": "unknown",
-      "cause": "words no slot, menu or source holds",
-      "evidence": "aside.mg-sidebar > section.mg-side-block > ul.mg-side-cats > li",
-      "pages": 30,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "text",
-      "value": "Leave blank",
-      "class": "unknown",
-      "cause": "words no slot, menu or source holds",
-      "evidence": "div.mg-split-in > div.mg-split-extra > form.ec-form > div.ec-form-field",
-      "pages": 2,
-      "firstPage": "/"
-    },
-    {
-      "kind": "text",
-      "value": "Retirement Planning (2)",
-      "class": "unknown",
-      "cause": "words no slot, menu or source holds",
-      "evidence": "aside.mg-sidebar > section.mg-side-block > ul.mg-side-cats > li",
-      "pages": 30,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "text",
-      "value": "Tax Advice & Management (3)",
-      "class": "unknown",
-      "cause": "words no slot, menu or source holds",
-      "evidence": "aside.mg-sidebar > section.mg-side-block > ul.mg-side-cats > li",
-      "pages": 30,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "text",
-      "value": "Tax Planning (2)",
-      "class": "unknown",
-      "cause": "words no slot, menu or source holds",
-      "evidence": "aside.mg-sidebar > section.mg-side-block > ul.mg-side-cats > li",
-      "pages": 30,
-      "firstPage": "/blog"
-    },
-    {
-      "kind": "text",
-      "value": "Copyright \u00a9 2026 Morgan. All Rights Reserved. Designed by JoomlArt.",
-      "class": "unknown",
-      "cause": "words no slot, menu or source holds (stamped chrome.chrome field copyright: no slot holds these words)",
-      "evidence": "div.mg-footer-main > div.mg-container > div.mg-copyright > p",
-      "pages": 34,
-      "firstPage": "/"
-    }
-  ],
-  "hygiene": [],
-  "sitePages": [
-    {
-      "entity": "pages.home",
-      "title": "Home",
-      "route": "/",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "pages.contact-us",
-      "title": "Contact Us",
-      "route": "/contact-us",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "pages.about-us",
-      "title": "About Us",
-      "route": "/about-us",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "pages.services",
-      "title": "Services",
-      "route": "/services",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "pages.blog",
-      "title": "News & Update",
-      "route": "/blog",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
-      "title": "Strong job growth is back: Payrolls jump in June well above expectations",
-      "route": "/blog/strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
-      "title": "Student loan borrowers who say they were defrauded sue Betsy DeVos for failing to cancel their debt",
-      "route": "/blog/student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.how-co-parents-can-stay-on-the-same-financial-page",
-      "title": "How co-parents can stay on the same financial page",
-      "route": "/blog/how-co-parents-can-stay-on-the-same-financial-page",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
-      "title": "Heavy Debt Humbles China\u2019s Business Champions, Including the Jewelry Queen",
-      "route": "/blog/heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
-      "title": "BASF Issues Profit Warning on U.S.-China Trade Concerns Longe and Parole",
-      "route": "/blog/basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
-      "title": "This is what super savers who plan to retire early are doing differently",
-      "route": "/blog/this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.the-world-needs-to-get-serious-about-combating-carbon-emissions",
-      "title": "The world needs to get serious about combating carbon emissions",
-      "route": "/blog/the-world-needs-to-get-serious-about-combating-carbon-emissions",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
-      "title": "Extreme Trash Recycling: 104 Protocols, 30,000 Inspectors Behind The Word Mountains",
-      "route": "/blog/extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
-      "title": "Pelosi\u2019s Sharp Message for Democrats Finds Receptive Audience ",
-      "route": "/blog/pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
-      "title": "Marco Rubio Introduces a Bill to Boost the U.S. Rare-Earth Industry Vokalia and Consonantia Bill to Boost",
-      "route": "/blog/marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
-      "title": "Real Estate Mogul William Zeckendorf Sells Park Avenue Apartment  Language Ocean",
-      "route": "/blog/real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
-      "title": "China's June vehicle sales down 9.6% year-on-year: Industry association",
-      "route": "/blog/china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
-      "title": "China\u2019s Newly Created Dajia Insurance Begins Absorbing Anbang",
-      "route": "/blog/china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
-      "title": "Congress Presses for More Details About Acosta\u2019s Role in Epstein Plea Deal Worries",
-      "route": "/blog/congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
-      "title": "Fed Chairman Hints at Lower Interest Rates, Cites Trade Uncertainty Lower Interest Rates Vokalia and Consonantia",
-      "route": "/blog/fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
-      "title": "Nintendo Moves Forward with a Cheaper Switch Console Sells Park Avenue Apartment",
-      "route": "/blog/nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
-      "title": "Cargill Profit Drops on Trade, A Path to EU Citizenship Cheaper Sells Flooding Challenges Profit Drops on Trade",
-      "route": "/blog/cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
-      "title": "House Judiciary Committee Authorizes Subpoenas to Ex-Trump Campaign Officials",
-      "route": "/blog/house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
-      "title": "Stocks making the biggest moves midday: DaVita, AMD, 3M, Acacia Communications and more",
-      "route": "/blog/stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
-      "title": "Trump Administration Hasn\u2019t Briefed Congress on New Rules for Cyberattacks, Lawmakers Say",
-      "route": "/blog/trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
-      "title": "State Department Analyst Resigns After White House Blocked Climate Change Testimony",
-      "route": "/blog/state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
-      "title": "Ivanka Trump Pushes Initiative to Give Women Bigger Role in Global Peace Efforts of The Semantics",
-      "route": "/blog/ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
-      "title": "For Sale in Malta: A Path to EU Citizenship Cheaper Sells Park Avenue Apartment",
-      "route": "/blog/for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
-      "title": "Beleaguered Money Managers Find Bright Spot in ESG Cargill Profit Drops on Trade, A Path to EU Citizenship Cheaper Sells",
-      "route": "/blog/beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
-      "opens": "live",
-      "status": 200
-    },
-    {
-      "entity": "posts.farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
-      "title": "Farmers Stockpiling Corn in Response to Tough Growing Conditions",
-      "route": "/blog/farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
-      "opens": "live",
-      "status": 200
-    }
-  ],
-  "labelRules": {
-    "version": "label-rules/1",
-    "roleVocabularyVersion": "place-content-roles/3",
-    "applies": true,
-    "r1": {
-      "facts": 73,
-      "slots": 728,
-      "percent": 10
-    },
-    "rules": {
-      "R2": {
-        "title": "fact-like sample without a contact or price role",
-        "count": 0,
-        "keys": []
-      },
-      "R3": {
-        "title": "URL slot without a role",
-        "count": 0,
-        "keys": []
-      },
-      "R4": {
-        "title": "repeat or CTA not grouped",
-        "count": 0,
-        "keys": []
-      },
-      "R5": {
-        "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
-        "count": 38,
-        "keys": [
-          "testimonials.home-cases.items[0].img",
-          "testimonials.home-cases.items[0].avatar",
-          "testimonials.home-cases.items[1].img",
-          "testimonials.home-cases.items[1].avatar",
-          "testimonials.home-cases.items[2].img",
-          "testimonials.home-cases.items[2].avatar",
-          "testimonials.home-cases.items[3].img",
-          "testimonials.home-cases.items[3].avatar",
-          "testimonials.footer-quote.items[0].avatar",
-          "testimonials.footer-quote.items[1].avatar",
-          "testimonials.services-cases.items[0].img",
-          "testimonials.services-cases.items[0].avatar"
-        ]
-      },
-      "R6": {
-        "title": "link or list item inside a fact slot",
-        "count": 0,
-        "keys": []
-      },
-      "R7": {
-        "title": "siblings with different roles",
-        "count": 0,
-        "keys": []
-      },
-      "R8": {
-        "title": "adjacent short slots on one line (a cut heading)",
-        "count": 32,
-        "keys": [
-          "teams.home-team.items[0].position + teams.home-team.items[1].title",
-          "teams.home-team.items[2].title + teams.home-team.items[3].position",
-          "teams.about-team.items[0].position + teams.about-team.items[1].title",
-          "teams.about-team.items[5].title + teams.about-team.items[6].position",
-          "features_intro.about-intro.items[0].title + features_intro.about-intro.items[1].title",
-          "features_intro.about-intro.items[2].title + features_intro.about-intro.items[3].title",
-          "teams.about-team.items[6].position + teams.about-team.items[7].title",
-          "posts.strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations.author + posts.strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations.date",
-          "posts.how-co-parents-can-stay-on-the-same-financial-page.author + posts.how-co-parents-can-stay-on-the-same-financial-page.date",
-          "posts.basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole.author + posts.basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole.date",
-          "posts.student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt.author + posts.student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt.date",
-          "posts.heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen.author + posts.heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen.date"
-        ]
-      },
-      "R9": {
-        "title": "fact-like hole",
-        "count": 0,
-        "keys": []
-      }
-    }
+  "links": {
+   "total": 102,
+   "matched": 98,
+   "locked": 0,
+   "capture": 0,
+   "captureLocked": 0,
+   "template": 0,
+   "core": 0,
+   "unknown": 4,
+   "catalogue": 0,
+   "ignored": 1
   }
+ },
+ "coverage": {
+  "text": 99.1,
+  "images": 100,
+  "links": 96.1
+ },
+ "holes": [
+  {
+   "kind": "text",
+   "value": "Page # of #",
+   "class": "template",
+   "cause": "words in the template's own source",
+   "evidence": "div.mg-blog > div.mg-blog-main > div.mg-pagination > p.mg-pagination-count",
+   "pages": 5,
+   "firstPage": "/blog",
+   "accepted": "Interface wording the template prints around a count or page number (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+  },
+  {
+   "kind": "link",
+   "value": "/blog?start=12",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "nav > ul > li > a",
+   "pages": 4,
+   "firstPage": "/blog",
+   "accepted": "A pagination link the template builds from the page size and a page number (the source's own ?start= address): navigation of the blog list, not content; the posts it leads to are entries of the posts collection."
+  },
+  {
+   "kind": "link",
+   "value": "/blog?start=18",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "nav > ul > li > a",
+   "pages": 4,
+   "firstPage": "/blog",
+   "accepted": "A pagination link the template builds from the page size and a page number (the source's own ?start= address): navigation of the blog list, not content; the posts it leads to are entries of the posts collection."
+  },
+  {
+   "kind": "link",
+   "value": "/blog?start=24",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "nav > ul > li > a",
+   "pages": 4,
+   "firstPage": "/blog",
+   "accepted": "A pagination link the template builds from the page size and a page number (the source's own ?start= address): navigation of the blog list, not content; the posts it leads to are entries of the posts collection."
+  },
+  {
+   "kind": "link",
+   "value": "/blog?start=6",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "nav > ul > li > a",
+   "pages": 4,
+   "firstPage": "/blog",
+   "accepted": "A pagination link the template builds from the page size and a page number (the source's own ?start= address): navigation of the blog list, not content; the posts it leads to are entries of the posts collection."
+  },
+  {
+   "kind": "text",
+   "value": "Leave blank",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.mg-split-in > div.mg-split-extra > form.ec-form > div.ec-form-field",
+   "pages": 2,
+   "firstPage": "/",
+   "accepted": "Label of the Forms plugin's hidden spam-trap field: interface wording of the plugin, not demo content a customer rewrites."
+  }
+ ],
+ "hygiene": [],
+ "sitePages": [
+  {
+   "entity": "pages.home",
+   "title": "Home",
+   "route": "/",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "pages.contact-us",
+   "title": "Contact Us",
+   "route": "/contact-us",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "pages.about-us",
+   "title": "About Us",
+   "route": "/about-us",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "pages.services",
+   "title": "Services",
+   "route": "/services",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "pages.blog",
+   "title": "News & Update",
+   "route": "/blog",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+   "title": "Strong job growth is back: Payrolls jump in June well above expectations",
+   "route": "/blog/strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
+   "title": "Student loan borrowers who say they were defrauded sue Betsy DeVos for failing to cancel their debt",
+   "route": "/blog/student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.how-co-parents-can-stay-on-the-same-financial-page",
+   "title": "How co-parents can stay on the same financial page",
+   "route": "/blog/how-co-parents-can-stay-on-the-same-financial-page",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
+   "title": "Heavy Debt Humbles China\u2019s Business Champions, Including the Jewelry Queen",
+   "route": "/blog/heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
+   "title": "BASF Issues Profit Warning on U.S.-China Trade Concerns Longe and Parole",
+   "route": "/blog/basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
+   "title": "This is what super savers who plan to retire early are doing differently",
+   "route": "/blog/this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.the-world-needs-to-get-serious-about-combating-carbon-emissions",
+   "title": "The world needs to get serious about combating carbon emissions",
+   "route": "/blog/the-world-needs-to-get-serious-about-combating-carbon-emissions",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
+   "title": "Extreme Trash Recycling: 104 Protocols, 30,000 Inspectors Behind The Word Mountains",
+   "route": "/blog/extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
+   "title": "Pelosi\u2019s Sharp Message for Democrats Finds Receptive Audience ",
+   "route": "/blog/pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
+   "title": "Marco Rubio Introduces a Bill to Boost the U.S. Rare-Earth Industry Vokalia and Consonantia Bill to Boost",
+   "route": "/blog/marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
+   "title": "Real Estate Mogul William Zeckendorf Sells Park Avenue Apartment  Language Ocean",
+   "route": "/blog/real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
+   "title": "China's June vehicle sales down 9.6% year-on-year: Industry association",
+   "route": "/blog/china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+   "title": "China\u2019s Newly Created Dajia Insurance Begins Absorbing Anbang",
+   "route": "/blog/china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
+   "title": "Congress Presses for More Details About Acosta\u2019s Role in Epstein Plea Deal Worries",
+   "route": "/blog/congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
+   "title": "Fed Chairman Hints at Lower Interest Rates, Cites Trade Uncertainty Lower Interest Rates Vokalia and Consonantia",
+   "route": "/blog/fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+   "title": "Nintendo Moves Forward with a Cheaper Switch Console Sells Park Avenue Apartment",
+   "route": "/blog/nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+   "title": "Cargill Profit Drops on Trade, A Path to EU Citizenship Cheaper Sells Flooding Challenges Profit Drops on Trade",
+   "route": "/blog/cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+   "title": "House Judiciary Committee Authorizes Subpoenas to Ex-Trump Campaign Officials",
+   "route": "/blog/house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
+   "title": "Stocks making the biggest moves midday: DaVita, AMD, 3M, Acacia Communications and more",
+   "route": "/blog/stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
+   "title": "Trump Administration Hasn\u2019t Briefed Congress on New Rules for Cyberattacks, Lawmakers Say",
+   "route": "/blog/trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+   "title": "State Department Analyst Resigns After White House Blocked Climate Change Testimony",
+   "route": "/blog/state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
+   "title": "Ivanka Trump Pushes Initiative to Give Women Bigger Role in Global Peace Efforts of The Semantics",
+   "route": "/blog/ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+   "title": "For Sale in Malta: A Path to EU Citizenship Cheaper Sells Park Avenue Apartment",
+   "route": "/blog/for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+   "title": "Beleaguered Money Managers Find Bright Spot in ESG Cargill Profit Drops on Trade, A Path to EU Citizenship Cheaper Sells",
+   "route": "/blog/beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+   "title": "Farmers Stockpiling Corn in Response to Tough Growing Conditions",
+   "route": "/blog/farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+   "opens": "live",
+   "status": 200
+  }
+ ],
+ "labelRules": {
+  "version": "label-rules/1",
+  "roleVocabularyVersion": "place-content-roles/3",
+  "applies": true,
+  "r1": {
+   "facts": 73,
+   "slots": 724,
+   "percent": 10.1
+  },
+  "rules": {
+   "R2": {
+    "title": "fact-like sample without a contact or price role",
+    "count": 0,
+    "keys": []
+   },
+   "R3": {
+    "title": "URL slot without a role",
+    "count": 0,
+    "keys": []
+   },
+   "R4": {
+    "title": "repeat or CTA not grouped",
+    "count": 0,
+    "keys": []
+   },
+   "R5": {
+    "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
+    "count": 38,
+    "keys": [
+     "testimonials.home-cases.items[0].img",
+     "testimonials.home-cases.items[0].avatar",
+     "testimonials.home-cases.items[1].img",
+     "testimonials.home-cases.items[1].avatar",
+     "testimonials.home-cases.items[2].img",
+     "testimonials.home-cases.items[2].avatar",
+     "testimonials.home-cases.items[3].img",
+     "testimonials.home-cases.items[3].avatar",
+     "testimonials.footer-quote.items[0].avatar",
+     "testimonials.footer-quote.items[1].avatar",
+     "testimonials.services-cases.items[0].img",
+     "testimonials.services-cases.items[0].avatar"
+    ]
+   },
+   "R6": {
+    "title": "link or list item inside a fact slot",
+    "count": 0,
+    "keys": []
+   },
+   "R7": {
+    "title": "siblings with different roles",
+    "count": 0,
+    "keys": []
+   },
+   "R8": {
+    "title": "adjacent short slots on one line (a cut heading)",
+    "count": 32,
+    "keys": [
+     "teams.home-team.items[0].position + teams.home-team.items[1].title",
+     "teams.home-team.items[2].title + teams.home-team.items[3].position",
+     "teams.about-team.items[0].position + teams.about-team.items[1].title",
+     "teams.about-team.items[5].title + teams.about-team.items[6].position",
+     "features_intro.about-intro.items[0].title + features_intro.about-intro.items[1].title",
+     "features_intro.about-intro.items[2].title + features_intro.about-intro.items[3].title",
+     "teams.about-team.items[6].position + teams.about-team.items[7].title",
+     "posts.strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations.author + posts.strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations.date",
+     "posts.how-co-parents-can-stay-on-the-same-financial-page.author + posts.how-co-parents-can-stay-on-the-same-financial-page.date",
+     "posts.basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole.author + posts.basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole.date",
+     "posts.student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt.author + posts.student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt.date",
+     "posts.heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen.author + posts.heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen.date"
+    ]
+   },
+   "R9": {
+    "title": "fact-like hole",
+    "count": 0,
+    "keys": []
+   }
+  }
+ }
 }

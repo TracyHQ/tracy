@@ -762,17 +762,17 @@
 					"type": "string"
 				},
 				{
-					"slug": "footer_social_facebook",
+					"slug": "footer_social_facebook_url",
 					"label": "Footer social facebook",
 					"type": "string"
 				},
 				{
-					"slug": "footer_social_twitter",
+					"slug": "footer_social_twitter_url",
 					"label": "Footer social twitter",
 					"type": "string"
 				},
 				{
-					"slug": "footer_social_instagram",
+					"slug": "footer_social_instagram_url",
 					"label": "Footer social instagram",
 					"type": "string"
 				},
@@ -993,7 +993,7 @@
 					"type": "string"
 				},
 				{
-					"slug": "website",
+					"slug": "website_url",
 					"label": "Website",
 					"type": "string"
 				},
@@ -6396,9 +6396,9 @@
 					"topbar_address": "312 North 24th Street Brooklyn, New York",
 					"topbar_phone": "212.218.8500",
 					"footer_social_title": "Social.",
-					"footer_social_facebook": "https://www.joomlart.com/",
-					"footer_social_twitter": "https://www.joomlart.com/",
-					"footer_social_instagram": "https://www.joomlart.com/",
+					"footer_social_facebook_url": "https://www.joomlart.com/",
+					"footer_social_twitter_url": "https://www.joomlart.com/",
+					"footer_social_instagram_url": "https://www.joomlart.com/",
 					"copyright": "Copyright © {year} {name}. All Rights Reserved.",
 					"copyright_credit": "Designed by JoomlArt.",
 					"skip_label": "Skip to content",
@@ -6720,7 +6720,7 @@
 					"phone_label": "Phone",
 					"phone": "402-989-6685",
 					"website_label": "Website",
-					"website": "https://joomlart.com",
+					"website_url": "https://joomlart.com",
 					"form_title": "Contact Form",
 					"form_intro_text": "Send an Email. All fields with an asterisk (*) are required.",
 					"name_label": "Name",

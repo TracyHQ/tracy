@@ -18008,8 +18008,8 @@
             "height": 160
           },
           "phone": {
-            "width": 100,
-            "height": 100
+            "width": 160,
+            "height": 160
           }
         },
         "aspect": 1,
@@ -18066,8 +18066,8 @@
             "height": 160
           },
           "phone": {
-            "width": 100,
-            "height": 100
+            "width": 160,
+            "height": 160
           }
         },
         "aspect": 1,
@@ -18124,8 +18124,8 @@
             "height": 160
           },
           "phone": {
-            "width": 100,
-            "height": 100
+            "width": 160,
+            "height": 160
           }
         },
         "aspect": 1,
@@ -18182,8 +18182,8 @@
             "height": 160
           },
           "phone": {
-            "width": 100,
-            "height": 100
+            "width": 160,
+            "height": 160
           }
         },
         "aspect": 1,
@@ -18240,8 +18240,8 @@
             "height": 160
           },
           "phone": {
-            "width": 100,
-            "height": 100
+            "width": 160,
+            "height": 160
           }
         },
         "aspect": 1,
@@ -18298,8 +18298,8 @@
             "height": 160
           },
           "phone": {
-            "width": 100,
-            "height": 100
+            "width": 160,
+            "height": 160
           }
         },
         "aspect": 1,
@@ -18922,7 +18922,28 @@
       "maxCharacters": 24,
       "maxCharactersFrom": "declared by the theme: the business name is printed as the logo lockup in the header (Header.astro, `.mg-logo`, shown when the customer has no logo picture); filled with Latin running text until the lockup gains a row beyond today's one row (Playwright, Chromium, 1440 / 768 / 390 px, the live site of this package (perf/slot-measure.mjs)): 59 characters at 1440 px, 62 at 768 px, 24 at 390 px",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 59,
+            "height": 28
+          },
+          "phone": {
+            "width": 79,
+            "height": 27
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 42,
+          "phone": 40
+        },
+        "maxCharacters": 40,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -19047,52 +19068,43 @@
       }
     },
     {
-      "key": "chrome.chrome.footer_social_facebook",
+      "key": "chrome.chrome.footer_social_facebook_url",
       "entity": "chrome.chrome",
       "target": {
         "collection": "chrome",
         "entry": "chrome",
-        "field": "footer_social_facebook"
+        "field": "footer_social_facebook_url"
       },
-      "type": "text",
+      "type": "url",
       "sample": "https://www.joomlart.com/",
       "label": "Footer social facebook",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
-      }
+      "role": "editorial.paragraph"
     },
     {
-      "key": "chrome.chrome.footer_social_twitter",
+      "key": "chrome.chrome.footer_social_twitter_url",
       "entity": "chrome.chrome",
       "target": {
         "collection": "chrome",
         "entry": "chrome",
-        "field": "footer_social_twitter"
+        "field": "footer_social_twitter_url"
       },
-      "type": "text",
+      "type": "url",
       "sample": "https://www.joomlart.com/",
       "label": "Footer social twitter",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
-      }
+      "role": "editorial.paragraph"
     },
     {
-      "key": "chrome.chrome.footer_social_instagram",
+      "key": "chrome.chrome.footer_social_instagram_url",
       "entity": "chrome.chrome",
       "target": {
         "collection": "chrome",
         "entry": "chrome",
-        "field": "footer_social_instagram"
+        "field": "footer_social_instagram_url"
       },
-      "type": "text",
+      "type": "url",
       "sample": "https://www.joomlart.com/",
       "label": "Footer social instagram",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
-      }
+      "role": "editorial.paragraph"
     },
     {
       "key": "chrome.chrome.copyright",
@@ -19130,7 +19142,28 @@
       "label": "Copyright credit",
       "role": "editorial.paragraph",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 123,
+            "height": 15
+          },
+          "phone": {
+            "width": 324,
+            "height": 35
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 209,
+          "phone": 61
+        },
+        "maxCharacters": 61,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -21462,41 +21495,17 @@
       }
     },
     {
-      "key": "contact.contact-info.website",
+      "key": "contact.contact-info.website_url",
       "entity": "contact.contact-info",
       "target": {
         "collection": "contact",
         "entry": "contact-info",
-        "field": "website"
+        "field": "website_url"
       },
-      "type": "text",
+      "type": "url",
       "sample": "https://joomlart.com",
       "label": "Website",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 206,
-            "height": 22
-          },
-          "phone": {
-            "width": 310,
-            "height": 22
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 46
-        },
-        "maxCharacters": 30,
-        "casing": "none",
-        "overflow": "rewrite"
-      }
+      "role": "editorial.paragraph"
     },
     {
       "key": "contact.contact-info.form_title",
@@ -21857,7 +21866,7 @@
     },
     "chrome.chrome.identity": {
       "items": 1,
-      "shown": 0,
+      "shown": 1,
       "uniform": true,
       "whenFewer": "neutral",
       "min": null,

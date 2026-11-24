@@ -1164,5 +1164,55 @@
         "/blog/farm-to-fork-sustainable-eating"
       ]
     }
+  },
+  "tracy-morgan": {
+    "revision": 35,
+    "sourceSha256": "232674b8e1798d4c86447cbce1ba277093b20e04fafbbd152839bf00c8c200cd",
+    "collections": {
+      "en:chrome": [
+        "/",
+        "/about-us",
+        "/services",
+        "/blog",
+        "/contact-us",
+        "/search?q=growth",
+        "/404",
+        "/blog/strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+        "/blog/student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt"
+      ],
+      "en:footer_links": [
+        "/",
+        "/about-us",
+        "/services",
+        "/blog",
+        "/contact-us",
+        "/search?q=growth",
+        "/blog/strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+        "/blog/student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt"
+      ],
+      "en:pages": ["/", "/about-us", "/services", "/blog", "/contact-us"],
+      "en:slideshow": ["/"],
+      "en:features_intro": ["/", "/about-us", "/services"],
+      "en:accordion": ["/"],
+      "en:testimonials": ["/", "/services"],
+      "en:teams": ["/", "/about-us"],
+      "en:clients": ["/", "/about-us", "/services"],
+      "en:contact": ["/", "/contact-us"],
+      "en:masthead": [
+        "/about-us",
+        "/services",
+        "/blog",
+        "/search?q=growth",
+        "/404",
+        "/blog/strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+        "/blog/student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt"
+      ],
+      "en:posts": [
+        "/blog",
+        "/search?q=growth",
+        "/blog/strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+        "/blog/student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt"
+      ]
+    }
   }
 }

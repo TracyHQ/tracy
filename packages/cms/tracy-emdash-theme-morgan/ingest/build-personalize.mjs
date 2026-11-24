@@ -62,10 +62,10 @@ fact('teams', 'about-team', 'items', 'named members of the demo team and their p
 fact('testimonials', 'services-praise', 'items', 'named clients of the demo business and what they said')
 fact('testimonials', 'footer-quote', 'items', 'a named client of the demo business and what they said')
 fact('clients', 'clients', 'items', 'the demo business’s client logos')
-fact('contact', 'contact-info', 'website', 'the demo business’s own website address')
-fact('chrome', 'chrome', 'footer_social_facebook', 'the demo business’s social address')
-fact('chrome', 'chrome', 'footer_social_twitter', 'the demo business’s social address')
-fact('chrome', 'chrome', 'footer_social_instagram', 'the demo business’s social address')
+fact('contact', 'contact-info', 'website_url', 'the demo business’s own website address')
+fact('chrome', 'chrome', 'footer_social_facebook_url', 'the demo business’s social address')
+fact('chrome', 'chrome', 'footer_social_twitter_url', 'the demo business’s social address')
+fact('chrome', 'chrome', 'footer_social_instagram_url', 'the demo business’s social address')
 
 const identity = [
   { collection: 'chrome', slug: 'chrome', field: 'brand_name', value: '{name}' },

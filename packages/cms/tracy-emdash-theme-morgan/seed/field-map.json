@@ -584,19 +584,19 @@
       "label": "Footer social title",
       "role": "editorial.heading"
     },
-    "chrome.footer_social_facebook": {
+    "chrome.footer_social_facebook_url": {
       "source": "text",
       "target": "string",
       "label": "Footer social facebook",
       "role": "editorial.paragraph"
     },
-    "chrome.footer_social_twitter": {
+    "chrome.footer_social_twitter_url": {
       "source": "text",
       "target": "string",
       "label": "Footer social twitter",
       "role": "editorial.paragraph"
     },
-    "chrome.footer_social_instagram": {
+    "chrome.footer_social_instagram_url": {
       "source": "text",
       "target": "string",
       "label": "Footer social instagram",
@@ -849,7 +849,7 @@
       "label": "Website label",
       "role": "editorial.button_label"
     },
-    "contact.website": {
+    "contact.website_url": {
       "source": "text",
       "target": "string",
       "label": "Website",

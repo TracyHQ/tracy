@@ -34,12 +34,12 @@ const FormEmbed = (blockComponents as any)['emdash-form']
 const formId = String(c?.form_id ?? '').trim()
 const email = String(c?.email ?? '').trim()
 const phone = String(c?.phone ?? '').trim()
-const website = String(c?.website ?? '').trim()
+const website = String(c?.website_url ?? '').trim()
 const cards = [
   { glyph: 'pin', label: 'address_label', value: 'address', text: String(c?.address ?? '').trim(), href: null },
   { glyph: 'envelope', label: 'email_label', value: 'email', text: email, href: email ? `mailto:${email}` : null },
   { glyph: 'handset', label: 'phone_label', value: 'phone', text: phone, href: telHref(phone) },
-  { glyph: 'globe', label: 'website_label', value: 'website', text: website, href: /^https?:\/\//.test(website) ? website : null }
+  { glyph: 'globe', label: 'website_label', value: 'website_url', text: website, href: /^https?:\/\//.test(website) ? website : null }
 ].filter((r) => r.text)
 const photo = mediaUrl(c?.photo)
 // The disabled form: the same fields in the same places, their words the entry's own labels.

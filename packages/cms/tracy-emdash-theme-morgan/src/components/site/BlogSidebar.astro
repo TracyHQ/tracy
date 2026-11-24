@@ -47,7 +47,7 @@ const tags = [...new Set(posts.flatMap((p) => String(p.tags ?? '').split(/[,\n]/
 		<section class="mg-side-block">
 			<h3 class="mg-side-title" {...$c('categories_label')}>{site.categories_label}</h3>
 			<ul class="mg-side-cats">
-				{[...cats.values()].map((c) => <li><PostGlyph name="folder" />{c.label} <span>({c.n})</span></li>)}
+				{[...cats.values()].map((c) => <li><PostGlyph name="folder" /><div class="mg-cat-name">{c.label}</div> <div class="mg-cat-count">({c.n})</div></li>)}
 			</ul>
 		</section>
 	)}

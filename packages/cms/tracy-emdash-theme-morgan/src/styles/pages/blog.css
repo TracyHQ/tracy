@@ -50,7 +50,8 @@
 	.mg-side-cats { list-style: none; margin: 0; padding: 0; font-size: 15px; line-height: 23.4px; }
 	.mg-side-cats li { display: block; padding: 6px 0; }
 	.mg-side-cats svg { display: inline-block; width: 12px; height: 12px; fill: var(--color-meta); margin-right: 8px; vertical-align: -1px; }
-	.mg-side-cats li span { color: var(--color-meta); }
+	.mg-side-cats li > div { display: inline; } /* the name and the count are two blocks (two measured units), drawn on one line */
+	.mg-side-cats .mg-cat-count { color: var(--color-meta); }
 	.mg-side-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 	.mg-side-tags li { padding: 3px 10px; background: var(--color-surface); border: 1px solid var(--color-line-soft); font-size: 11px; line-height: 20px; }
 }

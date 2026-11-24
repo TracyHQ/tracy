@@ -3970,6 +3970,14 @@
         "faviconReady": true,
         "note": "As 1.4.14: 1.4.17 is the 1.4.14 release with the picomatch patch (GHSA-fc5q-39xc-vjpf) and the version, nothing else; the header logo spot, the brand settings and the favicon are 1.4.14's, byte for byte."
       }
+    },
+    "tracy-morgan/emdash-1.x": {
+      "0.1.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "Read off the 0.1.0 source: two logo spots, the header (BrandLogo with logoSpots('themed'); the template's text lockup, the business name with a CSS-drawn dot, while no logo is given) and the off-canvas panel head (the same lockup as text); settings.logo in the light spot and the chrome entry's logo_dark in the dark one (the dark theme switches by data-theme); the template icon only while settings.favicon is empty (templateIconWanted). BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
+      }
     }
   }
 }

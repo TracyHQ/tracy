@@ -133,4 +133,5 @@
 	.mg-social svg { width: 13px; height: 13px; fill: currentColor; }
 	.mg-copyright { margin-top: 70px; font-size: 12px; line-height: 20px; }
 	.mg-copyright p { margin: 0 0 4px; }
+	.mg-copyright .mg-copyright-line { display: inline; } /* two stamped blocks (the line and the credit), drawn as one line as the source does */
 }
