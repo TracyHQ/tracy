@@ -3,7 +3,7 @@
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { mapsAddress } from '../lib/map-links.js'
 import { refusalWords } from './contract-write.js'
-import { actsInsidePage, slashless } from './link-doors.js'
+import { actsInsidePage, addressFromLabel, slashless } from './link-doors.js'
 import { readRow } from './settings-door.js'
 
 const ENDED = 'the run ended before this link was written'
@@ -42,6 +42,7 @@ export function lineOrder(
       reason: `a control that acts inside the page has no address, so the plan's ${leadsTo} is not written`
     }
   if (target.kind === 'failed') return failed(target.reason)
+  if (door.via === 'from-words') return fromWords(link)
   if (door.via === 'slot' || door.via === 'shared') {
     const keys = door.keys.filter((key) => !hiddenKeys.has(key) && !goneKeys.has(key))
     if (!keys.length) {
@@ -92,30 +93,16 @@ const alive = (target) => ({
  */
 export const refusedLine = (reason, extra = {}) => ({ status: 'refused', reason, key: null, ...extra })
 
-const digitsOf = (value) => String(value ?? '').replace(/[^0-9]/g, '')
+export { addressFromLabel }
 
-/**
- * Whether the template prints this link's address from its own words: a phone link whose number is its label's digits, an
- * e-mail link whose address is its label (a Joomla contact prints `tel:` and `mailto:` from the contact's own fields). The
- * address then follows the words, whoever writes them. Dev lat31b (23/11/2026): JA Boxing's contact page printed the club's
- * own number and address, yet both links were refused lines ("it keeps opening tel:#").
- */
-export function addressFromLabel(link) {
-  const target = String(link?.target ?? '')
-  const label = String(link?.label ?? '').trim()
-  if (!label || !link?.labelId) return false
-  if (/^tel:/i.test(target)) return digitsOf(target).length >= 6 && digitsOf(target) === digitsOf(label)
-  if (/^mailto:/i.test(target)) return target.slice(7).trim().toLowerCase() === label.toLowerCase()
-  return false
-}
+const fromWords = (link) => ({
+  status: 'skipped',
+  key: null,
+  reason: `the template prints this address from its words (${link.labelId}), so it follows them; no door of its own is needed`
+})
 
 function noDoor(link, leadsTo) {
-  if (addressFromLabel(link))
-    return {
-      status: 'skipped',
-      key: null,
-      reason: `the template prints this address from its words (${link.labelId}), so it follows them; no door of its own is needed`
-    }
+  if (addressFromLabel(link)) return fromWords(link)
   const keeps = link?.target ? ` and it keeps opening ${link.target}` : ''
   const dead = !link?.target && link?.action === 'page-control'
   return refusedLine(

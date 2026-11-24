@@ -17,22 +17,50 @@ export const CATEGORY_DOOR =
   "the page is a category view, and the plugin's content.update does not take alias for a category, so renaming it needs that door"
 
 /**
- * The order of a kept page no menu item of its own opens, or null when no parent item opens the page above it either.
- * @returns {null | { via: 'article', articleId: number | null, parentItemId: number, parentRow: object, reason?: string }}
+ * The order of a kept page no menu item of its own opens, or null when no item above it opens a page either. The nearest
+ * ancestor an item opens is the parent: a blog post under a category blog item answers at the item, its category's path and
+ * its own last part (`/our-blog/2-restaurant-business/4-world-coffee-day`), and only that last part is the article's. Where the
+ * router prints the article's id before its alias (`4-`), the id stays and the slug follows it (`between`, `idPrefix`).
+ * Dev lat32 (23/11/2026): JA Diner's three kept posts sat one category below the blog item, and each was refused as a page no
+ * item opens (18 read-back blocks).
+ * @returns {null | { via: 'article', articleId: number | null, parentItemId: number, parentRow: object, between?: string[],
+ *   idPrefix?: string, reason?: string }}
  */
 export function parentOrder(kitPage, { kit, rows, menutype }) {
   const parts = trimmed(kitPage.path).split('/')
   if (parts.length < 2) return null
-  const [parentRow] = rowsOpening({ path: `/${parts.slice(0, -1).join('/')}` }, rows, menutype)
-  if (!parentRow) return null
   const articleId = articleOfPage(kitPage, kit)
-  return {
-    via: 'article',
-    articleId,
-    parentItemId: Number(parentRow.id),
-    parentRow,
-    ...(articleId ? {} : { reason: CATEGORY_DOOR })
+  for (let cut = parts.length - 1; cut >= 1; cut--) {
+    const [parentRow] = rowsOpening({ path: `/${parts.slice(0, cut).join('/')}` }, rows, menutype)
+    if (!parentRow) continue
+    const between = parts.slice(cut, -1)
+    const idPrefix = articleId && parts.at(-1).startsWith(`${articleId}-`) ? `${articleId}-` : ''
+    return {
+      via: 'article',
+      articleId,
+      parentItemId: Number(parentRow.id),
+      parentRow,
+      ...(between.length ? { between } : {}),
+      ...(idPrefix ? { idPrefix } : {}),
+      ...(articleId ? {} : { reason: CATEGORY_DOOR })
+    }
   }
+  return null
+}
+
+/** Where an article page answers under its parent item's address once its article holds `slug`. */
+export const articleAddress = (parentAddress, order) =>
+  [
+    String(parentAddress).replace(/\/+$/, ''),
+    ...(order.between ?? []),
+    `${order.idPrefix ?? ''}${order.slug}`
+  ].join('/')
+
+/** The alias an article page's article held on the demo: the last part of its address, without the id the router prints. */
+export function demoArticleAlias(route) {
+  const last = trimmed(route?.from).split('/').at(-1) ?? ''
+  const prefix = route?.idPrefix ?? ''
+  return prefix && last.startsWith(prefix) ? last.slice(prefix.length) : last
 }
 
 /** The alias a url sibling holding `slug` takes: `<slug>-link`, numbered when a sibling already answers at that. */

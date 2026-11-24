@@ -531,3 +531,27 @@ test('list-rows that finds most of its lists nowhere is unmeasured, not green', 
   }
   await assert.rejects(listRowsGroup.run(context), /Only 1 of the 3 lists.*block-71\.item, block-72\.item/)
 })
+
+test('a list of pictures and addresses has no words to be found by, so it is not measured, never "the page prints 2"', () => {
+  const r = report()
+  r.slots.push(
+    { slot: 'block-2.0', key: 'module-2.0', status: 'written', ordered: 'images/tracy-content/a.jpg' },
+    { slot: 'block-2.4', key: 'module-2.4', status: 'written', ordered: '/' }
+  )
+  r.rows = [
+    {
+      block: 'block-2',
+      list: 'block-2.gallery',
+      plan: 4,
+      demo: 4,
+      kept: 4,
+      keptKeys: ['module-2.0', 'module-2.4']
+    }
+  ]
+  const card = (text) => ({ chars: text.length, text, pictures: 1 })
+  const measures = [
+    page('/about', { lists: [{ selector: 'div.row>div.col', items: [card('Our story'), card('')] }] })
+  ]
+  const { checked, failures, unread } = judgeListRows(r, measures)
+  assert.deepEqual([checked, failures, unread], [0, [], ['block-2.gallery']])
+})
