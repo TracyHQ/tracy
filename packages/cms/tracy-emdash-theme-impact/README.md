@@ -1,4 +1,4 @@
-# JA Impact (`@tracy/emdash-theme-fresco`)
+# JA Impact (`@tracy/emdash-theme-impact`)
 
 **JA Impact** (template id `tracy-impact`) is Tracy's EmDash template for charities and fundraising sites. It is a port of
 JoomlArt's Joomla template JA Impact (j6 1.0.6): home (hero, helpline card, fund panel, causes, donation strip, impact figures, events, newsletter, latest posts), About, Our causes and each cause, Our Events and each event, Blog and each post, Help & FAQs, Contact form, search and 404. English only. Demo content: the JA Impact sample site.
@@ -120,7 +120,7 @@ agent's token: keep it private. `tools/recovery-check.mjs` proves the round trip
 
 ## Mail
 
-Forms notify the address in `template.config.json -> mail` (sender `no-reply@ja-fresco.example`) through the
+Forms notify the address in `template.config.json -> mail` (sender `no-reply@ja-impact.example`) through the
 `emdash-smtp` plugin. Production SMTP is configured in Admin > SMTP Providers, never from this repo. A local Mailpit
 pass says nothing about production deliverability.
 
