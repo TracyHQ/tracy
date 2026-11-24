@@ -3971,7 +3971,7 @@
         "note": "As 1.4.14: 1.4.17 is the 1.4.14 release with the picomatch patch (GHSA-fc5q-39xc-vjpf) and the version, nothing else; the header logo spot, the brand settings and the favicon are 1.4.14's, byte for byte."
       }
     },
-    "tracy-morgan/emdash-1.x": {
+    "tracy-morgan/emdash-0.x": {
       "0.1.0": {
         "logos": "pair",
         "brandReady": true,

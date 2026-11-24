@@ -2,7 +2,7 @@
   "schemaVersion": "tdsr-measurement/v1",
   "template": "tracy-morgan",
   "cms": "emdash",
-  "tag": "tracy-morgan/emdash-1.x",
+  "tag": "tracy-morgan/emdash-0.x",
   "version": "0.1.0",
   "measuredAt": "2026-11-24T18:17:42.840Z",
   "machine": "linux-arm64",

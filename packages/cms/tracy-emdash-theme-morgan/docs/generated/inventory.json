@@ -1102,7 +1102,7 @@
     "src/lib/html.ts": "sha256:30442b05e2b16f22159c04d2dace659f7f553d40a0c6651e25bcb04078d8c5ef",
     "src/lib/i18n.ts": "sha256:aaea1f019b9b16abf51a977a1b120e6078fd15280354f57c9f9d9960a7577d03",
     "src/lib/layout.ts": "sha256:8ddbbcb705adebb8c79e7b337f7f688ff020855e348f4a8a3c148b6cd0ffd974",
-    "src/lib/link-gate.ts": "sha256:a7f420d3962a02c76bb99a21a4b9430e027ea2f383270d416858e2b45250e437",
+    "src/lib/link-gate.ts": "sha256:e89d5142fee85ec4e06be34a47bcdb94512ab947173833508a031e63cd5d89cd",
     "src/lib/listed-children.ts": "sha256:fb03fc5213623a76c22ae6ff13e9f5e6bee4b6a9884b4a9ea5e5e4cf695c13d3",
     "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
     "src/lib/menu-gate.ts": "sha256:1884514cd874f6edb1a845332a1da81afb4d85abebd65d287538a6a6a79d1441",

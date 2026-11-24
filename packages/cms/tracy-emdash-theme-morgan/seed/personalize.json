@@ -524,7 +524,8 @@
       "collection": "footer_links",
       "fields": [
         "column",
-        "label"
+        "label",
+        "title"
       ]
     },
     {
@@ -560,7 +561,8 @@
   ],
   "keptText": [
     "chrome/chrome.copyright_credit",
-    "chrome/chrome.not_found_code"
+    "chrome/chrome.not_found_code",
+    "chrome/chrome.not_found_text"
   ],
   "forms": [
     {

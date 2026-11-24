@@ -100,7 +100,7 @@ const labels = [
   { collection: 'accordion', fields: ['title'] },
   { collection: 'slideshow', fields: ['title'] },
   { collection: 'clients', fields: ['title'] },
-  { collection: 'footer_links', fields: ['column', 'label'] },
+  { collection: 'footer_links', fields: ['column', 'label', 'title'] },
   { collection: 'chrome' },
   { collection: 'contact' },
   { collection: 'masthead', fields: ['title'] },
@@ -109,7 +109,8 @@ const labels = [
 
 const keptText = [
   'chrome/chrome.copyright_credit',
-  'chrome/chrome.not_found_code'
+  'chrome/chrome.not_found_code',
+  'chrome/chrome.not_found_text'
 ].filter((id) => {
   const [c, rest] = id.split('/')
   const [slug, field] = rest.split('.')

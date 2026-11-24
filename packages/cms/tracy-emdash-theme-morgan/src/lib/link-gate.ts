@@ -21,12 +21,9 @@ const page = (slug: string): PageRecord => ({ collection: 'pages', slug })
  */
 const RECORDS: RecordTable = {
   blog: page('blog'),
-  about: page('about'),
-  menu: page('menu'),
-  gallery: page('gallery'),
-  chiefs: page('chiefs'),
-  offer: page('offer'),
-  contact: page('contact')
+  'about-us': page('about-us'),
+  services: page('services'),
+  'contact-us': page('contact-us')
 }
 
 /** One checker per request and locale, so each record is read once however many components ask. */

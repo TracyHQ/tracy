@@ -11,7 +11,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const read = (file) => readFileSync(path.join(ROOT, file), 'utf8')
 
 test('the demo logo is a text lockup of the chrome entry: the header and the off-canvas menu print the brand name, no file', () => {
-  assert.match(read('src/components/site/Header.astro'), /class="mg-logo">\{site\.brand_name\}<b>\.<\/b>/)
+  assert.match(read('src/components/site/Header.astro'), /class="mg-logo"><span \{\.\.\.\$c\('brand_name'\)\}>\{site\.brand_name\}<\/span><\/span>/)
 })
 
 test('a dark logo has its place in the questionnaire map', () => {
