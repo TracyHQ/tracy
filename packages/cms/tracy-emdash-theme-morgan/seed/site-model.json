@@ -618,10 +618,6 @@
           "type": "text"
         },
         {
-          "name": "license_note",
-          "type": "text"
-        },
-        {
           "name": "skip_label",
           "type": "text"
         },
@@ -2271,7 +2267,6 @@
         "footer_social_instagram": "https://www.joomlart.com/",
         "copyright": "Copyright © {year} {name}. All Rights Reserved.",
         "copyright_credit": "Designed by JoomlArt.",
-        "license_note": "Joomla! is Free Software released under the GNU General Public License.",
         "skip_label": "Skip to content",
         "menu_label": "Menu",
         "close_label": "Close",

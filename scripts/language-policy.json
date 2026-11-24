@@ -40129,6 +40129,11 @@
       "path": "packages/cms/tracy-emdash-theme-essence/seed/media/images/joomlart/category/item-5.jpg",
       "oid": "507ff3bad7499ffc5da99ee70a423b0ead7896f1",
       "reason": "A PNG picture the JoomlArt Essence demo ships under a .jpg name (checked with file(1): PNG image data 683 x 682); reviewed picture, not text."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-morgan/seed/media/images/joomlart/testimonials/item-4.jpg",
+      "oid": "1b9558e0eca4c423782cb8d09c38238eb2f323dd",
+      "reason": "A demo picture of the JoomlArt quickstart stored as PNG data under a .jpg name in the source release; shipped byte for byte as the source has it."
     }
   ]
 }

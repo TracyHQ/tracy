@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Morgan",
-	"generatedAt": "2026-11-24T15:13:16.993Z",
+	"generatedAt": "2026-11-24T16:08:40.244Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -80,9 +80,9 @@
 		"docs/install.md": "sha256:6a2658c2c19c4f884e006207056b221ea8a9a4113a3c908f00ce5b2f3553981f",
 		"docs/languages.md": "sha256:46108a25ebd4d4826848ba520bfb599e1f3f99553b0bbe2d0cd73064da175cb5",
 		"template.config.json": "sha256:5901eed4a7a564104ff92e81452b1612316b7d049a74035b15ca6fc22447717e",
-		"seed/seed.json": "sha256:c386c86581ffe073ca44e5e330d226e64e04bd0f7354318b7070b8fb9235a37c",
-		"seed/media-map.json": "sha256:d446f5cfa4964d2345db99d7536790964077ff3f708397719d54e824527298fb",
-		"seed/field-map.json": "sha256:93de60ad618b421a681080bb722e4bd0a709121f8c72a69b7591813180466cbd",
+		"seed/seed.json": "sha256:4dcd04c38caaa5df36a3b7d9a14b60033c84f33a066fe6c180f77b938ff0d5fd",
+		"seed/media-map.json": "sha256:c2d4d4ccd423b5daf1c2a878b5cf382c26cdba577133cfde7926da703826f349",
+		"seed/field-map.json": "sha256:c8cc18a03e1a1ce404acae43bb8550b7e7bdde65387037d48d7ebb95d2e5cfbf",
 		"pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
 		"tools/forms.json": "sha256:74bf6b6f24abd989084594d9d62561058bf417f57fdf206a2ef2cc64e5c2b649",
 		"seed/media/*": "sha256:68eb7ac4fb2ef7caf56676fb008436d4558bb42e4a35993595067305ede1a651 (93 files)"

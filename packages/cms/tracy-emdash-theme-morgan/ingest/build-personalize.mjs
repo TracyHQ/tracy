@@ -109,7 +109,6 @@ const labels = [
 
 const keptText = [
   'chrome/chrome.copyright_credit',
-  'chrome/chrome.license_note',
   'chrome/chrome.not_found_code'
 ].filter((id) => {
   const [c, rest] = id.split('/')

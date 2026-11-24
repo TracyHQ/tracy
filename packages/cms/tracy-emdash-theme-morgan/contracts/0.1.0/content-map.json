@@ -11344,19 +11344,6 @@
       "role": "editorial.paragraph"
     },
     {
-      "key": "chrome.chrome.license_note",
-      "entity": "chrome.chrome",
-      "target": {
-        "collection": "chrome",
-        "entry": "chrome",
-        "field": "license_note"
-      },
-      "type": "text",
-      "sample": "Joomla! is Free Software released under the GNU General Public License.",
-      "label": "License note",
-      "role": "editorial.paragraph"
-    },
-    {
       "key": "chrome.chrome.skip_label",
       "entity": "chrome.chrome",
       "target": {

@@ -14,6 +14,7 @@
 	.mg-sub { font-size: 16px; line-height: 25px; font-weight: 500; color: var(--color-accent-text); margin-bottom: 25px; }
 	.mg-sec-h { font-size: 36px; line-height: 45px; font-weight: 400; letter-spacing: 0; color: var(--color-heading); margin: 0; }
 	.mg-lead { font-size: 18px; line-height: 30px; margin: 25px 0 0; }
+	.mg-lead .mg-br { display: none; } /* a line break inside a lead paragraph of the demo is a space in the source */
 	@media (max-width: 767.98px) { .mg-sec-h { font-size: 28px; line-height: 36px; } }
 	.is-secondary .mg-sec-h, .is-secondary .mg-lead { color: var(--color-on-ink); }
 	.is-secondary .mg-sub { color: var(--color-on-ink); } /* the accent label on the navy band: lightened to 4.5:1 (the source's red reads 2.7:1) */
@@ -23,11 +24,13 @@
 	.mg-slideshow { position: relative; background: var(--color-ink); }
 	.mg-slide { display: none; min-height: 650px; background-size: cover; background-position: center; color: #fff; }
 	.mg-slide.is-active { display: block; }
-	@media (max-width: 767.98px) { .mg-br { display: none; } .mg-slide { background-position: 70% center; position: relative; } .mg-slide::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .15)); } .mg-slide .mg-container { position: relative; } .mg-tiles-h { font-size: 28px; line-height: 36px; } }
+	@media (max-width: 991.98px) { .mg-slide { background-position: 88% center; } }
+	@media (max-width: 767.98px) { .mg-br { display: none; } .mg-slide { position: relative; } .mg-slide::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .15)); } .mg-slide .mg-container { position: relative; } .mg-tiles-h { font-size: 28px; line-height: 36px; } }
 	.mg-slide-in { max-width: 540px; padding: 190px 0 120px; }
 	.mg-slide-h { font-size: 60px; line-height: 70px; font-weight: 700; color: #fff; margin-bottom: 25px; }
 	.mg-slide-p { font-size: 16px; line-height: 25px; color: rgba(255, 255, 255, .8); margin-bottom: 35px; max-width: 460px; }
 	.mg-slide-tabs { position: absolute; left: 0; right: 0; bottom: 0; background: var(--color-bg); border-top: 1px solid var(--color-line-soft); }
+	.mg-slide-tabs > .mg-container { max-width: none; padding-inline: 0; }
 	.mg-slide-tabs ul { list-style: none; margin: 0; padding: 0; display: flex; }
 	.mg-slide-tabs li { flex: 1; text-align: center; border-left: 1px solid var(--color-line-soft); position: relative; }
 	.mg-slide-tabs li:first-child { border-left: 0; }
@@ -136,9 +139,9 @@
 	@media (max-width: 575.98px) { .mg-cases, .mg-cases.is-scroll { grid-auto-columns: 86%; } }
 
 	/* client praise: quote cards in a row that scrolls sideways */
-	.mg-praise { display: flex; gap: 30px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 15px 20px; scrollbar-width: none; }
+	.mg-praise { display: flex; gap: 30px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 max(15px, calc((100% - 1260px) / 2 + 15px)) 20px; scroll-padding-inline: max(15px, calc((100% - 1260px) / 2 + 15px)); scrollbar-width: none; }
 	.mg-praise::-webkit-scrollbar { display: none; }
-	.mg-quote-card { flex: 0 0 min(420px, 85vw); margin: 0; background: var(--color-card); padding: 30px; text-align: center; scroll-snap-align: center; }
+	.mg-quote-card { flex: 0 0 min(390px, 85vw); margin: 0; background: var(--color-card); padding: 30px; text-align: center; scroll-snap-align: center; }
 	.mg-quote-card blockquote { margin: 0 0 25px; font-size: 14px; line-height: 22px; font-style: normal; }
 	.mg-quote-card figcaption { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 	.mg-quote-card img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; }
@@ -175,7 +178,6 @@
 	/* the dark quote band above the footer */
 	.mg-footer-quote { background: var(--ds-c-ink, #1b1b1b); color: #fff; padding: 100px 0; }
 	html[data-theme="dark"] .mg-footer-quote { background: var(--color-surface); }
-	.mg-footer-quote .mg-container { max-width: 1020px; }
 	.mg-fquote { display: none; margin: 0; align-items: center; gap: 24px; }
 	.mg-fquote.is-active { display: flex; }
 	@media (max-width: 575.98px) { .mg-fquote.is-active { flex-direction: column; align-items: flex-start; } }

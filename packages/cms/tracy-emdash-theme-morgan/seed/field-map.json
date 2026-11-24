@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T14:51:53.360Z",
+  "generatedAt": "2026-11-24T15:30:05.462Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -616,12 +616,6 @@
       "source": "text",
       "target": "string",
       "label": "Copyright credit",
-      "role": "editorial.paragraph"
-    },
-    "chrome.license_note": {
-      "source": "text",
-      "target": "string",
-      "label": "License note",
       "role": "editorial.paragraph"
     },
     "chrome.skip_label": {
