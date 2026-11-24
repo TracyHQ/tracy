@@ -1,8 +1,8 @@
 {
-  "id": "REG-PR-9999-emdash-kit-sections",
+  "id": "REG-PR-746-emdash-kit-sections",
   "kind": "feat",
   "title": "The readiness verdict names the sections of an EmDash template that a page of its template kit prints, that hold content-map slots and are no kit block",
-  "pr": 9999,
+  "pr": 746,
   "area": "website-opportunities/template-readiness",
   "cms": ["em"],
   "needs": [],
