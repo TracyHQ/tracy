@@ -1,0 +1,58 @@
+---
+/** The right column of an article page: the lists with their counts, a search box, the latest posts with their pictures, the tags. */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { loadArticles, articlePath } from '@/lib/articles'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const [events, posts, donations] = await Promise.all([loadArticles('events', locale), loadArticles('posts', locale), loadArticles('donations', locale)])
+const lists = [
+  { label: site.events_name, url: '/events', count: events.length, path: 'events_name' },
+  { label: site.blog_name, url: '/blog', count: posts.length, path: 'blog_name' },
+  { label: site.donations_name, url: '/donations', count: donations.length, path: 'donations_name' }
+]
+const recent = posts.slice(0, 5)
+const tags = [...new Set([...posts, ...donations, ...events].flatMap((a) => String(a.tags ?? '').split('\n')).map((t) => t.trim()).filter(Boolean))]
+const live = await liveLinks(Astro.request, locale, [...lists.map((l) => l.url), ...recent.map((p) => articlePath('posts', p.slug))])
+---
+
+<aside class="im-sidebar">
+	<section class="im-widget">
+		<h3 {...$c('categories_title')}>{site.categories_title}</h3>
+		<ul class="im-widget-list">
+			{lists.filter((l) => live(l.url)).map((l) => <li><a href={href(locale, l.url)} {...$c(l.path)}>{l.label}</a><span class="im-count">{l.count}</span></li>)}
+		</ul>
+	</section>
+	<form class="im-widget im-search-box" role="search" action={href(locale, '/search')} method="get">
+		<label class="sr-only" for="im-side-search">{site.search_label}</label>
+		<input id="im-side-search" type="search" name="q" placeholder={site.search_placeholder} />
+		<button type="submit" aria-label={site.search_button}><span class="im-fa" data-icon="search" aria-hidden="true"></span></button>
+	</form>
+	{recent.length > 0 && (
+		<section class="im-widget">
+			<h3 {...$c('recent_title')}>{site.recent_title}</h3>
+			<ul class="im-recent">
+				{recent.filter((p) => live(articlePath('posts', p.slug))).map((p) => (
+					<li>
+						{mediaUrl(p.cover) && <a class="im-recent-image" href={href(locale, articlePath('posts', p.slug))} tabindex="-1" aria-hidden="true"><img src={mediaUrl(p.cover)!} alt="" loading="lazy" decoding="async" /></a>}
+						<a class="im-recent-title" href={href(locale, articlePath('posts', p.slug))}>{p.title}</a>
+					</li>
+				))}
+			</ul>
+		</section>
+	)}
+	{tags.length > 0 && (
+		<section class="im-widget">
+			<h3 {...$c('tags_label')}>{site.tags_label}</h3>
+			<ul class="im-tags">{tags.map((t) => <li>{t}</li>)}</ul>
+		</section>
+	)}
+</aside>

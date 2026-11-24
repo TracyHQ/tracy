@@ -4,7 +4,7 @@
 // splits the one `posts` list the model has into blog posts, donations and events (the article's own custom fields come back
 // from the dump), adds what the model drops (site chrome, mastheads, authors, tags) and names the header menu `primary`.
 //   node ingest/shape-model.mjs <seed/site-model.json> <j6/inventory.json> <spec/sections.json> <spec/page-map.json> <spec/content.json>
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { decodeWith, stripTags } from './text.mjs'
 
 const decode = decodeWith({
@@ -351,6 +351,17 @@ const chromeFields = [
   'join_label',
   'donate_cta',
   'view_all_label',
+  'breadcrumb_home',
+  'breadcrumb_label',
+  'categories_title',
+  'recent_title',
+  'pagination_label',
+  'page_label',
+  'first_label',
+  'last_label',
+  'blog_name',
+  'donations_name',
+  'events_name',
   'view_all_blog_label',
   'stories_label',
   'stories_title',
@@ -379,6 +390,57 @@ const chromeFields = [
   'form_id',
   'logo_dark'
 ]
+// ---- contact page: the com_contact row (address, phone, e-mail, the "Hours of operation" block in its misc field) and the words of the form
+const cd = inventory.contact_details[0]
+const hours = [...String(cd.misc ?? '').matchAll(/<h5[^>]*>([\s\S]*?)<\/h5>[\s\S]*?<span[^>]*>([^<]*)<\/span>/g)].map((m) => [secText(m[1]), secText(m[2])])
+const contactFields = [
+  'title', 'location_title', 'map_label', 'form_title', 'form_intro', 'first_name_label', 'email_field_label', 'subject_label', 'message_label',
+  'privacy_title', 'privacy_text', 'copy_label', 'submit_label', 'card_title', 'email_label', 'email', 'address_label', 'address', 'phone_label', 'phone',
+  'hours_title', 'hours_1_time', 'hours_1_days', 'hours_2_time', 'hours_2_days', 'required_label', 'form_id'
+]
+model.types.push({ name: 'contact', mode: 'single', label: { en: 'Contact page' }, fields: contactFields.map((name) => ({ name, ...text })) })
+model.records.push({
+  type: 'contact',
+  slug: 'contact',
+  locale: 'en',
+  status: 'published',
+  values: {
+    title: 'Contact',
+    location_title: decode(cd.name),
+    map_label: 'Open in Google Maps',
+    form_title: 'Drop Us a Line',
+    form_intro: "Want to reach out? We'd love to hear from you.",
+    first_name_label: 'First name',
+    email_field_label: 'Email address',
+    subject_label: 'Your subject',
+    message_label: 'Message',
+    privacy_title: 'Privacy Note',
+    privacy_text: 'By submitting this form you agree to the Privacy Policy of this website and the storing of the submitted information.',
+    copy_label: 'Send a copy to yourself',
+    submit_label: 'Send Email',
+    card_title: 'Contact',
+    email_label: 'E-mail us',
+    email: cd.email_to,
+    address_label: 'Our address',
+    address: cd.address,
+    phone_label: 'Support 24/7',
+    phone: cd.telephone,
+    hours_title: 'Hours of operation',
+    hours_1_time: hours[0]?.[0] ?? '',
+    hours_1_days: hours[0]?.[1] ?? '',
+    hours_2_time: hours[1]?.[0] ?? '',
+    hours_2_days: hours[1]?.[1] ?? '',
+    required_label: 'required',
+    form_id: ''
+  }
+})
+
+// Words a page family prints and the chrome entry holds: one JSON file per family in ingest/chrome-words/ ({ "field_name": "English word" }),
+// so families built side by side do not edit one list. They are read in file-name order.
+const extraWords = {}
+for (const f of readdirSync(new URL('./chrome-words/', import.meta.url)).filter((n) => n.endsWith('.json')).sort())
+  Object.assign(extraWords, JSON.parse(readFileSync(new URL(`./chrome-words/${f}`, import.meta.url), 'utf8')))
+for (const name of Object.keys(extraWords)) if (!chromeFields.includes(name)) chromeFields.push(name)
 model.types.push({
   name: 'chrome',
   mode: 'single',
@@ -425,6 +487,17 @@ model.records.push({
     join_label: 'Join our event',
     donate_cta: 'Donate now',
     view_all_label: 'View all',
+    breadcrumb_home: 'Home',
+    breadcrumb_label: 'Breadcrumbs',
+    categories_title: 'Categories',
+    recent_title: 'Recent posts',
+    pagination_label: 'Pagination',
+    page_label: 'Page',
+    first_label: 'First page',
+    last_label: 'Last page',
+    blog_name: 'Blog',
+    donations_name: 'Donations',
+    events_name: 'Events',
     view_all_blog_label: 'View all our blog',
     stories_label: 'Funds',
     stories_title: 'Listen to their stories',
@@ -446,6 +519,7 @@ model.records.push({
     newsletter_email_label: 'Email',
     newsletter_button: 'Subscribe',
     newsletter_done: 'Thank you for subscribing.',
+    ...extraWords,
     play_label: 'Play video',
     slides_label: 'Slides',
     slide_label: 'Slide',

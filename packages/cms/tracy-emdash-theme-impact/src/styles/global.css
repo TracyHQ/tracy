@@ -13,6 +13,7 @@
 @import "./blocks/cards.css";
 @import "./blocks/chrome.css";
 @import "./blocks/home.css";
+@import "./pages/common.css";
 
 @font-face { font-family: "FA Solid"; src: url("../fonts/fa-solid-900.woff2") format("woff2"); font-weight: 900; font-display: swap; }
 @font-face { font-family: "FA Brands"; src: url("../fonts/fa-brands-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
@@ -60,6 +61,8 @@
 	.im-fa[data-icon="play"] { --fa: "\f04b"; } .im-fa[data-icon="check"] { --fa: "\f00c"; } .im-fa[data-icon="bars"] { --fa: "\f0c9"; }
 	.im-fa[data-icon="plus"] { --fa: "\2b"; } .im-fa[data-icon="minus"] { --fa: "\f068"; } .im-fa[data-icon="xmark"] { --fa: "\f00d"; }
 	.im-fa[data-icon="facebook"] { --fa: "\f39e"; } .im-fa[data-icon="twitter"] { --fa: "\f099"; } .im-fa[data-icon="tiktok"] { --fa: "\e07b"; }
+	.im-fa[data-icon="search"] { --fa: "\f002"; } .im-fa[data-icon="calendar"] { --fa: "\f073"; } .im-fa[data-icon="clock"] { --fa: "\f017"; }
+	.im-fa[data-icon="dollar"] { --fa: "\24"; } .im-fa[data-icon="tag"] { --fa: "\f02b"; } .im-fa[data-icon="minus"] { --fa: "\f068"; }
 	.im-fa[data-icon="pinterest"] { --fa: "\f0d2"; } .im-fa[data-icon="instagram"] { --fa: "\f16d"; } .im-fa[data-icon="youtube"] { --fa: "\f167"; }
 
 	/* buttons: 8 px radius, 500 weight; the theme buttons fill with their colour, hover keeps it at 85 percent (`theme.tpl.css:171-180`) */

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T05:52:06.758Z",
+  "generatedAt": "2026-11-24T05:55:08.668Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -922,6 +922,179 @@
       "label": "Background",
       "role": "editorial.illustration"
     },
+    "contact.title": {
+      "source": "text",
+      "target": "string",
+      "label": "Title",
+      "role": "editorial.heading"
+    },
+    "contact.location_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Location title",
+      "role": "editorial.heading"
+    },
+    "contact.map_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Map label",
+      "role": "editorial.button_label"
+    },
+    "contact.form_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Form title",
+      "role": "editorial.heading"
+    },
+    "contact.form_intro": {
+      "source": "text",
+      "target": "string",
+      "label": "Form intro",
+      "role": "editorial.paragraph"
+    },
+    "contact.first_name_label": {
+      "source": "text",
+      "target": "string",
+      "label": "First name label",
+      "role": "editorial.button_label"
+    },
+    "contact.email_field_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Email field label",
+      "role": "editorial.button_label"
+    },
+    "contact.subject_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Subject label",
+      "role": "editorial.button_label"
+    },
+    "contact.message_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Message label",
+      "role": "editorial.button_label"
+    },
+    "contact.privacy_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Privacy title",
+      "role": "editorial.heading"
+    },
+    "contact.privacy_text": {
+      "source": "text",
+      "target": "string",
+      "label": "Privacy text",
+      "role": "editorial.button_label"
+    },
+    "contact.copy_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Copy label",
+      "role": "editorial.button_label"
+    },
+    "contact.submit_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Submit label",
+      "role": "editorial.button_label"
+    },
+    "contact.card_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Card title",
+      "role": "editorial.heading"
+    },
+    "contact.email_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Email label",
+      "role": "editorial.button_label"
+    },
+    "contact.email": {
+      "source": "text",
+      "target": "string",
+      "label": "Email",
+      "role": "contact.email",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
+    },
+    "contact.address_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Address label",
+      "role": "editorial.button_label"
+    },
+    "contact.address": {
+      "source": "text",
+      "target": "string",
+      "label": "Address",
+      "role": "contact.address",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
+    },
+    "contact.phone_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Phone label",
+      "role": "editorial.button_label"
+    },
+    "contact.phone": {
+      "source": "text",
+      "target": "string",
+      "label": "Phone",
+      "role": "contact.phone",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
+    },
+    "contact.hours_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Hours title",
+      "role": "editorial.heading"
+    },
+    "contact.hours_1_time": {
+      "source": "text",
+      "target": "string",
+      "label": "Hours 1 time",
+      "role": "editorial.paragraph"
+    },
+    "contact.hours_1_days": {
+      "source": "text",
+      "target": "string",
+      "label": "Hours 1 days",
+      "role": "editorial.paragraph"
+    },
+    "contact.hours_2_time": {
+      "source": "text",
+      "target": "string",
+      "label": "Hours 2 time",
+      "role": "editorial.paragraph"
+    },
+    "contact.hours_2_days": {
+      "source": "text",
+      "target": "string",
+      "label": "Hours 2 days",
+      "role": "editorial.paragraph"
+    },
+    "contact.required_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Required label",
+      "role": "editorial.button_label"
+    },
+    "contact.form_id": {
+      "source": "text",
+      "target": "string",
+      "label": "Form id"
+    },
     "chrome.title": {
       "source": "text",
       "target": "string",
@@ -1133,6 +1306,72 @@
       "target": "string",
       "label": "View all label",
       "role": "editorial.button_label"
+    },
+    "chrome.breadcrumb_home": {
+      "source": "text",
+      "target": "string",
+      "label": "Breadcrumb home",
+      "role": "editorial.paragraph"
+    },
+    "chrome.breadcrumb_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Breadcrumb label",
+      "role": "editorial.button_label"
+    },
+    "chrome.categories_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Categories title",
+      "role": "editorial.heading"
+    },
+    "chrome.recent_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Recent title",
+      "role": "editorial.heading"
+    },
+    "chrome.pagination_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Pagination label",
+      "role": "editorial.button_label"
+    },
+    "chrome.page_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Page label",
+      "role": "editorial.button_label"
+    },
+    "chrome.first_label": {
+      "source": "text",
+      "target": "string",
+      "label": "First label",
+      "role": "editorial.button_label"
+    },
+    "chrome.last_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Last label",
+      "role": "editorial.button_label"
+    },
+    "chrome.blog_name": {
+      "source": "text",
+      "target": "string",
+      "label": "Blog name",
+      "role": "editorial.heading"
+    },
+    "chrome.donations_name": {
+      "source": "text",
+      "target": "string",
+      "label": "Donations name",
+      "role": "editorial.heading"
+    },
+    "chrome.events_name": {
+      "source": "text",
+      "target": "string",
+      "label": "Events name",
+      "role": "editorial.heading"
     },
     "chrome.view_all_blog_label": {
       "source": "text",

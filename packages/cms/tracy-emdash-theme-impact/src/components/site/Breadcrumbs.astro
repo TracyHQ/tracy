@@ -1,0 +1,25 @@
+---
+/** Home › Page › Item. On a band (the masthead) it is white; on the grey bar of an article page it is the page's own colour. */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  trail: { label: string; url?: string }[]
+  onBand?: boolean
+}
+const { chrome, trail, onBand = false } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const live = await liveLinks(Astro.request, chrome.locale, trail.map((t) => t.url))
+---
+
+<nav class:list={['im-crumbs', onBand && 'on-band']} aria-label={chrome.site.breadcrumb_label}>
+	<ol>
+		<li><a href={href(chrome.locale, '/')} {...$c('breadcrumb_home')}>{chrome.site.breadcrumb_home}</a></li>
+		{trail.map((t, i) => (
+			<li>{t.url && i < trail.length - 1 && live(t.url) ? <a href={href(chrome.locale, t.url)}>{t.label}</a> : <span aria-current={i === trail.length - 1 ? 'page' : undefined}>{t.label}</span>}</li>
+		))}
+	</ol>
+</nav>

@@ -1,0 +1,28 @@
+---
+/** `« 1 2 ›` as the source prints it: the current page filled green, the others on a grey tile; the arrows are links to the first, previous, next and last page. */
+import type { Chrome } from '@/lib/chrome'
+
+interface Props {
+  chrome: Chrome
+  /** The page's address without `?page`. */
+  base: string
+  page: number
+  pages: number
+}
+const { chrome, base, page, pages } = Astro.props
+const at = (n: number) => (n <= 1 ? base : `${base}?page=${n}`)
+const site = chrome.site
+const nums = Array.from({ length: pages }, (_, i) => i + 1)
+---
+
+{pages > 1 && (
+	<nav class="im-pagination" aria-label={site.pagination_label}>
+		<ul>
+			{page > 1 && <li><a href={at(1)} aria-label={site.first_label}>«</a></li>}
+			{page > 1 && <li><a href={at(page - 1)} aria-label={site.prev_label} rel="prev">‹</a></li>}
+			{nums.map((n) => <li>{n === page ? <span class="is-current" aria-current="page" aria-label={`${site.page_label} ${n}`}>{n}</span> : <a href={at(n)} aria-label={`${site.page_label} ${n}`}>{n}</a>}</li>)}
+			{page < pages && <li><a href={at(page + 1)} aria-label={site.next_label} rel="next">›</a></li>}
+			{page < pages && <li><a href={at(pages)} aria-label={site.last_label}>»</a></li>}
+		</ul>
+	</nav>
+)}

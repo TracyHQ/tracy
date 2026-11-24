@@ -8,7 +8,16 @@ export const prerender = false
 import { splitPath } from '@/lib/i18n'
 import { loadChrome } from '@/lib/chrome'
 import Home from '@/views/Home.astro'
-// the page families are added to PAGES and the detail routes below as they are built (STATUS.md, P5)
+import About from '@/views/About.astro'
+import DonationsList from '@/views/DonationsList.astro'
+import EventsList from '@/views/EventsList.astro'
+import BlogList from '@/views/BlogList.astro'
+import Faq from '@/views/Faq.astro'
+import Contact from '@/views/Contact.astro'
+import Search from '@/views/Search.astro'
+import Donation from '@/views/Donation.astro'
+import Event from '@/views/Event.astro'
+import Post from '@/views/Post.astro'
 import NotFound from '@/views/NotFound.astro'
 import { childLive } from '@/lib/link-gate'
 
@@ -20,9 +29,20 @@ const clean = segs.length === 0 ? '/' : `/${segs.join('/')}`
 
 type View = { component: any; props: Record<string, unknown> } | null
 let view: View = null
-const PAGES: Record<string, any> = {}
+const PAGES: Record<string, any> = {
+  about: About,
+  donations: DonationsList,
+  events: EventsList,
+  blog: BlogList,
+  'help-faqs': Faq,
+  contact: Contact,
+  search: Search
+}
+// an entry lives under its list: /donations/<slug>, /events/<slug>, /blog/<slug>
+const DETAIL: Record<string, any> = { donations: Donation, events: Event, blog: Post }
 if (clean === '/') view = { component: Home, props: {} }
 else if (segs.length === 1 && PAGES[segs[0]]) view = { component: PAGES[segs[0]], props: {} }
+else if (segs.length === 2 && DETAIL[segs[0]] && SLUG.test(segs[1])) view = { component: DETAIL[segs[0]], props: { slug: segs[1] } }
 
 // a page the customer unticked (its record is unpublished), and everything that hangs under it, answers 404
 if (view && !(await childLive(Astro.request, locale, clean))) view = null

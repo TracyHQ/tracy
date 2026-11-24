@@ -1138,10 +1138,158 @@
 			]
 		},
 		{
+			"slug": "contact",
+			"label": "Contact page",
+			"labelSingular": "Contact",
+			"sortOrder": 12,
+			"routable": false,
+			"supports": [
+				"revisions"
+			],
+			"editLocking": false,
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string"
+				},
+				{
+					"slug": "location_title",
+					"label": "Location title",
+					"type": "string"
+				},
+				{
+					"slug": "map_label",
+					"label": "Map label",
+					"type": "string"
+				},
+				{
+					"slug": "form_title",
+					"label": "Form title",
+					"type": "string"
+				},
+				{
+					"slug": "form_intro",
+					"label": "Form intro",
+					"type": "string"
+				},
+				{
+					"slug": "first_name_label",
+					"label": "First name label",
+					"type": "string"
+				},
+				{
+					"slug": "email_field_label",
+					"label": "Email field label",
+					"type": "string"
+				},
+				{
+					"slug": "subject_label",
+					"label": "Subject label",
+					"type": "string"
+				},
+				{
+					"slug": "message_label",
+					"label": "Message label",
+					"type": "string"
+				},
+				{
+					"slug": "privacy_title",
+					"label": "Privacy title",
+					"type": "string"
+				},
+				{
+					"slug": "privacy_text",
+					"label": "Privacy text",
+					"type": "string"
+				},
+				{
+					"slug": "copy_label",
+					"label": "Copy label",
+					"type": "string"
+				},
+				{
+					"slug": "submit_label",
+					"label": "Submit label",
+					"type": "string"
+				},
+				{
+					"slug": "card_title",
+					"label": "Card title",
+					"type": "string"
+				},
+				{
+					"slug": "email_label",
+					"label": "Email label",
+					"type": "string"
+				},
+				{
+					"slug": "email",
+					"label": "Email",
+					"type": "string"
+				},
+				{
+					"slug": "address_label",
+					"label": "Address label",
+					"type": "string"
+				},
+				{
+					"slug": "address",
+					"label": "Address",
+					"type": "string"
+				},
+				{
+					"slug": "phone_label",
+					"label": "Phone label",
+					"type": "string"
+				},
+				{
+					"slug": "phone",
+					"label": "Phone",
+					"type": "string"
+				},
+				{
+					"slug": "hours_title",
+					"label": "Hours title",
+					"type": "string"
+				},
+				{
+					"slug": "hours_1_time",
+					"label": "Hours 1 time",
+					"type": "string"
+				},
+				{
+					"slug": "hours_1_days",
+					"label": "Hours 1 days",
+					"type": "string"
+				},
+				{
+					"slug": "hours_2_time",
+					"label": "Hours 2 time",
+					"type": "string"
+				},
+				{
+					"slug": "hours_2_days",
+					"label": "Hours 2 days",
+					"type": "string"
+				},
+				{
+					"slug": "required_label",
+					"label": "Required label",
+					"type": "string"
+				},
+				{
+					"slug": "form_id",
+					"label": "Form id",
+					"type": "string"
+				}
+			]
+		},
+		{
 			"slug": "chrome",
 			"label": "Site chrome",
 			"labelSingular": "Chrome",
-			"sortOrder": 12,
+			"sortOrder": 13,
 			"routable": false,
 			"supports": [
 				"revisions"
@@ -1316,6 +1464,61 @@
 				{
 					"slug": "view_all_label",
 					"label": "View all label",
+					"type": "string"
+				},
+				{
+					"slug": "breadcrumb_home",
+					"label": "Breadcrumb home",
+					"type": "string"
+				},
+				{
+					"slug": "breadcrumb_label",
+					"label": "Breadcrumb label",
+					"type": "string"
+				},
+				{
+					"slug": "categories_title",
+					"label": "Categories title",
+					"type": "string"
+				},
+				{
+					"slug": "recent_title",
+					"label": "Recent title",
+					"type": "string"
+				},
+				{
+					"slug": "pagination_label",
+					"label": "Pagination label",
+					"type": "string"
+				},
+				{
+					"slug": "page_label",
+					"label": "Page label",
+					"type": "string"
+				},
+				{
+					"slug": "first_label",
+					"label": "First label",
+					"type": "string"
+				},
+				{
+					"slug": "last_label",
+					"label": "Last label",
+					"type": "string"
+				},
+				{
+					"slug": "blog_name",
+					"label": "Blog name",
+					"type": "string"
+				},
+				{
+					"slug": "donations_name",
+					"label": "Donations name",
+					"type": "string"
+				},
+				{
+					"slug": "events_name",
+					"label": "Events name",
 					"type": "string"
 				},
 				{
@@ -12450,6 +12653,43 @@
 				}
 			}
 		],
+		"contact": [
+			{
+				"id": "contact:contact:en",
+				"slug": "contact",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Contact",
+					"location_title": "Our Location",
+					"map_label": "Open in Google Maps",
+					"form_title": "Drop Us a Line",
+					"form_intro": "Want to reach out? We'd love to hear from you.",
+					"first_name_label": "First name",
+					"email_field_label": "Email address",
+					"subject_label": "Your subject",
+					"message_label": "Message",
+					"privacy_title": "Privacy Note",
+					"privacy_text": "By submitting this form you agree to the Privacy Policy of this website and the storing of the submitted information.",
+					"copy_label": "Send a copy to yourself",
+					"submit_label": "Send Email",
+					"card_title": "Contact",
+					"email_label": "E-mail us",
+					"email": "helpus24@gmail.com",
+					"address_label": "Our address",
+					"address": "Melbourne, Australia",
+					"phone_label": "Support 24/7",
+					"phone": "1 800 458 56 97",
+					"hours_title": "Hours of operation",
+					"hours_1_time": "9:00 am – 8:00 pm EST",
+					"hours_1_days": "Monday – Friday",
+					"hours_2_time": "Closed and relax",
+					"hours_2_days": "Saturday & Sunday",
+					"required_label": "required",
+					"form_id": ""
+				}
+			}
+		],
 		"chrome": [
 			{
 				"id": "chrome:chrome:en",
@@ -12491,6 +12731,17 @@
 					"join_label": "Join our event",
 					"donate_cta": "Donate now",
 					"view_all_label": "View all",
+					"breadcrumb_home": "Home",
+					"breadcrumb_label": "Breadcrumbs",
+					"categories_title": "Categories",
+					"recent_title": "Recent posts",
+					"pagination_label": "Pagination",
+					"page_label": "Page",
+					"first_label": "First page",
+					"last_label": "Last page",
+					"blog_name": "Blog",
+					"donations_name": "Donations",
+					"events_name": "Events",
 					"view_all_blog_label": "View all our blog",
 					"stories_label": "Funds",
 					"stories_title": "Listen to their stories",

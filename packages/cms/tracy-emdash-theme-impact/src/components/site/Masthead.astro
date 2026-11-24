@@ -1,0 +1,29 @@
+---
+/** The band under the header on a list or landing page (the source's JA Masthead): the page title over a picture, then the trail Home › Page. */
+import type { Chrome } from '@/lib/chrome'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { href } from '@/lib/i18n'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+
+interface Props {
+  chrome: Chrome
+  /** The slug of the `masthead` entry that holds this page's title and picture. */
+  slug: string
+  /** The trail after Home: `[{ label, url? }]`, the last item is the page itself. */
+  trail: { label: string; url?: string }[]
+  entry: Record<string, any> | null
+}
+const { chrome, entry, trail } = Astro.props
+const $m = stampFor(Astro.request, 'masthead', entry ? { id: entry.id, slug: entry.slug } : null)
+const bg = entry ? mediaUrl(entry.background) : null
+---
+
+{entry && (
+	<section class="im-masthead" style={bg ? `background-image:url('${bg}')` : undefined}>
+		<div class="im-container im-masthead-in">
+			<h1 class="im-masthead-title" {...$m('title')}>{entry.title}</h1>
+			<Breadcrumbs chrome={chrome} trail={trail} onBand />
+		</div>
+	</section>
+)}

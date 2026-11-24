@@ -897,6 +897,123 @@
       ]
     },
     {
+      "name": "contact",
+      "mode": "single",
+      "label": {
+        "en": "Contact page"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "location_title",
+          "type": "text"
+        },
+        {
+          "name": "map_label",
+          "type": "text"
+        },
+        {
+          "name": "form_title",
+          "type": "text"
+        },
+        {
+          "name": "form_intro",
+          "type": "text"
+        },
+        {
+          "name": "first_name_label",
+          "type": "text"
+        },
+        {
+          "name": "email_field_label",
+          "type": "text"
+        },
+        {
+          "name": "subject_label",
+          "type": "text"
+        },
+        {
+          "name": "message_label",
+          "type": "text"
+        },
+        {
+          "name": "privacy_title",
+          "type": "text"
+        },
+        {
+          "name": "privacy_text",
+          "type": "text"
+        },
+        {
+          "name": "copy_label",
+          "type": "text"
+        },
+        {
+          "name": "submit_label",
+          "type": "text"
+        },
+        {
+          "name": "card_title",
+          "type": "text"
+        },
+        {
+          "name": "email_label",
+          "type": "text"
+        },
+        {
+          "name": "email",
+          "type": "text"
+        },
+        {
+          "name": "address_label",
+          "type": "text"
+        },
+        {
+          "name": "address",
+          "type": "text"
+        },
+        {
+          "name": "phone_label",
+          "type": "text"
+        },
+        {
+          "name": "phone",
+          "type": "text"
+        },
+        {
+          "name": "hours_title",
+          "type": "text"
+        },
+        {
+          "name": "hours_1_time",
+          "type": "text"
+        },
+        {
+          "name": "hours_1_days",
+          "type": "text"
+        },
+        {
+          "name": "hours_2_time",
+          "type": "text"
+        },
+        {
+          "name": "hours_2_days",
+          "type": "text"
+        },
+        {
+          "name": "required_label",
+          "type": "text"
+        },
+        {
+          "name": "form_id",
+          "type": "text"
+        }
+      ]
+    },
+    {
       "name": "chrome",
       "mode": "single",
       "label": {
@@ -1037,6 +1154,50 @@
         },
         {
           "name": "view_all_label",
+          "type": "text"
+        },
+        {
+          "name": "breadcrumb_home",
+          "type": "text"
+        },
+        {
+          "name": "breadcrumb_label",
+          "type": "text"
+        },
+        {
+          "name": "categories_title",
+          "type": "text"
+        },
+        {
+          "name": "recent_title",
+          "type": "text"
+        },
+        {
+          "name": "pagination_label",
+          "type": "text"
+        },
+        {
+          "name": "page_label",
+          "type": "text"
+        },
+        {
+          "name": "first_label",
+          "type": "text"
+        },
+        {
+          "name": "last_label",
+          "type": "text"
+        },
+        {
+          "name": "blog_name",
+          "type": "text"
+        },
+        {
+          "name": "donations_name",
+          "type": "text"
+        },
+        {
+          "name": "events_name",
           "type": "text"
         },
         {
@@ -2700,6 +2861,41 @@
       }
     },
     {
+      "type": "contact",
+      "slug": "contact",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Contact",
+        "location_title": "Our Location",
+        "map_label": "Open in Google Maps",
+        "form_title": "Drop Us a Line",
+        "form_intro": "Want to reach out? We'd love to hear from you.",
+        "first_name_label": "First name",
+        "email_field_label": "Email address",
+        "subject_label": "Your subject",
+        "message_label": "Message",
+        "privacy_title": "Privacy Note",
+        "privacy_text": "By submitting this form you agree to the Privacy Policy of this website and the storing of the submitted information.",
+        "copy_label": "Send a copy to yourself",
+        "submit_label": "Send Email",
+        "card_title": "Contact",
+        "email_label": "E-mail us",
+        "email": "helpus24@gmail.com",
+        "address_label": "Our address",
+        "address": "Melbourne, Australia",
+        "phone_label": "Support 24/7",
+        "phone": "1 800 458 56 97",
+        "hours_title": "Hours of operation",
+        "hours_1_time": "9:00 am – 8:00 pm EST",
+        "hours_1_days": "Monday – Friday",
+        "hours_2_time": "Closed and relax",
+        "hours_2_days": "Saturday & Sunday",
+        "required_label": "required",
+        "form_id": ""
+      }
+    },
+    {
       "type": "chrome",
       "slug": "chrome",
       "locale": "en",
@@ -2739,6 +2935,17 @@
         "join_label": "Join our event",
         "donate_cta": "Donate now",
         "view_all_label": "View all",
+        "breadcrumb_home": "Home",
+        "breadcrumb_label": "Breadcrumbs",
+        "categories_title": "Categories",
+        "recent_title": "Recent posts",
+        "pagination_label": "Pagination",
+        "page_label": "Page",
+        "first_label": "First page",
+        "last_label": "Last page",
+        "blog_name": "Blog",
+        "donations_name": "Donations",
+        "events_name": "Events",
         "view_all_blog_label": "View all our blog",
         "stories_label": "Funds",
         "stories_title": "Listen to their stories",
