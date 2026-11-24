@@ -101,7 +101,9 @@ const STANDALONE = [
   'packages/cms/tracy-emdash-theme-restaurant',
   // JA Diner (EmDash port of the JA Diner Joomla site): same shape as the five above.
   'packages/cms/tracy-emdash-theme-diner',
-  // JA Essence (EmDash port of the JA Essence Joomla site): same shape as the six above.
+  // JA Fresco (EmDash port of the JA Fresco Joomla site): same shape as the six above.
+  'packages/cms/tracy-emdash-theme-fresco',
+  // JA Essence (EmDash port of the JA Essence Joomla site): same shape as the seven above.
   'packages/cms/tracy-emdash-theme-essence'
 ] as const
 
@@ -124,7 +126,7 @@ const GROUPS: readonly CoverageGroup[] = [
   {
     run: 'standalone',
     files:
-      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant|diner|essence)\/tests\/[^/]+\.test\.mjs$/
+      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant|diner|fresco|essence)\/tests\/[^/]+\.test\.mjs$/
   }
 ]
 
@@ -156,6 +158,7 @@ const PARTS = [
   'standalone:coffee',
   'standalone:restaurant',
   'standalone:diner',
+  'standalone:fresco',
   'vendor',
   'rest',
   'owner'
@@ -1684,6 +1687,7 @@ function main(): void {
       else if (spec.part === 'standalone:coffee') runStandalone(STANDALONE[3])
       else if (spec.part === 'standalone:restaurant') runStandalone(STANDALONE[4])
       else if (spec.part === 'standalone:diner') runStandalone(STANDALONE[5])
+      else if (spec.part === 'standalone:fresco') runStandalone(STANDALONE[6])
       else if (spec.part === 'vendor') runVendor()
       else if (spec.part === 'owner') runOwner(spec.owner ?? '', spec.shard)
       else {

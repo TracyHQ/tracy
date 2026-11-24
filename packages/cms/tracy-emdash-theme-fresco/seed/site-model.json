@@ -1,0 +1,2760 @@
+{
+  "$schema": "tracy-site-model/v1",
+  "source": {
+    "kind": "joomla",
+    "parity": "measured",
+    "origin": "ja_fresco",
+    "capturedAt": "2026-11-19T09:36:47.440Z"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "site": {
+    "title": {
+      "en": "JA Fresco"
+    },
+    "tagline": {
+      "en": ""
+    },
+    "postsPerPage": 10
+  },
+  "types": [
+    {
+      "name": "pages",
+      "mode": "list",
+      "label": {
+        "en": "Pages"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "body",
+          "type": "prose"
+        },
+        {
+          "name": "view",
+          "type": "text"
+        },
+        {
+          "name": "path",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "posts",
+      "mode": "list",
+      "label": {
+        "en": "Posts"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "searchable": true
+        },
+        {
+          "name": "excerpt",
+          "type": "prose",
+          "searchable": true
+        },
+        {
+          "name": "body",
+          "type": "prose",
+          "searchable": true
+        },
+        {
+          "name": "date",
+          "type": "date"
+        },
+        {
+          "name": "cover",
+          "type": "image"
+        },
+        {
+          "name": "created",
+          "type": "date"
+        },
+        {
+          "name": "author",
+          "type": "text"
+        },
+        {
+          "name": "author_avatar",
+          "type": "image"
+        },
+        {
+          "name": "tags",
+          "type": "text"
+        },
+        {
+          "name": "path",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "hero",
+      "mode": "list",
+      "label": {
+        "en": "hero"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "subtitle",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "image_decor",
+              "type": "image"
+            },
+            {
+              "name": "sub_title",
+              "type": "text"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "desc",
+              "type": "text"
+            },
+            {
+              "name": "button",
+              "type": "text"
+            },
+            {
+              "name": "btn_link",
+              "type": "url"
+            },
+            {
+              "name": "btn_type",
+              "type": "text"
+            },
+            {
+              "name": "button_2",
+              "type": "text"
+            },
+            {
+              "name": "btn_link_2",
+              "type": "url"
+            },
+            {
+              "name": "btn_type_2",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "features_intro",
+      "mode": "list",
+      "label": {
+        "en": "features intro"
+      },
+      "fields": [
+        {
+          "name": "columns",
+          "type": "text"
+        },
+        {
+          "name": "align",
+          "type": "text"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "more_info",
+          "type": "text"
+        },
+        {
+          "name": "align_media",
+          "type": "text"
+        },
+        {
+          "name": "intro_img",
+          "type": "image"
+        },
+        {
+          "name": "align_content",
+          "type": "text"
+        },
+        {
+          "name": "sub_title",
+          "type": "text"
+        },
+        {
+          "name": "info_title",
+          "type": "text"
+        },
+        {
+          "name": "info_desc",
+          "type": "text"
+        },
+        {
+          "name": "button",
+          "type": "text"
+        },
+        {
+          "name": "btn_link",
+          "type": "url"
+        },
+        {
+          "name": "btn_type",
+          "type": "text"
+        },
+        {
+          "name": "subtitle",
+          "type": "text"
+        },
+        {
+          "name": "img_video",
+          "type": "text"
+        },
+        {
+          "name": "img",
+          "type": "image"
+        },
+        {
+          "name": "id_video",
+          "type": "text"
+        },
+        {
+          "name": "desc",
+          "type": "prose"
+        },
+        {
+          "name": "button_link",
+          "type": "url"
+        },
+        {
+          "name": "type",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "img_icon",
+              "type": "image"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "description",
+              "type": "text"
+            },
+            {
+              "name": "link",
+              "type": "url"
+            },
+            {
+              "name": "bg_color",
+              "type": "text"
+            },
+            {
+              "name": "img_bg",
+              "type": "image"
+            },
+            {
+              "name": "action_title",
+              "type": "url"
+            },
+            {
+              "name": "font_icon",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_desc",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "menu",
+      "mode": "list",
+      "label": {
+        "en": "menu"
+      },
+      "fields": [
+        {
+          "name": "columns",
+          "type": "text"
+        },
+        {
+          "name": "menu_type",
+          "type": "text"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "align_media",
+          "type": "text"
+        },
+        {
+          "name": "menu_image",
+          "type": "image"
+        },
+        {
+          "name": "align",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "dish_name",
+              "type": "text"
+            },
+            {
+              "name": "dish_description",
+              "type": "text"
+            },
+            {
+              "name": "dish_price",
+              "type": "text"
+            },
+            {
+              "name": "img_icon",
+              "type": "image"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "description",
+              "type": "text"
+            },
+            {
+              "name": "price",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_desc",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "gallery",
+      "mode": "list",
+      "label": {
+        "en": "gallery"
+      },
+      "fields": [
+        {
+          "name": "number_col",
+          "type": "text"
+        },
+        {
+          "name": "auto_play",
+          "type": "text"
+        },
+        {
+          "name": "auto_time",
+          "type": "text"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "type_gallery",
+          "type": "text"
+        },
+        {
+          "name": "col",
+          "type": "text"
+        },
+        {
+          "name": "colmb",
+          "type": "text"
+        },
+        {
+          "name": "coltb",
+          "type": "text"
+        },
+        {
+          "name": "coldt",
+          "type": "text"
+        },
+        {
+          "name": "gutter",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "gallery_image",
+              "type": "image"
+            },
+            {
+              "name": "gallery_alt",
+              "type": "text"
+            },
+            {
+              "name": "selectitem",
+              "type": "text"
+            },
+            {
+              "name": "img",
+              "type": "image"
+            },
+            {
+              "name": "alt",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_desc",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "testimonials",
+      "mode": "list",
+      "label": {
+        "en": "testimonials"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "testimonial_title",
+          "type": "text"
+        },
+        {
+          "name": "testimonial_desc",
+          "type": "prose"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "desc",
+              "type": "text"
+            },
+            {
+              "name": "author",
+              "type": "text"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "star",
+              "type": "text"
+            },
+            {
+              "name": "img",
+              "type": "image"
+            },
+            {
+              "name": "name",
+              "type": "text"
+            },
+            {
+              "name": "member_position",
+              "type": "text"
+            },
+            {
+              "name": "member_description",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_desc",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "teams",
+      "mode": "list",
+      "label": {
+        "en": "teams"
+      },
+      "fields": [
+        {
+          "name": "number_column",
+          "type": "text"
+        },
+        {
+          "name": "title_btn",
+          "type": "text"
+        },
+        {
+          "name": "btn_link",
+          "type": "url"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "img",
+              "type": "image"
+            },
+            {
+              "name": "name_member",
+              "type": "text"
+            },
+            {
+              "name": "name_office",
+              "type": "text"
+            },
+            {
+              "name": "description",
+              "type": "text"
+            },
+            {
+              "name": "link_social",
+              "type": "url"
+            }
+          ]
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_desc",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "happyhours",
+      "mode": "list",
+      "label": {
+        "en": "happyhours"
+      },
+      "fields": [
+        {
+          "name": "logo_img",
+          "type": "image"
+        },
+        {
+          "name": "align_box",
+          "type": "text"
+        },
+        {
+          "name": "hp_img",
+          "type": "image"
+        },
+        {
+          "name": "hp_title",
+          "type": "text"
+        },
+        {
+          "name": "hp_desc",
+          "type": "text"
+        },
+        {
+          "name": "hp_info",
+          "type": "text"
+        },
+        {
+          "name": "hp_badge",
+          "type": "text"
+        },
+        {
+          "name": "hp_link_text",
+          "type": "url"
+        },
+        {
+          "name": "hp_link",
+          "type": "url"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_desc",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "book_table",
+      "mode": "list",
+      "label": {
+        "en": "book table"
+      },
+      "fields": [
+        {
+          "name": "book_btn",
+          "type": "text"
+        },
+        {
+          "name": "book_btn_type",
+          "type": "text"
+        },
+        {
+          "name": "book_desc",
+          "type": "text"
+        },
+        {
+          "name": "book_phone_title",
+          "type": "text"
+        },
+        {
+          "name": "book_phone",
+          "type": "text"
+        },
+        {
+          "name": "order_title",
+          "type": "text"
+        },
+        {
+          "name": "order_btn",
+          "type": "text"
+        },
+        {
+          "name": "order_btn_link",
+          "type": "url"
+        },
+        {
+          "name": "order_btn_type",
+          "type": "text"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "masthead",
+      "mode": "list",
+      "label": {
+        "en": "Mastheads"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "background",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "chrome",
+      "mode": "single",
+      "label": {
+        "en": "Site chrome"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "brand_name",
+          "type": "text"
+        },
+        {
+          "name": "topbar_address",
+          "type": "text"
+        },
+        {
+          "name": "topbar_phone_label",
+          "type": "text"
+        },
+        {
+          "name": "topbar_phone",
+          "type": "text"
+        },
+        {
+          "name": "footer_about_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_about",
+          "type": "text"
+        },
+        {
+          "name": "footer_visit_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_address",
+          "type": "text"
+        },
+        {
+          "name": "footer_phone",
+          "type": "text"
+        },
+        {
+          "name": "footer_email",
+          "type": "text"
+        },
+        {
+          "name": "footer_reservations_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_reservations_button",
+          "type": "text"
+        },
+        {
+          "name": "footer_hours_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_hours",
+          "type": "text"
+        },
+        {
+          "name": "footer_links_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_link_text",
+          "type": "text"
+        },
+        {
+          "name": "footer_link_to",
+          "type": "text"
+        },
+        {
+          "name": "footer_links_text",
+          "type": "text"
+        },
+        {
+          "name": "copyright",
+          "type": "text"
+        },
+        {
+          "name": "skip_label",
+          "type": "text"
+        },
+        {
+          "name": "menu_label",
+          "type": "text"
+        },
+        {
+          "name": "close_label",
+          "type": "text"
+        },
+        {
+          "name": "prev_label",
+          "type": "text"
+        },
+        {
+          "name": "next_label",
+          "type": "text"
+        },
+        {
+          "name": "more_label",
+          "type": "text"
+        },
+        {
+          "name": "read_more",
+          "type": "text"
+        },
+        {
+          "name": "by_label",
+          "type": "text"
+        },
+        {
+          "name": "related_title",
+          "type": "text"
+        },
+        {
+          "name": "related_text",
+          "type": "text"
+        },
+        {
+          "name": "tags_label",
+          "type": "text"
+        },
+        {
+          "name": "share_label",
+          "type": "text"
+        },
+        {
+          "name": "not_found_code",
+          "type": "text"
+        },
+        {
+          "name": "not_found_title",
+          "type": "text"
+        },
+        {
+          "name": "not_found_text",
+          "type": "text"
+        },
+        {
+          "name": "not_found_back_label",
+          "type": "text"
+        },
+        {
+          "name": "book_label",
+          "type": "text"
+        },
+        {
+          "name": "book_link",
+          "type": "text"
+        },
+        {
+          "name": "search_label",
+          "type": "text"
+        },
+        {
+          "name": "search_placeholder",
+          "type": "text"
+        },
+        {
+          "name": "search_button",
+          "type": "text"
+        },
+        {
+          "name": "no_results",
+          "type": "text"
+        },
+        {
+          "name": "logo_dark",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "contact",
+      "mode": "single",
+      "label": {
+        "en": "Contact"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "heading",
+          "type": "text"
+        },
+        {
+          "name": "intro",
+          "type": "text"
+        },
+        {
+          "name": "email_label",
+          "type": "text"
+        },
+        {
+          "name": "email",
+          "type": "text"
+        },
+        {
+          "name": "address_label",
+          "type": "text"
+        },
+        {
+          "name": "address",
+          "type": "text"
+        },
+        {
+          "name": "phone_label",
+          "type": "text"
+        },
+        {
+          "name": "phone",
+          "type": "text"
+        },
+        {
+          "name": "form_title",
+          "type": "text"
+        },
+        {
+          "name": "form_intro_text",
+          "type": "text"
+        },
+        {
+          "name": "name_label",
+          "type": "text"
+        },
+        {
+          "name": "email_field_label",
+          "type": "text"
+        },
+        {
+          "name": "phone_field_label",
+          "type": "text"
+        },
+        {
+          "name": "subject_label",
+          "type": "text"
+        },
+        {
+          "name": "message_label",
+          "type": "text"
+        },
+        {
+          "name": "submit_label",
+          "type": "text"
+        },
+        {
+          "name": "socials",
+          "type": "text"
+        },
+        {
+          "name": "form_id",
+          "type": "text"
+        }
+      ]
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "label": {
+        "en": "Categories"
+      },
+      "hierarchical": true,
+      "appliesTo": [
+        "posts"
+      ],
+      "terms": [
+        {
+          "slug": "uncategorised",
+          "label": {
+            "en": "Uncategorised"
+          }
+        },
+        {
+          "slug": "blogs",
+          "label": {
+            "en": "Blogs"
+          }
+        },
+        {
+          "slug": "food",
+          "label": {
+            "en": "Food"
+          }
+        },
+        {
+          "slug": "recipe",
+          "label": {
+            "en": "Recipe"
+          }
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "type": "pages",
+      "slug": "home",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Home",
+        "body": "",
+        "view": "front-page",
+        "path": "/"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "contact",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Contact",
+        "body": "",
+        "view": "page-contact",
+        "path": "/contact"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "about",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "About",
+        "body": "",
+        "view": "page-landing",
+        "path": "/about"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "gallery",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Gallery",
+        "body": "",
+        "view": "page-landing",
+        "path": "/gallery"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "chiefs",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Chiefs",
+        "body": "",
+        "view": "page-landing",
+        "path": "/chiefs"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "menu",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Menu",
+        "body": "",
+        "view": "page-landing",
+        "path": "/menu"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "offer",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Offer",
+        "body": "",
+        "view": "page-landing",
+        "path": "/offer"
+      }
+    },
+    {
+      "type": "hero",
+      "slug": "home-hero",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Hero",
+        "subtitle": "Welcome to fresco",
+        "items": [
+          {
+            "image_decor": "images/joomlart/hero/item-1.jpg",
+            "sub_title": "Welcome to fresco",
+            "title": "Restaurant & Fresco",
+            "desc": "Craving some delicious Paris food? Maybe you’re in the mood for a juicy steak? No matter what kind of meal you have in mind.",
+            "button": "see menu ",
+            "btn_link": "/menu",
+            "btn_type": "outline-primary",
+            "button_2": "book your table ",
+            "btn_link_2": "/contact",
+            "btn_type_2": "outline-primary"
+          }
+        ]
+      }
+    },
+    {
+      "type": "features_intro",
+      "slug": "home-services",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "3",
+        "align": "center",
+        "title": "Full Service Catering",
+        "items": [
+          {
+            "img_icon": "images/joomlart/feature/item-1.jpg",
+            "title": "Full Service Catering",
+            "description": "Learn More"
+          },
+          {
+            "img_icon": "images/joomlart/feature/item-2.jpg",
+            "title": "Explosion of Flavors",
+            "description": "See Menu"
+          },
+          {
+            "img_icon": "images/joomlart/feature/item-3.jpg",
+            "title": "Signature Drinks",
+            "description": "Explore the Bar"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": "Fresco, founded in 2022, is dedicated to all those who love to wander far and wide. We invite you on a wholesome culinary adventure, where you’ll explore undiscovered gourmet experiences.\nThank you for creating lasting memories with us."
+      }
+    },
+    {
+      "type": "features_intro",
+      "slug": "home-events",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "2",
+        "more_info": "",
+        "title": "Private Events",
+        "items": [
+          {
+            "bg_color": "primary",
+            "img_bg": "images/joomlart/gallery/item-6.jpg",
+            "title": "Your Private Event",
+            "action_title": "<h3>on sale now!</h3> <span>For $50</span>"
+          },
+          {
+            "bg_color": "dark",
+            "img_bg": "images/joomlart/gallery/item-4.jpg",
+            "title": "Book A Table",
+            "action_title": "<h3>Monday - Friday</h3> <span>7:00 am - 22:00 pm</span>"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "features_intro",
+      "slug": "home-visit",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "2",
+        "align": "left",
+        "title": "Visit Us",
+        "items": [
+          {
+            "img_icon": "images/joomlart/hero/item-2.jpg",
+            "title": "Laguna Beach",
+            "description": "4517 Washington Ave. Manchester, Kentucky 39495, USA<br/>\nOpening Hour: Mon - Fri : 9.00am - 22.00pm, Holidays : Close"
+          },
+          {
+            "img_icon": "images/joomlart/hero/item-3.jpg",
+            "title": "San Francisco",
+            "description": "317 Pacific C Hwy Huntington, CA 92648<br/>\nOpening Hour: Mon - Fri : 9.00am - 22.00pm, Holidays : Close"
+          }
+        ],
+        "section_label": "Visit Us",
+        "section_title": "HOW TO FIND US?",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "features_intro",
+      "slug": "about-intro",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "img_video": "image",
+        "align": "left",
+        "img": "images/joomlart/hero/item-3.jpg",
+        "id_video": "H3R1y1ADCZw",
+        "title": "Efforts to curb soda consumption bring ",
+        "desc": "Get started with the list of our best recipes. Narrow down those great options using our customised recipe filters. One you find the perfect dish, print & share your finds with friends. Sure you can make your meal planning a success.\n<ul class=\"list-special\">\n<li>Real he me fond show gave shot plan</li>\n<li>So insisted received is occasion</li>\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\n</ul>",
+        "button": "Join Now",
+        "button_link": "/contact",
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "features_intro",
+      "slug": "about-features",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "3",
+        "align": "center",
+        "type": "image",
+        "title": "About us",
+        "items": [
+          {
+            "img_icon": "images/joomlart/icons/ic-chef.png",
+            "font_icon": "",
+            "title": "We are located in the city center",
+            "description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
+          },
+          {
+            "img_icon": "images/joomlart/icons/food-delivery.png",
+            "font_icon": "",
+            "title": "Fresh ingredients from organic farms",
+            "description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
+          },
+          {
+            "img_icon": "images/joomlart/icons/menu.png",
+            "font_icon": "",
+            "title": "Own fast delivery. 30 min Maximum",
+            "description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
+          },
+          {
+            "img_icon": "images/joomlart/icons/online-order.png",
+            "font_icon": "",
+            "title": "Professional, experienced chefs",
+            "description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
+          },
+          {
+            "img_icon": "images/joomlart/icons/quality.png",
+            "font_icon": "",
+            "title": "The highest standards of service",
+            "description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
+          },
+          {
+            "img_icon": "images/joomlart/icons/entrances.png",
+            "font_icon": "",
+            "title": "Healsy Food for healthy body",
+            "description": "Porro nemo veniam necessitatibus praesentium eligendi rem temporibus adipisci quo modi numquam."
+          }
+        ],
+        "section_label": "",
+        "section_title": "We make the most of all our customers.",
+        "section_desc": "Phasellus enim libero, blandit vel sapien vitae, condimentum ultricies magna et. Quisque euismod orci ut."
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "home-explore",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "2",
+        "menu_type": "",
+        "title": "Explore",
+        "items": [
+          {
+            "dish_name": "Chili Chicken",
+            "dish_description": "tempura style, cool cucumbers, chili sauce",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Calamari Fritti ",
+            "dish_description": "tempura vegetables, spicy aioli",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Japanese Gyoza",
+            "dish_description": "pork dumplings with hot mustard",
+            "dish_price": "$56"
+          },
+          {
+            "dish_name": "Trio of Dips",
+            "dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+            "dish_price": "$33"
+          },
+          {
+            "dish_name": "Szechuan Edamame",
+            "dish_description": "wok tossed with chilies, garlic, soy sauce",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Cheeseburger Sliders",
+            "dish_description": "secret sauce & American cheese + additional sliders $4/each",
+            "dish_price": "$58"
+          },
+          {
+            "dish_name": "Lettuce Wraps",
+            "dish_description": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
+            "dish_price": "$89"
+          },
+          {
+            "dish_name": "Pesto Shrimp Flatbread",
+            "dish_description": "whole milk mozzarella, sundried tomatoes, chipotle aioli",
+            "dish_price": "$29"
+          },
+          {
+            "dish_name": "Tandoori Chicken Flatbread",
+            "dish_description": "chutney, red onion, cilantro, yogurt",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Hot Wings",
+            "dish_description": "Frank's hot sauce, creamy blue cheese dip",
+            "dish_price": "$30"
+          }
+        ],
+        "section_label": "Explore",
+        "section_title": "Our Menu & More",
+        "section_desc": "Picky eaters, adventurous eaters, whatever your taste, we have something for you."
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "home-sea",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "3",
+        "menu_type": "The Sea",
+        "title": "The Sea",
+        "items": [
+          {
+            "dish_name": "Blackened Fish Sandwich",
+            "dish_description": "tempura style, cool cucumbers, chili sauce",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Lobster Tacos",
+            "dish_description": "tempura vegetables, spicy aioli",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Whole Market Fish",
+            "dish_description": "pork dumplings with hot mustard",
+            "dish_price": "$56"
+          },
+          {
+            "dish_name": "Charred Seabass",
+            "dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+            "dish_price": "$33"
+          },
+          {
+            "dish_name": "Blackened Snapper",
+            "dish_description": "wok tossed with chilies, garlic, soy sauce",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Cheeseburger Sliders",
+            "dish_description": "secret sauce & American cheese + additional sliders $4/each",
+            "dish_price": "$58"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "home-land",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "3",
+        "menu_type": "The Land",
+        "title": "The Land",
+        "items": [
+          {
+            "dish_name": "Ribeye Bites Roasted",
+            "dish_description": "Shishito Peppers, Jalapeño Crème",
+            "dish_price": "$23"
+          },
+          {
+            "dish_name": "Buddha's Feast",
+            "dish_description": "Five-spice tofu, savory sauce, green beans, shiitakes, broccoli, carrots",
+            "dish_price": "$24"
+          },
+          {
+            "dish_name": "Stir fried Eggplant",
+            "dish_description": "pork dumplings with hot mustard",
+            "dish_price": "$25"
+          },
+          {
+            "dish_name": "Fried Chicken bun",
+            "dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+            "dish_price": "$12"
+          },
+          {
+            "dish_name": "Wagyu ribeye teppanyaki",
+            "dish_description": "wok tossed with chilies, garlic, soy sauce",
+            "dish_price": "$16"
+          },
+          {
+            "dish_name": "Crispy Pork Bun",
+            "dish_description": "secret sauce & American cheese + additional sliders $4/each",
+            "dish_price": "$44"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "home-sky",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "3",
+        "menu_type": "The Sky",
+        "title": "The Sky",
+        "items": [
+          {
+            "dish_name": "Sesame Chicken",
+            "dish_description": "tempura style, cool cucumbers, chili sauce",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Crispy Orange Chicken",
+            "dish_description": "tempura vegetables, spicy aioli",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Chicken Wings ",
+            "dish_description": "pork dumplings with hot mustard",
+            "dish_price": "$56"
+          },
+          {
+            "dish_name": "Chili spiced duck",
+            "dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+            "dish_price": "$33"
+          },
+          {
+            "dish_name": "Black Pepper Chili Chicken",
+            "dish_description": "wok tossed with chilies, garlic, soy sauce",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Drunken Chicken",
+            "dish_description": "secret sauce & American cheese + additional sliders $4/each",
+            "dish_price": "$58"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "home-desserts",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "3",
+        "menu_type": "Desserts",
+        "title": "Desserts",
+        "items": [
+          {
+            "dish_name": "Lavender scented pancakes",
+            "dish_description": "Bananas, raspberries, vanilla butter, shaved coconut, mint",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Dessert platter",
+            "dish_description": "Chef’s selection of sweets. \nServes 2",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Fruit Plate",
+            "dish_description": "Seasonal selections of fruits, shaved coconut, vanilla drizzle, mint",
+            "dish_price": "$56"
+          },
+          {
+            "dish_name": "Fried Banana",
+            "dish_description": "Panko crusted with caramel sauce, banana brulee, caramel popcorn",
+            "dish_price": "$33"
+          },
+          {
+            "dish_name": "Sorbet",
+            "dish_description": "Watermelon, passion fruit, strawberry, mango, orange",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Thai Donut",
+            "dish_description": "Fried donut dipped with sweet condense milk & peanut",
+            "dish_price": "$58"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "home-tea",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "3",
+        "menu_type": "Tea Menu",
+        "title": "Tea Menu",
+        "items": [
+          {
+            "dish_name": "Ti Quan Yin",
+            "dish_description": "Intense aroma, depth and fruitiness- ranked as one of the most famous teas in China",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Sencha",
+            "dish_description": "Shiny needlelike tea leaves that yield a slighty grassy, clean refreshing brew, the most popular tea in Japan",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Gunpowder",
+            "dish_description": "Green pellets of rolled tea leaves that produces a pleasant smokey flavor",
+            "dish_price": "$56"
+          },
+          {
+            "dish_name": "Zhenghe Bai Mudan \"White Peony\"",
+            "dish_description": "Fresh bamboo aroma, lightly sweet flavor with notes of melon and grape",
+            "dish_price": "$33"
+          },
+          {
+            "dish_name": "Jin Xuan",
+            "dish_description": "Creamy smooth texture, incredible milk aroma and taste with a naturally sweet flavor. Goes well with spicy foods",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Hong Tao",
+            "dish_description": "Peachy flavor, goes well with dessert",
+            "dish_price": "$58"
+          },
+          {
+            "dish_name": "Siji Chun \"Four Seasons\"",
+            "dish_description": "Intense floral aroma and delicate fruity taste without any bitterness or dryness",
+            "dish_price": "$58"
+          },
+          {
+            "dish_name": "Siji Chun \"Four Seasons\"",
+            "dish_description": "Intense floral aroma and delicate fruity taste without any bitterness or dryness",
+            "dish_price": "$58"
+          },
+          {
+            "dish_name": "Siji Chun \"Four Seasons\"",
+            "dish_description": "Intense floral aroma and delicate fruity taste without any bitterness or dryness",
+            "dish_price": "$58"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "menu-columns",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "3",
+        "menu_type": "",
+        "title": "Multi Column Layout",
+        "items": [
+          {
+            "dish_name": "Chili Chicken",
+            "dish_description": "tempura style, cool cucumbers, chili sauce",
+            "dish_price": "$30"
+          },
+          {
+            "dish_name": "Calamari Fritti ",
+            "dish_description": "tempura vegetables, spicy aioli",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Japanese Gyoza",
+            "dish_description": "pork dumplings with hot mustard",
+            "dish_price": "$56"
+          },
+          {
+            "dish_name": "Trio of Dips",
+            "dish_description": "smoked trout dip, cheese dip, hummus, fresh sliced baguette",
+            "dish_price": "$33"
+          },
+          {
+            "dish_name": "Szechuan Edamame",
+            "dish_description": "wok tossed with chilies, garlic, soy sauce",
+            "dish_price": "$47"
+          },
+          {
+            "dish_name": "Cheeseburger Sliders",
+            "dish_description": "secret sauce & American cheese + additional sliders $4/each",
+            "dish_price": "$58"
+          },
+          {
+            "dish_name": "Lettuce Wraps",
+            "dish_description": "toasted peanuts, crispy noodles, fresh cilantro + chicken or shrimp $3",
+            "dish_price": "$89"
+          },
+          {
+            "dish_name": "Pesto Shrimp Flatbread",
+            "dish_description": "whole milk mozzarella, sundried tomatoes, chipotle aioli",
+            "dish_price": "$29"
+          },
+          {
+            "dish_name": "Tandoori Chicken Flatbread",
+            "dish_description": "chutney, red onion, cilantro, yogurt",
+            "dish_price": "$30"
+          }
+        ],
+        "section_label": "",
+        "section_title": "Multi Column Layout",
+        "section_desc": "Picky eaters, adventurous eaters, whatever your taste, we have something for you."
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "menu-list-1",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "align_media": "left",
+        "menu_type": "Menu List With Image",
+        "menu_image": "images/joomlart/hero/item-10.jpg",
+        "title": "Menu",
+        "items": [
+          {
+            "dish_name": "Green papaya salad",
+            "dish_description": "Shishito Peppers, Jalapeño Crème",
+            "dish_price": "$20"
+          },
+          {
+            "dish_name": "Black pepper calamari",
+            "dish_description": "Chinese eggplant, sweet chili soy glaze",
+            "dish_price": "$35"
+          },
+          {
+            "dish_name": "Tumeric spiced cauliflower",
+            "dish_description": "House made kimchi, sriracha mayo",
+            "dish_price": "$45"
+          },
+          {
+            "dish_name": "Kingfish sashimi",
+            "dish_description": "Shishito Peppers, Jalapeño Crème",
+            "dish_price": "$78"
+          },
+          {
+            "dish_name": "Caramelised betel leaf",
+            "dish_description": "House made kimchi, sriracha mayo",
+            "dish_price": "$36"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "menu-list-2",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "align_media": "right",
+        "menu_type": "",
+        "menu_image": "images/joomlart/hero/item-10.jpg",
+        "title": "Menu",
+        "items": [
+          {
+            "dish_name": "Green papaya salad",
+            "dish_description": "Shishito Peppers, Jalapeño Crème",
+            "dish_price": "$20"
+          },
+          {
+            "dish_name": "Black pepper calamari",
+            "dish_description": "Chinese eggplant, sweet chili soy glaze",
+            "dish_price": "$35"
+          },
+          {
+            "dish_name": "Tumeric spiced cauliflower",
+            "dish_description": "House made kimchi, sriracha mayo",
+            "dish_price": "$45"
+          },
+          {
+            "dish_name": "Kingfish sashimi",
+            "dish_description": "Shishito Peppers, Jalapeño Crème",
+            "dish_price": "$78"
+          },
+          {
+            "dish_name": "Caramelised betel leaf",
+            "dish_description": "House made kimchi, sriracha mayo",
+            "dish_price": "$36"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "menu",
+      "slug": "menu-grid",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "3",
+        "align": "left",
+        "title": "Menu Grid List With Image",
+        "items": [
+          {
+            "img_icon": "images/joomlart/gallery/item-1.jpg",
+            "title": "Green papaya salad",
+            "description": "Shrimp, chili & lime",
+            "price": "11$"
+          },
+          {
+            "img_icon": "images/joomlart/gallery/item-2.jpg",
+            "title": "Black pepper calamari",
+            "description": "Galangal dressing, roasted rice, thai basil",
+            "price": "4$"
+          },
+          {
+            "img_icon": "images/joomlart/gallery/item-3.jpg",
+            "title": "Tumeric spiced cauliflower",
+            "description": "Sesame tofu dressing",
+            "price": "12$"
+          },
+          {
+            "img_icon": "images/joomlart/gallery/item-4.jpg",
+            "title": "Kingfish sashimi",
+            "description": "Ponzu, sriracha",
+            "price": "2$"
+          },
+          {
+            "img_icon": "images/joomlart/gallery/item-6.jpg",
+            "title": "Shishito Peppers",
+            "description": "Yuzu, sesame",
+            "price": "24$"
+          },
+          {
+            "img_icon": "images/joomlart/gallery/item-10.jpg",
+            "title": "Edamame",
+            "description": "Maldon sea salt",
+            "price": "12$"
+          }
+        ],
+        "section_label": "",
+        "section_title": "Menu Grid List With Image",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "gallery",
+      "slug": "home-gallery-1",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "number_col": "4",
+        "auto_play": "1",
+        "auto_time": "20000",
+        "title": "Gallery",
+        "items": [
+          {
+            "gallery_image": "images/joomlart/gallery/item-1.jpg",
+            "gallery_alt": "hand made spring rolls"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-2.jpg",
+            "gallery_alt": "chili rice paper chips"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-3.jpg",
+            "gallery_alt": "Citrus, wild rocket condiment."
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-4.jpg",
+            "gallery_alt": "Ricotta, goat cheese, beetroot"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-5.jpg",
+            "gallery_alt": "Culatello, Spalla Cotta, Mortadella"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-6.jpg",
+            "gallery_alt": "Porcini purée, parmesan, basil."
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "gallery",
+      "slug": "home-gallery-2",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "number_col": "4",
+        "auto_play": "1",
+        "auto_time": "20000",
+        "title": "Gallery",
+        "items": [
+          {
+            "gallery_image": "images/joomlart/gallery/item-7.jpg",
+            "gallery_alt": "hand made spring rolls"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-8.jpg",
+            "gallery_alt": "chili rice paper chips"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-10.jpg",
+            "gallery_alt": "Citrus, wild rocket condiment."
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-1.jpg",
+            "gallery_alt": "Ricotta, goat cheese, beetroot"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-5.jpg",
+            "gallery_alt": "Culatello, Spalla Cotta, Mortadella"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-6.jpg",
+            "gallery_alt": "Porcini purée, parmesan, basil."
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "gallery",
+      "slug": "gallery-two",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "type_gallery": "1",
+        "col": "3",
+        "title": "Gallery 2",
+        "items": [
+          {
+            "gallery_image": "images/joomlart/gallery/item-1.jpg",
+            "gallery_alt": "picture 1"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-10.jpg",
+            "gallery_alt": "picture 2"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-2.jpg",
+            "gallery_alt": "picture 3"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-3.jpg",
+            "gallery_alt": "picture 4"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-9.jpg",
+            "gallery_alt": "picture 5"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-4.jpg",
+            "gallery_alt": "picture 6"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-5.jpg",
+            "gallery_alt": "picture 7"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-8.jpg",
+            "gallery_alt": "picture 8"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-7.jpg",
+            "gallery_alt": "picture 9"
+          }
+        ],
+        "section_label": "",
+        "section_title": "Gallery 2",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "gallery",
+      "slug": "gallery-one",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "type_gallery": "2",
+        "col": "3",
+        "title": "Gallery",
+        "items": [
+          {
+            "gallery_image": "images/joomlart/gallery/item-1.jpg",
+            "gallery_alt": "picture 1"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-10.jpg",
+            "gallery_alt": "picture 2"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-2.jpg",
+            "gallery_alt": "picture 3"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-3.jpg",
+            "gallery_alt": "picture 4"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-9.jpg",
+            "gallery_alt": "picture 5"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-4.jpg",
+            "gallery_alt": "picture 6"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-5.jpg",
+            "gallery_alt": "picture 7"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-8.jpg",
+            "gallery_alt": "picture 8"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-7.jpg",
+            "gallery_alt": "picture 9"
+          },
+          {
+            "gallery_image": "images/joomlart/gallery/item-6.jpg",
+            "gallery_alt": "picture 10"
+          }
+        ],
+        "section_label": "",
+        "section_title": "Gallery 1",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "testimonials",
+      "slug": "home-testimonials",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Testimonials",
+        "items": [
+          {
+            "desc": "“The views and the atmosphere are breathtaking, the food is spectacular and cooked to perfection. All around just a wonderful place to visit.”",
+            "author": "Christine Q., 2022, via Tripadvisor"
+          },
+          {
+            "desc": "“Customer service was on point and the food was out of this world. Every single dish had so much flavour. It was a great experience and we will definitely come back.”",
+            "author": "Kim and David R., 2021"
+          },
+          {
+            "desc": "“The chef's tasting menu is outstanding, drinks are excellent and staff is attentive and very friendly. No details missed here.”",
+            "author": "Jason V., 2022"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "testimonials",
+      "slug": "about-testimonials",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Testimonials",
+        "items": [
+          {
+            "desc": "“The views and the atmosphere are breathtaking, the food is spectacular and cooked to perfection. All around just a wonderful place to visit.”",
+            "author": "Christine Q., 2022, via Tripadvisor"
+          },
+          {
+            "desc": "“Customer service was on point and the food was out of this world. Every single dish had so much flavour. It was a great experience and we will definitely come back.”",
+            "author": "Kim and David R., 2021"
+          },
+          {
+            "desc": "“The chef's tasting menu is outstanding, drinks are excellent and staff is attentive and very friendly. No details missed here.”",
+            "author": "Jason V., 2022"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "teams",
+      "slug": "about-team",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "number_column": "3",
+        "title_btn": "View All",
+        "btn_link": "/chiefs",
+        "title": "Teams",
+        "items": [
+          {
+            "img": "images/joomlart/authors/item-1.jpg",
+            "name_member": "Brandy Welch",
+            "name_office": "Founder",
+            "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+            "link_social": "<a href=\"#\" target=\"_Blank\" title=\"facebook\">\n  <span class=\"fab fa-facebook\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"instagram\">\n  <span class=\"fab fa-instagram\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"twitter\">\n  <span class=\"fab fa-twitter\" target=\"_Blank\"></span>\n  </a>"
+          },
+          {
+            "img": "images/joomlart/authors/item-2.jpg",
+            "name_member": "Robyn Ford",
+            "name_office": "Founder",
+            "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+            "link_social": "<a href=\"#\" target=\"_Blank\" title=\"facebook\">\n  <span class=\"fab fa-facebook\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"instagram\">\n  <span class=\"fab fa-instagram\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"twitter\">\n  <span class=\"fab fa-twitter\" target=\"_Blank\"></span>\n  </a>"
+          },
+          {
+            "img": "images/joomlart/authors/item-9.jpg",
+            "name_member": "Amos Paul",
+            "name_office": "Founder",
+            "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+            "link_social": "<a href=\"#\" target=\"_Blank\" title=\"facebook\">\n  <span class=\"fab fa-facebook\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"instagram\">\n  <span class=\"fab fa-instagram\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"twitter\">\n  <span class=\"fab fa-twitter\" target=\"_Blank\"></span>\n  </a>"
+          }
+        ],
+        "section_label": "",
+        "section_title": "Meet our awesome team",
+        "section_desc": "Phasellus enim libero, blandit vel sapien vitae, condimentum ultricies magna et. Quisque euismod orci ut."
+      }
+    },
+    {
+      "type": "teams",
+      "slug": "chiefs-team",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "number_column": "3",
+        "title_btn": "",
+        "btn_link": "",
+        "title": "Teams",
+        "items": [
+          {
+            "img": "images/joomlart/authors/item-1.jpg",
+            "name_member": "Brandy Welch",
+            "name_office": "Founder",
+            "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+            "link_social": "<a href=\"#\" target=\"_Blank\" title=\"facebook\">\n  <span class=\"fab fa-facebook\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"instagram\">\n  <span class=\"fab fa-instagram\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"twitter\">\n  <span class=\"fab fa-twitter\" target=\"_Blank\"></span>\n  </a>"
+          },
+          {
+            "img": "images/joomlart/authors/item-2.jpg",
+            "name_member": "Robyn Ford",
+            "name_office": "Founder",
+            "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+            "link_social": "<a href=\"#\" target=\"_Blank\" title=\"facebook\">\n  <span class=\"fab fa-facebook\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"instagram\">\n  <span class=\"fab fa-instagram\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"twitter\">\n  <span class=\"fab fa-twitter\" target=\"_Blank\"></span>\n  </a>"
+          },
+          {
+            "img": "images/joomlart/authors/item-9.jpg",
+            "name_member": "Amos Paul",
+            "name_office": "Founder",
+            "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+            "link_social": "<a href=\"#\" target=\"_Blank\" title=\"facebook\">\n  <span class=\"fab fa-facebook\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"instagram\">\n  <span class=\"fab fa-instagram\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"twitter\">\n  <span class=\"fab fa-twitter\" target=\"_Blank\"></span>\n  </a>"
+          },
+          {
+            "img": "images/joomlart/authors/item-3.jpg",
+            "name_member": "Johnnie Huff ",
+            "name_office": "Founder",
+            "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+            "link_social": "<a href=\"#\" target=\"_Blank\" title=\"facebook\">\n  <span class=\"fab fa-facebook\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"instagram\">\n  <span class=\"fab fa-instagram\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"twitter\">\n  <span class=\"fab fa-twitter\" target=\"_Blank\"></span>\n  </a>"
+          },
+          {
+            "img": "images/joomlart/authors/item-6.jpg",
+            "name_member": "Lena Lambert ",
+            "name_office": "Founder",
+            "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+            "link_social": "<a href=\"#\" target=\"_Blank\" title=\"facebook\">\n  <span class=\"fab fa-facebook\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"instagram\">\n  <span class=\"fab fa-instagram\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"twitter\">\n  <span class=\"fab fa-twitter\" target=\"_Blank\"></span>\n  </a>"
+          },
+          {
+            "img": "images/joomlart/authors/item-5.jpg",
+            "name_member": "Susan Mcguire ",
+            "name_office": "Founder",
+            "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat cupidatat non proident.",
+            "link_social": "<a href=\"#\" target=\"_Blank\" title=\"facebook\">\n  <span class=\"fab fa-facebook\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"instagram\">\n  <span class=\"fab fa-instagram\" target=\"_Blank\"></span>\n  </a>\n  <a href=\"#\" target=\"_Blank\" title=\"twitter\">\n  <span class=\"fab fa-twitter\" target=\"_Blank\"></span>\n  </a>"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "happyhours",
+      "slug": "offer-hour-1",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "logo_img": "images/joomlart/logo/logo.png",
+        "align_box": "left",
+        "hp_img": "images/joomlart/others/pic-6.jpg",
+        "hp_title": "Happy Hours",
+        "hp_desc": "Donec convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque ...",
+        "hp_info": "Mon. Tue. Thu. & Sun<br />\n12 Noon to 11 PM",
+        "hp_badge": "35% OFF",
+        "hp_link_text": "Join now",
+        "hp_link": "/contact",
+        "title": "Happy Hour 1",
+        "section_label": "",
+        "section_title": "Happy Hour 1",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "happyhours",
+      "slug": "offer-hour-2",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "logo_img": "images/joomlart/logo/logo.png",
+        "align_box": "center",
+        "hp_img": "images/joomlart/others/pic-5.jpg",
+        "hp_title": "Happy Hours",
+        "hp_desc": "Disputando consectetuer ex vim, qui prima eleifend id. In qui affert persius molestiae. Usu et laudem facilisis.Ad est minim fuisset, blandit placerat ex duo.",
+        "hp_info": "Mon. Tue. Thu. & Sun<br />\n12 Noon to 11 PM",
+        "hp_badge": "35% OFF",
+        "hp_link_text": "Join now",
+        "hp_link": "/contact",
+        "title": "Happy Hour 2",
+        "section_label": "",
+        "section_title": "Happy Hour 2",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "happyhours",
+      "slug": "offer-hour-3",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "logo_img": "images/joomlart/logo/logo.png",
+        "align_box": "left",
+        "hp_img": "images/joomlart/others/pic-7.jpg",
+        "hp_title": "Happy Hours",
+        "hp_desc": "Disputando consectetuer ex vim, qui prima eleifend id. In qui affert persius molestiae. Usu et laudem facilisis.Ad est minim fuisset, blandit placerat ex duo.",
+        "hp_info": "Mon. Tue. Thu. & Sun<br />\n12 Noon to 11 PM",
+        "hp_badge": "35% OFF",
+        "hp_link_text": "Join now",
+        "hp_link": "/contact",
+        "title": "Happy Hour 3",
+        "section_label": "",
+        "section_title": "Happy Hour 3",
+        "section_desc": ""
+      }
+    },
+    {
+      "type": "book_table",
+      "slug": "book-table",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "book_btn": "Book Table",
+        "book_btn_type": "primary",
+        "book_desc": "Book a table or just come along - we save space in every restaurant for walk-ins.",
+        "book_phone_title": "Book via phone",
+        "book_phone": "+983 3839 493",
+        "order_title": "Book via OpenTable",
+        "order_btn": "Book A Table",
+        "order_btn_link": "/contact",
+        "order_btn_type": "primary",
+        "title": "Book Table"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "blog",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Blog",
+        "body": "",
+        "view": "blog",
+        "path": "/blog"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "valentines-day-at-soul-kitchen",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "food"
+        ]
+      },
+      "values": {
+        "title": "Valentines Day at Soul Kitchen",
+        "excerpt": "",
+        "body": "<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n\n\r\n<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>\r\n<figure class=\"area-blockquote\">\r\n<blockquote class=\"blockquote\">\r\n<p>“ If you want to live a happy life, tie it to a goal, not to people or things. Loud in this in both hold. My entrance me is disposal bachelor remember relation”</p>\r\n</blockquote>\r\n<figcaption class=\"blockquote-footer\">Albert Flores</figcaption>\r\n</figure>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines.</p>\r\n<h2 class=\"mt-5 mb-4\">Me unpleasing impossible</h2>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share.</p>\r\n<div class=\"my-4 full-box\"><img src=\"images/joomlart/others/pic-2.jpg\" loading=\"lazy\" width=\"1280\" height=\"600\" data-path=\"local-images:/joomlart/others/pic-2.jpg\"/></div>\r\n<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<ul class=\"list-special\">\r\n<li>Real he me fond show gave shot plan</li>\r\n<li>So insisted received is occasion</li>\r\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\r\n</ul>\r\n<p>Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<h2 class=\"mt-5 mb-4\">However distant she request behaved</h2>\r\n<div class=\"row row-small my-4\">\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-3.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-3.jpg\"/></div>\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-2.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-2.jpg\"/></div>\r\n</div>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share. Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>",
+        "date": "2024-01-18 02:49:47",
+        "cover": "images/joomlart/blogs/food/intro/item-1.jpg",
+        "created": "2024-01-18 02:49:47",
+        "author": "Admin",
+        "author_avatar": "images/joomlart/authors/item-1.jpg",
+        "tags": "food\neat\nmeat",
+        "path": "/blog/valentines-day-at-soul-kitchen"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "mother-s-day-lunch-special",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "food"
+        ]
+      },
+      "values": {
+        "title": "Mother’s Day Lunch Special",
+        "excerpt": "",
+        "body": "<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n\n\r\n<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>\r\n<figure class=\"area-blockquote\">\r\n<blockquote class=\"blockquote\">\r\n<p>“ If you want to live a happy life, tie it to a goal, not to people or things. Loud in this in both hold. My entrance me is disposal bachelor remember relation”</p>\r\n</blockquote>\r\n<figcaption class=\"blockquote-footer\">Albert Flores</figcaption>\r\n</figure>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines.</p>\r\n<h2 class=\"mt-5 mb-4\">Me unpleasing impossible</h2>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share.</p>\r\n<div class=\"my-4 full-box\"><img src=\"images/joomlart/others/pic-2.jpg\" loading=\"lazy\" width=\"1280\" height=\"600\" data-path=\"local-images:/joomlart/others/pic-2.jpg\"/></div>\r\n<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<ul class=\"list-special\">\r\n<li>Real he me fond show gave shot plan</li>\r\n<li>So insisted received is occasion</li>\r\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\r\n</ul>\r\n<p>Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<h2 class=\"mt-5 mb-4\">However distant she request behaved</h2>\r\n<div class=\"row row-small my-4\">\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-3.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-3.jpg\"/></div>\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-2.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-2.jpg\"/></div>\r\n</div>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share. Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>",
+        "date": "2024-01-18 02:48:47",
+        "cover": "images/joomlart/blogs/food/intro/item-2.jpg",
+        "created": "2024-01-18 02:49:47",
+        "author": "Admin",
+        "author_avatar": "images/joomlart/authors/item-1.jpg",
+        "tags": "food\neat\nmeat",
+        "path": "/blog/mother-s-day-lunch-special"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "soul-kitchen-kumquat-thyme-cocktail",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "food"
+        ]
+      },
+      "values": {
+        "title": "Soul Kitchen Kumquat & Thyme Cocktail",
+        "excerpt": "",
+        "body": "<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n\n\r\n<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>\r\n<figure class=\"area-blockquote\">\r\n<blockquote class=\"blockquote\">\r\n<p>“ If you want to live a happy life, tie it to a goal, not to people or things. Loud in this in both hold. My entrance me is disposal bachelor remember relation”</p>\r\n</blockquote>\r\n<figcaption class=\"blockquote-footer\">Albert Flores</figcaption>\r\n</figure>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines.</p>\r\n<h2 class=\"mt-5 mb-4\">Me unpleasing impossible</h2>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share.</p>\r\n<div class=\"my-4 full-box\"><img src=\"images/joomlart/others/pic-2.jpg\" loading=\"lazy\" width=\"1280\" height=\"600\" data-path=\"local-images:/joomlart/others/pic-2.jpg\"/></div>\r\n<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<ul class=\"list-special\">\r\n<li>Real he me fond show gave shot plan</li>\r\n<li>So insisted received is occasion</li>\r\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\r\n</ul>\r\n<p>Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<h2 class=\"mt-5 mb-4\">However distant she request behaved</h2>\r\n<div class=\"row row-small my-4\">\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-3.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-3.jpg\"/></div>\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-2.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-2.jpg\"/></div>\r\n</div>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share. Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>",
+        "date": "2024-01-18 02:47:47",
+        "cover": "images/joomlart/blogs/food/intro/item-3.jpg",
+        "created": "2024-01-18 02:49:47",
+        "author": "Debra Ramsey",
+        "author_avatar": "images/joomlart/authors/item-5.jpg",
+        "tags": "food\neat\nmeat",
+        "path": "/blog/soul-kitchen-kumquat-thyme-cocktail"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "an-interview-with-chef-milo-ferndandes",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "food"
+        ]
+      },
+      "values": {
+        "title": "An Interview with Chef Milo Ferndandes",
+        "excerpt": "",
+        "body": "<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n\n\r\n<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>\r\n<figure class=\"area-blockquote\">\r\n<blockquote class=\"blockquote\">\r\n<p>“ If you want to live a happy life, tie it to a goal, not to people or things. Loud in this in both hold. My entrance me is disposal bachelor remember relation”</p>\r\n</blockquote>\r\n<figcaption class=\"blockquote-footer\">Albert Flores</figcaption>\r\n</figure>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines.</p>\r\n<h2 class=\"mt-5 mb-4\">Me unpleasing impossible</h2>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share.</p>\r\n<div class=\"my-4 full-box\"><img src=\"images/joomlart/others/pic-2.jpg\" loading=\"lazy\" width=\"1280\" height=\"600\" data-path=\"local-images:/joomlart/others/pic-2.jpg\"/></div>\r\n<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<ul class=\"list-special\">\r\n<li>Real he me fond show gave shot plan</li>\r\n<li>So insisted received is occasion</li>\r\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\r\n</ul>\r\n<p>Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<h2 class=\"mt-5 mb-4\">However distant she request behaved</h2>\r\n<div class=\"row row-small my-4\">\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-3.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-3.jpg\"/></div>\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-2.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-2.jpg\"/></div>\r\n</div>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share. Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>",
+        "date": "2024-01-18 02:46:47",
+        "cover": "images/joomlart/blogs/food/intro/item-4.jpg",
+        "created": "2024-01-18 02:49:47",
+        "author": "Debra Ramsey",
+        "author_avatar": "images/joomlart/authors/item-5.jpg",
+        "tags": "food\neat\nmeat",
+        "path": "/blog/an-interview-with-chef-milo-ferndandes"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "culinary-journeys-around-the-world",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "food"
+        ]
+      },
+      "values": {
+        "title": "Culinary Journeys Around the World",
+        "excerpt": "",
+        "body": "<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n\n\r\n<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>\r\n<figure class=\"area-blockquote\">\r\n<blockquote class=\"blockquote\">\r\n<p>“ If you want to live a happy life, tie it to a goal, not to people or things. Loud in this in both hold. My entrance me is disposal bachelor remember relation”</p>\r\n</blockquote>\r\n<figcaption class=\"blockquote-footer\">Albert Flores</figcaption>\r\n</figure>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines.</p>\r\n<h2 class=\"mt-5 mb-4\">Me unpleasing impossible</h2>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share.</p>\r\n<div class=\"my-4 full-box\"><img src=\"images/joomlart/others/pic-2.jpg\" loading=\"lazy\" width=\"1280\" height=\"600\" data-path=\"local-images:/joomlart/others/pic-2.jpg\"/></div>\r\n<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<ul class=\"list-special\">\r\n<li>Real he me fond show gave shot plan</li>\r\n<li>So insisted received is occasion</li>\r\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\r\n</ul>\r\n<p>Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<h2 class=\"mt-5 mb-4\">However distant she request behaved</h2>\r\n<div class=\"row row-small my-4\">\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-3.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-3.jpg\"/></div>\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-2.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-2.jpg\"/></div>\r\n</div>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share. Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>",
+        "date": "2024-01-18 02:45:47",
+        "cover": "images/joomlart/blogs/food/intro/item-5.jpg",
+        "created": "2024-01-18 02:49:47",
+        "author": "Bruce Crawford",
+        "author_avatar": "images/joomlart/authors/item-10.jpg",
+        "tags": "food\neat\nmeat",
+        "path": "/blog/culinary-journeys-around-the-world"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "savoring-the-art-of-cooking",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "food"
+        ]
+      },
+      "values": {
+        "title": "Savoring the Art of Cooking",
+        "excerpt": "",
+        "body": "<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n\n\r\n<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>\r\n<figure class=\"area-blockquote\">\r\n<blockquote class=\"blockquote\">\r\n<p>“ If you want to live a happy life, tie it to a goal, not to people or things. Loud in this in both hold. My entrance me is disposal bachelor remember relation”</p>\r\n</blockquote>\r\n<figcaption class=\"blockquote-footer\">Albert Flores</figcaption>\r\n</figure>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines.</p>\r\n<h2 class=\"mt-5 mb-4\">Me unpleasing impossible</h2>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share.</p>\r\n<div class=\"my-4 full-box\"><img src=\"images/joomlart/others/pic-2.jpg\" loading=\"lazy\" width=\"1280\" height=\"600\" data-path=\"local-images:/joomlart/others/pic-2.jpg\"/></div>\r\n<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<ul class=\"list-special\">\r\n<li>Real he me fond show gave shot plan</li>\r\n<li>So insisted received is occasion</li>\r\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\r\n</ul>\r\n<p>Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<h2 class=\"mt-5 mb-4\">However distant she request behaved</h2>\r\n<div class=\"row row-small my-4\">\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-3.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-3.jpg\"/></div>\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-2.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-2.jpg\"/></div>\r\n</div>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share. Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>",
+        "date": "2024-01-18 02:44:47",
+        "cover": "images/joomlart/blogs/food/intro/item-6.jpg",
+        "created": "2024-01-18 02:49:47",
+        "author": "Bruce Crawford",
+        "author_avatar": "images/joomlart/authors/item-10.jpg",
+        "tags": "food\neat\nmeat",
+        "path": "/blog/savoring-the-art-of-cooking"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "farm-to-fork-sustainable-eating",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "food"
+        ]
+      },
+      "values": {
+        "title": "Farm to Fork Sustainable Eating",
+        "excerpt": "",
+        "body": "<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n\n\r\n<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>\r\n<figure class=\"area-blockquote\">\r\n<blockquote class=\"blockquote\">\r\n<p>“ If you want to live a happy life, tie it to a goal, not to people or things. Loud in this in both hold. My entrance me is disposal bachelor remember relation”</p>\r\n</blockquote>\r\n<figcaption class=\"blockquote-footer\">Albert Flores</figcaption>\r\n</figure>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines.</p>\r\n<h2 class=\"mt-5 mb-4\">Me unpleasing impossible</h2>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share.</p>\r\n<div class=\"my-4 full-box\"><img src=\"images/joomlart/others/pic-2.jpg\" loading=\"lazy\" width=\"1280\" height=\"600\" data-path=\"local-images:/joomlart/others/pic-2.jpg\"/></div>\r\n<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<ul class=\"list-special\">\r\n<li>Real he me fond show gave shot plan</li>\r\n<li>So insisted received is occasion</li>\r\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\r\n</ul>\r\n<p>Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<h2 class=\"mt-5 mb-4\">However distant she request behaved</h2>\r\n<div class=\"row row-small my-4\">\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-3.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-3.jpg\"/></div>\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-2.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-2.jpg\"/></div>\r\n</div>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share. Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>",
+        "date": "2024-01-18 02:43:47",
+        "cover": "images/joomlart/blogs/food/intro/item-7.jpg",
+        "created": "2024-01-18 02:49:47",
+        "author": "Bruce Crawford",
+        "author_avatar": "images/joomlart/authors/item-10.jpg",
+        "tags": "food\neat\nmeat",
+        "path": "/blog/farm-to-fork-sustainable-eating"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "rediscovering-heirloom-recipes",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "food"
+        ]
+      },
+      "values": {
+        "title": "Rediscovering Heirloom Recipes",
+        "excerpt": "",
+        "body": "<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n\n\r\n<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>\r\n<figure class=\"area-blockquote\">\r\n<blockquote class=\"blockquote\">\r\n<p>“ If you want to live a happy life, tie it to a goal, not to people or things. Loud in this in both hold. My entrance me is disposal bachelor remember relation”</p>\r\n</blockquote>\r\n<figcaption class=\"blockquote-footer\">Albert Flores</figcaption>\r\n</figure>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines.</p>\r\n<h2 class=\"mt-5 mb-4\">Me unpleasing impossible</h2>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share.</p>\r\n<div class=\"my-4 full-box\"><img src=\"images/joomlart/others/pic-2.jpg\" loading=\"lazy\" width=\"1280\" height=\"600\" data-path=\"local-images:/joomlart/others/pic-2.jpg\"/></div>\r\n<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<ul class=\"list-special\">\r\n<li>Real he me fond show gave shot plan</li>\r\n<li>So insisted received is occasion</li>\r\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\r\n</ul>\r\n<p>Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<h2 class=\"mt-5 mb-4\">However distant she request behaved</h2>\r\n<div class=\"row row-small my-4\">\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-3.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-3.jpg\"/></div>\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-2.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-2.jpg\"/></div>\r\n</div>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share. Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>",
+        "date": "2024-01-18 02:42:47",
+        "cover": "images/joomlart/blogs/food/intro/item-8.jpg",
+        "created": "2024-01-18 02:49:47",
+        "author": "Amos Paul",
+        "author_avatar": "images/joomlart/authors/item-4.jpg",
+        "tags": "food\neat\nmeat",
+        "path": "/blog/rediscovering-heirloom-recipes"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "gastronomic-adventures-with-exotic-dishes",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "food"
+        ]
+      },
+      "values": {
+        "title": "Gastronomic Adventures with Exotic Dishes",
+        "excerpt": "",
+        "body": "<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n\n\r\n<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>\r\n<figure class=\"area-blockquote\">\r\n<blockquote class=\"blockquote\">\r\n<p>“ If you want to live a happy life, tie it to a goal, not to people or things. Loud in this in both hold. My entrance me is disposal bachelor remember relation”</p>\r\n</blockquote>\r\n<figcaption class=\"blockquote-footer\">Albert Flores</figcaption>\r\n</figure>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines.</p>\r\n<h2 class=\"mt-5 mb-4\">Me unpleasing impossible</h2>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share.</p>\r\n<div class=\"my-4 full-box\"><img src=\"images/joomlart/others/pic-2.jpg\" loading=\"lazy\" width=\"1280\" height=\"600\" data-path=\"local-images:/joomlart/others/pic-2.jpg\"/></div>\r\n<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<ul class=\"list-special\">\r\n<li>Real he me fond show gave shot plan</li>\r\n<li>So insisted received is occasion</li>\r\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\r\n</ul>\r\n<p>Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<h2 class=\"mt-5 mb-4\">However distant she request behaved</h2>\r\n<div class=\"row row-small my-4\">\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-3.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-3.jpg\"/></div>\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-2.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-2.jpg\"/></div>\r\n</div>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share. Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>",
+        "date": "2024-01-18 02:41:47",
+        "cover": "images/joomlart/blogs/food/intro/item-9.jpg",
+        "created": "2024-01-18 02:49:47",
+        "author": "Amos Paul",
+        "author_avatar": "images/joomlart/authors/item-4.jpg",
+        "tags": "food\neat\nmeat",
+        "path": "/blog/gastronomic-adventures-with-exotic-dishes"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "healthy-eating-for-body-and-soul",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "food"
+        ]
+      },
+      "values": {
+        "title": "Healthy Eating for Body and Soul",
+        "excerpt": "",
+        "body": "<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n\n\r\n<figure class=\"area-blockquote\">\r\n<blockquote class=\"blockquote\">\r\n<p>“ If you want to live a happy life, tie it to a goal, not to people or things. Loud in this in both hold. My entrance me is disposal bachelor remember relation”</p>\r\n</blockquote>\r\n<figcaption class=\"blockquote-footer\">Albert Flores</figcaption>\r\n</figure>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share our work with pride. And then, as we age, our comfort with creative expression declines.</p>\r\n<h2 class=\"mt-5 mb-4\">Me unpleasing impossible</h2>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share.</p>\r\n<div class=\"my-4 full-box\"><img src=\"images/joomlart/blogs/food/detail/item-1.jpg\" loading=\"lazy\" width=\"1200\" height=\"800\" data-path=\"local-images:/joomlart/blogs/food/detail/item-1.jpg\"/></div>\r\n<p>Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<ul class=\"list-special\">\r\n<li>Real he me fond show gave shot plan</li>\r\n<li>So insisted received is occasion</li>\r\n<li>Oh smiling amiable am so visited cordial in offices hearted</li>\r\n</ul>\r\n<p>Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>\r\n<h2 class=\"mt-5 mb-4\">However distant she request behaved</h2>\r\n<div class=\"row row-small my-4\">\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-3.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-3.jpg\"/></div>\r\n<div class=\"col-12 col-lg-6 item mb-2\"><img src=\"images/joomlart/blogs/food/intro/item-2.jpg\" loading=\"lazy\" width=\"700\" height=\"700\" data-path=\"local-images:/joomlart/blogs/food/intro/item-2.jpg\"/></div>\r\n</div>\r\n<p>It’s remarkable to watch a five-year-old draw, void of any anxiety about what the world will think. We all start our lives creatively confident, happy to create and share. Its sometimes her behaviour are contented. Do listening am eagerness oh objection collected. Together gay feelings continue juvenile had off one. Unknown may service subject her letters one bed. Child years noise ye in forty. Loud in this in both hold. My entrance me is disposal bachelor remember relation.</p>",
+        "date": "2024-01-18 02:40:47",
+        "cover": "images/joomlart/blogs/food/intro/item-10.jpg",
+        "created": "2024-01-18 02:49:47",
+        "author": "Amos Paul",
+        "author_avatar": "images/joomlart/authors/item-4.jpg",
+        "tags": "food\neat\nmeat",
+        "path": "/blog/healthy-eating-for-body-and-soul"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "blog",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Category Blog",
+        "description": "The industry's standard dummy text ever since the 1500s when an unknown printer took a galley",
+        "background": "images/joomlart/others/pic-1.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "contact",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Contact Us",
+        "description": "The industry's standard dummy text ever since the 1500s when an unknown printer took a galley",
+        "background": "images/joomlart/others/pic-1.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "chiefs",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Chiefs",
+        "description": "The industry's standard dummy text ever since the 1500s when an unknown printer took a galley",
+        "background": "images/joomlart/others/pic-1.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "about",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "About",
+        "description": "The industry's standard dummy text ever since the 1500s when an unknown printer took a galley",
+        "background": "images/joomlart/others/pic-1.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "post",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "",
+        "description": "",
+        "background": "images/joomlart/blogs/food/detail/item-1.jpg"
+      }
+    },
+    {
+      "type": "chrome",
+      "slug": "chrome",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Site chrome",
+        "brand_name": "JA Fresco",
+        "topbar_address": "317 Pacific C Hwy Huntington, CA 92648",
+        "topbar_phone_label": "Call Us:",
+        "topbar_phone": "156-677-124-2887",
+        "footer_about_title": "Welcome to Fresco",
+        "footer_about": "Fresco, founded in 2022, is dedicated to all those who love to wander far and wide.\nWe'd like to invite you on a culinary adventure, where you’ll explore undiscovered gourmet experiences.",
+        "footer_visit_title": "Visit",
+        "footer_address": "317 Pacific C Hwy Huntington, CA 92648",
+        "footer_phone": "123.456-7",
+        "footer_email": "no-reply@fresco.com",
+        "footer_reservations_title": "Reservations",
+        "footer_reservations_button": "Book your table",
+        "footer_hours_title": "Hours",
+        "footer_hours": "MONDAY thru FRIDAY\n11am - 9pm\nSATURDAY/SUNDAY\n10am - 11pm",
+        "footer_links_title": "About",
+        "footer_link_text": "Reservation Policy",
+        "footer_link_to": "/contact",
+        "footer_links_text": "Privacy Policy\nHealth & Safety\nFAQ",
+        "copyright": "Copyright © {year} {name}. All Rights Reserved.",
+        "skip_label": "Skip to content",
+        "menu_label": "Menu",
+        "close_label": "Close",
+        "prev_label": "Prev",
+        "next_label": "Next",
+        "more_label": "More Articles …",
+        "read_more": "Read more",
+        "by_label": "By",
+        "related_title": "Related Posts",
+        "related_text": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...",
+        "tags_label": "Tags:",
+        "share_label": "Share article:",
+        "not_found_code": "404",
+        "not_found_title": "Page not found",
+        "not_found_text": "An error has occurred while processing your request.",
+        "not_found_back_label": "Home Page",
+        "book_label": "Book Table",
+        "book_link": "/contact",
+        "search_label": "Smart Search",
+        "search_placeholder": "",
+        "search_button": "Search",
+        "no_results": "No results found."
+      }
+    },
+    {
+      "type": "contact",
+      "slug": "contact-info",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Contact",
+        "heading": "Have question?\nGet in touch!",
+        "intro": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
+        "email_label": "Write email",
+        "email": "needhelp@company.com",
+        "address_label": "Visit office",
+        "address": "2715 Ash Dr. San Jose, South Dakota 83475",
+        "phone_label": "Mobile",
+        "phone": "Free +92 (8800) 6802",
+        "form_title": "Always here to help you",
+        "form_intro_text": "Write a Message",
+        "name_label": "Your name",
+        "email_field_label": "Email address",
+        "phone_field_label": "Your phone",
+        "subject_label": "Subject",
+        "message_label": "How we can help?",
+        "submit_label": "Send a message",
+        "socials": "",
+        "form_id": ""
+      }
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": {
+        "en": "Primary"
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Home"
+          },
+          "path": "/"
+        },
+        {
+          "label": {
+            "en": "Menu"
+          },
+          "path": "/menu"
+        },
+        {
+          "label": {
+            "en": "About"
+          },
+          "path": "/about"
+        },
+        {
+          "label": {
+            "en": "Gallery"
+          },
+          "path": "/gallery"
+        },
+        {
+          "label": {
+            "en": "Chiefs"
+          },
+          "path": "/chiefs"
+        },
+        {
+          "label": {
+            "en": "Offer"
+          },
+          "path": "/offer"
+        },
+        {
+          "label": {
+            "en": "Contact"
+          },
+          "path": "/contact"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "kind": "page"
+    },
+    {
+      "path": "/contact",
+      "kind": "page"
+    },
+    {
+      "path": "/about",
+      "kind": "page"
+    },
+    {
+      "path": "/gallery",
+      "kind": "page"
+    },
+    {
+      "path": "/chiefs",
+      "kind": "page"
+    },
+    {
+      "path": "/menu",
+      "kind": "page"
+    },
+    {
+      "path": "/offer",
+      "kind": "page"
+    },
+    {
+      "path": "/blog",
+      "kind": "list",
+      "type": "posts"
+    },
+    {
+      "path": "/blog/valentines-day-at-soul-kitchen",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "valentines-day-at-soul-kitchen"
+    },
+    {
+      "path": "/blog/mother-s-day-lunch-special",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "mother-s-day-lunch-special"
+    },
+    {
+      "path": "/blog/soul-kitchen-kumquat-thyme-cocktail",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "soul-kitchen-kumquat-thyme-cocktail"
+    },
+    {
+      "path": "/blog/an-interview-with-chef-milo-ferndandes",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "an-interview-with-chef-milo-ferndandes"
+    },
+    {
+      "path": "/blog/culinary-journeys-around-the-world",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "culinary-journeys-around-the-world"
+    },
+    {
+      "path": "/blog/savoring-the-art-of-cooking",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "savoring-the-art-of-cooking"
+    },
+    {
+      "path": "/blog/farm-to-fork-sustainable-eating",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "farm-to-fork-sustainable-eating"
+    },
+    {
+      "path": "/blog/rediscovering-heirloom-recipes",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "rediscovering-heirloom-recipes"
+    },
+    {
+      "path": "/blog/gastronomic-adventures-with-exotic-dishes",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "gastronomic-adventures-with-exotic-dishes"
+    },
+    {
+      "path": "/blog/healthy-eating-for-body-and-soul",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "healthy-eating-for-body-and-soul"
+    }
+  ],
+  "redirects": [],
+  "media": [],
+  "tokens": {},
+  "facts": []
+}

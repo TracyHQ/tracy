@@ -1,0 +1,2 @@
+{"id":"REG-PR-741-emdash-fresco-road-precheck","verdict":"PASS","commit":"a252d695fec3ee7cc64d0f72cd2d3303ccfa09ff","ran_at":"2026-11-23T18:39:27.552Z","evidence":"tests/regression/.runs/2026-11-23-a252d695f/REG-PR-741-emdash-fresco-road-precheck.log"}
+{"id":"REG-PR-739-emdash-fresco-0-1-0","verdict":"PASS","commit":"a252d695fec3ee7cc64d0f72cd2d3303ccfa09ff","ran_at":"2026-11-23T18:39:28.196Z","evidence":"tests/regression/.runs/2026-11-23-a252d695f/REG-PR-739-emdash-fresco-0-1-0.log"}

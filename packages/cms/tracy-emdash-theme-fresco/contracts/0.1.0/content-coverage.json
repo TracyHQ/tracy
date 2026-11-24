@@ -1,0 +1,582 @@
+{
+  "schemaVersion": "tracy-content-coverage/v1",
+  "tool": {
+    "name": "@tracy/quickstart-tools content-coverage (emdash)",
+    "version": "1.8.0"
+  },
+  "platform": "emdash",
+  "contract": {
+    "id": "tracy-fresco/emdash-0.x/0.1.0",
+    "contentMapSha256": "cb5703563b8fa53fa2d96f5cc3cbab166884de03aeb4df92d8ce0b828dbfa76e",
+    "presentationLockSha256": null
+  },
+  "measuredAt": "2026-11-23T19:33:31.672Z",
+  "viewports": [
+    "desktop",
+    "phone"
+  ],
+  "bound": {
+    "stamp": 935,
+    "menu": 186,
+    "clone": 33,
+    "entry": 313,
+    "media": 181,
+    "words": 130,
+    "route": 103
+  },
+  "lockedFiles": [],
+  "pages": {
+    "audited": 19,
+    "inMap": 18,
+    "notInMap": 1,
+    "failed": 0,
+    "failures": [],
+    "capReached": false
+  },
+  "counts": {
+    "text": {
+      "total": 579,
+      "matched": 571,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 2,
+      "core": 5,
+      "unknown": 1,
+      "catalogue": 0,
+      "ignored": 2
+    },
+    "images": {
+      "total": 129,
+      "matched": 128,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 1,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 0
+    },
+    "links": {
+      "total": 83,
+      "matched": 53,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 0,
+      "unknown": 30,
+      "catalogue": 0,
+      "ignored": 1
+    }
+  },
+  "coverage": {
+    "text": 99.5,
+    "images": 100,
+    "links": 63.9
+  },
+  "holes": [
+    {
+      "kind": "text",
+      "value": "Page # of #",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.fr-main-body > div.fr-container > div.fr-pagination > p.fr-pagination-count",
+      "pages": 2,
+      "firstPage": "/blog",
+      "accepted": "Interface wording the template prints around a count or page number (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fan-interview-with-chef-milo-ferndandes&text=An%20Interview%20with%20Chef%20Milo%20Ferndandes",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/an-interview-with-chef-milo-ferndandes",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fculinary-journeys-around-the-world&text=Culinary%20Journeys%20Around%20the%20World",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/culinary-journeys-around-the-world",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Ffarm-to-fork-sustainable-eating&text=Farm%20to%20Fork%20Sustainable%20Eating",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/farm-to-fork-sustainable-eating",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fgastronomic-adventures-with-exotic-dishes&text=Gastronomic%20Adventures%20with%20Exotic%20Dishes",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/gastronomic-adventures-with-exotic-dishes",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fhealthy-eating-for-body-and-soul&text=Healthy%20Eating%20for%20Body%20and%20Soul",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/healthy-eating-for-body-and-soul",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fmother-s-day-lunch-special&text=Mother%E2%80%99s%20Day%20Lunch%20Special",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/mother-s-day-lunch-special",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Frediscovering-heirloom-recipes&text=Rediscovering%20Heirloom%20Recipes",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/rediscovering-heirloom-recipes",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fsavoring-the-art-of-cooking&text=Savoring%20the%20Art%20of%20Cooking",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/savoring-the-art-of-cooking",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fsoul-kitchen-kumquat-thyme-cocktail&text=Soul%20Kitchen%20Kumquat%20%26%20Thyme%20Cocktail",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/soul-kitchen-kumquat-thyme-cocktail",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fvalentines-day-at-soul-kitchen&text=Valentines%20Day%20at%20Soul%20Kitchen",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/valentines-day-at-soul-kitchen",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fan-interview-with-chef-milo-ferndandes",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/an-interview-with-chef-milo-ferndandes",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fculinary-journeys-around-the-world",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/culinary-journeys-around-the-world",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Ffarm-to-fork-sustainable-eating",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/farm-to-fork-sustainable-eating",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fgastronomic-adventures-with-exotic-dishes",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/gastronomic-adventures-with-exotic-dishes",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fhealthy-eating-for-body-and-soul",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/healthy-eating-for-body-and-soul",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fmother-s-day-lunch-special",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/mother-s-day-lunch-special",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Frediscovering-heirloom-recipes",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/rediscovering-heirloom-recipes",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fsavoring-the-art-of-cooking",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/savoring-the-art-of-cooking",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fsoul-kitchen-kumquat-thyme-cocktail",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/soul-kitchen-kumquat-thyme-cocktail",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fvalentines-day-at-soul-kitchen",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/valentines-day-at-soul-kitchen",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fan-interview-with-chef-milo-ferndandes",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-linkedin > a",
+      "pages": 1,
+      "firstPage": "/blog/an-interview-with-chef-milo-ferndandes",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fculinary-journeys-around-the-world",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-linkedin > a",
+      "pages": 1,
+      "firstPage": "/blog/culinary-journeys-around-the-world",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Ffarm-to-fork-sustainable-eating",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-linkedin > a",
+      "pages": 1,
+      "firstPage": "/blog/farm-to-fork-sustainable-eating",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fgastronomic-adventures-with-exotic-dishes",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-linkedin > a",
+      "pages": 1,
+      "firstPage": "/blog/gastronomic-adventures-with-exotic-dishes",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fhealthy-eating-for-body-and-soul",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-linkedin > a",
+      "pages": 1,
+      "firstPage": "/blog/healthy-eating-for-body-and-soul",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fmother-s-day-lunch-special",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-linkedin > a",
+      "pages": 1,
+      "firstPage": "/blog/mother-s-day-lunch-special",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Frediscovering-heirloom-recipes",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-linkedin > a",
+      "pages": 1,
+      "firstPage": "/blog/rediscovering-heirloom-recipes",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fsavoring-the-art-of-cooking",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-linkedin > a",
+      "pages": 1,
+      "firstPage": "/blog/savoring-the-art-of-cooking",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fsoul-kitchen-kumquat-thyme-cocktail",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-linkedin > a",
+      "pages": 1,
+      "firstPage": "/blog/soul-kitchen-kumquat-thyme-cocktail",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "link",
+      "value": "https://www.linkedin.com/sharing/share-offsite/?url=http%3A%2F%2F127.0.0.1%3A4450%2Fblog%2Fvalentines-day-at-soul-kitchen",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.fr-share > ul > li.is-linkedin > a",
+      "pages": 1,
+      "firstPage": "/blog/valentines-day-at-soul-kitchen",
+      "accepted": "The share row of a post (DECISIONS D42, owner decision 2026-11-22): the address of the network's share page is built at request time from the post's own address and title, so no slot can hold it; it carries no business fact and a customer never edits it."
+    },
+    {
+      "kind": "text",
+      "value": "Leave blank",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds",
+      "evidence": "div.fr-contact > div.fr-contact-form > form.ec-form > div.ec-form-field",
+      "pages": 1,
+      "firstPage": "/contact",
+      "accepted": "Label of the Forms plugin's hidden spam-trap field: interface wording of the plugin, not demo content a customer rewrites; it carries no business fact."
+    }
+  ],
+  "hygiene": [],
+  "sitePages": [
+    {
+      "entity": "pages.home",
+      "title": "Home",
+      "route": "/",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.contact",
+      "title": "Contact",
+      "route": "/contact",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.about",
+      "title": "About",
+      "route": "/about",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.gallery",
+      "title": "Gallery",
+      "route": "/gallery",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.chiefs",
+      "title": "Chiefs",
+      "route": "/chiefs",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.menu",
+      "title": "Menu",
+      "route": "/menu",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.offer",
+      "title": "Offer",
+      "route": "/offer",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.blog",
+      "title": "Blog",
+      "route": "/blog",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.valentines-day-at-soul-kitchen",
+      "title": "Valentines Day at Soul Kitchen",
+      "route": "/blog/valentines-day-at-soul-kitchen",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mother-s-day-lunch-special",
+      "title": "Mother\u2019s Day Lunch Special",
+      "route": "/blog/mother-s-day-lunch-special",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.soul-kitchen-kumquat-thyme-cocktail",
+      "title": "Soul Kitchen Kumquat & Thyme Cocktail",
+      "route": "/blog/soul-kitchen-kumquat-thyme-cocktail",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.an-interview-with-chef-milo-ferndandes",
+      "title": "An Interview with Chef Milo Ferndandes",
+      "route": "/blog/an-interview-with-chef-milo-ferndandes",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.culinary-journeys-around-the-world",
+      "title": "Culinary Journeys Around the World",
+      "route": "/blog/culinary-journeys-around-the-world",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.savoring-the-art-of-cooking",
+      "title": "Savoring the Art of Cooking",
+      "route": "/blog/savoring-the-art-of-cooking",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.farm-to-fork-sustainable-eating",
+      "title": "Farm to Fork Sustainable Eating",
+      "route": "/blog/farm-to-fork-sustainable-eating",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.rediscovering-heirloom-recipes",
+      "title": "Rediscovering Heirloom Recipes",
+      "route": "/blog/rediscovering-heirloom-recipes",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.gastronomic-adventures-with-exotic-dishes",
+      "title": "Gastronomic Adventures with Exotic Dishes",
+      "route": "/blog/gastronomic-adventures-with-exotic-dishes",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.healthy-eating-for-body-and-soul",
+      "title": "Healthy Eating for Body and Soul",
+      "route": "/blog/healthy-eating-for-body-and-soul",
+      "opens": "live",
+      "status": 200
+    }
+  ],
+  "labelRules": {
+    "version": "label-rules/1",
+    "roleVocabularyVersion": "place-content-roles/3",
+    "applies": true,
+    "r1": {
+      "facts": 497,
+      "slots": 1136,
+      "percent": 43.8
+    },
+    "rules": {
+      "R2": {
+        "title": "fact-like sample without a contact or price role",
+        "count": 0,
+        "keys": []
+      },
+      "R3": {
+        "title": "URL slot without a role",
+        "count": 0,
+        "keys": []
+      },
+      "R4": {
+        "title": "repeat or CTA not grouped",
+        "count": 0,
+        "keys": []
+      },
+      "R5": {
+        "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
+        "count": 0,
+        "keys": []
+      },
+      "R6": {
+        "title": "link or list item inside a fact slot",
+        "count": 0,
+        "keys": []
+      },
+      "R7": {
+        "title": "siblings with different roles",
+        "count": 0,
+        "keys": []
+      },
+      "R8": {
+        "title": "adjacent short slots on one line (a cut heading)",
+        "count": 0,
+        "keys": []
+      },
+      "R9": {
+        "title": "fact-like hole",
+        "count": 0,
+        "keys": []
+      }
+    }
+  }
+}

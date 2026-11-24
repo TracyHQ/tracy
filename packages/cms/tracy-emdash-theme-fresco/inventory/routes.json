@@ -1,0 +1,636 @@
+{
+  "note": "path = the route the EmDash site serves (site-model routes). source.url = what the running Joomla answers for it, when the crawl met it; the model drops the article id and the category segment Joomla keeps, so many detail routes have no equal path on the source.",
+  "unknownRouteBehaviour": {
+    "status": 404,
+    "chrome": true,
+    "view": "NotFound"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "home",
+        "found": true
+      },
+      "source": {
+        "url": "/",
+        "joomla": {
+          "menuId": "101",
+          "joomlaPath": "/",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "front-page",
+        "sections": [
+          {
+            "position": "topbar-l",
+            "via": "layout",
+            "modules": ["110"]
+          },
+          {
+            "position": "topbar-r",
+            "via": "layout",
+            "modules": ["111"]
+          },
+          {
+            "position": "hero",
+            "via": "layout",
+            "modules": ["112"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["114"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["115"]
+          },
+          {
+            "position": "section-3",
+            "via": "layout",
+            "modules": ["116"]
+          },
+          {
+            "position": "section-4",
+            "via": "layout",
+            "modules": ["117", "118", "119"]
+          },
+          {
+            "position": "section-5",
+            "via": "layout",
+            "modules": ["121"]
+          },
+          {
+            "position": "section-6",
+            "via": "layout",
+            "modules": ["122", "123"]
+          },
+          {
+            "position": "section-7",
+            "via": "layout",
+            "modules": ["124"]
+          },
+          {
+            "position": "section-8",
+            "via": "layout",
+            "modules": ["127"]
+          },
+          {
+            "position": "section-9",
+            "via": "layout",
+            "modules": ["128"]
+          },
+          {
+            "position": "copyright",
+            "via": "menu-assignment",
+            "modules": ["133"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/contact",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "contact",
+        "found": true
+      },
+      "source": {
+        "url": "/contact",
+        "joomla": {
+          "menuId": "117",
+          "joomlaPath": "/contact",
+          "option": "com_contact",
+          "view": "contact",
+          "id": "1"
+        },
+        "view": "page-contact",
+        "sections": [
+          {
+            "position": "topbar-l",
+            "via": "layout",
+            "modules": ["110"]
+          },
+          {
+            "position": "topbar-r",
+            "via": "layout",
+            "modules": ["111"]
+          },
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["136"]
+          },
+          {
+            "position": "copyright",
+            "via": "menu-assignment",
+            "modules": ["133"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/about",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "about",
+        "found": true
+      },
+      "source": {
+        "url": "/about",
+        "joomla": {
+          "menuId": "124",
+          "joomlaPath": "/about",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "topbar-l",
+            "via": "layout",
+            "modules": ["110"]
+          },
+          {
+            "position": "topbar-r",
+            "via": "layout",
+            "modules": ["111"]
+          },
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["136"]
+          },
+          {
+            "position": "section-3",
+            "via": "layout",
+            "modules": ["143"]
+          },
+          {
+            "position": "section-4",
+            "via": "layout",
+            "modules": ["150"]
+          },
+          {
+            "position": "section-5",
+            "via": "layout",
+            "modules": ["168"]
+          },
+          {
+            "position": "section-6",
+            "via": "layout",
+            "modules": ["153"]
+          },
+          {
+            "position": "copyright",
+            "via": "menu-assignment",
+            "modules": ["133"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/gallery",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "gallery",
+        "found": true
+      },
+      "source": {
+        "url": "/gallery",
+        "joomla": {
+          "menuId": "125",
+          "joomlaPath": "/gallery",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "topbar-l",
+            "via": "layout",
+            "modules": ["110"]
+          },
+          {
+            "position": "topbar-r",
+            "via": "layout",
+            "modules": ["111"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["165"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["148"]
+          },
+          {
+            "position": "copyright",
+            "via": "menu-assignment",
+            "modules": ["133"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/chiefs",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "chiefs",
+        "found": true
+      },
+      "source": {
+        "url": "/chiefs",
+        "joomla": {
+          "menuId": "126",
+          "joomlaPath": "/chiefs",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "topbar-l",
+            "via": "layout",
+            "modules": ["110"]
+          },
+          {
+            "position": "topbar-r",
+            "via": "layout",
+            "modules": ["111"]
+          },
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": ["136"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["163"]
+          },
+          {
+            "position": "copyright",
+            "via": "menu-assignment",
+            "modules": ["133"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/menu",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "menu",
+        "found": true
+      },
+      "source": {
+        "url": "/menu",
+        "joomla": {
+          "menuId": "128",
+          "joomlaPath": "/menu",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "topbar-l",
+            "via": "layout",
+            "modules": ["110"]
+          },
+          {
+            "position": "topbar-r",
+            "via": "layout",
+            "modules": ["111"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["158"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["164"]
+          },
+          {
+            "position": "section-3",
+            "via": "layout",
+            "modules": ["159", "162"]
+          },
+          {
+            "position": "copyright",
+            "via": "menu-assignment",
+            "modules": ["133"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/offer",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "offer",
+        "found": true
+      },
+      "source": {
+        "url": "/offer",
+        "joomla": {
+          "menuId": "132",
+          "joomlaPath": "/offer",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "topbar-l",
+            "via": "layout",
+            "modules": ["110"]
+          },
+          {
+            "position": "topbar-r",
+            "via": "layout",
+            "modules": ["111"]
+          },
+          {
+            "position": "section-1",
+            "via": "layout",
+            "modules": ["169"]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": ["170"]
+          },
+          {
+            "position": "section-3",
+            "via": "layout",
+            "modules": ["171"]
+          },
+          {
+            "position": "copyright",
+            "via": "menu-assignment",
+            "modules": ["133"]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog",
+      "kind": "list",
+      "cms": {
+        "collection": "posts",
+        "slug": "blog",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/valentines-day-at-soul-kitchen",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "valentines-day-at-soul-kitchen",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/mother-s-day-lunch-special",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "mother-s-day-lunch-special",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/soul-kitchen-kumquat-thyme-cocktail",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "soul-kitchen-kumquat-thyme-cocktail",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/an-interview-with-chef-milo-ferndandes",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "an-interview-with-chef-milo-ferndandes",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/culinary-journeys-around-the-world",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "culinary-journeys-around-the-world",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/savoring-the-art-of-cooking",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "savoring-the-art-of-cooking",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/farm-to-fork-sustainable-eating",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "farm-to-fork-sustainable-eating",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/rediscovering-heirloom-recipes",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "rediscovering-heirloom-recipes",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/gastronomic-adventures-with-exotic-dishes",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "gastronomic-adventures-with-exotic-dishes",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/healthy-eating-for-body-and-soul",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "healthy-eating-for-body-and-soul",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/404",
+      "kind": "system",
+      "cms": {
+        "collection": null,
+        "slug": null,
+        "found": false
+      },
+      "source": {
+        "url": "/index.php/nope-404",
+        "joomla": null,
+        "view": "error",
+        "sections": null
+      },
+      "expected": {
+        "status": 404
+      }
+    }
+  ]
+}

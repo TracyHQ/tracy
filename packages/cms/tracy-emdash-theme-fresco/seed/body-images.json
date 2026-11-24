@@ -1,0 +1,242 @@
+[
+  {
+    "collection": "posts",
+    "slug": "valentines-day-at-soul-kitchen",
+    "locale": "en",
+    "path": "body[7].asset",
+    "file": "images/joomlart/others/pic-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "valentines-day-at-soul-kitchen",
+    "locale": "en",
+    "path": "body[14].asset",
+    "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "valentines-day-at-soul-kitchen",
+    "locale": "en",
+    "path": "body[15].asset",
+    "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "mother-s-day-lunch-special",
+    "locale": "en",
+    "path": "body[7].asset",
+    "file": "images/joomlart/others/pic-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "mother-s-day-lunch-special",
+    "locale": "en",
+    "path": "body[14].asset",
+    "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "mother-s-day-lunch-special",
+    "locale": "en",
+    "path": "body[15].asset",
+    "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "soul-kitchen-kumquat-thyme-cocktail",
+    "locale": "en",
+    "path": "body[7].asset",
+    "file": "images/joomlart/others/pic-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "soul-kitchen-kumquat-thyme-cocktail",
+    "locale": "en",
+    "path": "body[14].asset",
+    "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "soul-kitchen-kumquat-thyme-cocktail",
+    "locale": "en",
+    "path": "body[15].asset",
+    "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "an-interview-with-chef-milo-ferndandes",
+    "locale": "en",
+    "path": "body[7].asset",
+    "file": "images/joomlart/others/pic-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "an-interview-with-chef-milo-ferndandes",
+    "locale": "en",
+    "path": "body[14].asset",
+    "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "an-interview-with-chef-milo-ferndandes",
+    "locale": "en",
+    "path": "body[15].asset",
+    "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "culinary-journeys-around-the-world",
+    "locale": "en",
+    "path": "body[7].asset",
+    "file": "images/joomlart/others/pic-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "culinary-journeys-around-the-world",
+    "locale": "en",
+    "path": "body[14].asset",
+    "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "culinary-journeys-around-the-world",
+    "locale": "en",
+    "path": "body[15].asset",
+    "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "savoring-the-art-of-cooking",
+    "locale": "en",
+    "path": "body[7].asset",
+    "file": "images/joomlart/others/pic-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "savoring-the-art-of-cooking",
+    "locale": "en",
+    "path": "body[14].asset",
+    "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "savoring-the-art-of-cooking",
+    "locale": "en",
+    "path": "body[15].asset",
+    "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "farm-to-fork-sustainable-eating",
+    "locale": "en",
+    "path": "body[7].asset",
+    "file": "images/joomlart/others/pic-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "farm-to-fork-sustainable-eating",
+    "locale": "en",
+    "path": "body[14].asset",
+    "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "farm-to-fork-sustainable-eating",
+    "locale": "en",
+    "path": "body[15].asset",
+    "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "rediscovering-heirloom-recipes",
+    "locale": "en",
+    "path": "body[7].asset",
+    "file": "images/joomlart/others/pic-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "rediscovering-heirloom-recipes",
+    "locale": "en",
+    "path": "body[14].asset",
+    "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "rediscovering-heirloom-recipes",
+    "locale": "en",
+    "path": "body[15].asset",
+    "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "gastronomic-adventures-with-exotic-dishes",
+    "locale": "en",
+    "path": "body[7].asset",
+    "file": "images/joomlart/others/pic-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "gastronomic-adventures-with-exotic-dishes",
+    "locale": "en",
+    "path": "body[14].asset",
+    "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "gastronomic-adventures-with-exotic-dishes",
+    "locale": "en",
+    "path": "body[15].asset",
+    "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "healthy-eating-for-body-and-soul",
+    "locale": "en",
+    "path": "body[6].asset",
+    "file": "images/joomlart/blogs/food/detail/item-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "healthy-eating-for-body-and-soul",
+    "locale": "en",
+    "path": "body[13].asset",
+    "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "healthy-eating-for-body-and-soul",
+    "locale": "en",
+    "path": "body[14].asset",
+    "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+    "alt": ""
+  }
+]

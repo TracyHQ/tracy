@@ -1,0 +1,49 @@
+/* acm happyhours style-1/2/3 (source: scss/_acm.scss:1402-1670; measured on /offer at 1440: panel 420 wide at x=64, badge 110). */
+@layer components {
+	.fr-hh { background-position: center; background-repeat: no-repeat; background-size: cover; padding: 128px 64px; }
+	.fr-hh-inner { max-width: 1920px; margin: auto; }
+	.fr-hh-inner.is-center .fr-hh-panel { margin: auto; }
+	.fr-hh-inner.is-right .fr-hh-panel { margin-left: auto; }
+	.fr-hh-panel { max-width: 420px; padding: 48px; text-align: center; border: 1px solid rgba(225, 225, 225, .4); background: rgba(0, 0, 0, .8); } /* ds-keep: translucent shade, scrim or one-off glyph over a photograph or a dark panel: the pair keeps the template value under every system */
+	.fr-hh-logo { width: 150px; margin: 16px auto; }
+	.fr-hh-logo img { display: block; width: 150px; height: auto; }
+	.fr-hh-title { font-size: 45px; margin: 0 0 24px; }
+	.fr-hh-desc { margin: 0 0 32px; }
+	.fr-hh-info { color: var(--color-heading); font-size: min(var(--h2-size), 32px); }
+	.fr-hh-info-inner { line-height: 1.4; }
+	.fr-hh-txt { display: block; margin: 32px 0; white-space: pre-line; }
+	.fr-hh-badge { background: var(--ds-c-success, #5cb85c); color: var(--color-accent-on); text-transform: uppercase; }
+	.fr-hh-badge-text { display: inline-block; font-size: var(--h3-size); line-height: 1.1; }
+	.fr-hh-link { margin-bottom: 24px; }
+
+	/* style 1: a circle on a double border */
+	.fr-hh.hh-1 .fr-hh-info { border: 1px solid rgba(255, 255, 255, .5); padding: 4px; position: relative; margin: 96px 0 32px; } /* ds-keep: translucent shade, scrim or one-off glyph over a photograph or a dark panel: the pair keeps the template value under every system */
+	.fr-hh.hh-1 .fr-hh-info-inner { border: 1px solid rgba(255, 255, 255, .5); padding: 32px 16px 16px; } /* ds-keep: translucent shade, scrim or one-off glyph over a photograph or a dark panel: the pair keeps the template value under every system */
+	.fr-hh.hh-1 .fr-hh-badge { display: block; border-radius: 50%; padding: 5px; position: absolute; top: -60px; left: 50%; transform: translateX(-50%); }
+	.fr-hh.hh-1 .fr-hh-badge-text { width: 100px; height: 100px; padding: 16px; border: 2px solid var(--color-accent-on); border-radius: 50%; font-size: 30px; }
+	.fr-hh.hh-1 .fr-hh-txt { font-size: 28px; margin: 32px 0; }
+
+	/* style 2: a circle on the panel corner */
+	.fr-hh.hh-2 .fr-hh-panel { position: relative; padding-top: 64px; }
+	.fr-hh.hh-2 .fr-hh-badge { border-radius: 50%; padding: 5px; position: absolute; right: -32px; top: -56px; z-index: 2; }
+	.fr-hh.hh-2 .fr-hh-badge-text { width: 120px; height: 120px; padding: 24px; border: 2px solid var(--color-accent-on); border-radius: 50%; font-weight: 400; font-size: 30px; }
+
+	/* style 3: a ribbon on the left edge */
+	.fr-hh.hh-3 .fr-hh-panel { position: relative; text-align: left; padding-top: 128px; }
+	.fr-hh.hh-3 .fr-hh-logo { margin: 0; }
+	.fr-hh.hh-3 .fr-hh-badge { display: block; font-size: 28px; position: absolute; left: -17.6px; top: 32px; }
+	.fr-hh.hh-3 .fr-hh-badge-text { position: relative; font-weight: 400; line-height: 1; padding: 12px 16px 12px 16px; }
+	.fr-hh.hh-3 .fr-hh-badge-text::before { content: ""; position: absolute; left: 0; bottom: -20px; width: 0; height: 0; border-left: 18px solid transparent; border-top: 20px solid var(--ds-c-accent-active, #357e35); }
+
+	@media (max-width: 575.98px) {
+		.fr-hh { padding: 96px 24px; }
+		.fr-hh-panel { padding: 32px; }
+		.fr-hh-title { font-size: 36px; }
+		.fr-hh-info { font-size: 30px; }
+		.fr-hh.hh-1 .fr-hh-badge-text { font-size: 28px; }
+		.fr-hh.hh-1 .fr-hh-txt { font-size: 24px; }
+		.fr-hh.hh-2 .fr-hh-badge { top: -24px; right: -12px; }
+		.fr-hh.hh-2 .fr-hh-badge-text { width: 100px; height: 100px; padding: 16px; font-size: 28px; }
+		.fr-hh.hh-3 .fr-hh-panel { padding-top: 96px; }
+	}
+}

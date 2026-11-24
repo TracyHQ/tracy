@@ -1,0 +1,11 @@
+---
+/**
+ * A Portable Text list item with its provenance stamp (`stampBlocks()`, `src/lib/stamps.ts`): the
+ * same `<li>` as the default renderer. Passed only on a stamped request.
+ */
+import { BLOCK_SRC } from '@/lib/stamps'
+
+const { node } = Astro.props
+---
+
+<li data-tracy-src={node?.[BLOCK_SRC]}><slot /></li>

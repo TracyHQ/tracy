@@ -1,0 +1,31 @@
+---
+/**
+ * The title band under the header (Joomla mod_jamasthead, one title / description / picture per menu item): a picture under a fade
+ * to the page colour, a centred title and description. `entry` is a `masthead` entry; `title` overrides its title (an article's own).
+ */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any> | null
+  title?: string
+  /** keep the entry's description under an overriding title (the Search page: the source band has both) */
+  describe?: boolean
+}
+const { entry, title, describe = false } = Astro.props
+const $m = stampFor(Astro.request, 'masthead', entry ? { id: entry.id, slug: entry.slug } : null)
+const bg = mediaUrl(entry?.background)
+const heading = title ?? entry?.title
+---
+
+{entry && (
+	<div class="fr-masthead" style={bg ? `background-image:url('${bg}')` : undefined}>
+		<div class="fr-container">
+			<div class="fr-masthead-detail">
+				{title ? <h1 class="fr-masthead-title">{heading}</h1> : <h1 class="fr-masthead-title" {...$m('title')}>{heading}</h1>}
+				{(!title || describe) && entry.description && <div class="fr-masthead-desc" {...$m('description')}>{entry.description}</div>}
+				<slot />
+			</div>
+		</div>
+	</div>
+)}

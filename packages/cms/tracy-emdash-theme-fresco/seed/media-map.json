@@ -1,0 +1,1182 @@
+{
+	"generatedAt": "2026-11-19T14:37:53.422Z",
+	"source": "JA Diner j6 1.0.5 webroot",
+	"items": [
+		{
+			"key": "images/joomlart/blogs/food/intro/item-1",
+			"file": "images/joomlart/blogs/food/intro/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a5be887ca95d8d73e2eee5ef4739b1154e1e4e83122aa92018184669bc831941",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "valentines-day-at-soul-kitchen",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/item-1",
+			"file": "images/joomlart/authors/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a111f7221362da80929f86de82dc02311a37cdea8afc178b3651dc9ec45df528",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "valentines-day-at-soul-kitchen",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "mother-s-day-lunch-special",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[0].img"
+				},
+				{
+					"collection": "teams",
+					"slug": "chiefs-team",
+					"locale": "en",
+					"path": "items[0].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blogs/food/intro/item-2",
+			"file": "images/joomlart/blogs/food/intro/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4ec8765d4c8be8e58fcebf8244381d502c3b18896245aff552efc8edb50ad164",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "mother-s-day-lunch-special",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "valentines-day-at-soul-kitchen",
+					"locale": "en",
+					"path": "body[15].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "mother-s-day-lunch-special",
+					"locale": "en",
+					"path": "body[15].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "soul-kitchen-kumquat-thyme-cocktail",
+					"locale": "en",
+					"path": "body[15].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "an-interview-with-chef-milo-ferndandes",
+					"locale": "en",
+					"path": "body[15].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "culinary-journeys-around-the-world",
+					"locale": "en",
+					"path": "body[15].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "savoring-the-art-of-cooking",
+					"locale": "en",
+					"path": "body[15].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "farm-to-fork-sustainable-eating",
+					"locale": "en",
+					"path": "body[15].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "rediscovering-heirloom-recipes",
+					"locale": "en",
+					"path": "body[15].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "gastronomic-adventures-with-exotic-dishes",
+					"locale": "en",
+					"path": "body[15].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "healthy-eating-for-body-and-soul",
+					"locale": "en",
+					"path": "body[14].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blogs/food/intro/item-3",
+			"file": "images/joomlart/blogs/food/intro/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1294c999384abc84ec6e4a0fe92c23d10890b164d781887bf6315b78311e0ec1",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "soul-kitchen-kumquat-thyme-cocktail",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "valentines-day-at-soul-kitchen",
+					"locale": "en",
+					"path": "body[14].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "mother-s-day-lunch-special",
+					"locale": "en",
+					"path": "body[14].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "soul-kitchen-kumquat-thyme-cocktail",
+					"locale": "en",
+					"path": "body[14].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "an-interview-with-chef-milo-ferndandes",
+					"locale": "en",
+					"path": "body[14].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "culinary-journeys-around-the-world",
+					"locale": "en",
+					"path": "body[14].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "savoring-the-art-of-cooking",
+					"locale": "en",
+					"path": "body[14].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "farm-to-fork-sustainable-eating",
+					"locale": "en",
+					"path": "body[14].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "rediscovering-heirloom-recipes",
+					"locale": "en",
+					"path": "body[14].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "gastronomic-adventures-with-exotic-dishes",
+					"locale": "en",
+					"path": "body[14].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "healthy-eating-for-body-and-soul",
+					"locale": "en",
+					"path": "body[13].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/item-5",
+			"file": "images/joomlart/authors/item-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4134c342fc5714bfac6249bde29a04d6585d28c88c21a48350d3d37582b9d842",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "soul-kitchen-kumquat-thyme-cocktail",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "an-interview-with-chef-milo-ferndandes",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "chiefs-team",
+					"locale": "en",
+					"path": "items[5].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blogs/food/intro/item-4",
+			"file": "images/joomlart/blogs/food/intro/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6a3143fb71352ca2f6f82249b86adb5fd93fdbc5128adda8a7d08ab7b0a4582d",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "an-interview-with-chef-milo-ferndandes",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blogs/food/intro/item-5",
+			"file": "images/joomlart/blogs/food/intro/item-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3f473c5c2cc8039dd1f3fa36221e05c30c4f2b859da32c823bbe3d8ed8f38b2d",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "culinary-journeys-around-the-world",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/item-10",
+			"file": "images/joomlart/authors/item-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "bc5f95576a49dab85abeea1deed606ebbf626329388c906cfe55459f9d18192c",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "culinary-journeys-around-the-world",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "savoring-the-art-of-cooking",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "farm-to-fork-sustainable-eating",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blogs/food/intro/item-6",
+			"file": "images/joomlart/blogs/food/intro/item-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "bc4aace0b10089a099e4a6e4f2ab755afd42997a3530ac18957bdc6d1ace23cf",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "savoring-the-art-of-cooking",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blogs/food/intro/item-7",
+			"file": "images/joomlart/blogs/food/intro/item-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "53781ff316b6a51e9d30fcad050aa9891b0d424269dfe8e59b9cb957567f502b",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "farm-to-fork-sustainable-eating",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blogs/food/intro/item-8",
+			"file": "images/joomlart/blogs/food/intro/item-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d741bf8cc023fbab094238cb473b7941a389eff5007d3c9def3fa3d385d915a2",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "rediscovering-heirloom-recipes",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/item-4",
+			"file": "images/joomlart/authors/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "93324b88d0fed71895e343c3926b98e9f0331a62bc26cfda5bccea76aaf5a70d",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "rediscovering-heirloom-recipes",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "gastronomic-adventures-with-exotic-dishes",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "healthy-eating-for-body-and-soul",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blogs/food/intro/item-9",
+			"file": "images/joomlart/blogs/food/intro/item-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "0666783024b70f3efddae1ed12c5f6f9d34999f615d1a92eab7a79cc75d5052c",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "gastronomic-adventures-with-exotic-dishes",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blogs/food/intro/item-10",
+			"file": "images/joomlart/blogs/food/intro/item-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4163f4fa4a10d183cbe02e55c89d6ebbcf52dde66165edc498a2257d30f08d25",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "healthy-eating-for-body-and-soul",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/hero/item-1",
+			"file": "images/joomlart/hero/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "717accae2c547635b21091022256f386898c85e35b90f9ca87558236a6e4f8ff",
+			"targets": [
+				{
+					"collection": "hero",
+					"slug": "home-hero",
+					"locale": "en",
+					"path": "items[0].image_decor"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/feature/item-1",
+			"file": "images/joomlart/feature/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "106b0d00edfc3358fe4115453bc6d6759da47a1ca4e9234cfa35cb619cabef6d",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-services",
+					"locale": "en",
+					"path": "items[0].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/feature/item-2",
+			"file": "images/joomlart/feature/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "7bc35ded14225806488d5c8870d6a7258b1386607fe60e25ba922be9e8bbb325",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-services",
+					"locale": "en",
+					"path": "items[1].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/feature/item-3",
+			"file": "images/joomlart/feature/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "389ec08f90457b7b8a08e5b70d39b57118643b4ddcf2c6244061bfad1c9de6de",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-services",
+					"locale": "en",
+					"path": "items[2].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/item-6",
+			"file": "images/joomlart/gallery/item-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "fedd116be8391e1ecdf582069c4e6de5331cbd98ce0c2abb361e517b0df37cfa",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-events",
+					"locale": "en",
+					"path": "items[0].img_bg"
+				},
+				{
+					"collection": "menu",
+					"slug": "menu-grid",
+					"locale": "en",
+					"path": "items[4].img_icon"
+				},
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-1",
+					"locale": "en",
+					"path": "items[5].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-2",
+					"locale": "en",
+					"path": "items[5].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-one",
+					"locale": "en",
+					"path": "items[9].gallery_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/item-4",
+			"file": "images/joomlart/gallery/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "26106f274ef48908861c3adbd90de102403a5a907228ed64e9ca33a0ac9d3f99",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-events",
+					"locale": "en",
+					"path": "items[1].img_bg"
+				},
+				{
+					"collection": "menu",
+					"slug": "menu-grid",
+					"locale": "en",
+					"path": "items[3].img_icon"
+				},
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-1",
+					"locale": "en",
+					"path": "items[3].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-two",
+					"locale": "en",
+					"path": "items[5].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-one",
+					"locale": "en",
+					"path": "items[5].gallery_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/hero/item-2",
+			"file": "images/joomlart/hero/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d0a98e469d633d5debd626395037bc33cbdba9e4bdb09868bfacbce5cde6efa8",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-visit",
+					"locale": "en",
+					"path": "items[0].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/hero/item-3",
+			"file": "images/joomlart/hero/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "992137b4636507867ed565b09d218941a3630ab0f8f2fa71af6577c22fab1cb1",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-visit",
+					"locale": "en",
+					"path": "items[1].img_icon"
+				},
+				{
+					"collection": "features_intro",
+					"slug": "about-intro",
+					"locale": "en",
+					"path": "img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icons/ic-chef",
+			"file": "images/joomlart/icons/ic-chef.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "c63dafc940ed829c66078ee3a346cd695028b8867ea529feaa9b1bca53eca36a",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "about-features",
+					"locale": "en",
+					"path": "items[0].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icons/food-delivery",
+			"file": "images/joomlart/icons/food-delivery.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "6815849620c1fe9fb11cf029f92cc196dc5e9443d99f5af924f7aa5e78b4840a",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "about-features",
+					"locale": "en",
+					"path": "items[1].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icons/menu",
+			"file": "images/joomlart/icons/menu.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "b59c56ad101572ac8c9dd40f136d9d720d1fddc09a36231d34dd2504fa8db8d0",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "about-features",
+					"locale": "en",
+					"path": "items[2].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icons/online-order",
+			"file": "images/joomlart/icons/online-order.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "11b4619a3ee8fb2b0367e11d5d7e01db830cd12c7398d897855045e6d5c27b85",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "about-features",
+					"locale": "en",
+					"path": "items[3].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icons/quality",
+			"file": "images/joomlart/icons/quality.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "f87d984b0fc0a34a4f289ca73f9c8b2a10007310b288b480089d948d187c4928",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "about-features",
+					"locale": "en",
+					"path": "items[4].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/icons/entrances",
+			"file": "images/joomlart/icons/entrances.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "3f7857d9c5e4c455c149632ba5a77082553715ef1b26eddde24e2d30f3271cdf",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "about-features",
+					"locale": "en",
+					"path": "items[5].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/hero/item-10",
+			"file": "images/joomlart/hero/item-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "fb9aeea306479be9a27ee702101edbafeec71c7f1b3dccec8e2d2fc3f8bc986a",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "menu-list-1",
+					"locale": "en",
+					"path": "menu_image"
+				},
+				{
+					"collection": "menu",
+					"slug": "menu-list-2",
+					"locale": "en",
+					"path": "menu_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/item-1",
+			"file": "images/joomlart/gallery/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "850f979ab9c0575e22278b8b4306023466f9d204fd1eaf710e30cfe8824464eb",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "menu-grid",
+					"locale": "en",
+					"path": "items[0].img_icon"
+				},
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-1",
+					"locale": "en",
+					"path": "items[0].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-2",
+					"locale": "en",
+					"path": "items[3].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-two",
+					"locale": "en",
+					"path": "items[0].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-one",
+					"locale": "en",
+					"path": "items[0].gallery_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/item-2",
+			"file": "images/joomlart/gallery/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "bfa9898083339e75bff297464fdef0c4f0edace845bd7b553ac2a6e1697d0907",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "menu-grid",
+					"locale": "en",
+					"path": "items[1].img_icon"
+				},
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-1",
+					"locale": "en",
+					"path": "items[1].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-two",
+					"locale": "en",
+					"path": "items[2].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-one",
+					"locale": "en",
+					"path": "items[2].gallery_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/item-3",
+			"file": "images/joomlart/gallery/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8a3ee9ba619e5becd6609a75824167cb480c87b9d7a992dbfd3413d6c1477c60",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "menu-grid",
+					"locale": "en",
+					"path": "items[2].img_icon"
+				},
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-1",
+					"locale": "en",
+					"path": "items[2].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-two",
+					"locale": "en",
+					"path": "items[3].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-one",
+					"locale": "en",
+					"path": "items[3].gallery_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/item-10",
+			"file": "images/joomlart/gallery/item-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b1695c90fbfa6d0144597224e41a2c9cfe57e35186e626ecbdc79ba9af27a1dc",
+			"targets": [
+				{
+					"collection": "menu",
+					"slug": "menu-grid",
+					"locale": "en",
+					"path": "items[5].img_icon"
+				},
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-2",
+					"locale": "en",
+					"path": "items[2].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-two",
+					"locale": "en",
+					"path": "items[1].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-one",
+					"locale": "en",
+					"path": "items[1].gallery_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/item-5",
+			"file": "images/joomlart/gallery/item-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "573d75fc1a4195510bf8254f37135c2eb25cf39286a6f7d65d5098c5e20699a4",
+			"targets": [
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-1",
+					"locale": "en",
+					"path": "items[4].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-2",
+					"locale": "en",
+					"path": "items[4].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-two",
+					"locale": "en",
+					"path": "items[6].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-one",
+					"locale": "en",
+					"path": "items[6].gallery_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/item-7",
+			"file": "images/joomlart/gallery/item-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a6c5a03212d1714f6213a47a5e4f808c0dffe650b5886285b1f75d91906bce92",
+			"targets": [
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-2",
+					"locale": "en",
+					"path": "items[0].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-two",
+					"locale": "en",
+					"path": "items[8].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-one",
+					"locale": "en",
+					"path": "items[8].gallery_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/item-8",
+			"file": "images/joomlart/gallery/item-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3d86c7d8ab39ca8d0cc8a893bb77b307b7eb14d33f348d8a2a556dfa3c8686ad",
+			"targets": [
+				{
+					"collection": "gallery",
+					"slug": "home-gallery-2",
+					"locale": "en",
+					"path": "items[1].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-two",
+					"locale": "en",
+					"path": "items[7].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-one",
+					"locale": "en",
+					"path": "items[7].gallery_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/item-9",
+			"file": "images/joomlart/gallery/item-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "85ca661140c53c4d095bacd533bfd70887bfc7cffd0def3b4fb7fc484845d65c",
+			"targets": [
+				{
+					"collection": "gallery",
+					"slug": "gallery-two",
+					"locale": "en",
+					"path": "items[4].gallery_image"
+				},
+				{
+					"collection": "gallery",
+					"slug": "gallery-one",
+					"locale": "en",
+					"path": "items[4].gallery_image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/item-2",
+			"file": "images/joomlart/authors/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "c82ebb1b7b506fdb57140cd6b2d9307b625d3457e45843b25fb9408d2bc86e1b",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[1].img"
+				},
+				{
+					"collection": "teams",
+					"slug": "chiefs-team",
+					"locale": "en",
+					"path": "items[1].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/item-9",
+			"file": "images/joomlart/authors/item-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4bf94d25b475a585048b0ef51675449f14e2269901cbc9901410f2f1791af403",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[2].img"
+				},
+				{
+					"collection": "teams",
+					"slug": "chiefs-team",
+					"locale": "en",
+					"path": "items[2].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/item-3",
+			"file": "images/joomlart/authors/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "41d3594e96d4aa422747f676d79863c23eefdfaedd9737bc053b35381c5b3717",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "chiefs-team",
+					"locale": "en",
+					"path": "items[3].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/item-6",
+			"file": "images/joomlart/authors/item-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1967bed8ccb69bcc3849f210950ac9284892a555add5b9b95c773ab1bdfe7d8f",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "chiefs-team",
+					"locale": "en",
+					"path": "items[4].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/logo/logo",
+			"file": "images/joomlart/logo/logo.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "56835252b8e73fed493d8493b8f176d5a84239723573daf2069d01b5f4ec0a3c",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "offer-hour-1",
+					"locale": "en",
+					"path": "logo_img"
+				},
+				{
+					"collection": "happyhours",
+					"slug": "offer-hour-2",
+					"locale": "en",
+					"path": "logo_img"
+				},
+				{
+					"collection": "happyhours",
+					"slug": "offer-hour-3",
+					"locale": "en",
+					"path": "logo_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/pic-6",
+			"file": "images/joomlart/others/pic-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3eb9206aab75dfec3385801cae2da64b1f431e2d6a63f8a07a936777e0d4f434",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "offer-hour-1",
+					"locale": "en",
+					"path": "hp_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/pic-5",
+			"file": "images/joomlart/others/pic-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4f962269a6d821f2a78df6008913fc0d137d1978c9ea3fe13ee16d4b0f24e36e",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "offer-hour-2",
+					"locale": "en",
+					"path": "hp_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/pic-7",
+			"file": "images/joomlart/others/pic-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "34af255a10b6615f09d0af17a1285e637f9244f8902c7624d04f355d2d1e893f",
+			"targets": [
+				{
+					"collection": "happyhours",
+					"slug": "offer-hour-3",
+					"locale": "en",
+					"path": "hp_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/pic-1",
+			"file": "images/joomlart/others/pic-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e306aec2979236d5ebeff9462b24b9b6bb486b502572b7861c80a9507d268ac9",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "blog",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "contact",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "chiefs",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "about",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/pic-2",
+			"file": "images/joomlart/others/pic-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "527bf8ca8de28a96edfdeb5c2b113464e5101f107103ef0a49cf1f4cf8f9a5db",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "valentines-day-at-soul-kitchen",
+					"locale": "en",
+					"path": "body[7].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "mother-s-day-lunch-special",
+					"locale": "en",
+					"path": "body[7].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "soul-kitchen-kumquat-thyme-cocktail",
+					"locale": "en",
+					"path": "body[7].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "an-interview-with-chef-milo-ferndandes",
+					"locale": "en",
+					"path": "body[7].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "culinary-journeys-around-the-world",
+					"locale": "en",
+					"path": "body[7].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "savoring-the-art-of-cooking",
+					"locale": "en",
+					"path": "body[7].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "farm-to-fork-sustainable-eating",
+					"locale": "en",
+					"path": "body[7].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "rediscovering-heirloom-recipes",
+					"locale": "en",
+					"path": "body[7].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "gastronomic-adventures-with-exotic-dishes",
+					"locale": "en",
+					"path": "body[7].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blogs/food/detail/item-1",
+			"file": "images/joomlart/blogs/food/detail/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a11d6e89074728c68f92fed30cb3c04212ccfcf061ca446314419615801802f9",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "healthy-eating-for-body-and-soul",
+					"locale": "en",
+					"path": "body[6].asset"
+				},
+				{
+					"collection": "masthead",
+					"slug": "post",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		}
+	]
+}

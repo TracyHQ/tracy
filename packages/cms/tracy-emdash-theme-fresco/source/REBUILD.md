@@ -1,0 +1,9 @@
+# Rebuilding `source/snapshot`
+
+`source/snapshot` is the Visual QA reference: a mirror of the source site plus the 404 page and the pages the menu does not link. It is **git-ignored**. What the gates read in its place is committed: `source/snapshot-SHA256SUMS`, `inventory/source-inventory.json` and `qa.contract.json` (it hashes every source file it cites).
+
+Source: JoomlArt's released quickstart `quickstart/ja-fresco/j6` **1.0.4**, the installer zip `ja-fresco-j6-quickstart-1.0.4.zip`, sha256 `224c8dc881a8752328b6d6400851dd449e755f06757225c2abf67786e9ec40dc` (DECISIONS D2). Joomla is stood up in Docker as in the Diner's `REBUILD.md`, with these differences: image `fresco-snap-php:8.3`, containers `fr-web` / `fr-db` on network `fr-net`, table prefix `jf_`, and SEF rewrite on (`cp htaccess.txt .htaccess`; `sef_rewrite = true` in `configuration.php`) so the pages answer at `/about`, `/menu`, … The pages the menu does not link (`/pages/j-content/category-blog`, its posts, `/pages/j-pages/smart-search`) are crawled with their own start URLs and merged, and the stand's own 404 answer is saved as `nope-404/index.html`. Absolute `http://127.0.0.1:18080` addresses are removed from the mirrored HTML, and the mirror is served for the QA run by `python3 -m http.server 18090 --bind 127.0.0.1` in `source/snapshot` (`--source-site`).
+
+The model is dumped with the WordPress skill's `scripts/ingest/joomla-dump.mjs --container fr-db --web-container fr-web --db joomla --prefix jf_ --user root --password root --site-url http://127.0.0.1:18080 --capture` and `from-joomla.mjs`, then `SRC_WORK=<folder holding spec/ j6/ webroot/> ingest/rebuild-seed.sh`.
+
+A fresh crawl never matches an earlier one byte for byte (form tokens): only pictures, fonts, scripts and stylesheets must match `snapshot-SHA256SUMS`.

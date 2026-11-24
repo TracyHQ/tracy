@@ -1,0 +1,91 @@
+---
+/**
+ * acm features-intro. style 1: full-bleed picture tiles (2 to 4 per row, 850 px tall) with a title and a line over a fade to the page colour.
+ * style 2: edge-to-edge colour-mask tiles (`bg_color` primary / dark) with a big centred title and an action line with an arrow.
+ * A tile link of `#` is not a link (plain text); a real link makes the whole tile clickable.
+ */
+import type { Chrome } from '@/lib/chrome'
+import SectionHead from '@/components/blocks/SectionHead.astro'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { spacing } from '@/lib/layout'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+import { cleanHtml } from '@/lib/html'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+  style?: 1 | 2
+}
+const { entry, chrome, style = 1 } = Astro.props
+const $f = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
+const items: any[] = entry.items ?? []
+const live = await liveLinks(
+  Astro.request,
+  chrome.locale,
+  items.map((i) => i.link)
+)
+const link = (u: unknown): string | null => {
+  if (typeof u !== 'string' || !u.trim() || u.trim() === '#' || !live(u)) return null
+  return dataHref(u, (p) => href(chrome.locale, p))
+}
+const cols = Math.min(4, Math.max(1, Number(entry.columns) || 2))
+const left = entry.align === 'left'
+const bg = (v: unknown) => {
+  const u = mediaUrl(v as any)
+  return u ? `background-image:url('${u}')` : undefined
+}
+---
+
+<section class:list={['fr-section', spacing(entry.slug)]}>
+	{style === 1 && <SectionHead entry={entry} collection="features_intro" />}
+	{style === 1 ? (
+		<div class="fr-container-fluid fr-fi-wrap">
+			<div class:list={['fr-fi-row', `cols-${cols}`, left && 'is-left']}>
+				{items.map((it, i) => {
+					const to = link(it.link)
+					return (
+						<div class="fr-fi-col">
+							<div class="fr-fi-item" style={bg(it.img_icon)}>
+								{to && <a class="fr-fi-mask" href={to} aria-label={it.title} />}
+								<div class="fr-fi-inner">
+									{it.title && <h3 {...$f(`items[${i}].title`)}>{it.title}</h3>}
+									{it.description && <p {...$f(`items[${i}].description`)} set:html={cleanHtml(it.description)} />}
+								</div>
+							</div>
+						</div>
+					)
+				})}
+			</div>
+		</div>
+	) : (
+		<div class="fr-fi2-row">
+			{items.map((it, i) => {
+				const to = link(it.link)
+				const dark = it.bg_color === 'dark'
+				return (
+					<div class="fr-fi2-col">
+						<div class:list={['fr-fi2-item', dark ? 'is-dark' : 'is-primary']} style={bg(it.img_bg)}>
+							<div class="fr-fi2-mask" aria-hidden="true" />
+							{to && <a class="fr-fi-mask" href={to} aria-label={it.title} />}
+							<div class="fr-fi2-inner">
+								{it.title && <h2 class="fr-fi2-title" {...$f(`items[${i}].title`)}>{it.title}</h2>}
+								{(it.action_title || to) && (
+									<div class="fr-fi2-action">
+										<div class="fr-fi2-action-title" {...$f(`items[${i}].action_title`)} set:html={cleanHtml(it.action_title)} />
+										<svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+											<path d="M12 36L36 12" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+											<path d="M16.5 12H36V31.5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+										</svg>
+									</div>
+								)}
+							</div>
+						</div>
+					</div>
+				)
+			})}
+		</div>
+	)}
+</section>

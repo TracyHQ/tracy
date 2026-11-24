@@ -1,0 +1,761 @@
+{
+  "crawled": 105,
+  "files": [
+    {
+      "path": "templates/ja_fresco/favicon.ico",
+      "sha256": "7bd9b59d14b126e8c5abcb1c89b60c79e2b2e17c15745fe8d385204d87c40765"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/css/all.min.css",
+      "sha256": "3b961e8e82f12168fd8e04ab46f9b596aae9c7fa0ac8066112176957f336114b"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome/css/font-awesome.min.css",
+      "sha256": "799aeb25cc0373fdee0e1b1db7ad6c2f6a0e058dfadaa3379689f583213190bd"
+    },
+    {
+      "path": "templates/ja_fresco/js/owl-carousel/owl.carousel.min.css",
+      "sha256": "521410e1fc44780061e09adc980275fb5ea277fd5d9e538454214ec4379ff4bc"
+    },
+    {
+      "path": "templates/ja_fresco/js/cobox/css/cobox.css",
+      "sha256": "06e175f1fd4c66d83fed017a0162ed42fd5fc69210c4171923ab04c90c9916ce"
+    },
+    {
+      "path": "media/t4/optimize/css/40134f40ea40fb82304c0f4bb0939fd1.css",
+      "sha256": "4359ab33614f7c47b307e922d95673144271cce14fbfabe63cbc5a4f94c2f6d4"
+    },
+    {
+      "path": "media/vendor/jquery/js/jquery-noconflict.min.js",
+      "sha256": "b7bbe381cf509577690654422e09b73e9fdbb0b70d47028146147da7a7a0c5fa"
+    },
+    {
+      "path": "media/system/js/core.min.js",
+      "sha256": "045181e3f5ea2f3afd09831dd18ea871b8a98fcb8cb3233af395fe123bdd3934"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/modal.min.js",
+      "sha256": "1a9326b0065dc08763f2323553814ef6f716c5948055f8d177d976eae684b9c1"
+    },
+    {
+      "path": "media/vendor/jquery/js/jquery.min.js",
+      "sha256": "fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a"
+    },
+    {
+      "path": "templates/ja_fresco/js/imagesloaded.pkgd.min.js",
+      "sha256": "37dbf4b6012d4e23cbc1cba50baa3572c93a5c371b9873fb5440cb84dfbf9902"
+    },
+    {
+      "path": "media/vendor/jquery-migrate/js/jquery-migrate.min.js",
+      "sha256": "6fa409c2c72c30d7e21c407339c5a4802c3334660d9b1dc5e3ea2752bb6a4b62"
+    },
+    {
+      "path": "templates/ja_fresco/js/owl-carousel/owl.carousel.min.js",
+      "sha256": "a53c43f834b32309b084ea9314df8307e9c78cee2202c6e07f216ae4ae5b704d"
+    },
+    {
+      "path": "templates/ja_fresco/js/window.curDot.min.js",
+      "sha256": "7aa6e4973639859cdd925cabfddcdeb49eb231ba1fa3876db487dcfa6a840f3d"
+    },
+    {
+      "path": "templates/ja_fresco/js/cobox/js/cobox.min.js",
+      "sha256": "1b9511215239951252550430955de1ae3b6c61b56c06e6611b9557f3a6a7011f"
+    },
+    {
+      "path": "templates/ja_fresco/js/isotope.pkgd.min.js",
+      "sha256": "a04391e3162984fd7194871495177f509bab42cb7defcf319afdf26b5c4a4934"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/dropdown.min.js",
+      "sha256": "c5d8353d52ebbf41bba3c66d69981ca111fee195d1ef3ec50054d79c2abde84d"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/collapse.min.js",
+      "sha256": "cf9de80f69ca7fb0965323fb377b2424b59d4ab961f5a7802e537c7effb98320"
+    },
+    {
+      "path": "media/plg_system_schedulerunner/js/run-schedule.min.js",
+      "sha256": "26ff971c169218fd254d5826a1c82d1fcf01340d35d09ef6f0f07eacde818a1e"
+    },
+    {
+      "path": "media/t4/optimize/js/78f2513fcfeba7b206d63530df956e07.js",
+      "sha256": "44415819f529ef75665a235356e6d55e85fa437af3ca5f455f872c62c0556b4a"
+    },
+    {
+      "path": "images/joomlart/logo/logo.png",
+      "sha256": "56835252b8e73fed493d8493b8f176d5a84239723573daf2069d01b5f4ec0a3c"
+    },
+    {
+      "path": "images/joomlart/gallery/item-1.jpg",
+      "sha256": "850f979ab9c0575e22278b8b4306023466f9d204fd1eaf710e30cfe8824464eb"
+    },
+    {
+      "path": "images/joomlart/gallery/item-2.jpg",
+      "sha256": "bfa9898083339e75bff297464fdef0c4f0edace845bd7b553ac2a6e1697d0907"
+    },
+    {
+      "path": "images/joomlart/gallery/item-3.jpg",
+      "sha256": "8a3ee9ba619e5becd6609a75824167cb480c87b9d7a992dbfd3413d6c1477c60"
+    },
+    {
+      "path": "images/joomlart/gallery/item-4.jpg",
+      "sha256": "26106f274ef48908861c3adbd90de102403a5a907228ed64e9ca33a0ac9d3f99"
+    },
+    {
+      "path": "images/joomlart/gallery/item-5.jpg",
+      "sha256": "573d75fc1a4195510bf8254f37135c2eb25cf39286a6f7d65d5098c5e20699a4"
+    },
+    {
+      "path": "images/joomlart/gallery/item-6.jpg",
+      "sha256": "fedd116be8391e1ecdf582069c4e6de5331cbd98ce0c2abb361e517b0df37cfa"
+    },
+    {
+      "path": "images/joomlart/gallery/item-7.jpg",
+      "sha256": "a6c5a03212d1714f6213a47a5e4f808c0dffe650b5886285b1f75d91906bce92"
+    },
+    {
+      "path": "images/joomlart/gallery/item-8.jpg",
+      "sha256": "3d86c7d8ab39ca8d0cc8a893bb77b307b7eb14d33f348d8a2a556dfa3c8686ad"
+    },
+    {
+      "path": "images/joomlart/gallery/item-10.jpg",
+      "sha256": "b1695c90fbfa6d0144597224e41a2c9cfe57e35186e626ecbdc79ba9af27a1dc"
+    },
+    {
+      "path": "images/joomlart/hero/item-1.jpg",
+      "sha256": "717accae2c547635b21091022256f386898c85e35b90f9ca87558236a6e4f8ff"
+    },
+    {
+      "path": "images/joomlart/feature/item-1.jpg",
+      "sha256": "106b0d00edfc3358fe4115453bc6d6759da47a1ca4e9234cfa35cb619cabef6d"
+    },
+    {
+      "path": "images/joomlart/feature/item-2.jpg",
+      "sha256": "7bc35ded14225806488d5c8870d6a7258b1386607fe60e25ba922be9e8bbb325"
+    },
+    {
+      "path": "images/joomlart/feature/item-3.jpg",
+      "sha256": "389ec08f90457b7b8a08e5b70d39b57118643b4ddcf2c6244061bfad1c9de6de"
+    },
+    {
+      "path": "images/joomlart/hero/item-2.jpg",
+      "sha256": "d0a98e469d633d5debd626395037bc33cbdba9e4bdb09868bfacbce5cde6efa8"
+    },
+    {
+      "path": "images/joomlart/hero/item-3.jpg",
+      "sha256": "992137b4636507867ed565b09d218941a3630ab0f8f2fa71af6577c22fab1cb1"
+    },
+    {
+      "path": "media/t4/optimize/css/00cbd7935f9bf416ccd97f2a552e67bc.css",
+      "sha256": "4359ab33614f7c47b307e922d95673144271cce14fbfabe63cbc5a4f94c2f6d4"
+    },
+    {
+      "path": "media/t4/optimize/js/a80e25a6b568c484002833fccdac50eb.js",
+      "sha256": "c81bbb5a9e0d695e6807c93102d10c5faea524dd8b43985bc0b5e88f6e56f1bc"
+    },
+    {
+      "path": "images/joomlart/hero/item-4.jpg",
+      "sha256": "1ed7ca43f722af9ee438b6f0410cff1140087b37ff41866c343f434212403d9e"
+    },
+    {
+      "path": "images/joomlart/hero/item-5.jpg",
+      "sha256": "d4386136f12c80ea329f2b83c12d96152dacbe5be1dbceabc32a2f5a3d2c22d3"
+    },
+    {
+      "path": "images/joomlart/hero/item-6.jpg",
+      "sha256": "7f9b9713ecb119dc5524bfee042d2c8cd308da43c875d039c31a356fdfc7ae7c"
+    },
+    {
+      "path": "images/joomlart/hero/item-7.jpg",
+      "sha256": "78eb0a93ef3c0a2c7d449aa003234776afec78a3424289aa4fda0bf56f2dfd12"
+    },
+    {
+      "path": "images/joomlart/hero/item-8.jpg",
+      "sha256": "a7c63663d6d097aaa6638da0362c07382ac9848bc9ac7b62fd2b14eee16145ca"
+    },
+    {
+      "path": "media/t4/optimize/css/e3bd1f2ff859b9ea2385b0360ece6e8c.css",
+      "sha256": "4359ab33614f7c47b307e922d95673144271cce14fbfabe63cbc5a4f94c2f6d4"
+    },
+    {
+      "path": "media/t4/optimize/js/181e433ec399a34f4d08f872e08db360.js",
+      "sha256": "7da1d00127bba502791fb65e0bbe770171673bdd45c4f6df8c03953109837b71"
+    },
+    {
+      "path": "images/joomlart/hero/item-10.jpg",
+      "sha256": "fb9aeea306479be9a27ee702101edbafeec71c7f1b3dccec8e2d2fc3f8bc986a"
+    },
+    {
+      "path": "images/joomlart/hero/item-3.jpg",
+      "sha256": "992137b4636507867ed565b09d218941a3630ab0f8f2fa71af6577c22fab1cb1"
+    },
+    {
+      "path": "images/joomlart/gallery/item-10.jpg",
+      "sha256": "b1695c90fbfa6d0144597224e41a2c9cfe57e35186e626ecbdc79ba9af27a1dc"
+    },
+    {
+      "path": "images/joomlart/gallery/item-2.jpg",
+      "sha256": "bfa9898083339e75bff297464fdef0c4f0edace845bd7b553ac2a6e1697d0907"
+    },
+    {
+      "path": "images/joomlart/hero/item-7.jpg",
+      "sha256": "78eb0a93ef3c0a2c7d449aa003234776afec78a3424289aa4fda0bf56f2dfd12"
+    },
+    {
+      "path": "images/joomlart/gallery/item-8.jpg",
+      "sha256": "3d86c7d8ab39ca8d0cc8a893bb77b307b7eb14d33f348d8a2a556dfa3c8686ad"
+    },
+    {
+      "path": "images/joomlart/gallery/item-5.jpg",
+      "sha256": "573d75fc1a4195510bf8254f37135c2eb25cf39286a6f7d65d5098c5e20699a4"
+    },
+    {
+      "path": "images/joomlart/hero/item-9.jpg",
+      "sha256": "3637da710f12e9650554978dadc5570de918bfab7f873ce826d5d75552eaed34"
+    },
+    {
+      "path": "media/t4/optimize/css/e22efab7be3ac401e11e9889c1698e5b.css",
+      "sha256": "4359ab33614f7c47b307e922d95673144271cce14fbfabe63cbc5a4f94c2f6d4"
+    },
+    {
+      "path": "media/t4/optimize/js/9756634f909b166269ef9f890cb5ac03.js",
+      "sha256": "4c730fa1e46c7331b9a9d18c64bb190105f8574c1619152ba0d1472b10d676a9"
+    },
+    {
+      "path": "media/t4/optimize/css/b64289025fba609bfd0f9f3e44a88e44.css",
+      "sha256": "ef71b66e7ce22421d7f17aeded746799aa80a4e6c06a5ab8bdcaf244acdc66f8"
+    },
+    {
+      "path": "images/joomlart/icons/ic-chef.png",
+      "sha256": "c63dafc940ed829c66078ee3a346cd695028b8867ea529feaa9b1bca53eca36a"
+    },
+    {
+      "path": "images/joomlart/icons/food-delivery.png",
+      "sha256": "6815849620c1fe9fb11cf029f92cc196dc5e9443d99f5af924f7aa5e78b4840a"
+    },
+    {
+      "path": "images/joomlart/icons/menu.png",
+      "sha256": "b59c56ad101572ac8c9dd40f136d9d720d1fddc09a36231d34dd2504fa8db8d0"
+    },
+    {
+      "path": "images/joomlart/icons/online-order.png",
+      "sha256": "11b4619a3ee8fb2b0367e11d5d7e01db830cd12c7398d897855045e6d5c27b85"
+    },
+    {
+      "path": "images/joomlart/icons/quality.png",
+      "sha256": "f87d984b0fc0a34a4f289ca73f9c8b2a10007310b288b480089d948d187c4928"
+    },
+    {
+      "path": "images/joomlart/icons/entrances.png",
+      "sha256": "3f7857d9c5e4c455c149632ba5a77082553715ef1b26eddde24e2d30f3271cdf"
+    },
+    {
+      "path": "images/joomlart/authors/item-1.jpg",
+      "sha256": "a111f7221362da80929f86de82dc02311a37cdea8afc178b3651dc9ec45df528"
+    },
+    {
+      "path": "images/joomlart/authors/item-2.jpg",
+      "sha256": "c82ebb1b7b506fdb57140cd6b2d9307b625d3457e45843b25fb9408d2bc86e1b"
+    },
+    {
+      "path": "images/joomlart/authors/item-9.jpg",
+      "sha256": "4bf94d25b475a585048b0ef51675449f14e2269901cbc9901410f2f1791af403"
+    },
+    {
+      "path": "images/joomlart/others/pic-1.jpg",
+      "sha256": "e306aec2979236d5ebeff9462b24b9b6bb486b502572b7861c80a9507d268ac9"
+    },
+    {
+      "path": "media/t4/optimize/css/f69ae0103009590f1a9c674b7059f2c4.css",
+      "sha256": "4359ab33614f7c47b307e922d95673144271cce14fbfabe63cbc5a4f94c2f6d4"
+    },
+    {
+      "path": "images/joomlart/gallery/item-1.jpg",
+      "sha256": "850f979ab9c0575e22278b8b4306023466f9d204fd1eaf710e30cfe8824464eb"
+    },
+    {
+      "path": "images/joomlart/gallery/item-3.jpg",
+      "sha256": "8a3ee9ba619e5becd6609a75824167cb480c87b9d7a992dbfd3413d6c1477c60"
+    },
+    {
+      "path": "images/joomlart/gallery/item-9.jpg",
+      "sha256": "85ca661140c53c4d095bacd533bfd70887bfc7cffd0def3b4fb7fc484845d65c"
+    },
+    {
+      "path": "images/joomlart/gallery/item-9.jpg",
+      "sha256": "85ca661140c53c4d095bacd533bfd70887bfc7cffd0def3b4fb7fc484845d65c"
+    },
+    {
+      "path": "images/joomlart/gallery/item-4.jpg",
+      "sha256": "26106f274ef48908861c3adbd90de102403a5a907228ed64e9ca33a0ac9d3f99"
+    },
+    {
+      "path": "images/joomlart/gallery/item-7.jpg",
+      "sha256": "a6c5a03212d1714f6213a47a5e4f808c0dffe650b5886285b1f75d91906bce92"
+    },
+    {
+      "path": "images/joomlart/gallery/item-6.jpg",
+      "sha256": "fedd116be8391e1ecdf582069c4e6de5331cbd98ce0c2abb361e517b0df37cfa"
+    },
+    {
+      "path": "media/t4/optimize/css/412babd2e7d65b01f8501d6bf187725b.css",
+      "sha256": "ef71b66e7ce22421d7f17aeded746799aa80a4e6c06a5ab8bdcaf244acdc66f8"
+    },
+    {
+      "path": "images/joomlart/authors/item-3.jpg",
+      "sha256": "41d3594e96d4aa422747f676d79863c23eefdfaedd9737bc053b35381c5b3717"
+    },
+    {
+      "path": "images/joomlart/authors/item-6.jpg",
+      "sha256": "1967bed8ccb69bcc3849f210950ac9284892a555add5b9b95c773ab1bdfe7d8f"
+    },
+    {
+      "path": "images/joomlart/authors/item-5.jpg",
+      "sha256": "4134c342fc5714bfac6249bde29a04d6585d28c88c21a48350d3d37582b9d842"
+    },
+    {
+      "path": "media/t4/optimize/css/10986b76965d2225fa827981204928b3.css",
+      "sha256": "4359ab33614f7c47b307e922d95673144271cce14fbfabe63cbc5a4f94c2f6d4"
+    },
+    {
+      "path": "images/joomlart/others/pic-6.jpg",
+      "sha256": "3eb9206aab75dfec3385801cae2da64b1f431e2d6a63f8a07a936777e0d4f434"
+    },
+    {
+      "path": "images/joomlart/others/pic-5.jpg",
+      "sha256": "4f962269a6d821f2a78df6008913fc0d137d1978c9ea3fe13ee16d4b0f24e36e"
+    },
+    {
+      "path": "images/joomlart/others/pic-7.jpg",
+      "sha256": "34af255a10b6615f09d0af17a1285e637f9244f8902c7624d04f355d2d1e893f"
+    },
+    {
+      "path": "media/vendor/joomla-custom-elements/css/joomla-alert.min.css",
+      "sha256": "df8eb5ad4051778586df18f3e6a7d3368820b8e8134751fa5ac845cead9318cb"
+    },
+    {
+      "path": "media/t4/optimize/css/3c182a625bffda89131f63009540a493.css",
+      "sha256": "9c20d4721d1e8fcd505942efbf2b38a38eb9335af32307d1446c550abab08860"
+    },
+    {
+      "path": "media/system/js/keepalive.min.js",
+      "sha256": "983c4e677c121da92edce183d530881200e0ce545ddca1174bdb3eedb7588619"
+    },
+    {
+      "path": "media/system/js/fields/validate.min.js",
+      "sha256": "2eb3c772ac894af82059fcf115b2ee545599cacf490eae2826c6e71a069c1f37"
+    },
+    {
+      "path": "media/system/js/joomla-hidden-mail.min.js",
+      "sha256": "1aacba2d5d0e5f070a52691efbf51b7183bba1fe42c6569ed5f2025c6e409f19"
+    },
+    {
+      "path": "media/system/js/messages.min.js",
+      "sha256": "09426cb3251a9408374f3f37bb5ec75a921c2e71d8717a83e7ab0acf16addf0a"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.woff2",
+      "sha256": "8ea8791754915a898a3100e63e32978a6d1763be6df8e73a39d3a90d691cdeef"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.woff",
+      "sha256": "f9217f66874b0c01cd8c10b6a295dbc4f609acb6f5adc41c37da46641b57eb02"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.ttf",
+      "sha256": "cda59d6efffa685830fd95b55f64ae9cb51279cd34b2410b69f84c7ec30157d9"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.woff2",
+      "sha256": "e42a88444448ac3d60549cc7c1ff2c8a9cac721034c073d80a14a44e79730cca"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.woff",
+      "sha256": "cb9e9e693192413cde2b1f21c1dc1d44b6fe7b27cc2b458e8b359d18f9ff8f4e"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.ttf",
+      "sha256": "e8711bbb871afd8e9dea60e16d30f00c7e4837bbc9807065017475b849fa2313"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.woff2",
+      "sha256": "9834b82ad26e2a37583d22676a12dd2eb0fe7c80356a2114d0db1aa8b3899537"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.woff",
+      "sha256": "3f6d3488cf65374f6f676c315340b0ac2be832bd55240c809448e36ef9b96326"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.ttf",
+      "sha256": "af6397503fcefbd613976c21ad5c1e37298c18bbe07d096db03ccd3af6e05ba8"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.woff2",
+      "sha256": "2adefcbc041e7d18fcf2d417879dc5a09997aa64d675b7a3c4b6ce33da13f3fe"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.woff",
+      "sha256": "ba0c59deb5450f5cb41b3f93609ee2d0d995415877ddfa223e8a8a7533474f07"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.ttf",
+      "sha256": "aa58f33f239a0fb02f5c7a6c45c043d7a9ac9a093335806694ecd6d4edc0d6a8"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome/fonts/fontawesome-webfont.svg",
+      "sha256": "ad6157926c1622ba4e1d03d478f1541368524bfc46f51e42fe0d945f7ef323e4"
+    },
+    {
+      "path": "templates/ja_fresco/js/owl-carousel/owl.video.play.png",
+      "sha256": "0436045686fddf10ccbbe2568e0cbffb457e7de7d43d1115c0056e81e97149ff"
+    },
+    {
+      "path": "templates/ja_fresco/js/cobox/css/img/blank.gif",
+      "sha256": "b1442e85b03bdcaf66dc58c7abb98745dd2687d86350be9a298a1d9382ac849b"
+    },
+    {
+      "path": "templates/ja_fresco/js/cobox/css/img/nav.png",
+      "sha256": "75ba57142b3d8ca6283632cc51aabb403183df7b156c468e5685d72859f5404d"
+    },
+    {
+      "path": "templates/ja_fresco/js/cobox/css/img/loading.gif",
+      "sha256": "225aa88b6ab02c06222ec9468d62e15fa188e39cdb9431d1f55401ad380753ed"
+    }
+  ],
+  "citedByContent": [
+    {
+      "file": "images/joomlart/hero/item-1.jpg",
+      "usedBy": ["hero/home-hero.items[0].image_decor"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/feature/item-1.jpg",
+      "usedBy": ["features_intro/home-services.items[0].img_icon"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/feature/item-2.jpg",
+      "usedBy": ["features_intro/home-services.items[1].img_icon"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/feature/item-3.jpg",
+      "usedBy": ["features_intro/home-services.items[2].img_icon"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/gallery/item-6.jpg",
+      "usedBy": [
+        "features_intro/home-events.items[0].img_bg",
+        "menu/menu-grid.items[4].img_icon",
+        "gallery/home-gallery-1.items[5].gallery_image",
+        "gallery/home-gallery-2.items[5].gallery_image",
+        "gallery/gallery-one.items[9].gallery_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/gallery/item-4.jpg",
+      "usedBy": [
+        "features_intro/home-events.items[1].img_bg",
+        "menu/menu-grid.items[3].img_icon",
+        "gallery/home-gallery-1.items[3].gallery_image",
+        "gallery/gallery-two.items[5].gallery_image",
+        "gallery/gallery-one.items[5].gallery_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/hero/item-2.jpg",
+      "usedBy": ["features_intro/home-visit.items[0].img_icon"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/hero/item-3.jpg",
+      "usedBy": ["features_intro/home-visit.items[1].img_icon", "features_intro/about-intro.img"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/icons/ic-chef.png",
+      "usedBy": ["features_intro/about-features.items[0].img_icon"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/icons/food-delivery.png",
+      "usedBy": ["features_intro/about-features.items[1].img_icon"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/icons/menu.png",
+      "usedBy": ["features_intro/about-features.items[2].img_icon"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/icons/online-order.png",
+      "usedBy": ["features_intro/about-features.items[3].img_icon"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/icons/quality.png",
+      "usedBy": ["features_intro/about-features.items[4].img_icon"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/icons/entrances.png",
+      "usedBy": ["features_intro/about-features.items[5].img_icon"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/hero/item-10.jpg",
+      "usedBy": ["menu/menu-list-1.menu_image", "menu/menu-list-2.menu_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/gallery/item-1.jpg",
+      "usedBy": [
+        "menu/menu-grid.items[0].img_icon",
+        "gallery/home-gallery-1.items[0].gallery_image",
+        "gallery/home-gallery-2.items[3].gallery_image",
+        "gallery/gallery-two.items[0].gallery_image",
+        "gallery/gallery-one.items[0].gallery_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/gallery/item-2.jpg",
+      "usedBy": [
+        "menu/menu-grid.items[1].img_icon",
+        "gallery/home-gallery-1.items[1].gallery_image",
+        "gallery/gallery-two.items[2].gallery_image",
+        "gallery/gallery-one.items[2].gallery_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/gallery/item-3.jpg",
+      "usedBy": [
+        "menu/menu-grid.items[2].img_icon",
+        "gallery/home-gallery-1.items[2].gallery_image",
+        "gallery/gallery-two.items[3].gallery_image",
+        "gallery/gallery-one.items[3].gallery_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/gallery/item-10.jpg",
+      "usedBy": [
+        "menu/menu-grid.items[5].img_icon",
+        "gallery/home-gallery-2.items[2].gallery_image",
+        "gallery/gallery-two.items[1].gallery_image",
+        "gallery/gallery-one.items[1].gallery_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/gallery/item-5.jpg",
+      "usedBy": [
+        "gallery/home-gallery-1.items[4].gallery_image",
+        "gallery/home-gallery-2.items[4].gallery_image",
+        "gallery/gallery-two.items[6].gallery_image",
+        "gallery/gallery-one.items[6].gallery_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/gallery/item-7.jpg",
+      "usedBy": [
+        "gallery/home-gallery-2.items[0].gallery_image",
+        "gallery/gallery-two.items[8].gallery_image",
+        "gallery/gallery-one.items[8].gallery_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/gallery/item-8.jpg",
+      "usedBy": [
+        "gallery/home-gallery-2.items[1].gallery_image",
+        "gallery/gallery-two.items[7].gallery_image",
+        "gallery/gallery-one.items[7].gallery_image"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/gallery/item-9.jpg",
+      "usedBy": ["gallery/gallery-two.items[4].gallery_image", "gallery/gallery-one.items[4].gallery_image"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/authors/item-1.jpg",
+      "usedBy": [
+        "teams/about-team.items[0].img",
+        "teams/chiefs-team.items[0].img",
+        "posts/valentines-day-at-soul-kitchen.author_avatar",
+        "posts/mother-s-day-lunch-special.author_avatar"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/authors/item-2.jpg",
+      "usedBy": ["teams/about-team.items[1].img", "teams/chiefs-team.items[1].img"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/authors/item-9.jpg",
+      "usedBy": ["teams/about-team.items[2].img", "teams/chiefs-team.items[2].img"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/authors/item-3.jpg",
+      "usedBy": ["teams/chiefs-team.items[3].img"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/authors/item-6.jpg",
+      "usedBy": ["teams/chiefs-team.items[4].img"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/authors/item-5.jpg",
+      "usedBy": [
+        "teams/chiefs-team.items[5].img",
+        "posts/soul-kitchen-kumquat-thyme-cocktail.author_avatar",
+        "posts/an-interview-with-chef-milo-ferndandes.author_avatar"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/logo/logo.png",
+      "usedBy": [
+        "happyhours/offer-hour-1.logo_img",
+        "happyhours/offer-hour-2.logo_img",
+        "happyhours/offer-hour-3.logo_img"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/others/pic-6.jpg",
+      "usedBy": ["happyhours/offer-hour-1.hp_img"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/others/pic-5.jpg",
+      "usedBy": ["happyhours/offer-hour-2.hp_img"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/others/pic-7.jpg",
+      "usedBy": ["happyhours/offer-hour-3.hp_img"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/others/pic-2.jpg",
+      "usedBy": [
+        "posts/valentines-day-at-soul-kitchen.body",
+        "posts/mother-s-day-lunch-special.body",
+        "posts/soul-kitchen-kumquat-thyme-cocktail.body",
+        "posts/an-interview-with-chef-milo-ferndandes.body",
+        "posts/culinary-journeys-around-the-world.body",
+        "posts/savoring-the-art-of-cooking.body"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blogs/food/intro/item-3.jpg",
+      "usedBy": [
+        "posts/valentines-day-at-soul-kitchen.body",
+        "posts/mother-s-day-lunch-special.body",
+        "posts/soul-kitchen-kumquat-thyme-cocktail.body",
+        "posts/soul-kitchen-kumquat-thyme-cocktail.cover",
+        "posts/an-interview-with-chef-milo-ferndandes.body",
+        "posts/culinary-journeys-around-the-world.body"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blogs/food/intro/item-2.jpg",
+      "usedBy": [
+        "posts/valentines-day-at-soul-kitchen.body",
+        "posts/mother-s-day-lunch-special.body",
+        "posts/mother-s-day-lunch-special.cover",
+        "posts/soul-kitchen-kumquat-thyme-cocktail.body",
+        "posts/an-interview-with-chef-milo-ferndandes.body",
+        "posts/culinary-journeys-around-the-world.body"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blogs/food/intro/item-1.jpg",
+      "usedBy": ["posts/valentines-day-at-soul-kitchen.cover"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blogs/food/intro/item-4.jpg",
+      "usedBy": ["posts/an-interview-with-chef-milo-ferndandes.cover"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blogs/food/intro/item-5.jpg",
+      "usedBy": ["posts/culinary-journeys-around-the-world.cover"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/authors/item-10.jpg",
+      "usedBy": [
+        "posts/culinary-journeys-around-the-world.author_avatar",
+        "posts/savoring-the-art-of-cooking.author_avatar",
+        "posts/farm-to-fork-sustainable-eating.author_avatar"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blogs/food/intro/item-6.jpg",
+      "usedBy": ["posts/savoring-the-art-of-cooking.cover"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blogs/food/intro/item-7.jpg",
+      "usedBy": ["posts/farm-to-fork-sustainable-eating.cover"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blogs/food/intro/item-8.jpg",
+      "usedBy": ["posts/rediscovering-heirloom-recipes.cover"],
+      "inSnapshot": false
+    },
+    {
+      "file": "images/joomlart/authors/item-4.jpg",
+      "usedBy": [
+        "posts/rediscovering-heirloom-recipes.author_avatar",
+        "posts/gastronomic-adventures-with-exotic-dishes.author_avatar",
+        "posts/healthy-eating-for-body-and-soul.author_avatar"
+      ],
+      "inSnapshot": false
+    },
+    {
+      "file": "images/joomlart/blogs/food/intro/item-9.jpg",
+      "usedBy": ["posts/gastronomic-adventures-with-exotic-dishes.cover"],
+      "inSnapshot": false
+    },
+    {
+      "file": "images/joomlart/blogs/food/detail/item-1.jpg",
+      "usedBy": ["posts/healthy-eating-for-body-and-soul.body"],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blogs/food/intro/item-10.jpg",
+      "usedBy": ["posts/healthy-eating-for-body-and-soul.cover"],
+      "inSnapshot": false
+    },
+    {
+      "file": "images/joomlart/others/pic-1.jpg",
+      "usedBy": [
+        "masthead/blog.background",
+        "masthead/contact.background",
+        "masthead/chiefs.background",
+        "masthead/about.background",
+        "masthead/post.background"
+      ],
+      "inSnapshot": true
+    }
+  ]
+}

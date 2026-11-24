@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-741-emdash-fresco-road-precheck",
+  "kind": "fix",
+  "title": "JA Fresco 0.1.0 clears the Road to live pre-check: every printed interface word is covered by a personalize rule, no # link field, only defined design-system roles, a declared theme toggle selector, and a kit json that agrees with the content map on the approved image set",
+  "pr": 741,
+  "area": "templates/emdash/fresco",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From packages/cms/tracy-emdash-theme-fresco run `node --test tests/road-precheck.test.mjs`: the LANG-2 derivation (every text a component prints, visible or as an accessible name, is covered by a labels, copy, facts, identity, blocks, rewrite rule or a keptText entry; removing hero.title or book_btn from the labels rule is found), PAGE-5, PAGE-8, ABOUT-2, DEF-1, TEXT-1, CON-1/CON-2, FORM-1 and IDENT-2 pins.",
+    "S2: Read seed/seed.json and seed/site-model.json of that package for a `link` field equal to `#`.",
+    "S3: Read every stylesheet under src/styles for `var(--ds-c-<role>` and compare the roles with the ones the slot defines (packages/design/tracy-ds-slot/src/tokens56.mjs COLOUR_TOKENS and role-variables.mjs).",
+    "S4: Read packages/design/tracy-ds-slot/templates/emdash-tracy-fresco.json for selectors.themeToggle.",
+    "S5: Read contracts/0.1.0/template-kit.json and content-map.json of the package: slot types against their samples, the kit's slot ids, the kit's approval; with TRACY_RELEASE_DIR set to a release folder, the template-kit.json inside its kit zip against the contract file."
+  ],
+  "expect": [
+    "Every test of S1 reports ok (a deleted or renamed test turns the case red); on the package of 5598a0fcf the file does not exist and the pins fail.",
+    "No link field of the seed or the site model is `#` (13 were on 5598a0fcf).",
+    "No stylesheet reads a `--ds-c-*` role the slot does not define (`--ds-c-ink-raised` was read on 5598a0fcf).",
+    "The slot contract declares `selectors.themeToggle` (it declared none on 5598a0fcf, so MODE-2 was unmeasurable).",
+    "No content-map slot has a type that contradicts its sample (footer_link was `url` with the sample `Reservation Policy` on 5598a0fcf), the kit names only slots of the content map, and its approval is by hano-xbt on `imagesSha256` aa181ec3ba6d80067b4a2a93eb7ddf85e913bbdc063fa52c5924b8b7b2bef703, the image set the kit lists, with its 16 EmDash-inherent errors; given a release folder, its kit zip holds the contract's template-kit.json byte for byte."
+  ],
+  "selectors": {
+    "grader": "tests/regression/scripts/REG-PR-741-emdash-fresco-road-precheck.mjs (one ok line per expect; REPO_ROOT points it at another checkout, TRACY_RELEASE_DIR at a release folder)"
+  },
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-741-emdash-fresco-road-precheck.mjs"],
+    "needs": [],
+    "timeout_s": 600
+  }
+}

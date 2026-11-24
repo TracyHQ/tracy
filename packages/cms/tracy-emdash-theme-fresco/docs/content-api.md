@@ -1,0 +1,7 @@
+# Content API and publication
+
+Read ../AGENTS.md. Supported entry points: the EmDash admin (`/_emdash/admin`), its REST API (`/_emdash/api/…`, token from `tools/mint-admin.cjs`, scope: the resident agent) and the seed importer `tools/seed-apply.mjs`. Confirm origin and locale, read the published state and any draft, make the smallest change, reject a concurrent revision, and publish only when asked: writes through the API are drafts and only `publish` reaches the public page (the REST read overlays drafts, so check the public page). An entry's public id is its slug; the real id is `entry.data.id`. Never edit content through SQL and never run `emdash seed … --on-conflict update` on a site with editors. `tools/seed-apply.mjs` keeps receipts (`data/seed-receipts.json`): an entry equal to the seed is adopted, one the editor changed is kept, one both changed is a conflict that needs a human (`--force` is never automatic).
+
+## Tracy's Content API and provenance stamps
+
+`seed/content-api-map.json` maps every collection: `pages` (type page, public path in the field `path`), `posts` (article, path in `path`), `chrome` (shared; the entry the header and footer print), all others generic with no page of their own. The image builds the reader on (`TRACY_CONTENT_API_SCALARS`, default 1). Each view stamps the elements that print an entry field with `data-tracy-src` through `src/lib/stamps.ts` (only on requests carrying the preview header). Deliberately unstamped: the menu, words the template prints from `ui-words.ts`, formatted dates and counts.
