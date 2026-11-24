@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Impact",
-	"generatedAt": "2026-11-24T11:43:01.501Z",
+	"generatedAt": "2026-11-24T11:52:42.120Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,7 +75,7 @@
 		"docs/content-model.md": "sha256:f02342db67a0aba7f74154a220484a522f5c6ea0d278d9bf49f57e9e5b524023",
 		"docs/content-rules.md": "sha256:e9696061af5fef30089d714cc5b3d227f7cfe9e94462e73c7f92d24c0a9046da",
 		"docs/design-system.md": "sha256:fd7e6f1483f84b6e5fbf4eab56b1cc43435e800665066e81385691b8f12018b3",
-		"docs/generated/inventory.json": "sha256:7f0c7b5b8a6cf04a07c546f2fb02ac7fe4ad962b8fc8d5e54dac6b5625e2964a",
+		"docs/generated/inventory.json": "sha256:cf0b9da31e8fe1c797f19551b2e5146ec7eeb7eaff9da1a96a5be1dfd2946cf6",
 		"docs/generated/inventory.md": "sha256:9baf055064d1df96f4f9d5c77a942540ccd7c30a3cc1475f74eab4e4c4d1a8c7",
 		"docs/install.md": "sha256:6a2658c2c19c4f884e006207056b221ea8a9a4113a3c908f00ce5b2f3553981f",
 		"docs/languages.md": "sha256:46108a25ebd4d4826848ba520bfb599e1f3f99553b0bbe2d0cd73064da175cb5",
