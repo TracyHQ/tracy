@@ -25,7 +25,7 @@
       "node",
       "--test",
       "--test-reporter=tap",
-      "--test-name-pattern=EmDash|the kit records which sections|published public module",
+      "--test-name-pattern=EmDash|the kit records the sections|published public module",
       "--test-concurrency=1",
       "apps/tracy-web/test/template-readiness-kit-modules.test.mjs",
       "packages/cms/tracy-quickstart-tools/test/template-kit-emdash.test.mjs"
