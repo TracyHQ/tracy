@@ -23,7 +23,7 @@
     "display": ".im-hero-title",
     "heading": "main .im-section-title",
     "body": "main .im-intro-lead",
-    "button-primary": ".im-donate",
+    "button-primary": "main .im-btn",
     "card": "main .im-card-feature",
     "container": "main .im-container"
   },
