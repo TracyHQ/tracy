@@ -61,8 +61,8 @@
 	html[data-theme="dark"] .brand-when-light, html:not([data-theme="dark"]) .brand-when-dark { display: none; }
 
 	/* the Font Awesome glyphs the demo uses: the font ships under src/fonts, the code points are the ones the source prints */
-	.im-fa { font-family: "FA Solid"; font-weight: 900; font-style: normal; line-height: 1; display: inline-block; -webkit-font-smoothing: antialiased; }
-	.im-fa.is-brand { font-family: "FA Brands"; font-weight: 400; }
+	.im-fa { font-family: "FA Solid"; font-weight: 900; font-style: normal; line-height: 1; display: inline-block; -webkit-font-smoothing: antialiased; } /* ds-keep: the Font Awesome glyph font, an icon face, not a text role */
+	.im-fa.is-brand { font-family: "FA Brands"; font-weight: 400; } /* ds-keep: the Font Awesome glyph font, an icon face, not a text role */
 	.im-fa::before { content: var(--fa); }
 	.im-fa[data-icon="earth"] { --fa: "\f57d"; } .im-fa[data-icon="envelope"] { --fa: "\f0e0"; } .im-fa[data-icon="phone"] { --fa: "\f095"; }
 	.im-fa[data-icon="arrow"] { --fa: "\f178"; } .im-fa[data-icon="pin"] { --fa: "\f3c5"; } .im-fa[data-icon="bookmark"] { --fa: "\f02e"; }

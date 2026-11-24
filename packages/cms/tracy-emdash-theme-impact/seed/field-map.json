@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T08:30:39.565Z",
+  "generatedAt": "2026-11-24T09:01:19.927Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -1578,6 +1578,18 @@
         "kind": "business",
         "name": "identity"
       }
+    },
+    "chrome.home_events_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Home events label",
+      "role": "editorial.button_label"
+    },
+    "chrome.home_events_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Home events title",
+      "role": "editorial.heading"
     },
     "chrome.event_date_label": {
       "source": "text",

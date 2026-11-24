@@ -11,7 +11,7 @@
 	html[data-ds-worn] .im-brand .im-logo-ink { display: block; width: 211px; height: 61px; background: linear-gradient(var(--ds-c-on-ink, #fff), var(--ds-c-on-ink, #fff)); -webkit-mask: url("/brand/logo.png") center / contain no-repeat; mask: url("/brand/logo.png") center / contain no-repeat; }
 	.im-contact-top { display: none; list-style: none; margin: 0; padding: 0; gap: 64px; align-items: center; }
 	.im-contact-top li { display: flex; align-items: center; gap: 16px; }
-	.im-contact-top .im-contact-icon, .im-contact-icon { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; font-size: 24px; background: color-mix(in srgb, var(--color-on-ink) 10%, transparent); border-radius: 8px; color: var(--color-accent); }
+	.im-contact-top .im-contact-icon, .im-contact-icon { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; font-size: 24px; background: color-mix(in srgb, var(--color-on-ink) 10%, transparent); border-radius: var(--ds-card-radius, 8px); color: var(--color-accent); }
 	.im-contact-icon.is-warning { color: var(--color-warn); }
 	.im-contact-text { display: flex; flex-direction: column; }
 	.im-contact-sub { font-size: 16px; line-height: 26px; color: color-mix(in srgb, var(--color-on-ink) 70%, transparent); margin-bottom: 4px; }
@@ -32,7 +32,7 @@
 	.im-nav a { display: inline-flex; align-items: center; padding: 22px 32px; font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--color-heading); }
 	.im-nav a:hover, .im-nav li.is-active > a { color: var(--color-accent-text-hover); }
 	
-	.im-btn.im-donate { align-self: stretch; border-radius: 0; border-width: 0; padding: 22px 32px; min-width: 160px; }
+	.im-btn.im-donate { align-self: stretch; border-radius: var(--ds-btn-radius, 0); border-width: 0; padding: 22px 32px; min-width: 160px; }
 
 	/* off-canvas menu (below 992 px) */
 	.im-offcanvas { position: fixed; inset: 0; z-index: 60; visibility: hidden; }

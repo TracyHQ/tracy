@@ -1,15 +1,15 @@
 /* shared by the inner pages: the masthead band, the breadcrumb trail, the page body with its sidebar, pagination, the sidebar widgets */
 @layer components {
-	.im-masthead { position: relative; min-height: 136px; display: flex; align-items: center; justify-content: center; background: var(--color-ink) center / cover no-repeat; color: #fff; text-align: center; }
+	.im-masthead { position: relative; min-height: 136px; display: flex; align-items: center; justify-content: center; background: var(--color-ink) center / cover no-repeat; color: var(--ds-c-on-ink, #fff); text-align: center; }
 	@media (min-width: 992px) { .im-masthead { min-height: 350px; } }
 	.im-masthead::before { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, .35); }
 	.im-masthead-in { position: relative; }
-	.im-masthead-title { font-size: var(--h2-size); line-height: 1.1; margin: 0 0 24px; color: #fff; }
+	.im-masthead-title { font-size: var(--h2-size); line-height: 1.1; margin: 0 0 24px; color: #fff; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
 	.im-crumbs ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0; font-size: 14px; line-height: 26px; }
 	.im-crumbs li + li::before { content: "›"; margin-inline: 12px; opacity: .8; }
 	.im-crumbs a, .im-crumbs span { color: var(--color-fg); }
-	.im-crumbs.on-band a, .im-crumbs.on-band span { color: #fff; font-size: 16px; }
-	.im-crumbs.on-band li + li::before { color: #fff; }
+	.im-crumbs.on-band a, .im-crumbs.on-band span { color: #fff; font-size: 16px; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
+	.im-crumbs.on-band li + li::before { color: #fff; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
 	.im-crumb-bar { background: var(--color-line-soft); padding-block: 32px; }
 	html[data-theme="dark"] .im-crumb-bar { background: var(--color-surface-warm); }
 
@@ -20,7 +20,7 @@
 
 	.im-pagination { margin: 64px 0 0; }
 	.im-pagination ul { list-style: none; margin: 0; padding: 0; display: flex; justify-content: center; gap: 8px; }
-	.im-pagination a, .im-pagination span { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; padding: 0 8px; border-radius: 4px; background: var(--color-surface); color: var(--color-heading); font-size: 14px; font-weight: 500; }
+	.im-pagination a, .im-pagination span { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; padding: 0 8px; border-radius: var(--ds-input-radius, 4px); background: var(--color-surface); color: var(--color-heading); font-size: 14px; font-weight: 500; }
 	.im-pagination .is-current { background: var(--color-accent); color: var(--color-accent-on); }
 	.im-pagination a:hover { color: var(--color-accent-text-hover); }
 
@@ -35,10 +35,10 @@
 	.im-search-box button { width: 48px; border: 0; background: transparent; color: var(--color-heading); cursor: pointer; }
 	.im-recent { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
 	.im-recent li { display: flex; gap: 16px; align-items: flex-start; }
-	.im-recent-image { flex: 0 0 80px; } .im-recent-image img { display: block; width: 80px; height: 80px; object-fit: cover; border-radius: 4px; }
+	.im-recent-image { flex: 0 0 80px; } .im-recent-image img { display: block; width: 80px; height: 80px; object-fit: cover; border-radius: var(--ds-input-radius, 4px); }
 	.im-recent-title { font-size: 14px; line-height: 1.4; font-weight: 500; color: var(--color-heading); }
 	.im-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-	.im-tags li { padding: 4px 12px; border-radius: 4px; background: var(--color-surface); font-size: 12px; color: var(--color-heading); }
+	.im-tags li { padding: 4px 12px; border-radius: var(--ds-pill-radius, 4px); background: var(--color-surface); font-size: 12px; color: var(--color-heading); }
 	.im-list-head { margin-bottom: 64px; }
 }
 
@@ -52,8 +52,8 @@
 	.im-prose ul, .im-prose ol { margin: 0 0 24px; padding-left: 24px; }
 	.im-prose li { margin-bottom: 8px; }
 	.im-prose a { color: var(--color-accent-text); text-decoration: underline; }
-	.im-prose blockquote { margin: 40px 0; padding: 32px; border-radius: var(--ds-card-radius, 8px); background: var(--color-info); color: #fff; font-size: 18px; line-height: 1.6; }
-	.im-prose blockquote p { margin: 0; color: #fff; }
+	.im-prose blockquote { margin: 40px 0; padding: 32px; border-radius: var(--ds-card-radius, 8px); background: var(--color-info); color: #fff; font-size: 18px; line-height: 1.6; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
+	.im-prose blockquote p { margin: 0; color: #fff; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
 	.im-prose-full { margin: 0 0 24px; } .im-prose-full img { display: block; width: 100%; height: auto; border-radius: var(--ds-card-radius, 8px); }
 	.im-prose-row { display: grid; grid-template-columns: 1fr; gap: 24px; margin: 0 0 24px; }
 	@media (min-width: 576px) { .im-prose-row { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); } }

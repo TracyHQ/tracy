@@ -12,7 +12,7 @@
 	.im-contact-map a { display: flex; align-items: center; justify-content: center; height: 350px; border-radius: var(--ds-card-radius, 8px); background: var(--color-surface-warm); color: var(--color-heading); }
 	@media (min-width: 992px) { .im-contact-map a { height: 530px; } }
 	.im-contact-map a:focus-visible { outline: 1px solid var(--color-accent); outline-offset: 0; }
-	.im-map-place { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; max-width: calc(100% - 32px); padding: 8px 16px; border-radius: 50px; background: var(--color-bg); box-shadow: 0 2px 8px rgba(0, 0, 0, .12); font-size: 14px; }
+	.im-map-place { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; max-width: calc(100% - 32px); padding: 8px 16px; border-radius: var(--ds-pill-radius, 50px); background: var(--color-bg); box-shadow: 0 2px 8px rgba(0, 0, 0, .12); font-size: 14px; }
 	.im-map-place strong { font-weight: 500; }
 
 	/* the form */
@@ -40,7 +40,7 @@
 		display: inline-flex; align-items: center; gap: 8px; padding: 17px 32px; border: 0; border-radius: var(--ds-btn-radius, 8px);
 		background: var(--color-accent); color: var(--color-accent-on) !important; font: inherit; font-weight: var(--ds-weight-button, 500); line-height: 20px; cursor: pointer; transition: opacity .2s;
 	}
-	.im-contact .ec-form .ec-form-submit::after { content: "\f178"; font-family: "FA Solid"; font-weight: 900; font-size: 14px; }
+	.im-contact .ec-form .ec-form-submit::after { content: "\f178"; font-family: "FA Solid"; font-weight: 900; font-size: 14px; } /* ds-keep: the Font Awesome glyph font, an icon face, not a text role */
 	.im-contact .ec-form .ec-form-submit:hover:not(:disabled), .im-contact .ec-form .ec-form-submit:focus-visible { opacity: .85; }
 	.im-contact .ec-form .ec-form-submit:disabled { opacity: .6; cursor: not-allowed; }
 	.im-contact .ec-form .ec-form-status { padding: 10px 14px; border-left: 3px solid var(--color-accent); background: var(--color-surface); }

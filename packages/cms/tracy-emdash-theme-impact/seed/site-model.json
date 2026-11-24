@@ -1277,6 +1277,14 @@
           "type": "image"
         },
         {
+          "name": "home_events_label",
+          "type": "text"
+        },
+        {
+          "name": "home_events_title",
+          "type": "text"
+        },
+        {
           "name": "event_date_label",
           "type": "text"
         },
@@ -3169,6 +3177,8 @@
         "newsletter_email_label": "Email",
         "newsletter_button": "Subscribe",
         "newsletter_done": "Thank you for subscribing.",
+        "home_events_label": "Coming soon",
+        "home_events_title": "You can check out our work our best events.",
         "event_date_label": "Event date:",
         "event_time_label": "Event time:",
         "event_place_label": "Location:",
