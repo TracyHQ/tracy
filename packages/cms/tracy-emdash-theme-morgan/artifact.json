@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Morgan",
-	"generatedAt": "2026-11-24T19:36:18.482Z",
+	"generatedAt": "2026-11-24T19:47:05.007Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -70,14 +70,14 @@
 	"checksums": {
 		"AGENTS.md": "sha256:ecbb2c381904b291ec10ea7aea79ec2361e96d948ebd15a982c0cc64a927b1c7",
 		"docs/architecture.md": "sha256:bf5b35d3f3e34b893e6aab99e7748dc2a53be4f5ae9170efd24b9ce9893447db",
-		"docs/checks-and-recovery.md": "sha256:1acdc07a8c01076bb0e593af27717d1bb023bef9df3f9621c04622cdb7404bce",
+		"docs/checks-and-recovery.md": "sha256:cda0cf7a8766f3ca53a989b20587c90e924563a00ab0ec5b0c1b73221c1c4093",
 		"docs/content-api.md": "sha256:8cbf5a19adfc0e5ebb4b5264ee17395702785446d3e1339bceb0ac137b57b9cd",
 		"docs/content-model.md": "sha256:66d6432cb585decaac52da09a4d55a4f813502c164b17c40cb01b57f19bda169",
 		"docs/content-rules.md": "sha256:abcc6bab20fb84f34f8c1186a95622c6491005a92845cfd6f7c522d2fbf8cf9d",
 		"docs/design-system.md": "sha256:9857b016d93757429556fba09a6428315c689350896af960e7a2bdf9de562a78",
 		"docs/generated/inventory.json": "sha256:44081535c814f30f6791f252c7bf589c6ae1652ec8b8e047f9ad9b1e0631cbac",
 		"docs/generated/inventory.md": "sha256:e45aacba7d14b832d29120febc13d83d1b876b3d6cac4b0c1e0d22c8e70485c4",
-		"docs/install.md": "sha256:3a2411d9a6041c6279f69be6bb89935b7a956cfc43287f3260908b828fffb286",
+		"docs/install.md": "sha256:702d66fa1c0ca82fc23f7d7c940d029ee3af2fc0713a925bd54f3e30aa6243d2",
 		"docs/languages.md": "sha256:46108a25ebd4d4826848ba520bfb599e1f3f99553b0bbe2d0cd73064da175cb5",
 		"template.config.json": "sha256:5901eed4a7a564104ff92e81452b1612316b7d049a74035b15ca6fc22447717e",
 		"seed/seed.json": "sha256:4dcd04c38caaa5df36a3b7d9a14b60033c84f33a066fe6c180f77b938ff0d5fd",
