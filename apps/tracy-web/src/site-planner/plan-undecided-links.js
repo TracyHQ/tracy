@@ -131,6 +131,68 @@ export function withItemLinksToTheirItems(plan, kit) {
 }
 
 /**
+ * A link whose words are the template's fixed text (`fixedLabel.rule: template-words`) and whose address is outside the site (a
+ * CMS or vendor credit: "Joomla!", "GNU General Public License") can lead nowhere else: no door of the site holds its address,
+ * and its words are not the customer's. When the line printing it is a fixed text the kit can hide (`canHide`), the plan's
+ * keep of the link is a hide, with that line, so the credit leaves whole. Dev lat32 (23/11/2026): JA Boxing's plan kept the
+ * footer's two credit links leading to the home page, and the write step refused both (two read-back blocks), while the
+ * credit stayed printed.
+ * @param {any} plan
+ * @param {any} kit
+ */
+export function withCreditLinksHidden(plan, kit) {
+  if (!plan || typeof plan !== 'object' || !kit || typeof kit !== 'object') return plan
+  const blocks = new Map(each(kit.blocks).map((b) => [b?.id, b]))
+  let changed = false
+  const fix = (decision) => {
+    if (!decision || typeof decision !== 'object' || decision.decision !== 'keep') return decision
+    const block = blocks.get(decision.block)
+    if (!block || !Array.isArray(decision.links)) return decision
+    const kitLinks = new Map(each(block.links).map((l) => [l?.id, l]))
+    const credits = decision.links
+      .map((l) => ({ entry: l, kitLink: kitLinks.get(l?.link) }))
+      .map(({ entry, kitLink }) => ({
+        entry,
+        kitLink,
+        line:
+          kitLink?.fixedLabel?.rule === 'template-words' && /^https?:\/\//i.test(String(kitLink.target ?? ''))
+            ? each(block.fixedText).find(
+                (t) =>
+                  t?.canHide === true && t.id && String(t.text ?? '').includes(String(kitLink.label ?? '\0'))
+              )
+            : null
+      }))
+      .filter((c) => c.line)
+    if (!credits.length) return decision
+    changed = true
+    const leaving = new Set(credits.map((c) => c.entry))
+    const hidden = new Set(each(decision.hiddenSlots).map((h) => h?.slot))
+    const add = []
+    for (const { kitLink, line } of credits) {
+      if (!hidden.has(kitLink.id)) {
+        hidden.add(kitLink.id)
+        add.push({ slot: kitLink.id, why: 'a credit link of the template: it leaves with its line' })
+      }
+      if (!hidden.has(line.id)) {
+        hidden.add(line.id)
+        add.push({ slot: line.id, why: "the template's credit line, not the business's words" })
+      }
+    }
+    return {
+      ...decision,
+      links: decision.links.filter((l) => !leaving.has(l)),
+      hiddenSlots: [...each(decision.hiddenSlots), ...add]
+    }
+  }
+  const sharedBlocks = each(plan.sharedBlocks).map(fix)
+  const pages = each(plan.pages).map((p) =>
+    p?.decision === 'keep' && Array.isArray(p.blocks) ? { ...p, blocks: p.blocks.map(fix) } : p
+  )
+  if (!changed) return plan
+  return { ...plan, ...(Array.isArray(plan.sharedBlocks) ? { sharedBlocks } : {}), pages }
+}
+
+/**
  * A kept link's `labelSlot` is the kit's (R10b holds it to the kit's label slot of that link): a link entry that names none, or
  * another slot, takes the kit's. There is one answer, and the planner's slip costs a fix round. Dev lat31b (23/11/2026):
  * JA Boxing's header links named no label slot though the kit ties them to the masthead's titles.

@@ -14,7 +14,7 @@ import { createHash } from 'node:crypto'
 import { menuRows } from '../lib/joomla-menu-rows.js'
 import { answerWords, doorCall } from './settings-door.js'
 import { addressAfter, keptAt, routeLines, routeOrders } from './page-route-lines.js'
-import { freeHolder } from './page-route-parent.js'
+import { articleAddress, demoArticleAlias, freeHolder } from './page-route-parent.js'
 import { MENU_ITEM_ALIAS_DOOR } from './plugin-doors.js'
 import { visibleText } from '../lib/site-copy/emphasis-markup.js'
 
@@ -193,7 +193,7 @@ export async function runRouteStage({
   const byId = new Map(rows.map((r) => [Number(r.id), r]))
   for (const order of articlePages) {
     const parent = byId.get(order.parentItemId)
-    if (parent) where.set(order.pageId, `${addressAfter(parent, rows, landed)}/${order.slug}`)
+    if (parent) where.set(order.pageId, articleAddress(addressAfter(parent, rows, landed), order))
   }
   at.forEach((p, i) => {
     if (where.get(p.id) !== p.path) at[i] = { ...p, path: where.get(p.id) }
@@ -211,17 +211,19 @@ export async function runRouteStage({
  * @returns {Promise<{ restored: object[], stop?: { code: string, reason: string } }>}
  */
 export async function restoreRoutes({ door, siteKey, routes }) {
+  // An article page's demo alias is its address's last part without the id the router prints before it.
+  const demoAlias = (r) => (r?.itemId ? lastPart(r.from) : demoArticleAlias(r))
   const renamed = each(routes).filter(
     (r) =>
       (r?.itemId || (r?.via === 'article' && r.articleId)) &&
       (r.move?.outcome === 'written' ||
-        (['written', 'already'].includes(r.outcome) && lastPart(r.from) && lastPart(r.from) !== r.slug))
+        (['written', 'already'].includes(r.outcome) && demoAlias(r) && demoAlias(r) !== r.slug))
   )
   if (!renamed.length) return { restored: [] }
   const call = doorCall(door, siteKey)
   const restored = []
   for (const route of renamed) {
-    const alias = lastPart(route.from)
+    const alias = demoAlias(route)
     try {
       if (route.move?.outcome === 'written') {
         await call('content.update', {

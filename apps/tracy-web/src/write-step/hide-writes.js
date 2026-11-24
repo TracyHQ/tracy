@@ -11,6 +11,17 @@ import { answerWords, doorCall, readRow } from './settings-door.js'
 
 const digest = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex')
 
+/** The tag a kit page lists, by its row id, when the page is a tag's own listing (its body's owner is the tag); else null. */
+export function tagListingOf(page, kit) {
+  const blocks = new Map((kit?.blocks ?? []).map((b) => [b?.id, b]))
+  for (const id of new Set(Object.values(page?.blocks ?? {}).flat())) {
+    const source = blocks.get(id)?.source
+    const match = /^tag-(\d+)$/.exec(String(source?.owner ?? ''))
+    if (match && String(source.ownerKind ?? '').startsWith('tag listing')) return Number(match[1])
+  }
+  return null
+}
+
 /** How a thing taken off the site is read back: its row, unpublished. */
 export const unpublishedRead = (kind, id) => ({ ordered: '0', readFrom: readRow(kind, id, 'published') })
 
@@ -62,11 +73,41 @@ export async function dropPages({ door, siteKey, pages, results, kit, plan }) {
   }
   let wrote = false
   for (const { page, depends } of pages) {
+    const tag = rowsOpening(page, rows).length ? null : tagListingOf(page, kit)
+    // A dropped page nothing of its own opens (a category view under the blog's item) has nothing to unpublish, so a kept post
+    // under it loses nothing. Dev lat32 (23/11/2026): JA Diner's dropped category page read as a refused hide.
+    if (!tag && !rowsOpening(page, rows).length && !articleOwners(page, kit).length) {
+      results.set(page.id, { status: 'skipped', reason: 'no published menu item opens this dropped page' })
+      continue
+    }
     if (depends) {
       results.set(page.id, {
         status: 'failed',
         reason: `the plan drops this page, but ${depends} needs its path: an unpublished item takes it with it, so it stays published`
       })
+      continue
+    }
+    // A tag's page is its tag: unpublished, no article prints the tag any more, and its page answers nothing. Before (dev lat32,
+    // 23/11/2026), JA Diner's kept posts printed the demo's tags, each leading to a tag page of demo articles.
+    if (tag) {
+      try {
+        const current = await call('content.get', { kind: 'tag', id: tag })
+        if (Number(current?.item?.id) !== tag || current?.item?.published == null)
+          throw new Error(`The site did not return the published state of tag-${tag}.`)
+        if (Number(current.item.published) === 1) {
+          await call('content.update', { apply_id: applyId, kind: 'tag', id: tag, fields: { published: 0 } })
+          wrote = true
+        }
+        results.set(page.id, {
+          status: 'hidden',
+          reason:
+            'the plan drops this tag page: its tag is unpublished, so no article prints it and the page answers nothing',
+          ordered: Number(current.item.published) === 1 ? '0' : String(current.item.published),
+          readFrom: readRow('tag', tag, 'published')
+        })
+      } catch (error) {
+        results.set(page.id, { status: 'failed', reason: error.message })
+      }
       continue
     }
     const articles = articleOwners(page, kit)
@@ -85,10 +126,6 @@ export async function dropPages({ door, siteKey, pages, results, kit, plan }) {
       continue
     }
     const opening = rowsOpening(page, rows)
-    if (!opening.length && !articles.length) {
-      results.set(page.id, { status: 'skipped', reason: 'no published menu item opens this dropped page' })
-      continue
-    }
     try {
       let articleState = '0'
       for (const id of articles) {

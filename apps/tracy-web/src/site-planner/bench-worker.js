@@ -50,8 +50,9 @@ import { plannerPrompt } from './planner-prompt.js'
 import { withHiddenLinkLabels, withHiddenListLinks } from './plan-hidden-links.js'
 import { withDemoVideosHidden } from './plan-demo-videos.js'
 import { withWrittenRowFieldsShown } from './plan-row-fields.js'
-import { withPageBlocksRepaired } from './plan-shape-repairs.js'
+import { withPageBlocksRepaired, withUnsharedBlocksOnTheirPage } from './plan-shape-repairs.js'
 import {
+  withCreditLinksHidden,
   withItemLinksToTheirItems,
   withKitLabelSlots,
   withUndecidedLinksSettled
@@ -333,10 +334,12 @@ function writesInTurns({ row, ready }) {
 // - a field of a kept list row that the decision both writes and hides is written (plan-row-fields.js);
 // - a fact id the planner shortened is made whole when exactly one fact of the brief starts with it (plan-fact-ids.js);
 // - a page's blocks written under another name are its blocks, and a shared block decided again on a page is the shared
-//   decision's (plan-shape-repairs.js);
+//   decision's, and a block the kit does not share, decided in sharedBlocks, is its one page's (plan-shape-repairs.js);
 // - a link left undecided that has one answer (a picture opening itself in place is hidden; a link to a kept page whose label
 //   is decided is kept) is decided, and a card's link that opens its own item leads to that item's kept page
-//   (plan-undecided-links.js), and a kept link's labelSlot is the kit's (plan-undecided-links.js withKitLabelSlots).
+//   (plan-undecided-links.js), and a kept link's labelSlot is the kit's (plan-undecided-links.js withKitLabelSlots);
+// - a kept credit link (the template's fixed words leading outside the site) is hidden with its hideable line
+//   (plan-undecided-links.js withCreditLinksHidden).
 function normalizedPlan(plan, kit, brief) {
   return withFullFactIds(normalizedForKit(plan, kit), brief)
 }
@@ -350,7 +353,16 @@ function normalizedForKit(plan, kit) {
             withDemoVideosHidden(
               withKitCharacterLimits(
                 withHiddenListLinks(
-                  withSlotsInTheirBlocks(withStockScreensDropped(withPageBlocksRepaired(plan), kit), kit),
+                  withSlotsInTheirBlocks(
+                    withStockScreensDropped(
+                      withCreditLinksHidden(
+                        withUnsharedBlocksOnTheirPage(withPageBlocksRepaired(plan), kit),
+                        kit
+                      ),
+                      kit
+                    ),
+                    kit
+                  ),
                   kit
                 ),
                 kit

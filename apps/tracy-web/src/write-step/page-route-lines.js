@@ -3,7 +3,7 @@
 // still call it by the demo's address. Nothing here calls the site: the menu rows come in, the orders and the lines go out.
 import { addressMoves, addressNow } from '../lib/renamed-addresses.js'
 import { rowsOpening } from './page-meta-write.js'
-import { freeAlias, parentOrder } from './page-route-parent.js'
+import { articleAddress, freeAlias, parentOrder } from './page-route-parent.js'
 import { readRow } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
@@ -96,7 +96,7 @@ export function routeOrders({ plan, kit, rows, menutype = null }) {
   // Every rename at once: a page under a renamed parent answers under the parent's new name too.
   const renamed = new Map(orders.filter((o) => o.itemId).map((o) => [o.itemId, o.slug]))
   for (const order of orders) {
-    if (order.parentRow) order.to = `${addressAfter(order.parentRow, rows, renamed)}/${order.slug}`
+    if (order.parentRow) order.to = articleAddress(addressAfter(order.parentRow, rows, renamed), order)
     if (!order.itemId) continue
     order.to = addressAfter(order.row, rows, renamed)
     const parent = Number(order.row.parent_id)

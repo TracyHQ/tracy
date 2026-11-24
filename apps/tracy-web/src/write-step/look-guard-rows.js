@@ -8,6 +8,7 @@ import { isSelfLinkBlock, selfLinkBlockIn, withSelfLinkBlock } from '../lib/self
 import { hiddenLinkBlockIn, isHiddenLinkBlock, withHiddenLinkBlock } from '../lib/hidden-page-links.js'
 import { createdHideBlockIn, isCreatedHideBlock, withCreatedHideBlock } from '../lib/created-page-hide.js'
 import { cssFaults, stylesOf } from './look-guard-css.js'
+import { altOnlyUpdate } from './look-guard-alts.js'
 import { emphasisOnlyUpdate } from './look-guard-emphasis.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { NOT_A_POST } from './page-create-stage.js'
@@ -57,8 +58,10 @@ const CREATED_FIELDS = {
 // restyles nothing, so it is open, and only as a slug, which can hold no markup and no other setting.
 /** The article state the write step may set on a template article: unpublished (Joomla `state` 0). */
 const UNPUBLISHED = 0
+// A tag's page the plan drops takes its tag off (hide-writes.js): `published`, and only to 0, as on a menu item.
 const TEMPLATE_FIELDS = {
   article: new Set(['metadesc', 'attribs', 'alias']),
+  tag: new Set(['published']),
   menuItem: new Set(['published', 'link', 'params', 'alias', 'parent_id', 'title'])
 }
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
@@ -380,6 +383,8 @@ export function updateFaults(params, state, kitNamed) {
   const { kind, id, fields } = params ?? {}
   // The emphasis stage turns a heading's codes into the demo's tags and changes nothing else (look-guard-emphasis.js).
   if (emphasisOnlyUpdate(params, state)) return []
+  // The record alt stage gives a placed picture its alt and changes nothing else (look-guard-alts.js).
+  if (altOnlyUpdate(params, state)) return []
   if (kind === 'module') return moduleFaults({ id, fields, state, kitNamed })
   if (kind === 'moduleAssignment') {
     const on = Object.keys(fields ?? {}).join() === 'menuids' && fields.menuids === '[0]'
