@@ -701,11 +701,36 @@ test("a theme's own brand token is its accent when only links are painted with a
   )
 })
 
-test('the kit records which sections each page prints: entries that are no page and no chrome, from the shown parts', () => {
-  const printed = sectionsOfPages(SECTIONS, MAP)
-  assert.deepEqual(Object.keys(printed).sort(), Object.keys(SECTIONS).sort())
-  for (const list of Object.values(printed))
-    for (const entity of list) assert.ok(!/^(pages|chrome)\./.test(entity), `${entity} is a section`)
+test('the kit records the sections each page prints, hidden at the read width or not; no page entry, no chrome', () => {
+  const sections = {
+    '/': {
+      before: [TOP, HEAD],
+      main: [
+        part(
+          'main > section.a',
+          ['a'],
+          [
+            ['pages', 'home', 'title'],
+            ['hero', 'home-hero', 'title']
+          ]
+        ),
+        // A phone-only strip: hidden at the read width, still printed by the page.
+        part('main > section.b', ['b'], [['promo', 'phone-strip', 'text']], { shown: false, height: 0 }),
+        // An entry stamped on the element itself, with no field (a whole card), names no field: not recorded.
+        part('main > section.c', ['c'], [['gallery', 'g-one', null]])
+      ],
+      after: [FOOT]
+    },
+    '/menu': {
+      before: [TOP, HEAD],
+      main: [part('main > section.a', ['a'], [['pages', 'menu', 'title']])],
+      after: [FOOT]
+    }
+  }
+  assert.deepEqual(sectionsOfPages(sections, MAP), {
+    '/': ['hero.home-hero', 'promo.phone-strip'],
+    '/menu': []
+  })
   assert.equal(sectionsOfPages(null, MAP), null)
   assert.equal(sectionsOfPages({}, MAP), null)
 })

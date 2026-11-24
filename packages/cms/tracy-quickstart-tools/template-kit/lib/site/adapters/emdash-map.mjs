@@ -13,7 +13,7 @@ import { slugOfPath } from '../../kit-paths.mjs'
 
 /**
  * Which sections each page prints, as the kit run read them: per page path, the `<collection>.<slug>` of every entry
- * (no page of its own, no chrome) whose fields the page's shown parts stamp. The kit records it (`sectionsOfPage`) so
+ * (no page of its own, no chrome) whose fields the page's parts stamp, hidden at the read width or not. The kit records it (`sectionsOfPage`) so
  * a check can tell a section no kit block holds on a page the kit holds from one printed only on pages the kit leaves
  * out. Null when the run read no page.
  * @param {Record<string, {before: object[], main: object[], after: object[]}> | null} sections
@@ -26,8 +26,9 @@ export function sectionsOfPages(sections, map) {
   const out = {}
   for (const [path, read] of Object.entries(sections)) {
     const seen = new Set()
+    // Every part in the page's DOM counts, shown or not: the sections are read at one width (1440px), and a part hidden
+    // there (display none, a phone-only strip) is still printed by the page at another width the kit reads.
     for (const part of [...read.before, ...read.main, ...read.after]) {
-      if (!part.shown) continue
       for (const st of part.stamps ?? []) {
         const entity = `${st.collection}.${st.slug}`
         if (st.field && !pageEntities.has(entity) && !entity.startsWith('chrome.')) seen.add(entity)
