@@ -49,7 +49,8 @@
 	.im-footer a:hover { color: var(--color-accent-text-hover); }
 	.im-contact-band { padding-top: var(--gutter-large); padding-bottom: var(--gutter-medium); border-bottom: 1px solid color-mix(in srgb, var(--color-on-ink) 12%, transparent); }
 	.im-contact-heading { max-width: 688px; font-size: var(--h2-size); color: var(--color-on-ink); margin: 0 0 72px; }
-	.im-contact-cols { display: flex; flex-wrap: wrap; gap: 32px 96px; }
+	.im-contact-cols { display: flex; flex-wrap: wrap; gap: 32px 48px; }
+	@media (min-width: 1200px) { .im-contact-cols { gap: 32px 96px; } }
 	.im-contact-label { margin: 0 0 4px; font-size: 14px; line-height: 22px; text-transform: uppercase; color: color-mix(in srgb, var(--color-on-ink) 80%, transparent); }
 	.im-contact-value { display: block; margin: 0; font-size: 24px; line-height: 36px; font-weight: 500; letter-spacing: -0.01em; color: var(--color-on-ink) !important; }
 	a.im-contact-value:hover { color: var(--color-accent-text-hover) !important; }

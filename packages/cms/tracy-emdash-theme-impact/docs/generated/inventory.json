@@ -1,0 +1,1796 @@
+{
+  "format": 1,
+  "scope": "Source baseline only. No live IDs, credentials, entry bodies or runtime verification.",
+  "template": {
+    "id": "tracy-impact",
+    "label": "JA Impact",
+    "version": "0.1.0"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "collections": [
+    {
+      "slug": "pages",
+      "label": "Pages",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "view",
+          "label": "View",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 7
+    },
+    {
+      "slug": "hero",
+      "label": "hero",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subtitle",
+          "label": "Subtitle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "features",
+      "label": "features",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "feature_main_img",
+          "label": "Feature main img",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "media_alignment",
+          "label": "Media alignment",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_tag",
+          "label": "Feature tag",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_title",
+          "label": "Feature title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_desc",
+          "label": "Feature desc",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "columns",
+          "label": "Columns",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "align",
+          "label": "Align",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image_type",
+          "label": "Image type",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "img_icon",
+          "label": "Img icon",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "link",
+          "label": "Link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_text_align",
+          "label": "Feature text align",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_sub_col",
+          "label": "Feature sub col",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "label",
+          "label": "Label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "icon",
+          "label": "Icon",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_col",
+          "label": "Feature col",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_count_item",
+          "label": "Feature count item",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bg_content",
+          "label": "Bg content",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "block_img",
+          "label": "Block img",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "block_description",
+          "label": "Block description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_block_label",
+          "label": "Btn block label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_block_link",
+          "label": "Btn block link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_block_type",
+          "label": "Btn block type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_media",
+          "label": "Feature media",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_date",
+          "label": "Feature date",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_month",
+          "label": "Feature month",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bg_datemonth",
+          "label": "Bg datemonth",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_text_color",
+          "label": "Feature text color",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_location",
+          "label": "Feature location",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_label",
+          "label": "Btn label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_link",
+          "label": "Btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_icon",
+          "label": "Btn icon",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_bg_content",
+          "label": "Btn bg content",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "id_video",
+          "label": "Id video",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "ft_video",
+          "label": "Ft video",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "video_align",
+          "label": "Video align",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "position",
+          "label": "Position",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "position_2",
+          "label": "Position 2",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_subtitle",
+          "label": "Feature subtitle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_charity",
+          "label": "Feature charity",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "feature_donation",
+          "label": "Feature donation",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_class",
+          "label": "Section class",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "charity_label",
+          "label": "Charity label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "donation_label",
+          "label": "Donation label",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 8
+    },
+    {
+      "slug": "contact_info",
+      "label": "contact info",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "align_section",
+          "label": "Align section",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subtitle",
+          "label": "Subtitle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "testimonials",
+          "label": "Testimonials",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_class",
+          "label": "Section class",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "social",
+      "label": "social",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "social_style",
+          "label": "Social style",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "social_title",
+          "label": "Social title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_class",
+          "label": "Section class",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "cta",
+      "label": "cta",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "cta_media",
+          "label": "Cta media",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "cta_align_media",
+          "label": "Cta align media",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_desc",
+          "label": "Cta desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_highlight",
+          "label": "Cta highlight",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link",
+          "label": "Cta link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_title",
+          "label": "Cta link title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link_type",
+          "label": "Cta link type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bg_content",
+          "label": "Bg content",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_title",
+          "label": "Cta title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_class",
+          "label": "Section class",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "accordion",
+      "label": "accordion",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "info_title",
+          "label": "Info title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "info_desc",
+          "label": "Info desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "text_align",
+          "label": "Text align",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "section_label",
+          "label": "Section label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_title",
+          "label": "Section title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "section_class",
+          "label": "Section class",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "posts",
+      "label": "Posts",
+      "routable": true,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "cover",
+          "label": "Cover",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "banner",
+          "label": "Banner",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author_avatar",
+          "label": "Author avatar",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "tags",
+          "label": "Tags",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "created",
+          "label": "Created",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 10
+    },
+    {
+      "slug": "donations",
+      "label": "Donations",
+      "routable": true,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "cover",
+          "label": "Cover",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "banner",
+          "label": "Banner",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author_avatar",
+          "label": "Author avatar",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "tags",
+          "label": "Tags",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "location",
+          "label": "Location",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "raise",
+          "label": "Raise",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "goal",
+          "label": "Goal",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "featured",
+          "label": "Featured",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "ordering",
+          "label": "Ordering",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 13
+    },
+    {
+      "slug": "events",
+      "label": "Events",
+      "routable": true,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "cover",
+          "label": "Cover",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "banner",
+          "label": "Banner",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author_avatar",
+          "label": "Author avatar",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "tags",
+          "label": "Tags",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "start_date",
+          "label": "Start date",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "event_time",
+          "label": "Event time",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "event_location",
+          "label": "Event location",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "event_fee",
+          "label": "Event fee",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "card_bg",
+          "label": "Card bg",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "date_bg",
+          "label": "Date bg",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "button_type",
+          "label": "Button type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "button_link",
+          "label": "Button link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "featured",
+          "label": "Featured",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "ordering",
+          "label": "Ordering",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 9
+    },
+    {
+      "slug": "masthead",
+      "label": "Mastheads",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "background",
+          "label": "Background",
+          "type": "image",
+          "required": false
+        }
+      ],
+      "seedEntries": 7
+    },
+    {
+      "slug": "contact",
+      "label": "Contact page",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "location_title",
+          "label": "Location title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "map_label",
+          "label": "Map label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_title",
+          "label": "Form title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_intro",
+          "label": "Form intro",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "first_name_label",
+          "label": "First name label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email_field_label",
+          "label": "Email field label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subject_label",
+          "label": "Subject label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "message_label",
+          "label": "Message label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "privacy_title",
+          "label": "Privacy title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "privacy_text",
+          "label": "Privacy text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "copy_label",
+          "label": "Copy label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "submit_label",
+          "label": "Submit label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "card_title",
+          "label": "Card title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email_label",
+          "label": "Email label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email",
+          "label": "Email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "address_label",
+          "label": "Address label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "address",
+          "label": "Address",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone_label",
+          "label": "Phone label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone",
+          "label": "Phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hours_title",
+          "label": "Hours title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hours_1_time",
+          "label": "Hours 1 time",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hours_1_days",
+          "label": "Hours 1 days",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hours_2_time",
+          "label": "Hours 2 time",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hours_2_days",
+          "label": "Hours 2 days",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "required_label",
+          "label": "Required label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "chrome",
+      "label": "Site chrome",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "brand_name",
+          "label": "Brand name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "donate_label",
+          "label": "Donate label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "donate_link",
+          "label": "Donate link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_about",
+          "label": "Footer about",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_col1_title",
+          "label": "Footer col1 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_col1_links",
+          "label": "Footer col1 links",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_col2_title",
+          "label": "Footer col2 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_col2_links",
+          "label": "Footer col2 links",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_col3_title",
+          "label": "Footer col3 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_col3_links",
+          "label": "Footer col3 links",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_col4_title",
+          "label": "Footer col4 title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_col4_links",
+          "label": "Footer col4 links",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "copyright",
+          "label": "Copyright",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "license_line",
+          "label": "License line",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "skip_label",
+          "label": "Skip label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "menu_label",
+          "label": "Menu label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "close_label",
+          "label": "Close label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "prev_label",
+          "label": "Prev label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "next_label",
+          "label": "Next label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "more_label",
+          "label": "More label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "read_more",
+          "label": "Read more",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "by_label",
+          "label": "By label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "related_title",
+          "label": "Related title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "tags_label",
+          "label": "Tags label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "share_label",
+          "label": "Share label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "raise_label",
+          "label": "Raise label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "goal_label",
+          "label": "Goal label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "location_label",
+          "label": "Location label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "fee_label",
+          "label": "Fee label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "time_label",
+          "label": "Time label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "join_label",
+          "label": "Join label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "donate_cta",
+          "label": "Donate cta",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "view_all_label",
+          "label": "View all label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "breadcrumb_home",
+          "label": "Breadcrumb home",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "breadcrumb_label",
+          "label": "Breadcrumb label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "categories_title",
+          "label": "Categories title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "recent_title",
+          "label": "Recent title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pagination_label",
+          "label": "Pagination label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "page_label",
+          "label": "Page label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "first_label",
+          "label": "First label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "last_label",
+          "label": "Last label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "blog_name",
+          "label": "Blog name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "donations_name",
+          "label": "Donations name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "events_name",
+          "label": "Events name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "view_all_blog_label",
+          "label": "View all blog label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stories_label",
+          "label": "Stories label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "stories_title",
+          "label": "Stories title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "events_label",
+          "label": "Events label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "events_title",
+          "label": "Events title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "blog_label",
+          "label": "Blog label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "blog_title",
+          "label": "Blog title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_code",
+          "label": "Not found code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_title",
+          "label": "Not found title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_text",
+          "label": "Not found text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_back_label",
+          "label": "Not found back label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_label",
+          "label": "Search label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_placeholder",
+          "label": "Search placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_button",
+          "label": "Search button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "no_results",
+          "label": "No results",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_title",
+          "label": "Newsletter title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_text",
+          "label": "Newsletter text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_name_label",
+          "label": "Newsletter name label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_email_label",
+          "label": "Newsletter email label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_button",
+          "label": "Newsletter button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "newsletter_done",
+          "label": "Newsletter done",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "play_label",
+          "label": "Play label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "slides_label",
+          "label": "Slides label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "slide_label",
+          "label": "Slide label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "currency_symbol",
+          "label": "Currency symbol",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "logo_dark",
+          "label": "Logo dark",
+          "type": "image",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": "Primary",
+      "locale": "en",
+      "items": 6
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 1
+    }
+  ],
+  "formBindings": [],
+  "dependencies": {
+    "@astrojs/node": "11.1.13",
+    "@astrojs/react": "6.0.0",
+    "@cloudflare/kumo": "2.6.0",
+    "@emdash-cms/auth": "1.1.0",
+    "@emdash-cms/plugin-audit-log": "0.2.3",
+    "@emdash-cms/plugin-forms": "0.2.9",
+    "@phosphor-icons/react": "2.1.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.4.12",
+    "better-sqlite3": "12.11.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "emdash": "1.1.0",
+    "emdash-smtp": "0.3.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0",
+    "lucide-react": "1.45.0",
+    "radix-ui": "1.6.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3"
+  },
+  "dependencyNotice": "Declared pins only; enabled plugin registration is owned by astro.config.mjs. Native CMS capabilities need not be separate dependencies.",
+  "routeFiles": [
+    "src/pages/404.astro",
+    "src/pages/[...path].astro"
+  ],
+  "routeNotice": "Route source files only, not expanded URLs. Dynamic/catch-all dispatch and CMS routes require authored guidance and runtime crawl evidence.",
+  "sourceFiles": [
+    "src/components/blocks/BlogGrid.astro",
+    "src/components/blocks/Connected.astro",
+    "src/components/blocks/Cta.astro",
+    "src/components/blocks/DonationCard.astro",
+    "src/components/blocks/DonationCarousel.astro",
+    "src/components/blocks/EventsHome.astro",
+    "src/components/blocks/FeatureCards.astro",
+    "src/components/blocks/FeatureFund.astro",
+    "src/components/blocks/FeatureIntro.astro",
+    "src/components/blocks/FeatureStats.astro",
+    "src/components/blocks/Hero.astro",
+    "src/components/blocks/SectionHead.astro",
+    "src/components/site/ArticleBody.astro",
+    "src/components/site/ArticleImages.astro",
+    "src/components/site/BrandLogo.astro",
+    "src/components/site/Breadcrumbs.astro",
+    "src/components/site/Footer.astro",
+    "src/components/site/FormWords.astro",
+    "src/components/site/Header.astro",
+    "src/components/site/Icon.astro",
+    "src/components/site/Masthead.astro",
+    "src/components/site/PageOwner.astro",
+    "src/components/site/Pagination.astro",
+    "src/components/site/ProseBlock.astro",
+    "src/components/site/ProseListItem.astro",
+    "src/components/site/ProseQuote.astro",
+    "src/components/site/Sidebar.astro",
+    "src/components/site/Social.astro",
+    "src/fonts.json",
+    "src/layouts/Base.astro",
+    "src/lib/articles.ts",
+    "src/lib/brand.ts",
+    "src/lib/chrome-labels.ts",
+    "src/lib/chrome.ts",
+    "src/lib/content.ts",
+    "src/lib/data-links.ts",
+    "src/lib/demo-logo.ts",
+    "src/lib/display-locale.ts",
+    "src/lib/ds-slot.ts",
+    "src/lib/font-subsets.mjs",
+    "src/lib/form-embed-words.ts",
+    "src/lib/hreflang-plugin.ts",
+    "src/lib/hreflang.ts",
+    "src/lib/html.ts",
+    "src/lib/i18n.ts",
+    "src/lib/layout.ts",
+    "src/lib/link-gate.ts",
+    "src/lib/listed-children.ts",
+    "src/lib/media.ts",
+    "src/lib/menu-gate.ts",
+    "src/lib/newsletter-client.ts",
+    "src/lib/page-layout.json",
+    "src/lib/page-records.ts",
+    "src/lib/page-routes.json",
+    "src/lib/parent-gate.ts",
+    "src/lib/posts.ts",
+    "src/lib/prose-text.ts",
+    "src/lib/public-origin.ts",
+    "src/lib/site-client.ts",
+    "src/lib/stamps.ts",
+    "src/lib/tel.ts",
+    "src/lib/ui-words.ts",
+    "src/lib/ui.ts",
+    "src/lib/utils.ts",
+    "src/live.config.ts",
+    "src/middleware.ts",
+    "src/pages/404.astro",
+    "src/pages/[...path].astro",
+    "src/styles/blocks/cards.css",
+    "src/styles/blocks/chrome.css",
+    "src/styles/blocks/cta.css",
+    "src/styles/blocks/features.css",
+    "src/styles/blocks/hero.css",
+    "src/styles/blocks/home.css",
+    "src/styles/global.css",
+    "src/styles/pages/common.css",
+    "src/styles/tokens.css",
+    "src/views/About.astro",
+    "src/views/BlogList.astro",
+    "src/views/Contact.astro",
+    "src/views/Donation.astro",
+    "src/views/DonationsList.astro",
+    "src/views/Event.astro",
+    "src/views/EventsList.astro",
+    "src/views/Faq.astro",
+    "src/views/Home.astro",
+    "src/views/NotFound.astro",
+    "src/views/Post.astro",
+    "src/views/Search.astro"
+  ],
+  "inputs": {
+    "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
+    "package.json": "sha256:f4873b850796ace5655fdab638f0e0901893383436290626a081c51942a76909",
+    "pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
+    "seed/field-map.json": "sha256:51e7a7797adf56c6cdb5beb3dfdb09cfd43c5633ad391e14b39451bc0bd3f2dd",
+    "seed/media-map.json": "sha256:b7627770d257c6f3deb155038d5aa626a9816adb024db75cf1bca6fc198b4f55",
+    "seed/seed.json": "sha256:72479857fe8c23334cee4244572aaa9dd2785fecbcaa2a738ef6fd7974178601",
+    "src/components/blocks/BlogGrid.astro": "sha256:8a951e2419da4f19c20fe53025db7c583599bea1ad1dd961ed0f27f5e7ff1f22",
+    "src/components/blocks/Connected.astro": "sha256:141c0992bc70676127409d9adaff3644360178634a067fc750a2d63fc034b615",
+    "src/components/blocks/Cta.astro": "sha256:947908954db2942ed59d9e6e21c87554fd5c996996dd2b397645229b23e03133",
+    "src/components/blocks/DonationCard.astro": "sha256:b6050b75bbcbe78dddcca7caa53af996b48d49145ebf7264774e5d997ffa3dab",
+    "src/components/blocks/DonationCarousel.astro": "sha256:4ec930b242083adf26916708c398f977f3d5004098e973a87bd7c518c2306bfb",
+    "src/components/blocks/EventsHome.astro": "sha256:471fa4bc1f6d8f347c45f67ab1d9be984225593d339da673eb463a6cf82b7a2d",
+    "src/components/blocks/FeatureCards.astro": "sha256:7f3f7ed925d635cdaa22fc8c0c9f79f3cd34c7a7d86278848d34f5ec37d45653",
+    "src/components/blocks/FeatureFund.astro": "sha256:a911037c3737ac20a11d26403f06989d75f29b965c2358d588e70bd901ab6f23",
+    "src/components/blocks/FeatureIntro.astro": "sha256:271fd18f683ad7ad69f3972749956f44c2c4d0e0ec1e7190803969e373c60451",
+    "src/components/blocks/FeatureStats.astro": "sha256:2bd77bd6dd24a7c9ee00e89c4b4608f1d95f041160b930772b61eef382368f56",
+    "src/components/blocks/Hero.astro": "sha256:9aadef220081fbf23f76d139180b09da0a7d7c92c27dc33cf8beb6bcd7da88c5",
+    "src/components/blocks/SectionHead.astro": "sha256:3acd296ca2310808ba6848df612c67c270853b4ccd0e1c1ff7537a685438d87d",
+    "src/components/site/ArticleBody.astro": "sha256:c669a5a255a888e16efd2c7ec4a7b6827cc029ddb35178cb3316c4b05fb188f3",
+    "src/components/site/ArticleImages.astro": "sha256:c16441690fbec38e3efa1183b0107a0839a70916ce375e1b1d716383e799a03f",
+    "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
+    "src/components/site/Breadcrumbs.astro": "sha256:de031db5df797f84c187d451527cd92a831a9b2166d5b35927e2ae26469c979b",
+    "src/components/site/Footer.astro": "sha256:a92ee882f53c5a7fa68a1982a184a0254b374f14bfcc8c2166523e859e42dac9",
+    "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
+    "src/components/site/Header.astro": "sha256:846e57bbcb425cd10624e95d1ae25b371a4278cec39b088a2b3e54c28070cf14",
+    "src/components/site/Icon.astro": "sha256:e718e87fb9a1c3f46a99eac9fc7eb5a87ff3ac2ef77444d9fceee114f1860331",
+    "src/components/site/Masthead.astro": "sha256:4610e54e505353a2303374e15939e64645092be22bebb408addf8ae6db941eef",
+    "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
+    "src/components/site/Pagination.astro": "sha256:06a36292959b94188f65cd4f3fc56f8e9652ebeb864ed381fe82c60fdbc3ccf8",
+    "src/components/site/ProseBlock.astro": "sha256:aae09606433eaaa875e7b16087bc404ed440e95c9fb56cf764ad2ea530364240",
+    "src/components/site/ProseListItem.astro": "sha256:e2c0293803a3cc1337b84ec79f684d76be0819335d31b5d2528abef0661e5404",
+    "src/components/site/ProseQuote.astro": "sha256:2d5ecd7987f911a2b7b2497143ab99c2feb4dc14c3fb417327a7a1ca782bda62",
+    "src/components/site/Sidebar.astro": "sha256:82694749f38f889d4fbf9f63d10c87f546d7aef994a97b70ee308b8f46c869c0",
+    "src/components/site/Social.astro": "sha256:212562b8d51a52b0c29ebc2c582925193d4d1d5e2dbe17992ab0ef132840d45f",
+    "src/fonts.json": "sha256:a6e71bfbffa672cc4c6049e2b498ff0ef3d460383816a969188b3a5da4e37782",
+    "src/layouts/Base.astro": "sha256:8f8adb9cc0dadd0768e7bcf5a0273cae445e28f9edefef584360f619436a6ac2",
+    "src/lib/articles.ts": "sha256:99c2ee45cb083754351a390cab954d13d8ffbe1440b3856343c1b50946a51ff5",
+    "src/lib/brand.ts": "sha256:38f8c2adeaa1e083f4ef5cabdd8e2ceac7d9243b9481414e41212c6d493e8939",
+    "src/lib/chrome-labels.ts": "sha256:caf6017c4fda7d87717e8fffbe17bcbacc16d948849869dc9544b07b612a1b75",
+    "src/lib/chrome.ts": "sha256:c8dbe5f7e6cee0f556655bdbe282d0290fc50f56766ba530f0c2c9affe20c131",
+    "src/lib/content.ts": "sha256:684f9fba7ecc3ea9332c640791e917a13a2805eb6fe818cd0004a1e06510e31c",
+    "src/lib/data-links.ts": "sha256:fb08660882cf4e99e35cddf7631c84d95405c9e72d0d761f83d1e935ef62910e",
+    "src/lib/demo-logo.ts": "sha256:18d675e0d60358a7c0e7eeab6f9d752545b35ad6c7595884c5f5ff672ccb6d26",
+    "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
+    "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
+    "src/lib/font-subsets.mjs": "sha256:a70b9e5e524e24bfa151470a3c71642be71f9f8b4f352ed805f987056b822cd8",
+    "src/lib/form-embed-words.ts": "sha256:0f341c8e6aea0a904c3a60eb1f5644dc51edf5dbbdc79512a8249fbc82ec3a66",
+    "src/lib/hreflang-plugin.ts": "sha256:fb1993974b6296c4a677f4691b7038313c5eb3b222088f4c9160a52e744fbe0d",
+    "src/lib/hreflang.ts": "sha256:924561614f01c3e11fa8f6f06b17ef04e1212a47dc7d1bedd83bb64cfe0f5f98",
+    "src/lib/html.ts": "sha256:30442b05e2b16f22159c04d2dace659f7f553d40a0c6651e25bcb04078d8c5ef",
+    "src/lib/i18n.ts": "sha256:aaea1f019b9b16abf51a977a1b120e6078fd15280354f57c9f9d9960a7577d03",
+    "src/lib/layout.ts": "sha256:c7e937be965bfa2ed8814fc82192e7921d545b4ae06311ae7d9642a9d2ba7568",
+    "src/lib/link-gate.ts": "sha256:01cc19ecd96fe13ab1b254bfa44c015064975e14177013255226933df7b20b1f",
+    "src/lib/listed-children.ts": "sha256:fb03fc5213623a76c22ae6ff13e9f5e6bee4b6a9884b4a9ea5e5e4cf695c13d3",
+    "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
+    "src/lib/menu-gate.ts": "sha256:1884514cd874f6edb1a845332a1da81afb4d85abebd65d287538a6a6a79d1441",
+    "src/lib/newsletter-client.ts": "sha256:da8b6f98f1ce763849b781c46dade779f7f8dd61975f25b0e9d53a15b19e599a",
+    "src/lib/page-layout.json": "sha256:764c94de4e638a4a77a0c44fb2d2f2142c827485419232b5986a254888189719",
+    "src/lib/page-records.ts": "sha256:490bbe348ae80ac7e429e0342e2f898768e2c43c1331905b83c71e2f51eca1ea",
+    "src/lib/page-routes.json": "sha256:ebd7b5404191c9aeae2da22f33875bad3a6f42487938892111a5668e70c3df87",
+    "src/lib/parent-gate.ts": "sha256:299a77bee7cb473c869e6e3b9642c99afddf4097f492217a3d9be150bb9ca6bc",
+    "src/lib/posts.ts": "sha256:5c49d77c31b56f0ce5163572d37da6ed0f78a1bf9a51948a1a5261c19f2d753f",
+    "src/lib/prose-text.ts": "sha256:56f0adf1e841c5a2196f3fab4135ee9f38ce62a66c1e31924eac4fef9a223bff",
+    "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
+    "src/lib/site-client.ts": "sha256:c6130021a93cb3b5a0e87482e4b621a564453b8f96a4c868e51b4c7150c24ca5",
+    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/tel.ts": "sha256:e4d78945f79f6e0f18ef5e21efe402133d4556fe3030885ca95907d8144c1077",
+    "src/lib/ui-words.ts": "sha256:e3e5d1dab8b3b981efd7b180c95e7bfa1ad573dc65252198c8c006814e3eecbf",
+    "src/lib/ui.ts": "sha256:f83d530f9d9b2c5107f21e14bb2bac40a9cca39733f2b661003250a2fe1171a9",
+    "src/lib/utils.ts": "sha256:0ca01a948ba414a7c7348bda63bf68803a73dbbb6f10b6e8183280e405d3aa13",
+    "src/live.config.ts": "sha256:52f0c8177d0e327ffdf28af8baf680d539d2aae444ba5ceace98baf095f7bf6c",
+    "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
+    "src/pages/[...path].astro": "sha256:2cbdc6a6655c3747fd2669d8500ece8f98be257a4743c9b00d8fc9a7691098c3",
+    "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
+    "src/styles/blocks/cards.css": "sha256:348347f589717a11b0f3097b75121e08fd98df0457dd16ad1b63b9aad04af705",
+    "src/styles/blocks/chrome.css": "sha256:eb60af9aed8a83a3adc8566ac16e45caba3e32b9fa3c0d3a32f81196251998c0",
+    "src/styles/blocks/cta.css": "sha256:ea30a4e63fbcae475b1b0886e31450160fde94598fbc23b7180409707ff0c282",
+    "src/styles/blocks/features.css": "sha256:ae4fa417ebc48bcf496e9b3846a54f8827efb7497b24799b457f99e591dde5ca",
+    "src/styles/blocks/hero.css": "sha256:5f47eaad47ff4463c0af03116ec9574b483e254862e81007adf8405d93fe063f",
+    "src/styles/blocks/home.css": "sha256:605b1a88a6db964f4b0cced4257545b72b5c92f6bc12107a7bb1347d1e14a0a6",
+    "src/styles/global.css": "sha256:9be78fd435f93d8890897c4ca8918cfc68642100ccafed1d03560b144d6405cb",
+    "src/styles/pages/common.css": "sha256:f13e3258704a21d3f63767ff18e7acc76d0be52ea238e9df6c30986989ebbbae",
+    "src/styles/tokens.css": "sha256:5ec892d50f5de5ba40abf146a76f8cfd23f077c61b0aa19064d1b9817b10f867",
+    "src/views/About.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
+    "src/views/BlogList.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
+    "src/views/Contact.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
+    "src/views/Donation.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
+    "src/views/DonationsList.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
+    "src/views/Event.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
+    "src/views/EventsList.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
+    "src/views/Faq.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
+    "src/views/Home.astro": "sha256:03749c22ddc6972f880680e5e7ad02946087a1519afdc510e48ec8cec37a963b",
+    "src/views/NotFound.astro": "sha256:97e23d7fb216b6af6c01595adafcdbe71e11f9e35a457c14aea83d8c8d09f786",
+    "src/views/Post.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
+    "src/views/Search.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
+    "template.config.json": "sha256:43ef78a33baa4fb9047eca30e59d4d5a43b702a4b73ae678653fae21c6b3522b",
+    "tools/forms.json": "sha256:19a17b176998c50ed07958efc136569894ade2a28dd851e1d69ad7401542c3bb",
+    "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
+  }
+}

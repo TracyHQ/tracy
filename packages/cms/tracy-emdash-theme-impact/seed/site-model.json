@@ -1306,7 +1306,7 @@
         },
         {
           "name": "logo_dark",
-          "type": "text"
+          "type": "image"
         }
       ]
     }
@@ -1874,6 +1874,25 @@
         "title": "Helpline is open 24/7",
         "section_label": "",
         "section_title": "Helpline is open 24/7",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "cta",
+      "slug": "join-together",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "bg_content": "default",
+        "cta_media": "images/joomlart/acm/activities-1.jpg",
+        "cta_title": "Join together for charity",
+        "cta_desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.",
+        "cta_link": "/contact",
+        "cta_link_title": "Get a quote",
+        "cta_link_type": "success",
+        "title": "Join together for charity",
+        "section_label": "",
+        "section_title": "",
         "section_class": ""
       }
     },

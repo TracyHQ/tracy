@@ -190,6 +190,20 @@
     "subColor": "normal",
     "align": "center"
   },
+  "join-together": {
+    "type": "cta",
+    "style": "style-2",
+    "module": "158",
+    "spacing": {
+      "top": "large",
+      "bottom": "blank",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
   "faq": {
     "type": "accordion",
     "style": "style-1",

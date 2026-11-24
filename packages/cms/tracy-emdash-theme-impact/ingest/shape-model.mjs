@@ -43,6 +43,7 @@ const NAME = {
   147: 'home-follow',
   155: 'footer-contact',
   157: 'home-helpline',
+  158: 'join-together',
   160: 'faq',
   161: 'home-raise-fund',
   163: 'footer-follow'
@@ -445,7 +446,7 @@ model.types.push({
   name: 'chrome',
   mode: 'single',
   label: { en: 'Site chrome' },
-  fields: chromeFields.map((name) => ({ name, ...text }))
+  fields: chromeFields.map((name) => ({ name, type: name === 'logo_dark' ? 'image' : 'text' }))
 })
 model.records.push({
   type: 'chrome',

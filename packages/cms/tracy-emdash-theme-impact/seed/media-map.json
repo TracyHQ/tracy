@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-24T05:55:08.764Z",
+	"generatedAt": "2026-11-24T06:00:50.704Z",
 	"source": "JA Impact j6 1.0.6 webroot",
 	"items": [
 		{
@@ -44,6 +44,12 @@
 					"slug": "about-activities",
 					"locale": "en",
 					"path": "feature_main_img"
+				},
+				{
+					"collection": "cta",
+					"slug": "join-together",
+					"locale": "en",
+					"path": "cta_media"
 				}
 			]
 		},

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T05:55:08.668Z",
+  "generatedAt": "2026-11-24T06:00:50.521Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -1528,8 +1528,8 @@
       "label": "Form id"
     },
     "chrome.logo_dark": {
-      "source": "text",
-      "target": "string",
+      "source": "image",
+      "target": "image",
       "label": "Logo dark",
       "role": "business.logo",
       "group": {

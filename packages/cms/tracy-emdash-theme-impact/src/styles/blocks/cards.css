@@ -26,7 +26,7 @@
 	.im-donation-money strong { font-size: 24px; font-weight: 500; margin-right: 4px; }
 
 	.im-events { display: grid; grid-template-columns: 1fr; gap: 32px; }
-	@media (min-width: 992px) { .im-events { grid-template-columns: 1fr 1fr; } .im-event.is-highlight { grid-column: 2; grid-row: 1 / span 2; } }
+	@media (min-width: 768px) { .im-events { grid-template-columns: 1fr 1fr; } .im-event.is-highlight { grid-column: 2; grid-row: 1 / span 2; } }
 	.im-event { position: relative; display: flex; flex-direction: column; min-height: 384px; border-radius: var(--ds-card-radius, 8px); overflow: hidden; background: var(--color-surface); }
 	.im-event.is-success { background: var(--color-accent); }
 	.im-event.has-image:not(.is-highlight) { color: #fff; background: #000; }
@@ -34,7 +34,8 @@
 	.im-event.is-highlight .im-event-image img { display: block; width: 100%; height: 416px; object-fit: cover; }
 	.im-event.is-highlight { justify-content: flex-start; }
 	.im-event.is-highlight .im-event-image { order: 2; margin-top: auto; }
-	.im-event-content { position: relative; z-index: 1; display: flex; gap: 32px; padding: 64px; }
+	.im-event-content { position: relative; z-index: 1; display: flex; gap: 32px; padding: 32px; }
+	@media (min-width: 1200px) { .im-event-content { padding: 64px; } }
 	.im-date { flex: 0 0 92px; width: 92px; height: 92px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-bg); color: var(--color-heading); border-radius: 8px; text-align: center; line-height: 1.2; }
 	.im-date strong { font-size: 28px; font-weight: 500; } .im-date span { font-size: 16px; }
 	.im-date.is-warning { background: var(--color-warn); color: #fff; }
@@ -46,6 +47,7 @@
 	.im-event-location { margin: 0 0 16px; color: var(--color-heading); } .im-event-intro { color: inherit; margin: 0 0 32px; }
 	.im-event.has-image:not(.is-highlight) .im-event-location { color: #fff; } .im-event.has-image:not(.is-highlight) .im-event-intro { color: #dee2e6; }
 	@media (max-width: 767.98px) { .im-event.is-highlight .im-event-image { display: none; } }
+	@media (max-width: 991.98px) { .im-event-content { flex-direction: column; } }
 	@media (max-width: 575.98px) { .im-event-content { flex-direction: column; align-items: center; text-align: center; padding: 32px 24px; gap: 16px; } .im-event-location { display: flex; justify-content: center; gap: 4px; } }
 
 	.im-blog { display: grid; grid-template-columns: 1fr; gap: 32px; align-items: start; }
