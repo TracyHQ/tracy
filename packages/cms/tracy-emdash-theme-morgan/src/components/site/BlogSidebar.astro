@@ -1,0 +1,60 @@
+---
+/** The blog sidebar (the source's right column): the newest posts with their picture, the categories with counts, the tags. */
+import type { Chrome } from '@/lib/chrome'
+import type { PostRow } from '@/lib/posts'
+import { href, type Locale } from '@/lib/i18n'
+import { postPath } from '@/lib/posts'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import PostGlyph from './PostGlyph.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  posts: PostRow[]
+  tag: string
+}
+const { chrome, locale, posts } = Astro.props
+const { site } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const recent = posts.slice(0, 2)
+const cats = new Map<string, { label: string; n: number }>()
+for (const p of posts)
+  if (p.category) cats.set(p.category.slug, { label: p.category.label, n: (cats.get(p.category.slug)?.n ?? 0) + 1 })
+const tags = [...new Set(posts.flatMap((p) => String(p.tags ?? '').split(/[,\n]/).map((t) => t.trim()).filter(Boolean)))]
+---
+
+<aside class="mg-sidebar">
+	{recent.length > 0 && (
+		<section class="mg-side-block">
+			<h3 class="mg-side-title" {...$c('recent_label')}>{site.recent_label}</h3>
+			<ul class="mg-side-recent">
+				{recent.map((p) => {
+					const pic = mediaUrl(p.cover)
+					return (
+						<li>
+							<a href={href(locale, postPath(p))}>
+								{pic && <img src={pic} alt="" width="280" height="190" loading="lazy" />}
+								<span>{p.title}</span>
+							</a>
+						</li>
+					)
+				})}
+			</ul>
+		</section>
+	)}
+	{cats.size > 0 && (
+		<section class="mg-side-block">
+			<h3 class="mg-side-title" {...$c('categories_label')}>{site.categories_label}</h3>
+			<ul class="mg-side-cats">
+				{[...cats.values()].map((c) => <li><PostGlyph name="folder" />{c.label} <span>({c.n})</span></li>)}
+			</ul>
+		</section>
+	)}
+	{tags.length > 0 && (
+		<section class="mg-side-block">
+			<h3 class="mg-side-title" {...$c('tags_label')}>{site.tags_label}</h3>
+			<ul class="mg-side-tags">{tags.map((t) => <li>{t}</li>)}</ul>
+		</section>
+	)}
+</aside>

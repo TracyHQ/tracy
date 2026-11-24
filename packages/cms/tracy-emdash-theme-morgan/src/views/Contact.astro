@@ -1,20 +1,20 @@
 ---
 /**
- * Contact (Joomla com_contact, plain style): masthead · two columns. Left: the two-line heading, the intro, then e-mail,
- * address and phone rows and the social glyphs. Right: the form title and intro and the form itself (Forms plugin; the
- * `contact-info` entry's `form_id` names it). No form id = the form is drawn disabled, never a fake submit.
+ * Contact (Joomla com_contact): the label and name, four cards (address, email, phone, website), then a full-width band with the
+ * contact's picture on the left and the form on navy on the right (Forms plugin; the `contact-info` entry's `form_id` names it).
+ * No form id = the form is drawn disabled, never a fake submit.
  */
 import Base from '@/layouts/Base.astro'
 import PageOwner from '@/components/site/PageOwner.astro'
 import FormWords from '@/components/site/FormWords.astro'
 import PostGlyph from '@/components/site/PostGlyph.astro'
-import Masthead from '@/components/blocks/Masthead.astro'
 import { blockComponents } from '@emdash-cms/plugin-forms/astro'
 import type { Chrome } from '@/lib/chrome'
 import type { Locale } from '@/lib/i18n'
 import { section } from '@/lib/content'
 import { uiTag } from '@/lib/ui'
 import { telHref } from '@/lib/tel'
+import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import { getEmDashEntry } from 'emdash'
 
@@ -23,112 +23,91 @@ interface Props {
   locale: Locale
 }
 const { chrome, locale } = Astro.props
-const [{ entry: pageEntry }, masthead, c] = await Promise.all([
-  getEmDashEntry('pages', 'contact', { locale }),
-  section('masthead', 'contact', locale),
+const [{ entry: pageEntry }, c] = await Promise.all([
+  getEmDashEntry('pages', 'contact-us', { locale }),
   section('contact', 'contact-info', locale)
 ])
 const page = (pageEntry?.data ?? {}) as Record<string, any>
-const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'contact' } : null)
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'contact-us' } : null)
 const $c = stampFor(Astro.request, 'contact', c ? { id: c.id, slug: c.slug } : null)
 const FormEmbed = (blockComponents as any)['emdash-form']
 const formId = String(c?.form_id ?? '').trim()
-const heading = String(c?.heading ?? '').split('\n')
 const email = String(c?.email ?? '').trim()
 const phone = String(c?.phone ?? '').trim()
-const tel = telHref(phone)
-const socials = String(c?.socials ?? '')
-  .split(',')
-  .map((s) => s.trim())
-  .filter(Boolean)
-const rows = [
-  {
-    glyph: 'envelope',
-    label: 'email_label',
-    value: 'email',
-    text: email,
-    href: email ? `mailto:${email}` : null
-  },
-  {
-    glyph: 'pin',
-    label: 'address_label',
-    value: 'address',
-    text: String(c?.address ?? '').trim(),
-    href: null
-  },
-  { glyph: 'phone', label: 'phone_label', value: 'phone', text: phone, href: tel }
+const website = String(c?.website ?? '').trim()
+const cards = [
+  { glyph: 'pin', label: 'address_label', value: 'address', text: String(c?.address ?? '').trim(), href: null },
+  { glyph: 'envelope', label: 'email_label', value: 'email', text: email, href: email ? `mailto:${email}` : null },
+  { glyph: 'handset', label: 'phone_label', value: 'phone', text: phone, href: telHref(phone) },
+  { glyph: 'globe', label: 'website_label', value: 'website', text: website, href: /^https?:\/\//.test(website) ? website : null }
 ].filter((r) => r.text)
+const photo = mediaUrl(c?.photo)
 // The disabled form: the same fields in the same places, their words the entry's own labels.
 const dead = [
   { type: 'text', label: 'name_label', half: true },
   { type: 'email', label: 'email_field_label', half: true },
-  { type: 'text', label: 'phone_field_label', half: true },
-  { type: 'text', label: 'subject_label', half: true },
+  { type: 'text', label: 'subject_label', half: false },
   { type: 'textarea', label: 'message_label', half: false }
 ]
 ---
 
-<Base chrome={chrome} title={page.title ?? masthead?.title ?? c?.title ?? ''} currentPath="/contact" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'contact', toPath: () => '/contact' } : null}>
+<Base chrome={chrome} title={page.title ?? c?.title ?? ''} currentPath="/contact-us" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'contact-us', toPath: () => '/contact-us' } : null}>
 	<main id="main">
 		<PageOwner stamp={$page} />
-		<Masthead entry={masthead} />
 		{c && (
-			<div class="fr-main-body">
-				<div class="fr-container fr-fixed">
-					<div class="fr-contact">
-						<div class="fr-contact-info">
-							<h2 {...$c('heading')}>{heading.map((line, i) => <Fragment>{i > 0 && <br />}{line}</Fragment>)}</h2>
-							{c.intro && <p class="fr-contact-intro" {...$c('intro')}>{c.intro}</p>}
-							<ul class="fr-contact-rows">
-								{rows.map((r) => (
-									<li>
-										<span class="fr-contact-icon" aria-hidden="true"><PostGlyph name={r.glyph} /></span>
-										<span class="fr-contact-text">
-											<span class="fr-sr" {...$c(r.label)}>{c[r.label]}</span>
-											{r.href ? <a href={r.href} {...$c(r.value)}>{r.text}</a> : <span {...$c(r.value)}>{r.text}</span>}
-										</span>
-									</li>
-								))}
-							</ul>
-							{socials.length > 0 && (
-								<ul class="fr-contact-socials" {...$c('socials')}>
-									{socials.map((s) => <li><PostGlyph name={s} /><span class="fr-sr">{s}</span></li>)}
-								</ul>
-							)}
+			<>
+				<section class="mg-sec mg-sec-contact-cards is-gray">
+					<div class="mg-container">
+						<div class="mg-sec-title is-center">
+							<div class="mg-sub" {...$c('label')}><span>{c.label}</span></div>
+							<h1 class="mg-sec-h" {...$c('heading')}>{c.heading}</h1>
 						</div>
-						<div class="fr-contact-form">
-							<div class="fr-contact-lead">
-								<h2 {...$c('form_title')}>{c.form_title}</h2>
-								<p {...$c('form_intro_text')}>{c.form_intro_text}</p>
+						<ul class="mg-contact-cards">
+							{cards.map((r) => (
+								<li class="mg-contact-card">
+									<span class="mg-contact-icon" aria-hidden="true"><PostGlyph name={r.glyph} /></span>
+									<h4 {...$c(r.label)}>{c[r.label]}</h4>
+									{r.href ? <a href={r.href} {...$c(r.value)}>{r.text}</a> : <p {...$c(r.value)}>{r.text}</p>}
+								</li>
+							))}
+						</ul>
+					</div>
+				</section>
+				<section class="mg-sec mg-sec-contact-form is-flush">
+					<div class="mg-split is-left is-secondary">
+						{photo && <div class="mg-split-pic"><img src={photo} alt="" width="960" height="800" loading="lazy" {...$c('photo')} /></div>}
+						<div class="mg-split-text">
+							<div class="mg-split-in mg-contact-form">
+								<h2 class="mg-sec-h" {...$c('form_title')}>{c.form_title}</h2>
+								<p class="mg-lead" {...$c('form_intro_text')}>{c.form_intro_text}</p>
+								{formId ? (
+									<FormWords tag={uiTag(locale)}><FormEmbed node={{ formId }} /></FormWords>
+								) : (
+									<form class="ec-form is-disabled" aria-disabled="true" onsubmit="return false">
+										<fieldset class="ec-form-page" disabled>
+											{dead.map((f) => (
+												<div class:list={['ec-form-field', { 'ec-form-field--half': f.half }]}>
+													{f.type === 'textarea'
+														? <textarea class="ec-form-input" placeholder={c[f.label]} aria-label={c[f.label]} {...$c(f.label)}></textarea>
+														: <input class="ec-form-input" type={f.type as any} placeholder={c[f.label]} aria-label={c[f.label]} {...$c(f.label)} />}
+												</div>
+											))}
+											<div class="ec-form-field"><button class="ec-form-submit" type="submit" disabled {...$c('submit_label')}>{c.submit_label}</button></div>
+										</fieldset>
+									</form>
+								)}
 							</div>
-							{formId ? (
-								<FormWords tag={uiTag(locale)}><FormEmbed node={{ formId }} /></FormWords>
-							) : (
-								<form class="ec-form is-disabled" aria-disabled="true" onsubmit="return false">
-									<fieldset class="ec-form-page" disabled>
-										{dead.map((f) => (
-											<div class:list={['ec-form-field', { 'ec-form-field--half': f.half }]}>
-												{f.type === 'textarea'
-													? <textarea class="ec-form-input" placeholder={c[f.label]} aria-label={c[f.label]} {...$c(f.label)}></textarea>
-													: <input class="ec-form-input" type={f.type as any} placeholder={c[f.label]} aria-label={c[f.label]} {...$c(f.label)} />}
-											</div>
-										))}
-										<div class="ec-form-field"><button class="ec-form-submit" type="submit" disabled {...$c('submit_label')}>{c.submit_label}</button></div>
-									</fieldset>
-								</form>
-							)}
 						</div>
 					</div>
-				</div>
-			</div>
+				</section>
+			</>
 		)}
 	</main>
-
-<script>
-  // the Forms plugin prints white space between the tags of the message box, which counts as text and hides its placeholder
-  document.querySelectorAll<HTMLTextAreaElement>('.fr-contact textarea').forEach((t) => {
-    if (!t.value.trim()) t.value = ''
-  })
-</script>
 </Base>
+<script>
+	// the Forms plugin prints white space between the tags of the message box, which counts as text and hides its placeholder
+	document.querySelectorAll<HTMLTextAreaElement>('.mg-contact-form textarea').forEach((t) => {
+		if (!t.value.trim()) t.value = ''
+	})
+</script>
 {formId && <script>import '@emdash-cms/plugin-forms/client'</script>}

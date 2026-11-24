@@ -1,0 +1,39 @@
+---
+/** acm-features style-2: a centred heading, a row of white icon cards, one button underneath. */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { href, type Locale } from '@/lib/i18n'
+import { dataHref } from '@/lib/data-links'
+import PostGlyph from '@/components/site/PostGlyph.astro'
+import Section from './Section.astro'
+import SectionHead from './SectionHead.astro'
+
+interface Props {
+  entry: Record<string, any>
+  name: string
+  locale: Locale
+  live: (url: string) => boolean
+}
+const { entry, name, locale, live } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
+const items = (entry.items ?? []) as Record<string, any>[]
+const cols = Math.max(1, Math.min(4, Number(entry.columns) || 4))
+---
+
+<Section entry={entry} name={name}>
+	<div class="mg-container">
+		<SectionHead entry={entry} collection="features_intro" center />
+		<div class="mg-boxes" style={`--cols:${cols}`}>
+			{items.map((it, i) => (
+				<div class="mg-box">
+					{it.img_icon && <img class="mg-box-icon" src={mediaUrl(it.img_icon) ?? ''} alt="" width="75" height="75" loading="lazy" {...$s(`items.${i}.img_icon`)} />}
+					<h4 {...$s(`items.${i}.title`)}>{it.title}</h4>
+					<p {...$s(`items.${i}.description`)}>{it.description}</p>
+				</div>
+			))}
+		</div>
+		{entry.title_more && entry.link_more && live(entry.link_more) && (
+			<div class="mg-actions is-center"><a class="mg-btn" href={dataHref(entry.link_more, (p) => href(locale, p))} {...$s('title_more')}>{entry.title_more}<PostGlyph name="arrow" /></a></div>
+		)}
+	</div>
+</Section>

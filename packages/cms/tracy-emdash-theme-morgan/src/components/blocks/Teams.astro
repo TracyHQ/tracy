@@ -1,87 +1,44 @@
 ---
-/**
- * acm teams style-1: member cards (`number_column` per row from 992 px, 2 from 768), photo, name, role in the accent, description
- * and social glyphs, then one outline button. The entry holds each member's social links as the source's HTML (`link_social`);
- * it is read for the network names only and drawn as plain glyphs (the source's links are `#`, D11), never output as HTML.
- */
-import type { Chrome } from '@/lib/chrome'
-import SectionHead from '@/components/blocks/SectionHead.astro'
-import { href } from '@/lib/i18n'
-import { spacing } from '@/lib/layout'
+/** acm-teams style-1: a centred heading, a grid of people (picture, name, position) and the yellow hiring strip. */
 import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
-import { liveLinks } from '@/lib/link-gate'
+import { href, type Locale } from '@/lib/i18n'
 import { dataHref } from '@/lib/data-links'
+import Section from './Section.astro'
+import SectionHead from './SectionHead.astro'
 
 interface Props {
   entry: Record<string, any>
-  chrome: Chrome
+  name: string
+  locale: Locale
+  live: (url: string) => boolean
 }
-const { entry, chrome } = Astro.props
-const $t = stampFor(Astro.request, 'teams', { id: entry.id, slug: entry.slug })
-const items: any[] = entry.items ?? []
-const cols = Math.min(4, Math.max(1, Number(entry.number_column) || 3))
-const live = await liveLinks(Astro.request, chrome.locale, [entry.btn_link])
-const link = (u: string) => dataHref(u, (p) => href(chrome.locale, p))
-
-// The networks a `link_social` HTML names: the title of each <a>, else its Font Awesome class.
-const networks = (html: unknown): { name: string; key: string }[] => {
-  const out: { name: string; key: string }[] = []
-  for (const m of String(html ?? '').matchAll(/<a\b[\s\S]*?<\/a>/gi)) {
-    const a = m[0]
-    const name = /title="([^"]*)"/i.exec(a)?.[1] ?? /fa-([a-z0-9-]+)/i.exec(a)?.[1] ?? ''
-    const key = name.toLowerCase().replace(/[^a-z]/g, '')
-    if (key) out.push({ name, key })
-  }
-  return out
-}
-// Line glyphs on a 24 px grid, drawn here (no icon font). An unknown network is drawn as a dot.
-const GLYPH: Record<string, string> = {
-  facebook: '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
-  instagram:
-    '<rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>',
-  twitter:
-    '<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>',
-  youtube:
-    '<path d="M2.5 17a24.1 24.1 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.6 49.6 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.1 24.1 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.6 49.6 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/>',
-  linkedin:
-    '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>'
-}
-GLYPH.x = GLYPH.twitter
+const { entry, name, locale, live } = Astro.props
+const $s = stampFor(Astro.request, 'teams', { id: entry.id, slug: entry.slug })
+const items = (entry.items ?? []) as Record<string, any>[]
+const cols = Math.max(1, Math.min(4, Number(entry.columns) || 4))
+const link = entry.more_link && live(entry.more_link) ? dataHref(entry.more_link, (p) => href(locale, p)) : null
 ---
 
-{items.length > 0 && (
-	<section class:list={['fr-section', spacing(entry.slug)]}>
-		<SectionHead entry={entry} collection="teams" />
-		<div class="fr-container">
-			<ul class="fr-team" style={`--fr-team-cols:${cols}`}>
-				{items.map((it, i) => {
-					const pic = mediaUrl(it.img)
-					const nets = networks(it.link_social)
-					return (
-						<li class="fr-member">
-							{pic && <div class="fr-member-pic"><img src={pic} alt="" width="408" height="408" loading="lazy" {...$t(`items[${i}].img`)} /></div>}
-							<div class="fr-member-info">
-								{it.name_member && <h3 class="fr-member-name" {...$t(`items[${i}].name_member`)}>{it.name_member}</h3>}
-								{it.name_office && <div class="fr-member-office" {...$t(`items[${i}].name_office`)}>{it.name_office}</div>}
-								{it.description && <p class="fr-member-desc" {...$t(`items[${i}].description`)}>{it.description}</p>}
-								{nets.length > 0 && (
-									<div class="fr-member-social" {...$t(`items[${i}].link_social`)}>
-										{nets.map((n) => (
-											<span class="fr-social" role="img" aria-label={n.name}>
-												<svg viewBox="0 0 24 24" width="14" height="14" fill={n.key === 'instagram' ? 'none' : 'currentColor'} stroke="currentColor" stroke-width={n.key === 'instagram' ? 2 : 1} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={GLYPH[n.key] ?? '<circle cx="12" cy="12" r="3" fill="currentColor"/>'} />
-											</span>
-										))}
-									</div>
-								)}
-							</div>
-						</li>
-					)
-				})}
-			</ul>
-			{entry.title_btn && live(entry.btn_link) && (
-				<div class="fr-team-action"><a class="fr-btn" href={link(entry.btn_link)!} {...$t('title_btn')}>{entry.title_btn}</a></div>
-			)}
+<Section entry={entry} name={name}>
+	<div class="mg-container">
+		<SectionHead entry={entry} collection="teams" center />
+		<div class="mg-team" style={`--cols:${cols}`}>
+			{items.map((it, i) => (
+				<div class="mg-member">
+					<div class="mg-member-pic"><img src={mediaUrl(it.avatar) ?? ''} alt="" width="300" height="300" loading="lazy" {...$s(`items.${i}.avatar`)} /></div>
+					<div class="mg-member-info">
+						<h4 {...$s(`items.${i}.title`)}>{it.title}</h4>
+						<span {...$s(`items.${i}.position`)}>{it.position}</span>
+					</div>
+				</div>
+			))}
 		</div>
-	</section>
-)}
+		{entry.more_title && (
+			<p class="mg-hiring">
+				<span {...$s('more_title')}>{entry.more_title}</span>
+				{entry.more_cta && (link ? <a href={link} {...$s('more_cta')}>{entry.more_cta}</a> : <b {...$s('more_cta')}>{entry.more_cta}</b>)}
+			</p>
+		)}
+	</div>
+</Section>

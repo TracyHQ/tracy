@@ -1,12 +1,12 @@
 ---
 /**
- * The meta line of an article (Joomla `dl.article-info`): the author's round picture, "By" and the name, then the date.
- * Used on the cards, in the post's title band and in the search results. Author names are plain text (the source's author
- * listing pages do not exist here).
+ * The meta line of an article (Joomla `dl.article-info`): the author with a person glyph, the date with a calendar glyph. Author names
+ * are plain text (the source's author listing pages do not exist here). The source also prints a hit counter; a static site has none
+ * and the template does not invent one (DECISIONS D13).
  */
 import type { PostRow } from '@/lib/posts'
 import { formatDate } from '@/lib/i18n'
-import { mediaUrl } from '@/lib/media'
+import PostGlyph from './PostGlyph.astro'
 
 interface Props {
   post: PostRow
@@ -15,19 +15,16 @@ interface Props {
   stamp: (field: string) => Record<string, string>
   /** The by-label's own stamp (chrome entry). */
   byStamp?: Record<string, string>
-  /** The title band shows its picture at once; cards below the fold load it late. */
   eager?: boolean
 }
-const { post, tag, by, stamp, byStamp = {}, eager = false } = Astro.props
-const avatar = mediaUrl(post.authorAvatar)
+const { post, tag, by, stamp, byStamp = {} } = Astro.props
 ---
 
-<div class="fr-meta">
+<div class="mg-meta">
 	{post.author && (
-		<span class="fr-meta-author">
-			{avatar && <img class="fr-meta-avatar" src={avatar} alt="" width="24" height="24" loading={eager ? 'eager' : 'lazy'} {...stamp('author_avatar')} />}
-			<span {...byStamp}>{by}</span>{' '}<strong {...stamp('author')}>{post.author}</strong>
+		<span class="mg-meta-author">
+			<PostGlyph name="user" /><span class="mg-sr" {...byStamp}>{by}</span>{' '}<span {...stamp('author')}>{post.author}</span>
 		</span>
 	)}
-	{post.date && <time class="fr-meta-date" datetime={post.date} {...stamp('date')}>{formatDate(post.date, tag)}</time>}
+	{post.date && <span class="mg-meta-date"><PostGlyph name="calendar" /><time datetime={post.date} {...stamp('date')}>{formatDate(post.date, tag)}</time></span>}
 </div>

@@ -10,10 +10,30 @@
     "title": "JA Morgan",
     "tagline": ""
   },
-  "contentOrder": [],
+  "contentOrder": [
+    "posts",
+    "pages",
+    "slideshow",
+    "features_intro",
+    "accordion",
+    "testimonials",
+    "teams",
+    "clients",
+    "masthead",
+    "contact",
+    "footer_links",
+    "chrome"
+  ],
   "forms": {
     "file": "tools/forms.json",
-    "bindings": []
+    "bindings": [
+      {
+        "form": "contact-{locale}",
+        "collection": "contact",
+        "slug": "contact-info",
+        "field": "form_id"
+      }
+    ]
   },
   "mail": {
     "fromEmail": "no-reply@ja-morgan.example",

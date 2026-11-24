@@ -19,3 +19,12 @@ export async function sections(collection: string, locale: Locale, slugs?: strin
   if (!slugs) return all
   return slugs.map((s) => all.find((r) => r.slug === s)).filter(Boolean) as Row[]
 }
+
+/** Every address a section's link fields hold (`link`, `btn_link`, `link_more`, `ft_link`, `more_link`), nested items included. */
+export function linkUrls(value: unknown): string[] {
+  if (Array.isArray(value)) return value.flatMap(linkUrls)
+  if (!value || typeof value !== 'object') return []
+  return Object.entries(value as Row).flatMap(([k, v]) =>
+    typeof v === 'string' ? (/(^|_)link(_more)?$/.test(k) && v ? [v] : []) : linkUrls(v)
+  )
+}

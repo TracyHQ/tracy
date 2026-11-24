@@ -1,1 +1,27 @@
-{ "forms": [] }
+{
+  "_note": "Forms plugin definitions: the contact form of the source (Joomla com_contact: Name, Email, Subject, Message; the labels are the contact-info entry's, shown as the field labels like the source). Created by tools/seed-apply.mjs forms. Not carried: the 'Send a copy to yourself' checkbox (the Forms plugin sends no copy to the sender, DECISIONS D12). The Home page's consultation box prints the same form.",
+  "forms": [
+    {
+      "name": "Contact form (EN)",
+      "slug": "contact-en",
+      "pages": [
+        {
+          "fields": [
+            { "id": "name-en", "type": "text", "label": "Name", "name": "name", "required": true, "width": "half" },
+            { "id": "email-en", "type": "email", "label": "Email", "name": "email", "required": true, "width": "half" },
+            { "id": "subject-en", "type": "text", "label": "Subject", "name": "subject", "required": true, "width": "full" },
+            { "id": "message-en", "type": "textarea", "label": "Message", "name": "message", "required": true, "width": "full" }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Thank you for your message.",
+        "notifyEmails": ["hello@ja-morgan.example"],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Send Email",
+        "retentionDays": 0
+      }
+    }
+  ]
+}

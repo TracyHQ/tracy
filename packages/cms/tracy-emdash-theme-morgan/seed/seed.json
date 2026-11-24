@@ -614,6 +614,11 @@
 					}
 				},
 				{
+					"slug": "more_cta",
+					"label": "More cta",
+					"type": "string"
+				},
+				{
 					"slug": "section_label",
 					"label": "Section label",
 					"type": "string"
@@ -754,21 +759,6 @@
 				{
 					"slug": "topbar_phone",
 					"label": "Topbar phone",
-					"type": "string"
-				},
-				{
-					"slug": "topbar_facebook",
-					"label": "Topbar facebook",
-					"type": "string"
-				},
-				{
-					"slug": "topbar_twitter",
-					"label": "Topbar twitter",
-					"type": "string"
-				},
-				{
-					"slug": "topbar_instagram",
-					"label": "Topbar instagram",
 					"type": "string"
 				},
 				{
@@ -1265,7 +1255,7 @@
 					"items": [
 						{
 							"title_dot": "Business Growth Advice",
-							"title": "Not for Profit.<br/>\nFor People.",
+							"title": "Not for Profit.\nFor People.",
 							"desc": "Donec venenatis volutpat urna congue imperdiet. Morbi ultrices sapien eu ligula incidunt ultrices. Uitae imperdiet felis.",
 							"btn_title": "Find Out More ",
 							"btn_link": "/services",
@@ -1273,7 +1263,7 @@
 						},
 						{
 							"title_dot": "Tax Advice and Management",
-							"title": "Tax Advice and.<br/>\nManagement.",
+							"title": "Tax Advice and.\nManagement.",
 							"desc": "Donec venenatis volutpat urna congue imperdiet. Morbi ultrices sapien eu ligula incidunt ultrices. Uitae imperdiet felis.",
 							"btn_title": "Find Out More ",
 							"btn_link": "/services",
@@ -1281,7 +1271,7 @@
 						},
 						{
 							"title_dot": "Business Insights",
-							"title": "Business Insights.<br/>\nFor People.",
+							"title": "Business Insights.\nFor People.",
 							"desc": "Donec venenatis volutpat urna congue imperdiet. Morbi ultrices sapien eu ligula incidunt ultrices. Uitae imperdiet felis.",
 							"btn_title": "Find Out More ",
 							"btn_link": "/services",
@@ -1289,7 +1279,7 @@
 						},
 						{
 							"title_dot": "Investment and Superannuation",
-							"title": "Investment and .<br/>\nSuperannuation.",
+							"title": "Investment and .\nSuperannuation.",
 							"desc": "Donec venenatis volutpat urna congue imperdiet. Morbi ultrices sapien eu ligula incidunt ultrices. Uitae imperdiet felis.",
 							"btn_title": "Find Out More ",
 							"btn_link": "/services",
@@ -1309,7 +1299,7 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"block_intro": "Quisque dolor fringilla semper, libero \nhendrerit allis, magna augue putate nibh ucibus enim eros acumin arcu ligula acumin dolor scelerisque.",
+					"block_intro": "Quisque dolor fringilla semper, libero\nhendrerit allis, magna augue putate nibh ucibus enim eros acumin arcu ligula acumin dolor scelerisque.",
 					"columns": "2",
 					"slide": "1",
 					"title": "Morgan help Business  Performance and  Scalability.",
@@ -1663,7 +1653,7 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"ft_desc": "Morgan provide Pioneering Solutions for everyday processes. We love to find simple \nsolutions to complex challenges.",
+					"ft_desc": "Morgan provide Pioneering Solutions for everyday processes. We love to find simple\nsolutions to complex challenges.",
 					"title": "Our Services.",
 					"items": [
 						{
@@ -1791,7 +1781,7 @@
 						{
 							"img": "images/joomlart/testimonials/item-1.jpg",
 							"label": "Investment Managment",
-							"title": "Stark Helped a Global Financial \nServices Firm Overcome Testing Issues",
+							"title": "Stark Helped a Global Financial\nServices Firm Overcome Testing Issues",
 							"desc": "Curabitur finibus mollis pellentesque. Curabitur arcu nisi, dignissim a mollis in, imperdiet vitae sapien.",
 							"link": ""
 						},
@@ -1799,7 +1789,7 @@
 							"img": "images/joomlart/testimonials/item-2.jpg",
 							"label": "Retirement Planning",
 							"title": "Help Business Performance and Scalability",
-							"desc": "Sed vel sapien ligula. Aliquam quis laoreet quam, eget eleifend lorem. \nBestibulum sagittis magna vitae nisi tempus ullamcorper.",
+							"desc": "Sed vel sapien ligula. Aliquam quis laoreet quam, eget eleifend lorem.\nBestibulum sagittis magna vitae nisi tempus ullamcorper.",
 							"link": ""
 						},
 						{
@@ -1812,8 +1802,8 @@
 						{
 							"img": "images/joomlart/testimonials/item-1.jpg",
 							"label": "Investment Managment",
-							"title": "Stark Helped a Global Financial \nServices Firm Overcome Testing Issues",
-							"desc": "Sed vel sapien ligula. Aliquam quis laoreet quam, eget eleifend lorem. \nBestibulum sagittis magna vitae nisi tempus ullamcorper.",
+							"title": "Stark Helped a Global Financial\nServices Firm Overcome Testing Issues",
+							"desc": "Sed vel sapien ligula. Aliquam quis laoreet quam, eget eleifend lorem.\nBestibulum sagittis magna vitae nisi tempus ullamcorper.",
 							"link": ""
 						}
 					],
@@ -1896,13 +1886,13 @@
 					"title": "Our Happy Clients",
 					"items": [
 						{
-							"member_description": "“Simple and eiegant a short course. It's not for full \nunderstanding, but it works perfectly as an introduction for the subject.”",
+							"member_description": "“Simple and eiegant a short course. It's not for full\nunderstanding, but it works perfectly as an introduction for the subject.”",
 							"img": "images/joomlart/testimonials/item-5.jpg",
 							"name": "Emma Button",
 							"member_position": "Business Executive"
 						},
 						{
-							"member_description": "“Very explained even for a short course. It's not for full \nunderstanding, but it works perfectly as an introduction for the subject.”",
+							"member_description": "“Very explained even for a short course. It's not for full\nunderstanding, but it works perfectly as an introduction for the subject.”",
 							"img": "images/joomlart/testimonials/item-6.jpg",
 							"name": "Shadrack Browne",
 							"member_position": "Business Executive"
@@ -1914,7 +1904,7 @@
 							"member_position": "Business Executive"
 						},
 						{
-							"member_description": "“Very explained even for a short course. It's not for full \nunderstanding, but it works perfectly as an introduction for the subject.”",
+							"member_description": "“Very explained even for a short course. It's not for full\nunderstanding, but it works perfectly as an introduction for the subject.”",
 							"img": "images/joomlart/testimonials/item-8.jpg",
 							"name": "Tony Stark",
 							"member_position": "Business Executive"
@@ -1940,7 +1930,7 @@
 				"locale": "en",
 				"data": {
 					"columns": "4",
-					"more_title": "We’re hirring, together we can make a real difference in business. <b>Join Our Team</b>",
+					"more_title": "We’re hirring, together we can make a real difference in business.",
 					"more_link": "",
 					"color_link": "warning",
 					"title": "Meet Our Professionals.",
@@ -1970,6 +1960,7 @@
 							"link": ""
 						}
 					],
+					"more_cta": "Join Our Team",
 					"section_label": "Expert People",
 					"section_bg": "gray",
 					"section_mask": ""
@@ -2035,6 +2026,7 @@
 							"link": ""
 						}
 					],
+					"more_cta": "",
 					"section_label": "Our Team",
 					"section_bg": "gray",
 					"section_mask": ""
@@ -2090,6 +2082,228 @@
 			}
 		],
 		"posts": [
+			{
+				"id": "posts:strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations:en",
+				"slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Strong job growth is back: Payrolls jump in June well above expectations",
+					"excerpt": [],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. If I didn't have my parents to think. He must have tried it a hundred times, shut his eyes wouldn't have.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "\"What's happened to me? \" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "Cut out of an illustrated magazine and housed in a nice, gilded frame",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i14",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b17",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s18",
+									"text": "Gregor then turned to look out the window at the dull weather. Drops of rain could be heard hitting the pane, which made him feel quite sad. \"How about if I sleep a little bit longer and forget all this nonsense\", he thought, but that was something he was unable to do because he was used to sleeping on his right, and in his present state couldn't get into that position.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b21",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s22",
+									"text": "However hard he threw himself onto his right, he always rolled back to where he was. He must have tried it a hundred times, shut his eyes so that he wouldn't have to look at the floundering legs, and only stopped when he began to feel a mild, dull pain there that he had never felt before. \"Oh, God\", he thought, \"what a strenuous career it is that I've chosen!",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b25",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s26",
+									"text": "Travelling day in and day out. Doing business like this takes much more effort than doing your own business at home, and on top of that there's the curse of travelling, worries about making train connections, bad and irregular food, contact with different people all the time so that you can never get to know anyone or become friendly with them. It can all go to Hell!",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b29",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s30",
+									"text": "Doing business like this takes much more effort than doing your own business at home",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i34",
+							"alt": ""
+						},
+						{
+							"_type": "image",
+							"_key": "i37",
+							"alt": ""
+						},
+						{
+							"_type": "image",
+							"_key": "i40",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b44",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s45",
+									"text": "He slid back into his former position. \"Getting up early all the time\", he thought, \"it makes you stupid. You've got to get enough sleep. Other travelling salesmen live a life of luxury. For instance, whenever I go back to the guest house during the morning to copy out the contract, these gentlemen are always still sitting there eating their breakfasts. He slid back into his former position. \"Getting up early all the time\", he thought, \"it makes you stupid. You've got to get enough sleep. Other travelling salesmen live a life of luxury. For instance, whenever I go back to the guest house during the morning to copy out the contract, these gentlemen are always still sitting there eating their breakfasts.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b48",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s49",
+									"text": "Amazingly few discotheques provide jukeboxes. My girl wove six dozen plaid jackets before she quit. Six big devils from Japan quickly forgot how to waltz. Big July earthquakes confound zany experimental vow. Foxy parsons quiz and cajole the lovably dim wiki-girl. Have a pick: twenty six letters - no forcing a jumbled quiz! Crazy Fredericka bought many very exquisite opal jewels. Sixty zippers were quickly picked from the woven jute bag. A quick movement of the enemy will jeopardize six gunboats.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b52",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s53",
+									"text": "If several languages coalesce, the grammar of the resulting language",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b56",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s57",
+									"text": "Everyone realizes why a new common language would be desirable: one could refuse to pay expensive translators. To achieve this, it would be necessary to have uniform grammar, pronunciation and more common words. If several languages coalesce, the grammar of the resulting language is more simple and regular than that of the individual languages.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i61",
+							"alt": ""
+						},
+						{
+							"_type": "image",
+							"_key": "i64",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b68",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s69",
+									"text": "I ought to just try that with my boss; I'd get kicked out on the spot. But who knows, maybe that would be the best thing for me. If I didn't have my parents to think about I'd have given in my notice a long time ago, I'd have gone up to the boss and told him just what I think, tell him everything I would, let him know just what I feel. He'd fall right off his desk!",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2021-08-03T02:11:34.000Z",
+					"cover": "images/joomlart/blog/img-20-thumb.jpg",
+					"created": "2021-08-03T02:11:34.000Z",
+					"author": "Admin",
+					"author_avatar": "",
+					"tags": "Business\nMorgan\nJoomlArt",
+					"path": "/blog/strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations"
+				},
+				"taxonomies": {
+					"category": [
+						"investment-managment"
+					]
+				}
+			},
 			{
 				"id": "posts:student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt:en",
 				"slug": "student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
@@ -6196,9 +6410,6 @@
 					"brand_name": "Morgan",
 					"topbar_address": "312 North 24th Street Brooklyn, New York",
 					"topbar_phone": "212.218.8500",
-					"topbar_facebook": "",
-					"topbar_twitter": "",
-					"topbar_instagram": "",
 					"footer_social_title": "Social",
 					"footer_social_facebook": "https://www.joomlart.com/",
 					"footer_social_twitter": "https://www.joomlart.com/",
@@ -6232,8 +6443,8 @@
 		],
 		"footer_links": [
 			{
-				"id": "footer_links:navigate-1:en",
-				"slug": "navigate-1",
+				"id": "footer_links:col1-01:en",
+				"slug": "col1-01",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6244,8 +6455,8 @@
 				}
 			},
 			{
-				"id": "footer_links:navigate-2:en",
-				"slug": "navigate-2",
+				"id": "footer_links:col1-02:en",
+				"slug": "col1-02",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6256,8 +6467,8 @@
 				}
 			},
 			{
-				"id": "footer_links:navigate-3:en",
-				"slug": "navigate-3",
+				"id": "footer_links:col1-03:en",
+				"slug": "col1-03",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6268,8 +6479,8 @@
 				}
 			},
 			{
-				"id": "footer_links:navigate-4:en",
-				"slug": "navigate-4",
+				"id": "footer_links:col1-04:en",
+				"slug": "col1-04",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6280,8 +6491,8 @@
 				}
 			},
 			{
-				"id": "footer_links:navigate-5:en",
-				"slug": "navigate-5",
+				"id": "footer_links:col1-05:en",
+				"slug": "col1-05",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6292,8 +6503,8 @@
 				}
 			},
 			{
-				"id": "footer_links:navigate-6:en",
-				"slug": "navigate-6",
+				"id": "footer_links:col1-06:en",
+				"slug": "col1-06",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6304,8 +6515,8 @@
 				}
 			},
 			{
-				"id": "footer_links:services-1:en",
-				"slug": "services-1",
+				"id": "footer_links:col2-01:en",
+				"slug": "col2-01",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6316,8 +6527,8 @@
 				}
 			},
 			{
-				"id": "footer_links:services-2:en",
-				"slug": "services-2",
+				"id": "footer_links:col2-02:en",
+				"slug": "col2-02",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6328,8 +6539,8 @@
 				}
 			},
 			{
-				"id": "footer_links:services-3:en",
-				"slug": "services-3",
+				"id": "footer_links:col2-03:en",
+				"slug": "col2-03",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6340,8 +6551,8 @@
 				}
 			},
 			{
-				"id": "footer_links:services-4:en",
-				"slug": "services-4",
+				"id": "footer_links:col2-04:en",
+				"slug": "col2-04",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6352,8 +6563,8 @@
 				}
 			},
 			{
-				"id": "footer_links:services-5:en",
-				"slug": "services-5",
+				"id": "footer_links:col2-05:en",
+				"slug": "col2-05",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6364,8 +6575,8 @@
 				}
 			},
 			{
-				"id": "footer_links:support-1:en",
-				"slug": "support-1",
+				"id": "footer_links:col3-01:en",
+				"slug": "col3-01",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6376,8 +6587,8 @@
 				}
 			},
 			{
-				"id": "footer_links:support-2:en",
-				"slug": "support-2",
+				"id": "footer_links:col3-02:en",
+				"slug": "col3-02",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6388,8 +6599,8 @@
 				}
 			},
 			{
-				"id": "footer_links:support-3:en",
-				"slug": "support-3",
+				"id": "footer_links:col3-03:en",
+				"slug": "col3-03",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6400,8 +6611,8 @@
 				}
 			},
 			{
-				"id": "footer_links:support-4:en",
-				"slug": "support-4",
+				"id": "footer_links:col3-04:en",
+				"slug": "col3-04",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6412,8 +6623,8 @@
 				}
 			},
 			{
-				"id": "footer_links:support-5:en",
-				"slug": "support-5",
+				"id": "footer_links:col3-05:en",
+				"slug": "col3-05",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6424,8 +6635,8 @@
 				}
 			},
 			{
-				"id": "footer_links:support-6:en",
-				"slug": "support-6",
+				"id": "footer_links:col3-06:en",
+				"slug": "col3-06",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6436,8 +6647,8 @@
 				}
 			},
 			{
-				"id": "footer_links:careers-1:en",
-				"slug": "careers-1",
+				"id": "footer_links:col4-01:en",
+				"slug": "col4-01",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6448,8 +6659,8 @@
 				}
 			},
 			{
-				"id": "footer_links:careers-2:en",
-				"slug": "careers-2",
+				"id": "footer_links:col4-02:en",
+				"slug": "col4-02",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6460,8 +6671,8 @@
 				}
 			},
 			{
-				"id": "footer_links:careers-3:en",
-				"slug": "careers-3",
+				"id": "footer_links:col4-03:en",
+				"slug": "col4-03",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6472,8 +6683,8 @@
 				}
 			},
 			{
-				"id": "footer_links:careers-4:en",
-				"slug": "careers-4",
+				"id": "footer_links:col4-04:en",
+				"slug": "col4-04",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6484,8 +6695,8 @@
 				}
 			},
 			{
-				"id": "footer_links:terms-privacy-1:en",
-				"slug": "terms-privacy-1",
+				"id": "footer_links:col5-01:en",
+				"slug": "col5-01",
 				"status": "published",
 				"locale": "en",
 				"data": {
@@ -6496,8 +6707,8 @@
 				}
 			},
 			{
-				"id": "footer_links:terms-privacy-2:en",
-				"slug": "terms-privacy-2",
+				"id": "footer_links:col5-02:en",
+				"slug": "col5-02",
 				"status": "published",
 				"locale": "en",
 				"data": {

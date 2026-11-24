@@ -1,0 +1,48 @@
+---
+/**
+ * acm-features style-3: a full-width band, half picture and half text (label, heading, lead, an optional list, accordion or form,
+ * an optional button). `align` 1 puts the picture on the left, 0 on the right. The slot holds what the module hangs under the text.
+ */
+import { PortableText } from 'emdash/ui'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { href, type Locale } from '@/lib/i18n'
+import { dataHref } from '@/lib/data-links'
+import PostGlyph from '@/components/site/PostGlyph.astro'
+import Section from './Section.astro'
+import SectionHead from './SectionHead.astro'
+
+interface Props {
+  entry: Record<string, any>
+  name: string
+  locale: Locale
+  live: (url: string) => boolean
+}
+const { entry, name, locale, live } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
+const left = String(entry.align) === '1'
+const pic = mediaUrl(entry.img_features)
+const secondary = entry.section_bg === 'secondary'
+const hasBody = Astro.slots.has('default')
+---
+
+<Section entry={entry} name={name} flush>
+	<div class:list={['mg-split', left ? 'is-left' : 'is-right', secondary && 'is-secondary']}>
+		{pic && <div class="mg-split-pic"><img src={pic} alt="" width="960" height="900" loading="lazy" {...$s('img_features')} /></div>}
+		<div class="mg-split-text">
+			<div class="mg-split-in">
+				<SectionHead entry={entry} collection="features_intro" />
+				{Array.isArray(entry.description) && entry.description.length > 0 && (
+					<div class="mg-lead mg-split-desc" {...$s('description')}><PortableText value={entry.description} /></div>
+				)}
+				{hasBody && <div class="mg-split-extra"><slot /></div>}
+				{entry.btn_title && entry.btn_link && live(entry.btn_link) && (
+					<div class="mg-actions"><a class="mg-btn" href={dataHref(entry.btn_link, (p) => href(locale, p))} {...$s('btn_title')}>{entry.btn_title}<PostGlyph name="arrow" /></a></div>
+				)}
+				{!entry.btn_title && entry.btn_link && live(entry.btn_link) && (
+					<div class="mg-actions"><a class="mg-btn is-square" href={dataHref(entry.btn_link, (p) => href(locale, p))} aria-label={entry.title}><PostGlyph name="arrow" /></a></div>
+				)}
+			</div>
+		</div>
+	</div>
+</Section>

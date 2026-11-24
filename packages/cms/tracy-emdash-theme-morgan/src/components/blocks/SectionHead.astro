@@ -1,32 +1,29 @@
 ---
 /**
- * The t4section chrome's centred title block: the module's own title (accent, 20 px), the big heading (`section_title`) and the
- * lead text (`section_desc`, paragraphs split by a line break). Prints nothing when the entry has none of them.
+ * The title block every section opens with (the source's `.section-title`): the small red label (the module's sub-heading),
+ * the heading and an optional lead. `center` centres it; the heading is the entry's `title` unless `titleField` says otherwise.
  */
 import { stampFor } from '@/lib/stamps'
+import Lines from './Lines.astro'
 
 interface Props {
   entry: Record<string, any>
   collection: string
+  center?: boolean
+  lead?: string
+  leadField?: string
+  tag?: 'h2' | 'h3'
 }
-const { entry, collection } = Astro.props
+const { entry, collection, center = false, lead = '', leadField = 'block_intro', tag = 'h3' } = Astro.props
 const $s = stampFor(Astro.request, collection, { id: entry.id, slug: entry.slug })
-const paras = String(entry.section_desc ?? '')
-  .split('\n')
-  .filter(Boolean)
-const has = entry.section_label || entry.section_title || paras.length > 0
+const Heading = tag
+const has = entry.section_label || entry.title || lead
 ---
 
 {has && (
-	<div class="fr-container">
-		<div class="fr-section-title-wrap">
-			{entry.section_label && <h3 class="fr-section-title" {...$s('section_label')}><span>{entry.section_label}</span></h3>}
-			{entry.section_title && <span class="fr-main-title" {...$s('section_title')}>{entry.section_title}</span>}
-			{paras.length > 0 && (
-				<div class="fr-lead fr-top-desc" {...$s('section_desc')}>
-					{paras.map((p) => <p>{p}</p>)}
-				</div>
-			)}
-		</div>
+	<div class:list={['mg-sec-title', center && 'is-center']}>
+		{entry.section_label && <div class="mg-sub" {...$s('section_label')}><span>{entry.section_label}</span></div>}
+		{entry.title && <Heading class="mg-sec-h" {...$s('title')}><Lines text={entry.title} /></Heading>}
+		{lead && <p class="mg-lead" {...$s(leadField)}><Lines text={lead} /></p>}
 	</div>
 )}

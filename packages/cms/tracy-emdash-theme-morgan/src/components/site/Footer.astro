@@ -3,61 +3,60 @@ import type { Chrome } from '@/lib/chrome'
 import { stampFor } from '@/lib/stamps'
 import { fill, href } from '@/lib/i18n'
 import { liveLinks } from '@/lib/link-gate'
-import { telHref } from '@/lib/tel'
 import { dataHref } from '@/lib/data-links'
+import PostGlyph from '@/components/site/PostGlyph.astro'
 
 interface Props {
   chrome: Chrome
 }
 const { chrome } = Astro.props
-const { site, locale } = chrome
+const { site, locale, footer } = chrome
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const copyright = fill(site.copyright, { year: new Date().getUTCFullYear(), name: site.brand_name })
-const lines = (v: unknown) =>
-  String(v ?? '')
-    .split('\n')
-    .filter(Boolean)
-// the one linked entry (`footer_link_text`, going to `footer_link_to`) first, then the source's `#` entries as plain text, one per line (DECISIONS D11)
-const links = [
-  { label: String(site.footer_link_text ?? ''), path: String(site.footer_link_to ?? '').trim() }
-].filter((l) => l.label)
-const live = await liveLinks(Astro.request, locale, [...links.map((l) => l.path), site.book_link])
-const Lines = (v: unknown) => lines(v)
+const live = await liveLinks(Astro.request, locale, footer.flatMap((c) => c.links.map((l) => l.link)))
+const socials = [
+  { glyph: 'facebook', url: String(site.footer_social_facebook ?? ''), field: 'footer_social_facebook' },
+  { glyph: 'twitter', url: String(site.footer_social_twitter ?? ''), field: 'footer_social_twitter' },
+  { glyph: 'instagram', url: String(site.footer_social_instagram ?? ''), field: 'footer_social_instagram' }
+].filter((s) => s.url)
 ---
 
-<footer class="fr-footer">
-	<div class="fr-container">
-		<div class="fr-footer-cols">
-			<div>
-				<h3 {...$c('footer_about_title')}>{site.footer_about_title}</h3>
-				<div {...$c('footer_about')}>{Lines(site.footer_about).map((l) => <p>{l}</p>)}</div>
-			</div>
-			<div>
-				<h3 {...$c('footer_visit_title')}>{site.footer_visit_title}</h3>
-				<p {...$c('footer_address')}>{site.footer_address}</p>
-				{site.footer_phone && <p>{telHref(site.footer_phone) ? <a href={telHref(site.footer_phone)!} {...$c('footer_phone')}>{site.footer_phone}</a> : <span {...$c('footer_phone')}>{site.footer_phone}</span>}</p>}
-				{site.footer_email && <p><a href={`mailto:${site.footer_email}`} {...$c('footer_email')}>{site.footer_email}</a></p>}
-			</div>
-			<div>
-				{live(site.book_link) && (
-					<>
-						<h3 {...$c('footer_reservations_title')}>{site.footer_reservations_title}</h3>
-						<p><a class="fr-btn is-light" href={dataHref(site.book_link, (p) => href(locale, p))} {...$c('footer_reservations_button')}>{site.footer_reservations_button}</a></p>
-					</>
+<footer class="mg-footer">
+	<div class="mg-footer-main">
+		<div class="mg-container">
+			<div class="mg-footer-cols">
+				{footer.map((col) => (
+					<div class="mg-footer-col">
+						<h3>{col.title}</h3>
+						<ul>
+							{col.links.map((l) => {
+								const $l = stampFor(Astro.request, 'footer_links', { id: l.id, slug: l.slug })
+								return (
+									<li>
+										{l.link && live(l.link)
+											? <a href={dataHref(l.link, (p) => href(locale, p))} {...$l('label')}>{l.label}</a>
+											: <span {...$l('label')}>{l.label}</span>}
+									</li>
+								)
+							})}
+						</ul>
+					</div>
+				))}
+				{socials.length > 0 && (
+					<div class="mg-footer-col mg-footer-social">
+						<h3 {...$c('footer_social_title')}>{site.footer_social_title}</h3>
+						<ul class="mg-social">
+							{socials.map((s) => (
+								<li><a class={`is-${s.glyph}`} href={s.url} aria-label={s.glyph} rel="noopener" {...$c(s.field)}><PostGlyph name={s.glyph} /></a></li>
+							))}
+						</ul>
+					</div>
 				)}
-				<h3 {...$c('footer_hours_title')}>{site.footer_hours_title}</h3>
-				<div class="fr-footer-hours" {...$c('footer_hours')}>{lines(site.footer_hours).map((row) => <p>{row}</p>)}</div>
 			</div>
-			<div>
-				<h3 {...$c('footer_links_title')}>{site.footer_links_title}</h3>
-				<ul>
-					{links.map((l) => <li>{l.path && live(l.path) ? <a href={dataHref(l.path, (p) => href(locale, p))} {...$c('footer_link_text')}>{l.label}</a> : <span {...$c('footer_link_text')}>{l.label}</span>}</li>)}
-					{lines(site.footer_links_text).map((label) => <li {...$c('footer_links_text')}><span>{label}</span></li>)}
-				</ul>
+			<div class="mg-copyright">
+				<p><span {...$c('copyright')}>{copyright}</span> <span {...$c('copyright_credit')}>{site.copyright_credit}</span></p>
+				<p {...$c('license_note')}>{site.license_note}</p>
 			</div>
-		</div>
-		<div class="fr-copyright">
-			<p {...$c('copyright')}>{copyright}</p>
 		</div>
 	</div>
 </footer>

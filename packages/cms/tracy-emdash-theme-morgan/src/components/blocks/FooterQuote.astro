@@ -1,0 +1,41 @@
+---
+/** acm-testimonial style-2: the dark band above the footer, one quote at a time with the person's picture, name and position. */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any>
+}
+const { entry } = Astro.props
+const $s = stampFor(Astro.request, 'testimonials', { id: entry.id, slug: entry.slug })
+const items = (entry.items ?? []) as Record<string, any>[]
+---
+
+<section class="mg-footer-quote mg-sec-footer-quote" data-quotes>
+	<div class="mg-container">
+		{items.map((it, i) => (
+			<figure class:list={['mg-fquote', i === 0 && 'is-active']} data-quote>
+				{it.avatar && <img src={mediaUrl(it.avatar) ?? ''} alt="" width="64" height="64" loading="lazy" {...$s(`items.${i}.avatar`)} />}
+				<div>
+					<blockquote {...$s(`items.${i}.content`)}>{it.content}</blockquote>
+					<figcaption><strong {...$s(`items.${i}.name`)}>{it.name}</strong> <span {...$s(`items.${i}.name_position`)}>{it.name_position}</span></figcaption>
+				</div>
+			</figure>
+		))}
+		{items.length > 1 && (
+			<ul class="mg-dots">
+				{items.map((_, i) => <li><button type="button" data-quote-dot={i} class:list={[i === 0 && 'is-active']} aria-label={String(i + 1)}></button></li>)}
+			</ul>
+		)}
+	</div>
+</section>
+<script>
+	document.querySelectorAll<HTMLElement>('[data-quotes]').forEach((root) => {
+		const q = [...root.querySelectorAll<HTMLElement>('[data-quote]')]
+		const d = [...root.querySelectorAll<HTMLElement>('[data-quote-dot]')]
+		d.forEach((b, n) => b.addEventListener('click', () => {
+			q.forEach((x, i) => x.classList.toggle('is-active', i === n))
+			d.forEach((x, i) => x.classList.toggle('is-active', i === n))
+		}))
+	})
+</script>

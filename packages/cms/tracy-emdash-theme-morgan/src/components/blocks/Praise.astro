@@ -1,0 +1,33 @@
+---
+/** acm-testimonial style-3 ("Our Happy Clients"): a centred heading and a row of quote cards, each with a round avatar, a name and a position. */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import Section from './Section.astro'
+import SectionHead from './SectionHead.astro'
+
+interface Props {
+  entry: Record<string, any>
+  name: string
+}
+const { entry, name } = Astro.props
+const $s = stampFor(Astro.request, 'testimonials', { id: entry.id, slug: entry.slug })
+const items = (entry.items ?? []) as Record<string, any>[]
+---
+
+<Section entry={entry} name={name}>
+	<div class="mg-container">
+		<SectionHead entry={entry} collection="testimonials" center />
+	</div>
+	<div class="mg-praise" data-carousel>
+		{items.map((it, i) => (
+			<figure class="mg-quote-card">
+				<blockquote {...$s(`items.${i}.member_description`)}>{it.member_description}</blockquote>
+				<figcaption>
+					{it.img && <img src={mediaUrl(it.img) ?? ''} alt="" width="48" height="48" loading="lazy" {...$s(`items.${i}.img`)} />}
+					<strong {...$s(`items.${i}.name`)}>{it.name}</strong>
+					<span {...$s(`items.${i}.member_position`)}>{it.member_position}</span>
+				</figcaption>
+			</figure>
+		))}
+	</div>
+</Section>

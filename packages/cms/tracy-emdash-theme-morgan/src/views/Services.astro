@@ -1,0 +1,47 @@
+---
+/** Services (the source's "page-landing"): masthead · the tile grid · case studies · client praise · call to action · client logos. */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Masthead from '@/components/blocks/Masthead.astro'
+import FeaturesTiles from '@/components/blocks/FeaturesTiles.astro'
+import Cases from '@/components/blocks/Cases.astro'
+import Praise from '@/components/blocks/Praise.astro'
+import Cta from '@/components/blocks/Cta.astro'
+import Clients from '@/components/blocks/Clients.astro'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import { linkUrls, section } from '@/lib/content'
+import { liveLinks } from '@/lib/link-gate'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, masthead, tiles, cases, praise, cta, clients] = await Promise.all([
+  getEmDashEntry('pages', 'services', { locale }),
+  section('masthead', 'services', locale),
+  section('features_intro', 'services-tiles', locale),
+  section('testimonials', 'services-cases', locale),
+  section('testimonials', 'services-praise', locale),
+  section('features_intro', 'services-cta', locale),
+  section('clients', 'clients', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'services' } : null)
+const live = await liveLinks(Astro.request, locale, linkUrls([tiles, cases, cta]))
+---
+
+<Base chrome={chrome} title={page.title ?? masthead?.title ?? ''} currentPath="/services" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'services', toPath: () => '/services' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<Masthead entry={masthead} />
+		{tiles && <FeaturesTiles entry={tiles} name="tiles" locale={locale} live={live} />}
+		{cases && <Cases entry={cases} name="services-cases" locale={locale} live={live} />}
+		{praise && <Praise entry={praise} name="praise" />}
+		{cta && <Cta entry={cta} name="cta" locale={locale} live={live} />}
+		{clients && <Clients entry={clients} name="services-clients" />}
+	</main>
+</Base>

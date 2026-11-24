@@ -1,9 +1,8 @@
 ---
 /**
- * One article as a card. `lead` = the horizontal first card of the list (picture left, text right); `card` = the grid card
- * (picture, category chip over its lower edge, title, meta, three-line intro); `related` = the card under a post
- * (a taller picture, the date in words, no author). The title links to the post; the category chip is plain text (there is
- * no category page in this template).
+ * One article as a card. `card` = the grid card of the blog list (picture, category chip over its lower edge, title, intro, meta,
+ * round arrow); `related` = the card under a post (a taller picture, the date in words, no author). The title links to the post;
+ * the category chip is plain text (there is no category page in this template).
  */
 import type { PostRow } from '@/lib/posts'
 import { href, type Locale } from '@/lib/i18n'
@@ -13,45 +12,48 @@ import { mediaUrl } from '@/lib/media'
 import { uiDate } from '@/lib/ui-words'
 import { stampFor } from '@/lib/stamps'
 import PostMeta from './PostMeta.astro'
+import PostGlyph from './PostGlyph.astro'
 
 interface Props {
   post: PostRow
   locale: Locale
   tag: string
   by: string
+  title?: string
   byStamp?: Record<string, string>
-  variant?: 'lead' | 'card' | 'related'
+  variant?: 'card' | 'related'
   /** The first cards on the screen load their picture at once. */
   eager?: boolean
 }
-const { post, locale, tag, by, byStamp = {}, variant = 'card', eager = false } = Astro.props
+const { post, locale, tag, by, title = '', byStamp = {}, variant = 'card', eager = false } = Astro.props
 const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
 const pic = mediaUrl(post.cover)
 const own = firstParagraph(post.excerpt)
-// The source prints the whole first paragraph and its CSS clamps it to three lines (measured 2026-11-19: 307 characters in the element, three lines shown)
-const rawIntro = own || firstParagraph(post.body)
-const intro = rawIntro
+const intro = own || firstParagraph(post.body)
 const introField = own ? 'excerpt' : 'body'
 const url = href(locale, postPath(post))
-const size = variant === 'lead' ? [700, 700] : [700, 525]
-const when = post.date
-  ? uiDate(tag, new Date(post.date), { day: 'numeric', month: 'long', year: 'numeric' })
-  : ''
+const when = post.date ? uiDate(tag, new Date(post.date), { day: 'numeric', month: 'long', year: 'numeric' }) : ''
 const Title = variant === 'related' ? 'h3' : 'h2'
 ---
 
-<article class:list={['fr-post', `fr-post-${variant}`]} {...$p()}>
+<article class:list={['mg-post', `mg-post-${variant}`]} {...$p()}>
 	{pic && (
-		<a class="fr-post-pic" href={url} tabindex="-1" aria-hidden="true">
-			<img src={pic} alt="" width={size[0]} height={size[1]} loading={eager ? 'eager' : 'lazy'} {...$p('cover')} />
+		<a class="mg-post-pic" href={url} tabindex="-1" aria-hidden="true">
+			<img src={pic} alt="" width="700" height="450" loading={eager ? 'eager' : 'lazy'} {...$p('cover')} />
 		</a>
 	)}
-	<div class="fr-post-body">
-		{post.category && <div class="fr-post-cat"><span class="fr-chip">{post.category.label}</span></div>}
-		<Title class="fr-post-title"><a href={url} {...$p('title')}>{post.title}</a></Title>
+	<div class="mg-post-body">
+		{post.category && <div class="mg-post-cat"><span class="mg-chip">{post.category.label}</span></div>}
+		<Title class="mg-post-title"><a href={url} {...$p('title')}>{post.title}</a></Title>
 		{variant === 'related'
-			? when && <time class="fr-post-when" datetime={post.date} {...$p('date')}>{when}</time>
-			: <PostMeta post={post} tag={tag} by={by} stamp={$p} byStamp={byStamp} eager={eager} />}
-		{intro && <p class="fr-post-intro" {...$p(introField)}>{intro}</p>}
+			? when && <time class="mg-post-when" datetime={post.date} {...$p('date')}>{when}</time>
+			: (
+				<>
+					{intro && <p class="mg-post-intro" {...$p(introField)}>{intro}</p>}
+					<PostMeta post={post} tag={tag} by={by} stamp={$p} byStamp={byStamp} eager={eager} />
+					<a class="mg-round" href={url} aria-label={title || post.title}><PostGlyph name="arrow" /></a>
+				</>
+			)}
+		{variant === 'related' && intro && <p class="mg-post-intro" {...$p(introField)}>{intro}</p>}
 	</div>
 </article>

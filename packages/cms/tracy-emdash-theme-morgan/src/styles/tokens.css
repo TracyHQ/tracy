@@ -1,42 +1,39 @@
 /*
- * JA Fresco design tokens. Values are the source template's own (docs: `etc/theme/default.json`, measured on the rendered
- * source home, inventory/visual-contract.md). Every colour reads its Design-system role first (`--ds-c-<role>`, the names of
- * design-system-roles.json) and keeps the template's own value as the fallback, so with no system worn the site looks exactly
- * as designed. The page is near-black only: the source has no light/dark switch (DECISIONS D12).
+ * JA Morgan design tokens. Values are the source template's own (docs: `templates/ja_morgan/less/variables.less` and the
+ * rendered J6 home at 1440 px, measured with Chromium, DECISIONS D5). Every colour reads its Design-system role first
+ * (`--ds-c-<role>`, the names of design-system-roles.json) and keeps the template's own value as the fallback, so with no
+ * system worn the site looks exactly as designed. The dark side is the source's own `css/darkmode.css` palette, switched
+ * by `html[data-theme="dark"]` (the same attribute and the same ?theme= query as the source).
  */
 @theme {
-	--font-display: var(--ds-font-display, var(--font-playfair), "Playfair Display", Georgia, "Times New Roman", serif);
-	--font-body: var(--ds-font-body, var(--font-roboto), "Roboto", Helvetica, Arial, sans-serif);
+	--font-display: var(--ds-font-display, var(--font-pt-root-ui), "PT Root UI", Helvetica, Arial, sans-serif);
+	--font-body: var(--ds-font-body, var(--font-pt-root-ui), "PT Root UI", Helvetica, Arial, sans-serif);
 
-	--color-bg: var(--ds-c-bg, #0a0b0a);
-	--color-surface: var(--ds-c-surface, #1a191b);
-	--color-surface-warm: var(--ds-c-surface-warm, #212529);
-	--color-fg: var(--ds-c-fg, rgba(255, 255, 255, 0.8));
-	--color-heading: var(--ds-c-heading, #ffffff);
-	--color-meta: var(--ds-c-meta, rgba(255, 255, 255, 0.6));
-	--color-muted: var(--ds-c-muted, rgba(255, 255, 255, 0.5));
-	--color-line: var(--ds-c-border, rgba(255, 255, 255, 0.1));
-	--color-line-soft: var(--ds-c-border-soft, rgba(255, 255, 255, 0.05));
+	--color-bg: var(--ds-c-bg, #ffffff);
+	--color-surface: var(--ds-c-surface, #f2f3f7);
+	--color-surface-warm: var(--ds-c-surface-warm, #f5f5f5);
+	--color-fg: var(--ds-c-fg, #777777);
+	--color-heading: var(--ds-c-heading, #333333);
+	--color-meta: var(--ds-c-meta, #999999);
+	--color-muted: var(--ds-c-muted, #555555);
+	--color-line: var(--ds-c-border, #dddddd);
+	--color-line-soft: var(--ds-c-border-soft, #eeeeee);
 
-	--color-accent: var(--ds-c-accent, #e6c9a2);
-	--color-accent-on: var(--ds-c-accent-on, #0a0b0a);
-	--color-accent-hover: var(--ds-c-accent-hover, #e6c9a2);
-	--color-accent-text: var(--ds-c-accent-text, #e6c9a2);
-	--color-accent-text-hover: var(--ds-c-accent-text-hover, #e6c9a2);
-	--color-ink: var(--ds-c-ink, #1b1a1c);
+	--color-accent: var(--ds-c-accent, #d93030);
+	--color-accent-on: var(--ds-c-accent-on, #ffffff);
+	--color-accent-hover: var(--ds-c-accent-hover, #b82626);
+	--color-accent-text: var(--ds-c-accent-text, #d93030);
+	--color-accent-text-hover: var(--ds-c-accent-text-hover, #b82626);
+	--color-ink: var(--ds-c-ink, #1b3060);
 	--color-on-ink: var(--ds-c-on-ink, #ffffff);
-	--color-success: var(--ds-c-success, #198754);
-
-	/* the white fills that separate cards and panels from the page (4 to 6 percent white, 5 to 10 percent borders) */
-	--color-tint: color-mix(in srgb, var(--color-on-ink) 4%, transparent);
-	--color-tint-strong: color-mix(in srgb, var(--color-on-ink) 6%, transparent);
+	--color-success: var(--ds-c-success, #5cb85c);
+	--color-card: var(--ds-c-bg, #ffffff);
 
 	/* shadcn semantic tokens, mapped onto the design */
 	--color-background: var(--color-bg);
 	--color-foreground: var(--color-fg);
 	--color-primary: var(--color-accent);
 	--color-primary-foreground: var(--color-accent-on);
-	--color-card: var(--color-tint);
 	--color-card-foreground: var(--color-fg);
 	--color-border: var(--color-line);
 	--color-input: var(--color-line);
@@ -44,28 +41,34 @@
 	--radius: var(--ds-card-radius, 0);
 }
 
-/* the t4section spacing and the heading scale: 128 px down to 12 px, shrinking below 1420, 992 and 576 px */
+/* the source's dark mode (css/darkmode.css): page #0f1320, cards #1a2032, lines #2a3247, text #a7b0c2, headings #f2f4f8 */
+html[data-theme="dark"] {
+	--color-bg: var(--ds-c-bg, #0f1320);
+	--color-surface: var(--ds-c-surface, #141927);
+	--color-surface-warm: var(--ds-c-surface-warm, #161d2c);
+	--color-fg: var(--ds-c-fg, #a7b0c2);
+	--color-heading: var(--ds-c-heading, #f2f4f8);
+	--color-meta: var(--ds-c-meta, #8b93a4);
+	--color-muted: var(--ds-c-muted, #a7b0c2);
+	--color-line: var(--ds-c-border, #2a3247);
+	--color-line-soft: var(--ds-c-border-soft, #1d2436);
+	--color-accent: var(--ds-c-accent, #e0463f);
+	--color-accent-hover: var(--ds-c-accent-hover, #f06b64);
+	--color-accent-text: var(--ds-c-accent-text, #e0463f);
+	--color-accent-text-hover: var(--ds-c-accent-text-hover, #f06b64);
+	--color-ink: var(--ds-c-ink, #1a2032);
+	--color-card: var(--ds-c-surface, #1a2032);
+}
+
+/* the section padding and the heading scale of the source (t3-section: 96 px; h1 60/75 at 1440, shrinking below 1200 and 768) */
 :root {
-	--gutter-xs: 12px;
-	--gutter-sm: 24px;
-	--gutter-normal: 48px;
-	--gutter-lg: 64px;
-	--gutter-xl: 128px;
-	--h1-base: 46px;
-	--h1-size: var(--ds-size-heading, var(--h1-base));
-	--display-size: var(--ds-size-display, var(--h1-base));
-	--h2-size: 32px;
+	--sec-pad: 96px;
+	--h1-size: var(--ds-size-heading, 60px);
+	--h2-size: 40px;
 	--h3-size: 28px;
-	--h4-size: 24px;
-	--h5-size: 20px;
+	--h4-size: 20px;
+	--h5-size: 18px;
 	--h6-size: 16px;
 }
-@media (max-width: 1419.98px) {
-	:root { --h1-base: 34px; --h2-size: 32px; --gutter-normal: 32px; --gutter-lg: 32px; --gutter-xl: 64px; }
-}
-@media (max-width: 991.98px) {
-	:root { --h1-base: 30px; --h2-size: 28px; --h3-size: 24px; --gutter-xl: 32px; }
-}
-@media (max-width: 575.98px) {
-	:root { --h1-base: 28px; --h1-size: var(--ds-size-heading-phone, var(--ds-size-heading, var(--h1-base))); --display-size: var(--ds-size-display-phone, var(--ds-size-display, var(--h1-base))); --h2-size: 26px; --h3-size: 24px; --h4-size: 22px; --gutter-sm: 16px; --gutter-normal: 24px; --gutter-lg: 24px; --gutter-xl: 24px; }
-}
+@media (max-width: 1199.98px) { :root { --h1-size: var(--ds-size-heading, 48px); --h2-size: 34px; --sec-pad: 72px; } }
+@media (max-width: 767.98px) { :root { --h1-size: var(--ds-size-heading-phone, var(--ds-size-heading, 34px)); --h2-size: 28px; --h3-size: 24px; --sec-pad: 48px; } }

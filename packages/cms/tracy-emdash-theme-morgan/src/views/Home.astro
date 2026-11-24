@@ -1,18 +1,26 @@
 ---
 /**
- * Home (DECISIONS D5): hero · services (features-intro 1) · explore (menu 1) · events (features-intro 2) · sea / land / sky (menu 1)
- * · gallery strip (gallery 1) · desserts / tea (menu 1) · gallery strip · testimonials · visit us (features-intro 1).
+ * Home (DECISIONS D6, the source's "Home Style 1"): slideshow · intro cards · services boxes · missions (accordion) · case studies ·
+ * philosophy · the team · the free-consultation form · client logos. The quote band is part of the footer.
  */
 import Base from '@/layouts/Base.astro'
 import PageOwner from '@/components/site/PageOwner.astro'
-import Hero from '@/components/blocks/Hero.astro'
-import FeaturesTiles from '@/components/blocks/FeaturesTiles.astro'
-import MenuList from '@/components/blocks/MenuList.astro'
-import GalleryCarousel from '@/components/blocks/GalleryCarousel.astro'
-import Testimonials from '@/components/blocks/Testimonials.astro'
+import FormWords from '@/components/site/FormWords.astro'
+import Slideshow from '@/components/blocks/Slideshow.astro'
+import FeaturesCards from '@/components/blocks/FeaturesCards.astro'
+import FeaturesBox from '@/components/blocks/FeaturesBox.astro'
+import FeaturesSplit from '@/components/blocks/FeaturesSplit.astro'
+import Accordion from '@/components/blocks/Accordion.astro'
+import Cases from '@/components/blocks/Cases.astro'
+import Teams from '@/components/blocks/Teams.astro'
+import Clients from '@/components/blocks/Clients.astro'
+import FooterQuote from '@/components/blocks/FooterQuote.astro'
+import { blockComponents } from '@emdash-cms/plugin-forms/astro'
 import type { Chrome } from '@/lib/chrome'
+import { uiTag } from '@/lib/ui'
 import type { Locale } from '@/lib/i18n'
-import { section } from '@/lib/content'
+import { linkUrls, section } from '@/lib/content'
+import { liveLinks } from '@/lib/link-gate'
 import { stampFor } from '@/lib/stamps'
 import { getEmDashEntry } from 'emdash'
 
@@ -21,56 +29,50 @@ interface Props {
   locale: Locale
 }
 const { chrome, locale } = Astro.props
-const [
-  { entry: pageEntry },
-  hero,
-  services,
-  explore,
-  events,
-  sea,
-  land,
-  sky,
-  gallery1,
-  desserts,
-  tea,
-  gallery2,
-  testimonials,
-  visit
-] = await Promise.all([
-  getEmDashEntry('pages', 'home', { locale }),
-  section('hero', 'home-hero', locale),
-  section('features_intro', 'home-services', locale),
-  section('menu', 'home-explore', locale),
-  section('features_intro', 'home-events', locale),
-  section('menu', 'home-sea', locale),
-  section('menu', 'home-land', locale),
-  section('menu', 'home-sky', locale),
-  section('gallery', 'home-gallery-1', locale),
-  section('menu', 'home-desserts', locale),
-  section('menu', 'home-tea', locale),
-  section('gallery', 'home-gallery-2', locale),
-  section('testimonials', 'home-testimonials', locale),
-  section('features_intro', 'home-visit', locale)
-])
+const [{ entry: pageEntry }, slideshow, intro, services, missions, missionsList, cases, philosophy, team, consult, clients, contact, quote] =
+  await Promise.all([
+    getEmDashEntry('pages', 'home', { locale }),
+    section('slideshow', 'home-slideshow', locale),
+    section('features_intro', 'home-intro', locale),
+    section('features_intro', 'home-services', locale),
+    section('features_intro', 'home-missions', locale),
+    section('accordion', 'home-missions-list', locale),
+    section('testimonials', 'home-cases', locale),
+    section('features_intro', 'home-philosophy', locale),
+    section('teams', 'home-team', locale),
+    section('features_intro', 'home-consult', locale),
+    section('clients', 'clients', locale),
+    section('contact', 'contact-info', locale),
+    section('testimonials', 'footer-quote', locale)
+  ])
 const page = (pageEntry?.data ?? {}) as Record<string, any>
 const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'home' } : null)
+const live = await liveLinks(Astro.request, locale, linkUrls([slideshow, intro, services, missions, cases, philosophy, team, consult]))
+const FormEmbed = (blockComponents as any)['emdash-form']
+const formId = String(contact?.form_id ?? '').trim()
 ---
 
 <Base chrome={chrome} title={page.title ?? chrome.site.brand_name} currentPath="/" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'home', toPath: () => '/' } : null}>
 	<main id="main">
 		<PageOwner stamp={$page} />
-		{hero && <Hero entry={hero} chrome={chrome} />}
-		{services && <FeaturesTiles entry={services} chrome={chrome} style={1} />}
-		{explore && <MenuList entry={explore} chrome={chrome} />}
-		{events && <FeaturesTiles entry={events} chrome={chrome} style={2} />}
-		{sea && <MenuList entry={sea} chrome={chrome} typeHeading />}
-		{land && <MenuList entry={land} chrome={chrome} typeHeading />}
-		{sky && <MenuList entry={sky} chrome={chrome} typeHeading />}
-		{gallery1 && <GalleryCarousel entry={gallery1} />}
-		{desserts && <MenuList entry={desserts} chrome={chrome} typeHeading />}
-		{tea && <MenuList entry={tea} chrome={chrome} typeHeading />}
-		{gallery2 && <GalleryCarousel entry={gallery2} />}
-		{testimonials && <Testimonials entry={testimonials} chrome={chrome} />}
-		{visit && <FeaturesTiles entry={visit} chrome={chrome} style={1} />}
+		{slideshow && <Slideshow entry={slideshow} locale={locale} live={live} />}
+		{intro && <FeaturesCards entry={intro} name="intro" locale={locale} live={live} />}
+		{services && <FeaturesBox entry={services} name="services" locale={locale} live={live} />}
+		{missions && (
+			<FeaturesSplit entry={missions} name="missions" locale={locale} live={live}>
+				{missionsList && <Accordion entry={missionsList} />}
+			</FeaturesSplit>
+		)}
+		{cases && <Cases entry={cases} name="cases" locale={locale} live={live} />}
+		{philosophy && <FeaturesSplit entry={philosophy} name="philosophy" locale={locale} live={live} />}
+		{team && <Teams entry={team} name="team" locale={locale} live={live} />}
+		{consult && (
+			<FeaturesSplit entry={consult} name="consult" locale={locale} live={live}>
+				{formId && <FormWords tag={uiTag(locale)}><FormEmbed node={{ formId }} /></FormWords>}
+			</FeaturesSplit>
+		)}
+		{clients && <Clients entry={clients} name="clients" />}
 	</main>
+	{quote && <FooterQuote slot="after-subscribe" entry={quote} />}
 </Base>
+{formId && <script>import '@emdash-cms/plugin-forms/client'</script>}

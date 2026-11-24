@@ -1,6 +1,54 @@
 [
   {
     "collection": "posts",
+    "slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+    "locale": "en",
+    "path": "body[3].asset",
+    "file": "images/joomlart/blog/img-11.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+    "locale": "en",
+    "path": "body[8].asset",
+    "file": "images/joomlart/blog/img-1-thumb.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/blog/img-7-thumb.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/blog/img-17-thumb.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+    "locale": "en",
+    "path": "body[15].asset",
+    "file": "images/joomlart/blog/img-19-thumb.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+    "locale": "en",
+    "path": "body[16].asset",
+    "file": "images/joomlart/blog/img-9-thumb.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
     "slug": "student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
     "locale": "en",
     "path": "body[3].asset",

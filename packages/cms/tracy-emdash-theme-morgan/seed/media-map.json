@@ -1,7 +1,34 @@
 {
-	"generatedAt": "2026-11-24T13:40:46.467Z",
+	"generatedAt": "2026-11-24T13:53:40.259Z",
 	"source": "JA Diner j6 1.0.5 webroot",
 	"items": [
+		{
+			"key": "images/joomlart/blog/img-20-thumb",
+			"file": "images/joomlart/blog/img-20-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "79cc8f42f8b0a0eb754b81408fdb500db10c35cbbd4ec635dfa8500e9adb2415",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "body[7].asset"
+				}
+			]
+		},
 		{
 			"key": "images/joomlart/blog/img-12-thumb",
 			"file": "images/joomlart/blog/img-12-thumb.jpg",
@@ -263,6 +290,12 @@
 				},
 				{
 					"collection": "posts",
+					"slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+					"locale": "en",
+					"path": "body[16].asset"
+				},
+				{
+					"collection": "posts",
 					"slug": "how-co-parents-can-stay-on-the-same-financial-page",
 					"locale": "en",
 					"path": "body[8].asset"
@@ -350,6 +383,12 @@
 				},
 				{
 					"collection": "posts",
+					"slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
 					"slug": "how-co-parents-can-stay-on-the-same-financial-page",
 					"locale": "en",
 					"path": "body[9].asset"
@@ -398,6 +437,12 @@
 					"slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
 					"locale": "en",
 					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+					"locale": "en",
+					"path": "body[9].asset"
 				},
 				{
 					"collection": "posts",
@@ -458,6 +503,12 @@
 				},
 				{
 					"collection": "posts",
+					"slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+					"locale": "en",
+					"path": "body[8].asset"
+				},
+				{
+					"collection": "posts",
 					"slug": "fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
 					"locale": "en",
 					"path": "body[10].asset"
@@ -498,27 +549,6 @@
 				{
 					"collection": "posts",
 					"slug": "real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
-					"locale": "en",
-					"path": "body[7].asset"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/blog/img-20-thumb",
-			"file": "images/joomlart/blog/img-20-thumb.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "79cc8f42f8b0a0eb754b81408fdb500db10c35cbbd4ec635dfa8500e9adb2415",
-			"targets": [
-				{
-					"collection": "posts",
-					"slug": "state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
-					"locale": "en",
-					"path": "cover"
-				},
-				{
-					"collection": "posts",
-					"slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
 					"locale": "en",
 					"path": "body[7].asset"
 				}
@@ -1449,6 +1479,66 @@
 			]
 		},
 		{
+			"key": "images/joomlart/blog/img-11",
+			"file": "images/joomlart/blog/img-11.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6e3b6ecc3a54fd3ba0cac9a8ef8c4eb5a283071ca39ce45e4c68c6146d716f94",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
+					"locale": "en",
+					"path": "body[8].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-19-thumb",
+			"file": "images/joomlart/blog/img-19-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "19bbd4904feaedfcd3f1662d6452aa06b90fe24b4a38eb747e57ff9a1bcd2eb5",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+					"locale": "en",
+					"path": "body[15].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+					"locale": "en",
+					"path": "body[11].asset"
+				}
+			]
+		},
+		{
 			"key": "images/joomlart/blog/img-1",
 			"file": "images/joomlart/blog/img-1.jpg",
 			"alt": "",
@@ -1538,27 +1628,6 @@
 					"slug": "trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
 					"locale": "en",
 					"path": "body[4].asset"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/blog/img-11",
-			"file": "images/joomlart/blog/img-11.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "6e3b6ecc3a54fd3ba0cac9a8ef8c4eb5a283071ca39ce45e4c68c6146d716f94",
-			"targets": [
-				{
-					"collection": "posts",
-					"slug": "this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
-					"locale": "en",
-					"path": "body[4].asset"
-				},
-				{
-					"collection": "posts",
-					"slug": "congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
-					"locale": "en",
-					"path": "body[8].asset"
 				}
 			]
 		},
@@ -1763,33 +1832,6 @@
 					"slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
 					"locale": "en",
 					"path": "body[4].asset"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/blog/img-19-thumb",
-			"file": "images/joomlart/blog/img-19-thumb.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "19bbd4904feaedfcd3f1662d6452aa06b90fe24b4a38eb747e57ff9a1bcd2eb5",
-			"targets": [
-				{
-					"collection": "posts",
-					"slug": "house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
-					"locale": "en",
-					"path": "body[10].asset"
-				},
-				{
-					"collection": "posts",
-					"slug": "beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
-					"locale": "en",
-					"path": "body[9].asset"
-				},
-				{
-					"collection": "posts",
-					"slug": "farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
-					"locale": "en",
-					"path": "body[11].asset"
 				}
 			]
 		},

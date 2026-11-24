@@ -97,6 +97,25 @@ for (const [slug, info] of Object.entries(sectionStyle)) {
   })
 }
 
+// `<br/>` inside a text field is a line break; the field holds the line break itself (the template prints it as one)
+const brs = (v, key = '') =>
+  Array.isArray(v)
+    ? v.map((x) => brs(x, key))
+    : v && typeof v === 'object'
+      ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, brs(x, k)]))
+      : typeof v === 'string' && key !== 'description'
+        ? v.replace(/<br\s*\/?>\s*\n?/gi, '\n').replace(/[ \t]+\n/g, '\n')
+        : v
+for (const r of model.records) if (r.type !== 'pages' && r.type !== 'posts') r.values = brs(r.values)
+// the team band's hiring line carries its call to action in a <b>: two fields, the sentence and the words that link
+for (const r of model.records.filter((x) => x.type === 'teams')) {
+  const m = /^([\s\S]*?)\s*<b>([\s\S]*?)<\/b>\s*$/.exec(r.values.more_title ?? '')
+  const type = model.types.find((t) => t.name === 'teams')
+  if (!type.fields.some((f) => f.name === 'more_cta')) type.fields.push({ name: 'more_cta', type: 'text' })
+  r.values.more_cta = m ? m[2] : ''
+  r.values.more_title = m ? m[1] : (r.values.more_title ?? '')
+}
+
 // a link that is `#` in the source goes nowhere: the field is empty and the page prints no link (DECISIONS D10)
 const clearHash = (v) =>
   Array.isArray(v)
@@ -207,6 +226,23 @@ const isPost = (r) => {
   const row = inventory.content.find((c) => c.alias === r.slug)
   return Boolean(row && POST_CATS.has(row.catid))
 }
+// the article that is a menu item ("Single Article") is a post too: the blog's first card
+{
+  const row = inventory.content.find((c) => c.id === '2')
+  if (row && !model.records.some((r) => r.type === 'posts' && r.slug === row.alias)) {
+    const sibling = model.records.find(
+      (r) => r.type === 'posts' && inventory.content.find((c) => c.alias === r.slug)?.catid === row.catid
+    )
+    model.records.push({
+      type: 'posts',
+      slug: row.alias,
+      locale: 'en',
+      status: 'published',
+      terms: sibling?.terms,
+      values: { title: decode(row.title), excerpt: '', body: '', date: row.publish_up, cover: '' }
+    })
+  }
+}
 model.records = model.records.filter((r) => r.type !== 'posts' || isPost(r))
 for (const r of model.records.filter((x) => x.type === 'posts')) {
   const row = inventory.content.find((c) => c.alias === r.slug)
@@ -287,9 +323,6 @@ model.types.push({
     'brand_name',
     'topbar_address',
     'topbar_phone',
-    'topbar_facebook',
-    'topbar_twitter',
-    'topbar_instagram',
     'footer_social_title',
     'footer_social_facebook',
     'footer_social_twitter',
@@ -332,9 +365,6 @@ model.records.push({
     brand_name: 'Morgan',
     topbar_address: lines(tl.content)[0] ?? '',
     topbar_phone: lines(tl.content)[1] ?? '',
-    topbar_facebook: '',
-    topbar_twitter: '',
-    topbar_instagram: '',
     footer_social_title: 'Social',
     footer_social_facebook: 'https://www.joomlart.com/',
     footer_social_twitter: 'https://www.joomlart.com/',
@@ -384,7 +414,7 @@ void copy
   })
   const COLUMNS = { navigate: 'Navigate', services: 'Services', support: 'Support', careers: 'Careers', 'terms-privacy': 'Terms & Privacy' }
   const TO = { Home: '/', Services: '/services', News: '/blog', Testimonials: '/services', Advisors: '/about-us', 'Contact Us': '/contact-us' }
-  for (const [menutype, column] of Object.entries(COLUMNS))
+  for (const [ci, [menutype, column]] of Object.entries(COLUMNS).entries())
     for (const [i, row] of inventory.menu
       .filter((m) => m.menutype === menutype && m.published === '1')
       .sort((a, b) => Number(a.lft ?? 0) - Number(b.lft ?? 0))
@@ -392,7 +422,7 @@ void copy
       const label = decode(row.title).trim()
       model.records.push({
         type: 'footer_links',
-        slug: `${menutype}-${i + 1}`,
+        slug: `col${ci + 1}-${String(i + 1).padStart(2, '0')}`,
         locale: 'en',
         status: 'published',
         values: { title: `${column}: ${label}`, column, label, link: menutype === 'navigate' ? (TO[label] ?? '') : '' }

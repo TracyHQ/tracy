@@ -5,10 +5,9 @@
  */
 import Base from '@/layouts/Base.astro'
 import PageOwner from '@/components/site/PageOwner.astro'
-import PostCard from '@/components/site/PostCard.astro'
+import BlogSidebar from '@/components/site/BlogSidebar.astro'
 import PostMeta from '@/components/site/PostMeta.astro'
 import PostGlyph from '@/components/site/PostGlyph.astro'
-import { publicOrigin } from '@/lib/public-origin'
 import PostImages from '@/components/site/PostImages.astro'
 import ProseBlock from '@/components/site/ProseBlock.astro'
 import ProseListItem from '@/components/site/ProseListItem.astro'
@@ -45,7 +44,6 @@ const me = list.find((p) => p.slug === slug)
 const idx = list.findIndex((p) => p.slug === slug)
 const newer = idx > 0 ? list[idx - 1] : undefined
 const older = idx >= 0 ? list[idx + 1] : undefined
-const related = list.filter((p) => p.slug !== slug).slice(0, 3)
 // one tag per line (a comma list from an older edit still reads)
 const tags = String(a.tags ?? '')
   .split(/[,\n]/)
@@ -76,76 +74,45 @@ const blocks: any[] = []
 for (const b of stamped as any[]) {
   const last = blocks[blocks.length - 1]
   if (b?._type === 'image') {
-    if (last?._type === 'frImages') last.images.push(b)
-    else blocks.push({ _type: 'frImages', _key: `img-${b._key}`, images: [b] })
+    if (last?._type === 'mgImages') last.images.push(b)
+    else blocks.push({ _type: 'mgImages', _key: `img-${b._key}`, images: [b] })
   } else blocks.push(b)
 }
 const components = {
-  type: { frImages: PostImages, ...($post.owner ? { blockquoteGroup: ProseQuote } : {}) },
+  type: { mgImages: PostImages, ...($post.owner ? { blockquoteGroup: ProseQuote } : {}) },
   ...($post.owner ? { block: ProseBlock, listItem: ProseListItem } : {})
 }
 const band = { ...(masthead ?? { id: undefined, slug: 'post' }), background: masthead?.background ?? a.cover }
-// Share links: plain addresses of the three networks' own share pages, built from this post's canonical address and title.
-// No third-party script and no request before the click; each opens in a new tab.
-const postUrl = `${publicOrigin(Astro.url)}${Astro.url.pathname}`
-const q = encodeURIComponent
-const share = [
-  { key: 'facebook', name: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${q(postUrl)}` },
-  {
-    key: 'twitter',
-    name: 'X',
-    href: `https://twitter.com/intent/tweet?url=${q(postUrl)}&text=${q(String(a.title ?? ''))}`
-  },
-  {
-    key: 'linkedin',
-    name: 'LinkedIn',
-    href: `https://www.linkedin.com/sharing/share-offsite/?url=${q(postUrl)}`
-  }
-]
 ---
 
 <Base chrome={chrome} title={a.title} image={cover} currentPath="/blog" type="article" content={{ collection: 'posts', id: a.id, slug, toPath: () => `/blog/${slug}` }}>
 	<main id="main">
 		<PageOwner stamp={$post} />
 		<Masthead entry={band} title={a.title}>
-			{row.category && <span class="fr-chip fr-post-band-chip">{row.category.label}</span>}
+			{row.category && <span class="mg-chip mg-post-band-chip">{row.category.label}</span>}
 			<PostMeta post={row} tag={tag} by={site.by_label} stamp={$post} byStamp={$c('by_label')} eager />
 		</Masthead>
-		<div class="fr-main-body">
-			<div class="fr-container fr-fixed">
-				<article class="fr-article">
-					<div class="fr-prose" {...$post('body')}><PortableText value={blocks} components={components} /></div>
-					<nav class="fr-post-nav" aria-label={w.adjacentArticles}>
+		<div class="mg-main-body">
+			<div class="mg-container">
+				<div class="mg-blog">
+				<article class="mg-article mg-blog-main">
+					<div class="mg-prose" {...$post('body')}><PortableText value={blocks} components={components} /></div>
+					<nav class="mg-post-nav" aria-label={w.adjacentArticles}>
 						{newer && <a class="is-prev" href={href(locale, postPath(newer))} rel="prev" aria-label={`${site.prev_label}: ${newer.title}`}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.6 2.6 12 4 8 8l4 4-1.4 1.4L5.2 8z" /></svg><span {...$c('prev_label')}>{site.prev_label}</span></a>}
 						{older && <a class="is-next" href={href(locale, postPath(older))} rel="next" aria-label={`${site.next_label}: ${older.title}`}><span {...$c('next_label')}>{site.next_label}</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.4 2.6 4 4l4 4-4 4 1.4 1.4L10.8 8z" /></svg></a>}
 					</nav>
-					<div class="fr-article-foot">
-						<div class="fr-share">
-							<h6 {...$c('share_label')}>{site.share_label}</h6>
-							<ul>{share.map((n) => <li class={`is-${n.key}`}><a href={n.href} target="_blank" rel="noopener" aria-label={`${site.share_label} ${n.name}`}><PostGlyph name={n.key} /></a></li>)}</ul>
-						</div>
+					<div class="mg-article-foot">
 						{tags.length > 0 && (
-							<div class="fr-tags">
+							<div class="mg-tags">
 								<h6 {...$c('tags_label')}>{site.tags_label}</h6>
 								<ul {...$post('tags')}>{tags.map((t) => <li>{t}</li>)}</ul>
 							</div>
 						)}
 					</div>
 				</article>
+				<BlogSidebar chrome={chrome} locale={locale} posts={list} tag={tag} />
+				</div>
 			</div>
 		</div>
-		{related.length > 0 && (
-			<section class="fr-related">
-				<div class="fr-container fr-fixed">
-					<div class="fr-section-title-wrap">
-						<h2 class="fr-main-title" {...$c('related_title')}>{site.related_title}</h2>
-						<div class="fr-lead fr-top-desc" {...$c('related_text')}><p>{site.related_text}</p></div>
-					</div>
-					<div class="fr-blog-grid">
-						{related.map((p) => <div class="fr-blog-cell"><PostCard post={p} locale={locale} tag={tag} by={site.by_label} variant="related" /></div>)}
-					</div>
-				</div>
-			</section>
-		)}
 	</main>
 </Base>

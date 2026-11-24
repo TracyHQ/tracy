@@ -1,21 +1,22 @@
 ---
 /**
- * The blog list (Joomla category blog): masthead · the first post as a wide lead card (page 1 only) · a three-column grid of
- * cards · "More Articles …" (the next posts as link-only titles) · pagination. Seven cards and four link titles per page, as
- * the source; `?page=N` names the page (the source's `?start=` offset).
+ * The blog list (Joomla category blog): masthead · a two-column grid of cards (six per page) beside the sidebar (the newest
+ * posts, the categories with their counts, the tags) · pagination. `?start=N` is the offset of the first card of a page, as the
+ * source's address names it.
  */
 import Base from '@/layouts/Base.astro'
 import PageOwner from '@/components/site/PageOwner.astro'
 import PostCard from '@/components/site/PostCard.astro'
-import Masthead from '@/components/blocks/Masthead.astro'
 import PostGlyph from '@/components/site/PostGlyph.astro'
+import BlogSidebar from '@/components/site/BlogSidebar.astro'
+import Masthead from '@/components/blocks/Masthead.astro'
 import type { Chrome } from '@/lib/chrome'
 import { href, type Locale } from '@/lib/i18n'
 import { ui } from '@/lib/ui'
 import { fillWords } from '@/lib/ui-words'
 import { section } from '@/lib/content'
 import { stampFor } from '@/lib/stamps'
-import { loadPosts, postPath } from '@/lib/posts'
+import { loadPosts } from '@/lib/posts'
 import { livePosts } from '@/lib/link-gate'
 import { getEmDashEntry } from 'emdash'
 
@@ -24,10 +25,8 @@ interface Props {
   locale: Locale
 }
 const { chrome, locale } = Astro.props
-const { site } = chrome
 const { tag, w } = ui(locale)
-const CARDS = 7
-const LINKS = 4
+const CARDS = 6
 
 const [{ entry: pageEntry }, masthead, all] = await Promise.all([
   getEmDashEntry('pages', 'blog', { locale }),
@@ -36,24 +35,21 @@ const [{ entry: pageEntry }, masthead, all] = await Promise.all([
 ])
 const list = await livePosts(Astro.request, locale, all)
 
-// ?page=N: anything but a whole number inside 1..pages is a page that does not exist.
+// ?start=N: a whole multiple of the page size inside the list; anything else is a page that does not exist.
 const pages = Math.max(1, Math.ceil(list.length / CARDS))
-const raw = Astro.url.searchParams.get('page')
-const page = raw === null ? 1 : /^[0-9]+$/.test(raw) ? Number(raw) : 0
-if (page < 1 || page > pages) {
+const raw = Astro.url.searchParams.get('start')
+const start = raw === null ? 0 : /^[0-9]+$/.test(raw) ? Number(raw) : -1
+if (start < 0 || start % CARDS !== 0 || start / CARDS >= pages) {
   Astro.response.status = 404
   return Astro.rewrite(href(locale, '/404'))
 }
-const offset = (page - 1) * CARDS
-const cards = list.slice(offset, offset + CARDS)
-const lead = page === 1 ? cards[0] : null
-const grid = page === 1 ? cards.slice(1) : cards
-const more = list.slice(offset + CARDS, offset + CARDS + LINKS)
+const page = start / CARDS + 1
+const cards = list.slice(start, start + CARDS)
 
 const p = pageEntry?.data as Record<string, any> | undefined
 const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: p?.id, slug: 'blog' } : null)
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
-const url = (n: number) => href(locale, n === 1 ? '/blog' : `/blog?page=${n}`)
+const url = (n: number) => href(locale, n === 1 ? '/blog' : `/blog?start=${(n - 1) * CARDS}`)
 const numbers = Array.from({ length: pages }, (_, k) => k + 1)
 ---
 
@@ -61,40 +57,29 @@ const numbers = Array.from({ length: pages }, (_, k) => k + 1)
 	<main id="main">
 		<PageOwner stamp={$page} />
 		<Masthead entry={masthead} />
-		<div class="fr-main-body">
-			<div class="fr-container fr-fixed">
-				{lead && (
-					<div class="fr-blog-lead">
-						<PostCard post={lead} locale={locale} tag={tag} by={site.by_label} byStamp={$c('by_label')} variant="lead" eager />
+		<div class="mg-main-body">
+			<div class="mg-container">
+				<div class="mg-blog">
+					<div class="mg-blog-main">
+						<div class="mg-blog-grid">
+							{cards.map((post, i) => (
+								<div class="mg-blog-cell"><PostCard post={post} locale={locale} tag={tag} by={chrome.site.by_label} byStamp={$c('by_label')} eager={i < 2} /></div>
+							))}
+						</div>
+						{pages > 1 && (
+							<div class="mg-pagination">
+								<nav aria-label={w.pagination}>
+									<ul>
+										{numbers.map((n) => <li class:list={[{ 'is-active': n === page }]}>{n === page ? <span aria-current="page">{n}</span> : <a href={url(n)}>{n}</a>}</li>)}
+										{page < pages && <li><a href={url(page + 1)} rel="next">{w.next}</a></li>}
+									</ul>
+								</nav>
+								<p class="mg-pagination-count">{fillWords(w.pageOf, { page, pages })}</p>
+							</div>
+						)}
 					</div>
-				)}
-				{grid.length > 0 && (
-					<div class="fr-blog-grid">
-						{grid.map((post, i) => (
-							<div class="fr-blog-cell"><PostCard post={post} locale={locale} tag={tag} by={site.by_label} byStamp={$c('by_label')} eager={i < 3 && !lead} /></div>
-						))}
-					</div>
-				)}
-				{more.length > 0 && (
-					<section class="fr-blog-more">
-						<h3 {...$c('more_label')}>{site.more_label}</h3>
-						<ol>{more.map((post) => <li><a href={href(locale, postPath(post))}>{post.title}</a></li>)}</ol>
-					</section>
-				)}
-				{pages > 1 && (
-					<div class="fr-pagination">
-						<nav aria-label={w.pagination}>
-							<ul>
-								<li class:list={[{ 'is-disabled': page === 1 }]}>{page > 1 ? <a href={url(1)} aria-label={w.previous}><PostGlyph name="angle-first" /></a> : <span aria-hidden="true"><PostGlyph name="angle-first" /></span>}</li>
-								<li class:list={[{ 'is-disabled': page === 1 }]}>{page > 1 ? <a href={url(page - 1)} rel="prev" aria-label={w.previous}><PostGlyph name="angle-prev" /></a> : <span aria-hidden="true"><PostGlyph name="angle-prev" /></span>}</li>
-								{numbers.map((n) => <li class:list={[{ 'is-active': n === page }]}>{n === page ? <span aria-current="page">{n}</span> : <a href={url(n)}>{n}</a>}</li>)}
-								<li class:list={[{ 'is-disabled': page === pages }]}>{page < pages ? <a href={url(page + 1)} rel="next" aria-label={w.next}><PostGlyph name="angle-next" /></a> : <span aria-hidden="true"><PostGlyph name="angle-next" /></span>}</li>
-								<li class:list={[{ 'is-disabled': page === pages }]}>{page < pages ? <a href={url(pages)} aria-label={w.next}><PostGlyph name="angle-last" /></a> : <span aria-hidden="true"><PostGlyph name="angle-last" /></span>}</li>
-							</ul>
-						</nav>
-						<p class="fr-pagination-count">{fillWords(w.pageOf, { page, pages })}</p>
-					</div>
-				)}
+					<BlogSidebar chrome={chrome} locale={locale} posts={list} tag={tag} />
+				</div>
 			</div>
 		</div>
 	</main>

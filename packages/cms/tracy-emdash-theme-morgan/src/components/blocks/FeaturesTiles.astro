@@ -1,91 +1,47 @@
 ---
 /**
- * acm features-intro. style 1: full-bleed picture tiles (2 to 4 per row, 850 px tall) with a title and a line over a fade to the page colour.
- * style 2: edge-to-edge colour-mask tiles (`bg_color` primary / dark) with a big centred title and an action line with an arrow.
- * A tile link of `#` is not a link (plain text); a real link makes the whole tile clickable.
+ * acm-features style-4 ("Our Services"): a centred heading and lead, then a four-column grid of tiles that alternate a coloured text
+ * tile (icon, title, text, link) and a picture. `content_align` says on which side of its row the text tile sits.
  */
-import type { Chrome } from '@/lib/chrome'
-import SectionHead from '@/components/blocks/SectionHead.astro'
-import { href } from '@/lib/i18n'
 import { mediaUrl } from '@/lib/media'
-import { spacing } from '@/lib/layout'
 import { stampFor } from '@/lib/stamps'
-import { liveLinks } from '@/lib/link-gate'
+import { href, type Locale } from '@/lib/i18n'
 import { dataHref } from '@/lib/data-links'
-import { cleanHtml } from '@/lib/html'
+import PostGlyph from '@/components/site/PostGlyph.astro'
+import Section from './Section.astro'
+import Lines from './Lines.astro'
 
 interface Props {
   entry: Record<string, any>
-  chrome: Chrome
-  style?: 1 | 2
+  name: string
+  locale: Locale
+  live: (url: string) => boolean
 }
-const { entry, chrome, style = 1 } = Astro.props
-const $f = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
-const items: any[] = entry.items ?? []
-const live = await liveLinks(
-  Astro.request,
-  chrome.locale,
-  items.map((i) => i.link)
-)
-const link = (u: unknown): string | null => {
-  if (typeof u !== 'string' || !u.trim() || u.trim() === '#' || !live(u)) return null
-  return dataHref(u, (p) => href(chrome.locale, p))
-}
-const cols = Math.min(4, Math.max(1, Number(entry.columns) || 2))
-const left = entry.align === 'left'
-const bg = (v: unknown) => {
-  const u = mediaUrl(v as any)
-  return u ? `background-image:url('${u}')` : undefined
-}
+const { entry, name, locale, live } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
+const items = (entry.items ?? []) as Record<string, any>[]
 ---
 
-<section class:list={['fr-section', spacing(entry.slug)]}>
-	{style === 1 && <SectionHead entry={entry} collection="features_intro" />}
-	{style === 1 ? (
-		<div class="fr-container-fluid fr-fi-wrap">
-			<div class:list={['fr-fi-row', `cols-${cols}`, left && 'is-left']}>
-				{items.map((it, i) => {
-					const to = link(it.link)
-					return (
-						<div class="fr-fi-col">
-							<div class="fr-fi-item" style={bg(it.img_icon)}>
-								{to && <a class="fr-fi-mask" href={to} aria-label={it.title} />}
-								<div class="fr-fi-inner">
-									{it.title && <h3 {...$f(`items[${i}].title`)}>{it.title}</h3>}
-									{it.description && <p {...$f(`items[${i}].description`)} set:html={cleanHtml(it.description)} />}
-								</div>
-							</div>
-						</div>
-					)
-				})}
+<Section entry={entry} name={name}>
+	<div class="mg-container">
+		<div class="mg-sec-title is-center">
+			{entry.section_label && <div class="mg-sub" {...$s('section_label')}><span>{entry.section_label}</span></div>}
+			{entry.ft_desc && <h2 class="mg-sec-h mg-tiles-h" {...$s('ft_desc')}><Lines text={entry.ft_desc} /></h2>}
+		</div>
+	</div>
+	<div class="mg-tiles">
+		{items.map((it, i) => (
+			<div class="mg-tile-row">
+				{it.content_align === 'left' && <div class="mg-tile mg-tile-pic">{it.img_intro && <img src={mediaUrl(it.img_intro) ?? ''} alt="" width="360" height="360" loading="lazy" {...$s(`items.${i}.img_intro`)} />}</div>}
+				<div class:list={['mg-tile', 'mg-tile-text', it.content_bg]}>
+					{it.img_icon && <img class="mg-tile-icon" src={mediaUrl(it.img_icon) ?? ''} alt="" width="40" height="40" loading="lazy" {...$s(`items.${i}.img_icon`)} />}
+					<h4 {...$s(`items.${i}.title`)}>{it.title}</h4>
+					<p {...$s(`items.${i}.description`)}>{it.description}</p>
+					{it.ft_link_title && it.ft_link && live(it.ft_link) && <a class="mg-tile-link" href={dataHref(it.ft_link, (p) => href(locale, p))} {...$s(`items.${i}.ft_link_title`)}>{it.ft_link_title}<PostGlyph name="arrow" /></a>}
+					{it.ft_link_title && !(it.ft_link && live(it.ft_link)) && <span class="mg-tile-link" {...$s(`items.${i}.ft_link_title`)}>{it.ft_link_title}<PostGlyph name="arrow" /></span>}
+				</div>
+				{it.content_align !== 'left' && <div class="mg-tile mg-tile-pic">{it.img_intro && <img src={mediaUrl(it.img_intro) ?? ''} alt="" width="360" height="360" loading="lazy" {...$s(`items.${i}.img_intro`)} />}</div>}
 			</div>
-		</div>
-	) : (
-		<div class="fr-fi2-row">
-			{items.map((it, i) => {
-				const to = link(it.link)
-				const dark = it.bg_color === 'dark'
-				return (
-					<div class="fr-fi2-col">
-						<div class:list={['fr-fi2-item', dark ? 'is-dark' : 'is-primary']} style={bg(it.img_bg)}>
-							<div class="fr-fi2-mask" aria-hidden="true" />
-							{to && <a class="fr-fi-mask" href={to} aria-label={it.title} />}
-							<div class="fr-fi2-inner">
-								{it.title && <h2 class="fr-fi2-title" {...$f(`items[${i}].title`)}>{it.title}</h2>}
-								{(it.action_title || to) && (
-									<div class="fr-fi2-action">
-										<div class="fr-fi2-action-title" {...$f(`items[${i}].action_title`)} set:html={cleanHtml(it.action_title)} />
-										<svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-											<path d="M12 36L36 12" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-											<path d="M16.5 12H36V31.5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-										</svg>
-									</div>
-								)}
-							</div>
-						</div>
-					</div>
-				)
-			})}
-		</div>
-	)}
-</section>
+		))}
+	</div>
+</Section>

@@ -1,0 +1,18 @@
+---
+/** One band of a page: its own class (`mg-sec-<name>`), its background (white / gray / secondary) and the faint map behind it. */
+import { mediaUrl } from '@/lib/media'
+
+interface Props {
+  entry: Record<string, any>
+  name: string
+  /** no vertical padding (the full-width split bands) */
+  flush?: boolean
+}
+const { entry, name, flush = false } = Astro.props
+const mask = mediaUrl(entry.section_mask)
+const bg = ['gray', 'secondary'].includes(entry.section_bg) ? entry.section_bg : 'white'
+---
+
+<section class:list={['mg-sec', `mg-sec-${name}`, `is-${bg}`, flush && 'is-flush', mask && 'has-mask']} style={mask ? `--mask:url('${mask}')` : undefined}>
+	<slot />
+</section>

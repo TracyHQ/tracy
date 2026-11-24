@@ -1,0 +1,43 @@
+---
+/** acm-testimonial style-1 ("Case Studies"): a centred heading and a row of cards, each a picture, a category chip, a title and text. */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { href, type Locale } from '@/lib/i18n'
+import { dataHref } from '@/lib/data-links'
+import PostGlyph from '@/components/site/PostGlyph.astro'
+import Section from './Section.astro'
+import SectionHead from './SectionHead.astro'
+import Lines from './Lines.astro'
+
+interface Props {
+  entry: Record<string, any>
+  name: string
+  locale: Locale
+  live: (url: string) => boolean
+}
+const { entry, name, locale, live } = Astro.props
+const $s = stampFor(Astro.request, 'testimonials', { id: entry.id, slug: entry.slug })
+const items = (entry.items ?? []) as Record<string, any>[]
+const cols = Math.max(1, Math.min(4, Number(entry.columns) || 3))
+---
+
+<Section entry={entry} name={name}>
+	<div class="mg-container">
+		<SectionHead entry={entry} collection="testimonials" center />
+		<div class:list={['mg-cases', items.length > cols && 'is-scroll']} style={`--cols:${cols}`} data-carousel>
+			{items.map((it, i) => (
+				<article class="mg-case">
+					{it.img && <img src={mediaUrl(it.img) ?? ''} alt="" width="420" height="270" loading="lazy" {...$s(`items.${i}.img`)} />}
+					<div class="mg-case-body">
+						{it.label && <span class="mg-chip" {...$s(`items.${i}.label`)}>{it.label}</span>}
+						<h4 {...$s(`items.${i}.title`)}>{it.link && live(it.link) ? <a href={dataHref(it.link, (p) => href(locale, p))}><Lines text={it.title} /></a> : <Lines text={it.title} />}</h4>
+						{it.desc && <p {...$s(`items.${i}.desc`)}>{it.desc}</p>}
+					</div>
+				</article>
+			))}
+		</div>
+		{entry.btn_title && entry.btn_link && live(entry.btn_link) && (
+			<div class="mg-actions is-center"><a class="mg-btn" href={dataHref(entry.btn_link, (p) => href(locale, p))} {...$s('btn_title')}>{entry.btn_title}<PostGlyph name="arrow" /></a></div>
+		)}
+	</div>
+</Section>

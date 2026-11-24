@@ -1,0 +1,35 @@
+---
+/** acm-features style-5: a full-width picture with a white panel (label, heading, text, button) on its right. */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { href, type Locale } from '@/lib/i18n'
+import { dataHref } from '@/lib/data-links'
+import PostGlyph from '@/components/site/PostGlyph.astro'
+import { PortableText } from 'emdash/ui'
+import Section from './Section.astro'
+import SectionHead from './SectionHead.astro'
+
+interface Props {
+  entry: Record<string, any>
+  name: string
+  locale: Locale
+  live: (url: string) => boolean
+}
+const { entry, name, locale, live } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
+const bg = mediaUrl(entry.ft_bg)
+---
+
+<Section entry={entry} name={name} flush>
+	<div class="mg-cta" style={bg ? `background-image:url('${bg}')` : undefined}>
+		<div class="mg-container">
+			<div class="mg-cta-panel">
+				<SectionHead entry={entry} collection="features_intro" />
+				{Array.isArray(entry.description) && entry.description.length > 0 && <div class="mg-lead" {...$s('description')}><PortableText value={entry.description} /></div>}
+				{entry.btn_title && entry.btn_link && live(entry.btn_link) && (
+					<div class="mg-actions"><a class="mg-btn" href={dataHref(entry.btn_link, (p) => href(locale, p))} {...$s('btn_title')}>{entry.btn_title}<PostGlyph name="arrow" /></a></div>
+				)}
+			</div>
+		</div>
+	</div>
+</Section>

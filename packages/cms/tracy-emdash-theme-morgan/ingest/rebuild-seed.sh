@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Rebuild seed/ from the source stand's dump. Run from the package root.
 #   SRC_WORK=<work dir> ingest/rebuild-seed.sh
-# SRC_WORK holds: spec/ (from-joomla.mjs output), j6/ (joomla-dump.mjs output), webroot/ (the extracted release),
-# snapshot/ (the crawl).
+# SRC_WORK holds: spec/ (from-joomla.mjs output), j6/ (joomla-dump.mjs output), webroot/ (the extracted release).
 set -euo pipefail
 W="${SRC_WORK:?SRC_WORK is the folder holding spec/ j6/ webroot/}"
 cp "$W/spec/site-model.json" seed/site-model.json

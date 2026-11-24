@@ -1,0 +1,42 @@
+---
+/** acm-features style-1: the heading and lead on the left, a row of picture cards (title, text, round arrow) on the right. */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { href, type Locale } from '@/lib/i18n'
+import { dataHref } from '@/lib/data-links'
+import PostGlyph from '@/components/site/PostGlyph.astro'
+import Section from './Section.astro'
+import SectionHead from './SectionHead.astro'
+import Lines from './Lines.astro'
+
+interface Props {
+  entry: Record<string, any>
+  name: string
+  locale: Locale
+  live: (url: string) => boolean
+}
+const { entry, name, locale, live } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
+const items = (entry.items ?? []) as Record<string, any>[]
+const cols = Math.max(1, Math.min(3, Number(entry.columns) || 2))
+---
+
+<Section entry={entry} name={name}>
+	<div class="mg-container">
+		<div class="mg-cards-intro">
+			<SectionHead entry={entry} collection="features_intro" lead={entry.block_intro} />
+			<div class="mg-cards" style={`--cols:${cols}`}>
+				{items.map((it, i) => (
+					<article class="mg-card">
+						{it.img && <img src={mediaUrl(it.img) ?? ''} alt="" width="420" height="270" loading="lazy" {...$s(`items.${i}.img`)} />}
+						<div class="mg-card-body">
+							<h4 {...$s(`items.${i}.title`)}>{it.title}</h4>
+							<p {...$s(`items.${i}.description`)}>{it.description}</p>
+							{it.link && live(it.link) && <a class="mg-round" href={dataHref(it.link, (p) => href(locale, p))} aria-label={it.title}><PostGlyph name="arrow" /></a>}
+						</div>
+					</article>
+				))}
+			</div>
+		</div>
+	</div>
+</Section>

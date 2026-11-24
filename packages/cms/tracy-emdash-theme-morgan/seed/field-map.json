@@ -1,5 +1,28 @@
 {
-  "generatedAt": "2026-11-24T13:40:43.901Z",
+  "generatedAt": "2026-11-24T13:53:40.134Z",
+  "roleVocabularyVersion": "place-content-roles/3",
+  "settings": {
+    "title": {
+      "role": "business.name",
+      "group": {
+        "kind": "business",
+        "name": "identity"
+      }
+    },
+    "tagline": {
+      "role": "business.tagline",
+      "group": {
+        "kind": "business",
+        "name": "identity"
+      }
+    }
+  },
+  "taxonomyRoles": {
+    "category": {
+      "role": "editorial.heading"
+    }
+  },
+  "slotRoles": {},
   "fields": {
     "pages.title": {
       "source": "text",
@@ -437,6 +460,12 @@
         "kind": "person"
       }
     },
+    "teams.more_cta": {
+      "source": "text",
+      "target": "string",
+      "label": "More cta",
+      "role": "editorial.button_label"
+    },
     "teams.section_label": {
       "source": "text",
       "target": "string",
@@ -554,24 +583,6 @@
         "kind": "contact",
         "name": "contact"
       }
-    },
-    "chrome.topbar_facebook": {
-      "source": "text",
-      "target": "string",
-      "label": "Topbar facebook",
-      "role": "editorial.paragraph"
-    },
-    "chrome.topbar_twitter": {
-      "source": "text",
-      "target": "string",
-      "label": "Topbar twitter",
-      "role": "editorial.paragraph"
-    },
-    "chrome.topbar_instagram": {
-      "source": "text",
-      "target": "string",
-      "label": "Topbar instagram",
-      "role": "editorial.paragraph"
     },
     "chrome.footer_social_title": {
       "source": "text",
@@ -915,28 +926,5 @@
       "label": "Photo",
       "role": "editorial.illustration"
     }
-  },
-  "roleVocabularyVersion": "place-content-roles/3",
-  "settings": {
-    "title": {
-      "role": "business.name",
-      "group": {
-        "kind": "business",
-        "name": "identity"
-      }
-    },
-    "tagline": {
-      "role": "business.tagline",
-      "group": {
-        "kind": "business",
-        "name": "identity"
-      }
-    }
-  },
-  "taxonomyRoles": {
-    "category": {
-      "role": "editorial.heading"
-    }
-  },
-  "slotRoles": {}
+  }
 }

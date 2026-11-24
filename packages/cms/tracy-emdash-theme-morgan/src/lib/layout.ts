@@ -1,6 +1,6 @@
 // Page composition is code (DECISIONS D5); the vertical rhythm of each section is the one the source's module carries
 // (`spacing.top` / `spacing.bottom`: large = --gutter-xl, normal = --gutter-normal, blank = none), kept in page-layout.json by
-// ingest/shape-model.mjs. `spacing('home-explore')` -> `top-normal bottom-large` for the `fr-section` classes.
+// ingest/shape-model.mjs. `spacing('home-explore')` -> `top-normal bottom-large` for the `mg-section` classes.
 import layout from './page-layout.json'
 
 type Spacing = { top?: string | null; bottom?: string | null }

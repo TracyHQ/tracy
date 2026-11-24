@@ -8,11 +8,8 @@ export const prerender = false
 import { splitPath } from '@/lib/i18n'
 import { loadChrome } from '@/lib/chrome'
 import Home from '@/views/Home.astro'
-import MenuPage from '@/views/MenuPage.astro'
 import About from '@/views/About.astro'
-import GalleryPage from '@/views/GalleryPage.astro'
-import Chiefs from '@/views/Chiefs.astro'
-import Offer from '@/views/Offer.astro'
+import Services from '@/views/Services.astro'
 import Contact from '@/views/Contact.astro'
 import BlogList from '@/views/BlogList.astro'
 import Post from '@/views/Post.astro'
@@ -29,12 +26,9 @@ const clean = segs.length === 0 ? '/' : `/${segs.join('/')}`
 type View = { component: any; props: Record<string, unknown> } | null
 let view: View = null
 const PAGES: Record<string, any> = {
-  menu: MenuPage,
-  about: About,
-  gallery: GalleryPage,
-  chiefs: Chiefs,
-  offer: Offer,
-  contact: Contact,
+  'about-us': About,
+  services: Services,
+  'contact-us': Contact,
   blog: BlogList,
   search: Search
 }

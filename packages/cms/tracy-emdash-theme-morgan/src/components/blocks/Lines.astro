@@ -1,0 +1,12 @@
+---
+/** A text field's line breaks printed as <br>. */
+interface Props {
+  text: unknown
+}
+const lines = String(Astro.props.text ?? '')
+  .split('\n')
+  .map((l) => l.trim())
+  .filter(Boolean)
+---
+
+{lines.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}

@@ -1,0 +1,35 @@
+[
+  {
+    "name": "PT Root UI",
+    "cssVariable": "--font-pt-root-ui",
+    "provider": "local",
+    "variants": [
+      {
+        "weight": 400,
+        "style": "normal",
+        "src": [
+          "./src/fonts/PT_Root_UI_Regular-webfont.woff"
+        ]
+      },
+      {
+        "weight": 500,
+        "style": "normal",
+        "src": [
+          "./src/fonts/PT_Root_UI_Medium-webfont.woff"
+        ]
+      },
+      {
+        "weight": 700,
+        "style": "normal",
+        "src": [
+          "./src/fonts/PT_Root_UI_Bold-webfont.woff"
+        ]
+      }
+    ],
+    "fallbacks": [
+      "Helvetica",
+      "Arial",
+      "sans-serif"
+    ]
+  }
+]

@@ -1,0 +1,61 @@
+---
+/** The home slideshow (acm-slideshow, owl): a full-width picture with the headline, text and button on the left; the tabs underneath switch the slide. */
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { href, type Locale } from '@/lib/i18n'
+import { dataHref } from '@/lib/data-links'
+import PostGlyph from '@/components/site/PostGlyph.astro'
+import Lines from './Lines.astro'
+
+interface Props {
+  entry: Record<string, any>
+  locale: Locale
+  live: (url: string) => boolean
+}
+const { entry, locale, live } = Astro.props
+const $s = stampFor(Astro.request, 'slideshow', { id: entry.id, slug: entry.slug })
+const items = (entry.items ?? []) as Record<string, any>[]
+---
+
+<section class="mg-slideshow mg-sec-slideshow" data-slideshow aria-roledescription="carousel">
+	<div class="mg-slides">
+		{items.map((it, i) => (
+			<div class:list={['mg-slide', i === 0 && 'is-active']} style={`background-image:url('${mediaUrl(it.image) ?? ''}')`} data-slide>
+				<div class="mg-container">
+					<div class="mg-slide-in">
+						<h2 class="mg-slide-h" {...$s(`items.${i}.title`)}><Lines text={it.title} /></h2>
+						<p class="mg-slide-p" {...$s(`items.${i}.desc`)}>{it.desc}</p>
+						{it.btn_title && it.btn_link && live(it.btn_link) && (
+							<a class="mg-btn" href={dataHref(it.btn_link, (p) => href(locale, p))} {...$s(`items.${i}.btn_title`)}>{String(it.btn_title).trim()}<PostGlyph name="arrow" /></a>
+						)}
+					</div>
+				</div>
+			</div>
+		))}
+	</div>
+	{items.length > 1 && (
+		<div class="mg-slide-tabs">
+			<div class="mg-container">
+				<ul>
+					{items.map((it, i) => (
+						<li class:list={[i === 0 && 'is-active']}><button type="button" data-slide-tab={i} aria-pressed={i === 0 ? 'true' : 'false'} {...$s(`items.${i}.title_dot`)}>{it.title_dot}</button></li>
+					))}
+				</ul>
+			</div>
+		</div>
+	)}
+</section>
+<script>
+	document.querySelectorAll<HTMLElement>('[data-slideshow]').forEach((root) => {
+		const slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')]
+		const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-slide-tab]')]
+		const show = (n: number) => {
+			slides.forEach((s, i) => s.classList.toggle('is-active', i === n))
+			tabs.forEach((t, i) => {
+				t.parentElement?.classList.toggle('is-active', i === n)
+				t.setAttribute('aria-pressed', i === n ? 'true' : 'false')
+			})
+		}
+		tabs.forEach((t, i) => t.addEventListener('click', () => show(i)))
+	})
+</script>

@@ -1,0 +1,20 @@
+---
+/** acm-accordion: panels with a grey heading; one open at a time (native <details name>). */
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any>
+}
+const { entry } = Astro.props
+const $s = stampFor(Astro.request, 'accordion', { id: entry.id, slug: entry.slug })
+const items = (entry.items ?? []) as Record<string, any>[]
+---
+
+<div class="mg-accordion">
+	{items.map((it, i) => (
+		<details class="mg-panel" name={`acc-${entry.slug}`} open={i === 0}>
+			<summary {...$s(`items.${i}.accordion_name`)}>{it.accordion_name}</summary>
+			<div class="mg-panel-body" {...$s(`items.${i}.accordion_desc`)}>{it.accordion_desc}</div>
+		</details>
+	))}
+</div>
