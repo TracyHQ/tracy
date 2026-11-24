@@ -9,7 +9,7 @@ import { join } from 'node:path'
 import { isLiteralPreSlot } from '../../content-coverage/lib/contract.mjs'
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { inlineOf } from './inline-marks.mjs'
-import { withEmdashPages } from './site/adapters/emdash-map.mjs'
+import { sectionsOfPages, withEmdashPages } from './site/adapters/emdash-map.mjs'
 import { withWordPressPages } from './site/adapters/wordpress-map.mjs'
 
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
@@ -117,6 +117,9 @@ export function useEmdashSections(sectionsByPath, mediaBySlot = null) {
   emdashSections = sectionsByPath ?? null
   emdashMedia = mediaBySlot ?? null
 }
+
+/** The sections each page prints, by page path, as this run read them (`sectionsOfPages`); null without a read. */
+export const emdashSectionsOfPages = (map) => sectionsOfPages(emdashSections, map)
 
 /**
  * The content map in the shape the kit reads, whatever the platform: a WordPress map lists no pages, so they are

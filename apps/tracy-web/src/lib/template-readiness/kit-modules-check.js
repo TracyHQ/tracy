@@ -8,6 +8,9 @@
  * "Meet Three Broomsticks." features (module-95, T3 `Section95` chrome, captured only since 3.1.1) nor for "Meet Our Chef."
  * (module-104), so the Arabian Tea House build kept two demo pictures and two buttons to pages the plan hid.
  *
+ * EmDash: the same question asked of sections, `kit-sections-missing` (`sectionsMissingFromKit`). WordPress stays out: its
+ * map holds no page assignments of blocks to compare with.
+ *
  * Read from what the repository holds (the kit, the content map's page assignments), nothing is crawled. The position test
  * keeps a module of a position the kit holds no block in (a copyright line, an off-canvas menu) out: whether the layout
  * prints such a position is not known here.
@@ -19,7 +22,7 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 
-import { contractFor } from '../contracts.js'
+import { contractOfRelease } from '../slot-roles-of-release.js'
 import { shownOnInspiration } from '../quickstart-releases.js'
 import { kitOfRelease } from '../template-kit/road-step.js'
 import { fixOf } from './fixes.js'
@@ -64,22 +67,102 @@ export function modulesMissingFromKit(kit, map) {
   return [...out.values()].sort((a, b) => (a.module < b.module ? -1 : 1))
 }
 
+/** Slot entities that are no section: the page entries, the settings, the shared chrome (held by the header and footer). */
+const NOT_SECTION = /^(pages|posts|taxonomy|chrome)\./
+
+/** The ids of every slot a kit block lists as its own (slots, demo-owned, frames, rows of its lists, links, fixed text). */
+function slotIdsHeldByKit(kit) {
+  const ids = new Set()
+  const walk = (o) => {
+    if (Array.isArray(o)) o.forEach(walk)
+    else if (o && typeof o === 'object') {
+      if (typeof o.id === 'string') ids.add(o.id)
+      for (const v of Object.values(o)) walk(v)
+    }
+  }
+  for (const b of each(kit?.blocks))
+    walk([b?.slots, b?.lists, b?.frames, b?.demoOwned, b?.links, b?.fixedText])
+  return ids
+}
+
+/**
+ * EmDash: the sections of the content map (an entry of a section collection, entity `<collection>.<slug>`) that hold
+ * visual slots, are printed on a page the kit holds and are no block of the kit. The kit names the block of a section
+ * that prints one entry of its own `block-<collection>-<slug>` (adapters/emdash-map.mjs `partEntity`); a section printed
+ * with others lives in a block named after its page and position, and then holds its slots by id. So a section is in
+ * the kit when that block exists (its source, or contained by one) or when a block holds any of its visual slots.
+ *
+ * Which page prints a section is the kit's own record (`sectionsOfPage`, written by the kit tool from its read of the
+ * site, template-kit/lib/kit.mjs). No map, seed or view file says it for every theme (page composition is theme code),
+ * so a kit settled before the tool wrote it is not judged: the answer is `null`, never a guess, and the judge says
+ * so with `kit-sections-unrecorded` (a warn).
+ * @param {any} kit the kit document
+ * @param {any} map the content map
+ * @returns {{ section: string, slots: number, pages: string[] }[] | null} null when the kit does not say which page prints what
+ */
+export function sectionsMissingFromKit(kit, map) {
+  const printed = kit?.sectionsOfPage
+  if (!printed || typeof printed !== 'object' || Array.isArray(printed)) return null
+  const known = new Set()
+  for (const block of each(kit?.blocks)) {
+    const source = block?.source ?? {}
+    if (typeof source.entity === 'string') known.add(source.entity)
+    for (const inner of each(source.contains)) known.add(inner)
+  }
+  const held = slotIdsHeldByKit(kit)
+  const kitPaths = each(kit?.pages).map((p) => p?.path)
+  /** @type {Map<string, { section: string, slots: number, held: boolean }>} */
+  const sections = new Map()
+  for (const s of each(map?.slots)) {
+    const entity = s?.entity
+    if (s?.nonVisual || typeof entity !== 'string' || !entity.includes('.') || NOT_SECTION.test(entity))
+      continue
+    const e = sections.get(entity) ?? { section: entity, slots: 0, held: false }
+    e.slots += 1
+    if (held.has(s.key)) e.held = true
+    sections.set(entity, e)
+  }
+  const out = []
+  for (const { section, slots, held: isHeld } of sections.values()) {
+    if (isHeld || known.has(`block-${section.replace('.', '-')}`)) continue
+    const pages = kitPaths.filter((at) => each(printed[at]).includes(section))
+    if (pages.length) out.push({ section, slots, pages })
+  }
+  return out.sort((a, b) => (a.section < b.section ? -1 : 1))
+}
+
 export const KIT_MODULES_CHECK = Object.freeze({
   piece: 'template-kit',
   step: 'kit-modules',
   judge(release, world) {
-    if (release?.platform !== 'joomla') return null
+    if (release?.platform !== 'joomla' && release?.platform !== 'emdash') return null
     const kit = world?.templateKit ?? kitOfRelease(release, world?.contracts ?? new Map())
     if (kit?.state !== 'read') return null
     let map = world?.contentMap
     if (map === undefined) {
-      const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
-      const dir = contractFor(world?.contracts ?? new Map(), release?.tag, version)?.dir
+      const dir = contractOfRelease(release, world?.contracts ?? new Map())?.dir
       if (!dir) return null
       try {
         map = JSON.parse(readFileSync(path.join(dir, 'content-map.json'), 'utf8'))
       } catch {
         return null
+      }
+    }
+    if (release.platform === 'emdash') {
+      const sections = sectionsMissingFromKit(kit.doc, map)
+      if (sections === null)
+        return {
+          // Never a todo: the kit is whole, it only does not say which page prints what.
+          state: 'warn',
+          code: 'kit-sections-unrecorded',
+          params: { fix: fixOf('kit-sections-unrecorded').text }
+        }
+      if (!sections?.length) return null
+      const sectionNames = sections.map((m) => m.section).join(', ')
+      return {
+        state: shownOnInspiration(release) ? 'warn' : 'todo',
+        code: 'kit-sections-missing',
+        params: { sections, sectionNames, fix: fixOf('kit-sections-missing', { sectionNames }).text }
       }
     }
     const modules = modulesMissingFromKit(kit.doc, map)

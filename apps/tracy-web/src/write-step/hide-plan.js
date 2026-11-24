@@ -113,6 +113,52 @@ function notEmptiable(key, slot) {
   return `the plugin's review for this contract does not list ${where}, so it cannot be emptied: this needs a new contract (${NEW_CONTRACT})`
 }
 
+/** The kit pages the plan drops: its own drops, and the article pages of the page groups it drops that it keeps none of. */
+function planDropsOf(plan, kit) {
+  const planDrops = each(plan?.pages)
+    .filter((p) => p?.decision === 'drop')
+    .map((p) => each(kit?.pages).find((k) => k?.id === p.id))
+    .filter(Boolean)
+  const droppedGroups = new Set(
+    each(plan?.pageGroups)
+      .filter((g) => g?.decision === 'drop')
+      .map((g) => g.id)
+  )
+  for (const page of each(kit?.pages))
+    if (
+      droppedGroups.has(page?.group) &&
+      articleOwners(page, kit).length > 0 &&
+      !each(plan?.pages).some((p) => p.id === page.id && p.decision === 'keep') &&
+      !planDrops.some((p) => p.id === page.id)
+    )
+      planDrops.push(page)
+  return planDrops
+}
+
+/**
+ * The articles the hide stage unpublishes (hide-writes.js dropPages): the one native article of a dropped page that no kept
+ * page also prints and no kept page or link needs the path of. By article id.
+ */
+function articlesUnpublished(plan, kit) {
+  const kept = new Set(
+    each(plan?.pages)
+      .filter((p) => p?.decision === 'keep')
+      .map((p) => p.id)
+  )
+  const keptArticles = new Set(
+    each(kit?.pages)
+      .filter((p) => kept.has(p?.id))
+      .flatMap((p) => articleOwners(p, kit))
+  )
+  const out = new Set()
+  for (const page of planDropsOf(plan, kit)) {
+    const articles = articleOwners(page, kit)
+    if (articles.length === 1 && !keptArticles.has(articles[0]) && !pageDependingOn(page.path, { plan, kit }))
+      out.add(articles[0])
+  }
+  return out
+}
+
 /** What a plan hides and cannot take off the site, each with the reason: the check's answer before anything is written. */
 function noWayOutOf(orders, pages) {
   const out = []
@@ -299,6 +345,7 @@ export function hideOrders({
       .filter((c) => c.kind === 'hide')
       .map((c) => contentMapKey(icons.get(c.slot)?.field ?? c.slot))
   )
+  const unpublished = articlesUnpublished(plan, kit)
   const orders = new Map()
   const emptySlots = []
   const strings = {}
@@ -398,6 +445,14 @@ export function hideOrders({
         orders.set(slot, { via: 'inpage', key })
         continue
       }
+      // A listing's pagination (a page number, NEXT, END) is the CMS's: it prints while the list holds more items than one
+      // page and leaves with the items the write step unpublishes. No slot holds it and none is missing; reachable-pages judges
+      // the next page if it still prints. Before (dev lat32, 23/11/2026), JA Diner's blog pagination the plan hid was two
+      // "the contract has no slot" blocks.
+      if (control?.fixedLabel?.rule === 'pagination') {
+        orders.set(slot, { via: 'pagination', key })
+        continue
+      }
     }
     if (key in removedAlready || removal?.remove.has(key)) {
       if (key in changes) failedAs(`the write step also writes ${key}, so it cannot be removed as well`)
@@ -420,6 +475,11 @@ export function hideOrders({
     } else if (held?.canHide) {
       emptySlots.push(key)
       orders.set(slot, { via: 'slot', key })
+    } else if (unpublished.has(Number(/^article-(\d+)$/.exec(entity)?.[1]))) {
+      // A field of an article whose page the plan drops: the hide stage unpublishes the article, so no listing prints it, and
+      // its title (a column Joomla never empties) leaves with it. Before (dev lat32, 23/11/2026) the titles of JA Boxing's two
+      // dropped learning-centre posts, hidden in a kept page's latest-posts block, were two "the contract has no slot" blocks.
+      orders.set(slot, { via: 'with-article', key, article: Number(entity.slice('article-'.length)) })
     } else {
       const places = printedOnlyOnDropped(slot, { kit, plan, dropped: blocks })
       if (places) orders.set(slot, { via: 'unshown', key, ...places })
@@ -471,23 +531,7 @@ export function hideOrders({
   }
   const taken = new Set(each(extras?.mainMenu?.hide).map((h) => slashless(h.path)))
   // The plan's drops, then the kit's stock screens the plan does not keep (lib/stock-screens.js), each dropped like any other.
-  const planDrops = each(plan?.pages)
-    .filter((p) => p?.decision === 'drop')
-    .map((p) => each(kit?.pages).find((k) => k?.id === p.id))
-    .filter(Boolean)
-  const droppedGroups = new Set(
-    each(plan?.pageGroups)
-      .filter((g) => g?.decision === 'drop')
-      .map((g) => g.id)
-  )
-  for (const page of each(kit?.pages))
-    if (
-      droppedGroups.has(page?.group) &&
-      articleOwners(page, kit).length > 0 &&
-      !each(plan?.pages).some((p) => p.id === page.id && p.decision === 'keep') &&
-      !planDrops.some((p) => p.id === page.id)
-    )
-      planDrops.push(page)
+  const planDrops = planDropsOf(plan, kit)
   const stock = stockScreensToDrop(kit, plan).filter((s) => !planDrops.some((page) => page.id === s.id))
   const pages = [...planDrops, ...stock.map(({ id, path }) => ({ id, path }))]
     .filter((page) => !taken.has(slashless(page.path)) || articleOwners(page, kit).length > 0)

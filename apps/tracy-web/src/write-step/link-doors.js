@@ -49,6 +49,23 @@ export function audioBindingMatches(slot, link, block) {
 export const holdsAddress = (slot) =>
   !NOT_ADDRESSES.has(slot?.role) && (slot?.type === 'url' || String(slot?.role ?? '').endsWith('_url'))
 
+const digitsOf = (value) => String(value ?? '').replace(/[^0-9]/g, '')
+
+/**
+ * Whether the template prints this link's address from its own words: a phone link whose number is its label's digits, an
+ * e-mail link whose address is its label (a Joomla contact prints `tel:` and `mailto:` from the contact's own fields). The
+ * address then follows the words, whoever writes them. Dev lat31b (23/11/2026): JA Boxing's contact page printed the club's
+ * own number and address, yet both links were refused lines ("it keeps opening tel:#").
+ */
+export function addressFromLabel(link) {
+  const target = String(link?.target ?? '')
+  const label = String(link?.label ?? '').trim()
+  if (!label || !link?.labelId) return false
+  if (/^tel:/i.test(target)) return digitsOf(target).length >= 6 && digitsOf(target) === digitsOf(label)
+  if (/^mailto:/i.test(target)) return target.slice(7).trim().toLowerCase() === label.toLowerCase()
+  return false
+}
+
 /** A control the kit measured as acting inside the page: a panel, a modal, a form, a picture's lightbox. */
 export const actsInsidePage = (link) =>
   link?.action === 'page-control' && Boolean(link.opens || link.icon?.mechanism === 'image-file')
@@ -220,6 +237,17 @@ export function linkDoors({ kit, reading, rows, contentMap }) {
         reason: bound ? null : 'audio source needs one exact slot/article/track binding; no fallback allowed'
       }
     }
+    // A phone or e-mail link the template prints from its own words follows them (`from-words`): an address slot beside it in
+    // its row is another link's (the row's title or button), and its own id names a slot only when that slot holds its address.
+    // Before (dev lat32, 23/11/2026) JA Boxing's two contact cards sent their call and e-mail links to the card's one address
+    // slot, and the plugin refused three of them ("already sent to tel:# by another link").
+    const kitLink = byId.get(id)?.link
+    if (
+      kitLink &&
+      addressFromLabel(kitLink) &&
+      !(own && holdsAddress(own) && String(own.sample ?? own.current ?? '') === kitLink.target)
+    )
+      return { via: 'from-words', ...byId.get(id) }
     if (own && holdsAddress(own)) return { via: 'slot', keys: [key], ...byId.get(id) }
     const found = byId.get(id) ?? byLabel.get(id)
     if (!found) return own ? { via: 'words-only', key } : { via: 'no-kit-link' }

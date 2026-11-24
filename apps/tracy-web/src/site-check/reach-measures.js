@@ -99,6 +99,13 @@ export function judgeListRows(report, measures, { pagesOf, tabbed = new Set() } 
       .filter((l) => keys.has(l.key))
       .map((l) => words(l.ordered))
       .filter(usable)
+    // A list of pictures and addresses has no words to be found by: every list of the page would match none of them, and the
+    // fewest items would win. Before (dev lat32, 23/11/2026) JA Diner's two four-photo galleries on About were "the page prints
+    // 2": the two columns of the block beside them. Such a list is not measured here.
+    if (!own.length) {
+      unread.push(row.list)
+      continue
+    }
     // Words other blocks on this page wrote: shared by them, they cannot tell this list from theirs. A line whose block no
     // page names (a menu item: its title prints in the menus of every page) may print on any page (15/11/2026, Central
     // Padel: the one kept person's name was also a menu title, and the footer menu of four pages was taken for the team).

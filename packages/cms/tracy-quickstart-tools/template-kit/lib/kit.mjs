@@ -1,6 +1,7 @@
 // template-kit.json: the whole kit in one file, in CMS-neutral words, for the agent that plans a site build.
 // Every field the kit cannot know is named in `errors` with its path and the reason; nothing is invented.
 import { imagesDigest } from '../../../../../apps/tracy-web/src/lib/template-kit/reader.js'
+import { emdashSectionsOfPages } from './contract-read.mjs'
 import { imageIdOf, neutralKey, pageIdOf } from './ids.mjs'
 import { buildBlock } from './kit-blocks.mjs'
 import {
@@ -341,6 +342,10 @@ export function buildKit({
     // Pages left out of the kit: test-data pages counted by reason and never named (exclude.mjs), and template
     // showcase pages with their paths (showcase-pages.mjs).
     excludedPages,
+    // EmDash only: the sections each page printed in this run's read of the site, `{ [path]: ['<collection>.<slug>'] }`
+    // (emdash-map.mjs `sectionsOfPages`). The readiness check "every section holding content-map slots is a kit block"
+    // judges only sections a page the kit holds prints.
+    ...(emdashSectionsOfPages(map) ? { sectionsOfPage: emdashSectionsOfPages(map) } : {}),
     errors,
     approval: null
   }

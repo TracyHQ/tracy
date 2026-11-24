@@ -3,6 +3,7 @@
 // taken away with its block or menu item is that row's `published`: the slot itself still holds words no page prints.
 import { refusalWords } from './contract-write.js'
 import { unpublishedRead } from './hide-writes.js'
+import { readRow } from './settings-door.js'
 
 const PLAN_HIDES = 'the plan hides this slot'
 const moduleId = (key) => Number(key.slice(key.lastIndexOf('-') + 1))
@@ -159,6 +160,13 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
       reason:
         "a tab that opens a panel of this page has no slot and no address: it stays, doing what it does, and its words are its label slot's"
     }
+  if (via === 'pagination')
+    return {
+      status: 'skipped',
+      key,
+      reason:
+        "a listing's pagination is the CMS's: it prints while the list holds more items than one page, and leaves with the items the plan drops; the next page is judged by reachable-pages if it still prints"
+    }
   if (via === 'unremovable-link')
     return {
       status: 'skipped',
@@ -183,6 +191,16 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
         ...(order.list ? [`the dropped block ${order.list}`] : []),
         `pages the plan drops (${order.pages.join(', ')})`
       ].join(' and ')}, so no kept page shows it`
+    }
+  // Not emptied: it leaves with its article, which the hide stage unpublishes; read back on the article's state.
+  if (via === 'with-article')
+    return {
+      status: 'hidden',
+      key,
+      printed: false,
+      reason: `${PLAN_HIDES}: the plan drops the page of article-${order.article}, whose article is unpublished, so no listing prints it`,
+      ordered: '0',
+      readFrom: readRow('article', order.article, 'state')
     }
   if (via === 'rewritten') return rewrittenResult(order, refused)
   if (via === 'carried') return carriedResult(order, { gone, removed, relinked, refused })
