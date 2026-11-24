@@ -62,8 +62,8 @@
 	a.im-contact-value:hover { color: var(--color-accent-text-hover) !important; }
 	.im-footnav { padding-block: 80px; }
 	.im-footnav-in { display: grid; grid-template-columns: 1fr; gap: 32px 64px; }
-	@media (min-width: 768px) { .im-footnav-in { grid-template-columns: repeat(4, 1fr); } .im-footnav-about { grid-column: 1 / -1; } }
-	@media (min-width: 1200px) { .im-footnav-in { grid-template-columns: 2fr repeat(4, 1fr); } .im-footnav-about { grid-column: auto; } }
+	@media (min-width: 768px) { .im-footnav-in { grid-template-columns: repeat(4, minmax(0, 1fr)); } .im-footnav-about { grid-column: 1 / -1; } }
+	@media (min-width: 1200px) { .im-footnav-in { grid-template-columns: 2fr repeat(4, minmax(0, 1fr)); } .im-footnav-about { grid-column: auto; } }
 	@media (max-width: 767.98px) { .im-footnav-in { grid-template-columns: 1fr 1fr; } .im-footnav-about { grid-column: 1 / -1; } }
 	.im-footnav-about p { margin: 24px 0 0; color: color-mix(in srgb, var(--color-on-ink) 80%, transparent); }
 	@media (min-width: 1200px) { .im-footnav-about p { max-width: 360px; } }

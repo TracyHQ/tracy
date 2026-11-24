@@ -32,7 +32,7 @@ const formId = site.form_id as string | undefined
 	<div class="im-connected-info">
 		<div class="im-connected-in">
 			<h2 {...$s('feature_title')}>{entry.feature_title}</h2>
-			<p class="im-connected-lead" {...$s('feature_desc')}>{lines(entry.feature_desc).map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
+			<p class="im-connected-lead" {...$s('feature_desc')}>{lines(entry.feature_desc).map((l, i) => <>{i > 0 && <>{' '}<br /></>}{l}</>)}</p>
 			<form class="im-news" data-newsletter method="post" action="/_emdash/api/plugins/emdash-forms/submit" data-form-id={formId}>
 				{formId && <input type="hidden" name="formId" value={formId} />}
 				<label class="im-field"><span class="sr-only">{site.newsletter_name_label}</span><input type="text" name="name" placeholder={site.newsletter_name_label} autocomplete="name" /></label>
