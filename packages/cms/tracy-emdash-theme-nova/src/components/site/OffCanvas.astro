@@ -1,0 +1,78 @@
+---
+/**
+ * The off-canvas menu: a panel from the right (under 992px) with the same menu as the header and a drill-down for each parent
+ * (the arrow opens its list in place of the root list, a back row returns). Opened by the header's menu button; the script is in Header.astro.
+ */
+import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { href } from '@/lib/i18n'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { getSiteSettings } from 'emdash'
+import { dataHref } from '@/lib/data-links'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import NovaLogo from '@/components/site/NovaLogo.astro'
+import ChromeIcon from '@/components/site/ChromeIcon.astro'
+
+interface Props {
+  chrome: Chrome
+  /** The menu to draw, already without the pages the customer unticked. */
+  items: ChromeMenuItem[]
+  currentPath: string
+}
+const { chrome, items, currentPath } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const settings = await getSiteSettings()
+const logos = brandLogos(settings, site.logo_dark, site.brand_name)
+const own = (url: string) => (url ? dataHref(url, (p) => href(locale, p)) : '')
+const active = (item: ChromeMenuItem): boolean => {
+  const u = item.url
+  if (u === '/') return currentPath === '/'
+  return (u !== '' && (currentPath === u || currentPath.startsWith(`${u}/`))) || item.children.some(active)
+}
+---
+
+<div class="nv-offcanvas-bg" data-nv-oc-close aria-hidden="true"></div>
+<div class="nv-offcanvas" id="nv-offcanvas" data-level="0" aria-hidden="true" role="dialog" aria-modal="true" aria-label={site.menu_label}>
+	<div class="nv-oc-head">
+		<a class="nv-brand" href={href(locale, '/')} aria-label={site.brand_name}>
+			<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="nv-logo-img">
+				<NovaLogo text={site.logo_text} />
+			</BrandLogo>
+		</a>
+		<button type="button" class="nv-oc-close" data-nv-oc-close aria-label={site.close_label} {...$c('close_label')}>
+			<ChromeIcon name="close" size={14} weight="bold" />
+		</button>
+	</div>
+	<div class="nv-oc-body">
+		<nav class="nv-oc-nav" aria-label={site.menu_label}>
+			<ul class="nv-oc-root">
+				{items.map((item) => (
+					<li class:list={[active(item) && 'is-active', item.children.length > 0 && 'has-sub']}>
+						{item.url ? <a href={own(item.url)} aria-current={currentPath === item.url ? 'page' : undefined}>{item.label}</a> : <span class="nv-oc-link">{item.label}</span>}
+						{item.children.length > 0 && (
+							<>
+								<button type="button" class="nv-oc-drill" data-nv-oc-drill aria-expanded="false" aria-label={item.label}>
+									<svg width="9" height="14" viewBox="0 0 9 14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 1.5 7 7 1.5 12.5"></path></svg>
+								</button>
+								<ul class="nv-oc-sub">
+									<li class="nv-oc-back">
+										<button type="button" data-nv-oc-back>
+											<svg width="9" height="14" viewBox="0 0 9 14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 1.5 2 7 7.5 12.5"></path></svg>
+											<span>{item.label}</span>
+										</button>
+									</li>
+									{item.children.map((c) => (
+										<li class:list={[active(c) && 'is-active']}>
+											<a href={own(c.url)} aria-current={currentPath === c.url ? 'page' : undefined}>{c.label}</a>
+										</li>
+									))}
+								</ul>
+							</>
+						)}
+					</li>
+				))}
+			</ul>
+		</nav>
+	</div>
+</div>

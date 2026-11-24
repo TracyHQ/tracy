@@ -1,1 +1,96 @@
-/* JA Nova — carousels. Owned by the block's author; see global.css for the tokens. */
+/*
+ * JA Nova - carousels: text slider chips, clients logo row, team cards, and the shared carousel frame (`.nv-car`).
+ * Sizes come from the source (`scss/_acm.scss`, the Owl options of the `acm` templates). The script (`src/lib/carousel-client.ts`)
+ * only moves the track; every size is set here, so a carousel that never starts still shows its first items in place.
+ * Dark values are those of the source's `css/darkmode.css`, through the tokens.
+ */
+
+/* shared frame: each item is (view + gap) / n - gap wide and keeps a gap to its right, as Owl lays it out */
+.nv-car { --nv-n: 1; --nv-g: 0px; }
+.nv-car-view { overflow: hidden; }
+.nv-car-track { display: flex; will-change: transform; }
+.nv-car-item { flex: 0 0 calc((100% + var(--nv-g)) / var(--nv-n) - var(--nv-g)); margin-right: var(--nv-g); min-width: 0; }
+
+/* ---------- text slider ---------- */
+.nv-text-slider { overflow: hidden; }
+.nv-ts { overflow: hidden; }
+.nv-ts-track { display: flex; width: max-content; }
+.nv-ts.is-moving .nv-ts-track { animation: nv-ts-run var(--nv-ts-dur, 60s) linear infinite; }
+.nv-ts.is-moving.is-rtl .nv-ts-track { animation-direction: reverse; }
+.nv-ts.is-moving:hover .nv-ts-track { animation-play-state: paused; }
+@keyframes nv-ts-run { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+@media (prefers-reduced-motion: reduce) { .nv-ts.is-moving .nv-ts-track { animation: none; } }
+.nv-ts-set { display: flex; flex: none; margin: 0; padding: 0; list-style: none; }
+.nv-ts-item {
+	display: flex; align-items: center; flex: none; margin-right: 32px; direction: ltr;
+	padding: 16px 32px; border-radius: var(--ds-pill-radius, 60px);
+	background: var(--color-surface); color: var(--color-heading);
+}
+.nv-ts-logo { display: block; flex: 0 0 56px; width: 56px; height: 56px; margin-right: 16px; }
+.nv-ts-logo img { display: block; max-height: 56px; width: auto; max-width: 100%; }
+.nv-ts-title {
+	margin: 0; color: var(--color-heading); font-family: var(--font-display); font-size: 28px; font-weight: var(--ds-weight-heading, 700);
+	line-height: 1.2; white-space: nowrap;
+}
+@media (max-width: 767px) {
+	.nv-ts-item { margin-right: 16px; }
+	.nv-ts-logo { flex-basis: 30px; width: 30px; height: 30px; }
+	.nv-ts-logo img { max-height: 30px; }
+	.nv-ts-title { font-size: 22px; }
+}
+
+/* ---------- clients ---------- */
+.nv-clients-in { border-bottom: 1px solid var(--color-line); --nv-n: var(--nv-c-xs, 2); --nv-g: 0px; }
+@media (min-width: 768px) { .nv-clients-in { --nv-n: var(--nv-c-md, 4); } }
+@media (min-width: 1440px) { .nv-clients-in { --nv-n: var(--nv-c-lg, 6); } }
+.nv-clients-item {
+	display: flex; align-items: center; justify-content: center; height: 80px; padding: 0 32px; border-left: 1px solid var(--color-line);
+}
+@media (min-width: 768px) { .nv-clients-item { height: 172px; } }
+.nv-clients-logo { display: block; max-width: 100%; }
+.nv-clients-logo a { display: block; opacity: .4; transition: opacity .5s; }
+.nv-clients-logo a:hover, .nv-clients-logo a:focus-visible { opacity: 1; }
+.nv-clients-logo img { display: block; max-width: 100%; height: auto; }
+
+/* ---------- teams ---------- */
+.nv-teams { overflow: hidden; }
+.nv-teams-top { display: flex; flex-wrap: wrap; align-items: center; margin: 0 0 16px; }
+@media (min-width: 768px) { .nv-teams-top { margin-bottom: 48px; } }
+.nv-teams-desc {
+	flex: 0 0 100%; margin: 16px 0 8px; padding: 8px 0; color: var(--color-accent-on); font-family: var(--font-display);
+	font-size: 24px; font-weight: var(--ds-weight-heading, 700); line-height: 1.2;
+}
+@media (min-width: 576px) { .nv-teams-desc { font-size: 28px; } }
+@media (min-width: 768px) { .nv-teams-desc { font-size: 32px; } }
+.nv-teams-nav { flex: 0 0 100%; padding: 8px 0; }
+@media (min-width: 768px) { .nv-teams-desc, .nv-teams-nav { padding-block: 16px; } }
+@media (min-width: 992px) {
+	.nv-teams-desc { flex-basis: 50%; max-width: 50%; }
+	.nv-teams-nav { flex-basis: 50%; max-width: 50%; text-align: right; }
+}
+.nv-teams-arrow {
+	display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; margin: 0 8px 0 0; padding: 0;
+	border: 0; border-radius: 50%; background: var(--color-surface); color: var(--color-heading); cursor: pointer;
+	transition: background-color .2s, color .2s;
+}
+@media (min-width: 992px) { .nv-teams-arrow { width: 64px; height: 64px; margin: 0 8px; } }
+.nv-teams-arrow:hover, .nv-teams-arrow:focus-visible { background: var(--color-accent); color: var(--color-accent-on); }
+.nv-teams-arrow svg { display: block; }
+
+.nv-teams-car { --nv-n: 1; --nv-g: 36px; }
+.nv-teams-car .nv-car-view { overflow: visible; }
+@media (min-width: 768px) { .nv-teams-car { --nv-n: 2; } }
+@media (min-width: 979px) { .nv-teams-car { --nv-n: 3; } }
+@media (min-width: 1199px) { .nv-teams-car { --nv-n: var(--nv-cols, 3); --nv-g: 32px; } }
+.nv-teams-card { height: 100%; padding: 16px; border-radius: var(--ds-card-radius, 16px); background: var(--color-surface); }
+.nv-teams-img { overflow: hidden; border-radius: var(--ds-card-radius, 16px); }
+.nv-teams-img img { display: block; width: 100%; height: auto; transition: transform .5s; }
+.nv-teams-card:hover .nv-teams-img img { transform: scale(1.1); }
+.nv-teams-text { margin: 32px 0 16px; }
+.nv-teams-name { margin: 0 0 8px; color: var(--color-heading); font-size: 18px; line-height: 1.2; }
+@media (min-width: 576px) { .nv-teams-name { font-size: 24px; } }
+.nv-teams-name a { color: var(--color-heading); }
+.nv-teams-name a:hover, .nv-teams-name a:focus-visible { color: var(--color-accent); }
+.nv-teams-text span { color: var(--color-meta); }
+/* the source's row gutters (-16px) pull the button up; `.nv-bottom-actions` itself is drawn in features.css */
+@media (min-width: 768px) { .nv-teams .nv-container { margin-bottom: -16px; } }

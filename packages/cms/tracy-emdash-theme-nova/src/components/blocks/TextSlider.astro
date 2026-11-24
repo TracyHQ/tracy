@@ -1,6 +1,54 @@
 ---
-// STUB — replaced by the block's author. Props: chrome, row (the entry's data), style ('style-1'…), info (page-layout.json entry).
-const { row } = Astro.props
+/**
+ * Text slider (acm `text-slider` style-1): a row of pill chips (icon + word) that drifts sideways, forever. Two entries sit one under the other
+ * and move opposite ways (`slide_direct` "1" = to the right). The source drives Owl Carousel; here the row is drawn four times and a CSS
+ * animation moves it by half its length, so it never needs a script, never shifts the layout, and shows every chip if animation is off.
+ * Only the first copy is read by assistive technology.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+import { sectionWrap } from '@/lib/section-style'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  style?: string
+  info?: { spacing?: { top?: string | null; bottom?: string | null } } | null
+}
+const { row, info } = Astro.props
+const $s = stampFor(Astro.request, 'text_slider', { id: row.id, slug: row.slug })
+const items: { logo?: any; title?: string }[] = Array.isArray(row.items) ? row.items.filter((i: any) => i && (i.title || i.logo)) : []
+if (items.length === 0) return
+const rtl = String(row.slide_direct) === '1'
+const moves = String(row.autoplay) !== 'false'
+// the source steps one chip every 5 s (Owl's default autoplay timeout); a lap of one row is chips x 5 s, the animation covers two rows
+const lap = items.length * 5 * 2
+const copies = [0, 1, 2, 3]
+const dim = (m: any, d: number) => ({ w: Number(m?.width) || d, h: Number(m?.height) || d })
 ---
 
-<section data-block="TextSlider"><div class="nv-wrap">{row.title}</div></section>
+<section class:list={[sectionWrap(row.slug, info), 'nv-text-slider']} {...$s()}>
+  <div class:list={['nv-ts', rtl ? 'is-rtl' : 'is-ltr', moves && 'is-moving']} style={`--nv-ts-dur:${lap}s`}>
+    <div class="nv-ts-track">
+      {copies.map((c) => (
+        <ul class="nv-ts-set" aria-hidden={c > 0 ? 'true' : undefined}>
+          {items.map((it) => {
+            const src = mediaUrl(it.logo)
+            const d = dim(it.logo, 56)
+            return (
+              <li class="nv-ts-item" {...(c === 0 ? $s.block('items') : {})}>
+                {src && (
+                  <span class="nv-ts-logo">
+                    <img src={src} alt="" width={d.w} height={d.h} loading="lazy" decoding="async" {...(c === 0 ? $s("items.logo") : {})} />
+                  </span>
+                )}
+                {it.title && <span class="nv-ts-title" {...(c === 0 ? $s("items.title") : {})}>{it.title}</span>}
+              </li>
+            )
+          })}
+        </ul>
+      ))}
+    </div>
+  </div>
+</section>

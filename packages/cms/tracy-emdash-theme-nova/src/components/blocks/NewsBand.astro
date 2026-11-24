@@ -1,5 +1,50 @@
 ---
-// STUB — replaced by the module's author. Props: chrome (+ category, postSlug, current where the module needs them).
+/** The green news band of the home page (source `mod_articles_category` "News", template grid): the newest article large, two more beside it, "View all our news". */
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { postPath } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import { uiTag } from '@/lib/ui'
+import { clip, introOf, loadPostsInOrder } from '@/components/site/nova-posts'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const locale = chrome.locale
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const w = chrome.site
+const items = (await loadPostsInOrder(locale)).filter((p) => p.kind !== 'project').slice(0, 3)
+const tag = uiTag(locale)
 ---
 
-<section data-block="NewsBand"></section>
+{items.length > 0 && (
+	<section class="nv-news nv-sec nv-green nv-pt-l nv-pb-l">
+		<div class="nv-ct">
+			<div class="nv-sec-title"><span class="nv-sec-h" {...$c('latest_news_title')}>{w.latest_news_title}</span></div>
+			<div class="nv-news-grid">
+				{items.map((p, i) => {
+					const $p = stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })
+					const src = mediaUrl(p.cover)
+					const url = href(locale, postPath(p))
+					return (
+						<article class:list={['nv-news-item', i === 0 ? 'is-lead' : 'is-child']} {...$p()}>
+							{src && <a class="nv-news-pic" href={url} tabindex="-1" aria-hidden="true" {...$p('cover')}><img src={src} alt="" width={p.cover?.width ?? 793} height={p.cover?.height ?? 561} loading="lazy" decoding="async" /></a>}
+							<div class="nv-news-text">
+								<p class="nv-news-date" {...$p('date')}><time datetime={p.date}>{formatDate(p.date, tag)}</time></p>
+								<h3><a href={url} {...$p('title')}>{p.title}</a></h3>
+								<p class="nv-news-meta">
+									{p.author && <span><span {...$c('by_label')}>{w.by_label}</span> <strong {...$p('author')}>{p.author.trim()}</strong></span>}
+									{p.category && <a href={href(locale, '/blog')}>{p.category.label}</a>}
+								</p>
+								{i === 0 && <p class="nv-news-intro">{clip(introOf(p), 97)}</p>}
+							</div>
+						</article>
+					)
+				})}
+			</div>
+			<div class="nv-bottom-actions"><a class="nv-btn is-light" href={href(locale, '/blog')} {...$c('view_all_news_label')}>{w.view_all_news_label}</a></div>
+		</div>
+	</section>
+)}

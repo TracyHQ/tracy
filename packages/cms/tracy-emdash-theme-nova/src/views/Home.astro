@@ -1,9 +1,24 @@
 ---
-// STUB — replaced by the view's author. Props: chrome, locale, path (+ slug / category where the router passes them).
+/** The home page: the sections of `page-layout.json` for `/`, the hero first and the green news band among them. */
 import Base from '@/layouts/Base.astro'
-const { chrome, path } = Astro.props
+import PageOwner from '@/components/site/PageOwner.astro'
+import Sections from '@/components/blocks/Sections.astro'
+import NotFound from '@/views/NotFound.astro'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+
+const { chrome, locale, path } = Astro.props
+const page = await section('pages', 'home', locale)
+const $p = stampFor(Astro.request, 'pages', page)
+const title = page?.title || chrome.site.brand_name
 ---
 
-<Base chrome={chrome} title="Home" currentPath={path || '/'}>
-	<main id="main" class="nv-wrap">Home</main>
-</Base>
+{!page ? <NotFound chrome={chrome} locale={locale} path={path} /> : (
+	<Base chrome={chrome} title={title} description={page.summary || null} currentPath="/" content={{ collection: 'pages', id: page.id, slug: 'home', toPath: () => '/' }}>
+		<main id="main" class="nv-pg nv-pg--home">
+			<PageOwner stamp={$p} />
+			<h1 class="sr-only" {...$p('title')}>{title}</h1>
+			<Sections chrome={chrome} path="/" />
+		</main>
+	</Base>
+)}

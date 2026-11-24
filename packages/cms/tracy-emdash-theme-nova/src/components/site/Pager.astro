@@ -1,0 +1,65 @@
+---
+/**
+ * The source's Joomla pagination: first, previous, the page numbers, next, last, in the `?start=N` form (start = the offset of
+ * the first card of the page). Every accessible name is a word of the chrome entry. Draws nothing for a single page.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { fill } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import Icon from '@/components/site/Icon.astro'
+import { startHref } from '@/components/site/nova-posts'
+
+interface Props {
+  chrome: Chrome
+  /** The page's own path (with its locale prefix). */
+  path: string
+  start: number
+  size: number
+  total: number
+  /** Query parameters kept on every link (the active category tab). */
+  extra?: Record<string, string>
+}
+const { chrome, path, start, size, total, extra = {} } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const w = chrome.site
+const pages = Math.max(1, Math.ceil(total / size))
+const current = Math.floor(start / size) + 1
+const at = (n: number) => startHref(path, (n - 1) * size, extra)
+---
+
+{pages > 1 && (
+	<div class="nv-pager-row">
+		<nav class="nv-pager" aria-label={w.pager_nav_label} {...$c('pager_nav_label')}>
+			<ul>
+				{current > 1 ? (
+					<>
+						<li><a href={at(1)} aria-label={w.pager_first_label} {...$c('pager_first_label')}><Icon name="first" size={16} /></a></li>
+						<li><a href={at(current - 1)} aria-label={w.pager_prev_label} rel="prev" {...$c('pager_prev_label')}><Icon name="prev" size={16} /></a></li>
+					</>
+				) : (
+					<>
+						<li class="is-off"><span aria-hidden="true"><Icon name="first" size={16} /></span></li>
+						<li class="is-off"><span aria-hidden="true"><Icon name="prev" size={16} /></span></li>
+					</>
+				)}
+				{Array.from({ length: pages }, (_, i) => i + 1).map((n) => n === current ? (
+					<li class="is-on"><span aria-current="true" aria-label={fill(w.pager_page_label, { n })}>{n}</span></li>
+				) : (
+					<li><a href={at(n)} aria-label={fill(w.pager_goto_label, { n })}>{n}</a></li>
+				))}
+				{current < pages ? (
+					<>
+						<li><a href={at(current + 1)} aria-label={w.pager_next_label} rel="next" {...$c('pager_next_label')}><Icon name="next" size={16} /></a></li>
+						<li><a href={at(pages)} aria-label={w.pager_last_label} {...$c('pager_last_label')}><Icon name="last" size={16} /></a></li>
+					</>
+				) : (
+					<>
+						<li class="is-off"><span aria-hidden="true"><Icon name="next" size={16} /></span></li>
+						<li class="is-off"><span aria-hidden="true"><Icon name="last" size={16} /></span></li>
+					</>
+				)}
+			</ul>
+		</nav>
+		<p class="nv-counter" {...$c('page_counter_label')}>{fill(w.page_counter_label, { current, total: pages })}</p>
+	</div>
+)}

@@ -1,0 +1,71 @@
+---
+/**
+ * The breadcrumb row under the header (every page except the home page). The default trail is read from the menus by path:
+ * Home, then each parent of the page in the menu, then the page; a view that knows better (an article, a project) passes `trail`.
+ * The home label is `chrome.site.breadcrumb_home`; every other label is a menu label or the view's own title.
+ */
+import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { href } from '@/lib/i18n'
+import { dataHref } from '@/lib/data-links'
+
+interface Props {
+  chrome: Chrome
+  currentPath: string
+  /** The crumbs after Home, the last one being the current page. An empty `url` prints the label without a link. */
+  trail?: { label: string; url: string }[]
+}
+const { chrome, currentPath, trail } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const own = (url: string) => (url ? dataHref(url, (p) => href(locale, p)) : '')
+
+/** The chain of menu items from the top down to the item whose URL is `path`; null when the menu does not hold it. */
+function chain(items: ChromeMenuItem[], path: string): ChromeMenuItem[] | null {
+  for (const item of items) {
+    if (item.url === path) return [item]
+    const below = chain(item.children, path)
+    if (below) return [item, ...below]
+  }
+  return null
+}
+function derive(): { label: string; url: string }[] {
+  const path = currentPath.length > 1 ? currentPath.replace(/\/$/, '') : currentPath
+  const found =
+    chain(chrome.primary, path) ??
+    // a service page hangs under Services; the footer lists hold the rest of the pages
+    (() => {
+      const mine = chain(chrome.services, path)
+      const parent = mine ? chain(chrome.primary, '/services') : null
+      return mine && parent ? [...parent, ...mine] : null
+    })() ??
+    chain(chrome.footerWork, path) ??
+    chain(chrome.footerCompany, path)
+  return (found ?? []).map((i) => ({ label: i.label, url: i.url }))
+}
+const crumbs = (trail ?? derive()).filter((c) => c.label)
+const home = { label: site.breadcrumb_home, url: '/' }
+---
+
+{
+	currentPath !== '/' && (
+		<section class="nv-breadcrumbs">
+			<div class="nv-container">
+				<nav aria-label={site.breadcrumb_label} {...$c('breadcrumb_label')}>
+					<ol>
+						<li>
+							<a href={href(locale, home.url)} {...$c('breadcrumb_home')}>{home.label}</a>
+							{crumbs.length > 0 && <span class="nv-bc-sep" aria-hidden="true" />}
+						</li>
+						{crumbs.map((c, i) => (
+							<li>
+								{c.url ? <a href={own(c.url)} aria-current={i === crumbs.length - 1 ? 'page' : undefined}>{c.label}</a> : <span aria-current={i === crumbs.length - 1 ? 'page' : undefined}>{c.label}</span>}
+								{i < crumbs.length - 1 && <span class="nv-bc-sep" aria-hidden="true" />}
+							</li>
+						))}
+					</ol>
+				</nav>
+			</div>
+		</section>
+	)
+}

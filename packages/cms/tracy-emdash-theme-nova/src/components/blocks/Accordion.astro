@@ -1,6 +1,68 @@
 ---
-// STUB — replaced by the block's author. Props: chrome, row (the entry's data), style ('style-1'…), info (page-layout.json entry).
-const { row } = Astro.props
+/**
+ * Accordion (acm `accordion`): the left column holds the heading, a line and a button, the right column the question panels. Each trigger
+ * opens its own panel and closes the others of the same block; the first panel starts open.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { dataHref } from '@/lib/data-links'
+import { cleanHtml } from '@/lib/html'
+import { headingHtml } from '@/lib/heading-html'
+import { sectionWrap } from '@/lib/section-style'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  style?: string
+  info?: { spacing?: { top?: string | null; bottom?: string | null } } | null
+}
+const { chrome, row, info } = Astro.props
+const $s = stampFor(Astro.request, 'accordion', { id: row.id, slug: row.slug })
+const items: { accordion_name?: string; accordion_desc?: string }[] = Array.isArray(row.items) ? row.items.filter((i: any) => i && i.accordion_name) : []
+const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
+const to = url(row.btn_link)
+const btnClass = (t?: string) => (/light/.test(t ?? '') ? 'is-light' : /secondary|dark/.test(t ?? '') ? 'is-secondary' : 'is-primary')
+const uid = `nv-acc-${row.slug}`
+// the source writes a line break as `</br>`, which a browser reads as `<br>`
+const br = (v: unknown) => String(v ?? '').replace(/<\/br\s*>/gi, '<br>')
+if (items.length === 0 && !row.info_title) return
 ---
 
-<section data-block="Accordion"><div class="nv-wrap">{row.title}</div></section>
+<section class:list={[sectionWrap(row.slug, info), 'nv-accordion']} {...$s()}>
+  <div class="nv-container">
+    <div class="nv-row">
+      <div class="nv-col nv-col-lg-6">
+        <div class="nv-acc-info">
+          {row.info_title && <div class="nv-acc-title" set:html={headingHtml(br(row.info_title))} {...$s('info_title')} />}
+          {row.info_desc && <div class="nv-acc-desc" set:html={headingHtml(br(row.info_desc))} {...$s('info_desc')} />}
+          {row.button && to && (
+            <div class="nv-acc-action">
+              <a class:list={['nv-blk-btn', btnClass(row.btn_type)]} href={to} {...$s('button')}>{row.button}</a>
+            </div>
+          )}
+        </div>
+      </div>
+      <div class="nv-col nv-col-lg-6">
+        <div class="nv-acc-group" data-nv-acc>
+          {items.map((it, i) => (
+            <div class:list={['nv-acc-card', i === 0 && 'is-open']} {...$s.block('items')}>
+              <h3 class="nv-acc-head">
+                <button type="button" class:list={['nv-acc-btn', i === 0 && 'is-open']} data-nv-acc-btn id={`${uid}-h-${i}`} aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`${uid}-p-${i}`}>
+                  <span class="nv-acc-q" {...$s('items.accordion_name')}>{it.accordion_name}</span>
+                  <span class="nv-acc-marker" aria-hidden="true"><span class="nv-acc-plus"></span></span>
+                </button>
+              </h3>
+              <div class="nv-acc-panel" id={`${uid}-p-${i}`} role="region" aria-labelledby={`${uid}-h-${i}`} hidden={i === 0 ? undefined : true}>
+                <div class="nv-acc-body" set:html={cleanHtml(it.accordion_desc)} {...$s('items.accordion_desc')} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  import '@/lib/carousel-client'
+</script>

@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-24T22:47:51.691Z",
+	"generatedAt": "2026-11-24T22:59:25.157Z",
 	"fields": {
 		"pages.title": {
 			"source": "text",
@@ -680,6 +680,166 @@
 			"source": "text",
 			"target": "string",
 			"label": "Social items"
+		},
+		"chrome.show_more_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Show more label"
+		},
+		"chrome.show_less_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Show less label"
+		},
+		"chrome.play_video_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Play video label"
+		},
+		"chrome.join_team_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Join team label"
+		},
+		"chrome.join_team_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Join team link"
+		},
+		"chrome.nav_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Nav label"
+		},
+		"chrome.breadcrumb_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Breadcrumb label"
+		},
+		"chrome.logo_text": {
+			"source": "text",
+			"target": "string",
+			"label": "Logo text"
+		},
+		"chrome.all_projects_label": {
+			"source": "text",
+			"target": "string",
+			"label": "All projects label"
+		},
+		"chrome.project_tabs_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Project tabs title"
+		},
+		"chrome.project_tabs_nav_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Project tabs nav label"
+		},
+		"chrome.view_all_news_label": {
+			"source": "text",
+			"target": "string",
+			"label": "View all news label"
+		},
+		"chrome.prev_article_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Prev article label"
+		},
+		"chrome.next_article_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Next article label"
+		},
+		"chrome.article_nav_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Article nav label"
+		},
+		"chrome.page_counter_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Page counter label"
+		},
+		"chrome.page_title_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Page title label"
+		},
+		"chrome.pager_page_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Pager page label"
+		},
+		"chrome.pager_goto_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Pager goto label"
+		},
+		"chrome.pager_first_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Pager first label"
+		},
+		"chrome.pager_prev_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Pager prev label"
+		},
+		"chrome.pager_next_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Pager next label"
+		},
+		"chrome.pager_last_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Pager last label"
+		},
+		"chrome.pager_nav_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Pager nav label"
+		},
+		"chrome.share_facebook_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Share facebook label"
+		},
+		"chrome.share_twitter_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Share twitter label"
+		},
+		"chrome.share_reddit_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Share reddit label"
+		},
+		"chrome.search_terms_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Search terms label"
+		},
+		"chrome.search_page_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Search page title"
+		},
+		"chrome.search_results_line": {
+			"source": "text",
+			"target": "string",
+			"label": "Search results line"
+		},
+		"chrome.blog_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Blog title"
+		},
+		"chrome.project_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Project title"
 		},
 		"contact.title": {
 			"source": "text",

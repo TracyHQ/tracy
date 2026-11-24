@@ -1,0 +1,56 @@
+---
+/**
+ * One card of a post list: the blog card (picture, date, title, intro) or the project card (picture, title, intro, then
+ * Client name and Budget). Markup follows the source's `com_content/category/blog_item.php` and `project_item.php`.
+ * Props: the post, the chrome (words), the locale and the variant; `$c` is the chrome stamp.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { postPath, type PostRow } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import { uiTag } from '@/lib/ui'
+import { introOf } from '@/components/site/nova-posts'
+
+interface Props {
+  post: PostRow
+  chrome: Chrome
+  locale: Locale
+  variant: 'blog' | 'project'
+  /** the card of the Project page's tabs: a grey panel, the title one step smaller */
+  tabs?: boolean
+}
+const { post, chrome, locale, variant, tabs = false } = Astro.props
+const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const url = href(locale, postPath(post))
+const cover = mediaUrl(post.cover)
+const size = variant === 'project' ? { w: 592, h: 419 } : { w: 793, h: 561 }
+const date = formatDate(post.date, uiTag(locale))
+const intro = introOf(post)
+---
+
+<article class:list={['nv-card', `nv-card--${variant}`, tabs && 'nv-card--tab']} {...$p()}>
+	{cover && (
+		<figure class="nv-card-pic" {...$p('cover')}>
+			<a href={url} tabindex="-1" aria-hidden="true"><img src={cover} alt="" width={post.cover?.width ?? size.w} height={post.cover?.height ?? size.h} loading="lazy" decoding="async" /></a>
+		</figure>
+	)}
+	<div class="nv-card-body">
+		{variant === 'blog' && date && <p class="nv-date" {...$p('date')}><time datetime={post.date}>{date}</time></p>}
+		{tabs ? <h3 class="nv-card-title"><a href={url} {...$p('title')}>{post.title}</a></h3> : <h2 class="nv-card-title"><a href={url} {...$p('title')}>{post.title}</a></h2>}
+		{intro && <p class="nv-card-intro" {...$p('body')}>{intro}</p>}
+		{variant === 'project' && (
+			<div class="nv-foot">
+				<div class="nv-foot-a">
+					<h5 {...$c('client_name_label')}>{chrome.site.client_name_label}</h5>
+					<p {...$p('project_client_name')}>{post.project.clientName}</p>
+				</div>
+				<div class="nv-foot-b">
+					<h5 {...$c('budget_label')}>{chrome.site.budget_label}</h5>
+					<p {...$p('project_budget')}>{post.project.budget}</p>
+				</div>
+			</div>
+		)}
+	</div>
+</article>

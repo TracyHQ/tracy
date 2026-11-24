@@ -1,0 +1,83 @@
+---
+/** Style 1: a picture and a text column (title, text, a list of checks or small pictures, a call to action). Source: style-1.php. */
+import type { Chrome } from '@/lib/chrome'
+import { headingHtml } from '@/lib/heading-html'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { blockLinks, columnsOf, sizeOf } from './links'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  info: Record<string, any>
+}
+const { chrome, row } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
+const items: Record<string, any>[] = Array.isArray(row.items) ? row.items : []
+const linkOf = await blockLinks(Astro.request, chrome.locale, [row.btn_link])
+const cta = row.button ? linkOf(row.btn_link) : null
+const img = mediaUrl(row.intro_img)
+const icon = mediaUrl(row.info_icon)
+const cols = columnsOf(row.columns)
+const align = row.align_media === 'left' ? 'left' : 'right'
+const type = String(row.btn_type || 'primary').replace(/[^a-z-]/g, '')
+const listed = items.filter((i) => i.title || i.desc)
+---
+
+<div class="nv-fcont">
+	<div class={`nv-frow nv-fgut nv-align-${align}`}>
+		{img && (
+			<div class="nv-fcol nv-fcol-lg-6 nv-features-media">
+				<div class="nv-intro-img"><img src={img} alt="" {...sizeOf(row.intro_img, 704, 658)} loading="lazy" decoding="async" {...$s('intro_img')} /></div>
+			</div>
+		)}
+		<div class="nv-fcol nv-fcol-lg-6 nv-features-desc">
+			<div class="nv-info-wrap">
+				<div class="nv-inner">
+					{row.info_title && <div class="nv-info-title"><h2 set:html={headingHtml(row.info_title)} {...$s('info_title')} /></div>}
+					{row.info_desc && <div class="nv-info-desc" set:html={headingHtml(row.info_desc)} {...$s('info_desc')} />}
+					{listed.length > 0 && (
+						<div class="nv-feature-list">
+							<div class={`nv-frow nv-list-item nv-columns-${cols}`}>
+								{listed.map((it) => {
+									const pic = mediaUrl(it.intro)
+									return (
+									<div class="nv-fcol nv-item-col" {...$s.block('items')}>
+										<div class={`nv-item ${pic ? 'nv-media-image' : 'nv-media-svg'}`}>
+											{pic ? (
+												<div class="nv-media-intro"><img src={pic} alt="" {...sizeOf(it.intro, 100, 100)} loading="lazy" decoding="async" {...$s('items.intro')} /></div>
+											) : (
+												<div class="nv-svg-intro">
+													<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+														<path d="M4.25476 16.2452C3.53569 15.5262 4.01262 14.0165 3.64662 13.132C3.26722 12.215 1.875 11.4769 1.875 10.5C1.875 9.52301 3.26722 8.785 3.64663 7.86803C4.01263 6.98346 3.5357 5.47382 4.25476 4.75476C4.97382 4.03569 6.48346 4.51262 7.36804 4.14662C8.28502 3.76722 9.02305 2.375 10 2.375C10.977 2.375 11.715 3.76722 12.632 4.14663C13.5165 4.51263 15.0262 4.0357 15.7452 4.75476C16.4643 5.47382 15.9874 6.98346 16.3534 7.86804C16.7328 8.78502 18.125 9.52305 18.125 10.5C18.125 11.477 16.7328 12.215 16.3534 13.132C15.9874 14.0165 16.4643 15.5262 15.7452 16.2452C15.0262 16.9643 13.5165 16.4874 12.632 16.8534C11.715 17.2328 10.9769 18.625 9.99997 18.625C9.02301 18.625 8.285 17.2328 7.36803 16.8534C6.48346 16.4874 4.97382 16.9643 4.25476 16.2452Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+														<path d="M13.4375 8.625L8.85414 13L6.5625 10.8125" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+													</svg>
+												</div>
+											)}
+											<div class="nv-item-content">
+												{it.title && <h4 {...$s('items.title')}>{it.title}</h4>}
+												{it.desc && <span {...$s('items.desc')}>{it.desc}</span>}
+											</div>
+										</div>
+									</div>
+									)
+								})}
+							</div>
+						</div>
+					)}
+					{row.button && (
+						<div class="nv-action">
+							{row.info_cta && (
+								<div class="nv-more-info">
+									{icon && <span class="nv-icon"><img src={icon} alt="" {...sizeOf(row.info_icon, 64, 64)} loading="lazy" decoding="async" {...$s('info_icon')} /></span>}
+									<span class="nv-cta-detail nv-h4" {...$s('info_cta')}>{row.info_cta}</span>
+								</div>
+							)}
+							{cta && <a href={cta} class={`nv-btn nv-btn-${type}`} {...$s('button')}>{row.button}</a>}
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,5 +1,51 @@
 ---
-// STUB — replaced by the module's author. Props: chrome (+ category, postSlug, current where the module needs them).
+/** "Check some of recent work" under a project (source `mod_related_items` type-project): two other projects of the category as cards. */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { postPath } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import { cut, introOf, loadPostsInOrder } from '@/components/site/nova-posts'
+
+interface Props {
+  chrome: Chrome
+  category?: string
+  postSlug?: string
+}
+const { chrome, category, postSlug } = Astro.props
+const locale = chrome.locale
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const all = (await loadPostsInOrder(locale)).filter((p) => p.kind === 'project' && p.slug !== postSlug)
+const same = all.filter((p) => p.category?.slug === category)
+// the projects after this one in its category, wrapping to the first ones when it is the last
+const own = (await loadPostsInOrder(locale)).filter((p) => p.kind === 'project' && p.category?.slug === category)
+const at = own.findIndex((p) => p.slug === postSlug)
+const ordered = at >= 0 ? [...own.slice(at + 1), ...own.slice(0, at)] : same
+const items = ordered.slice(0, 2)
 ---
 
-<section data-block="RecentWork"></section>
+{items.length > 0 && (
+	<section class="nv-recent nv-sec nv-band nv-pt-l nv-pb-l">
+		<div class="nv-ct">
+			<div class="nv-sec-title"><span class="nv-sec-h" {...$c('recent_work_title')}>{chrome.site.recent_work_title}</span></div>
+			<div class="nv-recent-grid">
+				{items.map((p) => {
+					const $p = stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })
+					const src = mediaUrl(p.cover)
+					const url = href(locale, postPath(p))
+					return (
+						<article class="nv-recent-item" {...$p()}>
+							{src && <a class="nv-recent-pic" href={url} tabindex="-1" aria-hidden="true" {...$p('cover')}><img src={src} alt="" width={p.cover?.width ?? 592} height={p.cover?.height ?? 419} loading="lazy" decoding="async" /></a>}
+							<h3 class="nv-recent-title"><a href={url} {...$p('title')}>{p.title}</a></h3>
+							<p class="nv-recent-intro">{cut(introOf(p), 150)}</p>
+							<div class="nv-foot">
+								<div class="nv-foot-a"><h5 {...$c('client_name_label')}>{chrome.site.client_name_label}</h5><p {...$p('project_client_name')}>{p.project.clientName}</p></div>
+								<div class="nv-foot-b"><h5 {...$c('budget_label')}>{chrome.site.budget_label}</h5><p {...$p('project_budget')}>{p.project.budget}</p></div>
+							</div>
+						</article>
+					)
+				})}
+			</div>
+		</div>
+	</section>
+)}

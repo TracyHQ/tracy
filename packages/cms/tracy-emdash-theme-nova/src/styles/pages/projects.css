@@ -1,1 +1,63 @@
-/* JA Nova — projects pages. */
+/*
+ * Project views: the news band of the home page, the category tabs of the Project page, the project cards, "recent work".
+ * Values measured on the rendered source (scss/_modules.scss `.mod-view-article-list`, `.tabs-category`, `.relateditems`).
+ */
+
+/* ---- the green news band (home) ---- */
+.nv-news { color: var(--ds-c-on-ink, rgba(255, 255, 255, .75)); }
+.nv-news-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+@media (min-width: 992px) { .nv-news-grid { grid-template-columns: 66% 31.6%; } .nv-news-item.is-lead { grid-row: 1 / 3; } }
+.nv-news-item { position: relative; display: flex; flex-direction: column; justify-content: flex-end; height: 300px; padding: 2rem; overflow: hidden; border-radius: 1rem; background: rgba(0, 0, 0, .7); color: rgba(255, 255, 255, .75); }
+@media (min-width: 992px) { .nv-news-item.is-lead { height: 632px; } }
+@media (max-width: 575.98px) { .nv-news-item { padding: 1rem; } }
+.nv-news-pic::before { content: ""; position: absolute; left: 0; bottom: 0; z-index: 1; width: 100%; height: 90%; background: linear-gradient(to bottom, transparent, var(--ds-c-ink, #000)); }
+.nv-news-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.nv-news-text { position: relative; z-index: 2; }
+.nv-news-date { margin: 0 0 .5rem; font-size: 1.25rem; font-weight: 500; text-transform: uppercase; color: var(--ds-c-accent-text, #ef3867); }
+.nv-green .nv-news-date { color: rgba(255, 255, 255, .9); }
+.nv-news-item h3 { margin: 0 0 .5rem; font-weight: 600; font-size: 1.75rem; color: var(--ds-c-on-ink, #fff); }
+.nv-news-item.is-child h3 { font-size: 1.5rem; }
+.nv-news-item h3 a { color: var(--ds-c-on-ink, #fff); }
+.nv-news-item h3 a:hover { color: rgba(255, 255, 255, .75); }
+.nv-news-meta { display: flex; flex-wrap: wrap; align-items: center; margin: 0 0 1rem; font-size: .875rem; font-weight: 500; text-transform: uppercase; }
+.nv-news-meta > * + *::before { content: "–"; margin: 0 6px; font-weight: 400; }
+.nv-news-meta a, .nv-news-meta strong { color: var(--ds-c-on-ink, #fff); }
+.nv-news-meta a { display: inline-flex; }
+.nv-news-meta > a::before { content: none; }
+.nv-news-intro { margin: 0; }
+.nv-news-item.is-child .nv-news-intro { display: none; }
+
+/* ---- category tabs (Project page) ---- */
+.nv-tabs-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 4rem; }
+@media (max-width: 991.98px) { .nv-tabs-nav { margin-bottom: 2rem; } }
+.nv-tabs-nav a { display: inline-flex; align-items: center; height: 64px; padding: 1rem 2rem; font-weight: 500; color: var(--color-heading); background: var(--pg-gray); border-radius: 1rem; transition: all .15s; }
+@media (max-width: 991.98px) { .nv-tabs-nav a { height: 50px; } }
+@media (max-width: 767.98px) { .nv-tabs-nav a { width: calc(50% - 1rem); padding: 1rem; justify-content: center; } }
+.nv-tabs-nav a:hover, .nv-tabs-nav a.is-on { background: var(--color-accent); color: var(--color-accent-on); }
+html[data-theme="dark"] .nv-tabs-nav a { background: var(--ds-c-surface, #1e232b); color: var(--ds-c-fg, #c2c9d2); }
+html[data-theme="dark"] .nv-tabs-nav a:hover, html[data-theme="dark"] .nv-tabs-nav a.is-on { background: var(--color-accent); color: var(--color-accent-on); }
+.nv-tabs-grid { display: grid; grid-template-columns: 1fr; column-gap: 2rem; }
+@media (min-width: 992px) { .nv-tabs-grid { grid-template-columns: repeat(2, 1fr); } }
+.nv-card--tab { margin-bottom: 2rem; padding: 2rem; border-radius: 2rem; }
+@media (max-width: 575.98px) { .nv-card--tab { padding: 1rem; border-radius: 1rem; } }
+.nv-card--tab .nv-card-pic { margin-bottom: 2rem; }
+@media (max-width: 991.98px) { .nv-card--tab .nv-card-pic { margin-bottom: 1.5rem; } }
+.nv-card--tab .nv-card-title { margin: 0 0 1rem; font-size: 1.75rem; }
+@media (max-width: 991.98px) { .nv-card--tab .nv-card-title { font-size: 1.5rem; } }
+html[data-theme="dark"] .nv-card--project { background: var(--ds-c-surface-warm, #1a1e25); }
+
+/* ---- recent work (under a project) ---- */
+.nv-recent-grid { display: grid; grid-template-columns: 1fr; gap: 0 2rem; margin-bottom: -2rem; }
+@media (min-width: 992px) { .nv-recent-grid { grid-template-columns: repeat(2, 1fr); } }
+.nv-recent-item { margin-bottom: 2rem; padding: 2rem; background: var(--pg-card); border-radius: 1rem; transition: all .5s; }
+@media (max-width: 767.98px) { .nv-recent-item { padding: 1rem; } }
+.nv-recent-item:hover { box-shadow: rgba(0, 0, 0, .07) 0 1px 1px, rgba(0, 0, 0, .07) 0 2px 2px, rgba(0, 0, 0, .07) 0 4px 4px, rgba(0, 0, 0, .07) 0 8px 8px, rgba(0, 0, 0, .07) 0 16px 16px; }
+.nv-recent-pic { display: block; margin-bottom: 2rem; overflow: hidden; border-radius: 1rem; }
+@media (max-width: 767.98px) { .nv-recent-pic { margin-bottom: 1rem; } }
+.nv-recent-pic img { display: block; width: 100%; height: auto; border-radius: 1rem; transition: all .8s; }
+.nv-recent-item:hover .nv-recent-pic img { transform: scale(1.02); }
+.nv-recent-title { margin: 0 0 1rem; font-size: 1.75rem; font-weight: 600; }
+@media (max-width: 575px) { .nv-recent-title { font-size: 22px; } }
+.nv-recent-title a { color: var(--color-heading); }
+.nv-recent-title a:hover { color: var(--color-accent-text-hover); }
+.nv-recent-intro { margin: 0; }

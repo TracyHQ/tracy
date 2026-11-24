@@ -1,0 +1,95 @@
+---
+/** Style 7: open positions. Each row has a title, two facts, a short text and, when there is a long text, a "Show more" button that opens only its own panel. Source: style-7.php. */
+import type { Chrome } from '@/lib/chrome'
+import { cleanHtml } from '@/lib/html'
+import { stampFor } from '@/lib/stamps'
+import { blockLinks } from './links'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  info: Record<string, any>
+}
+const { chrome, row } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const items: Record<string, any>[] = (Array.isArray(row.items) ? row.items : []).filter((i: any) => i.title)
+const linkOf = await blockLinks(Astro.request, chrome.locale, items.map((i) => i.btn_link))
+const type = (t: unknown) => String(t || 'primary').replace(/[^a-z-]/g, '')
+const more = chrome.site.show_more_label
+const less = chrome.site.show_less_label
+const uid = `nv-pos-${String(row.slug).replace(/[^a-z0-9-]/gi, '')}`
+---
+
+<div class="nv-fcont" id={uid}>
+	{items.map((it, i) => {
+		const url = it.btn_title ? linkOf(it.btn_link) : null
+		const panel = `${uid}-${i}`
+		return (
+			<div class="nv-features-inner" {...$s.block('items')}>
+				<div class="nv-frow nv-fgut nv-start">
+					<div class="nv-fcol nv-fcol-lg-9">
+						<div class="nv-frow nv-start nv-pos-row">
+							<div class="nv-fcol nv-fcol-lg-6">
+								<div class="nv-title nv-mb-2"><span class="nv-h3" {...$s('items.title')}>{it.title}</span></div>
+								<div class="nv-job-info">
+									{it.apply_position && (
+										<div class="nv-apply-position">
+											<svg class="nv-fa" viewBox="0 0 512 512" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" /></svg>
+											<span {...$s('items.apply_position')}>{it.apply_position}</span>
+										</div>
+									)}
+									{it.apply_time && (
+										<div class="nv-apply-time">
+											<svg class="nv-fa" viewBox="0 0 384 512" width="12" height="16" aria-hidden="true"><path fill="currentColor" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" /></svg>
+											<span {...$s('items.apply_time')}>{it.apply_time}</span>
+										</div>
+									)}
+								</div>
+							</div>
+							{it.desc && <div class="nv-fcol nv-fcol-12"><div class="nv-desc" {...$s('items.desc')}>{it.desc}</div></div>}
+							{it.full_desc && (
+								<div class="nv-collapse" id={panel} data-collapse-panel hidden>
+									<div class="nv-card-body">
+										<div set:html={cleanHtml(it.full_desc)} {...$s('items.full_desc')} />
+										{url && <div class="nv-btn-link"><a href={url} class={`nv-btn nv-btn-${type(it.btn_type)}`} {...$s('items.btn_title')}>{it.btn_title}</a></div>}
+									</div>
+								</div>
+							)}
+						</div>
+					</div>
+					<div class="nv-fcol nv-fcol-lg-3 nv-text-end">
+						{it.full_desc ? (
+							<button type="button" class="nv-btn nv-btn-primary nv-collapsed" data-collapse-toggle={panel} aria-expanded="false" aria-controls={panel}>
+								<span class="nv-show-more" {...$c('show_more_label')}>{more}</span>
+								<span class="nv-show-less" {...$c('show_less_label')}>{less}</span>
+							</button>
+						) : (
+							url && <a href={url} class={`nv-btn nv-btn-${type(it.btn_type)}`} {...$s('items.btn_title')}>{it.btn_title}</a>
+						)}
+					</div>
+				</div>
+			</div>
+		)
+	})}
+</div>
+
+<script is:inline>
+	(function () {
+		if (window.__nvCollapseBound) return
+		window.__nvCollapseBound = true
+		document.addEventListener('click', function (e) {
+			var t = e.target
+			if (!(t instanceof Element)) return
+			var b = t.closest('[data-collapse-toggle]')
+			if (!b) return
+			var p = document.getElementById(b.getAttribute('data-collapse-toggle'))
+			if (!p) return
+			var open = p.hasAttribute('hidden')
+			if (open) p.removeAttribute('hidden')
+			else p.setAttribute('hidden', '')
+			b.setAttribute('aria-expanded', open ? 'true' : 'false')
+			b.classList.toggle('nv-collapsed', !open)
+		})
+	})()
+</script>

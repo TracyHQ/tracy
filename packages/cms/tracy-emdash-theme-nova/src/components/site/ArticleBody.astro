@@ -1,0 +1,34 @@
+---
+/**
+ * The body of an article, page or project (Portable Text): paragraphs, h3 headings, bullet lists drawn as the source's
+ * `list-special`, pictures (consecutive pictures sit side by side). Text blocks keep their provenance stamp on a stamped request.
+ */
+import { PortableText } from 'emdash/ui'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import ArticleImageRow from '@/components/site/ArticleImageRow.astro'
+import { BLOCK_SRC } from '@/lib/stamps'
+
+interface Props {
+  value: any[]
+}
+const { value } = Astro.props
+const blocks: any[] = Array.isArray(value) ? value : []
+const textOf = (b: any) => (b?.children ?? []).map((c: any) => c?.text ?? '').join('')
+// an empty paragraph the importer left between blocks draws nothing
+// a Joomla module token (`{loadmoduleid 116}`) is no text for the reader
+const kept = blocks.filter((b) => !(b?._type === 'block' && !b.listItem && (textOf(b).trim() === '' || /^\{loadmodule/.test(textOf(b).trim()))))
+// consecutive pictures sit in one row
+const rows: any[] = []
+for (let i = 0; i < kept.length; i++) {
+  if (kept[i]?._type !== 'image') { rows.push(kept[i]); continue }
+  const run: any[] = []
+  while (kept[i]?._type === 'image') run.push(kept[i++])
+  i--
+  rows.push(run.length === 1 ? run[0] : { _type: 'nvRow', _key: `row-${run[0]._key ?? i}`, images: run })
+}
+const stamped = kept.some((b) => b?.[BLOCK_SRC])
+const components = { ...(stamped ? { block: ProseBlock, listItem: ProseListItem } : {}), type: { nvRow: ArticleImageRow } }
+---
+
+<div class="nv-article-body" itemprop="articleBody"><PortableText value={rows} components={components} /></div>

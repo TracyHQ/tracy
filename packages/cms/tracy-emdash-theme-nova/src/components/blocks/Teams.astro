@@ -1,6 +1,91 @@
 ---
-// STUB — replaced by the block's author. Props: chrome, row (the entry's data), style ('style-1'…), info (page-layout.json entry).
-const { row } = Astro.props
+/**
+ * Teams (acm `teams` style-1): a yellow band with a lead sentence, two round arrows and white cards that slide endlessly, 1 / 2 / 3 across
+ * (`columns` at xl and up). The arrows move this carousel only. As in the source, the left arrow is the one that goes to the next card.
+ * Under the cards the section's own button (words `join_team_label`, `join_team_link` of the chrome entry).
+ */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+import { dataHref } from '@/lib/data-links'
+import { headingHtml } from '@/lib/heading-html'
+import { sectionWrap } from '@/lib/section-style'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  style?: string
+  info?: { spacing?: { top?: string | null; bottom?: string | null } } | null
+}
+const { chrome, row, info } = Astro.props
+const $s = stampFor(Astro.request, 'teams', { id: row.id, slug: row.slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const site = chrome.site
+const items: { img?: any; title?: string; team_position?: string; link?: string }[] = Array.isArray(row.items) ? row.items.filter((i: any) => i && (i.title || i.img)) : []
+if (items.length === 0) return
+const columns = Math.max(1, Math.min(6, Number(row.columns) || 3))
+const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
+const joinTo = site.join_team_link ? url(site.join_team_link) : ''
+const carId = `nv-team-${row.slug}`
+const desc = row.team_desc ? headingHtml(row.team_desc) : ''
+
+const arrows = [
+  // visible order as in the source: left arrow = next, right arrow = prev
+  { dir: 'next', label: site.next_label, glyph: 'left', field: 'next_label' },
+  { dir: 'prev', label: site.prev_label, glyph: 'right', field: 'prev_label' }
+]
 ---
 
-<section data-block="Teams"><div class="nv-wrap">{row.title}</div></section>
+<section class:list={[sectionWrap(row.slug, info), 'nv-teams']} {...$s()}>
+  <div class="nv-container">
+    <div class="nv-teams-top">
+      {desc && <div class="nv-teams-desc" set:html={desc} {...$s('team_desc')} />}
+      <div class="nv-teams-nav">
+        {arrows.map((a) => (
+          <button type="button" class="nv-teams-arrow" data-nv-car-go={carId} data-dir={a.dir} aria-label={a.label} {...$c(a.field)}>
+            <svg viewBox="0 0 448 512" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d={a.glyph === 'left'
+              ? 'M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z'
+              : 'M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z'} /></svg>
+          </button>
+        ))}
+      </div>
+    </div>
+    <div class="nv-teams-car nv-car" data-nv-car data-nv-car-id={carId} style={`--nv-cols:${columns}`}>
+      <div class="nv-car-view">
+        <div class="nv-car-track">
+          {items.map((it) => {
+            const src = mediaUrl(it.img)
+            const to = url(it.link)
+            const pic = src && (
+              <div class="nv-teams-img">
+                <img src={src} alt="" width={Number(it.img?.width) || 400} height={Number(it.img?.height) || 400} loading="lazy" decoding="async" {...$s('items.img')} />
+              </div>
+            )
+            return (
+              <div class="nv-car-item nv-teams-item" {...$s.block('items')}>
+                <div class="nv-teams-card">
+                  {pic && (to ? <a href={to}>{pic}</a> : pic)}
+                  {(it.title || it.team_position) && (
+                    <div class="nv-teams-text">
+                      {it.title && <h4 class="nv-teams-name" {...$s('items.title')}>{to ? <a href={to}>{it.title}</a> : it.title}</h4>}
+                      {it.team_position && <span {...$s('items.team_position')}>{it.team_position}</span>}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+  {site.join_team_label && joinTo && (
+    <div class="nv-bottom-actions">
+      <a class="nv-blk-btn is-primary" href={joinTo} {...$c('join_team_label')}>{site.join_team_label}</a>
+    </div>
+  )}
+</section>
+<script>
+  import '@/lib/carousel-client'
+</script>

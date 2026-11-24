@@ -1,1 +1,25 @@
-/* JA Nova — hero. Owned by the block's author; see global.css for the tokens. */
+/* JA Nova — hero (source: scss/_acm.scss `.acm-hero.style-1`, measured on the rendered home). Tokens come from ../tokens.css. */
+
+.nv-hero .nv-hero-item {
+	background-image: var(--nv-hero-decor, none);
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.nv-hero .nv-hero-content { max-width: 700px; margin-inline: auto; padding-block: 160px; text-align: center; }
+.nv-hero .nv-hero-title { margin: 0 0 2rem; font-weight: 700; }
+.nv-hero .nv-hero-desc { margin: .5rem 0; }
+.nv-hero .nv-action { margin-top: 4rem; }
+
+@media (max-width: 1399.98px) {
+	.nv-hero .nv-hero-content { padding-block: 96px; }
+}
+@media (max-width: 767.98px) {
+	/* phone copy stays clear of the decoration */
+	.nv-hero .nv-hero-item { background-image: none; }
+	.nv-hero .nv-hero-content { padding-block: 32px; }
+	.nv-hero .nv-action { margin-top: 2rem; }
+}
+@media (max-width: 575.98px) {
+	.nv-hero .nv-hero-title { margin-bottom: 1rem; }
+}

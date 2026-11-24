@@ -1,0 +1,27 @@
+---
+/** The source's search module (`mod_finder`): an input and a button in one field, posting to the template's own `/search?q=`. */
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  q?: string
+  id?: string
+}
+const { chrome, locale, q = '', id = 'nv-q' } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const w = chrome.site
+---
+
+<search>
+	<form class="nv-search" action={href(locale, '/search')} method="get" aria-label={w.search_label}>
+		<label for={id} class="sr-only" {...$c('search_label')}>{w.search_label}</label>
+		<div class="nv-search-box">
+			<input type="search" name="q" id={id} value={q} placeholder={w.search_placeholder} autocomplete="off" {...$c('search_placeholder')} />
+			<button type="submit" aria-label={w.search_button} {...$c('search_button')}><Icon name="search" size={22} /></button>
+		</div>
+	</form>
+</search>

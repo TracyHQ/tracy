@@ -1,9 +1,95 @@
 ---
-// STUB — replaced by the view's author. Props: chrome, locale, path (+ slug / category where the router passes them).
+/**
+ * One post. `/blog/<slug>`: date, title, tag pills, the article with its share links, previous / next, then related posts.
+ * `/project/<category>/<slug>`: the category title, the project title and summary, the Client / Services / Date / Completed row,
+ * the banner, the article, previous / next, then "Check some of recent work".
+ */
 import Base from '@/layouts/Base.astro'
-const { chrome, path } = Astro.props
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import Sections from '@/components/blocks/Sections.astro'
+import ArticleBody from '@/components/site/ArticleBody.astro'
+import ShareRow from '@/components/site/ShareRow.astro'
+import ProjectMeta from '@/components/site/ProjectMeta.astro'
+import PostNav from '@/components/site/PostNav.astro'
+import NotFound from '@/views/NotFound.astro'
+import { formatDate, href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { postPath } from '@/lib/posts'
+import { publicOrigin } from '@/lib/public-origin'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+import { uiTag } from '@/lib/ui'
+import { introOf, loadPostsInOrder, paragraphs, tagsOf } from '@/components/site/nova-posts'
+
+const { chrome, locale, path, slug, category } = Astro.props
+const w = chrome.site
+const all = await loadPostsInOrder(locale)
+const wantProject = typeof category === 'string' && category !== ''
+const post = all.find((p) => p.slug === slug && (wantProject ? p.kind === 'project' && p.category?.slug === category : p.kind !== 'project'))
+if (!post) Astro.response.status = 404
+const $p = stampFor(Astro.request, 'posts', post ? { id: post.id, slug: post.slug } : null)
+const isProject = post?.kind === 'project'
+const own = post ? `${postPath(post)}` : path
+const siblings = post ? all.filter((p) => (isProject ? p.kind === 'project' && p.category?.slug === post.category?.slug : p.kind !== 'project')) : []
+const at = post ? siblings.findIndex((p) => p.slug === post.slug) : -1
+const nav = (p?: (typeof all)[number]) => (p ? { url: href(locale, postPath(p)), title: p.title } : null)
+const prev = nav(siblings[at - 1])
+const next = nav(siblings[at + 1])
+const banner = post ? mediaUrl(post.banner) : null
+let body = post ? post.body : []
+// a project shows its first paragraph as the summary above the meta row, so the body starts after it
+const intro = post ? introOf(post) : ''
+if (post && isProject && intro && paragraphs(body)[0] === intro) {
+  const i = (body as any[]).findIndex((b) => b?._type === 'block' && !b.listItem && (b.style ?? 'normal') === 'normal' && (b.children ?? []).map((c: any) => c?.text ?? '').join('').trim() === intro)
+  body = (body as any[]).filter((_, j) => j !== i)
+}
+const stamped = post ? stampBlocks($p, 'body', body) : []
+const tags = post ? tagsOf(post) : []
+const catLabel = post?.category?.label ?? ''
+const trail = post
+  ? isProject
+    ? [{ label: w.project_title, url: '/project' }, { label: catLabel, url: `/project/${post.category?.slug}` }]
+    : [{ label: w.blog_title, url: '/blog' }, { label: post.title, url: '' }]
+  : undefined
 ---
 
-<Base chrome={chrome} title="Post" currentPath={path || '/'}>
-	<main id="main" class="nv-wrap">Post</main>
-</Base>
+{!post ? <NotFound chrome={chrome} locale={locale} path={path} /> : (
+	<Base chrome={chrome} title={post.title} description={intro || null} image={banner} currentPath={own} type="article" content={{ collection: 'posts', id: post.id, slug: post.slug, toPath: (s: string) => postPath({ slug: s, category: post.category }) }}>
+		<main id="main" class:list={['nv-pg', isProject ? 'nv-pg--project' : 'nv-pg--post']}>
+			<PageOwner stamp={$p} />
+			<Breadcrumbs chrome={chrome} currentPath={own} trail={trail} />
+			<div class="nv-body">
+				<div class="nv-ct">
+					<article class:list={['nv-article', isProject && 'is-project']} itemscope itemtype="https://schema.org/Article">
+						{!isProject && post.date && (
+							<div class="nv-article-aside"><p class="nv-date" {...$p('date')}><time datetime={post.date} itemprop="datePublished">{formatDate(post.date, uiTag(locale))}</time></p></div>
+						)}
+						{isProject ? (
+							<>
+								<header class="nv-article-head"><h1>{catLabel}</h1></header>
+								<header class="nv-article-head is-sub"><h2 class="is-h1" itemprop="headline" {...$p('title')}>{post.title}</h2></header>
+								{intro && <div class="nv-article-intro"><p {...$p('body')}>{intro}</p></div>}
+								<ProjectMeta chrome={chrome} post={post} />
+							</>
+						) : (
+							<>
+								<header class="nv-article-head"><h1 itemprop="headline" {...$p('title')}>{post.title}</h1></header>
+								{tags.length > 0 && <ul class="nv-article-tags" {...$p('tags')}>{tags.map((t) => <li><span>{t}</span></li>)}</ul>}
+							</>
+						)}
+						{isProject && banner && <figure class="nv-article-pic is-wide" {...$p('banner')}><img src={banner} alt="" width={post.banner?.width ?? 1344} height={post.banner?.height ?? 672} loading="lazy" decoding="async" itemprop="image" /></figure>}
+						<div class="nv-article-box">
+							<ShareRow chrome={chrome} url={`${publicOrigin(Astro.url)}${href(locale, own)}`} title={post.title} />
+							<div class="nv-article-right">
+								{!isProject && banner && <figure class="nv-article-pic" {...$p('banner')}><img src={banner} alt="" width={post.banner?.width ?? 1000} height={post.banner?.height ?? 500} loading="lazy" decoding="async" itemprop="image" /></figure>}
+								<ArticleBody value={stamped} />
+								<PostNav chrome={chrome} prev={prev} next={next} />
+							</div>
+						</div>
+					</article>
+				</div>
+			</div>
+			{isProject ? <Sections chrome={chrome} path="/project/project-detail" category={post.category?.slug} postSlug={post.slug} /> : <Sections chrome={chrome} path="/blog-detail" postSlug={post.slug} />}
+		</main>
+	</Base>
+)}

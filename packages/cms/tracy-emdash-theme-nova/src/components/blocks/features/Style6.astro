@@ -1,0 +1,41 @@
+---
+/** Style 6: expertise cards in a 5/7 and 7/5 grid, each with a coloured dot, a small title, a title, text and a list of pills. Source: style-6.php. */
+import type { Chrome } from '@/lib/chrome'
+import { cleanHtml } from '@/lib/html'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  info: Record<string, any>
+}
+const { row } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
+const items: Record<string, any>[] = (Array.isArray(row.items) ? row.items : []).filter((i: any) => i.title || i.description)
+const colour = (c: unknown) => String(c || '').replace(/[^a-z-]/g, '')
+const span = (c: unknown) => {
+  const n = Number.parseInt(String(c ?? ''), 10)
+  return n >= 1 && n <= 12 ? n : 6
+}
+---
+
+<div class="nv-fcont">
+	<div class="nv-frow nv-fgut">
+		{items.map((it) => (
+			<div class={`nv-fcol nv-fcol-lg-${span(it.columns)}`}>
+				<div class="nv-features-item" {...$s.block('items')}>
+					<div class="nv-item-inner">
+						<div class="nv-dot-decor">
+							<span class={`nv-mask nv-bg-${colour(it.dot_color)}`}></span>
+							<span class={`nv-bg-${colour(it.dot_color)}`}></span>
+						</div>
+						{it.sub_title && <div class="nv-sub-title" {...$s('items.sub_title')}>{it.sub_title}</div>}
+						{it.title && <h3 {...$s('items.title')}>{it.title}</h3>}
+						{it.description && <p {...$s('items.description')}>{it.description}</p>}
+						{it.list_features && <div class="nv-list-features" set:html={cleanHtml(it.list_features)} {...$s('items.list_features')} />}
+					</div>
+				</div>
+			</div>
+		))}
+	</div>
+</div>

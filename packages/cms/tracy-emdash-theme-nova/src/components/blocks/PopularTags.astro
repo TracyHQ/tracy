@@ -1,5 +1,27 @@
 ---
-// STUB — replaced by the module's author. Props: chrome (+ category, postSlug, current where the module needs them).
+/**
+ * "Tags Popular" (source `mod_tags_popular`): the tags the posts carry, most used first. A tag has no page of its own in this
+ * template, so each prints as a plain pill, never a link to nowhere.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { tagsOf, loadPostsInOrder } from '@/components/site/nova-posts'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const count = new Map<string, number>()
+for (const p of await loadPostsInOrder(chrome.locale)) for (const t of tagsOf(p)) count.set(t, (count.get(t) ?? 0) + 1)
+const tags = [...count.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 10).map(([t]) => t)
 ---
 
-<section data-block="PopularTags"></section>
+{tags.length > 0 && (
+	<div class="nv-popular">
+		<h3 class="nv-mod-title" {...$c('popular_tags_title')}>{chrome.site.popular_tags_title}</h3>
+		<ul>
+			{tags.map((t) => <li><span>{t}</span></li>)}
+		</ul>
+	</div>
+)}

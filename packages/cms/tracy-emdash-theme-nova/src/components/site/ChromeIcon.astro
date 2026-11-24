@@ -1,0 +1,32 @@
+---
+/** Glyphs of the page chrome as inline SVG (Phosphor, MIT, rendered on the server): the contact row, the menu button, the arrows, the networks. */
+import { createElement } from 'react'
+import * as Phosphor from '@phosphor-icons/react/dist/ssr'
+
+interface Props {
+  name: string
+  size?: number
+  weight?: 'regular' | 'fill' | 'bold' | 'light'
+  class?: string
+}
+const { name, size = 16, weight = 'fill', class: cls = '' } = Astro.props
+const BY_NAME: Record<string, string> = {
+  phone: 'Phone',
+  envelope: 'Envelope',
+  bars: 'List',
+  'caret-right': 'CaretRight',
+  'caret-left': 'CaretLeft',
+  close: 'X',
+  facebook: 'FacebookLogo',
+  twitter: 'TwitterLogo',
+  x: 'XLogo',
+  instagram: 'InstagramLogo',
+  linkedin: 'LinkedinLogo',
+  youtube: 'YoutubeLogo',
+  rss: 'RssSimple',
+  link: 'Link'
+}
+const Glyph = (Phosphor as unknown as Record<string, any>)[BY_NAME[name] ?? 'Link']
+---
+
+<Fragment set:html={(await import('react-dom/server')).renderToStaticMarkup(createElement(Glyph, { size, weight, 'aria-hidden': true, className: cls || undefined }))} />

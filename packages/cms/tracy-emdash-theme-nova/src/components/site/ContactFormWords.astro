@@ -1,0 +1,47 @@
+---
+/**
+ * Writes the `contact` entry's words over the Forms plugin's embed (default slot): the field labels, the placeholders and the
+ * button. The plugin prints the labels of the form definition; the page prints the entry's, so an editor's change shows. Provenance
+ * stamps go on the replaced elements.
+ */
+import type { Row } from '@/lib/content'
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  c: Row
+  stamp: Stamp
+}
+const { c, stamp: $c } = Astro.props
+const html = Astro.slots.has('default') ? await Astro.slots.render('default') : ''
+const esc = (s: unknown) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+const attrs = (field: string) =>
+  Object.entries($c(field))
+    .map(([k, v]) => ` ${k}="${esc(v)}"`)
+    .join('')
+let out = html
+const FIELDS: [string, string][] = [
+  ['name', 'name_label'],
+  ['email', 'email_field_label'],
+  ['phone', 'phone_field_label'],
+  ['subject', 'subject_label'],
+  ['message', 'message_label']
+]
+for (const [name, key] of FIELDS) {
+  if (!c[key]) continue
+  out = out.replace(
+    new RegExp(`<label\\b([^>]*\\bfor="[^"]*-${name}"[^>]*)>\\s*[^<]*`),
+    (_m, a) => `<label${a}${attrs(key)}>${esc(c[key])}`
+  )
+  out = out.replace(
+    new RegExp(`(<(?:input|textarea)\\b[^>]*\\bid="[^"]*-${name}"[^>]*?)\\splaceholder="[^"]*"`),
+    (_m, a) => `${a} placeholder="${esc(c[key])}"`
+  )
+}
+if (c.submit_label)
+  out = out.replace(
+    /(<button\b[^>]*\bec-form-submit\b[^>]*)>\s*[^<]*/,
+    (_m, a) => `${a}${attrs('submit_label')}>${esc(c.submit_label)}`
+  )
+---
+
+<Fragment set:html={out} />

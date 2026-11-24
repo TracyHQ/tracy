@@ -1,6 +1,48 @@
 ---
-// STUB — replaced by the block's author. Props: chrome, row (the entry's data), style ('style-1'…), info (page-layout.json entry).
-const { row } = Astro.props
+/**
+ * Social (acm `social` style-1): a row of network icons, plain (style 1) or on coloured discs (style 2). The network comes from the Font Awesome
+ * class of the entry (`fa-brands fa-facebook` -> facebook). An item with no link prints its icon and no anchor.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { networkOf } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { sectionWrap } from '@/lib/section-style'
+import SocialIcon from '@/components/site/SocialIcon.astro'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  style?: string
+  info?: { spacing?: { top?: string | null; bottom?: string | null } } | null
+}
+const { chrome, row, info } = Astro.props
+const $s = stampFor(Astro.request, 'social', { id: row.id, slug: row.slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const items: { font_icon?: string; title?: string; link?: string }[] = Array.isArray(row.items)
+  ? row.items.filter((i: any) => i && (i.font_icon || i.title))
+  : []
+if (items.length === 0) return
+const look = String(row.social_style) === '1' ? '1' : '2'
 ---
 
-<section data-block="Social"><div class="nv-wrap">{row.title}</div></section>
+<section class:list={[sectionWrap(row.slug, info), 'nv-social-block']} {...$s()}>
+  <div class="nv-container">
+    <div class:list={['nv-sb-follow', `is-style-${look}`]}>
+      {chrome.site.follow_label && <span class="nv-sb-label" {...$c('follow_label')}>{chrome.site.follow_label}</span>}
+      {items.map((it) => {
+        const net = networkOf(it.font_icon, it.title)
+        const to = it.link && it.link.trim() && it.link.trim() !== '#' ? it.link.trim() : ''
+        const icon = <SocialIcon name={net} size={look === '1' ? 20 : 16} />
+        return (
+          <div class="nv-sb-item" {...$s.block('items')}>
+            {to ? (
+              <a href={to} title={it.title || undefined} aria-label={it.title || undefined} class:list={['nv-sb-link', `is-${net}`]} rel="noopener">{icon}</a>
+            ) : (
+              <span class:list={['nv-sb-link', 'is-off', `is-${net}`]} title={it.title || undefined}>{icon}</span>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  </div>
+</section>

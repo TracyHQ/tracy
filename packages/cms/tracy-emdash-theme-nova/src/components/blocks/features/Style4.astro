@@ -1,0 +1,47 @@
+---
+/** Style 4: a title and two paragraphs above, a numbered row of four values below. Source: style-4.php. */
+import type { Chrome } from '@/lib/chrome'
+import { headingHtml } from '@/lib/heading-html'
+import { stampFor } from '@/lib/stamps'
+import { columnsOf } from './links'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  info: Record<string, any>
+}
+const { row } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
+const items: Record<string, any>[] = (Array.isArray(row.items) ? row.items : []).filter((i: any) => i.title || i.description)
+const cols = columnsOf(row.columns, 4)
+const colour = (c: unknown) => String(c || '').replace(/[^a-z-]/g, '')
+const number = (i: number) => String(i + 1).padStart(2, '0')
+---
+
+<div class="nv-fcont">
+	<div class="nv-top-info">
+		<div class="nv-frow">
+			<div class="nv-fcol nv-fcol-md-6 nv-content-left">
+				{row.ft_title && <div class="nv-section-title nv-h2" set:html={headingHtml(row.ft_title)} {...$s('ft_title')} />}
+			</div>
+			<div class="nv-fcol nv-fcol-md-6 nv-content-right">
+				{row.content_featured && <p class="nv-my-0" {...$s('content_featured')}>{row.content_featured}</p>}
+			</div>
+		</div>
+	</div>
+	<div class="nv-bottom-info">
+		<div class={`nv-frow nv-fgut nv-center nv-cols-${cols}`}>
+			{items.map((it, i) => (
+				<div class="nv-fcol nv-stat-col nv-item">
+					<div class="nv-features-inner" {...$s.block('items')}>
+						<div class={`nv-text-number nv-hl-${colour(it.background_type)}`}>{number(i)}</div>
+						<div class="nv-features-content">
+							{it.title && <div class="nv-title"><span class="nv-h3" {...$s('items.title')}>{it.title}</span></div>}
+							{it.description && <div class="nv-desc"><span {...$s('items.description')}>{it.description}</span></div>}
+						</div>
+					</div>
+				</div>
+			))}
+		</div>
+	</div>
+</div>

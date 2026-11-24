@@ -1,9 +1,78 @@
 ---
-// STUB — replaced by the view's author. Props: chrome, locale, path (+ slug / category where the router passes them).
+/**
+ * A service page: the page's body and banner beside the "Service Category" menu, the cards inside the article, the FAQ under it,
+ * and previous / next. Source: `com_content/article` with the `t4-sidebar-l` menu module.
+ */
 import Base from '@/layouts/Base.astro'
-const { chrome, path } = Astro.props
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import Sections from '@/components/blocks/Sections.astro'
+import ArticleBody from '@/components/site/ArticleBody.astro'
+import ShareRow from '@/components/site/ShareRow.astro'
+import PostNav from '@/components/site/PostNav.astro'
+import NotFound from '@/views/NotFound.astro'
+import { section } from '@/lib/content'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+import { publicOrigin } from '@/lib/public-origin'
+
+const { chrome, locale, path, slug } = Astro.props
+const page = await section('pages', slug, locale)
+const $p = stampFor(Astro.request, 'pages', page)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const body = page ? stampBlocks($p, 'body', page.body) : []
+const banner = page ? mediaUrl(page.banner) : null
+const here = `/${slug}`
+const menu = chrome.services
+// the source lists the articles in the reverse of the menu: "previous" is the one the menu shows after this one
+const at = menu.findIndex((m) => m.url === here)
+const nav = (i: number) => (menu[i] ? { url: href(locale, menu[i].url), title: menu[i].label } : null)
+const prev = at >= 0 ? nav(at + 1) : null
+const next = at > 0 ? nav(at - 1) : null
+if (!page) Astro.response.status = 404
 ---
 
-<Base chrome={chrome} title="Service" currentPath={path || '/'}>
-	<main id="main" class="nv-wrap">Service</main>
-</Base>
+{!page ? <NotFound chrome={chrome} locale={locale} path={path} /> : (
+	<Base chrome={chrome} title={page.title} description={page.summary || null} image={banner} currentPath={here} content={{ collection: 'pages', id: page.id, slug, toPath: () => here }}>
+		<main id="main" class="nv-pg nv-pg--service">
+			<PageOwner stamp={$p} />
+			<Breadcrumbs chrome={chrome} currentPath={here} />
+			<div class="nv-body">
+				<div class="nv-ct">
+					<div class="nv-service-grid">
+						<div class="nv-service-main">
+							<article class="nv-article is-side" itemscope itemtype="https://schema.org/Article">
+								<header class="nv-article-head"><h1 itemprop="headline" {...$p('title')}>{page.title}</h1></header>
+								<div class="nv-article-box">
+									<ShareRow chrome={chrome} url={`${publicOrigin(Astro.url)}${href(locale, here)}`} title={page.title} />
+									<div class="nv-article-right">
+										{banner && <figure class="nv-article-pic" {...$p('banner')}><img src={banner} alt="" width={page.banner?.width ?? 1344} height={page.banner?.height ?? 672} loading="lazy" decoding="async" itemprop="image" /></figure>}
+										<ArticleBody value={body} />
+										<Sections chrome={chrome} path={here} only={[]} skip={['faq']} />
+										<PostNav chrome={chrome} prev={prev} next={next} />
+									</div>
+								</div>
+							</article>
+						</div>
+						<aside class="nv-service-side">
+							<div class="nv-menu-box">
+								<h3 class="nv-mod-title" {...$c('service_menu_title')}>{chrome.site.service_menu_title}</h3>
+								<nav aria-label={chrome.site.service_menu_title}>
+									<ul>
+										{menu.map((m) => (
+											<li class:list={[m.url === here && 'is-on']}>
+												{m.url ? <a href={href(locale, m.url)} aria-current={m.url === here ? 'page' : undefined}>{m.label}</a> : <span>{m.label}</span>}
+											</li>
+										))}
+									</ul>
+								</nav>
+							</div>
+						</aside>
+					</div>
+				</div>
+			</div>
+			<Sections chrome={chrome} path={here} only={[]} skip={['products-cards']} />
+		</main>
+	</Base>
+)}

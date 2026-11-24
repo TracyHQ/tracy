@@ -1,0 +1,35 @@
+---
+/** Style 3: counters, four cards each with a big coloured number, a title and a line. Source: style-3.php. */
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { columnsOf } from './links'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  info: Record<string, any>
+}
+const { row } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
+const items: Record<string, any>[] = (Array.isArray(row.items) ? row.items : []).filter((i: any) => i.number || i.title || i.description)
+const cols = columnsOf(row.columns, 4)
+const colour = (c: unknown) => String(c || '').replace(/[^a-z-]/g, '')
+---
+
+<div class="nv-fcont">
+	<div class={`nv-frow nv-fgut nv-center nv-cols-${cols}`}>
+		{items.map((it) => (
+			<div class="nv-fcol nv-stat-col nv-item">
+				<div class="nv-features-inner" {...$s.block('items')}>
+					{it.number && (
+						<div class="nv-number">
+							<span class={`nv-h2 nv-hl-${colour(it.stt_color)}`} {...$s('items.number')}>{it.number}</span>
+						</div>
+					)}
+					{it.title && <div class="nv-title"><span class="nv-h4" {...$s('items.title')}>{it.title}</span></div>}
+					{it.description && <div class="nv-desc"><span {...$s('items.description')}>{it.description}</span></div>}
+				</div>
+			</div>
+		))}
+	</div>
+</div>

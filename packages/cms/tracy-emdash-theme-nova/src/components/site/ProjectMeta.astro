@@ -1,0 +1,35 @@
+---
+/** The Client / Services / Date / Completed row on top of a project (source `top-project`). "See live" only when the project has a link. */
+import type { Chrome } from '@/lib/chrome'
+import type { PostRow } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  post: PostRow
+}
+const { chrome, post } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const $p = stampFor(Astro.request, 'posts', { id: post.id, slug: post.slug })
+const w = chrome.site
+const p = post.project
+const link = /^https?:\/\//i.test(p.link) ? p.link : ''
+const cells = [
+  { label: w.client_label, lf: 'client_label', value: p.client, vf: 'project_client' },
+  { label: w.services_label, lf: 'services_label', value: p.services, vf: 'project_services' },
+  { label: w.date_label, lf: 'date_label', value: p.date, vf: 'project_date' }
+]
+---
+
+<div class="nv-meta">
+	{cells.map((c) => (
+		<div class="nv-meta-cell">
+			<h5 {...$c(c.lf)}>{c.label}</h5>
+			<p {...$p(c.vf)}>{c.value}</p>
+		</div>
+	))}
+	<div class="nv-meta-cell">
+		<h5 {...$c('completed_label')}>{w.completed_label}</h5>
+		{link && <a class="nv-btn" href={link} target="_blank" rel="noopener noreferrer" {...$c('see_live_label')}>{w.see_live_label}</a>}
+	</div>
+</div>

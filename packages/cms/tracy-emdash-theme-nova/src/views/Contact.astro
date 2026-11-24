@@ -1,9 +1,94 @@
 ---
-// STUB — replaced by the view's author. Props: chrome, locale, path (+ slug / category where the router passes them).
+/**
+ * The contact page (source `com_contact` plain style): banner picture, three info cards (address, phone, email), a heading with
+ * an intro and the follow-us row, and the form. Every word comes from the `contact` entry or the chrome entry.
+ */
 import Base from '@/layouts/Base.astro'
-const { chrome, path } = Astro.props
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import Sections from '@/components/blocks/Sections.astro'
+import ContactForm from '@/components/site/ContactForm.astro'
+import ContactGlyph from '@/components/site/ContactGlyph.astro'
+import SocialIcon from '@/components/site/SocialIcon.astro'
+import NotFound from '@/views/NotFound.astro'
+import { section } from '@/lib/content'
+import { networkOf } from '@/lib/chrome'
+import { cleanHtml } from '@/lib/html'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { telHref } from '@/lib/tel'
+import { dataHref } from '@/lib/data-links'
+import { href } from '@/lib/i18n'
+import { lines } from '@/components/site/nova-posts'
+
+const { chrome, locale, path } = Astro.props
+const [c, page] = await Promise.all([section('contact', 'contact-layout', locale), section('pages', 'contact', locale)])
+const $k = stampFor(Astro.request, 'contact', c)
+const $p = stampFor(Astro.request, 'pages', page)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const banner = c ? mediaUrl(c.banner) : null
+const heading = lines(c?.heading)
+const social = chrome.social.social
+const tel = c ? telHref(c.phone) : null
+const cards = c
+  ? [
+      { key: 'address', label: c.address_label, lf: 'address_label', value: c.address, vf: 'address', href: null as string | null },
+      { key: 'phone', label: c.phone_label, lf: 'phone_label', value: c.phone, vf: 'phone', href: tel },
+      { key: 'email', label: c.email_label, lf: 'email_label', value: c.email, vf: 'email', href: c.email ? `mailto:${c.email}` : null }
+    ].filter((x) => x.value)
+  : []
+if (!c) Astro.response.status = 404
 ---
 
-<Base chrome={chrome} title="Contact" currentPath={path || '/'}>
-	<main id="main" class="nv-wrap">Contact</main>
-</Base>
+{!c ? <NotFound chrome={chrome} locale={locale} path={path} /> : (
+	<Base chrome={chrome} title={c.title} description={page?.summary || null} currentPath="/contact" content={page ? { collection: 'pages', id: page.id, slug: 'contact', toPath: () => '/contact' } : null}>
+		<main id="main" class="nv-pg nv-pg--contact">
+			<PageOwner stamp={$k} />
+			<Breadcrumbs chrome={chrome} currentPath="/contact" />
+			<div class="nv-body nv-body--tight">
+				<div class="nv-ct">
+					<div class="nv-contact">
+						<h1 class="nv-contact-h1" {...$k('title')}>{c.title}</h1>
+						{banner && <figure class="nv-contact-pic" {...$k('banner')}><img src={banner} alt="" width={c.banner?.width ?? 1344} height={c.banner?.height ?? 672} loading="lazy" decoding="async" /></figure>}
+						{cards.length > 0 && (
+							<ul class="nv-contact-cards">
+								{cards.map((k) => (
+									<li class={`nv-contact-card is-${k.key}`}>
+										<span class="nv-contact-icon"><ContactGlyph name={k.key as 'address' | 'phone' | 'email'} size={36} /></span>
+										<span class="nv-contact-info">
+											<span class="nv-contact-label" {...$k(k.lf)}>{k.label}</span>
+											<span class="nv-contact-text" {...$k(k.vf)}>{k.href ? <a href={k.href}>{k.value}</a> : k.value}</span>
+										</span>
+									</li>
+								))}
+							</ul>
+						)}
+						<div class="nv-contact-cols">
+							<div class="nv-contact-left">
+								{heading.length > 0 && (
+									<h2 class="nv-contact-title" {...$k('heading')}>
+										{heading.map((l, i) => i === heading.length - 1 && heading.length > 1 ? <span class="nv-contact-hl">{l}<span class="nv-contact-mega" aria-hidden="true"><ContactGlyph name="speaker" size={48} /></span></span> : <>{i > 0 && ' '}{l}{' '}</>)}
+									</h2>
+								)}
+								{c.intro && <div class="nv-contact-intro" {...$k('intro')} set:html={cleanHtml(c.intro)} />}
+								{social && social.items.length > 0 && (
+									<div class="nv-contact-follow">
+										<h4 {...$k('follow_label')}>{c.follow_label}</h4>
+										<ul class="nv-contact-links">
+											{social.items.map((s) => {
+												const url = dataHref(s.link, (p) => href(locale, p))
+												return <li class={`is-${networkOf(s.font_icon, s.title)}`}>{url ? <a href={url} aria-label={s.title} target="_blank" rel="noopener noreferrer"><SocialIcon name={networkOf(s.font_icon, s.title)} size={16} /></a> : <span role="img" aria-label={s.title}><SocialIcon name={networkOf(s.font_icon, s.title)} size={16} /></span>}</li>
+											})}
+										</ul>
+									</div>
+								)}
+							</div>
+							<div class="nv-contact-right"><ContactForm locale={locale} c={c} stamp={$k} /></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<Sections chrome={chrome} path="/contact" />
+		</main>
+	</Base>
+)}

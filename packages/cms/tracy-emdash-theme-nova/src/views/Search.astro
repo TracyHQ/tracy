@@ -1,9 +1,77 @@
 ---
-// STUB — replaced by the view's author. Props: chrome, locale, path (+ slug / category where the router passes them).
+/** Search (the source's Smart Search page): a form, then the posts whose words match. Route: /search?q=… Not indexed. */
+import { search } from 'emdash'
 import Base from '@/layouts/Base.astro'
-const { chrome, path } = Astro.props
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import Pager from '@/components/site/Pager.astro'
+import Icon from '@/components/site/Icon.astro'
+import { fill, formatDate, href } from '@/lib/i18n'
+import { postPath } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
+import { stampFor } from '@/lib/stamps'
+import { uiTag } from '@/lib/ui'
+import { introOf, loadPostsInOrder, startOf } from '@/components/site/nova-posts'
+
+const { chrome, locale } = Astro.props
+const w = chrome.site
+Astro.response.headers.set('cache-control', 'no-store')
+const q = (Astro.url.searchParams.get('q') ?? '').trim().slice(0, 200)
+const [all, found] = await Promise.all([
+  loadPostsInOrder(locale),
+  q ? search(q, { collections: ['posts'], locale, status: 'published', limit: 50 }).then((r: any) => r.items ?? r) : Promise.resolve([])
+])
+const live = await livePosts(Astro.request, locale, all)
+const indexed = (found as any[]).map((r) => live.find((p) => p.slug === r.slug)).filter(Boolean) as typeof live
+// the search index is a CMS feature a site may not have switched on: with no index hit, the posts are matched on their own words
+const words = q.toLowerCase().split(/\s+/).filter(Boolean)
+const plain = (v: unknown) => (Array.isArray(v) ? v.map((b: any) => (b?.children ?? []).map((c: any) => c.text ?? '').join('')).join(' ') : '')
+const results = indexed.length > 0 || words.length === 0 ? indexed : live.filter((p) => words.every((x) => `${p.title} ${plain(p.excerpt)} ${plain(p.body)}`.toLowerCase().includes(x)))
+const PER_PAGE = 10
+const start = startOf(Astro.url, PER_PAGE, results.length)
+const shown = results.slice(start, start + PER_PAGE)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const tag = uiTag(locale)
 ---
 
-<Base chrome={chrome} title="Search" currentPath={path || '/'}>
-	<main id="main" class="nv-wrap">Search</main>
+<Base chrome={chrome} title={w.search_page_title} currentPath="/search" robots="noindex, follow">
+	<main id="main" class="nv-pg nv-pg--search">
+		<PageOwner stamp={$c} />
+		<Breadcrumbs chrome={chrome} currentPath="/search" trail={[{ label: w.search_page_title, url: '/search' }]} />
+		<div class="nv-body">
+			<div class="nv-ct">
+				<div class="nv-finder">
+					<h1 class="sr-only" {...$c('search_page_title')}>{w.search_page_title}</h1>
+					<form class="nv-finder-form" action={href(locale, '/search')} method="get" role="search">
+						<label for="nv-q" {...$c('search_terms_label')}>{w.search_terms_label}</label>
+						<div class="nv-finder-group">
+							<input type="search" name="q" id="nv-q" value={q} placeholder={w.search_placeholder} autocomplete="off" {...$c('search_placeholder')} />
+							<button type="submit" class="nv-btn" {...$c('search_button')}><Icon name="search" size={18} /> {w.search_button}</button>
+						</div>
+					</form>
+					{q && (
+						<div class="nv-finder-results" aria-live="polite">
+							{results.length > 0 ? (
+								<>
+									<p class="nv-finder-count" {...$c('search_results_line')}>{fill(w.search_results_line, { count: results.length, query: q })}</p>
+									<ol class="nv-finder-list">
+										{shown.map((p) => (
+											<li>
+												<h2><a href={href(locale, postPath(p))}>{p.title}</a></h2>
+												<p>{introOf(p)}</p>
+												<time datetime={p.date}>{formatDate(p.date, tag)}</time>
+											</li>
+										))}
+									</ol>
+									<Pager chrome={chrome} path={href(locale, '/search')} start={start} size={PER_PAGE} total={results.length} extra={{ q }} />
+								</>
+							) : (
+								<div class="nv-finder-empty"><p {...$c('no_results')}>{w.no_results}</p></div>
+							)}
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	</main>
 </Base>

@@ -1,0 +1,32 @@
+---
+/** Previous / next article buttons under an article, as the source's `pagenavigation`. Words: chrome prev/next labels. */
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  chrome: Chrome
+  prev?: { url: string; title: string } | null
+  next?: { url: string; title: string } | null
+}
+const { chrome, prev = null, next = null } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const w = chrome.site
+---
+
+{(prev || next) && (
+	<nav class="nv-postnav" aria-label={w.article_nav_label} {...$c('article_nav_label')}>
+		{prev && (
+			<a class="nv-pn-btn is-prev" href={prev.url} rel="prev">
+				<span class="sr-only">{w.prev_article_label} {prev.title}</span>
+				<Icon name="prev" size={12} /> <span aria-hidden="true" {...$c('prev_label')}>{w.prev_label}</span>
+			</a>
+		)}
+		{next && (
+			<a class="nv-pn-btn is-next" href={next.url} rel="next">
+				<span class="sr-only">{w.next_article_label} {next.title}</span>
+				<span aria-hidden="true" {...$c('next_label')}>{w.next_label}</span> <Icon name="next" size={12} />
+			</a>
+		)}
+	</nav>
+)}

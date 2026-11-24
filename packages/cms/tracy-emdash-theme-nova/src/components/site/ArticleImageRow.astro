@@ -1,0 +1,18 @@
+---
+/** Consecutive pictures of an article body, side by side (the source's two `col-lg-6` columns). */
+import { bodyImageUrl } from '@/lib/media'
+
+const { node } = Astro.props
+const imgs = (node?.images ?? [])
+  .map((n: any) => ({
+    src: bodyImageUrl(n?.asset),
+    alt: n?.alt ?? '',
+    w: Number(n?.width ?? n?.asset?.width ?? n?.asset?.meta?.width) || undefined,
+    h: Number(n?.height ?? n?.asset?.height ?? n?.asset?.meta?.height) || undefined
+  }))
+  .filter((i: any) => i.src)
+---
+
+<div class="nv-body-row" style={`--cols:${Math.max(1, imgs.length)}`}>
+	{imgs.map((i: any) => <figure><img src={i.src} alt={i.alt} width={i.w} height={i.h} loading="lazy" decoding="async" /></figure>)}
+</div>

@@ -1,0 +1,40 @@
+---
+/**
+ * "Share this story" with the three share links of the source (Facebook, Twitter, Reddit). Each is a plain link to the network's
+ * share address for the current page; the names are chrome words.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  chrome: Chrome
+  url: string
+  title: string
+}
+const { chrome, url, title } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const w = chrome.site
+const u = encodeURIComponent(url)
+const t = encodeURIComponent(title)
+const links = [
+  { key: 'facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${u}`, label: w.share_facebook_label, field: 'share_facebook_label' },
+  { key: 'twitter', href: `https://twitter.com/intent/tweet?url=${u}&text=${t}`, label: w.share_twitter_label, field: 'share_twitter_label' },
+  { key: 'reddit', href: `https://www.reddit.com/submit?url=${u}&title=${t}`, label: w.share_reddit_label, field: 'share_reddit_label' }
+]
+---
+
+<div class="nv-share">
+	<h5 {...$c('share_label')}>{w.share_label}</h5>
+	<ul>
+		{links.map((l) => (
+			<li class={`is-${l.key}`}>
+				<a href={l.href} target="_blank" rel="noopener noreferrer" aria-label={l.label} {...$c(l.field)}>
+					{l.key === 'reddit' ? (
+						<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><ellipse cx="12" cy="14" rx="8" ry="5.5" /><circle cx="5.500" cy="10.500" r="2" /><circle cx="18.500" cy="10.500" r="2" /><circle cx="17.500" cy="4.500" r="1.500" /></svg>
+					) : <Icon name={l.key} size={16} />}
+				</a>
+			</li>
+		))}
+	</ul>
+</div>

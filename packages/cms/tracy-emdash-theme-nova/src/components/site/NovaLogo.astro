@@ -1,0 +1,18 @@
+---
+/**
+ * The template's own logo lockup (the default slot of BrandLogo): the violet mark and the site's short name, drawn as SVG so it
+ * follows the theme. The word is the chrome field `logo_text`; the ink is `--nv-logo-ink` (the footer sets it to the on-ink colour).
+ */
+interface Props {
+  text: string
+  stamp?: Record<string, string>
+}
+const { text, stamp = {} } = Astro.props
+---
+
+<svg class="nv-logo" viewBox="0 0 162 48" width="162" height="48" aria-hidden="true" focusable="false" {...stamp}>
+	<rect class="nv-logo-tile" width="48" height="48" rx="3"></rect>
+	<path class="nv-logo-shade" d="M7.2 25 27.8 43.2 42.6 32.6 40 30.4 27.8 39.2 10.2 23.6z"></path>
+	<path class="nv-logo-glyph" d="M22 9 26.6 12.3 11.4 23.8 7.2 20.1zM17.2 21.2 32.4 31.9 27.8 36.1 13.2 24.7zM37.5 20.9 42 24.7 34 31.6 29 27.8z"></path>
+	<text class="nv-logo-text" x="66" y="39.6" font-size="42" font-weight="500" textLength="93" lengthAdjust="spacingAndGlyphs">{text}</text>
+</svg>

@@ -1,5 +1,54 @@
 ---
-// STUB — replaced by the module's author. Props: chrome (+ category, postSlug, current where the module needs them).
+/**
+ * The project list of the Project page (source `mod_articles_categories` tabs): "All project" and one tab per category, then the
+ * project cards of the active tab, four to a page. The tabs are links (`?category=<slug>`), the pager is the `?start=N` form.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import PostCard from '@/components/site/PostCard.astro'
+import Pager from '@/components/site/Pager.astro'
+import { lines, loadPostsInOrder, startHref, startOf } from '@/components/site/nova-posts'
+
+interface Props {
+  chrome: Chrome
+  current?: string
+}
+const { chrome } = Astro.props
+const locale = chrome.locale
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const w = chrome.site
+const PER_PAGE = 4
+const projects = (await loadPostsInOrder(locale)).filter((p) => p.kind === 'project')
+// the categories in the order their first project appears in
+const cats: { slug: string; label: string; n: number }[] = []
+for (const p of projects)
+  if (p.category) {
+    const c = cats.find((x) => x.slug === p.category!.slug)
+    if (c) c.n++
+    else cats.push({ slug: p.category.slug, label: p.category.label, n: 1 })
+  }
+const asked = Astro.url.searchParams.get('category') ?? ''
+const active = cats.some((c) => c.slug === asked) ? asked : ''
+const list = active ? projects.filter((p) => p.category?.slug === active) : projects
+const start = startOf(Astro.url, PER_PAGE, list.length)
+const shown = list.slice(start, start + PER_PAGE)
+const path = href(locale, '/project')
+const heading = lines(w.project_tabs_title)
 ---
 
-<section data-block="CategoryTabs"></section>
+<section class="nv-tabs nv-sec nv-pt-l nv-pb-l">
+	<div class="nv-ct">
+		<div class="nv-sec-title is-small"><span class="nv-sec-h" {...$c('project_tabs_title')}>{heading.map((l, i) => <>{i > 0 && <br />}{l}</>)}</span></div>
+		<nav class="nv-tabs-nav" aria-label={w.project_tabs_nav_label} {...$c('project_tabs_nav_label')}>
+			<a href={startHref(path, 0)} class:list={[!active && 'is-on']} aria-current={!active ? 'page' : undefined} {...$c('all_projects_label')}>{w.all_projects_label}</a>
+			{cats.map((c) => (
+				<a href={startHref(path, 0, { category: c.slug })} class:list={[active === c.slug && 'is-on']} aria-current={active === c.slug ? 'page' : undefined}>{c.label}</a>
+			))}
+		</nav>
+		<div class="nv-tabs-grid">
+			{shown.map((p) => <PostCard post={p} chrome={chrome} locale={locale} variant="project" tabs />)}
+		</div>
+		<Pager chrome={chrome} path={path} start={start} size={PER_PAGE} total={list.length} extra={{ category: active }} />
+	</div>
+</section>

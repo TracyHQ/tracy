@@ -1,9 +1,55 @@
 ---
-// STUB — replaced by the view's author. Props: chrome, locale, path (+ slug / category where the router passes them).
+/**
+ * The 404 page: on its own, with no header or footer, as the source's error page is (a big code, the title, the sentence, a
+ * button back home) and the light/dark switch in the corner. The router sets the 404 status. Words: chrome `not_found_*`.
+ */
 import Base from '@/layouts/Base.astro'
-const { chrome, path } = Astro.props
+import PageOwner from '@/components/site/PageOwner.astro'
+import ThemeToggle from '@/components/site/ThemeToggle.astro'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+
+const { chrome, locale } = Astro.props
+const w = chrome.site
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 ---
 
-<Base chrome={chrome} title="NotFound" currentPath={path || '/'}>
-	<main id="main" class="nv-wrap">NotFound</main>
+<Base chrome={chrome} title={w.not_found_title} currentPath="/404" robots="noindex, follow" bare bodyClass="nv-error-body">
+	<main id="main" class="nv-err">
+		<PageOwner stamp={$c} />
+		<div class="nv-err-toggle"><ThemeToggle label={w.theme_toggle_label} stamp={$c('theme_toggle_label')} /></div>
+		<div class="nv-err-wrap">
+			<div class="nv-err-info">
+				<span class="nv-err-code" {...$c('not_found_code')}>{w.not_found_code}</span>
+				<div class="nv-err-msg"><h1 {...$c('not_found_title')}>{w.not_found_title}</h1></div>
+			</div>
+			<div class="nv-err-other">
+				<p><strong {...$c('not_found_text')}>{w.not_found_text}</strong></p>
+				<div class="nv-err-redirect"><a href={href(locale, '/')} title={w.not_found_back_label} {...$c('not_found_back_label')}>{w.not_found_back_label}</a></div>
+			</div>
+		</div>
+	</main>
 </Base>
+
+<script is:inline>
+	// the page has no header, so it carries its own light/dark switch (same key and rule as Header.astro)
+	(function () {
+		var root = document.documentElement;
+		function pressed() {
+			var dark = root.getAttribute('data-theme') === 'dark';
+			document.querySelectorAll('[data-theme-toggle]').forEach(function (b) { b.setAttribute('aria-pressed', dark ? 'true' : 'false'); });
+		}
+		pressed();
+		document.querySelectorAll('[data-theme-toggle]').forEach(function (b) {
+			b.addEventListener('click', function () {
+				var dark = root.getAttribute('data-theme') === 'dark';
+				if (dark) root.removeAttribute('data-theme'); else root.setAttribute('data-theme', 'dark');
+				var s = document.getElementById('tracy-ds-slot');
+				var ds = s && s.getAttribute('data-ds');
+				var key = root.hasAttribute('data-ds-worn') && ds ? 'tracy-nova-theme@' + ds : 'tracy-nova-theme';
+				try { localStorage.setItem(key, dark ? 'light' : 'dark'); } catch (e) {}
+				pressed();
+			});
+		});
+	})();
+</script>

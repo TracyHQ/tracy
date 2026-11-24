@@ -1,6 +1,56 @@
 ---
-// STUB — replaced by the block's author. Props: chrome, row (the entry's data), style ('style-1'…), info (page-layout.json entry).
-const { row } = Astro.props
+/**
+ * Call to action (acm `cta`). style-1: a centred heading, a line and one or more buttons (the pale band under the logo carousel).
+ * style-2: a one-line strip, the sentence on the left and a light button on the right (`cta_desc`, `cta_title` = the button's words, `cta_link`).
+ */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { dataHref } from '@/lib/data-links'
+import { headingHtml } from '@/lib/heading-html'
+import { sectionWrap } from '@/lib/section-style'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  style?: string
+  info?: { spacing?: { top?: string | null; bottom?: string | null } } | null
+}
+const { chrome, row, style = 'style-1', info } = Astro.props
+const $s = stampFor(Astro.request, 'cta', { id: row.id, slug: row.slug })
+const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
+const btnClass = (t?: string) => (/light/.test(t ?? '') ? 'is-light' : /secondary|dark/.test(t ?? '') ? 'is-secondary' : 'is-primary')
+const buttons: { btn_title?: string; btn_link?: string; btn_type?: string }[] = Array.isArray(row.items) ? row.items.filter((b: any) => b && b.btn_title && url(b.btn_link)) : []
+const second = style === 'style-2'
+// style-2 may be drawn by a view with no page-layout entry: it falls back to the medium spacing of the source
+const spacing = info ?? (second ? { spacing: { top: 'medium', bottom: 'medium' } } : null)
 ---
 
-<section data-block="Cta"><div class="nv-wrap">{row.title}</div></section>
+<section class:list={[sectionWrap(row.slug, spacing), 'nv-cta', second ? 'nv-cta-2' : 'nv-cta-1']} {...$s()}>
+  <div class="nv-container">
+    <div class="nv-cta-wrap">
+      {second ? (
+        <div class="nv-cta-content">
+          {row.cta_desc && <h2 class="nv-cta-line" set:html={headingHtml(row.cta_desc)} {...$s('cta_desc')} />}
+          {row.cta_title && url(row.cta_link) && (
+            <div class="nv-cta-action">
+              <a class:list={['nv-blk-btn', btnClass(row.btn_type)]} href={url(row.cta_link)} {...$s('cta_title')}>{row.cta_title}</a>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div class="nv-cta-content">
+          {row.cta_title && <h2 class="nv-cta-title" set:html={headingHtml(row.cta_title)} {...$s('cta_title')} />}
+          {row.cta_desc && <div class="nv-cta-desc" {...$s('cta_desc')}>{row.cta_desc}</div>}
+          {buttons.length > 0 && (
+            <div class="nv-cta-actions">
+              {buttons.map((b) => (
+                <a class:list={['nv-blk-btn', btnClass(b.btn_type)]} href={url(b.btn_link)} {...$s.block('items')}>{b.btn_title}</a>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</section>

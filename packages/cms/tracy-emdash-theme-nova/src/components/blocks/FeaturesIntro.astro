@@ -1,6 +1,55 @@
 ---
-// STUB — replaced by the block's author. Props: chrome, row (the entry's data), style ('style-1'…), info (page-layout.json entry).
-const { row } = Astro.props
+/**
+ * The "Features Intro" module of the source in its seven styles (acm/features-intro/tmpl/style-1..7.php), one component each in
+ * `features/`. This file prints the section wrapper (space above and below, background band: `lib/section-style.ts`) and picks the
+ * style. Every word comes from the `features_intro` entry.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { SECTION_HAS_MAIN_TITLE, sectionStyle } from '@/lib/section-style'
+import { headingHtml } from '@/lib/heading-html'
+import { stampFor } from '@/lib/stamps'
+import { blockLinks } from '@/components/blocks/features/links'
+import Style1 from '@/components/blocks/features/Style1.astro'
+import Style2 from '@/components/blocks/features/Style2.astro'
+import Style3 from '@/components/blocks/features/Style3.astro'
+import Style4 from '@/components/blocks/features/Style4.astro'
+import Style5 from '@/components/blocks/features/Style5.astro'
+import Style6 from '@/components/blocks/features/Style6.astro'
+import Style7 from '@/components/blocks/features/Style7.astro'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  style: string
+  info: Record<string, any>
+}
+const { chrome, row, style, info } = Astro.props
+const n = Math.min(7, Math.max(1, Number.parseInt(String(style).replace('style-', ''), 10) || 1))
+const look = sectionStyle(row.slug, info)
+const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
+const props = { chrome, row, info }
+// the title above the content: `main_title` (the heading with its coloured words) when the entry has one, else the entry's `title`
+const mainField = row.main_title ? 'main_title' : 'title'
+const mainTitle = row.main_title || (SECTION_HAS_MAIN_TITLE.has(row.slug) ? row.title : '')
+// optional closing text and button under the content (the module's `bottom-desc` and section button in the source)
+const linkOf = await blockLinks(Astro.request, chrome.locale, [row.bottom_btn_link])
+const bottomBtn = row.bottom_btn_title ? linkOf(row.bottom_btn_link) : null
+const bottomType = String(row.bottom_btn_type || 'primary').replace(/[^a-z-]/g, '')
 ---
 
-<section data-block="FeaturesIntro"><div class="nv-wrap">{row.title}</div></section>
+<section class={`nv-features nv-features-${n} nv-features-${row.slug} ${look.wrap}`} data-block="FeaturesIntro" {...$s()}>
+	{mainTitle && (
+		<div class="nv-fcont"><div class="nv-fmod-title"><span class="nv-h2 nv-main-title" set:html={headingHtml(mainTitle)} {...$s(mainField)} /></div></div>
+	)}
+	<div class="nv-section-ct">
+		{n === 1 && <Style1 {...props} />}
+		{n === 2 && <Style2 {...props} />}
+		{n === 3 && <Style3 {...props} />}
+		{n === 4 && <Style4 {...props} />}
+		{n === 5 && <Style5 {...props} />}
+		{n === 6 && <Style6 {...props} />}
+		{n === 7 && <Style7 {...props} />}
+	</div>
+	{row.bottom_desc && <div class="nv-fsection-bottom-desc" {...$s('bottom_desc')}>{row.bottom_desc}</div>}
+	{bottomBtn && <div class="nv-fbottom-actions"><a href={bottomBtn} class={`nv-btn nv-btn-${bottomType}`} {...$s('bottom_btn_title')}>{row.bottom_btn_title}</a></div>}
+</section>

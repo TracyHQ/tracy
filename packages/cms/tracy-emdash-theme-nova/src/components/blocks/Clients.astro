@@ -1,6 +1,55 @@
 ---
-// STUB — replaced by the block's author. Props: chrome, row (the entry's data), style ('style-1'…), info (page-layout.json entry).
-const { row } = Astro.props
+/**
+ * Clients (acm `clients` style-1): a full-width row of logos in ruled cells, 6 / 4 / 2 across at lg / md / xs (`col_lg col_md col_xs`), endless
+ * and stepping one cell every 5 s. The cell sizes come from CSS alone, so the first logos are in place before (and without) the script.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+import { dataHref } from '@/lib/data-links'
+import { sectionWrap } from '@/lib/section-style'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  style?: string
+  info?: { spacing?: { top?: string | null; bottom?: string | null } } | null
+}
+const { chrome, row, info } = Astro.props
+const $s = stampFor(Astro.request, 'clients', { id: row.id, slug: row.slug })
+const items: { logo?: any; title?: string; link?: string }[] = Array.isArray(row.items) ? row.items.filter((i: any) => i && i.logo) : []
+if (items.length === 0) return
+const num = (v: unknown, d: number) => Math.max(1, Number(v) || d)
+const cols = `--nv-c-lg:${num(row.col_lg, 6)};--nv-c-md:${num(row.col_md, 4)};--nv-c-xs:${num(row.col_xs, 2)}`
+const auto = String(row.autoplay) !== 'false'
+const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
 ---
 
-<section data-block="Clients"><div class="nv-wrap">{row.title}</div></section>
+<section class:list={[sectionWrap(row.slug, info), 'nv-clients']} {...$s()}>
+  <div
+    class="nv-clients-in nv-car"
+    data-nv-car
+    data-auto={auto ? 5000 : undefined}
+    data-speed={Number(row.auto_time) || 500}
+    style={cols}
+  >
+    <div class="nv-car-view">
+      <div class="nv-car-track">
+        {items.map((it) => {
+          const src = mediaUrl(it.logo)
+          const to = url(it.link)
+          const img = <img src={src ?? ''} alt={it.title ?? ''} width={Number(it.logo?.width) || undefined} height={Number(it.logo?.height) || undefined} loading="lazy" decoding="async" {...$s('items.logo')} />
+          return (
+            <div class="nv-car-item nv-clients-item" {...$s.block('items')}>
+              <div class="nv-clients-logo">{to ? <a href={to} title={it.title || undefined}>{img}</a> : img}</div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  import '@/lib/carousel-client'
+</script>

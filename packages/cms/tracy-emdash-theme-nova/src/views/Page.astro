@@ -1,9 +1,31 @@
 ---
-// STUB — replaced by the view's author. Props: chrome, locale, path (+ slug / category where the router passes them).
+/** A plain page of the primary menu (About Us, Career, Services, Project): its title for the outline, then the sections of `page-layout.json`. */
 import Base from '@/layouts/Base.astro'
-const { chrome, path } = Astro.props
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import Sections from '@/components/blocks/Sections.astro'
+import ArticleBody from '@/components/site/ArticleBody.astro'
+import NotFound from '@/views/NotFound.astro'
+import { section } from '@/lib/content'
+import { stampBlocks, stampFor } from '@/lib/stamps'
+
+const { chrome, locale, path, slug } = Astro.props
+const page = await section('pages', slug, locale)
+const $p = stampFor(Astro.request, 'pages', page)
+const body = page ? stampBlocks($p, 'body', page.body) : []
+if (!page) Astro.response.status = 404
 ---
 
-<Base chrome={chrome} title="Page" currentPath={path || '/'}>
-	<main id="main" class="nv-wrap">Page</main>
-</Base>
+{!page ? <NotFound chrome={chrome} locale={locale} path={path} /> : (
+	<Base chrome={chrome} title={page.title} description={page.summary || null} currentPath={path} content={{ collection: 'pages', id: page.id, slug, toPath: () => path }}>
+		<main id="main" class="nv-pg nv-pg--page">
+			<PageOwner stamp={$p} />
+			<Breadcrumbs chrome={chrome} currentPath={path} />
+			<h1 class="sr-only" {...$p('title')}>{page.title}</h1>
+			{body.length > 0 && (
+				<div class="nv-body"><div class="nv-ct"><ArticleBody value={body} /></div></div>
+			)}
+			<Sections chrome={chrome} path={path} />
+		</main>
+	</Base>
+)}

@@ -1,5 +1,52 @@
 ---
-// STUB — replaced by the module's author. Props: chrome (+ category, postSlug, current where the module needs them).
+/** "Latest news from us" on the blog page (source `mod_articles_latest` type-1): the newest article large, the next three beside it. */
+import type { Chrome } from '@/lib/chrome'
+import { formatDate, href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { postPath } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import { uiTag } from '@/lib/ui'
+import { cut, introOf, loadPostsInOrder } from '@/components/site/nova-posts'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const locale = chrome.locale
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const articles = (await loadPostsInOrder(locale)).filter((p) => p.kind !== 'project').slice(0, 4)
+const [first, ...rest] = articles
+const stampOf = (p: (typeof articles)[number]) => stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })
+const tag = uiTag(locale)
 ---
 
-<section data-block="LatestNews"></section>
+{first && (
+	<section class="nv-latest nv-sec nv-pt-l nv-pb-m">
+		<div class="nv-ct">
+			<div class="nv-sec-title"><span class="nv-sec-h" {...$c('latest_news_title')}>{chrome.site.latest_news_title}</span></div>
+			<div class="nv-latest-grid">
+				<article class="nv-latest-first" {...stampOf(first)()}>
+					{mediaUrl(first.cover) && (
+						<div class="nv-latest-pic" {...stampOf(first)('cover')}>
+							<img src={mediaUrl(first.cover)!} alt="" width={first.cover?.width ?? 793} height={first.cover?.height ?? 561} loading="lazy" decoding="async" />
+						</div>
+					)}
+					<div class="nv-latest-text">
+						<p class="nv-date" {...stampOf(first)('date')}><time datetime={first.date}>{formatDate(first.date, tag)}</time></p>
+						<h4 class="nv-latest-title"><a href={href(locale, postPath(first))} {...stampOf(first)('title')}>{first.title}</a></h4>
+						<p class="nv-latest-intro">{cut(introOf(first), 140)}</p>
+					</div>
+				</article>
+				<div class="nv-latest-side">
+					{rest.map((p) => (
+						<article class="nv-latest-item" {...stampOf(p)()}>
+							<p class="nv-date" {...stampOf(p)('date')}><time datetime={p.date}>{formatDate(p.date, tag)}</time></p>
+							<h4 class="nv-latest-title"><a href={href(locale, postPath(p))} {...stampOf(p)('title')}>{p.title}</a></h4>
+							<p class="nv-latest-intro">{cut(introOf(p), 70)}</p>
+						</article>
+					))}
+				</div>
+			</div>
+		</div>
+	</section>
+)}

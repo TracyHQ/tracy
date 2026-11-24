@@ -1,6 +1,70 @@
 ---
-// STUB — replaced by the block's author. Props: chrome, row (the entry's data), style ('style-1'…), info (page-layout.json entry).
-const { row } = Astro.props
+/**
+ * Pricing (acm `pricing` style-1): plan names as tabs on the left (a row of buttons below xl), the chosen plan's price, line, button and
+ * feature list on the right. Real tabs: buttons with `role="tab"`, panels with `role="tabpanel"`, arrow keys move between them.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { dataHref } from '@/lib/data-links'
+import { cleanHtml } from '@/lib/html'
+import { sectionWrap } from '@/lib/section-style'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  style?: string
+  info?: { spacing?: { top?: string | null; bottom?: string | null } } | null
+}
+const { chrome, row, info } = Astro.props
+const $s = stampFor(Astro.request, 'pricing', { id: row.id, slug: row.slug })
+const plans: Record<string, any>[] = Array.isArray(row.items) ? row.items.filter((i: any) => i && i.title) : []
+if (plans.length === 0) return
+const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
+const btnClass = (t?: string) => (/light/.test(t ?? '') ? 'is-light' : /secondary|dark/.test(t ?? '') ? 'is-secondary' : 'is-primary')
+const uid = `nv-pr-${row.slug}`
 ---
 
-<section data-block="Pricing"><div class="nv-wrap">{row.title}</div></section>
+<section class:list={[sectionWrap(row.slug, info), 'nv-pricing']} {...$s()}>
+  <div class="nv-container">
+    <div class="nv-row nv-v-gutters" data-nv-tabs>
+      <div class="nv-col nv-col-xl-4">
+        <div class="nv-pricing-wrap is-title">
+          <div class="nv-pricing-tabs" role="tablist" aria-orientation="vertical">
+            {plans.map((p, i) => (
+              <button type="button" role="tab" id={`${uid}-tab-${i}`} class:list={['nv-pricing-tab', i === 0 && 'is-active']} aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`${uid}-${i}`} tabindex={i === 0 ? 0 : -1} {...$s.block('items')}>
+                <span {...$s('items.title')}>{p.title}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div class="nv-col nv-col-xl-8">
+        <div class="nv-pricing-wrap is-detail">
+          {plans.map((p, i) => {
+            const to = url(p.btn_link)
+            return (
+              <div class:list={['nv-pricing-pane', i === 0 && 'is-active']} role="tabpanel" id={`${uid}-${i}`} aria-labelledby={`${uid}-tab-${i}`} hidden={i === 0 ? undefined : true} {...$s.block('items')}>
+                <div class="nv-pricing-head">
+                  <div class="nv-pricing-title-wrap">
+                    {p.price && <div class="nv-pricing-price" {...$s('items.price')}>{p.price}</div>}
+                    {p.desc && <div class="nv-pricing-desc" {...$s('items.desc')}>{p.desc}</div>}
+                  </div>
+                  {to && p.btn_title && (
+                    <div class="nv-pricing-action">
+                      <a class:list={['nv-blk-btn', btnClass(p.btn_type)]} href={to} {...$s('items.btn_title')}>{p.btn_title}</a>
+                    </div>
+                  )}
+                </div>
+                {p.plan_list && <div class="nv-pricing-list" set:html={cleanHtml(p.plan_list)} {...$s('items.plan_list')} />}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  import '@/lib/carousel-client'
+</script>

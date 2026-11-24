@@ -1,5 +1,193 @@
 ---
-// STUB — replaced by the chrome author. Props: chrome, currentPath.
+/**
+ * The page header of JA Nova: the main menu with its drop-downs on the left, the logo in the middle, the quick contact and the
+ * light/dark switch on the right; under 992px the menu moves into the off-canvas panel (OffCanvas.astro). Not sticky, as the source.
+ * Every word is CMS content (`chrome` entry); the menu is the `primary` menu.
+ */
+import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { href } from '@/lib/i18n'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import NovaLogo from '@/components/site/NovaLogo.astro'
+import ChromeIcon from '@/components/site/ChromeIcon.astro'
+import ThemeToggle from '@/components/site/ThemeToggle.astro'
+import OffCanvas from '@/components/site/OffCanvas.astro'
+import { liveLinks } from '@/lib/link-gate'
+import { menuUrls, pruneMenu } from '@/lib/menu-gate'
+import { dataHref } from '@/lib/data-links'
+import { telHref } from '@/lib/tel'
+
+interface Props {
+  chrome: Chrome
+  currentPath: string
+}
+const { chrome, currentPath } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const settings = await getSiteSettings()
+const logos = brandLogos(settings, site.logo_dark, site.brand_name)
+const own = (url: string) => (url ? dataHref(url, (p) => href(locale, p)) : '')
+const active = (item: ChromeMenuItem): boolean => {
+  const u = item.url
+  if (u === '/') return currentPath === '/'
+  return (u !== '' && (currentPath === u || currentPath.startsWith(`${u}/`))) || item.children.some(active)
+}
+// the menu without the pages the customer unticked, and the pages under them
+const live = await liveLinks(Astro.request, locale, menuUrls(chrome.primary))
+const primary = pruneMenu(chrome.primary, live)
+const phone = String(site.header_phone ?? '').trim()
+const tel = telHref(phone)
+const email = String(site.header_email ?? '').trim()
 ---
 
-<header>Header</header>
+<OffCanvas chrome={chrome} items={primary} currentPath={currentPath} />
+<header class="nv-header">
+	<div class="nv-container nv-container-hdr">
+		<div class="nv-header-row">
+			<div class="nv-header-logo">
+				<a class="nv-brand" href={href(locale, '/')} aria-label={site.brand_name}>
+					<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="nv-logo-img">
+						<NovaLogo text={site.logo_text} stamp={$c('logo_text')} />
+					</BrandLogo>
+				</a>
+			</div>
+			<div class="nv-header-nav">
+				<nav class="nv-nav" aria-label={site.nav_label} {...$c('nav_label')}>
+					<ul>
+						{primary.map((item) => (
+							<li class:list={[active(item) && 'is-active', item.children.length > 0 && 'has-sub']}>
+								{item.url ? (
+									<a href={own(item.url)} aria-current={currentPath === item.url ? 'page' : undefined}>
+										<span>{item.label}</span>
+										{item.children.length > 0 && <i class="nv-caret" aria-hidden="true" />}
+									</a>
+								) : (
+									<span class="nv-nav-link" tabindex="0">
+										<span>{item.label}</span>
+										{item.children.length > 0 && <i class="nv-caret" aria-hidden="true" />}
+									</span>
+								)}
+								{item.children.length > 0 && (
+									<div class="nv-sub">
+										<ul>
+											{item.children.map((c) => (
+												<li class:list={[active(c) && 'is-active']}>
+													<a href={own(c.url)}>{c.label}</a>
+												</li>
+											))}
+										</ul>
+									</div>
+								)}
+							</li>
+						))}
+					</ul>
+				</nav>
+			</div>
+			<div class="nv-header-right">
+				{((phone && tel) || email) && (
+					<div class="nv-quick">
+						{phone && tel && (
+							<a href={tel} title={phone}>
+								<ChromeIcon name="phone" size={16} />
+								<span>{phone}</span>
+							</a>
+						)}
+						{email && (
+							<a href={`mailto:${email}`} title={email}>
+								<ChromeIcon name="envelope" size={16} />
+								<span>{email}</span>
+							</a>
+						)}
+					</div>
+				)}
+				<ThemeToggle label={site.theme_toggle_label} stamp={$c('theme_toggle_label')} />
+				<button type="button" class="nv-menu-button" data-nv-oc-open aria-controls="nv-offcanvas" aria-expanded="false" aria-label={site.menu_label} {...$c('menu_label')}>
+					<ChromeIcon name="bars" size={22} weight="bold" />
+				</button>
+			</div>
+		</div>
+	</div>
+</header>
+<script is:inline>
+	(function () {
+		var root = document.documentElement;
+		var panel = document.getElementById('nv-offcanvas');
+		var openers = document.querySelectorAll('[data-nv-oc-open]');
+		var last = null;
+		function level(n) {
+			if (!panel) return;
+			panel.setAttribute('data-level', String(n));
+			panel.querySelectorAll('.nv-oc-sub').forEach(function (s) { s.classList.remove('is-open'); });
+		}
+		function setOpen(on) {
+			if (!panel) return;
+			panel.classList.toggle('is-open', on);
+			root.classList.toggle('nv-oc-lock', on);
+			panel.setAttribute('aria-hidden', on ? 'false' : 'true');
+			if (panel.inert !== undefined) panel.inert = !on;
+			openers.forEach(function (b) { b.setAttribute('aria-expanded', on ? 'true' : 'false'); });
+			if (on) { last = document.activeElement; var c = panel.querySelector('[data-nv-oc-close]'); if (c) c.focus(); }
+			else { level(0); if (last && last.focus) last.focus(); }
+		}
+		if (panel) {
+			if (panel.inert !== undefined) panel.inert = true;
+			openers.forEach(function (b) { b.addEventListener('click', function () { setOpen(true); }); });
+			document.querySelectorAll('[data-nv-oc-close]').forEach(function (b) { b.addEventListener('click', function () { setOpen(false); }); });
+			document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('is-open')) setOpen(false); });
+			// drill-down: a parent's arrow opens its own list in place of the root list; the back row returns
+			panel.querySelectorAll('[data-nv-oc-drill]').forEach(function (b) {
+				b.addEventListener('click', function () {
+					var sub = b.parentElement.querySelector('.nv-oc-sub');
+					if (!sub) return;
+					sub.classList.add('is-open');
+					panel.setAttribute('data-level', '1');
+					b.setAttribute('aria-expanded', 'true');
+				});
+			});
+			panel.querySelectorAll('[data-nv-oc-back]').forEach(function (b) {
+				b.addEventListener('click', function () {
+					level(0);
+					panel.querySelectorAll('[data-nv-oc-drill]').forEach(function (d) { d.setAttribute('aria-expanded', 'false'); });
+				});
+			});
+			// the panel closes when the visitor widens the window to where the menu is in the header
+			var mq = window.matchMedia('(min-width: 992px)');
+			var close = function (e) { if (e.matches && panel.classList.contains('is-open')) setOpen(false); };
+			if (mq.addEventListener) mq.addEventListener('change', close);
+		}
+		// a sub-menu of the header opens on a tap too (touch screens have no hover)
+		document.querySelectorAll('.nv-nav li.has-sub > a, .nv-nav li.has-sub > .nv-nav-link').forEach(function (a) {
+			a.addEventListener('click', function (e) {
+				if (!window.matchMedia('(hover: none)').matches) return;
+				var li = a.parentElement;
+				if (!li.classList.contains('is-open')) {
+					e.preventDefault();
+					document.querySelectorAll('.nv-nav li.is-open').forEach(function (o) { o.classList.remove('is-open'); });
+					li.classList.add('is-open');
+				}
+			});
+		});
+		document.addEventListener('click', function (e) {
+			if (!e.target.closest('.nv-nav')) document.querySelectorAll('.nv-nav li.is-open').forEach(function (o) { o.classList.remove('is-open'); });
+		});
+		// the light/dark switch: the choice is kept under the same key Base.astro reads
+		function pressed() {
+			var dark = root.getAttribute('data-theme') === 'dark';
+			document.querySelectorAll('[data-theme-toggle]').forEach(function (b) { b.setAttribute('aria-pressed', dark ? 'true' : 'false'); });
+		}
+		pressed();
+		document.querySelectorAll('[data-theme-toggle]').forEach(function (b) {
+			b.addEventListener('click', function () {
+				var dark = root.getAttribute('data-theme') === 'dark';
+				if (dark) root.removeAttribute('data-theme');
+				else root.setAttribute('data-theme', 'dark');
+				var ds = document.getElementById('tracy-ds-slot') && document.getElementById('tracy-ds-slot').getAttribute('data-ds');
+				var key = root.hasAttribute('data-ds-worn') && ds ? 'tracy-nova-theme@' + ds : 'tracy-nova-theme';
+				try { localStorage.setItem(key, dark ? 'light' : 'dark'); } catch (e) {}
+				pressed();
+			});
+		});
+	})();
+</script>

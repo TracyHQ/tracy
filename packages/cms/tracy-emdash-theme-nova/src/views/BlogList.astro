@@ -1,9 +1,100 @@
 ---
-// STUB — replaced by the view's author. Props: chrome, locale, path (+ slug / category where the router passes them).
+/**
+ * A list of posts. `/blog`: the latest-news module, the search and popular-tags band, then the articles three to a row, nine to a
+ * page, with the next few as a "More Articles" list. `/project/<category>`: the project cards two to a row, six to a page.
+ * Pagination is the `?start=N` form.
+ */
 import Base from '@/layouts/Base.astro'
-const { chrome, path } = Astro.props
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import Sections from '@/components/blocks/Sections.astro'
+import PopularTags from '@/components/blocks/PopularTags.astro'
+import PostCard from '@/components/site/PostCard.astro'
+import Pager from '@/components/site/Pager.astro'
+import SearchBox from '@/components/site/SearchBox.astro'
+import SocialIcon from '@/components/site/SocialIcon.astro'
+import NotFound from '@/views/NotFound.astro'
+import { section } from '@/lib/content'
+import { networkOf } from '@/lib/chrome'
+import { dataHref } from '@/lib/data-links'
+import { fill, href } from '@/lib/i18n'
+import { postPath } from '@/lib/posts'
+import { stampFor } from '@/lib/stamps'
+import { loadPostsInOrder, startHref, startOf } from '@/components/site/nova-posts'
+
+const { chrome, locale, path, category } = Astro.props
+const w = chrome.site
+const isProject = typeof category === 'string' && category !== ''
+const PER_PAGE = isProject ? 6 : 9
+const MORE = 4
+const all = await loadPostsInOrder(locale)
+const list = isProject ? all.filter((p) => p.kind === 'project' && p.category?.slug === category) : all.filter((p) => p.kind !== 'project')
+const label = isProject ? (all.find((p) => p.category?.slug === category)?.category?.label ?? '') : ''
+const page = await section('pages', isProject ? 'project' : 'blog', locale)
+const $p = stampFor(Astro.request, 'pages', page)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const heading = isProject ? label : (page?.title ?? w.blog_title)
+const here = isProject ? `/project/${category}` : '/blog'
+const start = startOf(Astro.url, PER_PAGE, list.length)
+const shown = list.slice(start, start + PER_PAGE)
+// Joomla lists the next few articles after the page's cards as plain links
+const more = isProject ? [] : list.slice(start + PER_PAGE, start + PER_PAGE + MORE)
+const pageNo = Math.floor(start / PER_PAGE) + 1
+const title = pageNo > 1 ? `${heading} — ${fill(w.page_title_label, { n: pageNo })}` : heading
+const trail = isProject
+  ? [{ label: w.project_title, url: '/project' }, { label: heading, url: here }]
+  : [{ label: heading, url: here }]
+const social = chrome.social.social
+if (isProject && list.length === 0) Astro.response.status = 404
 ---
 
-<Base chrome={chrome} title="BlogList" currentPath={path || '/'}>
-	<main id="main" class="nv-wrap">BlogList</main>
-</Base>
+{isProject && list.length === 0 ? <NotFound chrome={chrome} locale={locale} path={path} /> : (
+	<Base chrome={chrome} title={title} description={page?.summary || null} currentPath={here} content={page && !isProject ? { collection: 'pages', id: page.id, slug: 'blog', toPath: () => here } : null}>
+		<main id="main" class:list={['nv-pg', isProject ? 'nv-pg--projects' : 'nv-pg--blog']}>
+			<PageOwner stamp={$p} />
+			<Breadcrumbs chrome={chrome} currentPath={here} trail={trail} />
+			{!isProject && <Sections chrome={chrome} path="/blog" only={['latest-news']} />}
+			{!isProject && (
+				<section class="nv-modband nv-sec nv-band nv-pt-m nv-pb-m">
+					<div class="nv-ct">
+						<div class="nv-modband-grid">
+							<div class="nv-modband-left">
+								<h3 class="nv-mod-title" {...$c('search_label')}>{w.search_label}</h3>
+								<SearchBox chrome={chrome} locale={locale} id="nv-q-blog" />
+								{social && social.items.length > 0 && (
+									<ul class="nv-listsocial">
+										{social.items.map((s) => {
+											const net = networkOf(s.font_icon, s.title)
+											const url = dataHref(s.link, (q) => href(locale, q))
+											return <li class={`is-${net}`}>{url ? <a href={url} aria-label={s.title} target="_blank" rel="noopener noreferrer"><SocialIcon name={net} size={16} /></a> : <span role="img" aria-label={s.title}><SocialIcon name={net} size={16} /></span>}</li>
+										})}
+									</ul>
+								)}
+							</div>
+							<div class="nv-modband-right"><PopularTags chrome={chrome} /></div>
+						</div>
+					</div>
+				</section>
+			)}
+			<div class:list={['nv-body', !isProject && 'nv-body--tight']}>
+				<div class="nv-ct">
+					<div class:list={['nv-list', isProject ? 'is-project' : 'is-blog']}>
+						{isProject ? <h1 class="nv-list-h1" {...$p('title')}>{heading}</h1> : <h1 class="nv-list-sub" {...$p('title')}>{heading}</h1>}
+						<div class:list={['nv-cards', isProject ? 'is-2' : 'is-3']}>
+							{shown.map((p) => <PostCard post={p} chrome={chrome} locale={locale} variant={isProject ? 'project' : 'blog'} />)}
+						</div>
+						{more.length > 0 && (
+							<section class="nv-more">
+								<h3 {...$c('more_label')}>{w.more_label}</h3>
+								<ol>
+									{more.map((p) => <li><a href={href(locale, postPath(p))}>{p.title}</a></li>)}
+								</ol>
+							</section>
+						)}
+						<Pager chrome={chrome} path={href(locale, here)} start={start} size={PER_PAGE} total={list.length} />
+					</div>
+				</div>
+			</div>
+		</main>
+	</Base>
+)}

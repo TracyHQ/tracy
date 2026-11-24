@@ -1,5 +1,93 @@
 ---
-// STUB — replaced by the chrome author. Props: chrome, currentPath.
+/**
+ * The page footer of JA Nova: the call-to-action strip (the `cta-contact` entry, drawn by the Cta block), then the dark footer with the
+ * logo, the short text and the social icons, three link columns (Company, Work, Services) and the copyright line.
+ * Every word is CMS content (`chrome` entry, `social` entry, the menus).
+ */
+import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
+import { networkOf } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { fill, href } from '@/lib/i18n'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { getSiteSettings } from 'emdash'
+import { liveLinks } from '@/lib/link-gate'
+import { menuUrls, pruneMenu } from '@/lib/menu-gate'
+import { dataHref } from '@/lib/data-links'
+import { section } from '@/lib/content'
+import layout from '@/lib/page-layout.json'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import NovaLogo from '@/components/site/NovaLogo.astro'
+import ChromeIcon from '@/components/site/ChromeIcon.astro'
+import Cta from '@/components/blocks/Cta.astro'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const settings = await getSiteSettings()
+const logos = brandLogos(settings, site.logo_dark, site.brand_name)
+const copyright = fill(site.copyright, { year: new Date().getUTCFullYear(), name: site.brand_name })
+const live = await liveLinks(Astro.request, locale, [...menuUrls(chrome.footerCompany), ...menuUrls(chrome.footerWork), ...menuUrls(chrome.services)])
+const own = (url: string) => (url ? dataHref(url, (p) => href(locale, p)) : '')
+const columns: { title: string; titleField: string; items: ChromeMenuItem[] }[] = [
+  { title: site.footer_company_title, titleField: 'footer_company_title', items: pruneMenu(chrome.footerCompany, live) },
+  { title: site.footer_work_title, titleField: 'footer_work_title', items: pruneMenu(chrome.footerWork, live) },
+  { title: site.footer_services_title, titleField: 'footer_services_title', items: pruneMenu(chrome.services, live) }
+]
+const social = chrome.social['social']
+const ctaInfo = (layout.sections as Record<string, { type: string; style: string; module: string; position: string }>)['cta-contact']
+const ctaRow = await section('cta', 'cta-contact', locale)
 ---
 
-<footer>Footer</footer>
+{ctaRow && ctaInfo && <Cta chrome={chrome} row={ctaRow} style={ctaInfo.style} info={ctaInfo} />}
+<footer class="nv-footer">
+	<div class="nv-container">
+		<div class="nv-footer-info">
+			<div class="nv-footer-col nv-footer-about">
+				<a class="nv-brand nv-footer-logo" href={href(locale, '/')} aria-label={site.brand_name}>
+					<BrandLogo spots={logoSpots(logos, 'dark')} alt={logos.alt || site.brand_name} imgClass="nv-logo-img">
+						<NovaLogo text={site.logo_text} stamp={$c('logo_text')} />
+					</BrandLogo>
+				</a>
+				<p {...$c('footer_about')}>{site.footer_about}</p>
+				{social && social.items.length > 0 && (
+					<div class="nv-social" {...stampFor(Astro.request, 'social', social.entry)()}>
+						{social.items.map((it) => {
+							const net = networkOf(it.font_icon, it.title)
+							return it.link && it.link !== '#' ? (
+								<a class={`nv-social-item is-${net}`} href={it.link} title={it.title} aria-label={it.title}>
+									<ChromeIcon name={net} size={20} />
+								</a>
+							) : (
+								<span class={`nv-social-item is-${net}`} title={it.title}>
+									<ChromeIcon name={net} size={20} />
+								</span>
+							)
+						})}
+					</div>
+				)}
+			</div>
+			{columns.map((col) => (
+				<div class="nv-footer-col">
+					<h3 class="nv-footer-title" {...$c(col.titleField)}>{col.title}</h3>
+					<nav aria-label={col.title}>
+						<ul>
+							{col.items.map((l) => (
+								<li>
+									<a href={own(l.url)}>{l.label}</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				</div>
+			))}
+		</div>
+	</div>
+	<div class="nv-copyright">
+		<div class="nv-container">
+			<p {...$c('copyright')}>{copyright}</p>
+		</div>
+	</div>
+</footer>

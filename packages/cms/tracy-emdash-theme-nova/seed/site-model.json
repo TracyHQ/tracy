@@ -866,6 +866,134 @@
         {
           "name": "social_items",
           "type": "text"
+        },
+        {
+          "name": "show_more_label",
+          "type": "text"
+        },
+        {
+          "name": "show_less_label",
+          "type": "text"
+        },
+        {
+          "name": "play_video_label",
+          "type": "text"
+        },
+        {
+          "name": "join_team_label",
+          "type": "text"
+        },
+        {
+          "name": "join_team_link",
+          "type": "text"
+        },
+        {
+          "name": "nav_label",
+          "type": "text"
+        },
+        {
+          "name": "breadcrumb_label",
+          "type": "text"
+        },
+        {
+          "name": "logo_text",
+          "type": "text"
+        },
+        {
+          "name": "all_projects_label",
+          "type": "text"
+        },
+        {
+          "name": "project_tabs_title",
+          "type": "text"
+        },
+        {
+          "name": "project_tabs_nav_label",
+          "type": "text"
+        },
+        {
+          "name": "view_all_news_label",
+          "type": "text"
+        },
+        {
+          "name": "prev_article_label",
+          "type": "text"
+        },
+        {
+          "name": "next_article_label",
+          "type": "text"
+        },
+        {
+          "name": "article_nav_label",
+          "type": "text"
+        },
+        {
+          "name": "page_counter_label",
+          "type": "text"
+        },
+        {
+          "name": "page_title_label",
+          "type": "text"
+        },
+        {
+          "name": "pager_page_label",
+          "type": "text"
+        },
+        {
+          "name": "pager_goto_label",
+          "type": "text"
+        },
+        {
+          "name": "pager_first_label",
+          "type": "text"
+        },
+        {
+          "name": "pager_prev_label",
+          "type": "text"
+        },
+        {
+          "name": "pager_next_label",
+          "type": "text"
+        },
+        {
+          "name": "pager_last_label",
+          "type": "text"
+        },
+        {
+          "name": "pager_nav_label",
+          "type": "text"
+        },
+        {
+          "name": "share_facebook_label",
+          "type": "text"
+        },
+        {
+          "name": "share_twitter_label",
+          "type": "text"
+        },
+        {
+          "name": "share_reddit_label",
+          "type": "text"
+        },
+        {
+          "name": "search_terms_label",
+          "type": "text"
+        },
+        {
+          "name": "search_page_title",
+          "type": "text"
+        },
+        {
+          "name": "search_results_line",
+          "type": "text"
+        },
+        {
+          "name": "blog_title",
+          "type": "text"
+        },
+        {
+          "name": "project_title",
+          "type": "text"
         }
       ]
     },
@@ -3462,7 +3590,39 @@
         "latest_news_title": "Latest news from us",
         "popular_tags_title": "Tags",
         "service_menu_title": "Service Category",
-        "follow_label": "Follow us:"
+        "follow_label": "Follow us:",
+        "show_more_label": "Show more",
+        "show_less_label": "Show less",
+        "play_video_label": "Play video",
+        "join_team_label": "Join our team",
+        "join_team_link": "/career",
+        "nav_label": "Primary",
+        "breadcrumb_label": "Breadcrumbs",
+        "logo_text": "Nova",
+        "all_projects_label": "All project",
+        "project_tabs_title": "We have an experienced team\nof production",
+        "project_tabs_nav_label": "Project categories",
+        "view_all_news_label": "View all our news",
+        "prev_article_label": "Previous article:",
+        "next_article_label": "Next article:",
+        "article_nav_label": "Page Navigation",
+        "page_counter_label": "Page {current} of {total}",
+        "page_title_label": "Page {n}",
+        "pager_page_label": "Page {n}",
+        "pager_goto_label": "Go to page {n}",
+        "pager_first_label": "Go to start page",
+        "pager_prev_label": "Go to previous page",
+        "pager_next_label": "Go to next page",
+        "pager_last_label": "Go to end page",
+        "pager_nav_label": "Pagination",
+        "share_facebook_label": "Share on Facebook",
+        "share_twitter_label": "Share on Twitter",
+        "share_reddit_label": "Share on Reddit",
+        "search_terms_label": "Search Terms:",
+        "search_page_title": "Smart Search",
+        "search_results_line": "{count} results for {query}",
+        "blog_title": "Blog",
+        "project_title": "Project"
       }
     },
     {

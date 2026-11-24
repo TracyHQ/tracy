@@ -1,6 +1,44 @@
 ---
-// STUB — replaced by the block's author. Props: chrome, row (the entry's data), style ('style-1'…), info (page-layout.json entry).
-const { row } = Astro.props
+/**
+ * The hero of the home page (source: acm/hero/tmpl/style-1.php): the title, the lead, up to two buttons, on a decorative picture
+ * that the stylesheet hides below 768px. Every word comes from the `hero` entry.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { headingHtml } from '@/lib/heading-html'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { blockLinks } from '@/components/blocks/features/links'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  style: string
+  info: Record<string, any>
+}
+const { chrome, row } = Astro.props
+const $s = stampFor(Astro.request, 'hero', { id: row.id, slug: row.slug })
+const linkOf = await blockLinks(Astro.request, chrome.locale, [row.btn_link, row.btn_link_2])
+const decor = mediaUrl(row.image_decor)
+const link1 = row.button ? linkOf(row.btn_link) : null
+const link2 = row.button_2 ? linkOf(row.btn_link_2) : null
+const type = (t: unknown, d: string) => String(t || d).replace(/[^a-z-]/g, '')
 ---
 
-<section data-block="Hero"><div class="nv-wrap">{row.title}</div></section>
+<section class="nv-hero" data-block="Hero" {...$s()}>
+	<div class="nv-fcont">
+		<div class="nv-hero-item" style={decor ? `--nv-hero-decor: url('${decor}')` : undefined}>
+			<div class="nv-hero-content">
+				<div class="nv-hero-inner">
+					{row.title && <h1 class="nv-hero-title" set:html={headingHtml(row.title)} {...$s('title')} />}
+					{row.desc && <div class="nv-h4 nv-hero-desc" {...$s('desc')}>{row.desc}</div>}
+					{(link1 || link2) && (
+						<div class="nv-action">
+							{link1 && <a href={link1} class={`nv-btn nv-btn-${type(row.btn_type, 'primary')}`} {...$s('button')}>{row.button}</a>}
+							{link2 && <a href={link2} class={`nv-btn nv-btn-${type(row.btn_type_2, 'secondary')}`} {...$s('button_2')}>{row.button_2}</a>}
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

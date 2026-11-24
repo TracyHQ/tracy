@@ -1,0 +1,15 @@
+---
+/** The glyph of one contact info card (address, phone, email) and of the heading's megaphone, drawn inline. */
+import { createElement } from 'react'
+import * as Phosphor from '@phosphor-icons/react/dist/ssr'
+
+interface Props {
+  name: 'address' | 'phone' | 'email' | 'speaker'
+  size?: number
+}
+const { name, size = 48 } = Astro.props
+const BY: Record<string, string> = { address: 'MapPin', phone: 'Phone', email: 'EnvelopeSimple', speaker: 'Megaphone' }
+const Glyph = (Phosphor as unknown as Record<string, any>)[BY[name]]
+---
+
+<Fragment set:html={Glyph ? (await import('react-dom/server')).renderToStaticMarkup(createElement(Glyph, { size, weight: 'regular', 'aria-hidden': true })) : ''} />

@@ -3,7 +3,7 @@
 // picture paths the model cut to basenames, turns the Joomla articles that are menu items into posts or pages, adds what the
 // model drops (site chrome, contact, authors, tags, project fields) and writes src/lib/page-layout.json (which sections a page prints).
 //   node ingest/shape-model.mjs <seed/site-model.json> <j6/inventory.json> <spec/sections.json> <spec/page-map.json> <spec/content.json>
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { decodeWith, stripTags } from './text.mjs'
 
 const decode = decodeWith({ '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#039;': "'", '&#39;': "'", '&nbsp;': ' ' })
@@ -306,6 +306,16 @@ model.records.push({
     follow_label: 'Follow us:'
   }
 })
+// words the components print (accessible names, button labels, messages): one file per author in ingest/words/*.json, `{ "field_name": "English words" }`
+{
+  const chromeType = model.types.find((t) => t.name === 'chrome')
+  const chromeRec = model.records.find((r) => r.type === 'chrome')
+  for (const f of readdirSync(new URL('./words/', import.meta.url)).filter((n) => n.endsWith('.json')).sort())
+    for (const [name, value] of Object.entries(JSON.parse(readFileSync(new URL(`./words/${f}`, import.meta.url), 'utf8')))) {
+      if (!chromeType.fields.some((x) => x.name === name)) chromeType.fields.push({ name, ...text })
+      chromeRec.values[name] = value
+    }
+}
 model.records = model.records.filter((r) => r.type !== 'modules')
 model.types = model.types.filter((t) => t.name !== 'modules')
 

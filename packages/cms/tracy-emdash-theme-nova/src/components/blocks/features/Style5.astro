@@ -1,0 +1,84 @@
+---
+/**
+ * Style 5: a video intro, a picture with a round play button. The source opens a modal with a YouTube player; here the button opens
+ * a dialog and the player (youtube-nocookie) is created only on that click, so nothing loads or plays until the visitor asks.
+ * Source: style-5.php.
+ */
+import type { Chrome } from '@/lib/chrome'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { sizeOf } from './links'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  info: Record<string, any>
+}
+const { chrome, row } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
+const img = mediaUrl(row.image)
+const videoId = /^[A-Za-z0-9_-]{6,20}$/.test(String(row.id_video ?? '')) ? String(row.id_video) : ''
+const uid = `nv-video-${String(row.slug).replace(/[^a-z0-9-]/gi, '')}`
+const play = chrome.site.play_video_label
+const close = chrome.site.close_label
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+---
+
+<div class="nv-fcont">
+	<div class="nv-video-intro">
+		{img && <div class="nv-pic-featured"><img src={img} alt="" {...sizeOf(row.image, 1344, 640)} loading="lazy" decoding="async" {...$s('image')} /></div>}
+		{videoId && (
+			<div class="nv-ic-play">
+				<button type="button" class="nv-play-btn" data-video-open={uid} data-video-id={videoId} aria-label={play || undefined} {...$c('play_video_label')}>
+					<span class="nv-icon">
+						<svg viewBox="0 0 448 512" width="30" height="34" aria-hidden="true"><path fill="currentColor" d="M91.2 36.9c-12.4-6.8-27.4-6.5-39.6 .7S32 57.9 32 72V440c0 14.1 7.5 27.2 19.6 34.4s27.2 7.5 39.6 .7l336-184c12.8-7 20.8-20.5 20.8-35.1s-8-28.1-20.8-35.1l-336-184z" /></svg>
+					</span>
+				</button>
+			</div>
+		)}
+	</div>
+	{videoId && (
+		<dialog class="nv-video-modal" id={uid} aria-label={play || undefined}>
+			<div class="nv-modal-dialog">
+				<button type="button" class="nv-modal-close" data-video-close aria-label={close || undefined} {...$c('close_label')}><span aria-hidden="true">&times;</span></button>
+				<div class="nv-video-wrapper"></div>
+			</div>
+		</dialog>
+	)}
+</div>
+
+<script is:inline>
+	(function () {
+		if (window.__nvVideoBound) return
+		window.__nvVideoBound = true
+		document.addEventListener('click', function (e) {
+			var t = e.target
+			if (!(t instanceof Element)) return
+			var open = t.closest('[data-video-open]')
+			if (open) {
+				var dlg = document.getElementById(open.getAttribute('data-video-open'))
+				if (!dlg || !dlg.showModal) return
+				var box = dlg.querySelector('.nv-video-wrapper')
+				if (box && !box.firstChild) {
+					var f = document.createElement('iframe')
+					f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(open.getAttribute('data-video-id')) + '?autoplay=1&modestbranding=1&rel=0'
+					f.allow = 'autoplay; encrypted-media; picture-in-picture'
+					f.setAttribute('allowfullscreen', '')
+					f.title = dlg.getAttribute('aria-label') || ''
+					box.appendChild(f)
+				}
+				dlg.showModal()
+				return
+			}
+			var dlg2 = t.closest('dialog.nv-video-modal')
+			if (dlg2 && (t.closest('[data-video-close]') || t === dlg2)) dlg2.close()
+		})
+		document.addEventListener('close', function (e) {
+			var d = e.target
+			if (d instanceof Element && d.matches('dialog.nv-video-modal')) {
+				var box = d.querySelector('.nv-video-wrapper')
+				if (box) box.textContent = ''
+			}
+		}, true)
+	})()
+</script>

@@ -1,0 +1,45 @@
+---
+/** Style 2: cards (icon, title, text), one of them highlighted in the accent colour, each a link. Source: style-2.php. */
+import type { Chrome } from '@/lib/chrome'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { blockLinks, columnsOf, sizeOf } from './links'
+
+interface Props {
+  chrome: Chrome
+  row: Record<string, any>
+  info: Record<string, any>
+}
+const { chrome, row } = Astro.props
+const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
+const items: Record<string, any>[] = (Array.isArray(row.items) ? row.items : []).filter((i: any) => i.title || i.description)
+const linkOf = await blockLinks(Astro.request, chrome.locale, items.map((i) => i.link))
+const cols = columnsOf(row.columns, 3)
+const align = row.align === 'center' || row.align === 'right' ? row.align : 'left'
+const imageType = String(row.image_type || 'normal').replace(/[^a-z-]/g, '')
+---
+
+<div class={`nv-fcont nv-media-${imageType}`}>
+	<div class={`nv-frow nv-fgut nv-text-${align} nv-cols-${cols} nv-center`}>
+		{items.map((it) => {
+			const url = linkOf(it.link)
+			const icon = mediaUrl(it.img_icon)
+			return (
+				<div class={`nv-fcol nv-card-col${it.highlight === 'highlight' ? ' nv-item-highlight' : ''}`}>
+					<div class={`nv-features-item${url ? '' : ' nv-no-link'}`} {...$s.block('items')}>
+						{url && <a href={url} class="nv-link-mask" tabindex="-1" aria-hidden="true"></a>}
+						<div class="nv-item-inner">
+							{icon && (
+								<div class="nv-img-icon">
+									<img src={icon} alt="" {...sizeOf(it.img_icon, 120, 120)} loading="lazy" decoding="async" {...$s('items.img_icon')} />
+								</div>
+							)}
+							{it.title && <h4 {...$s('items.title')}>{it.title}</h4>}
+							{it.description && <p {...$s('items.description')}>{it.description}</p>}
+						</div>
+					</div>
+				</div>
+			)
+		})}
+	</div>
+</div>
