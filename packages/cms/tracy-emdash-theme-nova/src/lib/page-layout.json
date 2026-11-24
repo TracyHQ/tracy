@@ -1,0 +1,427 @@
+{
+  "sections": {
+    "home-hero": {
+      "type": "hero",
+      "style": "style-1",
+      "module": "111",
+      "spacing": {
+        "top": null,
+        "bottom": null
+      },
+      "position": "hero"
+    },
+    "home-intro-1": {
+      "type": "features_intro",
+      "style": "style-1",
+      "module": "112",
+      "spacing": {
+        "top": "large",
+        "bottom": "medium"
+      },
+      "position": "section-1"
+    },
+    "products-cards": {
+      "type": "features_intro",
+      "style": "style-2",
+      "module": "116",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-2"
+    },
+    "home-intro-2": {
+      "type": "features_intro",
+      "style": "style-1",
+      "module": "123",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-5"
+    },
+    "home-intro-3": {
+      "type": "features_intro",
+      "style": "style-1",
+      "module": "125",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-7"
+    },
+    "home-stats": {
+      "type": "features_intro",
+      "style": "style-3",
+      "module": "126",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-8"
+    },
+    "about-intro": {
+      "type": "features_intro",
+      "style": "style-4",
+      "module": "137",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-1"
+    },
+    "about-video": {
+      "type": "features_intro",
+      "style": "style-5",
+      "module": "139",
+      "spacing": {
+        "top": "blank",
+        "bottom": "large"
+      },
+      "position": "section-2"
+    },
+    "about-intro-2": {
+      "type": "features_intro",
+      "style": "style-1",
+      "module": "140",
+      "spacing": {
+        "top": "blank",
+        "bottom": "medium"
+      },
+      "position": "section-3"
+    },
+    "about-expertise": {
+      "type": "features_intro",
+      "style": "style-6",
+      "module": "141",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-4"
+    },
+    "about-stats": {
+      "type": "features_intro",
+      "style": "style-3",
+      "module": "142",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-7"
+    },
+    "services-intro": {
+      "type": "features_intro",
+      "style": "style-1",
+      "module": "143",
+      "spacing": {
+        "top": "large",
+        "bottom": "medium"
+      },
+      "position": "section-5"
+    },
+    "services-cards": {
+      "type": "features_intro",
+      "style": "style-2",
+      "module": "144",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-1"
+    },
+    "career-positions": {
+      "type": "features_intro",
+      "style": "style-7",
+      "module": "145",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-1"
+    },
+    "home-chips-1": {
+      "type": "text_slider",
+      "style": "style-1",
+      "module": "114",
+      "spacing": {
+        "top": "blank",
+        "bottom": "small"
+      },
+      "position": "section-1"
+    },
+    "home-chips-2": {
+      "type": "text_slider",
+      "style": "style-1",
+      "module": "115",
+      "spacing": {
+        "top": "blank",
+        "bottom": "large"
+      },
+      "position": "section-1"
+    },
+    "home-cta": {
+      "type": "cta",
+      "style": "style-1",
+      "module": "121",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-3"
+    },
+    "cta-contact": {
+      "type": "cta",
+      "style": "style-2",
+      "module": "131",
+      "spacing": {
+        "top": "medium",
+        "bottom": "medium"
+      },
+      "position": "section-12"
+    },
+    "clients": {
+      "type": "clients",
+      "style": "style-1",
+      "module": "122",
+      "spacing": {
+        "top": "blank",
+        "bottom": "blank"
+      },
+      "position": "section-4"
+    },
+    "team": {
+      "type": "teams",
+      "style": "style-1",
+      "module": "124",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-6"
+    },
+    "pricing": {
+      "type": "pricing",
+      "style": "style-1",
+      "module": "127",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-9"
+    },
+    "faq": {
+      "type": "accordion",
+      "style": "style-1",
+      "module": "130",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "section-11"
+    },
+    "social": {
+      "type": "social",
+      "style": "style-1",
+      "module": "148",
+      "spacing": {
+        "top": "large",
+        "bottom": "large"
+      },
+      "position": "footnav-1"
+    }
+  },
+  "pages": {
+    "/": [
+      {
+        "section": "home-hero"
+      },
+      {
+        "section": "home-intro-1"
+      },
+      {
+        "section": "home-chips-1"
+      },
+      {
+        "section": "home-chips-2"
+      },
+      {
+        "section": "products-cards"
+      },
+      {
+        "section": "home-cta"
+      },
+      {
+        "section": "clients"
+      },
+      {
+        "section": "home-intro-2"
+      },
+      {
+        "section": "team"
+      },
+      {
+        "section": "home-intro-3"
+      },
+      {
+        "section": "home-stats"
+      },
+      {
+        "section": "pricing"
+      },
+      {
+        "dynamic": "news-band"
+      },
+      {
+        "section": "faq"
+      }
+    ],
+    "/login-form": [],
+    "/registration-form": [],
+    "/user-profile": [],
+    "/error-page": [],
+    "/offline-pages": [],
+    "/typography": [],
+    "/smart-search": [],
+    "/category-blog": [
+      {
+        "dynamic": "latest-news"
+      },
+      {
+        "dynamic": "search"
+      },
+      {
+        "dynamic": "popular-tags"
+      }
+    ],
+    "/featured-articles": [],
+    "/author-listting": [],
+    "/blog-detail": [
+      {
+        "dynamic": "related-posts"
+      }
+    ],
+    "/about-us-2/contact": [],
+    "/project": [
+      {
+        "dynamic": "category-tabs"
+      }
+    ],
+    "/about-us-2": [
+      {
+        "section": "about-intro"
+      },
+      {
+        "section": "about-video"
+      },
+      {
+        "section": "about-intro-2"
+      },
+      {
+        "section": "about-expertise"
+      },
+      {
+        "section": "team"
+      },
+      {
+        "section": "about-stats"
+      }
+    ],
+    "/project/branding": [
+      {
+        "dynamic": "recent-work"
+      }
+    ],
+    "/project/ui-ux-design": [
+      {
+        "dynamic": "recent-work"
+      }
+    ],
+    "/project/illustration": [
+      {
+        "dynamic": "recent-work"
+      }
+    ],
+    "/services": [
+      {
+        "section": "services-cards"
+      },
+      {
+        "section": "services-intro"
+      },
+      {
+        "section": "faq"
+      }
+    ],
+    "/project/project-detail": [
+      {
+        "dynamic": "recent-work"
+      }
+    ],
+    "/about-us-2/career": [
+      {
+        "section": "career-positions"
+      }
+    ],
+    "/illustration": [
+      {
+        "section": "faq"
+      },
+      {
+        "section": "products-cards"
+      }
+    ],
+    "/development": [
+      {
+        "section": "faq"
+      },
+      {
+        "section": "products-cards"
+      }
+    ],
+    "/mobile-application": [
+      {
+        "section": "faq"
+      },
+      {
+        "section": "products-cards"
+      }
+    ],
+    "/cloud-solutions": [
+      {
+        "section": "faq"
+      },
+      {
+        "section": "products-cards"
+      }
+    ],
+    "/it-infrastructure": [
+      {
+        "section": "faq"
+      },
+      {
+        "section": "products-cards"
+      }
+    ],
+    "/cybersecurity": [
+      {
+        "section": "faq"
+      },
+      {
+        "section": "products-cards"
+      }
+    ],
+    "/virtualization": [
+      {
+        "section": "faq"
+      },
+      {
+        "section": "products-cards"
+      }
+    ],
+    "/tagged-items": [],
+    "/tags": [],
+    "/category-blog/how-business-technology-changed-how-we-think-about-death": [],
+    "/404": []
+  }
+}

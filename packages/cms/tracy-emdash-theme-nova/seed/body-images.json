@@ -1,0 +1,562 @@
+[
+  {
+    "collection": "pages",
+    "slug": "illustration",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/illustration/intro/item-5.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "pages",
+    "slug": "development",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/illustration/intro/item-5.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "pages",
+    "slug": "mobile-application",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/illustration/intro/item-5.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "pages",
+    "slug": "cloud-solutions",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/illustration/intro/item-5.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "pages",
+    "slug": "it-infrastructure",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/illustration/intro/item-5.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "pages",
+    "slug": "cybersecurity",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/illustration/intro/item-5.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "pages",
+    "slug": "virtualization",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/illustration/intro/item-5.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "landing-page-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "landing-page-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "corporate-website-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "corporate-website-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "email-newsletter-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "email-newsletter-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "design-system-ul-kit",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "design-system-ul-kit",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "blog-design-layout",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "blog-design-layout",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "presentation-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "presentation-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "realistic-scenarios",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "realistic-scenarios",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "social-media-graphics",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "social-media-graphics",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "brochure-flyer-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "brochure-flyer-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "mobile-app-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "mobile-app-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "brand-identity-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "brand-identity-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "packaging-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "packaging-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "muckup-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "muckup-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "logo-design-branding",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "logo-design-branding",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "poster-banner-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "poster-banner-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "web-application-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "web-application-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "infographic-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "infographic-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "event-invitation-design",
+    "locale": "en",
+    "path": "body[9].asset",
+    "file": "images/joomlart/project/pic-1.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "event-invitation-design",
+    "locale": "en",
+    "path": "body[10].asset",
+    "file": "images/joomlart/project/pic-2.png",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "how-business-technology-changed-how-we-think-about-death",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "why-the-biggest-myths-about-business-may-actually-be-right",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "how-to-create-an-awesome-software-video-about-success-busines",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "the-digital-age-of-death-how-business-technology-is-transforming-end-of-life",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "virtual-memorials-exploring-the-impact-of-business-technology-on-mourning",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "the-rise-of-online-funeral-services-business-technology-s-role",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "revolutionizing-death-care-the-business-tech-disruption-in-funeral-services",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "how-business-technology-is-shaping-the-way-we-remember-2023",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "examining-the-role-of-business-technology-in-the-mourning-process",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "mourning-in-the-digital-age-unpacking-the-influence-of-business-technology",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "transforming-grief-exploring-the-impact-of-business-technology-on-memorialization",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "the-influence-of-business-technology-on-mourning-practices-2023",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "digital-tributes-examining-the-changing-face-of-mourning-with-business-technology",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "the-digital-remembrance-investigating-the-role-of-business-technology-in-grief",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "mourning-in-the-digital-world-examining-the-impact-of-business-technology",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "beyond-the-funeral-navigating-grief-in-the-age-of-business-technology",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "the-digital-mourning-ritual-examining-the-influence-of-business-technology",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "virtual-connections-exploring-how-business-technology-is-redefining-mourning",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  },
+  {
+    "collection": "posts",
+    "slug": "the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process",
+    "locale": "en",
+    "path": "body[11].asset",
+    "file": "images/joomlart/blogs/pic-1.jpg",
+    "alt": ""
+  }
+]

@@ -1,0 +1,97 @@
+{
+  "pages": [
+    {
+      "path": "/",
+      "slug": "home",
+      "view": "home"
+    },
+    {
+      "path": "/contact",
+      "slug": "contact",
+      "view": "contact"
+    },
+    {
+      "path": "/project",
+      "slug": "project",
+      "view": "project"
+    },
+    {
+      "path": "/about",
+      "slug": "about",
+      "view": "about"
+    },
+    {
+      "path": "/services",
+      "slug": "services",
+      "view": "services"
+    },
+    {
+      "path": "/career",
+      "slug": "career",
+      "view": "career"
+    },
+    {
+      "path": "/illustration",
+      "slug": "illustration",
+      "view": "service"
+    },
+    {
+      "path": "/development",
+      "slug": "development",
+      "view": "service"
+    },
+    {
+      "path": "/mobile-application",
+      "slug": "mobile-application",
+      "view": "service"
+    },
+    {
+      "path": "/cloud-solutions",
+      "slug": "cloud-solutions",
+      "view": "service"
+    },
+    {
+      "path": "/it-infrastructure",
+      "slug": "it-infrastructure",
+      "view": "service"
+    },
+    {
+      "path": "/cybersecurity",
+      "slug": "cybersecurity",
+      "view": "service"
+    },
+    {
+      "path": "/virtualization",
+      "slug": "virtualization",
+      "view": "service"
+    },
+    {
+      "path": "/blog",
+      "slug": "blog",
+      "view": "blog"
+    },
+    {
+      "path": "/project/illustration",
+      "slug": "illustration",
+      "view": "service"
+    }
+  ],
+  "lists": [
+    {
+      "path": "/blog",
+      "type": "posts"
+    },
+    {
+      "path": "/project/branding",
+      "type": "posts"
+    },
+    {
+      "path": "/project/ui-ux-design",
+      "type": "posts"
+    },
+    {
+      "path": "/project/illustration",
+      "type": "posts"
+    }
+  ]
+}

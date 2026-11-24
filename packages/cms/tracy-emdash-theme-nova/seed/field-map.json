@@ -1,0 +1,780 @@
+{
+	"generatedAt": "2026-11-24T22:45:55.095Z",
+	"fields": {
+		"pages.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"pages.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"pages.view": {
+			"source": "text",
+			"target": "string",
+			"label": "View"
+		},
+		"pages.banner": {
+			"source": "image",
+			"target": "image",
+			"label": "Banner"
+		},
+		"pages.summary": {
+			"source": "text",
+			"target": "string",
+			"label": "Summary"
+		},
+		"pages.sub_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Sub title"
+		},
+		"pages.path": {
+			"source": "text",
+			"target": "string",
+			"label": "Path"
+		},
+		"posts.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"posts.excerpt": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Excerpt"
+		},
+		"posts.body": {
+			"source": "prose",
+			"target": "portableText",
+			"label": "Body"
+		},
+		"posts.date": {
+			"source": "date",
+			"target": "datetime",
+			"label": "Date"
+		},
+		"posts.cover": {
+			"source": "image",
+			"target": "image",
+			"label": "Cover"
+		},
+		"posts.created": {
+			"source": "date",
+			"target": "datetime",
+			"label": "Created"
+		},
+		"posts.author": {
+			"source": "text",
+			"target": "string",
+			"label": "Author"
+		},
+		"posts.author_avatar": {
+			"source": "image",
+			"target": "image",
+			"label": "Author avatar"
+		},
+		"posts.tags": {
+			"source": "text",
+			"target": "string",
+			"label": "Tags"
+		},
+		"posts.hits": {
+			"source": "text",
+			"target": "string",
+			"label": "Hits"
+		},
+		"posts.kind": {
+			"source": "text",
+			"target": "string",
+			"label": "Kind"
+		},
+		"posts.banner": {
+			"source": "image",
+			"target": "image",
+			"label": "Banner"
+		},
+		"posts.project_client": {
+			"source": "text",
+			"target": "string",
+			"label": "Project client"
+		},
+		"posts.project_budget": {
+			"source": "text",
+			"target": "string",
+			"label": "Project budget"
+		},
+		"posts.project_client_name": {
+			"source": "text",
+			"target": "string",
+			"label": "Project client name"
+		},
+		"posts.project_services": {
+			"source": "text",
+			"target": "string",
+			"label": "Project services"
+		},
+		"posts.project_date": {
+			"source": "text",
+			"target": "string",
+			"label": "Project date"
+		},
+		"posts.project_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Project link"
+		},
+		"posts.path": {
+			"source": "text",
+			"target": "string",
+			"label": "Path"
+		},
+		"hero.image_decor": {
+			"source": "image",
+			"target": "image",
+			"label": "Image decor"
+		},
+		"hero.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"hero.desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Desc"
+		},
+		"hero.button": {
+			"source": "text",
+			"target": "string",
+			"label": "Button"
+		},
+		"hero.btn_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Btn link"
+		},
+		"hero.btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Btn type"
+		},
+		"hero.button_2": {
+			"source": "text",
+			"target": "string",
+			"label": "Button 2"
+		},
+		"hero.btn_link_2": {
+			"source": "url",
+			"target": "string",
+			"label": "Btn link 2"
+		},
+		"hero.btn_type_2": {
+			"source": "text",
+			"target": "string",
+			"label": "Btn type 2"
+		},
+		"features_intro.intro_img": {
+			"source": "image",
+			"target": "image",
+			"label": "Intro img"
+		},
+		"features_intro.align_media": {
+			"source": "text",
+			"target": "string",
+			"label": "Align media"
+		},
+		"features_intro.info_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Info title"
+		},
+		"features_intro.info_desc": {
+			"source": "prose",
+			"target": "text",
+			"label": "Info desc"
+		},
+		"features_intro.info_icon": {
+			"source": "image",
+			"target": "image",
+			"label": "Info icon"
+		},
+		"features_intro.info_cta": {
+			"source": "text",
+			"target": "string",
+			"label": "Info cta"
+		},
+		"features_intro.button": {
+			"source": "text",
+			"target": "string",
+			"label": "Button"
+		},
+		"features_intro.btn_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Btn link"
+		},
+		"features_intro.btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Btn type"
+		},
+		"features_intro.columns": {
+			"source": "text",
+			"target": "string",
+			"label": "Columns"
+		},
+		"features_intro.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"features_intro.align": {
+			"source": "text",
+			"target": "string",
+			"label": "Align"
+		},
+		"features_intro.image_type": {
+			"source": "image",
+			"target": "string",
+			"label": "Image type"
+		},
+		"features_intro.ft_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Ft title"
+		},
+		"features_intro.content_featured": {
+			"source": "prose",
+			"target": "text",
+			"label": "Content featured"
+		},
+		"features_intro.description": {
+			"source": "text",
+			"target": "string",
+			"label": "Description"
+		},
+		"features_intro.id_video": {
+			"source": "text",
+			"target": "string",
+			"label": "Id video"
+		},
+		"features_intro.image": {
+			"source": "image",
+			"target": "image",
+			"label": "Image"
+		},
+		"features_intro.subtitle": {
+			"source": "text",
+			"target": "string",
+			"label": "Subtitle"
+		},
+		"features_intro.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"text_slider.slide_direct": {
+			"source": "text",
+			"target": "string",
+			"label": "Slide direct"
+		},
+		"text_slider.autoplay": {
+			"source": "text",
+			"target": "string",
+			"label": "Autoplay"
+		},
+		"text_slider.auto_time": {
+			"source": "text",
+			"target": "string",
+			"label": "Auto time"
+		},
+		"text_slider.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"text_slider.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"cta.cta_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Cta title"
+		},
+		"cta.cta_desc": {
+			"source": "prose",
+			"target": "string",
+			"label": "Cta desc"
+		},
+		"cta.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"cta.cta_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Cta link"
+		},
+		"cta.btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Btn type"
+		},
+		"cta.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"clients.col_lg": {
+			"source": "text",
+			"target": "string",
+			"label": "Col lg"
+		},
+		"clients.col_md": {
+			"source": "text",
+			"target": "string",
+			"label": "Col md"
+		},
+		"clients.col_xs": {
+			"source": "text",
+			"target": "string",
+			"label": "Col xs"
+		},
+		"clients.slide_direct": {
+			"source": "text",
+			"target": "string",
+			"label": "Slide direct"
+		},
+		"clients.autoplay": {
+			"source": "text",
+			"target": "string",
+			"label": "Autoplay"
+		},
+		"clients.auto_time": {
+			"source": "text",
+			"target": "string",
+			"label": "Auto time"
+		},
+		"clients.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"clients.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"teams.team_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Team desc"
+		},
+		"teams.columns": {
+			"source": "text",
+			"target": "string",
+			"label": "Columns"
+		},
+		"teams.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"teams.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"pricing.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"pricing.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"accordion.info_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Info title"
+		},
+		"accordion.info_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Info desc"
+		},
+		"accordion.button": {
+			"source": "text",
+			"target": "string",
+			"label": "Button"
+		},
+		"accordion.btn_link": {
+			"source": "url",
+			"target": "string",
+			"label": "Btn link"
+		},
+		"accordion.btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Btn type"
+		},
+		"accordion.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"accordion.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"social.social_style": {
+			"source": "text",
+			"target": "string",
+			"label": "Social style"
+		},
+		"social.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"social.items": {
+			"source": "group",
+			"target": "repeater",
+			"label": "Items"
+		},
+		"chrome.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"chrome.brand_name": {
+			"source": "text",
+			"target": "string",
+			"label": "Brand name"
+		},
+		"chrome.header_phone": {
+			"source": "text",
+			"target": "string",
+			"label": "Header phone"
+		},
+		"chrome.header_email": {
+			"source": "text",
+			"target": "string",
+			"label": "Header email"
+		},
+		"chrome.footer_about": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer about"
+		},
+		"chrome.footer_company_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer company title"
+		},
+		"chrome.footer_work_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer work title"
+		},
+		"chrome.footer_services_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Footer services title"
+		},
+		"chrome.copyright": {
+			"source": "text",
+			"target": "string",
+			"label": "Copyright"
+		},
+		"chrome.skip_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Skip label"
+		},
+		"chrome.menu_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Menu label"
+		},
+		"chrome.close_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Close label"
+		},
+		"chrome.prev_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Prev label"
+		},
+		"chrome.next_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Next label"
+		},
+		"chrome.more_label": {
+			"source": "text",
+			"target": "string",
+			"label": "More label"
+		},
+		"chrome.read_more": {
+			"source": "text",
+			"target": "string",
+			"label": "Read more"
+		},
+		"chrome.by_label": {
+			"source": "text",
+			"target": "string",
+			"label": "By label"
+		},
+		"chrome.tags_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Tags label"
+		},
+		"chrome.share_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Share label"
+		},
+		"chrome.not_found_code": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found code"
+		},
+		"chrome.not_found_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found title"
+		},
+		"chrome.not_found_text": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found text"
+		},
+		"chrome.not_found_back_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Not found back label"
+		},
+		"chrome.search_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Search label"
+		},
+		"chrome.search_placeholder": {
+			"source": "text",
+			"target": "string",
+			"label": "Search placeholder"
+		},
+		"chrome.search_button": {
+			"source": "text",
+			"target": "string",
+			"label": "Search button"
+		},
+		"chrome.no_results": {
+			"source": "text",
+			"target": "string",
+			"label": "No results"
+		},
+		"chrome.theme_toggle_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Theme toggle label"
+		},
+		"chrome.breadcrumb_home": {
+			"source": "text",
+			"target": "string",
+			"label": "Breadcrumb home"
+		},
+		"chrome.categories_all_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Categories all label"
+		},
+		"chrome.client_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Client label"
+		},
+		"chrome.services_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Services label"
+		},
+		"chrome.date_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Date label"
+		},
+		"chrome.completed_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Completed label"
+		},
+		"chrome.see_live_label": {
+			"source": "text",
+			"target": "string",
+			"label": "See live label"
+		},
+		"chrome.budget_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Budget label"
+		},
+		"chrome.client_name_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Client name label"
+		},
+		"chrome.recent_work_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Recent work title"
+		},
+		"chrome.related_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Related title"
+		},
+		"chrome.latest_news_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Latest news title"
+		},
+		"chrome.popular_tags_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Popular tags title"
+		},
+		"chrome.service_menu_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Service menu title"
+		},
+		"chrome.follow_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Follow label"
+		},
+		"chrome.subscribe_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Subscribe label"
+		},
+		"chrome.logo_dark": {
+			"source": "image",
+			"target": "image",
+			"label": "Logo dark"
+		},
+		"chrome.social_items": {
+			"source": "text",
+			"target": "string",
+			"label": "Social items"
+		},
+		"contact.title": {
+			"source": "text",
+			"target": "string",
+			"label": "Title"
+		},
+		"contact.address_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Address label"
+		},
+		"contact.address": {
+			"source": "text",
+			"target": "string",
+			"label": "Address"
+		},
+		"contact.phone_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Phone label"
+		},
+		"contact.phone": {
+			"source": "text",
+			"target": "string",
+			"label": "Phone"
+		},
+		"contact.email_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Email label"
+		},
+		"contact.email": {
+			"source": "text",
+			"target": "string",
+			"label": "Email"
+		},
+		"contact.heading": {
+			"source": "text",
+			"target": "string",
+			"label": "Heading"
+		},
+		"contact.intro": {
+			"source": "text",
+			"target": "string",
+			"label": "Intro"
+		},
+		"contact.follow_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Follow label"
+		},
+		"contact.name_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Name label"
+		},
+		"contact.email_field_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Email field label"
+		},
+		"contact.phone_field_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Phone field label"
+		},
+		"contact.subject_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Subject label"
+		},
+		"contact.message_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Message label"
+		},
+		"contact.submit_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Submit label"
+		},
+		"contact.banner": {
+			"source": "image",
+			"target": "image",
+			"label": "Banner"
+		},
+		"contact.socials": {
+			"source": "text",
+			"target": "string",
+			"label": "Socials"
+		},
+		"contact.form_id": {
+			"source": "text",
+			"target": "string",
+			"label": "Form id"
+		}
+	}
+}
