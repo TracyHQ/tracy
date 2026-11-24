@@ -6,7 +6,6 @@
 	.im-hero-slide { flex: 0 0 100%; scroll-snap-align: start; min-height: 814px; display: flex; align-items: flex-start; background-size: cover; background-position: center; position: relative; color: #fff; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
 	.im-hero-slide::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 0, 0, .45), rgba(0, 0, 0, .1) 60%, transparent); }
 	.im-hero-slide > .im-container { position: relative; }
-	.im-hero-slide .im-btn { padding-inline: 36px; }
 	.im-hero-content { max-width: 656px; padding-top: 160px; padding-bottom: 96px; }
 	.im-hero-sub { font-size: 24px; line-height: 1.2; font-weight: 500; letter-spacing: -0.01em; color: var(--ds-c-accent-on-ink, #2fd98a); margin: 0 0 8px; }
 	.im-hero-title { font-weight: var(--ds-weight-display, 500); letter-spacing: -0.02em; font-family: var(--font-display); font-size: var(--h1-size); line-height: 1.2; margin: 0 0 8px; color: #fff; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
