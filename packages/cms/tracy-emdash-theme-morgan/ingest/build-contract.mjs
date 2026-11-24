@@ -43,7 +43,8 @@ const RULES = [
   ['split-title', '.mg-sec.is-secondary .mg-sec-h', HOME, true],
   ['card-title', '.mg-card h4', HOME],
   ['box-title', '.mg-box h4', HOME],
-  ['panel-title', '.mg-panel summary', HOME],
+  ['panel-title', '.mg-panel:not([open]) summary', HOME],
+  ['panel-title-open', '.mg-panel[open] summary', HOME],
   ['case-title', '.mg-case h4', HOME],
   ['member-name', '.mg-member h4', HOME],
   ['hiring', '.mg-hiring', HOME],
@@ -91,7 +92,7 @@ const PAGES = [
     view: 'Home',
     identity: '.mg-slideshow',
     cols: ['chrome', 'footer_links', 'pages', 'slideshow', 'features_intro', 'accordion', 'testimonials', 'teams', 'clients', 'contact'],
-    rules: [...BASE, 'slide-title', 'section-label', 'section-title', 'card-title', 'box-title', 'panel-title', 'case-title', 'member-name', 'hiring', 'quote-text'],
+    rules: [...BASE, 'slide-title', 'section-label', 'section-title', 'card-title', 'box-title', 'panel-title', 'panel-title-open', 'case-title', 'member-name', 'hiring', 'quote-text'],
     content: [
       ['slide', '.mg-slide-h', 'field', 'slideshow/home-slideshow.items[0].title', 'Not for Profit.\nFor People.'],
       ['intro', '.mg-sec-intro .mg-sec-h', 'field', 'features_intro/home-intro.title', 'Morgan help Business Performance and Scalability.']

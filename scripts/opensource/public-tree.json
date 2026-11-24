@@ -4743,6 +4743,48 @@
       "match": "^/Volumes/x$",
       "kind": "false-positive",
       "reason": "a sample absolute path in the kit's path-safety check, not a machine path of anyone"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-morgan/seed/*.json",
+      "category": "email",
+      "match": "^(no-reply@gmail\\.com|inquiry@stark\\.com|inquiry@morgan\\.com)$",
+      "kind": "placeholder",
+      "reason": "demo footer and contact addresses of the JA Morgan quickstart this template ports; the personalization step replaces them with the customer's own"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-morgan/contracts/**",
+      "category": "email",
+      "match": "^(no-reply@gmail\\.com|inquiry@stark\\.com|inquiry@morgan\\.com)$",
+      "kind": "placeholder",
+      "reason": "the same demo addresses, read into the generated content map of the template"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-morgan/pnpm-workspace.yaml",
+      "category": "email",
+      "match": "^picomatch@(2\\.3\\.2|4\\.0\\.7)\\.patch$",
+      "kind": "false-positive",
+      "reason": "a pnpm patch file name (<package>@<version>.patch), not an e-mail address"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-morgan/tests/*.test.mjs",
+      "category": "email",
+      "match": "^(picomatch@(2\\.3\\.2|4\\.0\\.7)|scope__pkg@1\\.0\\.0)\\.patch$",
+      "kind": "false-positive",
+      "reason": "pnpm patch file names in the kit's distribution tests, not e-mail addresses"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-morgan/tests/personalize-demo-street.test.mjs",
+      "category": "email",
+      "match": "^Info@joomlart\\.com$",
+      "kind": "third-party-content",
+      "reason": "footer address of the JA Diner template demo content that the kit's personalize test must replace"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-morgan/tools/distribution.mjs",
+      "category": "machine-path",
+      "match": "^/Volumes/x$",
+      "kind": "false-positive",
+      "reason": "a sample absolute path in the kit's path-safety check, not a machine path of anyone"
     }
   ],
   "excludeReasons": {

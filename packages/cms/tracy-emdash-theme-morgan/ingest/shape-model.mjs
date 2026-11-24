@@ -134,6 +134,11 @@ const clearHash = (v) =>
         ? ''
         : v
 for (const r of model.records) if (r.type !== 'pages' && r.type !== 'posts') r.values = clearHash(r.values)
+// the home services button points at the services page it is for (DECISIONS D10)
+{
+  const r = model.records.find((x) => x.type === 'features_intro' && x.slug === 'home-services')
+  if (r && !r.values.link_more) r.values.link_more = '/services'
+}
 // the demo's own addresses move to the ported ones
 const PATHS = { '/services-page': '/services', '/contact-us': '/contact-us', '/about-us': '/about-us' }
 const fixLinks = (v) =>

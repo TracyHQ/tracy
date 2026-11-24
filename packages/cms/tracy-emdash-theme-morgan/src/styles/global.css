@@ -83,7 +83,9 @@
 	.mg-nav a { display: block; padding: 32.5px 0; font-size: 16px; line-height: 25px; font-weight: 700; color: var(--color-heading); }
 	.mg-nav a:hover, .mg-nav li.is-active > a { color: var(--color-accent-text); }
 	.mg-header-r { display: flex; align-items: center; gap: 14px; }
+	.mg-header-r { margin-left: auto; }
 	.mg-nav + .mg-header-r { margin-left: 0; }
+	@media (max-width: 991.98px) { .mg-nav + .mg-header-r { margin-left: auto; } }
 	.mg-theme { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 40px; padding: 0; border: 0; background: transparent; cursor: pointer; color: var(--ds-c-heading, var(--ds-c-ink, #1b3060)); }
 	html[data-theme="dark"] .mg-theme { color: var(--color-heading); }
 	.mg-theme svg { width: 18px; height: 18px; fill: currentColor; }

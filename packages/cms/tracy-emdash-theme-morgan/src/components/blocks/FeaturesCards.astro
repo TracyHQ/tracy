@@ -20,7 +20,7 @@ const $s = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry
 const items = (entry.items ?? []) as Record<string, any>[]
 const cols = Math.max(1, Math.min(3, Number(entry.columns) || 2))
 // the About page's cards are line icons (png) with a title and text, not picture cards
-const icons = items.length > 0 && items.every((it) => /\.png(#|$)/i.test(String(it.img ?? '')))
+const icons = items.length > 0 && items.every((it) => /\.png$/i.test(mediaUrl(it.img) ?? ''))
 ---
 
 <Section entry={entry} name={name}>

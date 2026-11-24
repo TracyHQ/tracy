@@ -1018,7 +1018,7 @@
             "link": ""
           }
         ],
-        "section_label": "Introducing",
+        "section_label": "Introducing.",
         "section_style": "white",
         "section_mask": "images/joomlart/others/mask-map-2.png"
       }
@@ -1033,7 +1033,7 @@
         "features_style": "box",
         "columns": "4",
         "title_more": "View more Services",
-        "link_more": "",
+        "link_more": "/services",
         "title": "15+ Years of Experience in  Financial Services & Business.",
         "items": [
           {
@@ -1061,7 +1061,7 @@
             "description": "In hac habitasse platea \ndictumst dapibus eros ac leo blandit, ligula sit amet posuere turpis acumin."
           }
         ],
-        "section_label": "Our Services",
+        "section_label": "Our Services.",
         "section_style": "gray",
         "section_mask": ""
       }
@@ -1078,7 +1078,7 @@
         "btn_title": "",
         "btn_link": "/services",
         "title": "Morgan Provides Services in the Financial Sector.",
-        "section_label": "Our Missions",
+        "section_label": "Our Missions.",
         "section_style": "white",
         "section_mask": ""
       }
@@ -1095,7 +1095,7 @@
         "btn_title": "Book a Consultation",
         "btn_link": "/contact-us",
         "title": "Morgan help Business  Performance & Scalability.",
-        "section_label": "Our Philosophy",
+        "section_label": "Our Philosophy.",
         "section_style": "white",
         "section_mask": ""
       }
@@ -1112,7 +1112,7 @@
         "btn_title": "",
         "btn_link": "/services",
         "title": "Morgan help Business  Performance & Scalability.",
-        "section_label": "Free Consultation",
+        "section_label": "Free Consultation.",
         "section_style": "secondary",
         "section_mask": ""
       }
@@ -1129,7 +1129,7 @@
         "btn_title": "",
         "btn_link": "/services",
         "title": " Interested in working with Morgan, a large language ocean? ",
-        "section_label": "Careers at Morgan",
+        "section_label": "Careers at Morgan.",
         "section_style": "gray",
         "section_mask": ""
       }
@@ -1146,7 +1146,7 @@
         "btn_title": "",
         "btn_link": "/services",
         "title": "Passionate People on Our Team, Their Place and Supplies.",
-        "section_label": "Expert People",
+        "section_label": "Expert People.",
         "section_style": "white",
         "section_mask": ""
       }
@@ -1187,7 +1187,7 @@
             "link": ""
           }
         ],
-        "section_label": "Our Services",
+        "section_label": "Our Services.",
         "section_style": "white",
         "section_mask": "images/joomlart/others/mask-map-2.png"
       }
@@ -1246,7 +1246,7 @@
             "ft_link": ""
           }
         ],
-        "section_label": "Our Services",
+        "section_label": "Our Services.",
         "section_style": "white",
         "section_mask": "images/joomlart/others/mask-map.png"
       }
@@ -1263,7 +1263,7 @@
         "btn_link": "/contact-us",
         "btn_type": "primary",
         "title": "We’d love to hear from you. Let's see how we can assist you",
-        "section_label": "Get in touch",
+        "section_label": "Get in touch.",
         "section_style": "white",
         "section_mask": ""
       }
@@ -1333,7 +1333,7 @@
             "link": ""
           }
         ],
-        "section_label": "Case Studies",
+        "section_label": "Case Studies.",
         "section_style": "gray",
         "section_mask": ""
       }
@@ -1398,7 +1398,7 @@
             "link": ""
           }
         ],
-        "section_label": "Case Studies",
+        "section_label": "Case Studies.",
         "section_style": "white",
         "section_mask": ""
       }
@@ -1442,7 +1442,7 @@
             "member_position": "Business Executive"
           }
         ],
-        "section_label": "Testimonials",
+        "section_label": "Testimonials.",
         "section_style": "gray",
         "section_mask": ""
       }
@@ -1485,7 +1485,7 @@
           }
         ],
         "more_cta": "Join Our Team",
-        "section_label": "Expert People",
+        "section_label": "Expert People.",
         "section_style": "gray",
         "section_mask": ""
       }
@@ -1551,7 +1551,7 @@
           }
         ],
         "more_cta": "",
-        "section_label": "Our Team",
+        "section_label": "Our Team.",
         "section_style": "gray",
         "section_mask": ""
       }
@@ -2265,7 +2265,7 @@
         "brand_name": "Morgan",
         "topbar_address": "312 North 24th Street Brooklyn, New York",
         "topbar_phone": "212.218.8500",
-        "footer_social_title": "Social",
+        "footer_social_title": "Social.",
         "footer_social_facebook": "https://www.joomlart.com/",
         "footer_social_twitter": "https://www.joomlart.com/",
         "footer_social_instagram": "https://www.joomlart.com/",
@@ -2301,8 +2301,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Navigate: Home",
-        "column": "Navigate",
+        "title": "Navigate.: Home",
+        "column": "Navigate.",
         "label": "Home",
         "link": "/"
       }
@@ -2313,8 +2313,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Navigate: Services",
-        "column": "Navigate",
+        "title": "Navigate.: Services",
+        "column": "Navigate.",
         "label": "Services",
         "link": "/services"
       }
@@ -2325,8 +2325,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Navigate: News",
-        "column": "Navigate",
+        "title": "Navigate.: News",
+        "column": "Navigate.",
         "label": "News",
         "link": "/blog"
       }
@@ -2337,8 +2337,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Navigate: Testimonials",
-        "column": "Navigate",
+        "title": "Navigate.: Testimonials",
+        "column": "Navigate.",
         "label": "Testimonials",
         "link": "/services"
       }
@@ -2349,8 +2349,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Navigate: Advisors",
-        "column": "Navigate",
+        "title": "Navigate.: Advisors",
+        "column": "Navigate.",
         "label": "Advisors",
         "link": "/about-us"
       }
@@ -2361,8 +2361,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Navigate: Contact Us",
-        "column": "Navigate",
+        "title": "Navigate.: Contact Us",
+        "column": "Navigate.",
         "label": "Contact Us",
         "link": "/contact-us"
       }
@@ -2373,8 +2373,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Services: Research",
-        "column": "Services",
+        "title": "Services.: Research",
+        "column": "Services.",
         "label": "Research",
         "link": ""
       }
@@ -2385,8 +2385,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Services: Financial Modeling",
-        "column": "Services",
+        "title": "Services.: Financial Modeling",
+        "column": "Services.",
         "label": "Financial Modeling",
         "link": ""
       }
@@ -2397,8 +2397,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Services: Human Resource",
-        "column": "Services",
+        "title": "Services.: Human Resource",
+        "column": "Services.",
         "label": "Human Resource",
         "link": ""
       }
@@ -2409,8 +2409,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Services: Management",
-        "column": "Services",
+        "title": "Services.: Management",
+        "column": "Services.",
         "label": "Management",
         "link": ""
       }
@@ -2421,8 +2421,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Services: Legal Solutions",
-        "column": "Services",
+        "title": "Services.: Legal Solutions",
+        "column": "Services.",
         "label": "Legal Solutions",
         "link": ""
       }
@@ -2433,8 +2433,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Support: Documentation",
-        "column": "Support",
+        "title": "Support.: Documentation",
+        "column": "Support.",
         "label": "Documentation",
         "link": ""
       }
@@ -2445,8 +2445,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Support: F.A.Q",
-        "column": "Support",
+        "title": "Support.: F.A.Q",
+        "column": "Support.",
         "label": "F.A.Q",
         "link": ""
       }
@@ -2457,8 +2457,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Support: Media",
-        "column": "Support",
+        "title": "Support.: Media",
+        "column": "Support.",
         "label": "Media",
         "link": ""
       }
@@ -2469,8 +2469,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Support: Support Policy",
-        "column": "Support",
+        "title": "Support.: Support Policy",
+        "column": "Support.",
         "label": "Support Policy",
         "link": ""
       }
@@ -2481,8 +2481,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Support: Privacy / Terms of use",
-        "column": "Support",
+        "title": "Support.: Privacy / Terms of use",
+        "column": "Support.",
         "label": "Privacy / Terms of use",
         "link": ""
       }
@@ -2493,8 +2493,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Support: Advertise",
-        "column": "Support",
+        "title": "Support.: Advertise",
+        "column": "Support.",
         "label": "Advertise",
         "link": ""
       }
@@ -2505,8 +2505,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Careers: Get the Theme",
-        "column": "Careers",
+        "title": "Careers.: Get the Theme",
+        "column": "Careers.",
         "label": "Get the Theme",
         "link": ""
       }
@@ -2517,8 +2517,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Careers: How It Works",
-        "column": "Careers",
+        "title": "Careers.: How It Works",
+        "column": "Careers.",
         "label": "How It Works",
         "link": ""
       }
@@ -2529,8 +2529,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Careers: Articles & Tips",
-        "column": "Careers",
+        "title": "Careers.: Articles & Tips",
+        "column": "Careers.",
         "label": "Articles & Tips",
         "link": ""
       }
@@ -2541,8 +2541,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Careers: Terms of Service",
-        "column": "Careers",
+        "title": "Careers.: Terms of Service",
+        "column": "Careers.",
         "label": "Terms of Service",
         "link": ""
       }
@@ -2553,8 +2553,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Terms & Privacy: Terms & Conditions",
-        "column": "Terms & Privacy",
+        "title": "Terms & Privacy.: Terms & Conditions",
+        "column": "Terms & Privacy.",
         "label": "Terms & Conditions",
         "link": ""
       }
@@ -2565,8 +2565,8 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Terms & Privacy: Cookie Policy",
-        "column": "Terms & Privacy",
+        "title": "Terms & Privacy.: Cookie Policy",
+        "column": "Terms & Privacy.",
         "label": "Cookie Policy",
         "link": ""
       }
