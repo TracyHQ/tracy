@@ -159,7 +159,6 @@ Template: JA Morgan (tracy-morgan). Default locale: en. Locales: en.
 | footer_social_instagram | string | no | Footer social instagram |
 | copyright | string | no | Copyright |
 | copyright_credit | string | no | Copyright credit |
-| license_note | string | no | License note |
 | skip_label | string | no | Skip label |
 | menu_label | string | no | Menu label |
 | close_label | string | no | Close label |
