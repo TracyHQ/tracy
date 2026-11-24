@@ -3801,6 +3801,14 @@
         "note": "Read off the 0.1.0 source: the header is the only logo spot (BrandLogo with logoSpots('dark'): the page is near-black in both states, so the logo is the chrome entry's logo_dark, else the template's text lockup/demo logo); settings.logo is not drawn (a light-ground logo is never shown on the dark page); the template icon (an accent square with the initial F) only while settings.favicon is empty (templateIconWanted). BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
       }
     },
+    "tracy-impact/emdash-0.x": {
+      "0.1.0": {
+        "logos": "dark",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "Read off the 0.1.0 source: the header band and the footer are the logo spots (BrandLogo with logoSpots('dark'): both are drawn on the navy ink in both themes), so the logo is the chrome entry's logo_dark, else the template's demo logo (a white wordmark with a coloured mark; under a worn design system it is drawn through a mask in the on-ink colour); settings.logo is not drawn (a light-ground logo is never shown on the navy band); the template icon (three coloured dots on a navy square) only while settings.favicon is empty (templateIconWanted). BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
+      }
+    },
     "tracy-diner/emdash-0.x": {
       "0.1.0": {
         "logos": "pair",

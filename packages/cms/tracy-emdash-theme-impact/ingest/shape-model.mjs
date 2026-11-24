@@ -132,6 +132,16 @@ for (const [slug, info] of Object.entries(sectionStyle)) {
   sectionStyle[slug].subColor = p['sub-title-color'] ?? ''
   sectionStyle[slug].align = p['sub-align'] ?? ''
 }
+// The Joomla module titles are not printed (a section prints its own heading fields), so they are not kept as demo text a customer could not see
+// and no rule would rewrite (ABOUT-2): the module `title`/`subtitle` of every section entry, and `section_title` where the entry prints `feature_title`.
+for (const r of model.records) {
+  if (['features', 'cta', 'contact_info', 'hero'].includes(r.type)) {
+    delete r.values.title
+    delete r.values.subtitle
+    if (r.type === 'features' && r.values.feature_title) delete r.values.section_title
+  }
+}
+for (const t of model.types) if (['features', 'cta', 'contact_info', 'hero'].includes(t.name)) t.fields = t.fields.filter((f) => !['title', 'subtitle'].includes(f.name))
 writeFileSync(
   new URL('../src/lib/page-layout.json', import.meta.url),
   JSON.stringify(sectionStyle, null, 2) + '\n'

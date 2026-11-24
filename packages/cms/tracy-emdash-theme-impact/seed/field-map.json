@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T08:08:35.980Z",
+  "generatedAt": "2026-11-24T08:30:39.565Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -103,18 +103,6 @@
       "target": "string",
       "label": "Path"
     },
-    "hero.title": {
-      "source": "text",
-      "target": "string",
-      "label": "Title",
-      "role": "editorial.heading"
-    },
-    "hero.subtitle": {
-      "source": "text",
-      "target": "string",
-      "label": "Subtitle",
-      "role": "editorial.heading"
-    },
     "hero.items": {
       "source": "group",
       "target": "repeater",
@@ -163,12 +151,6 @@
       "target": "text",
       "label": "Feature desc",
       "role": "editorial.paragraph"
-    },
-    "features.title": {
-      "source": "text",
-      "target": "string",
-      "label": "Title",
-      "role": "editorial.heading"
     },
     "features.columns": {
       "source": "text",
@@ -455,18 +437,6 @@
       "label": "Align section",
       "role": "editorial.paragraph"
     },
-    "contact_info.title": {
-      "source": "text",
-      "target": "string",
-      "label": "Title",
-      "role": "editorial.heading"
-    },
-    "contact_info.subtitle": {
-      "source": "text",
-      "target": "string",
-      "label": "Subtitle",
-      "role": "editorial.heading"
-    },
     "contact_info.testimonials": {
       "source": "text",
       "target": "string",
@@ -591,12 +561,6 @@
       "target": "string",
       "label": "Cta link type",
       "role": "editorial.navigation_url"
-    },
-    "cta.title": {
-      "source": "text",
-      "target": "string",
-      "label": "Title",
-      "role": "editorial.heading"
     },
     "cta.bg_content": {
       "source": "text",

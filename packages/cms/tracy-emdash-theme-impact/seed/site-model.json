@@ -55,14 +55,6 @@
       },
       "fields": [
         {
-          "name": "title",
-          "type": "text"
-        },
-        {
-          "name": "subtitle",
-          "type": "text"
-        },
-        {
           "name": "items",
           "type": "group",
           "fields": [
@@ -144,10 +136,6 @@
         {
           "name": "feature_desc",
           "type": "prose"
-        },
-        {
-          "name": "title",
-          "type": "text"
         },
         {
           "name": "columns",
@@ -437,14 +425,6 @@
           "type": "text"
         },
         {
-          "name": "title",
-          "type": "text"
-        },
-        {
-          "name": "subtitle",
-          "type": "text"
-        },
-        {
           "name": "testimonials",
           "type": "text"
         },
@@ -577,10 +557,6 @@
         {
           "name": "cta_link_type",
           "type": "url"
-        },
-        {
-          "name": "title",
-          "type": "text"
         },
         {
           "name": "bg_content",
@@ -1412,8 +1388,6 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "How to engage help our planet",
-        "subtitle": "All-in-one Giving All-in-one Giving",
         "items": [
           {
             "image_hero": "images/joomlart/hero/item-1.jpg",
@@ -1457,7 +1431,6 @@
         "feature_tag": "Our Activities",
         "feature_title": "Let's retain & grow\nyour donor base",
         "feature_desc": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet, ne sit justo propriae facilisi, est cu labitur dolorem philosophia. Te latine malorum debitis eum. Mea paulo dictas atomorum ea, suas regione explicari pro ut. Harum possit persecuti.",
-        "title": "Our Activities",
         "items": [
           {
             "sub_feature_img": "images/joomlart/acm/activities-2.jpg",
@@ -1466,7 +1439,6 @@
           }
         ],
         "section_label": "",
-        "section_title": "",
         "section_class": ""
       }
     },
@@ -1476,7 +1448,6 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "What makes us different?",
         "items": [
           {
             "feature_highlight": "info",
@@ -1522,7 +1493,6 @@
         "feature_desc": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
         "feature_text_align": "start",
         "feature_sub_col": "3",
-        "title": "Meet us",
         "items": [
           {
             "sub_feature_img": "images/joomlart/acm/assistance_1.png",
@@ -1544,7 +1514,6 @@
           }
         ],
         "section_label": "",
-        "section_title": "",
         "section_class": ""
       }
     },
@@ -1559,7 +1528,6 @@
         "feature_tag": "Our Activities",
         "feature_title": "Let's retain & grow\nyour donor base",
         "feature_desc": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Lorem ipsum dolor sit amet, ne sit justo propriae facilisi, est cu . Mea paulo dictas atomorum ea, suas regione explicari pro ut. Harum possit persecuti.",
-        "title": "Let's retain & grow your donor base",
         "items": [
           {
             "sub_feature_img": "images/joomlart/acm/activities-2.jpg",
@@ -1568,7 +1536,6 @@
           }
         ],
         "section_label": "",
-        "section_title": "Let's retain & grow your donor base",
         "section_class": "minimal"
       }
     },
@@ -1581,7 +1548,6 @@
         "feature_col": "2",
         "feature_count_item": "0",
         "feature_text_align": "start",
-        "title": "Give",
         "items": [
           {
             "bg_content": "white",
@@ -1624,7 +1590,6 @@
         "btn_block_label": "Donate today",
         "btn_block_link": "/donations",
         "btn_block_type": "white",
-        "title": "Saving endangered species is crucial",
         "items": [
           {
             "img_icon": "images/joomlart/features/icon-1.png",
@@ -1705,9 +1670,7 @@
         "video_align": "left",
         "position": "acym",
         "position_2": "follow",
-        "title": "Stay connected",
         "section_label": "",
-        "section_title": "",
         "section_class": ""
       }
     },
@@ -1722,7 +1685,6 @@
         "feature_desc": "Morbi in sem quis dui placerat ornare. Pellentesque odio nisi, euismod in, pharetra a, ultricies more than just a meal and a bed",
         "feature_charity": "72",
         "feature_donation": "92",
-        "title": "Raise fund for clean & healthy food",
         "items": [
           {
             "sub_feature_media": "images/joomlart/features/icon-8.png",
@@ -1736,7 +1698,6 @@
           }
         ],
         "section_label": "",
-        "section_title": "Raise fund for clean & healthy food",
         "section_class": "",
         "charity_label": "Charity",
         "donation_label": "Donation"
@@ -1749,8 +1710,6 @@
       "status": "published",
       "values": {
         "align_section": "end",
-        "title": "Contact Info",
-        "subtitle": "Our address: You may send an email Helpline and support",
         "items": [
           {
             "font_icon": "fa-solid fa-earth-americas",
@@ -1785,8 +1744,6 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Contact Information 2",
-        "subtitle": "Email us Our address Support 24/7",
         "items": [
           {
             "heading": "Our team of qualified plumbers is ready and always available, anytime, anywhere. ",
@@ -1897,7 +1854,6 @@
         "cta_link": "/contact",
         "cta_link_title": "Get a quote",
         "cta_link_type": "success",
-        "title": "Helpline is open 24/7",
         "section_label": "",
         "section_title": "Helpline is open 24/7",
         "section_class": ""
@@ -1916,7 +1872,6 @@
         "cta_link": "/contact",
         "cta_link_title": "Get a quote",
         "cta_link_type": "success",
-        "title": "Join together for charity",
         "section_label": "",
         "section_title": "",
         "section_class": ""

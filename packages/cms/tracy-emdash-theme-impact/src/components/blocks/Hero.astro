@@ -25,7 +25,7 @@ const lines = (v: unknown) => String(v ?? '').split('\n')
 ---
 
 {items[0] && (
-	<section class="im-hero" aria-label={entry.title} data-carousel>
+	<section class="im-hero" aria-label={items[0]?.title} data-carousel>
 		<div class="im-hero-track" data-track>
 			{items.map((it, i) => (
 				<div class="im-hero-slide" style={bg(it.image_hero)} data-slide aria-hidden={i === 0 ? undefined : 'true'}>
