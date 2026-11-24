@@ -1,0 +1,1634 @@
+{
+ "schemaVersion": "tracy-content-coverage/v1",
+ "tool": {
+  "name": "@tracy/quickstart-tools content-coverage (emdash)",
+  "version": "1.8.0"
+ },
+ "platform": "emdash",
+ "contract": {
+  "id": "tracy-impact/emdash-0.x/0.1.0",
+  "contentMapSha256": "1ecbe5b66fe88836a2beb07cc05f61fd8527eb38a99c3c5a1c7bcaf9343f9012",
+  "presentationLockSha256": null
+ },
+ "measuredAt": "2026-11-24T07:36:39.952Z",
+ "viewports": [
+  "desktop",
+  "phone"
+ ],
+ "bound": {
+  "stamp": 2210,
+  "entry": 892,
+  "menu": 529,
+  "clone": 280,
+  "excerpt": 22,
+  "words": 579,
+  "media": 385,
+  "route": 371
+ },
+ "lockedFiles": [
+  "/decor/section-causes.jpg"
+ ],
+ "pages": {
+  "audited": 51,
+  "inMap": 48,
+  "notInMap": 3,
+  "failed": 0,
+  "failures": [],
+  "capReached": false
+ },
+ "counts": {
+  "text": {
+   "total": 888,
+   "matched": 822,
+   "locked": 0,
+   "capture": 0,
+   "captureLocked": 0,
+   "template": 29,
+   "core": 4,
+   "unknown": 33,
+   "catalogue": 0,
+   "ignored": 6
+  },
+  "images": {
+   "total": 191,
+   "matched": 189,
+   "locked": 1,
+   "capture": 0,
+   "captureLocked": 0,
+   "template": 0,
+   "core": 1,
+   "unknown": 0,
+   "catalogue": 0,
+   "ignored": 0
+  },
+  "links": {
+   "total": 173,
+   "matched": 94,
+   "locked": 0,
+   "capture": 0,
+   "captureLocked": 0,
+   "template": 0,
+   "core": 0,
+   "unknown": 79,
+   "catalogue": 0,
+   "ignored": 1
+  }
+ },
+ "coverage": {
+  "text": 93,
+  "images": 100,
+  "links": 54.3
+ },
+ "holes": [
+  {
+   "kind": "text",
+   "value": "#.#%",
+   "class": "template",
+   "cause": "words in the template's own source",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "Leave blank",
+   "class": "template",
+   "cause": "words in the template's own source",
+   "evidence": "div.im-contact-main > div.im-contact-form > form.ec-form > div.ec-form-field",
+   "pages": 1,
+   "firstPage": "/contact",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "May",
+   "class": "template",
+   "cause": "words in the template's own source",
+   "evidence": "article.im-event > div.im-event-content > div.im-date > span",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "$#,# Goal",
+   "class": "template",
+   "cause": "words in the template's own source (stamped donations.water-treatment-projects field goal: no slot holds these words)",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-donation-money > span",
+   "pages": 35,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "$#,# Raise",
+   "class": "template",
+   "cause": "words in the template's own source (stamped donations.water-treatment-projects field raise: no slot holds these words)",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-donation-money > span",
+   "pages": 35,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text='I'm%20thankful%20for%20today'%3A%20Philadelphia%20shelter%20feeds%20homeless%20and%20hungry%20during%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fim-thankful-for-tod...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=%20Exciting%20Adventures%20to%20the%20Past%20and%20Future%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexciting-adventures-to-the-past-and-future",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exciting-adventures-to-the-past-and-future",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=A%20Journey%20of%20Discovery%20and%20Learning%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fa-journey-of-discovery-and-learning",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/a-journey-of-discovery-and-learning",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=A%20Journey%20Through%20Enchanted%20Lands%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fa-journey-through-enchanted-lands",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/a-journey-through-enchanted-lands",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Building%20empathy%20throughremote%20user%20research%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fbuilding-empathy-throughremote-user-research",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/building-empathy-throughremote-user-research",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Charity%20branding%3A%20is%20yourbrand%20digital%20ready%3F%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-branding-is-yourbrand-digital-ready",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-branding-is-yourbrand-digital-ready",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Charity%20of%20the%20month%20plan%20international%20UK%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-of-the-month-plan-international-uk",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-of-the-month-plan-international-uk",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Charity%20of%20the%20month%20plan%20international%20UK%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-of-the-month-plan-international-uk-2",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-of-the-month-plan-international-uk-2",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Donation%20and%20cleaning%20program%20foundation%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fdonation-and-cleaning-program-foundation",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/donation-and-cleaning-program-foundation",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Exploring%20Magical%20Worlds%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexploring-magical-worlds",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exploring-magical-worlds",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Exploring%20the%20Beauty%20of%20the%20Animal%20Kingdom%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexploring-the-beauty-of-the-animal-kingdom",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exploring-the-beauty-of-the-animal-kingdom",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Framingham%3A%20The%20study%20and%20the%20town%20that%20changed%20the%20health%20of%20a%20generation%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fframingham-the-study...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Heartwarming%20Tales%20of%20Kindness%20and%20Togetherness%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fheartwarming-tales-of-kindness-and-togetherness",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/heartwarming-tales-of-kindness-and-togetherness",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=How%20many%20people%20in%20Africa%20don%E2%80%99t%20have%20food%3F%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fhow-many-people-in-africa-don-t-have-food",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/how-many-people-in-africa-don-t-have-food",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Legends%20and%20Folktales%20from%20Around%20the%20World%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Flegends-and-folktales-from-around-the-world",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/legends-and-folktales-from-around-the-world",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Outdoor%20behavioral%20healthcare%20services%20to%20youth%20and%20young%20adults%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Foutdoor-behavioral-healthcare-services-t...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Silly%20Stories%20and%20Jokes%20for%20Young%20Readers%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fsilly-stories-and-jokes-for-young-readers",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/silly-stories-and-jokes-for-young-readers",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=Tracking%20the%20trash%3A%20Are%20your%20plastic%20bags%20really%20being%20recycled%3F%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Ftracking-the-trash-are-your-plasti...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://api.whatsapp.com/send?text=We%E2%80%99ve%20reached%201%20million%20indonations%20and%20counting%20http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fweve-reached-1-million-indonations-and-counting",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/weve-reached-1-million-indonations-and-counting",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fa-journey-of-discovery-and-learning&text=A%20Journey%20of%20Discovery%20and%20Learning",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/a-journey-of-discovery-and-learning",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fa-journey-through-enchanted-lands&text=A%20Journey%20Through%20Enchanted%20Lands",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/a-journey-through-enchanted-lands",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fbuilding-empathy-throughremote-user-research&text=Building%20empathy%20throughremote%20user%20research",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/building-empathy-throughremote-user-research",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-branding-is-yourbrand-digital-ready&text=Charity%20branding%3A%20is%20yourbrand%20digital%20ready%3F",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-branding-is-yourbrand-digital-ready",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-of-the-month-plan-international-uk-2&text=Charity%20of%20the%20month%20plan%20international%20UK",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-of-the-month-plan-international-uk-2",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-of-the-month-plan-international-uk&text=Charity%20of%20the%20month%20plan%20international%20UK",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-of-the-month-plan-international-uk",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fdonation-and-cleaning-program-foundation&text=Donation%20and%20cleaning%20program%20foundation",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/donation-and-cleaning-program-foundation",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexciting-adventures-to-the-past-and-future&text=%20Exciting%20Adventures%20to%20the%20Past%20and%20Future",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exciting-adventures-to-the-past-and-future",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexploring-magical-worlds&text=Exploring%20Magical%20Worlds",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exploring-magical-worlds",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexploring-the-beauty-of-the-animal-kingdom&text=Exploring%20the%20Beauty%20of%20the%20Animal%20Kingdom",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exploring-the-beauty-of-the-animal-kingdom",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fframingham-the-study-and-the-town-that-changed-the-health-of-a-generation&text=Framingham%3A%20The%20study%20and%20the%20...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fheartwarming-tales-of-kindness-and-togetherness&text=Heartwarming%20Tales%20of%20Kindness%20and%20Togetherness",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/heartwarming-tales-of-kindness-and-togetherness",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fhow-many-people-in-africa-don-t-have-food&text=How%20many%20people%20in%20Africa%20don%E2%80%99t%20have%20food%3F",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/how-many-people-in-africa-don-t-have-food",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fim-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during&text='I'm%20thankful%20for%20today'%3A%20Phil...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Flegends-and-folktales-from-around-the-world&text=Legends%20and%20Folktales%20from%20Around%20the%20World",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/legends-and-folktales-from-around-the-world",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Foutdoor-behavioral-healthcare-services-to-youth-and-young-adults&text=Outdoor%20behavioral%20healthcare%20services%20to%2...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fsilly-stories-and-jokes-for-young-readers&text=Silly%20Stories%20and%20Jokes%20for%20Young%20Readers",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/silly-stories-and-jokes-for-young-readers",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Ftracking-the-trash-are-your-plastic-bags-really-being-recycled&text=Tracking%20the%20trash%3A%20Are%20your%20plastic%20ba...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fweve-reached-1-million-indonations-and-counting&text=We%E2%80%99ve%20reached%201%20million%20indonations%20and%20counting",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/weve-reached-1-million-indonations-and-counting",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fa-journey-of-discovery-and-learning",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/a-journey-of-discovery-and-learning",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fa-journey-through-enchanted-lands",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/a-journey-through-enchanted-lands",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fbuilding-empathy-throughremote-user-research",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/building-empathy-throughremote-user-research",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-branding-is-yourbrand-digital-ready",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-branding-is-yourbrand-digital-ready",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-of-the-month-plan-international-uk",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-of-the-month-plan-international-uk",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-of-the-month-plan-international-uk-2",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-of-the-month-plan-international-uk-2",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fdonation-and-cleaning-program-foundation",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/donation-and-cleaning-program-foundation",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexciting-adventures-to-the-past-and-future",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exciting-adventures-to-the-past-and-future",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexploring-magical-worlds",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exploring-magical-worlds",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexploring-the-beauty-of-the-animal-kingdom",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exploring-the-beauty-of-the-animal-kingdom",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fframingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fheartwarming-tales-of-kindness-and-togetherness",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/heartwarming-tales-of-kindness-and-togetherness",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fhow-many-people-in-africa-don-t-have-food",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/how-many-people-in-africa-don-t-have-food",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fim-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Flegends-and-folktales-from-around-the-world",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/legends-and-folktales-from-around-the-world",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Foutdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fsilly-stories-and-jokes-for-young-readers",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/silly-stories-and-jokes-for-young-readers",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Ftracking-the-trash-are-your-plastic-bags-really-being-recycled",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fweve-reached-1-million-indonations-and-counting",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/weve-reached-1-million-indonations-and-counting",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.google.com/maps/search/?api=1&query=Melbourne%2C%20Australia",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "div.im-contact > div.im-contact-main > div.im-contact-map > a",
+   "pages": 1,
+   "firstPage": "/contact"
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fa-journey-of-discovery-and-learning&name=A%20Journey%20of%20Discovery%20and%20Learning",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/a-journey-of-discovery-and-learning",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fa-journey-through-enchanted-lands&name=A%20Journey%20Through%20Enchanted%20Lands",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/a-journey-through-enchanted-lands",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fbuilding-empathy-throughremote-user-research&name=Building%20empathy%20throughremote%20user%20research",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/building-empathy-throughremote-user-research",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-branding-is-yourbrand-digital-ready&name=Charity%20branding%3A%20is%20yourbrand%20digital%20ready%3F",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-branding-is-yourbrand-digital-ready",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-of-the-month-plan-international-uk-2&name=Charity%20of%20the%20month%20plan%20international%20UK",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-of-the-month-plan-international-uk-2",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fcharity-of-the-month-plan-international-uk&name=Charity%20of%20the%20month%20plan%20international%20UK",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/charity-of-the-month-plan-international-uk",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fdonation-and-cleaning-program-foundation&name=Donation%20and%20cleaning%20program%20foundation",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/donation-and-cleaning-program-foundation",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexciting-adventures-to-the-past-and-future&name=%20Exciting%20Adventures%20to%20the%20Past%20and%20Future",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exciting-adventures-to-the-past-and-future",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexploring-magical-worlds&name=Exploring%20Magical%20Worlds",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exploring-magical-worlds",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fexploring-the-beauty-of-the-animal-kingdom&name=Exploring%20the%20Beauty%20of%20the%20Animal%20Kingdom",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/exploring-the-beauty-of-the-animal-kingdom",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fframingham-the-study-and-the-town-that-changed-the-health-of-a-generation&name=Framingham%3A%20The%20study%20and%20the%2...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fheartwarming-tales-of-kindness-and-togetherness&name=Heartwarming%20Tales%20of%20Kindness%20and%20Togetherness",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/heartwarming-tales-of-kindness-and-togetherness",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fhow-many-people-in-africa-don-t-have-food&name=How%20many%20people%20in%20Africa%20don%E2%80%99t%20have%20food%3F",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/how-many-people-in-africa-don-t-have-food",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fim-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during&name='I'm%20thankful%20for%20today'%3A%20Phi...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Flegends-and-folktales-from-around-the-world&name=Legends%20and%20Folktales%20from%20Around%20the%20World",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/legends-and-folktales-from-around-the-world",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Foutdoor-behavioral-healthcare-services-to-youth-and-young-adults&name=Outdoor%20behavioral%20healthcare%20services%20to%...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fsilly-stories-and-jokes-for-young-readers&name=Silly%20Stories%20and%20Jokes%20for%20Young%20Readers",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/silly-stories-and-jokes-for-young-readers",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Ftracking-the-trash-are-your-plastic-bags-really-being-recycled&name=Tracking%20the%20trash%3A%20Are%20your%20plastic%20b...",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "https://www.tumblr.com/share/link?url=http%3A%2F%2F127.0.0.1%3A4362%2Fblog%2Fweve-reached-1-million-indonations-and-counting&name=We%E2%80%99ve%20reached%201%20million%20indonations%20and%20counting",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "article.im-page-main > ul.im-share > li > a",
+   "pages": 1,
+   "firstPage": "/blog/weve-reached-1-million-indonations-and-counting",
+   "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
+  },
+  {
+   "kind": "link",
+   "value": "tel:24",
+   "class": "unknown",
+   "cause": "an address no link slot, menu, page, term or source holds",
+   "evidence": "ul.im-contact-top > li > span.im-contact-text > a.im-contact-title",
+   "pages": 102,
+   "firstPage": "/"
+  },
+  {
+   "kind": "text",
+   "value": "03",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-accordion-col > details.im-faq > summary > span.im-faq-number",
+   "pages": 1,
+   "firstPage": "/help-faqs",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "04",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-accordion-col > details.im-faq > summary > span.im-faq-number",
+   "pages": 1,
+   "firstPage": "/help-faqs",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "05",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-accordion-col > details.im-faq > summary > span.im-faq-number",
+   "pages": 1,
+   "firstPage": "/help-faqs",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "06",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-accordion-col > details.im-faq > summary > span.im-faq-number",
+   "pages": 1,
+   "firstPage": "/help-faqs",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "07",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-accordion-col > details.im-faq > summary > span.im-faq-number",
+   "pages": 1,
+   "firstPage": "/help-faqs",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "08",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-accordion-col > details.im-faq > summary > span.im-faq-number",
+   "pages": 1,
+   "firstPage": "/help-faqs",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "09",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-accordion-col > details.im-faq > summary > span.im-faq-number",
+   "pages": 1,
+   "firstPage": "/help-faqs",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "10",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-accordion-col > details.im-faq > summary > span.im-faq-number",
+   "pages": 33,
+   "firstPage": "/help-faqs",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "13",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "section.im-widget > ul.im-widget-list > li > span.im-count",
+   "pages": 32,
+   "firstPage": "/blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "30%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 2,
+   "firstPage": "/donations",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "46.2%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 2,
+   "firstPage": "/donations",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "50%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "53.2%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "53.3%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-detail-picture > div.im-detail-progress > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 2,
+   "firstPage": "/donations/exploring-the-world-of-feline-friends",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "55.8%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "58.3%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "60.7%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "66.7%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "70%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "72%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-fund-main > div.im-bar > div.im-bar-head > span",
+   "pages": 1,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "73.8%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "83.3%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-progress-wrap > span.im-progress-pct",
+   "pages": 2,
+   "firstPage": "/donations",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "92%",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds",
+   "evidence": "div.im-fund-main > div.im-bar > div.im-bar-head > span",
+   "pages": 1,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "About us",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds (stamped chrome.chrome field footer_col1_links: no slot holds these words)",
+   "evidence": "div.im-footnav-col > ul > li > a",
+   "pages": 51,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "Location : Hall 1, Building A , Golden Street",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds (stamped chrome.chrome field location_label: no slot holds these words)",
+   "evidence": "article.im-event > div.im-event-content > div.im-event-text > p.im-event-location",
+   "pages": 3,
+   "firstPage": "/",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "Animals , Charity , Activism",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds (stamped events.a-microscopic-marvel field tags: no slot holds these words)",
+   "evidence": "dl.im-event-info > div.im-event-info-row > div > dd",
+   "pages": 1,
+   "firstPage": "/events/a-microscopic-marvel",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "Animals , Charity , Nature",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds (stamped events.afforestation-program field tags: no slot holds these words)",
+   "evidence": "dl.im-event-info > div.im-event-info-row > div > dd",
+   "pages": 3,
+   "firstPage": "/events/afforestation-program",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "Animals , Nature , Activism",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds (stamped events.an-adventure-with-animals field tags: no slot holds these words)",
+   "evidence": "dl.im-event-info > div.im-event-info-row > div > dd",
+   "pages": 1,
+   "firstPage": "/events/an-adventure-with-animals",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "Nature , Activism",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds (stamped events.charity-journey-to-africa field tags: no slot holds these words)",
+   "evidence": "dl.im-event-info > div.im-event-info-row > div > dd",
+   "pages": 1,
+   "firstPage": "/events/charity-journey-to-africa",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "Animals , Charity",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds (stamped events.feed-the-world field tags: no slot holds these words)",
+   "evidence": "dl.im-event-info > div.im-event-info-row > div > dd",
+   "pages": 1,
+   "firstPage": "/events/feed-the-world",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  },
+  {
+   "kind": "text",
+   "value": "Animals , Nature",
+   "class": "unknown",
+   "cause": "words no slot, menu or source holds (stamped events.saving-nature field tags: no slot holds these words)",
+   "evidence": "dl.im-event-info > div.im-event-info-row > div > dd",
+   "pages": 1,
+   "firstPage": "/events/saving-nature",
+   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
+  }
+ ],
+ "hygiene": [],
+ "sitePages": [
+  {
+   "entity": "pages.home",
+   "title": "Home",
+   "route": "/",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "pages.about",
+   "title": "About",
+   "route": "/about",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "pages.contact",
+   "title": "Contact",
+   "route": "/contact",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "pages.help-faqs",
+   "title": "Help & FAQs",
+   "route": "/help-faqs",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "pages.donations",
+   "title": "Our causes",
+   "route": "/donations",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "pages.events",
+   "title": "Our Events",
+   "route": "/events",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "pages.blog",
+   "title": "Blog",
+   "route": "/blog",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+   "title": "Tracking the trash: Are your plastic bags really being recycled?",
+   "route": "/blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.charity-of-the-month-plan-international-uk",
+   "title": "Charity of the month plan international UK",
+   "route": "/blog/charity-of-the-month-plan-international-uk",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.weve-reached-1-million-indonations-and-counting",
+   "title": "We\u2019ve reached 1 million indonations and counting",
+   "route": "/blog/weve-reached-1-million-indonations-and-counting",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.building-empathy-throughremote-user-research",
+   "title": "Building empathy throughremote user research",
+   "route": "/blog/building-empathy-throughremote-user-research",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+   "title": "Framingham: The study and the town that changed the health of a generation",
+   "route": "/blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+   "title": "'I'm thankful for today': Philadelphia shelter feeds homeless and hungry during",
+   "route": "/blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+   "title": "Outdoor behavioral healthcare services to youth and young adults",
+   "route": "/blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.charity-branding-is-yourbrand-digital-ready",
+   "title": "Charity branding: is yourbrand digital ready?",
+   "route": "/blog/charity-branding-is-yourbrand-digital-ready",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.donation-and-cleaning-program-foundation",
+   "title": "Donation and cleaning program foundation",
+   "route": "/blog/donation-and-cleaning-program-foundation",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.charity-of-the-month-plan-international-uk-2",
+   "title": "Charity of the month plan international UK",
+   "route": "/blog/charity-of-the-month-plan-international-uk-2",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.silly-stories-and-jokes-for-young-readers",
+   "title": "Silly Stories and Jokes for Young Readers",
+   "route": "/blog/silly-stories-and-jokes-for-young-readers",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.how-many-people-in-africa-don-t-have-food",
+   "title": "How many people in Africa don\u2019t have food?",
+   "route": "/blog/how-many-people-in-africa-don-t-have-food",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.exploring-magical-worlds",
+   "title": "Exploring Magical Worlds",
+   "route": "/blog/exploring-magical-worlds",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.legends-and-folktales-from-around-the-world",
+   "title": "Legends and Folktales from Around the World",
+   "route": "/blog/legends-and-folktales-from-around-the-world",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.a-journey-of-discovery-and-learning",
+   "title": "A Journey of Discovery and Learning",
+   "route": "/blog/a-journey-of-discovery-and-learning",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.exploring-the-beauty-of-the-animal-kingdom",
+   "title": "Exploring the Beauty of the Animal Kingdom",
+   "route": "/blog/exploring-the-beauty-of-the-animal-kingdom",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.heartwarming-tales-of-kindness-and-togetherness",
+   "title": "Heartwarming Tales of Kindness and Togetherness",
+   "route": "/blog/heartwarming-tales-of-kindness-and-togetherness",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.a-journey-through-enchanted-lands",
+   "title": "A Journey Through Enchanted Lands",
+   "route": "/blog/a-journey-through-enchanted-lands",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "posts.exciting-adventures-to-the-past-and-future",
+   "title": " Exciting Adventures to the Past and Future",
+   "route": "/blog/exciting-adventures-to-the-past-and-future",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.water-treatment-projects",
+   "title": "Water treatment projects",
+   "route": "/donations/water-treatment-projects",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.saving-ensdangered-species",
+   "title": "Saving ensdangered species",
+   "route": "/donations/saving-ensdangered-species",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.sea-pollution",
+   "title": "Sea pollution",
+   "route": "/donations/sea-pollution",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.community-center",
+   "title": "Community center",
+   "route": "/donations/community-center",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.endangered-species",
+   "title": "Endangered species",
+   "route": "/donations/endangered-species",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.oil-pollution",
+   "title": "Oil pollution",
+   "route": "/donations/oil-pollution",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.save-rainforests",
+   "title": "Save rainforests",
+   "route": "/donations/save-rainforests",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.indigenous-people",
+   "title": "Indigenous people",
+   "route": "/donations/indigenous-people",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.saving-animal-preserve",
+   "title": "Saving animal preserve",
+   "route": "/donations/saving-animal-preserve",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.the-mysteries-of-the-jungle-creatures",
+   "title": "The Mysteries of the Jungle Creatures",
+   "route": "/donations/the-mysteries-of-the-jungle-creatures",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.exploring-the-world-of-feline-friends",
+   "title": "Exploring the World of Feline Friends",
+   "route": "/donations/exploring-the-world-of-feline-friends",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.surviving-the-harsh-polar-realms",
+   "title": "Surviving the Harsh Polar Realms",
+   "route": "/donations/surviving-the-harsh-polar-realms",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "donations.the-african-wildlife-chronicles",
+   "title": "The African Wildlife Chronicles",
+   "route": "/donations/the-african-wildlife-chronicles",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "events.afforestation-program",
+   "title": "Afforestation program",
+   "route": "/events/afforestation-program",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "events.natures-hidden-gems",
+   "title": "Nature's Hidden Gems",
+   "route": "/events/natures-hidden-gems",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "events.feed-the-world",
+   "title": "Feed the world",
+   "route": "/events/feed-the-world",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "events.an-adventure-with-animals",
+   "title": "An Adventure with Animals",
+   "route": "/events/an-adventure-with-animals",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "events.charity-journey-to-africa",
+   "title": "Charity journey to Africa",
+   "route": "/events/charity-journey-to-africa",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "events.unveiling-natures-best-kept-treasures",
+   "title": "Unveiling Nature's Best ",
+   "route": "/events/unveiling-natures-best-kept-treasures",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "events.the-day-of-the-african-child",
+   "title": "The day of the African child",
+   "route": "/events/the-day-of-the-african-child",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "events.saving-nature",
+   "title": "Saving nature",
+   "route": "/events/saving-nature",
+   "opens": "live",
+   "status": 200
+  },
+  {
+   "entity": "events.a-microscopic-marvel",
+   "title": "A Microscopic Marvel",
+   "route": "/events/a-microscopic-marvel",
+   "opens": "live",
+   "status": 200
+  }
+ ],
+ "labelRules": {
+  "version": "label-rules/1",
+  "roleVocabularyVersion": "place-content-roles/3",
+  "applies": true,
+  "r1": {
+   "facts": 119,
+   "slots": 1096,
+   "percent": 10.9
+  },
+  "rules": {
+   "R2": {
+    "title": "fact-like sample without a contact or price role",
+    "count": 0,
+    "keys": []
+   },
+   "R3": {
+    "title": "URL slot without a role",
+    "count": 0,
+    "keys": []
+   },
+   "R4": {
+    "title": "repeat or CTA not grouped",
+    "count": 0,
+    "keys": []
+   },
+   "R5": {
+    "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
+    "count": 0,
+    "keys": []
+   },
+   "R6": {
+    "title": "link or list item inside a fact slot",
+    "count": 0,
+    "keys": []
+   },
+   "R7": {
+    "title": "siblings with different roles",
+    "count": 0,
+    "keys": []
+   },
+   "R8": {
+    "title": "adjacent short slots on one line (a cut heading)",
+    "count": 7,
+    "keys": [
+     "chrome.chrome.footer_col1_title + chrome.chrome.footer_col2_title",
+     "chrome.chrome.footer_col2_title + chrome.chrome.footer_col3_title",
+     "chrome.chrome.footer_col3_title + chrome.chrome.footer_col4_title",
+     "features.about-give.items[0].number + features.about-give.items[0].feature_tag",
+     "features.about-give.items[0].feature_tag + features.about-give.items[1].number",
+     "features.about-give.items[1].number + features.about-give.items[1].feature_tag",
+     "contact.contact.address + contact.contact.map_label"
+    ]
+   },
+   "R9": {
+    "title": "fact-like hole",
+    "count": 26,
+    "keys": [
+     "$4,500 Raise",
+     "$9,000 Goal",
+     "$23,000 Raise",
+     "$30,000 Goal",
+     "$24,270 Raise",
+     "$40,000 Goal",
+     "$14,000 Raise",
+     "$24,000 Goal",
+     "$16,000 Raise",
+     "$24,000 Goal",
+     "$14,000 Raise",
+     "$20,000 Goal"
+    ]
+   }
+  }
+ }
+}

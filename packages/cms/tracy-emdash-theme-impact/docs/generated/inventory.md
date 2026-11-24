@@ -16,9 +16,9 @@ Template: JA Impact (tracy-impact). Default locale: en. Locales: en.
 | features | features | 8 | false |
 | contact_info | contact info | 2 | false |
 | social | social | 2 | false |
-| cta | cta | 1 | false |
+| cta | cta | 2 | false |
 | accordion | accordion | 1 | false |
-| posts | Posts | 10 | true |
+| posts | Posts | 19 | true |
 | donations | Donations | 13 | true |
 | events | Events | 9 | true |
 | masthead | Mastheads | 7 | false |
@@ -328,6 +328,13 @@ Template: JA Impact (tracy-impact). Default locale: en. Locales: en.
 | currency_symbol | string | no | Currency symbol |
 | form_id | string | no | Form id |
 | logo_dark | image | no | Logo dark |
+| event_date_label | string | no | Event date label |
+| event_time_label | string | no | Event time label |
+| event_place_label | string | no | Event place label |
+| event_fee_label | string | no | Event fee label |
+| event_category_label | string | no | Event category label |
+| register_label | string | no | Register label |
+| not_found_oh | string | no | Not found oh |
 
 ## Menus
 
@@ -339,12 +346,14 @@ Template: JA Impact (tracy-impact). Default locale: en. Locales: en.
 
 | Name | Locale | Collections | Baseline terms |
 | --- | --- | --- | --- |
-| category | en | posts | 1 |
+| category | en | posts | 2 |
 
 ## Form bindings
 
 | Form pattern | Collection | Slug | Field |
 | --- | --- | --- | --- |
+| contact-{locale} | contact | contact | form_id |
+| subscribe-{locale} | chrome | chrome | form_id |
 
 ## Dependencies
 

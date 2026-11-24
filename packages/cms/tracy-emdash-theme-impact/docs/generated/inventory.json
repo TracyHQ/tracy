@@ -557,7 +557,7 @@
           "required": false
         }
       ],
-      "seedEntries": 1
+      "seedEntries": 2
     },
     {
       "slug": "accordion",
@@ -687,7 +687,7 @@
           "required": false
         }
       ],
-      "seedEntries": 10
+      "seedEntries": 19
     },
     {
       "slug": "donations",
@@ -1547,6 +1547,48 @@
           "label": "Logo dark",
           "type": "image",
           "required": false
+        },
+        {
+          "slug": "event_date_label",
+          "label": "Event date label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "event_time_label",
+          "label": "Event time label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "event_place_label",
+          "label": "Event place label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "event_fee_label",
+          "label": "Event fee label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "event_category_label",
+          "label": "Event category label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "register_label",
+          "label": "Register label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_oh",
+          "label": "Not found oh",
+          "type": "string",
+          "required": false
         }
       ],
       "seedEntries": 1
@@ -1567,10 +1609,23 @@
       "collections": [
         "posts"
       ],
-      "terms": 1
+      "terms": 2
     }
   ],
-  "formBindings": [],
+  "formBindings": [
+    {
+      "form": "contact-{locale}",
+      "collection": "contact",
+      "slug": "contact",
+      "field": "form_id"
+    },
+    {
+      "form": "subscribe-{locale}",
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "form_id"
+    }
+  ],
   "dependencies": {
     "@astrojs/node": "11.1.13",
     "@astrojs/react": "6.0.0",
@@ -1603,15 +1658,19 @@
   ],
   "routeNotice": "Route source files only, not expanded URLs. Dynamic/catch-all dispatch and CMS routes require authored guidance and runtime crawl evidence.",
   "sourceFiles": [
+    "src/components/blocks/Accordion.astro",
     "src/components/blocks/BlogGrid.astro",
     "src/components/blocks/Connected.astro",
     "src/components/blocks/Cta.astro",
+    "src/components/blocks/CtaCard.astro",
     "src/components/blocks/DonationCard.astro",
     "src/components/blocks/DonationCarousel.astro",
     "src/components/blocks/EventsHome.astro",
     "src/components/blocks/FeatureCards.astro",
     "src/components/blocks/FeatureFund.astro",
+    "src/components/blocks/FeatureGive.astro",
     "src/components/blocks/FeatureIntro.astro",
+    "src/components/blocks/FeatureMission.astro",
     "src/components/blocks/FeatureStats.astro",
     "src/components/blocks/Hero.astro",
     "src/components/blocks/SectionHead.astro",
@@ -1678,7 +1737,13 @@
     "src/styles/blocks/hero.css",
     "src/styles/blocks/home.css",
     "src/styles/global.css",
+    "src/styles/pages/about.css",
+    "src/styles/pages/blog.css",
     "src/styles/pages/common.css",
+    "src/styles/pages/contact.css",
+    "src/styles/pages/faq.css",
+    "src/styles/pages/inner-a.css",
+    "src/styles/pages/lists.css",
     "src/styles/tokens.css",
     "src/views/About.astro",
     "src/views/BlogList.astro",
@@ -1697,40 +1762,44 @@
     "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
     "package.json": "sha256:f4873b850796ace5655fdab638f0e0901893383436290626a081c51942a76909",
     "pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
-    "seed/field-map.json": "sha256:51e7a7797adf56c6cdb5beb3dfdb09cfd43c5633ad391e14b39451bc0bd3f2dd",
-    "seed/media-map.json": "sha256:b7627770d257c6f3deb155038d5aa626a9816adb024db75cf1bca6fc198b4f55",
-    "seed/seed.json": "sha256:72479857fe8c23334cee4244572aaa9dd2785fecbcaa2a738ef6fd7974178601",
-    "src/components/blocks/BlogGrid.astro": "sha256:8a951e2419da4f19c20fe53025db7c583599bea1ad1dd961ed0f27f5e7ff1f22",
+    "seed/field-map.json": "sha256:ca6d4c956207895ed6bdd5c18e6e7d124065a784817a6856f9f3a50381e0c71e",
+    "seed/media-map.json": "sha256:1ea0211503842b53d4650f718c818bcc7a1a91495e9c097627ec7b9259089297",
+    "seed/seed.json": "sha256:e21048a841889282f4e085867bbce701436cda35b2fdf92038b1fdc5c3627f3b",
+    "src/components/blocks/Accordion.astro": "sha256:2b27f9458f55b6efd12d83525d996e3d64c40d9f73e7dc4b1d54b7c4ff7e309e",
+    "src/components/blocks/BlogGrid.astro": "sha256:f37b30174ce9566a90f4784dedc6053b8cdeb7adc3b956a9d2e8110350462fba",
     "src/components/blocks/Connected.astro": "sha256:141c0992bc70676127409d9adaff3644360178634a067fc750a2d63fc034b615",
     "src/components/blocks/Cta.astro": "sha256:947908954db2942ed59d9e6e21c87554fd5c996996dd2b397645229b23e03133",
-    "src/components/blocks/DonationCard.astro": "sha256:b6050b75bbcbe78dddcca7caa53af996b48d49145ebf7264774e5d997ffa3dab",
+    "src/components/blocks/CtaCard.astro": "sha256:80cd402da872e0e9194ad2e76c5c8c785bebe0c18c138f9e5dfec7bf4c4411a4",
+    "src/components/blocks/DonationCard.astro": "sha256:d02984f2fc66d4164d077b2f261831418b10e4b1d4463389f99c69a8b4d2abf2",
     "src/components/blocks/DonationCarousel.astro": "sha256:4ec930b242083adf26916708c398f977f3d5004098e973a87bd7c518c2306bfb",
     "src/components/blocks/EventsHome.astro": "sha256:471fa4bc1f6d8f347c45f67ab1d9be984225593d339da673eb463a6cf82b7a2d",
-    "src/components/blocks/FeatureCards.astro": "sha256:7f3f7ed925d635cdaa22fc8c0c9f79f3cd34c7a7d86278848d34f5ec37d45653",
+    "src/components/blocks/FeatureCards.astro": "sha256:30190e2df1b38b22134a48cf15a7065aadca3166128c94b402f181889a491213",
     "src/components/blocks/FeatureFund.astro": "sha256:a911037c3737ac20a11d26403f06989d75f29b965c2358d588e70bd901ab6f23",
+    "src/components/blocks/FeatureGive.astro": "sha256:d7eed953bdcae69007fbfd02583065a8707eae55aa315493aab2aca59ac9481a",
     "src/components/blocks/FeatureIntro.astro": "sha256:271fd18f683ad7ad69f3972749956f44c2c4d0e0ec1e7190803969e373c60451",
+    "src/components/blocks/FeatureMission.astro": "sha256:5fa3596cae684390f9a5f12f118ef67b8783c25755d22e7efa8bf192a79c7c11",
     "src/components/blocks/FeatureStats.astro": "sha256:2bd77bd6dd24a7c9ee00e89c4b4608f1d95f041160b930772b61eef382368f56",
-    "src/components/blocks/Hero.astro": "sha256:9aadef220081fbf23f76d139180b09da0a7d7c92c27dc33cf8beb6bcd7da88c5",
+    "src/components/blocks/Hero.astro": "sha256:88834a44d849ba99beefb011319bf29dad1f595d28a58a1b8f4255e8591f81b2",
     "src/components/blocks/SectionHead.astro": "sha256:3acd296ca2310808ba6848df612c67c270853b4ccd0e1c1ff7537a685438d87d",
-    "src/components/site/ArticleBody.astro": "sha256:c669a5a255a888e16efd2c7ec4a7b6827cc029ddb35178cb3316c4b05fb188f3",
+    "src/components/site/ArticleBody.astro": "sha256:e2c0ded62af7b071e9909e9486751919c9199f460e0162125e5a83363cf4b4c2",
     "src/components/site/ArticleImages.astro": "sha256:c16441690fbec38e3efa1183b0107a0839a70916ce375e1b1d716383e799a03f",
     "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
     "src/components/site/Breadcrumbs.astro": "sha256:de031db5df797f84c187d451527cd92a831a9b2166d5b35927e2ae26469c979b",
-    "src/components/site/Footer.astro": "sha256:a92ee882f53c5a7fa68a1982a184a0254b374f14bfcc8c2166523e859e42dac9",
+    "src/components/site/Footer.astro": "sha256:7e00157c67eb1d003c42ddbf3b543fc06b89975422c34d8fffc7553398bf3434",
     "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
-    "src/components/site/Header.astro": "sha256:846e57bbcb425cd10624e95d1ae25b371a4278cec39b088a2b3e54c28070cf14",
-    "src/components/site/Icon.astro": "sha256:e718e87fb9a1c3f46a99eac9fc7eb5a87ff3ac2ef77444d9fceee114f1860331",
+    "src/components/site/Header.astro": "sha256:6e6d20fe1065e78c94934fbdc567fceaf1604aa1336d6430cd579a080bca91f6",
+    "src/components/site/Icon.astro": "sha256:0be7a0e42d2e270fa53ca7a0a32aaf50b9e93d8c5fea9b9e4b60f78fc25cef2c",
     "src/components/site/Masthead.astro": "sha256:4610e54e505353a2303374e15939e64645092be22bebb408addf8ae6db941eef",
     "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
     "src/components/site/Pagination.astro": "sha256:06a36292959b94188f65cd4f3fc56f8e9652ebeb864ed381fe82c60fdbc3ccf8",
     "src/components/site/ProseBlock.astro": "sha256:aae09606433eaaa875e7b16087bc404ed440e95c9fb56cf764ad2ea530364240",
     "src/components/site/ProseListItem.astro": "sha256:e2c0293803a3cc1337b84ec79f684d76be0819335d31b5d2528abef0661e5404",
     "src/components/site/ProseQuote.astro": "sha256:2d5ecd7987f911a2b7b2497143ab99c2feb4dc14c3fb417327a7a1ca782bda62",
-    "src/components/site/Sidebar.astro": "sha256:82694749f38f889d4fbf9f63d10c87f546d7aef994a97b70ee308b8f46c869c0",
+    "src/components/site/Sidebar.astro": "sha256:7983c83b1308d8a045802cd212e46c0f2d72e3edc71df71fc9c6b55a6097cbf1",
     "src/components/site/Social.astro": "sha256:212562b8d51a52b0c29ebc2c582925193d4d1d5e2dbe17992ab0ef132840d45f",
     "src/fonts.json": "sha256:a6e71bfbffa672cc4c6049e2b498ff0ef3d460383816a969188b3a5da4e37782",
     "src/layouts/Base.astro": "sha256:8f8adb9cc0dadd0768e7bcf5a0273cae445e28f9edefef584360f619436a6ac2",
-    "src/lib/articles.ts": "sha256:99c2ee45cb083754351a390cab954d13d8ffbe1440b3856343c1b50946a51ff5",
+    "src/lib/articles.ts": "sha256:1f94d7f55237fc0cfdfe4ce2596f0f53e706629e7475a70009769e2b9faaf93a",
     "src/lib/brand.ts": "sha256:38f8c2adeaa1e083f4ef5cabdd8e2ceac7d9243b9481414e41212c6d493e8939",
     "src/lib/chrome-labels.ts": "sha256:caf6017c4fda7d87717e8fffbe17bcbacc16d948849869dc9544b07b612a1b75",
     "src/lib/chrome.ts": "sha256:c8dbe5f7e6cee0f556655bdbe282d0290fc50f56766ba530f0c2c9affe20c131",
@@ -1751,14 +1820,14 @@
     "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
     "src/lib/menu-gate.ts": "sha256:1884514cd874f6edb1a845332a1da81afb4d85abebd65d287538a6a6a79d1441",
     "src/lib/newsletter-client.ts": "sha256:da8b6f98f1ce763849b781c46dade779f7f8dd61975f25b0e9d53a15b19e599a",
-    "src/lib/page-layout.json": "sha256:764c94de4e638a4a77a0c44fb2d2f2142c827485419232b5986a254888189719",
+    "src/lib/page-layout.json": "sha256:4c4024a20e2fdc501e5a0180aca86203d893718a69c7dd85d179683d3eee8252",
     "src/lib/page-records.ts": "sha256:490bbe348ae80ac7e429e0342e2f898768e2c43c1331905b83c71e2f51eca1ea",
     "src/lib/page-routes.json": "sha256:ebd7b5404191c9aeae2da22f33875bad3a6f42487938892111a5668e70c3df87",
     "src/lib/parent-gate.ts": "sha256:299a77bee7cb473c869e6e3b9642c99afddf4097f492217a3d9be150bb9ca6bc",
     "src/lib/posts.ts": "sha256:5c49d77c31b56f0ce5163572d37da6ed0f78a1bf9a51948a1a5261c19f2d753f",
     "src/lib/prose-text.ts": "sha256:56f0adf1e841c5a2196f3fab4135ee9f38ce62a66c1e31924eac4fef9a223bff",
     "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
-    "src/lib/site-client.ts": "sha256:c6130021a93cb3b5a0e87482e4b621a564453b8f96a4c868e51b4c7150c24ca5",
+    "src/lib/site-client.ts": "sha256:c6cdb69015d4a61ed360bdf00a4b9ce7b8488d4cb374d88c10b4228d95a03acb",
     "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
     "src/lib/tel.ts": "sha256:e4d78945f79f6e0f18ef5e21efe402133d4556fe3030885ca95907d8144c1077",
     "src/lib/ui-words.ts": "sha256:e3e5d1dab8b3b981efd7b180c95e7bfa1ad573dc65252198c8c006814e3eecbf",
@@ -1768,29 +1837,35 @@
     "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
     "src/pages/[...path].astro": "sha256:2cbdc6a6655c3747fd2669d8500ece8f98be257a4743c9b00d8fc9a7691098c3",
     "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
-    "src/styles/blocks/cards.css": "sha256:348347f589717a11b0f3097b75121e08fd98df0457dd16ad1b63b9aad04af705",
-    "src/styles/blocks/chrome.css": "sha256:eb60af9aed8a83a3adc8566ac16e45caba3e32b9fa3c0d3a32f81196251998c0",
-    "src/styles/blocks/cta.css": "sha256:ea30a4e63fbcae475b1b0886e31450160fde94598fbc23b7180409707ff0c282",
-    "src/styles/blocks/features.css": "sha256:ae4fa417ebc48bcf496e9b3846a54f8827efb7497b24799b457f99e591dde5ca",
-    "src/styles/blocks/hero.css": "sha256:5f47eaad47ff4463c0af03116ec9574b483e254862e81007adf8405d93fe063f",
+    "src/styles/blocks/cards.css": "sha256:ad688d8055356d83ce114e6eb739a13a79df555147f4aeaf9a901aa818fcc22c",
+    "src/styles/blocks/chrome.css": "sha256:37b1981512fef98ddb7ab766743bd4abbff5cea079e35664dfe1c0a5fc9159cd",
+    "src/styles/blocks/cta.css": "sha256:c59fa347f101e9c38c380c8987ab14d597c6e4ff91a7bda353b7a65ab3226297",
+    "src/styles/blocks/features.css": "sha256:52087e64bdd81bf1cda6964f260025841b53871ab395e0a7b8de5523ce164d5c",
+    "src/styles/blocks/hero.css": "sha256:7ca2fbd3fad7af108bb2da9500a2f458bf55c288115d96484fa39d7093708eeb",
     "src/styles/blocks/home.css": "sha256:605b1a88a6db964f4b0cced4257545b72b5c92f6bc12107a7bb1347d1e14a0a6",
-    "src/styles/global.css": "sha256:9be78fd435f93d8890897c4ca8918cfc68642100ccafed1d03560b144d6405cb",
-    "src/styles/pages/common.css": "sha256:f13e3258704a21d3f63767ff18e7acc76d0be52ea238e9df6c30986989ebbbae",
-    "src/styles/tokens.css": "sha256:5ec892d50f5de5ba40abf146a76f8cfd23f077c61b0aa19064d1b9817b10f867",
-    "src/views/About.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
-    "src/views/BlogList.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
-    "src/views/Contact.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
-    "src/views/Donation.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
-    "src/views/DonationsList.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
-    "src/views/Event.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
-    "src/views/EventsList.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
-    "src/views/Faq.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
-    "src/views/Home.astro": "sha256:03749c22ddc6972f880680e5e7ad02946087a1519afdc510e48ec8cec37a963b",
-    "src/views/NotFound.astro": "sha256:97e23d7fb216b6af6c01595adafcdbe71e11f9e35a457c14aea83d8c8d09f786",
-    "src/views/Post.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
-    "src/views/Search.astro": "sha256:cc14012b03def0d8bc52f5eb0b81c29a31e7e3164a712236e92966e65e9da13c",
-    "template.config.json": "sha256:43ef78a33baa4fb9047eca30e59d4d5a43b702a4b73ae678653fae21c6b3522b",
-    "tools/forms.json": "sha256:19a17b176998c50ed07958efc136569894ade2a28dd851e1d69ad7401542c3bb",
+    "src/styles/global.css": "sha256:ffdb8969762e322e0c78f83f9201a06a0cbe262db5e2495d31d4509dee2eafb1",
+    "src/styles/pages/about.css": "sha256:6c1f97b7dd6255e46ba390f89bc20100eaf1690123634d7928ec6b47468232e0",
+    "src/styles/pages/blog.css": "sha256:9c3b78e65e566d8e1a109484c8349c4965838fb0e6263215d17871dfdb1cda6e",
+    "src/styles/pages/common.css": "sha256:db0598b1bcc0af8cc897032b4210fe101c4b896fa6f1f053bc720e4a66e3b687",
+    "src/styles/pages/contact.css": "sha256:a6fa9d58b1cc148e9c2eb6a31968d7ae73ec1ba93a81803d33ae34ed5b4f4195",
+    "src/styles/pages/faq.css": "sha256:75cdd12b21a158bb273960fdba6fa2325dc2ec2cba408d298f6cb9bdfe6063f4",
+    "src/styles/pages/inner-a.css": "sha256:a1aa68ba933615480f7e31b61ca2bf398b65b428269a8b487331d2d61ab00963",
+    "src/styles/pages/lists.css": "sha256:ad92d27f8b6c01aa9b89aecf380d39d778c92e340618888c67db4d0fc2b21dee",
+    "src/styles/tokens.css": "sha256:919256d4aa4210e08eb9270e34cf6ae13ff43c30a70eb604d8e22e15c2d84a49",
+    "src/views/About.astro": "sha256:9720228b621ce991e983b249ce534fee1077e8f6e07dcbe8a46957aca1a4da28",
+    "src/views/BlogList.astro": "sha256:72e53d181ee4c5dfa1c423f32fcb442ea71a758b5cce316e4bf1764b1b8ab192",
+    "src/views/Contact.astro": "sha256:cdeadcb6b3acaddf3fd199cb706432edd0eb93cf428dfb49fa56a9ede149b059",
+    "src/views/Donation.astro": "sha256:1703974716a4881adff1e98c1f5af1e2583b537f658daebcda0375c4c4caf241",
+    "src/views/DonationsList.astro": "sha256:28ecec03d9e74ecc9e9e2a03c6a0386c1083e7c020025c261dde44535f0237fa",
+    "src/views/Event.astro": "sha256:da342ed0e05d443b4581db545953fa93bf0a73753cd723527516197eb18ea949",
+    "src/views/EventsList.astro": "sha256:eaeaae78e28c8fcf8575ff6193bb93a33c07c08807f9a759db29099a54560518",
+    "src/views/Faq.astro": "sha256:a42e905ce81dbc1936c799841480cddca612ed0cc25810225c5386a67d95dc95",
+    "src/views/Home.astro": "sha256:107c9524b1feb1053dbc7a2ec94b1fac53adfc4b6313aa5990ef544af68f09a5",
+    "src/views/NotFound.astro": "sha256:3fd3fd43c25cc259bcc9c2d7a7f32229b6d08a0b9465b998a8e21df546deda07",
+    "src/views/Post.astro": "sha256:9e04872409f08cc0560efc42e90797240a96da8c14a619ea3b96a77f3d81831c",
+    "src/views/Search.astro": "sha256:0a6e51eec091397b1284104f8a83826b72aa314146e59f24ad686ca61db9092a",
+    "template.config.json": "sha256:3eb558876ca023bdf012748c2a844498f3852e7f1e1ef3d652eb75acbfeeebe3",
+    "tools/forms.json": "sha256:a22301fcc3b88a1f1062f50ce4414477f9d89fb41f35b0facc5c99cc1f029dfb",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }
 }

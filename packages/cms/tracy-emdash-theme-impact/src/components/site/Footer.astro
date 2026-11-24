@@ -36,7 +36,8 @@ const cols = [1, 2, 3, 4].map((n) => ({
   })
 }))
 const live = await liveLinks(Astro.request, locale, [...cols.flatMap((c) => c.links.map((l) => l.path)), ...items.map((i) => i.link)])
-const target = (link: unknown) => telHref(link) ?? dataHref(link, (p) => href(locale, p))
+const target = (link: unknown) =>
+  /^mailto:/i.test(String(link ?? '')) ? String(link) : (telHref(link) ?? dataHref(link, (p) => href(locale, p)))
 ---
 
 <footer class="im-footer">

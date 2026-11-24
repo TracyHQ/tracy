@@ -34,8 +34,8 @@ const $t = stampFor(Astro.request, 'contact_info', top ? { id: top.id, slug: 'to
 const live = await liveLinks(Astro.request, locale, [...menuUrls(chrome.primary), site.donate_link, ...topItems.map((i) => i.link)])
 const primary = pruneMenu(chrome.primary, live)
 const itemHref = (link: unknown) => {
-  const tel = telHref(link)
-  return tel ?? dataHref(link, (p) => href(locale, p))
+  if (/^mailto:/i.test(String(link ?? ''))) return String(link)
+  return telHref(link) ?? dataHref(link, (p) => href(locale, p))
 }
 ---
 
