@@ -30,6 +30,7 @@ const TEMPLATES = [
   'tracy-emdash-theme-restaurant',
   'tracy-emdash-theme-diner',
   'tracy-emdash-theme-fresco',
+  'tracy-emdash-theme-morgan',
   'tracy-emdash-theme-essence'
 ]
 

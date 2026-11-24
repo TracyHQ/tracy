@@ -49,8 +49,8 @@
 
 	/* icon boxes (acm-features 2) */
 	.mg-boxes { display: grid; grid-template-columns: repeat(var(--cols, 4), 1fr); gap: 30px; }
-	.mg-box { background: var(--color-card); padding: 60px 30px 30px; }
-	.mg-box-icon { display: block; width: 75px; height: 75px; margin-bottom: 25px; }
+	.mg-box { background: var(--color-card); padding: 60px 30px 30px; text-align: center; }
+	.mg-box-icon { display: block; width: 75px; height: 75px; margin: 0 auto 25px; }
 	.mg-box h4 { font-size: 20px; line-height: 30px; font-weight: 500; margin-bottom: 30px; }
 	.mg-box p { margin-bottom: 25px; }
 	@media (max-width: 991.98px) { .mg-boxes { grid-template-columns: repeat(2, 1fr); } }
@@ -86,13 +86,14 @@
 	.mg-panel summary { list-style: none; cursor: pointer; padding: 18px 25px; background: var(--color-surface-warm); color: var(--color-heading); font-size: 16px; line-height: 24px; font-weight: 500; position: relative; }
 	.mg-panel summary::-webkit-details-marker { display: none; }
 	.mg-panel summary::after { content: "+"; position: absolute; right: 25px; top: 18px; color: var(--color-accent-text); font-weight: 400; }
+	.mg-panel[open] summary { background: var(--color-ink); color: var(--color-on-ink); }
 	.mg-panel[open] summary::after { content: "−"; }
 	.mg-panel-body { padding: 25px; }
 
 	/* service tiles (acm-features 4): four 360 px tiles per row, text and picture alternating */
 	.mg-tiles { margin-top: 20px; }
-	.mg-tiles { display: grid; grid-template-columns: repeat(4, 1fr); }
-	.mg-tile-row { display: contents; }
+	.mg-tiles { display: grid; grid-template-columns: repeat(2, 1fr); }
+	.mg-tile-row { display: grid; grid-template-columns: 1fr 1fr; }
 	.mg-tile { min-height: 360px; }
 	.mg-tile-text { padding: 65px 40px 40px; color: #fff; display: flex; flex-direction: column; }
 	.mg-tile-text.bg-lv-1 { background: var(--ds-c-ink, #1b3060); }
@@ -107,11 +108,15 @@
 	.mg-tile-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
 	.mg-sec-tiles .mg-sec-title.is-center { max-width: 900px; }
 	.mg-tiles-h { font-size: 36px; line-height: 45px; }
-	@media (max-width: 991.98px) { .mg-tiles { grid-template-columns: 1fr 1fr; } }
-	@media (max-width: 575.98px) { .mg-tiles { grid-template-columns: 1fr; } }
+	@media (max-width: 991.98px) { .mg-tiles { grid-template-columns: 1fr; } }
+	@media (max-width: 575.98px) { .mg-tile-row { grid-template-columns: 1fr; } .mg-tile-row.is-pic-first { display: flex; flex-direction: column-reverse; } .mg-tile-pic { min-height: 0; aspect-ratio: 1 / 1; } }
 
 	/* case studies and their cards */
 	.mg-cases { display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 30px; }
+	.mg-cards.is-icons { gap: 50px 30px; }
+	.mg-cards.is-icons .mg-card { background: none; border: 0; }
+	.mg-cards.is-icons .mg-card img { width: 75px; height: 75px; aspect-ratio: auto; object-fit: contain; }
+	.mg-cards.is-icons .mg-card-body { padding: 25px 0 0; }
 	.mg-cases.is-scroll { display: grid; grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: calc((100% - 60px) / var(--cols, 3)); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
 	.mg-cases.is-scroll::-webkit-scrollbar { display: none; }
 	.mg-cases.is-scroll > .mg-case { scroll-snap-align: start; }
@@ -122,8 +127,8 @@
 	.mg-case h4 { font-size: 18px; line-height: 27px; font-weight: 500; margin-bottom: 15px; }
 	.mg-case h4 a { color: inherit; }
 	.mg-case p { margin-bottom: 10px; }
-	@media (max-width: 991.98px) { .mg-cases { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-	@media (max-width: 575.98px) { .mg-cases { grid-template-columns: 1fr; } }
+	@media (max-width: 991.98px) { .mg-cases { grid-template-columns: repeat(2, minmax(0, 1fr)); } .mg-cases.is-scroll { grid-auto-columns: calc((100% - 30px) / 2); } }
+	@media (max-width: 575.98px) { .mg-cases { grid-template-columns: 1fr; } .mg-cases.is-scroll { grid-auto-columns: 86%; } }
 
 	/* client praise: quote cards in a row that scrolls sideways */
 	.mg-praise { display: flex; gap: 30px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 15px 20px; scrollbar-width: none; }
@@ -152,6 +157,7 @@
 	.mg-hiring { margin: 40px auto 0; max-width: 780px; text-align: center; padding: 14px 20px; background: #fb2; color: #333; font-size: 14px; } /* ds-keep: the strip's own warning yellow */
 	.mg-hiring a, .mg-hiring b { color: #333; font-weight: 700; margin-left: 4px; }
 	@media (max-width: 991.98px) { .mg-team { grid-template-columns: repeat(2, 1fr); } }
+	@media (max-width: 575.98px) { .mg-team { grid-template-columns: 1fr; } }
 
 	/* client logos */
 	.mg-sec-clients, .mg-sec-about-clients, .mg-sec-services-clients { padding: 80px 0; border-top: 1px solid var(--color-line-soft); }
@@ -182,4 +188,12 @@
 	.mg-masthead-title { color: #fff; font-size: 50px; line-height: 60px; font-weight: 700; margin-bottom: 20px; }
 	.mg-masthead-desc { color: rgba(255, 255, 255, .8); font-size: 18px; line-height: 30px; margin: 0; }
 	@media (max-width: 767.98px) { .mg-masthead-title { font-size: 34px; line-height: 42px; } .mg-masthead-detail { padding: 64px 0; } }
+}
+
+/* the dark side of the bands the source's dark mode does not reach: line icons and logos are inverted to read on dark cards */
+@layer components {
+	html[data-theme="dark"] .mg-box-icon, html[data-theme="dark"] .mg-cards.is-icons img { filter: invert(1) brightness(1.1); }
+	html[data-theme="dark"] .mg-clients img { opacity: calc(var(--op, .3) + .3); }
+	html[data-theme="dark"] .mg-hiring { background: color-mix(in srgb, #fb2 22%, var(--color-bg)); color: var(--color-heading); } /* ds-keep: the strip's own warning yellow, dimmed on the dark page */
+	html[data-theme="dark"] .mg-hiring a, html[data-theme="dark"] .mg-hiring b { color: var(--color-heading); }
 }

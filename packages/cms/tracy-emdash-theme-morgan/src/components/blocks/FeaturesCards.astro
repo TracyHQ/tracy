@@ -19,16 +19,18 @@ const { entry, name, locale, live } = Astro.props
 const $s = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
 const items = (entry.items ?? []) as Record<string, any>[]
 const cols = Math.max(1, Math.min(3, Number(entry.columns) || 2))
+// the About page's cards are line icons (png) with a title and text, not picture cards
+const icons = items.length > 0 && items.every((it) => /\.png(#|$)/i.test(String(it.img ?? '')))
 ---
 
 <Section entry={entry} name={name}>
 	<div class="mg-container">
 		<div class="mg-cards-intro">
 			<SectionHead entry={entry} collection="features_intro" lead={entry.block_intro} />
-			<div class="mg-cards" style={`--cols:${cols}`}>
+			<div class:list={['mg-cards', icons && 'is-icons']} style={`--cols:${cols}`}>
 				{items.map((it, i) => (
 					<article class="mg-card">
-						{it.img && <img src={mediaUrl(it.img) ?? ''} alt="" width="420" height="270" loading="lazy" {...$s(`items.${i}.img`)} />}
+						{it.img && <img src={mediaUrl(it.img) ?? ''} alt="" width={icons ? 75 : 420} height={icons ? 75 : 270} loading="lazy" {...$s(`items.${i}.img`)} />}
 						<div class="mg-card-body">
 							<h4 {...$s(`items.${i}.title`)}>{it.title}</h4>
 							<p {...$s(`items.${i}.description`)}>{it.description}</p>

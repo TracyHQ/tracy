@@ -68,6 +68,7 @@ test('the full row set is the release set: checks, both test shards, six EmDash 
     'build check (tests emdash-coffee)',
     'build check (tests emdash-diner)',
     'build check (tests emdash-fresco)',
+    'build check (tests emdash-morgan)',
     'build check (tests emdash-restaurant)',
     'build check (tests emdash-saas)'
   ])

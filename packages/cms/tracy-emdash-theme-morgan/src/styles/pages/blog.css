@@ -40,6 +40,7 @@
 	.mg-side-block { margin-bottom: 45px; }
 	.mg-side-title { font-size: 16px; line-height: 25px; font-weight: 500; color: var(--color-accent-text); margin-bottom: 22px; }
 	.mg-side-recent { list-style: none; margin: 0; padding: 0; }
+	@media (max-width: 991.98px) { .mg-side-recent { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; } .mg-side-recent li { margin: 0; } }
 	.mg-side-recent li { margin-bottom: 25px; }
 	.mg-side-recent a { display: block; color: var(--color-heading); font-size: 13px; line-height: 20px; }
 	.mg-side-recent img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; margin-bottom: 10px; }

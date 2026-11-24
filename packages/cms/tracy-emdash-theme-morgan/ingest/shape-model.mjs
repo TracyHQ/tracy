@@ -162,7 +162,7 @@ for (const [slug, info] of Object.entries(sectionStyle)) {
   const rec = model.records.find((r) => r.type === info.type && r.slug === slug)
   const label = decode(stripTags(String(p['sub-heading'] ?? ''))).trim()
   Object.assign(rec.values, {
-    section_label: label.replace(/\.$/, ''),
+    section_label: label,
     section_style: ['gray', 'secondary'].includes(p['color-module']) ? p['color-module'] : 'white',
     section_mask: isImg(p['bg-module']) ? fullPath(p['bg-module']) : ''
   })
@@ -381,7 +381,7 @@ model.records.push({
     brand_name: 'Morgan',
     topbar_address: lines(tl.content)[0] ?? '',
     topbar_phone: lines(tl.content)[1] ?? '',
-    footer_social_title: 'Social',
+    footer_social_title: 'Social.',
     footer_social_facebook: 'https://www.joomlart.com/',
     footer_social_twitter: 'https://www.joomlart.com/',
     footer_social_instagram: 'https://www.joomlart.com/',
@@ -428,7 +428,7 @@ void copy
       { name: 'link', type: 'url' }
     ]
   })
-  const COLUMNS = { navigate: 'Navigate', services: 'Services', support: 'Support', careers: 'Careers', 'terms-privacy': 'Terms & Privacy' }
+  const COLUMNS = { navigate: 'Navigate.', services: 'Services.', support: 'Support.', careers: 'Careers.', 'terms-privacy': 'Terms & Privacy.' }
   const TO = { Home: '/', Services: '/services', News: '/blog', Testimonials: '/services', Advisors: '/about-us', 'Contact Us': '/contact-us' }
   for (const [ci, [menutype, column]] of Object.entries(COLUMNS).entries())
     for (const [i, row] of inventory.menu

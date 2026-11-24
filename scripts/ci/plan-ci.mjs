@@ -118,6 +118,11 @@ const EMDASH = [
     group: 'tests emdash-fresco',
     args: '--only tests --tests-part standalone:fresco',
     own: String.raw`packages/cms/tracy-emdash-theme-fresco/`
+  },
+  {
+    group: 'tests emdash-morgan',
+    args: '--only tests --tests-part standalone:morgan',
+    own: String.raw`packages/cms/tracy-emdash-theme-morgan/`
   }
 ]
 

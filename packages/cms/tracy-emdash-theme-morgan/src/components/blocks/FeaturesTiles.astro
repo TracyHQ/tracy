@@ -31,7 +31,7 @@ const items = (entry.items ?? []) as Record<string, any>[]
 	</div>
 	<div class="mg-tiles">
 		{items.map((it, i) => (
-			<div class="mg-tile-row">
+			<div class:list={['mg-tile-row', it.content_align === 'left' && 'is-pic-first']}>
 				{it.content_align === 'left' && <div class="mg-tile mg-tile-pic">{it.img_intro && <img src={mediaUrl(it.img_intro) ?? ''} alt="" width="360" height="360" loading="lazy" {...$s(`items.${i}.img_intro`)} />}</div>}
 				<div class:list={['mg-tile', 'mg-tile-text', it.content_bg]}>
 					{it.img_icon && <img class="mg-tile-icon" src={mediaUrl(it.img_icon) ?? ''} alt="" width="40" height="40" loading="lazy" {...$s(`items.${i}.img_icon`)} />}

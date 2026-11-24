@@ -144,6 +144,7 @@ test('release pull requests, the nightly and manual runs force every Turbo row; 
       'tests emdash-restaurant',
       'tests emdash-diner',
       'tests emdash-fresco',
+      'tests emdash-morgan',
       'tests emdash-saas'
     ])
       assert.ok(
@@ -188,6 +189,7 @@ test('the full row sets: the shards or the forced Turbo rows, each with checks a
     'tests emdash-restaurant',
     'tests emdash-diner',
     'tests emdash-fresco',
+    'tests emdash-morgan',
     'tests emdash-saas'
   ]
   assert.deepEqual([...legacy].sort(), ['checks', ...conditional, 'tests 1/2', 'tests 2/2'].sort())

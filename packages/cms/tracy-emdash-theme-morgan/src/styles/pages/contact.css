@@ -29,4 +29,5 @@
 	.mg-split.is-secondary .ec-form-field { margin-bottom: 24px; }
 	.mg-split.is-secondary .ec-form-field--half { display: inline-block; width: calc(50% - 12px); vertical-align: top; }
 	.mg-split.is-secondary .ec-form-field--half + .ec-form-field--half { margin-left: 20px; }
+	@media (max-width: 575.98px) { .mg-split.is-secondary .ec-form-field--half { display: block; width: 100%; margin-left: 0; } .mg-split.is-secondary .ec-form-field--half + .ec-form-field--half { margin-left: 0; } }
 }

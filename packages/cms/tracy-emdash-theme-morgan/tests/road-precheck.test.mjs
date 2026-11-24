@@ -297,11 +297,13 @@ test('PAGE-8: the Blog page is covered by the trim rule of its posts, and no tri
   assert.deepEqual(map.hide, [])
 })
 
-test('DEF-1: no design-system role the slot does not define', () => {
+test('DEF-1: no design-system role the slot does not define', (t) => {
+  // the roles file is a repository-only record of the quickstart's slot contract (the package does not ship `inventory/`)
+  if (!existsSync(path.join(ROOT, 'inventory/design-system-roles.json'))) return t.skip('inventory/ is not shipped in the package')
   // the roles the template's slot contract (design-system-roles.json of the quickstart) declares, plus the knobs the kit reads
   const css = styles()
   const known = new Set(
-    JSON.parse(read('contracts/design-system-roles.json')).declared
+    JSON.parse(read('inventory/design-system-roles.json')).declared
   )
   const used = new Set([...css.matchAll(/var\((--ds-[a-z0-9-]+)/g)].map((m) => m[1]))
   const extra = new Set(['--ds-weight-body', '--ds-weight-display', '--ds-weight-heading', '--ds-weight-button', '--ds-size-heading', '--ds-size-heading-phone', '--ds-size-display', '--ds-leading-display', '--ds-tracking-display'])

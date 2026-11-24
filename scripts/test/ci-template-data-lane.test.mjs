@@ -55,6 +55,7 @@ const FULL_ROWS = [
   'tests emdash-restaurant',
   'tests emdash-diner',
   'tests emdash-fresco',
+  'tests emdash-morgan',
   'tests e2e',
   'tests 1/2',
   'tests 2/2',
