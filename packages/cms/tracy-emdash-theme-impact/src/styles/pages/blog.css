@@ -84,3 +84,6 @@
 	.im-post-nav .is-next { margin-left: auto; text-align: right; }
 }
 @layer components { @media (max-width: 575.98px) { .im-post-nav { flex-direction: column; } .im-post-nav a { max-width: none; } .im-post-nav .is-next { margin-left: 0; text-align: left; } } }
+@layer components {
+	@media (max-width: 575.98px) { .im-error-bubble { top: -14%; left: -2%; width: 44px; height: 44px; line-height: 44px; font-size: 16px; } }
+}

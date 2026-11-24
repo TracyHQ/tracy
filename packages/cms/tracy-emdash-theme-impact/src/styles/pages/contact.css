@@ -70,3 +70,7 @@
 	.im-contact-social [data-icon="pinterest"] { color: var(--color-danger); }
 }
 @layer components { .im-map-place { display: flex; flex-direction: column; align-items: center; gap: 4px; } }
+@layer components {
+	@media (max-width: 991.98px) { .im-contact-form { margin-bottom: 48px; } }
+	.im-contact-card .im-contact-social { padding-top: 24px; }
+}

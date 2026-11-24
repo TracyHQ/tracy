@@ -78,7 +78,10 @@ const dead = [
 								<h3 class="im-contact-head" {...$c('form_title')}>{c.form_title}</h3>
 								{c.form_intro && <p class="im-contact-intro" {...$c('form_intro')}>{c.form_intro}</p>}
 								{formId ? (
+									<>
 									<FormWords tag={uiTag(locale)}><FormEmbed node={{ formId }} /></FormWords>
+									{c.privacy_title && <p class="im-privacy-title" data-privacy-move><span {...$c('privacy_title')}>{c.privacy_title}</span><span class="im-privacy-star" aria-hidden="true">*</span></p>}
+									</>
 								) : (
 									<form class="ec-form is-disabled" aria-label={c.form_title} aria-disabled="true" onsubmit="return false">
 										<fieldset class="ec-form-page" disabled>
@@ -138,6 +141,11 @@ const dead = [
 	</main>
 	<script>
 		// the Forms plugin prints white space between the tags of the message box, which counts as text and hides its placeholder
+		// the Privacy Note title belongs right above the consent box, which the Forms plugin prints itself
+		document.querySelectorAll<HTMLElement>('[data-privacy-move]').forEach((p) => {
+			const field = document.querySelector('.im-contact input[name=privacy]')?.closest('.ec-form-field')
+			if (field?.parentElement) field.parentElement.insertBefore(p, field)
+		})
 		document.querySelectorAll<HTMLTextAreaElement>('.im-contact textarea').forEach((t) => {
 			if (!t.value.trim()) t.value = ''
 		})

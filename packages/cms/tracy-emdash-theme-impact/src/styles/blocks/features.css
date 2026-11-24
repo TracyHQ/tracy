@@ -90,3 +90,7 @@
 	.im-video-close { position: absolute; right: 8px; top: 8px; z-index: 2; width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--ds-c-bg, #fff); cursor: pointer; }
 	@media (max-width: 991.98px) { .im-connected-info { padding: 64px 40px; } .im-connected-in { max-width: none; margin-inline: 0; } .im-connected { flex-direction: column; min-height: 0; } .im-connected.is-media-right { flex-direction: column; } .im-connected-media { flex-basis: auto; min-height: 360px; } .im-connected-in { margin-inline: auto; } }
 }
+@layer components {
+	.im-band p { text-wrap: balance; }
+	@media (max-width: 575.98px) { .im-connected-lead br { display: none; } .im-news .im-btn { width: 100%; } .im-connected-info { padding-inline: 16px; } }
+}

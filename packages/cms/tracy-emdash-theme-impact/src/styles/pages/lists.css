@@ -62,3 +62,6 @@
 	.im-cta-card-title { font-size: var(--h3-size); line-height: 1.2; margin: 0 0 16px; color: #fff; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
 	.im-cta-card-desc { margin: 0 0 40px; color: #ced4da; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
 }
+@layer components {
+	@media (max-width: 767.98px) { .im-event-banner { margin-bottom: 24px; } }
+}
