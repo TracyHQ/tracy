@@ -1,6 +1,6 @@
 # Installed template: agent instructions
 
-DOCS_REQUIRED: Identify this template and its supported runtime from package/config.
+This is **JA Morgan** (`tracy-morgan`, version 0.1.0): Tracy's EmDash business and consulting template ported from JoomlArt's Joomla 6 template JA Morgan (a T3 template). EmDash 1.1.0 on Astro 7.4.12 (SSR, Node adapter), Tailwind CSS 4, English only. Identity and wiring: `template.config.json`; the way it is built and tested: `package.json` and `tools/`.
 
 Read docs/architecture.md before changing the application. Use docs/install.md for
 an empty-target install and docs/content-api.md before touching CMS state. Identify

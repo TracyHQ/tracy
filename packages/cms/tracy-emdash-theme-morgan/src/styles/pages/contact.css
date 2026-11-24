@@ -18,7 +18,7 @@
 	/* the Forms plugin's form on the navy panel (also the home's consultation box): underlined fields, labels above, a red button */
 	.mg-split.is-secondary .ec-form-field label, .mg-split.is-secondary .ec-form-label { color: var(--color-on-ink); font-size: 14px; }
 	.mg-split.is-secondary .ec-form-input, .mg-split.is-secondary input, .mg-split.is-secondary textarea {
-		width: 100%; background: transparent; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--color-on-ink) 25%, transparent); border-radius: 0; color: var(--color-on-ink); padding: 10px 0; font: inherit; box-shadow: none;
+		width: 100%; background: transparent; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--color-on-ink) 50%, transparent); border-radius: 0; color: var(--color-on-ink); padding: 10px 0; font: inherit; box-shadow: none;
 	}
 	.mg-split.is-secondary textarea { min-height: 110px; }
 	.mg-split.is-secondary input:focus, .mg-split.is-secondary textarea:focus { outline: 0; border-bottom-color: var(--color-accent); }

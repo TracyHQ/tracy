@@ -520,6 +520,9 @@ model.types = model.types.filter((t) => t.name !== 'modules')
 model.media = []
 // two typos of the demo data are corrected (DECISIONS D14)
 for (const r of model.records) if (r.type === 'masthead' && r.values?.title === 'Our Sevices') r.values.title = 'Our Services'
+// a demo headline that quotes a price reads as a claim about the customer's business (the label rule R2 of the content map): the figure is dropped (DECISIONS D19)
+for (const r of model.records)
+  if (r.type === 'posts' && /\s+for \$?29\.5M\b/i.test(r.values.title ?? '')) r.values.title = r.values.title.replace(/\s+for \$?29\.5M\b/i, '')
 model.site = { ...model.site, title: { en: 'JA Morgan' }, tagline: { en: '' } }
 
 // ---- a scalar field that arrives as a list holds the first non-empty value

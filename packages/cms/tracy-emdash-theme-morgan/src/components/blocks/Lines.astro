@@ -9,4 +9,4 @@ const lines = String(Astro.props.text ?? '')
   .filter(Boolean)
 ---
 
-{lines.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
+{lines.map((l, i) => <Fragment>{i > 0 && <>{' '}<br class="mg-br" /></>}{l}</Fragment>)}

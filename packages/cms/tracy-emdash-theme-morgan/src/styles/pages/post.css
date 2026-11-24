@@ -20,7 +20,7 @@
 	.mg-prose-full { margin: 25px 0; }
 	.mg-prose-full img { display: block; width: 100%; height: auto; }
 	.mg-prose-row { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 25px 0; }
-	@media (min-width: 768px) { .mg-prose-row { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 30px; } }
+	@media (min-width: 992px) { .mg-prose-row { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 30px; } }
 	.mg-prose-row img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
 
 	.mg-post-nav { display: flex; margin-top: 24px; }

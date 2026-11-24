@@ -1,11 +1,10 @@
 # Architecture
 
-DOCS_REQUIRED: Explain this application's SSR adapter, CMS storage, route dispatch,
-layouts, views, components and plugin registration using actual relative paths.
+Read ../AGENTS.md. generated/inventory.md lists discovered route source files and declared dependencies, not all effective URLs or active plugins.
 
-Read ../AGENTS.md. generated/inventory.md lists discovered route source files and
-declared dependencies, not all effective URLs or active plugins. Explain dynamic
-routes here and point to the package's route contract and runtime audit evidence.
-
-Distinguish source, generated build output and persistent CMS/media state. This is
-an EmDash/Astro application, not a Joomla PHP template or a universal upload ZIP.
+- **Runtime.** Astro 7 in SSR mode with the Node standalone adapter (`astro.config.mjs`); EmDash 1.1.0 stores content in SQLite (`data/data.db`, from `SITE_DATA_DIR`) and media in `uploads/`. Plugins registered in `astro.config.mjs`: audit log, forms, SMTP, the Tracy Content API behind `TRACY_CONTENT_API_SCALARS`.
+- **Routing.** One catch-all, `src/pages/[...path].astro`, serves every public address: `/`, `/about-us`, `/services`, `/contact-us`, `/blog` (`?start=N`, six cards a page), `/blog/<slug>`, `/search`. Anything else renders `src/views/NotFound.astro` with status 404 and the site chrome. `src/pages/404.astro` answers the literal `/404`.
+- **Layout and views.** `src/layouts/Base.astro` is the only place `src/styles/global.css` is imported (never the admin). One view per page family in `src/views/` (Home, About, Services, Contact, BlogList, Post, Search, NotFound); page composition (which section entry fills which band) is code, written down in `DECISIONS.md` D9.
+- **Blocks.** `src/components/blocks/` holds one component per source block (slideshow, feature cards, icon boxes, split bands, service tiles, call to action, case studies, client praise, quote band, team, client logos, masthead, accordion); `src/components/site/` holds the header (top bar, menu, theme switch, off-canvas menu), the footer, the post card, the blog sidebar and the glyphs. Every band has its own class (`mg-sec-<name>`).
+- **State.** Source (this folder) vs build output (`dist/`, `.astro/`) vs persistent CMS state (`data/`, `uploads/`): only the first is in the package. Seed (`seed/`) is a baseline applied by `tools/bootstrap-site.sh` / `tools/seed-apply.mjs`; it never overwrites an editor's work.
+- This is an EmDash/Astro application, not a Joomla PHP template. Route audit evidence: `tools/audit.mjs` and `tools/qa.mjs --browser` write it into the acceptance run.
