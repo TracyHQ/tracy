@@ -35,7 +35,8 @@ const RULES = [
   ['footer-text', '.mg-footer li', HOME],
   ['copyright', '.mg-copyright p', HOME],
   ['topbar', '.mg-topbar-item', HOME, true],
-  ['slide-title', '.mg-slide-h', HOME],
+  ['slide-title', 'h1.mg-slide-h', HOME],
+  ['slide-title-2', 'h2.mg-slide-h', HOME, true],
   ['section-label', ':is(.mg-sec.is-white, .mg-sec.is-gray) .mg-sub', HOME],
   ['split-label', '.mg-sec.is-secondary .mg-sub', HOME, true],
   ['section-title', ':is(.mg-sec.is-white, .mg-sec.is-gray) .mg-sec-title > .mg-sec-h:not(.mg-tiles-h):not(.mg-cta-panel .mg-sec-h)', HOME],
@@ -92,7 +93,7 @@ const PAGES = [
     view: 'Home',
     identity: '.mg-slideshow',
     cols: ['chrome', 'footer_links', 'pages', 'slideshow', 'features_intro', 'accordion', 'testimonials', 'teams', 'clients', 'contact'],
-    rules: [...BASE, 'slide-title', 'section-label', 'section-title', 'card-title', 'box-title', 'panel-title', 'panel-title-open', 'case-title', 'member-name', 'hiring', 'quote-text'],
+    rules: [...BASE, 'slide-title', 'slide-title-2', 'section-label', 'section-title', 'card-title', 'box-title', 'panel-title', 'panel-title-open', 'case-title', 'member-name', 'hiring', 'quote-text'],
     content: [
       ['slide', '.mg-slide-h', 'field', 'slideshow/home-slideshow.items[0].title', 'Not for Profit.\nFor People.'],
       ['intro', '.mg-sec-intro .mg-sec-h', 'field', 'features_intro/home-intro.title', 'Morgan help Business Performance and Scalability.']
@@ -327,7 +328,7 @@ contract.fonts = {
   selectors: ['h1', 'h2', 'h3', 'p', 'a', 'button', 'span', 'li'],
   platform:
     'Chromium (Playwright). One family is shipped locally (src/fonts.json): PT Root UI 400, 500 and 700 for the display and the body.',
-  allowed: { en: ['PT Root UI'] }
+  allowed: { en: ['PT Root UI', 'PT Root UI Regular', 'PT Root UI Medium', 'PT Root UI Bold', 'Be Vietnam Pro'] }
 }
 contract.capabilities = ['audit-log', 'seo', 'media', 'forms']
 contract.reviews.forms = { mode: 'required' }

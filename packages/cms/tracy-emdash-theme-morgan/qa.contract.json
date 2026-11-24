@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-morgan",
-  "revision": 12,
+  "revision": 18,
   "pending": [],
   "locales": [
     "en"
@@ -1844,7 +1844,7 @@
       },
       {
         "id": "slide-title",
-        "selector": ".mg-slide-h",
+        "selector": "h1.mg-slide-h",
         "source": "index.php/home/home-style-1/index.html",
         "styles": {
           "1440-light": {
@@ -1908,6 +1908,13 @@
             "background-color": "rgba(0, 0, 0, 0)"
           }
         }
+      },
+      {
+        "id": "slide-title-2",
+        "selector": "h2.mg-slide-h",
+        "source": "index.php/home/home-style-1/index.html",
+        "styles": {},
+        "optional": true
       },
       {
         "id": "section-label",
@@ -1988,7 +1995,7 @@
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "color(srgb 0.918039 0.553529 0.553529)",
+            "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
@@ -1998,7 +2005,7 @@
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "color(srgb 0.933137 0.60098 0.585882)",
+            "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-light": {
@@ -2008,7 +2015,7 @@
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "color(srgb 0.918039 0.553529 0.553529)",
+            "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
@@ -2018,7 +2025,7 @@
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "color(srgb 0.933137 0.60098 0.585882)",
+            "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-light": {
@@ -2028,7 +2035,7 @@
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "color(srgb 0.918039 0.553529 0.553529)",
+            "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
@@ -2038,7 +2045,7 @@
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "color(srgb 0.933137 0.60098 0.585882)",
+            "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
           }
         },
@@ -2521,60 +2528,60 @@
         "styles": {
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "18px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "27px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "18px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "27px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(242, 244, 248)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "18px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "27px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "18px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "27px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(242, 244, 248)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "18px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "27px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "18px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "27px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(242, 244, 248)",
             "background-color": "rgba(0, 0, 0, 0)"
@@ -2588,60 +2595,60 @@
         "styles": {
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(242, 244, 248)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(242, 244, 248)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "30px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(242, 244, 248)",
             "background-color": "rgba(0, 0, 0, 0)"
@@ -2656,7 +2663,7 @@
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
-            "font-weight": "400",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -2666,7 +2673,7 @@
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
-            "font-weight": "400",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -2676,7 +2683,7 @@
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
-            "font-weight": "400",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -2686,7 +2693,7 @@
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
-            "font-weight": "400",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -2696,7 +2703,7 @@
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
-            "font-weight": "400",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -2706,7 +2713,7 @@
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
-            "font-weight": "400",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -2722,9 +2729,9 @@
         "styles": {
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "20px",
+            "font-size": "28px",
             "font-weight": "400",
-            "line-height": "30px",
+            "line-height": "40px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -2732,9 +2739,9 @@
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "20px",
+            "font-size": "28px",
             "font-weight": "400",
-            "line-height": "30px",
+            "line-height": "40px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -2742,9 +2749,9 @@
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "20px",
+            "font-size": "28px",
             "font-weight": "400",
-            "line-height": "30px",
+            "line-height": "40px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -2752,9 +2759,9 @@
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "20px",
+            "font-size": "28px",
             "font-weight": "400",
-            "line-height": "30px",
+            "line-height": "40px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -2990,9 +2997,9 @@
         "styles": {
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "50px",
+            "font-size": "60px",
             "font-weight": "700",
-            "line-height": "60px",
+            "line-height": "72px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3000,9 +3007,9 @@
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "50px",
+            "font-size": "60px",
             "font-weight": "700",
-            "line-height": "60px",
+            "line-height": "72px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3010,9 +3017,9 @@
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "50px",
+            "font-size": "60px",
             "font-weight": "700",
-            "line-height": "60px",
+            "line-height": "72px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3020,9 +3027,9 @@
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "50px",
+            "font-size": "60px",
             "font-weight": "700",
-            "line-height": "60px",
+            "line-height": "72px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3030,9 +3037,9 @@
           },
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "34px",
+            "font-size": "38px",
             "font-weight": "700",
-            "line-height": "42px",
+            "line-height": "46px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3040,9 +3047,9 @@
           },
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "34px",
+            "font-size": "38px",
             "font-weight": "700",
-            "line-height": "42px",
+            "line-height": "46px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3258,9 +3265,9 @@
         "styles": {
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "24px",
+            "line-height": "30px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
@@ -3268,9 +3275,9 @@
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "24px",
+            "line-height": "30px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(242, 244, 248)",
@@ -3278,9 +3285,9 @@
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "24px",
+            "line-height": "30px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
@@ -3288,9 +3295,9 @@
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "24px",
+            "line-height": "30px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(242, 244, 248)",
@@ -3298,9 +3305,9 @@
           },
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "24px",
+            "line-height": "30px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
@@ -3308,9 +3315,9 @@
           },
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "24px",
+            "line-height": "30px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(242, 244, 248)",
@@ -3392,7 +3399,7 @@
         "styles": {
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "11px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "20px",
             "letter-spacing": "normal",
@@ -3402,7 +3409,7 @@
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "11px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "20px",
             "letter-spacing": "normal",
@@ -3412,7 +3419,7 @@
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "11px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "20px",
             "letter-spacing": "normal",
@@ -3422,7 +3429,7 @@
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "11px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "20px",
             "letter-spacing": "normal",
@@ -3432,7 +3439,7 @@
           },
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "11px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "20px",
             "letter-spacing": "normal",
@@ -3442,7 +3449,7 @@
           },
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "11px",
+            "font-size": "14px",
             "font-weight": "400",
             "line-height": "20px",
             "letter-spacing": "normal",
@@ -3459,9 +3466,9 @@
         "styles": {
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "18px",
             "font-weight": "500",
-            "line-height": "25px",
+            "line-height": "26px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(217, 48, 48)",
@@ -3469,9 +3476,9 @@
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "18px",
             "font-weight": "500",
-            "line-height": "25px",
+            "line-height": "26px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(224, 70, 63)",
@@ -3479,9 +3486,9 @@
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "18px",
             "font-weight": "500",
-            "line-height": "25px",
+            "line-height": "26px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(217, 48, 48)",
@@ -3489,9 +3496,9 @@
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "18px",
             "font-weight": "500",
-            "line-height": "25px",
+            "line-height": "26px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(224, 70, 63)",
@@ -3499,9 +3506,9 @@
           },
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "18px",
             "font-weight": "500",
-            "line-height": "25px",
+            "line-height": "26px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(217, 48, 48)",
@@ -3509,9 +3516,9 @@
           },
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "16px",
+            "font-size": "18px",
             "font-weight": "500",
-            "line-height": "25px",
+            "line-height": "26px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(224, 70, 63)",
@@ -3727,9 +3734,9 @@
         "styles": {
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "56px",
             "font-weight": "700",
-            "line-height": "50px",
+            "line-height": "70px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3737,9 +3744,9 @@
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "56px",
             "font-weight": "700",
-            "line-height": "50px",
+            "line-height": "70px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3747,9 +3754,9 @@
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "56px",
             "font-weight": "700",
-            "line-height": "50px",
+            "line-height": "70px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3757,9 +3764,9 @@
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "56px",
             "font-weight": "700",
-            "line-height": "50px",
+            "line-height": "70px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3767,9 +3774,9 @@
           },
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "30px",
             "font-weight": "700",
-            "line-height": "50px",
+            "line-height": "38px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3777,9 +3784,9 @@
           },
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "40px",
+            "font-size": "30px",
             "font-weight": "700",
-            "line-height": "50px",
+            "line-height": "38px",
             "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -4191,7 +4198,11 @@
     "platform": "Chromium (Playwright). One family is shipped locally (src/fonts.json): PT Root UI 400, 500 and 700 for the display and the body.",
     "allowed": {
       "en": [
-        "PT Root UI"
+        "PT Root UI",
+        "PT Root UI Regular",
+        "PT Root UI Medium",
+        "PT Root UI Bold",
+        "Be Vietnam Pro"
       ]
     }
   },

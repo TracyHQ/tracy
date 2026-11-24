@@ -11482,7 +11482,7 @@
         "field": "tags_label"
       },
       "type": "text",
-      "sample": "Tags",
+      "sample": "Tags.",
       "label": "Tags label",
       "role": "editorial.button_label"
     },
@@ -11495,7 +11495,7 @@
         "field": "categories_label"
       },
       "type": "text",
-      "sample": "Categories",
+      "sample": "Categories.",
       "label": "Categories label",
       "role": "editorial.button_label"
     },
@@ -11508,7 +11508,7 @@
         "field": "recent_label"
       },
       "type": "text",
-      "sample": "News & Update",
+      "sample": "News & Update.",
       "label": "Recent label",
       "role": "editorial.button_label"
     },
@@ -12619,7 +12619,7 @@
         "field": "label"
       },
       "type": "text",
-      "sample": "Contact",
+      "sample": "Contact.",
       "label": "Label",
       "role": "editorial.button_label"
     },

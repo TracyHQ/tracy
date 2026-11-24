@@ -1,13 +1,16 @@
 /* A post (Joomla article page): the title band with the post's own picture (chip, title, meta), the body column beside the sidebar,
    previous / next and tags. Imported by global.css. */
 @layer components {
-	.mg-masthead:has(.mg-post-band-chip) .mg-masthead-detail { max-width: 1260px; margin: 0; text-align: left; padding: 90px 0 100px; }
-	.mg-masthead:has(.mg-post-band-chip) .mg-masthead-title { font-size: 40px; line-height: 50px; max-width: 760px; margin: 30px 0 40px; }
+	.mg-masthead:has(.mg-post-band-chip) .mg-masthead-detail { max-width: 1260px; margin: 0; text-align: left; padding: 190px 0 200px; }
+	.mg-masthead:has(.mg-post-band-chip) .mg-masthead-title { font-size: 56px; line-height: 70px; max-width: 760px; margin: 30px 0 40px; }
 	.mg-masthead:has(.mg-post-band-chip) .mg-meta { color: rgba(255, 255, 255, .8); }
 	.mg-masthead:has(.mg-post-band-chip) .mg-masthead-detail { display: flex; flex-direction: column; align-items: flex-start; }
 	.mg-masthead:has(.mg-post-band-chip) .mg-post-band-chip { order: -1; }
 	.mg-masthead:has(.mg-post-band-chip) .mg-masthead-title { margin: 22px 0 28px; }
 
+	.mg-article, .mg-blog-main { min-width: 0; }
+	.mg-prose { overflow-wrap: anywhere; }
+	.mg-prose img, .mg-prose video, .mg-prose iframe, .mg-prose table { max-width: 100%; height: auto; }
 	.mg-prose { margin: 0 0 30px; font-size: 14px; line-height: 25px; }
 	.mg-prose p { margin: 0 0 25px; }
 	.mg-prose h2, .mg-prose h3 { margin: 35px 0 20px; font-size: 20px; line-height: 28px; font-weight: 500; }
@@ -33,4 +36,9 @@
 	.mg-article-foot h6 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 	.mg-tags ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 	.mg-tags li { padding: 3px 10px; background: var(--color-surface); border: 1px solid var(--color-line-soft); font-size: 11px; line-height: 20px; }
+}
+
+@layer components {
+	.mg-masthead-title { overflow-wrap: anywhere; }
+	@media (max-width: 767.98px) { .mg-masthead:has(.mg-post-band-chip) .mg-masthead-title { font-size: 30px; line-height: 38px; } .mg-masthead:has(.mg-post-band-chip) .mg-masthead-detail { padding: 100px 0; } }
 }

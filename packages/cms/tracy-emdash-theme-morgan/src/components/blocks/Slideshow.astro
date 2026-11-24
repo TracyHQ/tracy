@@ -23,7 +23,7 @@ const items = (entry.items ?? []) as Record<string, any>[]
 			<div class:list={['mg-slide', i === 0 && 'is-active']} style={`background-image:url('${mediaUrl(it.image) ?? ''}')`} data-slide>
 				<div class="mg-container">
 					<div class="mg-slide-in">
-						<h2 class="mg-slide-h" {...$s(`items.${i}.title`)}><Lines text={it.title} /></h2>
+						{i === 0 ? <h1 class="mg-slide-h" {...$s(`items.${i}.title`)}><Lines text={it.title} /></h1> : <h2 class="mg-slide-h" {...$s(`items.${i}.title`)}><Lines text={it.title} /></h2>}
 						<p class="mg-slide-p" {...$s(`items.${i}.desc`)}>{it.desc}</p>
 						{it.btn_title && it.btn_link && live(it.btn_link) && (
 							<a class="mg-btn" href={dataHref(it.btn_link, (p) => href(locale, p))} {...$s(`items.${i}.btn_title`)}>{String(it.btn_title).trim()}<PostGlyph name="arrow" /></a>

@@ -50,7 +50,7 @@
 
 	/* buttons: square, 16 px semi-bold, solid accent, an arrow after the words */
 	.mg-btn {
-		display: inline-flex; align-items: center; gap: 10px; padding: 20px 30px; font-family: var(--font-body); font-size: 16px; line-height: 18px; font-weight: var(--ds-weight-button, 600);
+		display: inline-flex; align-items: center; gap: 10px; padding: 20px 30px; font-family: var(--font-body); font-size: 16px; line-height: 18px; font-weight: var(--ds-weight-button, 700);
 		cursor: pointer; border: 1px solid var(--color-accent); border-radius: var(--ds-btn-radius, 0); background: var(--color-accent); color: var(--color-accent-on); transition: background-color .2s, border-color .2s, color .2s;
 	}
 	.mg-btn svg { width: 14px; height: 14px; fill: currentColor; }
@@ -99,7 +99,7 @@
 	@media (max-width: 575.98px) { .mg-topbar-in { flex-wrap: wrap; gap: 0 16px; padding-block: 6px; } }
 
 	/* off-canvas menu */
-	.mg-offcanvas { position: fixed; inset: 0; z-index: 1000; visibility: hidden; }
+	.mg-offcanvas { position: fixed; inset: 0; z-index: 1000; visibility: hidden; overflow: hidden; }
 	.mg-offcanvas.is-open { visibility: visible; }
 	.mg-offcanvas-backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .5); opacity: 0; transition: opacity .3s; }
 	.mg-offcanvas.is-open .mg-offcanvas-backdrop { opacity: 1; }
