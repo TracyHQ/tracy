@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-impact",
-  "revision": 2,
+  "revision": 3,
   "pending": [],
   "locales": [
     "en"
@@ -3046,42 +3046,42 @@
             "font-weight": "500",
             "border-radius": "8px",
             "padding-top": "17px",
-            "padding-left": "25px"
+            "padding-left": "36px"
           },
           "1440-dark": {
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
             "padding-top": "17px",
-            "padding-left": "25px"
+            "padding-left": "36px"
           },
           "768-light": {
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
             "padding-top": "17px",
-            "padding-left": "25px"
+            "padding-left": "36px"
           },
           "768-dark": {
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
             "padding-top": "17px",
-            "padding-left": "25px"
+            "padding-left": "36px"
           },
           "390-light": {
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
             "padding-top": "17px",
-            "padding-left": "25px"
+            "padding-left": "36px"
           },
           "390-dark": {
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
             "padding-top": "17px",
-            "padding-left": "25px"
+            "padding-left": "36px"
           }
         }
       },
