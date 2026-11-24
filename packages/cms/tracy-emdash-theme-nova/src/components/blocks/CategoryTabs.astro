@@ -39,7 +39,7 @@ const heading = lines(w.project_tabs_title)
 
 <section class="nv-tabs nv-sec nv-pt-l nv-pb-l">
 	<div class="nv-ct">
-		<div class="nv-sec-title is-small"><span class="nv-sec-h" {...$c('project_tabs_title')}>{heading.map((l, i) => <>{i > 0 && <br />}{l}</>)}</span></div>
+		<div class="nv-sec-title is-small"><span class="nv-sec-h" {...$c('project_tabs_title')}>{heading.join(' ')}</span></div>
 		<nav class="nv-tabs-nav" aria-label={w.project_tabs_nav_label} {...$c('project_tabs_nav_label')}>
 			<a href={startHref(path, 0)} class:list={[!active && 'is-on']} aria-current={!active ? 'page' : undefined} {...$c('all_projects_label')}>{w.all_projects_label}</a>
 			{cats.map((c) => (

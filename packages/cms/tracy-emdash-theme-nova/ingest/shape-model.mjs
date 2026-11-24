@@ -74,6 +74,31 @@ for (const [slug, info] of Object.entries(sectionInfo)) {
   })
 }
 
+// the section's own heading block and bottom button: module parameters the model drops (`main-section`, `bottom-desc`, `title-btn`, `link-btn`)
+{
+  const menuPath = (link) => {
+    const id = /Itemid=(\d+)/.exec(link ?? '')?.[1]
+    const row = inventory.menu.find((m) => m.id === id)
+    if (!row) return ''
+    const p = `/${row.path}`
+    return { '/about-us-2': '/about', '/about-us-2/contact': '/contact', '/about-us-2/career': '/career' }[p] ?? p
+  }
+  for (const [slug, info] of Object.entries(sectionInfo)) {
+    if (info.type === 'hero') continue
+    const p = JSON.parse(inventory.modules.find((m) => String(m.id) === info.module).params)
+    const vals = {
+      main_title: String(p['main-section'] ?? ''),
+      bottom_desc: String(p['bottom-desc'] ?? ''),
+      bottom_btn_title: String(p['title-btn'] ?? ''),
+      bottom_btn_link: p['title-btn'] ? menuPath(p['link-btn']) : '',
+      bottom_btn_type: p['title-btn'] ? String(p['type-btn'] ?? 'primary') : ''
+    }
+    const type = model.types.find((t) => t.name === info.type)
+    for (const name of Object.keys(vals)) if (!type.fields.some((f) => f.name === name)) type.fields.push({ name, type: 'text' })
+    Object.assign(model.records.find((r) => r.type === info.type && r.slug === slug).values, vals)
+  }
+}
+
 // ---- page layout: which sections a page prints, in the order of its positions. 131 (CTA) and 136 (copyright) are on every page: chrome.
 const DYN = {
   117: 'latest-news',
@@ -127,7 +152,7 @@ for (const f of postType.fields) if (['title', 'excerpt', 'body'].includes(f.nam
 const extra = [
   ['created', 'date'], ['author', 'text'], ['author_avatar', 'image'], ['tags', 'text'], ['hits', 'text'], ['kind', 'text'],
   ['banner', 'image'], ['project_client', 'text'], ['project_budget', 'text'], ['project_client_name', 'text'], ['project_services', 'text'],
-  ['project_date', 'text'], ['project_link', 'text']
+  ['project_date', 'text'], ['project_link', 'text'], ['sort', 'text']
 ]
 for (const [name, type] of extra) if (!postType.fields.some((f) => f.name === name)) postType.fields.push({ name, type })
 const slugOfModel = (alias) => alias.replace(/[^a-z0-9]+/g, '-')
@@ -182,7 +207,8 @@ for (const r of model.records.filter((x) => x.type === 'posts')) {
     project_client_name: (fields['prj-client-name'] ?? '').trim(),
     project_services: fields['prj-services'] ?? '',
     project_date: fields['prj-date'] ?? '',
-    project_link: fields['prj-completed'] ?? ''
+    project_link: fields['prj-completed'] ?? '',
+    sort: String(row.ordering ?? '').padStart(4, '0')
   })
 }
 {
@@ -301,7 +327,7 @@ model.records.push({
     recent_work_title: 'Check some of recent work',
     related_title: 'Related Posts',
     latest_news_title: 'Latest news from us',
-    popular_tags_title: 'Tags',
+    popular_tags_title: 'Tags Popular',
     service_menu_title: 'Service Category',
     follow_label: 'Follow us:'
   }
@@ -361,6 +387,18 @@ model.types = model.types.filter((t) => t.name !== 'modules')
 }
 model.media = []
 model.site = { ...model.site, title: { en: 'JA Nova' }, tagline: { en: '' } }
+
+// ---- links the model keeps at the Joomla paths of the ported pages
+{
+  const MOVED = { '/about-us-2/contact': '/contact', '/about-us-2/career': '/career', '/about-us-2': '/about', '/category-blog': '/blog' }
+  const walk = (v, set) => {
+    if (typeof v === 'string') return MOVED[v] ?? v
+    if (Array.isArray(v)) return v.map((x) => walk(x))
+    if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, walk(x)]))
+    return v
+  }
+  for (const r of model.records) if (r.type !== 'posts' && r.type !== 'pages') r.values = walk(r.values)
+}
 
 // ---- a scalar field that arrives as a list holds the first non-empty value
 for (const r of model.records) {

@@ -68,12 +68,13 @@ html[data-theme="dark"] .nv-pricing { --nv-soft: var(--color-band); --nv-soft-2:
 }
 @media (min-width: 576px) { .nv-pricing-tab { font-size: 24px; } }
 @media (min-width: 1200px) {
-	.nv-pricing-tab { margin: 0 0 32px; padding: 32px; border-color: transparent; font-size: 28px; }
+	.nv-pricing-tab { margin: 0 0 31px; padding: 32px; border-color: transparent; font-size: 28px; }
 	.nv-pricing-tab:last-child { margin-bottom: 0; }
 }
 .nv-pricing-tab:hover { color: var(--color-accent); }
 .nv-pricing-tab.is-active { border-color: var(--color-accent); background: var(--color-accent-light); color: var(--color-accent); }
 html[data-theme="dark"] .nv-pricing-tab { color: var(--color-fg); }
+html[data-theme="dark"] .nv-pricing-tab:not(.is-active) { border-color: var(--color-line); }
 html[data-theme="dark"] .nv-pricing-tab:hover { color: var(--color-accent-text); }
 html[data-theme="dark"] .nv-pricing-tab.is-active { background: var(--nv-soft-2); color: var(--color-accent-text); }
 .nv-pricing-pane[hidden] { display: none; }
@@ -119,9 +120,9 @@ html[data-theme="dark"] .nv-accordion { --nv-soft: var(--color-surface); }
 .nv-acc-btn:hover, .nv-acc-btn:focus-visible { color: var(--color-accent); }
 .nv-acc-q { padding-right: 16px; font-family: var(--font-display); font-size: 16px; font-weight: var(--ds-weight-heading, 700); line-height: 1.2; }
 @media (min-width: 576px) { .nv-acc-q { font-size: 18px; } }
-.nv-acc-marker { position: relative; flex: none; width: 12px; height: 12px; }
-.nv-acc-marker::before, .nv-acc-plus::before { content: ""; position: absolute; left: 0; top: 5px; width: 12px; height: 2px; background: currentColor; }
-.nv-acc-plus::before { top: 0; left: 5px; width: 2px; height: 12px; transition: transform .2s, opacity .2s; }
+.nv-acc-marker { position: relative; flex: none; width: 11px; height: 12px; }
+.nv-acc-marker::before, .nv-acc-plus::before { content: ""; position: absolute; left: 0; top: 4.75px; width: 11px; height: 2.5px; border-radius: 1.25px; background: currentColor; }
+.nv-acc-plus::before { top: .5px; left: 4.25px; width: 2.5px; height: 11px; transition: transform .2s, opacity .2s; }
 .nv-acc-plus { position: absolute; inset: 0; }
 .nv-acc-btn.is-open .nv-acc-plus::before { opacity: 0; transform: rotate(90deg); }
 .nv-acc-panel { overflow: hidden; transition: height .35s ease; }
@@ -145,3 +146,13 @@ a.nv-sb-link:hover, a.nv-sb-link:focus-visible { opacity: .8; }
 .nv-sb-follow.is-style-2 .is-facebook { background: var(--color-net-facebook, #1877f2); }
 .nv-sb-follow.is-style-2 .is-twitter, .nv-sb-follow.is-style-2 .is-x { background: var(--color-net-twitter, #1da1f2); }
 .nv-sb-follow.is-style-2 .is-instagram { background: var(--color-net-instagram, #e4405f); }
+
+/* the section heading above the pricing tabs (source: t4section `main-section`, centred, 700px, 64px below) */
+.nv-pricing .nv-section-title-wrap { max-width: 700px; margin: 0 auto 4rem; text-align: center; }
+@media (max-width: 767.98px) { .nv-pricing .nv-section-title-wrap { margin-bottom: 2rem; } }
+@media (max-width: 575.98px) { .nv-pricing .nv-section-title-wrap { margin-bottom: 1rem; } }
+.nv-pricing .nv-main-title { margin: 0; display: block; font-family: var(--font-display); font-weight: var(--ds-weight-heading, 700); line-height: 1.2; color: var(--color-heading); font-size: 2rem; }
+@media (max-width: 767.98px) { .nv-pricing .nv-main-title { font-size: 28px; } }
+@media (max-width: 575.98px) { .nv-pricing .nv-main-title { font-size: 24px; } }
+/* coloured words of the footer strip: the source's `.text-cyan` */
+.nv-cta .nv-hl-cyan { color: var(--ds-c-accent-text, var(--color-cyan)); }

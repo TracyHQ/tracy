@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-24T22:59:25.157Z",
+	"generatedAt": "2026-11-24T23:16:04.524Z",
 	"fields": {
 		"pages.title": {
 			"source": "text",
@@ -125,6 +125,11 @@
 			"source": "text",
 			"target": "string",
 			"label": "Project link"
+		},
+		"posts.sort": {
+			"source": "text",
+			"target": "string",
+			"label": "Sort"
 		},
 		"posts.path": {
 			"source": "text",
@@ -276,6 +281,31 @@
 			"target": "repeater",
 			"label": "Items"
 		},
+		"features_intro.main_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Main title"
+		},
+		"features_intro.bottom_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom desc"
+		},
+		"features_intro.bottom_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn title"
+		},
+		"features_intro.bottom_btn_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn link"
+		},
+		"features_intro.bottom_btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn type"
+		},
 		"text_slider.slide_direct": {
 			"source": "text",
 			"target": "string",
@@ -300,6 +330,31 @@
 			"source": "group",
 			"target": "repeater",
 			"label": "Items"
+		},
+		"text_slider.main_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Main title"
+		},
+		"text_slider.bottom_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom desc"
+		},
+		"text_slider.bottom_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn title"
+		},
+		"text_slider.bottom_btn_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn link"
+		},
+		"text_slider.bottom_btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn type"
 		},
 		"cta.cta_title": {
 			"source": "text",
@@ -330,6 +385,31 @@
 			"source": "group",
 			"target": "repeater",
 			"label": "Items"
+		},
+		"cta.main_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Main title"
+		},
+		"cta.bottom_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom desc"
+		},
+		"cta.bottom_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn title"
+		},
+		"cta.bottom_btn_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn link"
+		},
+		"cta.bottom_btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn type"
 		},
 		"clients.col_lg": {
 			"source": "text",
@@ -371,6 +451,31 @@
 			"target": "repeater",
 			"label": "Items"
 		},
+		"clients.main_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Main title"
+		},
+		"clients.bottom_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom desc"
+		},
+		"clients.bottom_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn title"
+		},
+		"clients.bottom_btn_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn link"
+		},
+		"clients.bottom_btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn type"
+		},
 		"teams.team_desc": {
 			"source": "text",
 			"target": "string",
@@ -391,6 +496,31 @@
 			"target": "repeater",
 			"label": "Items"
 		},
+		"teams.main_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Main title"
+		},
+		"teams.bottom_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom desc"
+		},
+		"teams.bottom_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn title"
+		},
+		"teams.bottom_btn_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn link"
+		},
+		"teams.bottom_btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn type"
+		},
 		"pricing.title": {
 			"source": "text",
 			"target": "string",
@@ -400,6 +530,31 @@
 			"source": "group",
 			"target": "repeater",
 			"label": "Items"
+		},
+		"pricing.main_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Main title"
+		},
+		"pricing.bottom_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom desc"
+		},
+		"pricing.bottom_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn title"
+		},
+		"pricing.bottom_btn_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn link"
+		},
+		"pricing.bottom_btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn type"
 		},
 		"accordion.info_title": {
 			"source": "text",
@@ -436,6 +591,31 @@
 			"target": "repeater",
 			"label": "Items"
 		},
+		"accordion.main_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Main title"
+		},
+		"accordion.bottom_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom desc"
+		},
+		"accordion.bottom_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn title"
+		},
+		"accordion.bottom_btn_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn link"
+		},
+		"accordion.bottom_btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn type"
+		},
 		"social.social_style": {
 			"source": "text",
 			"target": "string",
@@ -450,6 +630,31 @@
 			"source": "group",
 			"target": "repeater",
 			"label": "Items"
+		},
+		"social.main_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Main title"
+		},
+		"social.bottom_desc": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom desc"
+		},
+		"social.bottom_btn_title": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn title"
+		},
+		"social.bottom_btn_link": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn link"
+		},
+		"social.bottom_btn_type": {
+			"source": "text",
+			"target": "string",
+			"label": "Bottom btn type"
 		},
 		"chrome.title": {
 			"source": "text",
@@ -695,16 +900,6 @@
 			"source": "text",
 			"target": "string",
 			"label": "Play video label"
-		},
-		"chrome.join_team_label": {
-			"source": "text",
-			"target": "string",
-			"label": "Join team label"
-		},
-		"chrome.join_team_link": {
-			"source": "text",
-			"target": "string",
-			"label": "Join team link"
 		},
 		"chrome.nav_label": {
 			"source": "text",

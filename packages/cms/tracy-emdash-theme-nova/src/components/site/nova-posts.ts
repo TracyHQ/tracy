@@ -1,6 +1,6 @@
 // Small pure helpers the page views and post modules share: the intro text of a post, its tags, a page of a list in the
 // `?start=N` form the source's pagination uses. No words are printed here; every label comes from the CMS.
-import { getEmDashCollection } from 'emdash'
+import { getEmDashCollection, getTaxonomyTerms } from 'emdash'
 import { loadPosts, type PostRow } from '@/lib/posts'
 import type { Locale } from '@/lib/i18n'
 
@@ -64,16 +64,41 @@ export const projectCategory = (post: Pick<PostRow, 'kind' | 'category'>): strin
   post.kind === 'project' && post.category ? post.category.slug : null
 
 /**
- * Every published post, newest first; posts of the same moment keep the order the collection holds them in (the order the
- * source lists them in), where `loadPosts` breaks that tie by slug.
+ * Every published post in the source's list orders: the articles of the blog newest first (ties: the Joomla `sort` ordering),
+ * then the projects by category (the order the categories were created in, which is the order the source's tabs and its
+ * "All project" list use) and by the Joomla `sort` ordering inside a category. A caller takes the kind it needs.
  */
 export async function loadPostsInOrder(locale: Locale): Promise<PostRow[]> {
   const [rows, { entries }] = await Promise.all([
     loadPosts(locale),
     getEmDashCollection('posts', { locale, status: 'published' })
   ])
-  const rank = new Map<string, number>((entries as any[]).map((e, i) => [e.id as string, i]))
-  return [...rows].sort((a, b) =>
-    a.date < b.date ? 1 : a.date > b.date ? -1 : (rank.get(a.slug) ?? 0) - (rank.get(b.slug) ?? 0)
-  )
+  const rank = new Map<string, number>()
+  const sortOf = new Map<string, string>()
+  ;(entries as any[]).forEach((e, i) => {
+    rank.set(e.id as string, i)
+    sortOf.set(e.id as string, String(e.data.sort ?? ''))
+  })
+  let terms: string[] = []
+  try {
+    terms = ((await getTaxonomyTerms('category', { locale })) as any[]).map((t) => t.slug as string)
+  } catch {
+    terms = []
+  }
+  const catRank = (p: PostRow) => {
+    const i = terms.indexOf(p.category?.slug ?? '')
+    return i < 0 ? 999 : i
+  }
+  const bySort = (a: PostRow, b: PostRow) => {
+    const x = sortOf.get(a.slug) ?? ''
+    const y = sortOf.get(b.slug) ?? ''
+    return x < y ? -1 : x > y ? 1 : (rank.get(a.slug) ?? 0) - (rank.get(b.slug) ?? 0)
+  }
+  const articles = rows.filter((p) => p.kind !== 'project').sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : bySort(a, b)))
+  const projects = rows.filter((p) => p.kind === 'project').sort((a, b) => catRank(a) - catRank(b) || bySort(a, b))
+  return [...articles, ...projects]
 }
+
+/** The home news band's order (`mod_articles_category` ordered by title, ascending, case-insensitive). */
+export const byTitle = (list: PostRow[]): PostRow[] =>
+  [...list].sort((a, b) => a.title.localeCompare(b.title, 'en', { sensitivity: 'base' }))

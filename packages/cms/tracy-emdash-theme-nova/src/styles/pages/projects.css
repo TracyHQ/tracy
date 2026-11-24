@@ -30,7 +30,7 @@
 /* ---- category tabs (Project page) ---- */
 .nv-tabs-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 4rem; }
 @media (max-width: 991.98px) { .nv-tabs-nav { margin-bottom: 2rem; } }
-.nv-tabs-nav a { display: inline-flex; align-items: center; height: 64px; padding: 1rem 2rem; font-weight: 500; color: var(--color-heading); background: var(--pg-gray); border-radius: 1rem; transition: all .15s; }
+.nv-tabs-nav a { display: inline-flex; align-items: center; height: 64px; padding: .75rem 2rem; font-size: .9375rem; font-weight: 500; color: var(--color-heading); background: var(--pg-gray); border-radius: 1rem; transition: all .15s; }
 @media (max-width: 991.98px) { .nv-tabs-nav a { height: 50px; } }
 @media (max-width: 767.98px) { .nv-tabs-nav a { width: calc(50% - 1rem); padding: 1rem; justify-content: center; } }
 .nv-tabs-nav a:hover, .nv-tabs-nav a.is-on { background: var(--color-accent); color: var(--color-accent-on); }
@@ -57,7 +57,7 @@ html[data-theme="dark"] .nv-card--project { background: var(--ds-c-surface-warm,
 .nv-recent-pic img { display: block; width: 100%; height: auto; border-radius: 1rem; transition: all .8s; }
 .nv-recent-item:hover .nv-recent-pic img { transform: scale(1.02); }
 .nv-recent-title { margin: 0 0 1rem; font-size: 1.75rem; font-weight: 600; }
-@media (max-width: 575px) { .nv-recent-title { font-size: 22px; } }
+@media (max-width: 576px) { .nv-recent-title { font-size: 22px; } }
 .nv-recent-title a { color: var(--color-heading); }
 .nv-recent-title a:hover { color: var(--color-accent-text-hover); }
 .nv-recent-intro { margin: 0; }

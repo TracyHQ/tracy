@@ -23,13 +23,13 @@ const cells = [
 
 <div class="nv-meta">
 	{cells.map((c) => (
-		<div class="nv-meta-cell">
+		<div class="nv-meta-cell"><div class="nv-meta-in">
 			<h5 {...$c(c.lf)}>{c.label}</h5>
 			<p {...$p(c.vf)}>{c.value}</p>
-		</div>
+		</div></div>
 	))}
-	<div class="nv-meta-cell">
+	<div class="nv-meta-cell"><div class="nv-meta-in">
 		<h5 {...$c('completed_label')}>{w.completed_label}</h5>
 		{link && <a class="nv-btn" href={link} target="_blank" rel="noopener noreferrer" {...$c('see_live_label')}>{w.see_live_label}</a>}
-	</div>
+	</div></div>
 </div>

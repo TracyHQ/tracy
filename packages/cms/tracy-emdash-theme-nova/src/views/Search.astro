@@ -37,7 +37,7 @@ const tag = uiTag(locale)
 <Base chrome={chrome} title={w.search_page_title} currentPath="/search" robots="noindex, follow">
 	<main id="main" class="nv-pg nv-pg--search">
 		<PageOwner stamp={$c} />
-		<Breadcrumbs chrome={chrome} currentPath="/search" trail={[{ label: w.search_page_title, url: '/search' }]} />
+		<Breadcrumbs chrome={chrome} currentPath="/search" trail={[{ label: w.search_page_title, url: '/search' }, ...(q ? [{ label: q, url: '' }] : [])]} />
 		<div class="nv-body">
 			<div class="nv-ct">
 				<div class="nv-finder">

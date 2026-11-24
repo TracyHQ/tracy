@@ -33,13 +33,13 @@ const at = (n: number) => startHref(path, (n - 1) * size, extra)
 			<ul>
 				{current > 1 ? (
 					<>
-						<li><a href={at(1)} aria-label={w.pager_first_label} {...$c('pager_first_label')}><Icon name="first" size={16} /></a></li>
-						<li><a href={at(current - 1)} aria-label={w.pager_prev_label} rel="prev" {...$c('pager_prev_label')}><Icon name="prev" size={16} /></a></li>
+						<li><a href={at(1)} aria-label={w.pager_first_label} {...$c('pager_first_label')}><Icon name="first" size={16} weight="bold" /></a></li>
+						<li><a href={at(current - 1)} aria-label={w.pager_prev_label} rel="prev" {...$c('pager_prev_label')}><Icon name="prev" size={16} weight="bold" /></a></li>
 					</>
 				) : (
 					<>
-						<li class="is-off"><span aria-hidden="true"><Icon name="first" size={16} /></span></li>
-						<li class="is-off"><span aria-hidden="true"><Icon name="prev" size={16} /></span></li>
+						<li class="is-off"><span aria-hidden="true"><Icon name="first" size={16} weight="bold" /></span></li>
+						<li class="is-off"><span aria-hidden="true"><Icon name="prev" size={16} weight="bold" /></span></li>
 					</>
 				)}
 				{Array.from({ length: pages }, (_, i) => i + 1).map((n) => n === current ? (
@@ -49,13 +49,13 @@ const at = (n: number) => startHref(path, (n - 1) * size, extra)
 				))}
 				{current < pages ? (
 					<>
-						<li><a href={at(current + 1)} aria-label={w.pager_next_label} rel="next" {...$c('pager_next_label')}><Icon name="next" size={16} /></a></li>
-						<li><a href={at(pages)} aria-label={w.pager_last_label} {...$c('pager_last_label')}><Icon name="last" size={16} /></a></li>
+						<li><a href={at(current + 1)} aria-label={w.pager_next_label} rel="next" {...$c('pager_next_label')}><Icon name="next" size={16} weight="bold" /></a></li>
+						<li><a href={at(pages)} aria-label={w.pager_last_label} {...$c('pager_last_label')}><Icon name="last" size={16} weight="bold" /></a></li>
 					</>
 				) : (
 					<>
-						<li class="is-off"><span aria-hidden="true"><Icon name="next" size={16} /></span></li>
-						<li class="is-off"><span aria-hidden="true"><Icon name="last" size={16} /></span></li>
+						<li class="is-off"><span aria-hidden="true"><Icon name="next" size={16} weight="bold" /></span></li>
+						<li class="is-off"><span aria-hidden="true"><Icon name="last" size={16} weight="bold" /></span></li>
 					</>
 				)}
 			</ul>

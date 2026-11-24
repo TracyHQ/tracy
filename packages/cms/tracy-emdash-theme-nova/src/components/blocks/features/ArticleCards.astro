@@ -1,0 +1,25 @@
+---
+/**
+ * The cards module (`products-cards`) placed inside a service article at the source's `{loadmoduleid 116}` token: the three cards only,
+ * no section title, no closing text or button, compact spacing (`.nv-article-cards` in `styles/blocks/features.css`).
+ */
+import type { Chrome } from '@/lib/chrome'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import Style2 from '@/components/blocks/features/Style2.astro'
+
+interface Props {
+  chrome: Chrome
+  /** The slug of the cards entry (default: the products cards). */
+  slug?: string
+}
+const { chrome, slug = 'products-cards' } = Astro.props
+const row = await section('features_intro', slug, chrome.locale)
+const $s = row ? stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug }) : null
+---
+
+{row && $s && (
+	<div class="nv-features nv-features-2 nv-article-cards" data-block="FeaturesIntro" {...$s()}>
+		<Style2 chrome={chrome} row={row} info={{}} />
+	</div>
+)}

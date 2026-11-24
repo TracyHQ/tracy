@@ -10,6 +10,7 @@ import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
 import Sections from '@/components/blocks/Sections.astro'
 import PopularTags from '@/components/blocks/PopularTags.astro'
 import PostCard from '@/components/site/PostCard.astro'
+import FileGlyph from '@/components/site/FileGlyph.astro'
 import Pager from '@/components/site/Pager.astro'
 import SearchBox from '@/components/site/SearchBox.astro'
 import SocialIcon from '@/components/site/SocialIcon.astro'
@@ -87,7 +88,7 @@ if (isProject && list.length === 0) Astro.response.status = 404
 							<section class="nv-more">
 								<h3 {...$c('more_label')}>{w.more_label}</h3>
 								<ol>
-									{more.map((p) => <li><a href={href(locale, postPath(p))}>{p.title}</a></li>)}
+									{more.map((p) => <li><a href={href(locale, postPath(p))}><FileGlyph /><span {...stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })('title')}>{p.title}</span></a></li>)}
 								</ol>
 							</section>
 						)}

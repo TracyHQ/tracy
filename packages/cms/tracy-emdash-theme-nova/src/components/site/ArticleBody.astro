@@ -8,6 +8,7 @@ import ProseBlock from '@/components/site/ProseBlock.astro'
 import ProseListItem from '@/components/site/ProseListItem.astro'
 import ArticleImageRow from '@/components/site/ArticleImageRow.astro'
 import { BLOCK_SRC } from '@/lib/stamps'
+import { bodyImageUrl } from '@/lib/media'
 
 interface Props {
   value: any[]
@@ -15,20 +16,67 @@ interface Props {
 const { value } = Astro.props
 const blocks: any[] = Array.isArray(value) ? value : []
 const textOf = (b: any) => (b?.children ?? []).map((c: any) => c?.text ?? '').join('')
+const isText = (b: any) => b?._type === 'block' && !b.listItem
+// a Joomla module token (`{loadmoduleid 116}`) is no text for the reader: it marks where the cards of the page go (the slot)
+const isToken = (b: any) => isText(b) && /^\{loadmodule/.test(textOf(b).trim())
+const tokenAt = blocks.findIndex(isToken)
 // an empty paragraph the importer left between blocks draws nothing
-// a Joomla module token (`{loadmoduleid 116}`) is no text for the reader
-const kept = blocks.filter((b) => !(b?._type === 'block' && !b.listItem && (textOf(b).trim() === '' || /^\{loadmodule/.test(textOf(b).trim()))))
-// consecutive pictures sit in one row
-const rows: any[] = []
-for (let i = 0; i < kept.length; i++) {
-  if (kept[i]?._type !== 'image') { rows.push(kept[i]); continue }
-  const run: any[] = []
-  while (kept[i]?._type === 'image') run.push(kept[i++])
-  i--
-  rows.push(run.length === 1 ? run[0] : { _type: 'nvRow', _key: `row-${run[0]._key ?? i}`, images: run })
+const keep = (b: any) => !(isText(b) && (textOf(b).trim() === '' || isToken(b)))
+const before = (tokenAt < 0 ? blocks : blocks.slice(0, tokenAt)).filter(keep)
+const after = tokenAt < 0 ? [] : blocks.slice(tokenAt + 1).filter(keep)
+
+// consecutive pictures sit in one row; a picture followed by a heading and a bullet list is the source's two-column row
+// (picture left, heading and list right)
+const group = (list: any[]): any[] => {
+  const rows: any[] = []
+  for (let i = 0; i < list.length; i++) {
+    if (list[i]?._type !== 'image') { rows.push(list[i]); continue }
+    const run: any[] = []
+    while (list[i]?._type === 'image') run.push(list[i++])
+    const head = list[i]
+    if (run.length === 1 && head?._type === 'block' && head.style === 'h3' && list[i + 1]?.listItem) {
+      const text = [head]
+      i++
+      while (list[i]?.listItem) text.push(list[i++])
+      rows.push({ kind: 'split', image: run[0], text })
+      i--
+      continue
+    }
+    i--
+    rows.push(run.length === 1 ? run[0] : { _type: 'nvRow', _key: `row-${run[0]._key ?? i}`, images: run })
+  }
+  // consecutive plain blocks stay one Portable Text so lists keep their grouping
+  const out: any[] = []
+  for (const r of rows) {
+    if (r?.kind === 'split') out.push(r)
+    else if (out.length && out[out.length - 1].kind === 'pt') out[out.length - 1].blocks.push(r)
+    else out.push({ kind: 'pt', blocks: [r] })
+  }
+  return out
 }
-const stamped = kept.some((b) => b?.[BLOCK_SRC])
+const stamped = blocks.some((b) => b?.[BLOCK_SRC])
 const components = { ...(stamped ? { block: ProseBlock, listItem: ProseListItem } : {}), type: { nvRow: ArticleImageRow } }
+const imageOf = (n: any) => ({
+  src: bodyImageUrl(n?.asset),
+  alt: n?.alt ?? '',
+  w: Number(n?.width ?? n?.asset?.width ?? n?.asset?.meta?.width) || undefined,
+  h: Number(n?.height ?? n?.asset?.height ?? n?.asset?.meta?.height) || undefined
+})
+const segments = [...group(before), ...(Astro.slots.has('default') ? [{ kind: 'slot' }] : []), ...group(after)]
 ---
 
-<div class="nv-article-body" itemprop="articleBody"><PortableText value={rows} components={components} /></div>
+<div class="nv-article-body" itemprop="articleBody">
+	{segments.map((s) => {
+		if (s.kind === 'slot') return <Fragment><div class="nv-article-slot"><slot /></div></Fragment>
+		if (s.kind === 'split') {
+			const img = imageOf(s.image)
+			return (
+				<div class="nv-article-split">
+					<div class="nv-split-pic">{img.src && <img src={img.src} alt={img.alt} width={img.w} height={img.h} loading="lazy" decoding="async" />}</div>
+					<div class="nv-split-text"><PortableText value={s.text} components={components} /></div>
+				</div>
+			)
+		}
+		return <PortableText value={s.blocks} components={components} />
+	})}
+</div>

@@ -2,7 +2,7 @@
 /**
  * Teams (acm `teams` style-1): a yellow band with a lead sentence, two round arrows and white cards that slide endlessly, 1 / 2 / 3 across
  * (`columns` at xl and up). The arrows move this carousel only. As in the source, the left arrow is the one that goes to the next card.
- * Under the cards the section's own button (words `join_team_label`, `join_team_link` of the chrome entry).
+ * Under the cards the section's own button (`bottom_btn_title`, `bottom_btn_link`, `bottom_btn_type`).
  */
 import type { Chrome } from '@/lib/chrome'
 import { href } from '@/lib/i18n'
@@ -26,7 +26,8 @@ const items: { img?: any; title?: string; team_position?: string; link?: string 
 if (items.length === 0) return
 const columns = Math.max(1, Math.min(6, Number(row.columns) || 3))
 const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
-const joinTo = site.join_team_link ? url(site.join_team_link) : ''
+const joinTo = url(row.bottom_btn_link)
+const joinType = /light/.test(row.bottom_btn_type ?? '') ? 'is-light' : /secondary|dark/.test(row.bottom_btn_type ?? '') ? 'is-secondary' : 'is-primary'
 const carId = `nv-team-${row.slug}`
 const desc = row.team_desc ? headingHtml(row.team_desc) : ''
 
@@ -80,9 +81,9 @@ const arrows = [
       </div>
     </div>
   </div>
-  {site.join_team_label && joinTo && (
+  {row.bottom_btn_title && joinTo && (
     <div class="nv-bottom-actions">
-      <a class="nv-blk-btn is-primary" href={joinTo} {...$c('join_team_label')}>{site.join_team_label}</a>
+      <a class:list={['nv-blk-btn', joinType]} href={joinTo} {...$s('bottom_btn_title')}>{row.bottom_btn_title}</a>
     </div>
   )}
 </section>

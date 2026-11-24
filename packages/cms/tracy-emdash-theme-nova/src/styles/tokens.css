@@ -34,7 +34,15 @@
 	--color-yellow-light: var(--ds-c-warn-bg, #fef6e7);
 	--color-red: var(--ds-c-danger, #ef3867);
 	--color-red-light: var(--ds-c-danger-bg, #fde9ee);
-	--color-cyan: var(--ds-c-info, #25b5ff);
+	--color-cyan: var(--ds-c-info, #2dc3f5);
+	/* ds-keep: brand colour of a social network */
+	--color-net-facebook: #1877f2;
+	/* ds-keep: brand colour of a social network */
+	--color-net-twitter: #1da1f2;
+	/* ds-keep: brand colour of a social network */
+	--color-net-instagram: #e4405f;
+	/* ds-keep: brand colour of a social network */
+	--color-net-youtube: #ff0000;
 	--color-cyan-light: var(--ds-c-info-bg, #e9f7ff);
 
 	/* shadcn semantic tokens, mapped onto the design */

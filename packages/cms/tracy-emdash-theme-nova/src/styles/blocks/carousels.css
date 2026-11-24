@@ -51,19 +51,22 @@
 .nv-clients-logo a { display: block; opacity: .4; transition: opacity .5s; }
 .nv-clients-logo a:hover, .nv-clients-logo a:focus-visible { opacity: 1; }
 .nv-clients-logo img { display: block; max-width: 100%; height: auto; }
+/* an item with no link prints no anchor: its picture carries the same pale look (source: opacity on the `a`) */
+.nv-clients-logo > img { opacity: .4; transition: opacity .5s; }
+.nv-clients-logo > img:hover { opacity: 1; }
 
 /* ---------- teams ---------- */
 .nv-teams { overflow: hidden; }
-.nv-teams-top { display: flex; flex-wrap: wrap; align-items: center; margin: 0 0 16px; }
-@media (min-width: 768px) { .nv-teams-top { margin-bottom: 48px; } }
+.nv-teams-top { display: flex; flex-wrap: wrap; align-items: center; margin: -8px 0 24px; }
+@media (min-width: 768px) { .nv-teams-top { margin: -16px 0 48px; } }
 .nv-teams-desc {
-	flex: 0 0 100%; margin: 16px 0 8px; padding: 8px 0; color: var(--color-accent-on); font-family: var(--font-display);
+	flex: 0 0 100%; margin: 24px 0 16px; padding: 0; color: var(--color-accent-on); font-family: var(--font-display);
 	font-size: 24px; font-weight: var(--ds-weight-heading, 700); line-height: 1.2;
 }
 @media (min-width: 576px) { .nv-teams-desc { font-size: 28px; } }
 @media (min-width: 768px) { .nv-teams-desc { font-size: 32px; } }
 .nv-teams-nav { flex: 0 0 100%; padding: 8px 0; }
-@media (min-width: 768px) { .nv-teams-desc, .nv-teams-nav { padding-block: 16px; } }
+@media (min-width: 768px) { .nv-teams-desc { margin: 32px 0 24px; } .nv-teams-nav { padding-block: 16px; } }
 @media (min-width: 992px) {
 	.nv-teams-desc { flex-basis: 50%; max-width: 50%; }
 	.nv-teams-nav { flex-basis: 50%; max-width: 50%; text-align: right; }
@@ -73,7 +76,7 @@
 	border: 0; border-radius: 50%; background: var(--color-surface); color: var(--color-heading); cursor: pointer;
 	transition: background-color .2s, color .2s;
 }
-@media (min-width: 992px) { .nv-teams-arrow { width: 64px; height: 64px; margin: 0 8px; } }
+@media (min-width: 992px) { .nv-teams-arrow { width: 64px; height: 64px; margin: 0 8px 0 12px; } }
 .nv-teams-arrow:hover, .nv-teams-arrow:focus-visible { background: var(--color-accent); color: var(--color-accent-on); }
 .nv-teams-arrow svg { display: block; }
 
@@ -92,5 +95,3 @@
 .nv-teams-name a { color: var(--color-heading); }
 .nv-teams-name a:hover, .nv-teams-name a:focus-visible { color: var(--color-accent); }
 .nv-teams-text span { color: var(--color-meta); }
-/* the source's row gutters (-16px) pull the button up; `.nv-bottom-actions` itself is drawn in features.css */
-@media (min-width: 768px) { .nv-teams .nv-container { margin-bottom: -16px; } }

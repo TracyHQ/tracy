@@ -6,7 +6,7 @@ import { mediaUrl } from '@/lib/media'
 import { postPath } from '@/lib/posts'
 import { stampFor } from '@/lib/stamps'
 import { uiTag } from '@/lib/ui'
-import { clip, introOf, loadPostsInOrder } from '@/components/site/nova-posts'
+import { byTitle, clip, introOf, loadPostsInOrder } from '@/components/site/nova-posts'
 
 interface Props {
   chrome: Chrome
@@ -15,7 +15,7 @@ const { chrome } = Astro.props
 const locale = chrome.locale
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const w = chrome.site
-const items = (await loadPostsInOrder(locale)).filter((p) => p.kind !== 'project').slice(0, 3)
+const items = byTitle((await loadPostsInOrder(locale)).filter((p) => p.kind !== 'project')).slice(0, 3)
 const tag = uiTag(locale)
 ---
 

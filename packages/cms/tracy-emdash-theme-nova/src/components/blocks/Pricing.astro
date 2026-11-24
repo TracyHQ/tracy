@@ -8,6 +8,7 @@ import { href } from '@/lib/i18n'
 import { stampFor } from '@/lib/stamps'
 import { dataHref } from '@/lib/data-links'
 import { cleanHtml } from '@/lib/html'
+import { headingHtml } from '@/lib/heading-html'
 import { sectionWrap } from '@/lib/section-style'
 
 interface Props {
@@ -26,6 +27,11 @@ const uid = `nv-pr-${row.slug}`
 ---
 
 <section class:list={[sectionWrap(row.slug, info), 'nv-pricing']} {...$s()}>
+  {row.main_title && (
+    <div class="nv-container">
+      <div class="nv-section-title-wrap"><div class="nv-mod-title-wrap"><span class="nv-h2 nv-main-title" set:html={headingHtml(row.main_title)} {...$s('main_title')} /></div></div>
+    </div>
+  )}
   <div class="nv-container">
     <div class="nv-row nv-v-gutters" data-nv-tabs>
       <div class="nv-col nv-col-xl-4">

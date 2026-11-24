@@ -48,7 +48,7 @@ const tags = post ? tagsOf(post) : []
 const catLabel = post?.category?.label ?? ''
 const trail = post
   ? isProject
-    ? [{ label: w.project_title, url: '/project' }, { label: catLabel, url: `/project/${post.category?.slug}` }]
+    ? [{ label: w.project_title, url: '/project' }, { label: catLabel, url: `/project/${post.category?.slug}` }, { label: post.title, url: '' }]
     : [{ label: w.blog_title, url: '/blog' }, { label: post.title, url: '' }]
   : undefined
 ---

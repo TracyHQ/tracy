@@ -8,6 +8,7 @@ import PageOwner from '@/components/site/PageOwner.astro'
 import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
 import Sections from '@/components/blocks/Sections.astro'
 import ArticleBody from '@/components/site/ArticleBody.astro'
+import ArticleCards from '@/components/blocks/features/ArticleCards.astro'
 import ShareRow from '@/components/site/ShareRow.astro'
 import PostNav from '@/components/site/PostNav.astro'
 import NotFound from '@/views/NotFound.astro'
@@ -48,8 +49,7 @@ if (!page) Astro.response.status = 404
 									<ShareRow chrome={chrome} url={`${publicOrigin(Astro.url)}${href(locale, here)}`} title={page.title} />
 									<div class="nv-article-right">
 										{banner && <figure class="nv-article-pic" {...$p('banner')}><img src={banner} alt="" width={page.banner?.width ?? 1344} height={page.banner?.height ?? 672} loading="lazy" decoding="async" itemprop="image" /></figure>}
-										<ArticleBody value={body} />
-										<Sections chrome={chrome} path={here} only={[]} skip={['faq']} />
+										<ArticleBody value={body}><ArticleCards chrome={chrome} /></ArticleBody>
 										<PostNav chrome={chrome} prev={prev} next={next} />
 									</div>
 								</div>

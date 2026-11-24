@@ -1,0 +1,13 @@
+---
+/** The document glyph before each link of "More Articles …" (the source draws Font Awesome's file icon; not shipped here, so a Phosphor glyph as inline SVG). */
+import { createElement } from 'react'
+import * as Phosphor from '@phosphor-icons/react/dist/ssr'
+
+interface Props {
+  size?: number
+}
+const { size = 16 } = Astro.props
+const Glyph = (Phosphor as unknown as Record<string, any>).FileText
+---
+
+<Fragment set:html={(await import('react-dom/server')).renderToStaticMarkup(createElement(Glyph, { size, weight: 'regular', 'aria-hidden': true }))} />
