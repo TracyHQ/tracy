@@ -1,13 +1,11 @@
 /* Search (Joomla Smart Search, simplified) and the error page. Imported by global.css. */
 @layer components {
 	/* source .com-finder: a centred 1200 px panel, tinted, 64 px padding */
-	.mg-search { max-width: 1200px; margin: 0 auto; padding: 0; background: var(--color-surface); }
-	@media (max-width: 991.98px) { .mg-search { padding: 48px 32px; } }
-	@media (max-width: 575.98px) { .mg-search { padding: 48px 8px; } }
-	.mg-search-form label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+	.mg-search { padding: 0; }
+		.mg-search-form label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 	.mg-search-row { display: flex; flex-wrap: wrap; gap: 8px; }
-	.mg-search-row input { flex: 1 1 240px; min-width: 0; padding: 10px 24px; background: var(--ds-c-surface, rgba(255, 255, 255, .06)); border: 1px solid var(--ds-c-border, rgba(255, 255, 255, .07)); border-radius: var(--ds-input-radius, 0); color: var(--ds-c-fg, #fff); font: 400 14px/21px var(--font-body); appearance: none; }
-	.mg-search-row input::placeholder { color: var(--ds-c-muted, rgba(255, 255, 255, .5)); opacity: 1; }
+	.mg-search-row input { flex: 1 1 240px; min-width: 0; padding: 10px 24px; background: var(--color-bg); border: 1px solid var(--color-line); border-radius: var(--ds-input-radius, 0); color: var(--color-fg); font: 400 14px/21px var(--font-body); appearance: none; }
+	.mg-search-row input::placeholder { color: var(--color-muted, #888); opacity: 1; }
 	.mg-search-row input:focus { outline: 1px solid var(--color-accent); outline-offset: 0; border-color: var(--color-accent); }
 	.mg-search-results { margin-top: 48px; }
 	.mg-search-count { margin: 0 0 24px; font-size: var(--h3-size); color: var(--color-accent-text); }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-morgan",
-  "revision": 27,
+  "revision": 30,
   "pending": [],
   "locales": [
     "en"
@@ -2729,9 +2729,9 @@
         "styles": {
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "28px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "40px",
+            "line-height": "38px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -2739,9 +2739,9 @@
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "28px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "40px",
+            "line-height": "38px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -2749,9 +2749,9 @@
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "28px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "40px",
+            "line-height": "38px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -2759,9 +2759,9 @@
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "28px",
+            "font-size": "24px",
             "font-weight": "400",
-            "line-height": "40px",
+            "line-height": "38px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -2865,61 +2865,61 @@
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
             "font-weight": "400",
-            "line-height": "22px",
+            "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(119, 119, 119)",
-            "background-color": "rgba(0, 0, 0, 0)"
+            "background-color": "rgb(255, 255, 255)"
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
             "font-weight": "400",
-            "line-height": "22px",
+            "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(167, 176, 194)",
-            "background-color": "rgba(0, 0, 0, 0)"
+            "background-color": "rgb(26, 32, 50)"
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
             "font-weight": "400",
-            "line-height": "22px",
+            "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(119, 119, 119)",
-            "background-color": "rgba(0, 0, 0, 0)"
+            "background-color": "rgb(255, 255, 255)"
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
             "font-weight": "400",
-            "line-height": "22px",
+            "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(167, 176, 194)",
-            "background-color": "rgba(0, 0, 0, 0)"
+            "background-color": "rgb(26, 32, 50)"
           },
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
             "font-weight": "400",
-            "line-height": "22px",
+            "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(119, 119, 119)",
-            "background-color": "rgba(0, 0, 0, 0)"
+            "background-color": "rgb(255, 255, 255)"
           },
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "14px",
             "font-weight": "400",
-            "line-height": "22px",
+            "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(167, 176, 194)",
-            "background-color": "rgba(0, 0, 0, 0)"
+            "background-color": "rgb(26, 32, 50)"
           }
         }
       },
@@ -4635,6 +4635,7 @@
         "topbar",
         "masthead-title",
         "masthead-desc",
+        "side-title",
         "search-count",
         "search-result-title"
       ],

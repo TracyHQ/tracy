@@ -141,12 +141,13 @@
 	/* client praise: quote cards in a row that scrolls sideways */
 	.mg-praise { display: flex; gap: 30px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 max(15px, calc((100% - 1260px) / 2 + 15px)) 20px; scroll-padding-inline: max(15px, calc((100% - 1260px) / 2 + 15px)); scrollbar-width: none; }
 	.mg-praise::-webkit-scrollbar { display: none; }
-	.mg-quote-card { flex: 0 0 min(390px, 85vw); margin: 0; background: var(--color-card); padding: 30px; text-align: center; scroll-snap-align: center; }
-	.mg-quote-card blockquote { margin: 0 0 25px; font-size: 14px; line-height: 22px; font-style: normal; }
+	.mg-quote-card { flex: 0 0 min(390px, 85vw); margin: 0; text-align: center; scroll-snap-align: center; }
+	.mg-quote-card blockquote { position: relative; box-sizing: border-box; min-height: 200px; margin: 0 0 30px; padding: 50px 40px 30px; background: var(--color-card); font-size: 14px; line-height: 25px; font-style: normal; box-shadow: 0 0 15px rgba(0, 0, 0, .04); }
+	.mg-quote-card blockquote::after { content: ""; position: absolute; left: 50%; top: 100%; margin-left: -15px; border: 15px solid transparent; border-top-color: var(--color-card); border-bottom-width: 0; }
 	.mg-quote-card figcaption { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-	.mg-quote-card img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; }
-	.mg-quote-card strong { color: var(--color-heading); font-weight: 500; font-size: 14px; }
-	.mg-quote-card span { font-size: 12px; color: var(--color-meta); }
+	.mg-quote-card img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; }
+	.mg-quote-card strong { color: var(--color-heading); font-weight: 500; font-size: 15px; }
+	.mg-quote-card span { font-size: 15px; color: var(--color-fg); }
 
 	/* call to action: a picture with a white panel on the right */
 	.mg-cta { background-size: cover; background-position: center; padding: 140px 0; }
@@ -181,11 +182,11 @@
 	.mg-fquote { display: none; margin: 0; align-items: center; gap: 24px; }
 	.mg-fquote.is-active { display: flex; }
 	@media (max-width: 575.98px) { .mg-fquote.is-active { flex-direction: column; align-items: flex-start; } }
-	.mg-fquote img { width: 156px; height: 156px; border-radius: 50%; object-fit: cover; flex: none; }
-	.mg-fquote blockquote { margin: 0 0 12px; font-size: 28px; line-height: 40px; color: #fff; }
+	.mg-fquote img { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; flex: none; }
+	.mg-fquote blockquote { max-width: 640px; margin: 0 0 24px; font-size: 24px; line-height: 38px; color: #fff; }
 	@media (max-width: 767.98px) { .mg-fquote img { width: 96px; height: 96px; } .mg-fquote blockquote { font-size: 20px; line-height: 30px; } }
-	.mg-fquote figcaption { font-size: 14px; color: rgba(255, 255, 255, .6); }
-	.mg-fquote strong { color: #fff; font-weight: 500; }
+	.mg-fquote figcaption { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: rgba(255, 255, 255, .6); }
+	.mg-fquote strong { color: #fff; font-weight: 500; font-size: 18px; }
 	.mg-dots { list-style: none; margin: 24px 0 0; padding: 0; display: flex; gap: 10px; }
 	.mg-dots button { width: 8px; height: 8px; padding: 0; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .4); background: transparent; cursor: pointer; }
 	.mg-dots button.is-active { background: var(--color-accent); border-color: var(--color-accent); }

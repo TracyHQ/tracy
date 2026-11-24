@@ -7,6 +7,7 @@ import { search } from 'emdash'
 import Base from '@/layouts/Base.astro'
 import PageOwner from '@/components/site/PageOwner.astro'
 import PostMeta from '@/components/site/PostMeta.astro'
+import BlogSidebar from '@/components/site/BlogSidebar.astro'
 import Masthead from '@/components/blocks/Masthead.astro'
 import type { Chrome } from '@/lib/chrome'
 import { href, type Locale } from '@/lib/i18n'
@@ -51,6 +52,8 @@ const results =
         return words.every((x) => hay.includes(x))
       })
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+// English singular: one hit reads “1 result for …”
+const resultsLine = fillWords(w.searchResultsLine, { count: results.length, query: q }).replace(/^(1 )results\b/, '$1result')
 ---
 
 <Base chrome={chrome} title={site.search_label} currentPath="/search" robots="noindex, follow">
@@ -58,7 +61,9 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 		<PageOwner stamp={$c} />
 		<Masthead entry={masthead} title={site.search_label} describe />
 		<div class="mg-main-body">
-			<div class="mg-container mg-fixed">
+			<div class="mg-container">
+				<div class="mg-blog">
+					<div class="mg-blog-main">
 				<div class="mg-search">
 					<form class="mg-search-form" action={href(locale, '/search')} method="get" role="search">
 						<label for="mg-q">{w.search}</label>
@@ -73,7 +78,7 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 								<p class="mg-search-empty" {...$c('no_results')}>{site.no_results}</p>
 							) : (
 								<>
-									<h2 class="mg-search-count">{fillWords(w.searchResultsLine, { count: results.length, query: q })}</h2>
+									<h2 class="mg-search-count">{resultsLine}</h2>
 									<ol>
 										{results.map((p) => {
 											const $p = stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })
@@ -91,6 +96,9 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 							)}
 						</div>
 					)}
+				</div>
+					</div>
+					<BlogSidebar chrome={chrome} locale={locale} posts={live} tag={tag} />
 				</div>
 			</div>
 		</div>
