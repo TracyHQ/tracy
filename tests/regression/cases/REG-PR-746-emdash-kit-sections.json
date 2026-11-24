@@ -1,0 +1,47 @@
+{
+  "id": "REG-PR-746-emdash-kit-sections",
+  "kind": "feat",
+  "title": "The readiness verdict names the sections of an EmDash template that a page of its template kit prints, that hold content-map slots and are no kit block",
+  "pr": 746,
+  "area": "website-opportunities/template-readiness",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database, no stand, no model).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "An EmDash section with visual slots, printed on a page the kit holds (the kit's own sectionsOfPage) and with no kit block (named after its entry, contained by a block, or holding the slot by id) is named by kit-sections-missing, todo, or warn once shown on Design inspiration.",
+    "A section printed only on pages the kit leaves out (masthead.blog) is not named; a kit that does not record which page prints what is never guessed at: the piece warns kit-sections-unrecorded (a warn, never a todo) with the kit rebuild command that records sectionsOfPage.",
+    "Non-visual slots, the settings, page entries, posts and the chrome are not sections.",
+    "The template kit tool records sectionsOfPage from its read of the site's pages: every section stamped in a page's DOM, hidden at the read width or not, and no page entry or chrome.",
+    "On the Road's own path (an EmDash release row, its contract folder found as the other steps find it) the committed kit and content map of each EmDash contract are read, and the template-kit piece of the verdict reports kit-sections-missing once the kit records its pages.",
+    "Joomla keeps kit-modules-missing unchanged, and a WordPress release gets nothing."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=EmDash|the kit records the sections|published public module",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/template-readiness-kit-modules.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-emdash.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "EmDash: a section printed on a kit page",
+      "EmDash: a section printed only on pages the kit leaves out",
+      "EmDash: a kit that does not say",
+      "EmDash: the judge names the sections",
+      "EmDash on the Road: tracy-fresco 0.1.0",
+      "EmDash on the Road: tracy-diner 0.1.4",
+      "EmDash on the Road: tracy-essence 0.1.0",
+      "EmDash on the Road: tracy-restaurant 1.0.4",
+      "the kit records the sections each page prints",
+      "a published public module with slots"
+    ]
+  }
+}

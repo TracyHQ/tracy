@@ -20,7 +20,7 @@ import {
   logoPlacesOf,
   readEmdashSettings
 } from '../template-kit/lib/site/adapters/emdash.mjs'
-import { withEmdashPages } from '../template-kit/lib/site/adapters/emdash-map.mjs'
+import { sectionsOfPages, withEmdashPages } from '../template-kit/lib/site/adapters/emdash-map.mjs'
 import { buildLogoSpots } from '../template-kit/lib/site/logo-spots.mjs'
 import { measureBrandColours } from '../template-kit/lib/site/colour-measure.mjs'
 import { sidesOf } from '../template-kit/lib/site/colour-sides.mjs'
@@ -699,4 +699,38 @@ test("a theme's own brand token is its accent when only links are painted with a
     '#bc4220',
     'only a theme that says so wins over links'
   )
+})
+
+test('the kit records the sections each page prints, hidden at the read width or not; no page entry, no chrome', () => {
+  const sections = {
+    '/': {
+      before: [TOP, HEAD],
+      main: [
+        part(
+          'main > section.a',
+          ['a'],
+          [
+            ['pages', 'home', 'title'],
+            ['hero', 'home-hero', 'title']
+          ]
+        ),
+        // A phone-only strip: hidden at the read width, still printed by the page.
+        part('main > section.b', ['b'], [['promo', 'phone-strip', 'text']], { shown: false, height: 0 }),
+        // An entry stamped on the element itself, with no field (a whole card), names no field: not recorded.
+        part('main > section.c', ['c'], [['gallery', 'g-one', null]])
+      ],
+      after: [FOOT]
+    },
+    '/menu': {
+      before: [TOP, HEAD],
+      main: [part('main > section.a', ['a'], [['pages', 'menu', 'title']])],
+      after: [FOOT]
+    }
+  }
+  assert.deepEqual(sectionsOfPages(sections, MAP), {
+    '/': ['hero.home-hero', 'promo.phone-strip'],
+    '/menu': []
+  })
+  assert.equal(sectionsOfPages(null, MAP), null)
+  assert.equal(sectionsOfPages({}, MAP), null)
 })
