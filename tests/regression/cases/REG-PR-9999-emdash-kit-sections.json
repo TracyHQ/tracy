@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-9999-emdash-kit-sections",
+  "kind": "feat",
+  "title": "The readiness verdict names the sections of an EmDash template that hold content-map slots and are no block of its template kit",
+  "pr": 9999,
+  "area": "website-opportunities/template-readiness",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd (no database, no stand, no model).",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "An EmDash section with visual slots and no kit block (named after its entry, contained by a block, or holding the slot by id) is named by kit-sections-missing, todo, or warn once shown on Design inspiration.",
+    "A section a block is named after, contains or holds slots of, non-visual slots, the settings, page entries, posts and the chrome are not named.",
+    "When the map assigns sections to pages, a section printed only on a page outside the kit is ignored.",
+    "Joomla keeps kit-modules-missing unchanged, and a WordPress release gets nothing."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/template-readiness-kit-modules.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "EmDash: a section with visual slots and no block is named",
+      "EmDash: with the pages that print each section",
+      "EmDash: the judge names the sections",
+      "a published public module with slots"
+    ]
+  }
+}
