@@ -94,7 +94,8 @@ function slotIdsHeldByKit(kit) {
  *
  * Which page prints a section is the kit's own record (`sectionsOfPage`, written by the kit tool from its read of the
  * site, template-kit/lib/kit.mjs). No map, seed or view file says it for every theme (page composition is theme code),
- * so a kit settled before the tool wrote it is not judged: the answer is `null`, never a guess.
+ * so a kit settled before the tool wrote it is not judged: the answer is `null`, never a guess, and the judge says
+ * so with `kit-sections-unrecorded` (a warn).
  * @param {any} kit the kit document
  * @param {any} map the content map
  * @returns {{ section: string, slots: number, pages: string[] }[] | null} null when the kit does not say which page prints what
@@ -149,6 +150,13 @@ export const KIT_MODULES_CHECK = Object.freeze({
     }
     if (release.platform === 'emdash') {
       const sections = sectionsMissingFromKit(kit.doc, map)
+      if (sections === null)
+        return {
+          // Never a todo: the kit is whole, it only does not say which page prints what.
+          state: 'warn',
+          code: 'kit-sections-unrecorded',
+          params: { fix: fixOf('kit-sections-unrecorded').text }
+        }
       if (!sections?.length) return null
       const sectionNames = sections.map((m) => m.section).join(', ')
       return {

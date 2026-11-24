@@ -265,6 +265,10 @@ export const FIXES = Object.freeze({
     command: `${KIT_TOOL} build --site <a site restored from the pinned version> --contract <contract folder> --out <folder holding template-kit.json> --full`,
     skill: '.agents/skills/joomla-template-readiness/references/kit-rebuild.md'
   },
+  'kit-sections-unrecorded': {
+    text: 'The template kit does not record which page prints which section, so the sections no block holds cannot be checked. Build the kit again with the current template kit tool on a site running the pinned version, reading the page sections afresh (--reread-sections): it writes sectionsOfPage. Keep the committed kit as the output folder so the declared fields are kept, then review and approve it again.',
+    command: `${KIT_TOOL} build --site <a site running the pinned version> --contract <contract folder> --out <folder holding template-kit.json> --full --reread-sections`
+  },
   'kit-sections-missing': {
     text: 'The template kit has no block for {sectionNames}, sections of the template that hold slots of the content map, so no plan decides them and their demo words, pictures and buttons stay on every site. Build the kit again with the current template kit tool on a site running the pinned version, reading the page sections afresh (--reread-sections), into a folder that holds the committed kit so the declared fields are kept, then review and approve it again.',
     command: `${KIT_TOOL} build --site <a site running the pinned version> --contract <contract folder> --out <folder holding template-kit.json> --full --reread-sections`

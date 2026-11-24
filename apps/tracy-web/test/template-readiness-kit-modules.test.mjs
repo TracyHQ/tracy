@@ -154,16 +154,17 @@ test('EmDash: a section printed only on pages the kit leaves out (masthead.blog)
   assert.ok(!sectionsMissingFromKit(emKit, emMap).some((m) => m.section === 'masthead.blog'))
 })
 
-test('EmDash: a kit that does not say which page prints what is not judged, never guessed', () => {
+test('EmDash: a kit that does not say which page prints what is not judged, never guessed: it warns that it is unrecorded', () => {
   const { sectionsOfPage: _, ...old } = emKit
   assert.equal(sectionsMissingFromKit(old, emMap), null)
-  assert.equal(
-    KIT_MODULES_CHECK.judge(
-      { platform: 'emdash' },
-      { templateKit: { state: 'read', doc: old }, contentMap: emMap }
-    ),
-    null
+  const verdict = KIT_MODULES_CHECK.judge(
+    { platform: 'emdash' },
+    { templateKit: { state: 'read', doc: old }, contentMap: emMap }
   )
+  assert.equal(verdict.state, 'warn')
+  assert.equal(verdict.code, 'kit-sections-unrecorded')
+  assert.match(verdict.params.fix, /--reread-sections/)
+  assert.match(verdict.params.fix, /sectionsOfPage/)
 })
 
 test('EmDash: the judge names the sections (todo, warn once shown on Design inspiration); a complete kit and other platforms give null', () => {
@@ -200,8 +201,14 @@ for (const [template, version] of EMDASH_CONTRACTS) {
     const release = roadRow(template, version, contracts)
     const kit = kitOfRelease(release, contracts)
     if (kit.state !== 'read') return // no kit committed for this template: nothing to judge (base, business)
-    // The committed kit predates `sectionsOfPage`: the step says nothing rather than guess the page of a section.
-    assert.equal(KIT_MODULES_CHECK.judge(release, { contracts }), null)
+    // The committed kit predates `sectionsOfPage`: the step warns that it is unrecorded rather than guess the page of
+    // a section, and the warn does not hold the release.
+    const unrecorded = KIT_MODULES_CHECK.judge(release, { contracts })
+    assert.deepEqual([unrecorded?.state, unrecorded?.code], ['warn', 'kit-sections-unrecorded'])
+    assert.equal(
+      readinessVerdict(release, { contracts }).pieces.find((p) => p.piece === 'template-kit').code,
+      'kit-sections-unrecorded'
+    )
     // A kit that records where each section is printed (every section on every kit page) reaches the finding through
     // the verdict, with the content map read from the same folder.
     const map = JSON.parse(
