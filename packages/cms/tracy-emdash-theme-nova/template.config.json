@@ -13,7 +13,14 @@
   "contentOrder": [],
   "forms": {
     "file": "tools/forms.json",
-    "bindings": []
+    "bindings": [
+      {
+        "form": "contact-{locale}",
+        "collection": "contact",
+        "slug": "contact-layout",
+        "field": "form_id"
+      }
+    ]
   },
   "mail": {
     "fromEmail": "no-reply@ja-nova.example",

@@ -1,0 +1,43 @@
+---
+/**
+ * One glyph, drawn as inline SVG (no icon font: the source's Font Awesome is not shipped). The names are this template's own;
+ * each maps to a Phosphor glyph (MIT, already a dependency), rendered server-side.
+ */
+import { createElement } from 'react'
+import * as Phosphor from '@phosphor-icons/react/dist/ssr'
+
+interface Props {
+  name: string
+  size?: number
+  weight?: 'regular' | 'fill' | 'bold' | 'light'
+  class?: string
+}
+const { name, size = 20, weight = 'regular', class: cls = '' } = Astro.props
+const BY_NAME: Record<string, string> = {
+  facebook: 'FacebookLogo',
+  twitter: 'XLogo',
+  x: 'XLogo',
+  instagram: 'InstagramLogo',
+  linkedin: 'LinkedinLogo',
+  youtube: 'YoutubeLogo',
+  rss: 'RssSimple',
+  search: 'MagnifyingGlass',
+  bars: 'List',
+  moon: 'Moon',
+  sun: 'Sun',
+  plane: 'PaperPlaneTilt',
+  eye: 'Eye',
+  caret: 'CaretDown',
+  play: 'Play',
+  images: 'Images',
+  close: 'X',
+  prev: 'CaretLeft',
+  next: 'CaretRight',
+  first: 'CaretDoubleLeft',
+  last: 'CaretDoubleRight',
+  link: 'Link'
+}
+const Glyph = (Phosphor as unknown as Record<string, any>)[BY_NAME[name] ?? 'Link']
+---
+
+<Fragment set:html={(await import('react-dom/server')).renderToStaticMarkup(createElement(Glyph, { size, weight, 'aria-hidden': true, className: cls || undefined }))} />

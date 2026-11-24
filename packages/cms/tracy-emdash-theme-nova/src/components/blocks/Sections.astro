@@ -1,0 +1,74 @@
+---
+/**
+ * Prints the sections a page carries, in the order of `src/lib/page-layout.json` (`pages[path]`, written by ingest/shape-model.mjs from the
+ * Joomla layout: a `section` is one ACM entry by slug, a `dynamic` is a module that lists posts). The entry's collection and style come from
+ * `page-layout.json` `sections[slug]`; each block reads the entry itself through `section()` and draws nothing when the entry is off.
+ */
+import type { Chrome } from '@/lib/chrome'
+import layout from '@/lib/page-layout.json'
+import { section } from '@/lib/content'
+import Hero from '@/components/blocks/Hero.astro'
+import FeaturesIntro from '@/components/blocks/FeaturesIntro.astro'
+import TextSlider from '@/components/blocks/TextSlider.astro'
+import Cta from '@/components/blocks/Cta.astro'
+import Clients from '@/components/blocks/Clients.astro'
+import Teams from '@/components/blocks/Teams.astro'
+import Pricing from '@/components/blocks/Pricing.astro'
+import Accordion from '@/components/blocks/Accordion.astro'
+import Social from '@/components/blocks/Social.astro'
+import NewsBand from '@/components/blocks/NewsBand.astro'
+import CategoryTabs from '@/components/blocks/CategoryTabs.astro'
+import RecentWork from '@/components/blocks/RecentWork.astro'
+import RelatedPosts from '@/components/blocks/RelatedPosts.astro'
+import LatestNews from '@/components/blocks/LatestNews.astro'
+import PopularTags from '@/components/blocks/PopularTags.astro'
+
+interface Props {
+  chrome: Chrome
+  /** The page's key in `page-layout.json` `pages` (`/`, `/about`, `/services`, …). */
+  path: string
+  /** Section slugs to leave out (a view that draws one itself). */
+  skip?: string[]
+  /** Dynamic modules to draw (default: all of the page's). A view that places a module elsewhere passes the others. */
+  only?: string[]
+  /** The category a post list or detail belongs to (for the module that lists related work). */
+  category?: string
+  /** The post slug on a detail page (related posts leave it out). */
+  postSlug?: string
+}
+const { chrome, path, skip = [], only, category, postSlug } = Astro.props
+const sectionInfo = layout.sections as Record<string, { type: string; style: string; module: string; position: string }>
+const plan = ((layout.pages as Record<string, ({ section: string } | { dynamic: string })[]>)[path] ?? []).filter((p) =>
+  'section' in p ? !skip.includes(p.section) : !only || only.includes(p.dynamic)
+)
+const rows = await Promise.all(
+  plan.map(async (p) => {
+    if (!('section' in p)) return { ...p, info: null, row: null }
+    const info = sectionInfo[p.section]
+    return { ...p, info, row: info ? await section(info.type, p.section, chrome.locale) : null }
+  })
+)
+---
+
+{rows.map((r) => {
+  if ('dynamic' in r) {
+    return r.dynamic === 'news-band' ? <NewsBand chrome={chrome} /> :
+      r.dynamic === 'category-tabs' ? <CategoryTabs chrome={chrome} current={category} /> :
+      r.dynamic === 'recent-work' ? <RecentWork chrome={chrome} category={category} postSlug={postSlug} /> :
+      r.dynamic === 'related-posts' ? <RelatedPosts chrome={chrome} category={category} postSlug={postSlug} /> :
+      r.dynamic === 'latest-news' ? <LatestNews chrome={chrome} /> :
+      r.dynamic === 'popular-tags' ? <PopularTags chrome={chrome} /> : null
+  }
+  if (!r.row || !r.info) return null
+  const t = r.info.type
+  const common = { chrome, row: r.row, style: r.info.style, info: r.info }
+  return t === 'hero' ? <Hero {...common} /> :
+    t === 'features_intro' ? <FeaturesIntro {...common} /> :
+    t === 'text_slider' ? <TextSlider {...common} /> :
+    t === 'cta' ? <Cta {...common} /> :
+    t === 'clients' ? <Clients {...common} /> :
+    t === 'teams' ? <Teams {...common} /> :
+    t === 'pricing' ? <Pricing {...common} /> :
+    t === 'accordion' ? <Accordion {...common} /> :
+    t === 'social' ? <Social {...common} /> : null
+})}

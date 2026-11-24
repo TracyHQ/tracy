@@ -95,7 +95,8 @@ for (const pg of pageMap.pages) {
       if (NAME[id]) list.push({ section: NAME[id] })
       else if (DYN[id]) list.push({ dynamic: DYN[id] })
     }
-  pages[pg.path] = list
+  const RENAME = { '/about-us-2': '/about', '/about-us-2/contact': '/contact', '/about-us-2/career': '/career', '/category-blog': '/blog' }
+  pages[RENAME[pg.path] ?? pg.path] = list
 }
 writeFileSync(new URL('../src/lib/page-layout.json', import.meta.url), JSON.stringify({ sections: sectionInfo, pages }, null, 2) + '\n')
 

@@ -283,7 +283,7 @@
     "/offline-pages": [],
     "/typography": [],
     "/smart-search": [],
-    "/category-blog": [
+    "/blog": [
       {
         "dynamic": "latest-news"
       },
@@ -301,13 +301,13 @@
         "dynamic": "related-posts"
       }
     ],
-    "/about-us-2/contact": [],
+    "/contact": [],
     "/project": [
       {
         "dynamic": "category-tabs"
       }
     ],
-    "/about-us-2": [
+    "/about": [
       {
         "section": "about-intro"
       },
@@ -358,7 +358,7 @@
         "dynamic": "recent-work"
       }
     ],
-    "/about-us-2/career": [
+    "/career": [
       {
         "section": "career-positions"
       }

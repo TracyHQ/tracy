@@ -1,0 +1,9 @@
+---
+// STUB — replaced by the view's author. Props: chrome, locale, path (+ slug / category where the router passes them).
+import Base from '@/layouts/Base.astro'
+const { chrome, path } = Astro.props
+---
+
+<Base chrome={chrome} title="NotFound" currentPath={path || '/'}>
+	<main id="main" class="nv-wrap">NotFound</main>
+</Base>

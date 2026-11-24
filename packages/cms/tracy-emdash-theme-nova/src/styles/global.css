@@ -1,0 +1,64 @@
+/*
+ * Storefront stylesheet. Imported ONLY by src/layouts/Base.astro (public pages). The EmDash admin at /_emdash/admin is a
+ * separate app and must never receive Tailwind's preflight or these tokens.
+ * Values: inventory/visual-contract.md and the measurements taken on the rendered Joomla source (the stand of source/REBUILD.md).
+ * Class prefix `nv-` = JA Nova component.
+ * Design-system roles: the stylesheet reads each role as `var(--ds-…, <the template's own value>)`.
+ */
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./blocks/chrome.css";
+@import "./blocks/hero.css";
+@import "./blocks/features.css";
+@import "./blocks/carousels.css";
+@import "./blocks/bands.css";
+@import "./pages/posts.css";
+@import "./pages/projects.css";
+@import "./pages/pages.css";
+
+@custom-variant dark (&:where(html[data-theme="dark"], html[data-theme="dark"] *));
+
+@layer base {
+	html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+	body {
+		background: var(--color-bg);
+		color: var(--color-fg);
+		font-family: var(--font-body);
+		font-size: 16px;
+		line-height: 1.5;
+		font-weight: var(--ds-weight-body, 400);
+		-webkit-font-smoothing: antialiased;
+		overflow-x: hidden;
+	}
+	h1, h2, h3, h4, h5, h6 { margin: 0 0 .5rem; font-family: var(--font-display); font-weight: var(--ds-weight-heading, 700); line-height: 1.2; color: var(--color-heading); }
+	h1 { font-size: 2.5rem; }
+	h2 { font-size: 2rem; }
+	h3 { font-size: 1.75rem; }
+	h4 { font-size: 1.5rem; }
+	h5 { font-size: 1.25rem; }
+	h6 { font-size: 1rem; }
+	@media (max-width: 1199px) { h1 { font-size: 38px; } h2 { font-size: 32px; } }
+	@media (max-width: 767px) { h1 { font-size: 32px; } h2 { font-size: 28px; } h3 { font-size: 22px; } }
+	@media (max-width: 575px) { h1 { font-size: 28px; } h2 { font-size: 24px; } h4 { font-size: 18px; } }
+	p { margin: 0 0 1rem; }
+	a { color: inherit; text-decoration: none; }
+	img { max-width: 100%; height: auto; }
+	:focus-visible { outline: 1px solid var(--ds-c-focus-ring, var(--color-accent)); outline-offset: 2px; }
+}
+
+@layer components {
+	.nv-wrap { width: 100%; max-width: 1392px; margin-inline: auto; padding-inline: 24px; }
+	.nv-display { font-family: var(--font-display); }
+
+	/* buttons: 1rem, weight 500 */
+	.nv-btn {
+		display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px;
+		font-family: var(--font-display); font-size: 1rem; line-height: 1.5; font-weight: var(--ds-weight-button, 500); text-align: center;
+		background: var(--color-accent); color: var(--color-accent-on); border: 1px solid var(--color-accent); border-radius: var(--ds-btn-radius, 12px);
+		cursor: pointer; transition: background-color .2s, color .2s, border-color .2s;
+	}
+	.nv-btn:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); color: var(--color-accent-on); }
+	.nv-btn.is-light { background: var(--color-surface); border-color: var(--color-surface); color: var(--color-heading); }
+	.nv-btn.is-light:hover { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-on); }
+	.nv-btn.is-secondary { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-ink); }
+}
