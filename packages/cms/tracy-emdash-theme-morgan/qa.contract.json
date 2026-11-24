@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-morgan",
-  "revision": 2,
+  "revision": 9,
   "pending": [],
   "locales": [
     "en"
@@ -1389,7 +1389,7 @@
     "rules": [
       {
         "id": "body-type",
-        "selector": "body",
+        "selector": "body:not(.mg-error-body)",
         "source": "index.php/home/home-style-1/index.html",
         "styles": {
           "1440-light": {
@@ -1461,8 +1461,8 @@
         "styles": {
           "1440-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "15px",
-            "font-weight": "500",
+            "font-size": "16px",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -1471,8 +1471,8 @@
           },
           "1440-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "15px",
-            "font-weight": "500",
+            "font-size": "16px",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -1481,8 +1481,8 @@
           },
           "768-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "15px",
-            "font-weight": "500",
+            "font-size": "16px",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -1491,8 +1491,8 @@
           },
           "768-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "15px",
-            "font-weight": "500",
+            "font-size": "16px",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -1501,8 +1501,8 @@
           },
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "15px",
-            "font-weight": "500",
+            "font-size": "16px",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -1511,8 +1511,8 @@
           },
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "15px",
-            "font-weight": "500",
+            "font-size": "16px",
+            "font-weight": "700",
             "line-height": "25px",
             "letter-spacing": "normal",
             "text-transform": "none",
@@ -1528,22 +1528,22 @@
         "source": "index.php/home/home-style-1/index.html",
         "styles": {
           "1440-light": {
-            "font-size": "15px"
+            "font-size": "16px"
           },
           "1440-dark": {
-            "font-size": "15px"
+            "font-size": "16px"
           },
           "768-light": {
-            "font-size": "15px"
+            "font-size": "16px"
           },
           "768-dark": {
-            "font-size": "15px"
+            "font-size": "16px"
           },
           "390-light": {
-            "font-size": "15px"
+            "font-size": "16px"
           },
           "390-dark": {
-            "font-size": "15px"
+            "font-size": "16px"
           }
         },
         "optional": true
@@ -1582,8 +1582,8 @@
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "16px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "23.3px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
@@ -1592,8 +1592,8 @@
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "16px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "23.3px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
@@ -1602,8 +1602,8 @@
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "16px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "23.3px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
@@ -1612,8 +1612,8 @@
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "16px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "23.3px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
@@ -1622,8 +1622,8 @@
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "16px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "23.3px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
@@ -1632,8 +1632,8 @@
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
             "font-size": "16px",
             "font-weight": "500",
-            "line-height": "25px",
-            "letter-spacing": "normal",
+            "line-height": "23.3px",
+            "letter-spacing": "-0.6px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
@@ -1911,7 +1911,7 @@
       },
       {
         "id": "section-label",
-        "selector": ".mg-sub",
+        "selector": ":is(.mg-sec.is-white, .mg-sec.is-gray) .mg-sub",
         "source": "index.php/home/home-style-1/index.html",
         "styles": {
           "1440-light": {
@@ -1977,8 +1977,76 @@
         }
       },
       {
+        "id": "split-label",
+        "selector": ".mg-sec.is-secondary .mg-sub",
+        "source": "index.php/home/home-style-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "500",
+            "line-height": "25px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "color(srgb 0.918039 0.553529 0.553529)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "500",
+            "line-height": "25px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "color(srgb 0.933137 0.60098 0.585882)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "500",
+            "line-height": "25px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "color(srgb 0.918039 0.553529 0.553529)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "500",
+            "line-height": "25px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "color(srgb 0.933137 0.60098 0.585882)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "500",
+            "line-height": "25px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "color(srgb 0.918039 0.553529 0.553529)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "16px",
+            "font-weight": "500",
+            "line-height": "25px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "color(srgb 0.933137 0.60098 0.585882)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
+      },
+      {
         "id": "section-title",
-        "selector": ".mg-sec-h",
+        "selector": ":is(.mg-sec.is-white, .mg-sec.is-gray) .mg-sec-title > .mg-sec-h:not(.mg-tiles-h):not(.mg-cta-panel .mg-sec-h)",
         "source": "index.php/home/home-style-1/index.html",
         "styles": {
           "1440-light": {
@@ -2042,6 +2110,141 @@
             "background-color": "rgba(0, 0, 0, 0)"
           }
         }
+      },
+      {
+        "id": "tiles-title",
+        "selector": ".mg-tiles-h",
+        "source": "index.php/services-page/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "36px",
+            "font-weight": "400",
+            "line-height": "45px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(51, 51, 51)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "36px",
+            "font-weight": "400",
+            "line-height": "45px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(242, 244, 248)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "36px",
+            "font-weight": "400",
+            "line-height": "45px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(51, 51, 51)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "36px",
+            "font-weight": "400",
+            "line-height": "45px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(242, 244, 248)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "36px",
+            "font-weight": "400",
+            "line-height": "45px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(51, 51, 51)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "36px",
+            "font-weight": "400",
+            "line-height": "45px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(242, 244, 248)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "split-title",
+        "selector": ".mg-sec.is-secondary .mg-sec-h",
+        "source": "index.php/home/home-style-1/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "36px",
+            "font-weight": "400",
+            "line-height": "45px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "36px",
+            "font-weight": "400",
+            "line-height": "45px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "36px",
+            "font-weight": "400",
+            "line-height": "45px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "36px",
+            "font-weight": "400",
+            "line-height": "45px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "400",
+            "line-height": "36px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        },
+        "optional": true
       },
       {
         "id": "card-title",
@@ -3050,7 +3253,7 @@
       },
       {
         "id": "post-card-meta",
-        "selector": ".mg-meta",
+        "selector": ".mg-post .mg-meta",
         "source": "index.php/joomlart-content/category-blog/index.html",
         "styles": {
           "1440-light": {
@@ -3060,7 +3263,7 @@
             "line-height": "20px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(153, 153, 153)",
+            "color": "rgb(117, 117, 117)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
@@ -3080,7 +3283,7 @@
             "line-height": "20px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(153, 153, 153)",
+            "color": "rgb(117, 117, 117)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
@@ -3100,7 +3303,7 @@
             "line-height": "20px",
             "letter-spacing": "normal",
             "text-transform": "none",
-            "color": "rgb(153, 153, 153)",
+            "color": "rgb(117, 117, 117)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
@@ -3111,6 +3314,73 @@
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(139, 147, 164)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "post-masthead-meta",
+        "selector": ".mg-masthead .mg-meta",
+        "source": "index.php/joomlart-content/single-article/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "11px",
+            "font-weight": "400",
+            "line-height": "20px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.8)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "11px",
+            "font-weight": "400",
+            "line-height": "20px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.8)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "11px",
+            "font-weight": "400",
+            "line-height": "20px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.8)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "11px",
+            "font-weight": "400",
+            "line-height": "20px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.8)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "11px",
+            "font-weight": "400",
+            "line-height": "20px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.8)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "11px",
+            "font-weight": "400",
+            "line-height": "20px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgba(255, 255, 255, 0.8)",
             "background-color": "rgba(0, 0, 0, 0)"
           }
         }
@@ -3184,7 +3454,74 @@
       },
       {
         "id": "pagination",
-        "selector": ".mg-pagination li a, .mg-pagination li span",
+        "selector": ".mg-pagination li:not(.is-active) a",
+        "source": "index.php/joomlart-content/category-blog/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(51, 51, 51)",
+            "background-color": "rgb(255, 255, 255)"
+          },
+          "1440-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(242, 244, 248)",
+            "background-color": "rgb(26, 32, 50)"
+          },
+          "768-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(51, 51, 51)",
+            "background-color": "rgb(255, 255, 255)"
+          },
+          "768-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(242, 244, 248)",
+            "background-color": "rgb(26, 32, 50)"
+          },
+          "390-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(51, 51, 51)",
+            "background-color": "rgb(255, 255, 255)"
+          },
+          "390-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "14px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(242, 244, 248)",
+            "background-color": "rgb(26, 32, 50)"
+          }
+        }
+      },
+      {
+        "id": "pagination-active",
+        "selector": ".mg-pagination li.is-active span",
         "source": "index.php/joomlart-content/category-blog/index.html",
         "styles": {
           "1440-light": {
@@ -3246,6 +3583,73 @@
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgb(224, 70, 63)"
+          }
+        }
+      },
+      {
+        "id": "pagination-count",
+        "selector": ".mg-pagination-count",
+        "source": "index.php/joomlart-content/category-blog/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "12px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(119, 119, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "12px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(167, 176, 194)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "12px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(119, 119, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "12px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(167, 176, 194)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "12px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(119, 119, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-size": "12px",
+            "font-weight": "400",
+            "line-height": "22px",
+            "letter-spacing": "normal",
+            "text-transform": "none",
+            "color": "rgb(167, 176, 194)",
+            "background-color": "rgba(0, 0, 0, 0)"
           }
         }
       },
@@ -3564,9 +3968,9 @@
           },
           "390-light": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "208px",
+            "font-size": "128px",
             "font-weight": "400",
-            "line-height": "208px",
+            "line-height": "128px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3574,9 +3978,9 @@
           },
           "390-dark": {
             "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
-            "font-size": "208px",
+            "font-size": "128px",
             "font-weight": "400",
-            "line-height": "208px",
+            "line-height": "128px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
@@ -3662,7 +4066,7 @@
           "site": ".mg-footer h3",
           "source": ".t3-footer .t3-module .module-title"
         },
-        "ground": "html"
+        "ground": "body"
       },
       "properties": [
         "font-size",
@@ -3701,7 +4105,8 @@
     },
     "exceptions": [],
     "accentBorders": [
-      "rgb(217, 48, 48)"
+      "rgb(217, 48, 48)",
+      "rgb(224, 70, 63)"
     ]
   },
   "interactions": {},
@@ -3770,7 +4175,9 @@
         "topbar",
         "slide-title",
         "section-label",
+        "split-label",
         "section-title",
+        "split-title",
         "card-title",
         "box-title",
         "panel-title",
@@ -3859,6 +4266,7 @@
         "footerTitle",
         "ground"
       ],
+      "images": "placeholders",
       "content": [
         {
           "id": "title",
@@ -3914,6 +4322,7 @@
         "topbar",
         "section-label",
         "section-title",
+        "tiles-title",
         "case-title",
         "tile-title",
         "praise-text",
@@ -3926,6 +4335,7 @@
         "footerTitle",
         "ground"
       ],
+      "images": "placeholders",
       "content": [
         {
           "id": "title",
@@ -3982,7 +4392,9 @@
         "post-card-title",
         "post-card-meta",
         "side-title",
-        "pagination"
+        "pagination",
+        "pagination-active",
+        "pagination-count"
       ],
       "parity": [
         "nav",
@@ -4101,7 +4513,6 @@
         "topbar",
         "masthead-title",
         "masthead-desc",
-        "post-card-meta",
         "search-count"
       ],
       "parity": [
@@ -4149,8 +4560,13 @@
         ]
       },
       "rules": [
-        "body-type",
+        "nav-link",
+        "nav-font",
         "p-font",
+        "footer-title",
+        "footer-text",
+        "copyright",
+        "topbar",
         "nf-code",
         "nf-title"
       ],
@@ -4207,7 +4623,7 @@
         "footer-text",
         "copyright",
         "topbar",
-        "post-card-meta",
+        "post-masthead-meta",
         "side-title",
         "post-masthead-title",
         "prose-h3",
@@ -4268,7 +4684,7 @@
         "footer-text",
         "copyright",
         "topbar",
-        "post-card-meta",
+        "post-masthead-meta",
         "side-title",
         "post-masthead-title",
         "prose-h3",

@@ -14,7 +14,7 @@
 	--color-surface-warm: var(--ds-c-surface-warm, #f5f5f5);
 	--color-fg: var(--ds-c-fg, #777777);
 	--color-heading: var(--ds-c-heading, #333333);
-	--color-meta: var(--ds-c-meta, #999999);
+	--color-meta: var(--ds-c-meta, #757575);
 	--color-muted: var(--ds-c-muted, #555555);
 	--color-line: var(--ds-c-border, #dddddd);
 	--color-line-soft: var(--ds-c-border-soft, #eeeeee);

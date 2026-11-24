@@ -27,7 +27,7 @@ const POST2 =
 const SEARCH = 'index.php/other-pages/smart-search/index.html'
 const NOT_FOUND = 'index.php/nope-404/index.html'
 const RULES = [
-  ['body-type', 'body', HOME],
+  ['body-type', 'body:not(.mg-error-body)', HOME],
   ['nav-link', '.mg-nav li:not(.is-active) a:not(:hover)', HOME, true],
   ['nav-font', '.mg-nav a', HOME, true, ['font-size']],
   ['p-font', 'main p:not(blockquote p)', HOME, false, ['font-family']],
@@ -36,8 +36,11 @@ const RULES = [
   ['copyright', '.mg-copyright p', HOME],
   ['topbar', '.mg-topbar-item', HOME, true],
   ['slide-title', '.mg-slide-h', HOME],
-  ['section-label', '.mg-sub', HOME],
-  ['section-title', '.mg-sec-h', HOME],
+  ['section-label', ':is(.mg-sec.is-white, .mg-sec.is-gray) .mg-sub', HOME],
+  ['split-label', '.mg-sec.is-secondary .mg-sub', HOME, true],
+  ['section-title', ':is(.mg-sec.is-white, .mg-sec.is-gray) .mg-sec-title > .mg-sec-h:not(.mg-tiles-h):not(.mg-cta-panel .mg-sec-h)', HOME],
+  ['tiles-title', '.mg-tiles-h', SERVICES],
+  ['split-title', '.mg-sec.is-secondary .mg-sec-h', HOME, true],
   ['card-title', '.mg-card h4', HOME],
   ['box-title', '.mg-box h4', HOME],
   ['panel-title', '.mg-panel summary', HOME],
@@ -53,9 +56,12 @@ const RULES = [
   ['contact-card-title', '.mg-contact-card h4', CONTACT],
   ['contact-form-title', '.mg-contact-form .mg-sec-h', CONTACT],
   ['post-card-title', '.mg-post-card .mg-post-title, .mg-post .mg-post-title', BLOG],
-  ['post-card-meta', '.mg-meta', BLOG],
+  ['post-card-meta', '.mg-post .mg-meta', BLOG],
+  ['post-masthead-meta', '.mg-masthead .mg-meta', POST],
   ['side-title', '.mg-side-title', BLOG],
-  ['pagination', '.mg-pagination li a, .mg-pagination li span', BLOG],
+  ['pagination', '.mg-pagination li:not(.is-active) a', BLOG],
+  ['pagination-active', '.mg-pagination li.is-active span', BLOG],
+  ['pagination-count', '.mg-pagination-count', BLOG],
   ['post-masthead-title', '.mg-masthead:has(.mg-post-band-chip) .mg-masthead-title', POST],
   ['prose-h3', '.mg-prose h3', POST],
   ['prose-text', '.mg-prose p', POST],
@@ -108,7 +114,7 @@ const PAGES = [
     view: 'Services',
     identity: '.mg-tiles',
     cols: ['chrome', 'footer_links', 'pages', 'masthead', 'features_intro', 'testimonials', 'clients'],
-    rules: [...BASE, 'masthead-title', 'masthead-desc', 'section-label', 'section-title', 'tile-title', 'case-title', 'praise-text', 'cta-title'],
+    rules: [...BASE, 'masthead-title', 'masthead-desc', 'section-label', 'section-title', 'tiles-title', 'tile-title', 'case-title', 'praise-text', 'cta-title'],
     content: [['title', '.mg-masthead-title', 'field', 'masthead/services.title', 'Our Services']]
   },
   {
@@ -118,7 +124,7 @@ const PAGES = [
     view: 'BlogList',
     identity: '.mg-blog-grid',
     cols: ['chrome', 'footer_links', 'pages', 'posts', 'masthead'],
-    rules: [...BASE, 'masthead-title', 'masthead-desc', 'post-card-title', 'post-card-meta', 'side-title', 'pagination'],
+    rules: [...BASE, 'masthead-title', 'masthead-desc', 'post-card-title', 'post-card-meta', 'side-title', 'pagination', 'pagination-active', 'pagination-count'],
     content: [['title', '.mg-masthead-title', 'field', 'masthead/blog.title', 'JA Morgan']]
   },
   {
@@ -159,7 +165,7 @@ const PAGES = [
     view: 'Post',
     identity: '.mg-masthead',
     cols: ['chrome', 'footer_links', 'posts', 'masthead'],
-    rules: [...BASE, 'post-masthead-title', 'prose-h3', 'prose-text', 'side-title'],
+    rules: [...BASE, 'post-masthead-title', 'post-masthead-meta', 'prose-h3', 'prose-text', 'side-title'],
     family: 'detail',
     content: [['title', '.mg-masthead-title', 'field', 'posts.title', POSTS[POST_SLUG]]]
   },
@@ -170,7 +176,7 @@ const PAGES = [
     view: 'Post',
     identity: '.mg-masthead',
     cols: ['chrome', 'footer_links', 'posts', 'masthead'],
-    rules: [...BASE, 'post-masthead-title', 'prose-text', 'side-title'],
+    rules: [...BASE, 'post-masthead-title', 'post-masthead-meta', 'prose-text', 'side-title'],
     family: 'detail',
     content: [['title', '.mg-masthead-title', 'field', 'posts.title', POSTS[POST2_SLUG]]]
   }
@@ -271,7 +277,7 @@ contract.pages = PAGES.map((p) => ({
   render: { view: `src/views/${p.view}.astro`, collections: p.cols },
   rules: p.rules,
   parity: p.id === 'en-not-found' ? ['ground'] : ['nav', 'footerTitle', 'ground'],
-  ...(p.id === 'en-home' ? { images: 'placeholders' } : {}),
+  ...(['en-home', 'en-services', 'en-about'].includes(p.id) ? { images: 'placeholders' } : {}),
   content: p.content.map((c) => F(c[0], c[1], p.src, c[2], c[3], c[4]))
 }))
 const byView = new Map()
@@ -289,7 +295,7 @@ contract.design.parity = {
   selectors: {
     nav: { site: '.mg-nav li:nth-child(3) a', source: '.t3-megamenu .navbar-nav > li:nth-child(3) > a' },
     footerTitle: { site: '.mg-footer h3', source: '.t3-footer .t3-module .module-title' },
-    ground: 'html'
+    ground: 'body'
   },
   properties: ['font-size', 'font-weight', 'letter-spacing', 'padding-top', 'padding-left'],
   hexTolerance: 8,
@@ -313,7 +319,7 @@ for (const x of JSON.parse(readFileSync(new URL('./accepted-differences.json', i
     reason: x.reason,
     decision: x.decision
   })
-contract.design.accentBorders = ['rgb(217, 48, 48)']
+contract.design.accentBorders = ['rgb(217, 48, 48)', 'rgb(224, 70, 63)']
 // the off-canvas menu exists below 992 px only (its button is hidden above), so no `interactions` state is declared for the 1440 frame
 contract.interactions = {}
 contract.fonts = {

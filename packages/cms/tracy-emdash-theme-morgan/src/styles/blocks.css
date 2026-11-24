@@ -13,10 +13,10 @@
 	.mg-sec-title.is-center { text-align: center; max-width: 520px; margin-inline: auto; margin-bottom: 60px; }
 	.mg-sub { font-size: 16px; line-height: 25px; font-weight: 500; color: var(--color-accent-text); margin-bottom: 25px; }
 	.mg-sec-h { font-size: 36px; line-height: 45px; font-weight: 400; letter-spacing: 0; color: var(--color-heading); margin: 0; }
-	.mg-sec-title h1.mg-sec-h { font-size: 36px; }
 	.mg-lead { font-size: 18px; line-height: 30px; margin: 25px 0 0; }
 	@media (max-width: 767.98px) { .mg-sec-h { font-size: 28px; line-height: 36px; } }
 	.is-secondary .mg-sec-h, .is-secondary .mg-lead { color: var(--color-on-ink); }
+	.is-secondary .mg-sub { color: color-mix(in srgb, var(--color-accent-text) 55%, #fff); } /* the accent label on the navy band: lightened to 4.5:1 (the source's red reads 2.7:1) */
 	.is-secondary .mg-lead { opacity: .8; }
 
 	/* slideshow */
@@ -98,7 +98,7 @@
 	.mg-tile-text.bg-lv-1 { background: var(--ds-c-ink, #1b3060); }
 	.mg-tile-text.bg-lv-2 { background: #2f6f6a; } /* ds-keep: the demo's own tile colours, no role of a design system names them */
 	.mg-tile-text.bg-lv-3 { background: #6e675f; } /* ds-keep: the demo's own tile colours, no role of a design system names them */
-	.mg-tile-text.bg-lv-4 { background: #9b9fb3; } /* ds-keep: the demo's own tile colours, no role of a design system names them */
+	.mg-tile-text.bg-lv-4 { background: #6c7088; } /* ds-keep: the demo's own tile colours, no role of a design system names them */
 	.mg-tile-icon { width: 40px; height: 40px; margin-bottom: 25px; }
 	.mg-tile-text h4 { color: #fff; font-size: 16px; line-height: 25px; font-weight: 500; margin-bottom: 15px; }
 	.mg-tile-text p { color: rgba(255, 255, 255, .8); font-size: 14px; line-height: 22px; margin-bottom: 20px; flex: 1; }
@@ -172,7 +172,7 @@
 	.mg-fquote strong { color: #fff; font-weight: 500; }
 	.mg-dots { list-style: none; margin: 24px 0 0; padding: 0; display: flex; gap: 10px; }
 	.mg-dots button { width: 8px; height: 8px; padding: 0; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .4); background: transparent; cursor: pointer; }
-	.mg-dots button.is-active { background: #fff; border-color: #fff; }
+	.mg-dots button.is-active { background: var(--color-accent); border-color: var(--color-accent); }
 
 	/* the title band under the header */
 	.mg-masthead { background-size: cover; background-position: center; background-color: var(--color-ink); position: relative; color: #fff; }

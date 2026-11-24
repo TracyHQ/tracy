@@ -79,8 +79,8 @@
 	.mg-logo b { color: var(--color-accent); font-weight: 700; }
 	.mg-logo-img { display: block; max-height: 40px; width: auto; }
 	.mg-nav { margin-left: auto; }
-	.mg-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 0; }
-	.mg-nav a { display: block; padding: 10px 20px; font-size: 15px; line-height: 25px; font-weight: 500; color: var(--color-heading); }
+	.mg-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 40px; }
+	.mg-nav a { display: block; padding: 32.5px 0; font-size: 16px; line-height: 25px; font-weight: 700; color: var(--color-heading); }
 	.mg-nav a:hover, .mg-nav li.is-active > a { color: var(--color-accent-text); }
 	.mg-header-r { display: flex; align-items: center; gap: 14px; }
 	.mg-nav + .mg-header-r { margin-left: 0; }
@@ -115,7 +115,7 @@
 	.mg-footer-cols { display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; }
 	@media (max-width: 991.98px) { .mg-footer-cols { grid-template-columns: repeat(3, 1fr); } }
 	@media (max-width: 575.98px) { .mg-footer-cols { grid-template-columns: repeat(2, 1fr); } }
-	.mg-footer h3 { font-size: 16px; line-height: 25px; font-weight: 500; color: var(--color-on-ink); letter-spacing: 0; margin-bottom: 25px; }
+	.mg-footer h3 { font-size: 16px; line-height: 23.3px; font-weight: 500; color: var(--color-on-ink); letter-spacing: -0.6px; margin-bottom: 12.5px; }
 	.mg-footer ul { list-style: none; margin: 0; padding: 0; }
 	.mg-footer li { margin-bottom: 11px; font-size: 16px; }
 	.mg-footer a { color: var(--ds-c-meta, #888888); }

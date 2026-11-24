@@ -1,6 +1,6 @@
 ---
 /**
- * The error page (source: templates/ja_morgan/error.php): a full-screen picture under a dark veil, with no header or footer (as the source), the huge code, the title,
+ * The error page (source: templates/ja_morgan/error.php): a full-width picture band under a dark veil with the header and footer kept (an unknown address answers 404 with the chrome, DECISIONS D16), the huge code, the title,
  * one line and a button home. Every word is the site entry's.
  */
 import Base from '@/layouts/Base.astro'
@@ -22,7 +22,7 @@ const band = await section('masthead', 'not-found', locale)
 const bg = mediaUrl(band?.background)
 ---
 
-<Base chrome={chrome} title={site.not_found_title ?? site.not_found_code ?? ''} currentPath="/404" robots="noindex, nofollow" bodyClass="mg-error-body" bare>
+<Base chrome={chrome} title={site.not_found_title ?? site.not_found_code ?? ''} currentPath="/404" robots="noindex, nofollow" bodyClass="mg-error-body">
 	<main id="main" class="mg-error" style={bg ? `background-image:url('${bg}')` : undefined}>
 		<div class="mg-error-wrap">
 			<div class="mg-error-info">
