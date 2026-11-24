@@ -4,10 +4,10 @@
   "cms": "emdash",
   "tag": "tracy-morgan/emdash-0.x",
   "version": "0.1.0",
-  "measuredAt": "2026-11-24T21:44:44.948Z",
+  "measuredAt": "2026-11-24T22:28:24.535Z",
   "machine": "linux-arm64",
   "measuredBy": "tdsr flow.mjs --cms emdash --template emdash-tracy-morgan",
-  "flowVersion": "0e157b9b1",
+  "flowVersion": "5ffa564f0",
   "modes": [
     "native",
     "derived"
@@ -95,7 +95,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0
+        "page": 0.001
       },
       "lowContrast": 0,
       "lowestContrast": 4.8,
@@ -121,7 +121,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0.01
+        "page": 0.011
       },
       "lowContrast": 0,
       "lowestContrast": 4.8,
@@ -225,7 +225,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0.016
+        "page": 0.017
       },
       "lowContrast": 0,
       "lowestContrast": 4.84,
@@ -381,7 +381,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0.007
+        "page": 0.006
       },
       "lowContrast": 0,
       "lowestContrast": 4.88,
@@ -433,7 +433,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0.018
+        "page": 0.017
       },
       "lowContrast": 0,
       "lowestContrast": 5.13,
@@ -537,7 +537,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0.012
+        "page": 0.01
       },
       "lowContrast": 0,
       "lowestContrast": 4.94,
@@ -641,7 +641,7 @@
       "followsKept": 0,
       "left": {
         "first": 0,
-        "page": 0.009
+        "page": 0.01
       },
       "lowContrast": 0,
       "lowestContrast": 4.74,
@@ -11937,6 +11937,7 @@
       }
     }
   ],
+  "previewMeasuredAt": "2026-11-24T22:29:56.693Z",
   "previewPages": [
     "/",
     "/about-us",
@@ -11946,6 +11947,5 @@
     "/search?q=growth",
     "/blog/strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
     "/blog/student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt"
-  ],
-  "previewMeasuredAt": "2026-11-24T21:51:43.452Z"
+  ]
 }
