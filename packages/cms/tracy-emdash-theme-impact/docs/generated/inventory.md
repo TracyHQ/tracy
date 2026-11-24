@@ -38,8 +38,6 @@ Template: JA Impact (tracy-impact). Default locale: en. Locales: en.
 
 | Field | Type | Required | Label |
 | --- | --- | --- | --- |
-| title | string | no | Title |
-| subtitle | string | no | Subtitle |
 | items | repeater | no | Items |
 
 ### features
@@ -51,7 +49,6 @@ Template: JA Impact (tracy-impact). Default locale: en. Locales: en.
 | feature_tag | string | no | Feature tag |
 | feature_title | string | no | Feature title |
 | feature_desc | text | no | Feature desc |
-| title | string | no | Title |
 | columns | string | no | Columns |
 | align | string | no | Align |
 | image_type | image | no | Image type |
@@ -100,8 +97,6 @@ Template: JA Impact (tracy-impact). Default locale: en. Locales: en.
 | Field | Type | Required | Label |
 | --- | --- | --- | --- |
 | align_section | string | no | Align section |
-| title | string | no | Title |
-| subtitle | string | no | Subtitle |
 | testimonials | string | no | Testimonials |
 | items | repeater | no | Items |
 | section_label | string | no | Section label |
@@ -131,7 +126,6 @@ Template: JA Impact (tracy-impact). Default locale: en. Locales: en.
 | cta_link | string | no | Cta link |
 | cta_link_title | string | no | Cta link title |
 | cta_link_type | string | no | Cta link type |
-| title | string | no | Title |
 | bg_content | string | no | Bg content |
 | cta_title | string | no | Cta title |
 | section_label | string | no | Section label |

@@ -378,7 +378,8 @@
       "fields": [
         "title",
         "excerpt",
-        "body"
+        "body",
+        "tags"
       ],
       "body": "body",
       "bodyWords": 160,
@@ -409,7 +410,8 @@
         "title",
         "excerpt",
         "body",
-        "location"
+        "location",
+        "tags"
       ],
       "body": "body",
       "bodyWords": 160,
@@ -436,7 +438,11 @@
         "title",
         "excerpt",
         "body",
-        "event_location"
+        "event_location",
+        "event_time",
+        "event_fee",
+        "start_date",
+        "tags"
       ],
       "body": "body",
       "bodyWords": 120,
@@ -732,7 +738,15 @@
     }
   ],
   "trim": [],
-  "keptText": [],
+  "keptText": [
+    "social/home-follow.items",
+    "social/footer-follow.items",
+    "contact/contact.privacy_text",
+    "chrome/chrome.footer_col1_links",
+    "chrome/chrome.footer_col3_links",
+    "chrome/chrome.events_title",
+    "chrome/chrome.not_found_text"
+  ],
   "forms": [
     {
       "slug": "contact",

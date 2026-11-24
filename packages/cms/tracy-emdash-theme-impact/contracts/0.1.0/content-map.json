@@ -1329,38 +1329,6 @@
       }
     },
     {
-      "key": "hero.home-hero.title",
-      "entity": "hero.home-hero",
-      "target": {
-        "collection": "hero",
-        "entry": "home-hero",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "How to engage help our planet",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "hero.home-hero.subtitle",
-      "entity": "hero.home-hero",
-      "target": {
-        "collection": "hero",
-        "entry": "home-hero",
-        "field": "subtitle"
-      },
-      "type": "text",
-      "sample": "All-in-one Giving All-in-one Giving",
-      "label": "Subtitle",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "hero.home-hero.items[0].image_hero",
       "entity": "hero.home-hero",
       "target": {
@@ -1996,22 +1964,6 @@
       }
     },
     {
-      "key": "features.about-activities.title",
-      "entity": "features.about-activities",
-      "target": {
-        "collection": "features",
-        "entry": "about-activities",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Our Activities",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "features.about-activities.items[0].sub_feature_img",
       "entity": "features.about-activities",
       "target": {
@@ -2515,22 +2467,6 @@
       }
     },
     {
-      "key": "features.about-activities.section_title",
-      "entity": "features.about-activities",
-      "target": {
-        "collection": "features",
-        "entry": "about-activities",
-        "field": "section_title"
-      },
-      "type": "text",
-      "sample": "",
-      "label": "Section title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "features.about-activities.section_class",
       "entity": "features.about-activities",
       "target": {
@@ -2541,22 +2477,6 @@
       "type": "text",
       "sample": "",
       "label": "Section class",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "features.about-mission.title",
-      "entity": "features.about-mission",
-      "target": {
-        "collection": "features",
-        "entry": "about-mission",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "What makes us different?",
-      "label": "Title",
       "role": "editorial.heading",
       "fit": {
         "measured": false
@@ -4210,22 +4130,6 @@
       }
     },
     {
-      "key": "features.meet-us.title",
-      "entity": "features.meet-us",
-      "target": {
-        "collection": "features",
-        "entry": "meet-us",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Meet us",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "features.meet-us.feature_text_align",
       "entity": "features.meet-us",
       "target": {
@@ -5798,22 +5702,6 @@
       }
     },
     {
-      "key": "features.meet-us.section_title",
-      "entity": "features.meet-us",
-      "target": {
-        "collection": "features",
-        "entry": "meet-us",
-        "field": "section_title"
-      },
-      "type": "text",
-      "sample": "",
-      "label": "Section title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "features.meet-us.section_class",
       "entity": "features.meet-us",
       "target": {
@@ -5974,22 +5862,6 @@
         "maxCharacters": 235,
         "casing": "none",
         "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "features.home-donor-base.title",
-      "entity": "features.home-donor-base",
-      "target": {
-        "collection": "features",
-        "entry": "home-donor-base",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Let's retain & grow your donor base",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
       }
     },
     {
@@ -6496,22 +6368,6 @@
       }
     },
     {
-      "key": "features.home-donor-base.section_title",
-      "entity": "features.home-donor-base",
-      "target": {
-        "collection": "features",
-        "entry": "home-donor-base",
-        "field": "section_title"
-      },
-      "type": "text",
-      "sample": "Let's retain & grow your donor base",
-      "label": "Section title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "features.home-donor-base.section_class",
       "entity": "features.home-donor-base",
       "target": {
@@ -6522,22 +6378,6 @@
       "type": "text",
       "sample": "minimal",
       "label": "Section class",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "features.about-give.title",
-      "entity": "features.about-give",
-      "target": {
-        "collection": "features",
-        "entry": "about-give",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Give",
-      "label": "Title",
       "role": "editorial.heading",
       "fit": {
         "measured": false
@@ -7730,22 +7570,6 @@
       "type": "text",
       "sample": "",
       "label": "Section class",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "features.what-we-do.title",
-      "entity": "features.what-we-do",
-      "target": {
-        "collection": "features",
-        "entry": "what-we-do",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Saving endangered species is crucial",
-      "label": "Title",
       "role": "editorial.heading",
       "fit": {
         "measured": false
@@ -11109,22 +10933,6 @@
       }
     },
     {
-      "key": "features.home-connected.title",
-      "entity": "features.home-connected",
-      "target": {
-        "collection": "features",
-        "entry": "home-connected",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Stay connected",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "features.home-connected.id_video",
       "entity": "features.home-connected",
       "target": {
@@ -11240,22 +11048,6 @@
       }
     },
     {
-      "key": "features.home-connected.section_title",
-      "entity": "features.home-connected",
-      "target": {
-        "collection": "features",
-        "entry": "home-connected",
-        "field": "section_title"
-      },
-      "type": "text",
-      "sample": "",
-      "label": "Section title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "features.home-connected.section_class",
       "entity": "features.home-connected",
       "target": {
@@ -11343,22 +11135,6 @@
         "maxCharacters": 144,
         "casing": "none",
         "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "features.home-raise-fund.title",
-      "entity": "features.home-raise-fund",
-      "target": {
-        "collection": "features",
-        "entry": "home-raise-fund",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Raise fund for clean & healthy food",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
       }
     },
     {
@@ -12421,22 +12197,6 @@
       }
     },
     {
-      "key": "features.home-raise-fund.section_title",
-      "entity": "features.home-raise-fund",
-      "target": {
-        "collection": "features",
-        "entry": "home-raise-fund",
-        "field": "section_title"
-      },
-      "type": "text",
-      "sample": "Raise fund for clean & healthy food",
-      "label": "Section title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "features.home-raise-fund.section_class",
       "entity": "features.home-raise-fund",
       "target": {
@@ -12538,59 +12298,6 @@
       "sample": "end",
       "label": "Align section",
       "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "contact_info.topbar-contact.title",
-      "entity": "contact_info.topbar-contact",
-      "target": {
-        "collection": "contact_info",
-        "entry": "topbar-contact",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Contact Info",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 88,
-            "height": 19
-          },
-          "phone": {
-            "width": 88,
-            "height": 19
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 24,
-          "phone": 20
-        },
-        "maxCharacters": 20,
-        "casing": "none",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "contact_info.topbar-contact.subtitle",
-      "entity": "contact_info.topbar-contact",
-      "target": {
-        "collection": "contact_info",
-        "entry": "topbar-contact",
-        "field": "subtitle"
-      },
-      "type": "text",
-      "sample": "Our address: You may send an email Helpline and support",
-      "label": "Subtitle",
-      "role": "editorial.heading",
       "fit": {
         "measured": false
       }
@@ -13032,38 +12739,6 @@
       "type": "text",
       "sample": "",
       "label": "Section class",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "contact_info.footer-contact.title",
-      "entity": "contact_info.footer-contact",
-      "target": {
-        "collection": "contact_info",
-        "entry": "footer-contact",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Contact Information 2",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "contact_info.footer-contact.subtitle",
-      "entity": "contact_info.footer-contact",
-      "target": {
-        "collection": "contact_info",
-        "entry": "footer-contact",
-        "field": "subtitle"
-      },
-      "type": "text",
-      "sample": "Email us Our address Support 24/7",
-      "label": "Subtitle",
       "role": "editorial.heading",
       "fit": {
         "measured": false
@@ -14260,22 +13935,6 @@
       }
     },
     {
-      "key": "cta.home-helpline.title",
-      "entity": "cta.home-helpline",
-      "target": {
-        "collection": "cta",
-        "entry": "home-helpline",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Helpline is open 24/7",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "cta.home-helpline.section_label",
       "entity": "cta.home-helpline",
       "target": {
@@ -14484,22 +14143,6 @@
       "label": "Cta link type",
       "role": "editorial.navigation_url",
       "customize": "keep",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "cta.join-together.title",
-      "entity": "cta.join-together",
-      "target": {
-        "collection": "cta",
-        "entry": "join-together",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Join together for charity",
-      "label": "Title",
-      "role": "editorial.heading",
       "fit": {
         "measured": false
       }

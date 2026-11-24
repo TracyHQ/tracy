@@ -51,18 +51,6 @@
       "routable": false,
       "fields": [
         {
-          "slug": "title",
-          "label": "Title",
-          "type": "string",
-          "required": false
-        },
-        {
-          "slug": "subtitle",
-          "label": "Subtitle",
-          "type": "string",
-          "required": false
-        },
-        {
           "slug": "items",
           "label": "Items",
           "type": "repeater",
@@ -104,12 +92,6 @@
           "slug": "feature_desc",
           "label": "Feature desc",
           "type": "text",
-          "required": false
-        },
-        {
-          "slug": "title",
-          "label": "Title",
-          "type": "string",
           "required": false
         },
         {
@@ -379,18 +361,6 @@
           "required": false
         },
         {
-          "slug": "title",
-          "label": "Title",
-          "type": "string",
-          "required": false
-        },
-        {
-          "slug": "subtitle",
-          "label": "Subtitle",
-          "type": "string",
-          "required": false
-        },
-        {
           "slug": "testimonials",
           "label": "Testimonials",
           "type": "string",
@@ -517,12 +487,6 @@
         {
           "slug": "cta_link_type",
           "label": "Cta link type",
-          "type": "string",
-          "required": false
-        },
-        {
-          "slug": "title",
-          "label": "Title",
           "type": "string",
           "required": false
         },
@@ -1750,9 +1714,9 @@
     "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
     "package.json": "sha256:f4873b850796ace5655fdab638f0e0901893383436290626a081c51942a76909",
     "pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
-    "seed/field-map.json": "sha256:4f5ab8bf171a86bc8fdb13921b03116270f376a6ae3f4f66716ae8de2416d878",
-    "seed/media-map.json": "sha256:7ae758541be5817acece7eae9ad873f78052b6022beff6c8f9d9110964043814",
-    "seed/seed.json": "sha256:77451d434e42549d74d455c0a4fdbeb923660f3ea71b42ef9028327cd4bfef3c",
+    "seed/field-map.json": "sha256:74cff5ebd4b0bc7f4234bd8923a7da8eac996ede1180766fd1e84c7e268c88b4",
+    "seed/media-map.json": "sha256:60700986d1c5147ee9c132590fa2d3ac661e85ed1de4bc177fcfe0e216759563",
+    "seed/seed.json": "sha256:87b40a58b16fbf618f184a69828ee63b4b6b9e428bf1576950ac6eec213bc9cc",
     "src/components/blocks/Accordion.astro": "sha256:2b27f9458f55b6efd12d83525d996e3d64c40d9f73e7dc4b1d54b7c4ff7e309e",
     "src/components/blocks/BlogGrid.astro": "sha256:f37b30174ce9566a90f4784dedc6053b8cdeb7adc3b956a9d2e8110350462fba",
     "src/components/blocks/Connected.astro": "sha256:141c0992bc70676127409d9adaff3644360178634a067fc750a2d63fc034b615",
@@ -1767,7 +1731,7 @@
     "src/components/blocks/FeatureIntro.astro": "sha256:271fd18f683ad7ad69f3972749956f44c2c4d0e0ec1e7190803969e373c60451",
     "src/components/blocks/FeatureMission.astro": "sha256:5fa3596cae684390f9a5f12f118ef67b8783c25755d22e7efa8bf192a79c7c11",
     "src/components/blocks/FeatureStats.astro": "sha256:2bd77bd6dd24a7c9ee00e89c4b4608f1d95f041160b930772b61eef382368f56",
-    "src/components/blocks/Hero.astro": "sha256:88834a44d849ba99beefb011319bf29dad1f595d28a58a1b8f4255e8591f81b2",
+    "src/components/blocks/Hero.astro": "sha256:b5eb59ba522417162828979aaa740ed9493c4eb0f09a0a4ad63a5b180efcccc4",
     "src/components/blocks/SectionHead.astro": "sha256:3acd296ca2310808ba6848df612c67c270853b4ccd0e1c1ff7537a685438d87d",
     "src/components/site/ArticleBody.astro": "sha256:e2c0ded62af7b071e9909e9486751919c9199f460e0162125e5a83363cf4b4c2",
     "src/components/site/ArticleImages.astro": "sha256:c16441690fbec38e3efa1183b0107a0839a70916ce375e1b1d716383e799a03f",
