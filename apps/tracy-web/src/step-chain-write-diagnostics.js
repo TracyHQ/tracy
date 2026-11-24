@@ -70,10 +70,11 @@ const page = (v) =>
     : null
 // A slot is a content map key (`module-106.2`) or a kit id (`block-106.2`, `body-classes_group-boxing.link-4`,
 // `menuItem-189.0`): before (dev lat28, 22/11/2026) only content map keys were kept, so most faults of the final check named
-// no slot and could not be traced to one.
+// no slot and could not be traced to one. A language string, a site setting and a template profile are slots too (dev lat33,
+// 24/11/2026: four written-not-printed blocks on JA Boxing's contact page named no slot).
 const slot = (v) =>
   typeof v === 'string' &&
-  (/^(?:module|article|contact|menu|menuItem|category|component|custom|site|image|tag|user)-\d+(?:-[a-zA-Z0-9_-]+)?(?:[.:][a-zA-Z0-9_-]+)*$/.test(
+  (/^(?:module|article|contact|menu|menuItem|category|component|custom|site|image|tag|user|languageString|siteSetting|templateConfig|templateStyle|field|fieldValue)-\d+(?:-[a-zA-Z0-9_-]+)?(?:[.:][a-zA-Z0-9_-]+)*$/.test(
     v
   ) ||
     /^(?:block|body)-[a-zA-Z0-9_]+(?:-[a-zA-Z0-9_]+)*(?:[.:][a-zA-Z0-9_-]+)*$/.test(v)) &&
@@ -112,16 +113,55 @@ export function unmeasuredCode(reason) {
 }
 /**
  * What a read the site check sent was refused with (site-check.js readsOnly): the action, its operation and the
- * plugin's code, never the message. Dev s2a and t1b (21–22/11/2026): every page group of Arabian Tea House's final check
+ * plugin's code, and what its words say as a fixed code (`said`), never the words. Dev s2a and t1b (21–22/11/2026): every page group of Arabian Tea House's final check
  * was unmeasured as `read-refused` within a second of starting, and nothing said which read or why.
- * @returns {{ action: string, operation: string | null, code: string } | null}
+ * @returns {{ action: string, operation: string | null, code: string, said?: { kind: string, key?: string, field?: string } } | null}
  */
 export function refusalOf(reason) {
+  const text = String(reason ?? '')
   const m =
     /^([a-z][a-z0-9_.]{0,63}) ([a-z][a-z0-9_]{0,31})? ?was refused \(([A-Za-z][A-Za-z0-9_.-]{1,63})\)/.exec(
-      String(reason ?? '')
+      text
     )
-  return m ? { action: m[1], operation: m[2] ?? null, code: m[3] } : null
+  if (!m) return null
+  const said = pluginSaid(text.slice(m[0].length).replace(/^:\s*/, ''))
+  return { action: m[1], operation: m[2] ?? null, code: m[3], ...(said ? { said } : {}) }
+}
+
+/**
+ * What the plugin's words say, as a fixed code, with the contract key or column they name when the shape carries one:
+ * never the words themselves. A contract's refusal names its own keys (`article-4`, `module-95.11`) and the site's column
+ * names, which hold no customer value. Dev lat33 (24/11/2026): Arabian Tea House's final check was refused
+ * `contract_failed` on its inspect, the third time, and the code alone could not say why.
+ */
+const PLUGIN_SAID = [
+  ['contract-changed', /^Installed content contract changed/],
+  ['language-job', /unfinished language job/],
+  [
+    'profile-changed',
+    /installed (?:multilingual|demo-trim) profile changed|carries no (?:multilingual|demo-trim) profile/
+  ],
+  ['not-bound', /requires a bound contract|needs a bound site/],
+  ['entity-gone', /^(?:Bound entity disappeared|Missing or ambiguous entity|Unknown contract entity): /],
+  ['protected-field', /^Missing protected field /],
+  [
+    'slot-unreadable',
+    /^(?:Content slot is (?:not text|missing or ambiguous|missing from its column|cannot be rewritten)|JSON slot is (?:not text|missing))/
+  ],
+  ['drift', /^(?:Presentation|Module assignment) drift: |^Access-level or ACL definition changed/],
+  ['revision', /^Content changed|revisions? (?:are unavailable|must map)/]
+]
+const CONTRACT_KEY = /\b([a-z][A-Za-z]{1,30}-\d{1,9}(?:\.(?:link-)?\d{1,4})?)\b/
+function pluginSaid(words) {
+  const found = PLUGIN_SAID.find(([, test]) => test.test(words))
+  if (!found) return null
+  const [kind] = found
+  const key = ['entity-gone', 'slot-unreadable', 'drift'].includes(kind)
+    ? CONTRACT_KEY.exec(words)?.[1]
+    : null
+  const field =
+    kind === 'protected-field' ? /^Missing protected field ([a-z_]{1,40})$/.exec(words)?.[1] : null
+  return { kind, ...(key ? { key } : {}), ...(field ? { field } : {}) }
 }
 
 /** A code-like word the host gave with "no verdicts" (an error code such as HOST_TIMEOUT), never prose. */
