@@ -87,16 +87,16 @@ const $w = whatWeDo ? stampFor(Astro.request, 'features', { id: whatWeDo.id, slu
 			</section>
 		)}
 		{coming.length > 0 && (
-			<section class="im-section top-large bottom-large">
+			<section class="im-section top-large bottom-large im-home-events">
 				<div class="im-container">
 					<SectionHead label={chrome.site.home_events_label} title={chrome.site.home_events_title} stamp={stampFor(Astro.request, 'chrome', chrome.entry)} labelPath="home_events_label" titlePath="home_events_title" />
 					<EventsHome entries={coming} chrome={chrome} />
 				</div>
 			</section>
 		)}
-		{connected && <section class="im-section"><Connected entry={connected} chrome={chrome} follow={follow} /></section>}
+		{connected && <section class="im-section im-home-connect"><Connected entry={connected} chrome={chrome} follow={follow} /></section>}
 		{latest.length > 0 && (
-			<section class="im-section top-large bottom-large">
+			<section class="im-section top-large bottom-large im-home-latest">
 				<div class="im-container">
 					<SectionHead label={chrome.site.blog_label} title={chrome.site.blog_title} stamp={stampFor(Astro.request, 'chrome', chrome.entry)} labelPath="blog_label" titlePath="blog_title" />
 					<BlogGrid entries={latest} chrome={chrome} />

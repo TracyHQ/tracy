@@ -320,6 +320,8 @@ Template: JA Impact (tracy-impact). Default locale: en. Locales: en.
 | currency_symbol | string | no | Currency symbol |
 | form_id | string | no | Form id |
 | logo_dark | image | no | Logo dark |
+| home_events_label | string | no | Home events label |
+| home_events_title | string | no | Home events title |
 | event_date_label | string | no | Event date label |
 | event_time_label | string | no | Event time label |
 | event_place_label | string | no | Event place label |
