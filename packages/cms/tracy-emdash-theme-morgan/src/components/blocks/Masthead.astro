@@ -11,8 +11,10 @@ interface Props {
   title?: string
   /** keep the entry's description under an overriding title */
   describe?: boolean
+  /** the source's blog and search bands: a 500 px block, centred on the page, its text flush left */
+  left?: boolean
 }
-const { entry, title, describe = false } = Astro.props
+const { entry, title, describe = false, left = false } = Astro.props
 const $m = stampFor(Astro.request, 'masthead', entry ? { id: entry.id, slug: entry.slug } : null)
 const bg = mediaUrl(entry?.background)
 const heading = title ?? entry?.title
@@ -21,7 +23,7 @@ const heading = title ?? entry?.title
 {entry && (
 	<div class="mg-masthead mg-sec-masthead" style={bg ? `background-image:url('${bg}')` : undefined}>
 		<div class="mg-container">
-			<div class="mg-masthead-detail">
+			<div class:list={['mg-masthead-detail', left && 'is-left']}>
 				{title ? <h1 class="mg-masthead-title">{heading}</h1> : <h1 class="mg-masthead-title" {...$m('title')}>{heading}</h1>}
 				{(!title || describe) && entry.description && <p class="mg-masthead-desc" {...$m('description')}>{entry.description}</p>}
 				<slot />
