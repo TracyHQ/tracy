@@ -92,5 +92,5 @@
 }
 @layer components {
 	.im-band p { text-wrap: balance; }
-	@media (max-width: 575.98px) { .im-connected-lead br { display: none; } .im-news .im-btn { width: 100%; } .im-connected-info { padding-inline: 16px; } }
+	@media (max-width: 575.98px) { .im-connected-lead br { display: none; } .im-news .im-btn { margin-inline: auto; } .im-connected-info { padding-inline: 16px; } }
 }

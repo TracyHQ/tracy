@@ -71,5 +71,5 @@
 @layer components {
 	.im-donation-money { flex-wrap: wrap; gap: 4px 24px; }
 	@media (max-width: 991.98px) { .im-donation-intro { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; } }
-	@media (min-width: 768px) and (max-width: 991.98px) { .im-events > .im-event:last-child:nth-child(odd) { grid-column: 1 / -1; } }
+	@media (min-width: 768px) and (max-width: 991.98px) { .im-events { align-items: start; } .im-events > .im-event:last-child:nth-child(odd) { grid-column: 1 / -1; } }
 }

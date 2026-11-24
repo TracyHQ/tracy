@@ -1850,7 +1850,7 @@
     "src/pages/[...path].astro": "sha256:2cbdc6a6655c3747fd2669d8500ece8f98be257a4743c9b00d8fc9a7691098c3",
     "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
     "src/styles/blocks/cards.css": "sha256:89d0a8b96cec867d250678b09bc75bb470ee448e2f3ef0bddcc96235d5edee00",
-    "src/styles/blocks/chrome.css": "sha256:57698af0575b0d57060f3a8a38f4f56fd5b3478ad5c5e8d6e49c521e20d62e6c",
+    "src/styles/blocks/chrome.css": "sha256:ccf4e194141f84e574e332f7fc3fc0249c12c2a040287ac8725e93f288ebaec6",
     "src/styles/blocks/cta.css": "sha256:01c57faf5a1e13833c113c999f42e0ae0d5e18c9fcfb6fe3b3cab5e9d03fc6c4",
     "src/styles/blocks/features.css": "sha256:23f1f353f3411ffa8cbbc02ddf8a148ed0dbe490bcf9dec5ccaf8c0d9d508e2e",
     "src/styles/blocks/hero.css": "sha256:27591b7c0a25f6c5bc6bf713cbf01c5744b0f257d6e1801ca571782da1c59f1b",

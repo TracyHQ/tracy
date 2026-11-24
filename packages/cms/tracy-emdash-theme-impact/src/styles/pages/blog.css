@@ -87,3 +87,6 @@
 @layer components {
 	@media (max-width: 575.98px) { .im-error-bubble { top: -14%; left: -2%; width: 44px; height: 44px; line-height: 44px; font-size: 16px; } }
 }
+@layer components {
+	html[data-theme="dark"] .im-error-back { border: 1px solid var(--color-border); }
+}
