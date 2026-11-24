@@ -725,12 +725,6 @@
       "collection": "contact"
     },
     {
-      "collection": "masthead",
-      "fields": [
-        "title"
-      ]
-    },
-    {
       "collection": "pages",
       "fields": [
         "title"

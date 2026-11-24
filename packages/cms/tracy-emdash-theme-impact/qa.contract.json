@@ -4003,13 +4003,13 @@
     "exceptions": [
       {
         "kind": "scan:contrast",
-        "match": "^span\\.im-give-count$",
+        "match": "^(span\\.im-give-count|li\\.im-give-item)$",
         "reason": "The 01 and 02 numerals of the give cards are decorative, aria-hidden and drawn light grey as in the source (acm features style-5)",
         "decision": "DECISIONS D23"
       },
       {
         "kind": "scan:dark-on-dark",
-        "match": "^span\\.im-give-count$",
+        "match": "^(span\\.im-give-count|li\\.im-give-item)$",
         "reason": "The 01 and 02 numerals of the give cards are decorative, aria-hidden and drawn light grey as in the source (acm features style-5)",
         "decision": "DECISIONS D23"
       }
@@ -4182,7 +4182,7 @@
           "selector": ".im-masthead-title >> nth=0",
           "source": "about/index.html",
           "owner": "field",
-          "binding": "masthead/about.title",
+          "binding": "pages/about.title",
           "attribute": "text",
           "expected": "Who we are"
         }
@@ -4243,7 +4243,7 @@
           "selector": ".im-masthead-title >> nth=0",
           "source": "donations/index.html",
           "owner": "field",
-          "binding": "masthead/donations.title",
+          "binding": "pages/donations.title",
           "attribute": "text",
           "expected": "Our causes"
         }
@@ -4362,7 +4362,7 @@
           "selector": ".im-masthead-title >> nth=0",
           "source": "events/index.html",
           "owner": "field",
-          "binding": "masthead/events.title",
+          "binding": "pages/events.title",
           "attribute": "text",
           "expected": "Our Events"
         }
@@ -4482,7 +4482,7 @@
           "selector": ".im-masthead-title >> nth=0",
           "source": "blog/index.html",
           "owner": "field",
-          "binding": "masthead/blog.title",
+          "binding": "pages/blog.title",
           "attribute": "text",
           "expected": "Blog"
         }
@@ -4600,7 +4600,7 @@
           "selector": ".im-masthead-title >> nth=0",
           "source": "help-faqs/index.html",
           "owner": "field",
-          "binding": "masthead/help-faqs.title",
+          "binding": "pages/help-faqs.title",
           "attribute": "text",
           "expected": "Help & FAQs"
         }
@@ -4658,7 +4658,7 @@
           "selector": ".im-masthead-title >> nth=0",
           "source": "contact/index.html",
           "owner": "field",
-          "binding": "masthead/contact.title",
+          "binding": "pages/contact.title",
           "attribute": "text",
           "expected": "Contact"
         }

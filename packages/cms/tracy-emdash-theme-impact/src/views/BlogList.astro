@@ -42,10 +42,10 @@ const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: p.id, slug: 'bl
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 ---
 
-<Base chrome={chrome} title={masthead?.title ?? p.title ?? chrome.site.blog_name} currentPath="/blog" content={pageEntry ? { collection: 'pages', id: p.id, slug: 'blog', toPath: () => '/blog' } : null}>
+<Base chrome={chrome} title={p.title ?? chrome.site.blog_name} currentPath="/blog" content={pageEntry ? { collection: 'pages', id: p.id, slug: 'blog', toPath: () => '/blog' } : null}>
 	<main id="main">
 		<PageOwner stamp={$page} />
-		<Masthead chrome={chrome} slug="blog" entry={masthead} trail={[{ label: masthead?.title ?? chrome.site.blog_name }]} />
+		<Masthead chrome={chrome} slug="blog" entry={masthead} trail={[{ label: p.title ?? chrome.site.blog_name }]} />
 		<section class="im-section im-list">
 			<div class="im-container">
 				<SectionHead label={chrome.site.blog_label} title={chrome.site.blog_title} stamp={$c} labelPath="blog_label" titlePath="blog_title" />

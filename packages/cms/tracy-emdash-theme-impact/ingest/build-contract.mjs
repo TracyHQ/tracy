@@ -78,7 +78,7 @@ RULES.push(
 )
 const mast = (id, path, src, view, title, cols, extra = {}) => ({
   id, path, src, view, identity: '.im-masthead', cols: ['chrome', 'pages', 'masthead', ...cols],
-  rules: [], content: [['masthead', '.im-masthead-title', 'field', `masthead/${path.slice(1)}.title`, title]], ...extra
+  rules: [], content: [['masthead', '.im-masthead-title', 'field', `pages/${path === '/help-faqs' ? 'help-faqs' : path.slice(1)}.title`, title]], ...extra
 })
 const PAGES = [
   {

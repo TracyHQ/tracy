@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T07:48:38.858Z",
+  "generatedAt": "2026-11-24T08:08:35.980Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -976,18 +976,6 @@
       "source": "text",
       "target": "string",
       "label": "Path"
-    },
-    "masthead.title": {
-      "source": "text",
-      "target": "string",
-      "label": "Title",
-      "role": "editorial.heading"
-    },
-    "masthead.description": {
-      "source": "text",
-      "target": "string",
-      "label": "Description",
-      "role": "editorial.paragraph"
     },
     "masthead.background": {
       "source": "image",

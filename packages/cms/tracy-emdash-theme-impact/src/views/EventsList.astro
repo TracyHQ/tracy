@@ -34,7 +34,7 @@ const current = Number.isFinite(asked) ? Math.min(Math.max(asked, 1), pages) : 1
 const rows = all.slice((current - 1) * PER_PAGE, current * PER_PAGE)
 ---
 
-<Base chrome={chrome} title={page.title ?? masthead?.title ?? ''} currentPath="/events" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'events', toPath: () => '/events' } : null}>
+<Base chrome={chrome} title={page.title ?? ''} currentPath="/events" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'events', toPath: () => '/events' } : null}>
 	<main id="main">
 		<PageOwner stamp={$page} />
 		<Masthead chrome={chrome} slug="events" entry={masthead} trail={[{ label: chrome.site.events_name }]} />

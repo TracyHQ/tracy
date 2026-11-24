@@ -298,11 +298,7 @@ for (const tax of model.taxonomies ?? []) {
     name: 'masthead',
     mode: 'list',
     label: { en: 'Mastheads' },
-    fields: [
-      { name: 'title', ...text },
-      { name: 'description', ...text },
-      { name: 'background', type: 'image' }
-    ]
+    fields: [{ name: 'background', type: 'image' }]
   })
   const SLUG = { 102: 'about', 103: 'donations', 104: 'events', 119: 'contact', 120: 'faq', 116: 'blog', 136: 'post' }
   for (const [i, ids] of Object.entries(cfg.item_id)) {
@@ -313,12 +309,12 @@ for (const tax of model.taxonomies ?? []) {
       slug,
       locale: 'en',
       status: 'published',
-      values: {
-        title: decode(cfg.title[i]),
-        description: cfg.description[i] ?? '',
-        background: String(cfg.background[i]).split('#')[0]
-      }
+      values: { background: String(cfg.background[i]).split('#')[0] }
     })
+    // the band prints the title of the page record, so a page that has a band takes the band's title (the source's own words)
+    const PAGE_OF = { about: 'about', donations: 'donations', events: 'events', contact: 'contact', faq: 'help-faqs', blog: 'blog' }
+    const rec = model.records.find((r) => r.type === 'pages' && r.slug === PAGE_OF[slug])
+    if (rec) rec.values.title = decode(cfg.title[i])
   }
 }
 

@@ -22,7 +22,7 @@ const [{ entry: pageEntry }, masthead, faq] = await Promise.all([
 ])
 const page = (pageEntry?.data ?? {}) as Record<string, any>
 const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'help-faqs' } : null)
-const title = String(page.title ?? masthead?.title ?? '')
+const title = String(page.title ?? '')
 ---
 
 <Base chrome={chrome} title={title} currentPath="/help-faqs" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'help-faqs', toPath: () => '/help-faqs' } : null}>

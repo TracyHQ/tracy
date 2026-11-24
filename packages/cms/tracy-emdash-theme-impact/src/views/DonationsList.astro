@@ -33,7 +33,7 @@ const rows = all.slice((current - 1) * PER_PAGE, current * PER_PAGE)
 const base = href(locale, '/donations')
 ---
 
-<Base chrome={chrome} title={page.title ?? masthead?.title ?? ''} currentPath="/donations" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'donations', toPath: () => '/donations' } : null}>
+<Base chrome={chrome} title={page.title ?? ''} currentPath="/donations" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'donations', toPath: () => '/donations' } : null}>
 	<main id="main">
 		<PageOwner stamp={$page} />
 		<Masthead chrome={chrome} slug="donations" entry={masthead} trail={[{ label: chrome.site.donations_name }]} />

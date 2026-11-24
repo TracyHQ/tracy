@@ -1121,16 +1121,6 @@
 			"editLocking": false,
 			"fields": [
 				{
-					"slug": "title",
-					"label": "Title",
-					"type": "string"
-				},
-				{
-					"slug": "description",
-					"label": "Description",
-					"type": "string"
-				},
-				{
 					"slug": "background",
 					"label": "Background",
 					"type": "image"
@@ -1784,7 +1774,7 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"title": "About",
+					"title": "Who we are",
 					"body": [],
 					"view": "page-landing",
 					"path": "/about"
@@ -14187,8 +14177,6 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"title": "Who we are",
-					"description": "",
 					"background": "images/joomlart/hero/hero-1.jpg"
 				}
 			},
@@ -14198,8 +14186,6 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"title": "Blog",
-					"description": "",
 					"background": "images/joomlart/hero/hero-1.jpg"
 				}
 			},
@@ -14209,8 +14195,6 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"title": "Blog",
-					"description": "",
 					"background": "images/joomlart/hero/hero-1.jpg"
 				}
 			},
@@ -14220,8 +14204,6 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"title": "Our Events",
-					"description": "",
 					"background": "images/joomlart/hero/hero-1.jpg"
 				}
 			},
@@ -14231,8 +14213,6 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"title": "Contact",
-					"description": "",
 					"background": "images/joomlart/hero/hero-1.jpg"
 				}
 			},
@@ -14242,8 +14222,6 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"title": "Our causes",
-					"description": "",
 					"background": "images/joomlart/hero/hero-1.jpg"
 				}
 			},
@@ -14253,8 +14231,6 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"title": "Help & FAQs",
-					"description": "",
 					"background": "images/joomlart/hero/hero-1.jpg"
 				}
 			}

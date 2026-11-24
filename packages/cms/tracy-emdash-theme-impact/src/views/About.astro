@@ -35,7 +35,7 @@ const [{ entry: pageEntry }, masthead, activities, mission, whatWeDo, meet, give
 const page = (pageEntry?.data ?? {}) as Record<string, any>
 const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'about' } : null)
 const stampOf = (e: Record<string, any>) => stampFor(Astro.request, 'features', { id: e.id, slug: e.slug })
-const title = String(page.title ?? masthead?.title ?? '')
+const title = String(page.title ?? '')
 ---
 
 <Base chrome={chrome} title={title} currentPath="/about" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'about', toPath: () => '/about' } : null}>

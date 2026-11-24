@@ -5,6 +5,7 @@ import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import { href } from '@/lib/i18n'
 import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import { getEmDashEntry } from 'emdash'
 
 interface Props {
   chrome: Chrome
@@ -15,14 +16,19 @@ interface Props {
   entry: Record<string, any> | null
 }
 const { chrome, entry, trail } = Astro.props
-const $m = stampFor(Astro.request, 'masthead', entry ? { id: entry.id, slug: entry.slug } : null)
+// the band prints the page's own title (the `pages` record), so one slot holds it; the `masthead` entry holds the picture
+const PAGE: Record<string, string> = { faq: 'help-faqs' }
+const pageSlug = PAGE[Astro.props.slug] ?? Astro.props.slug
+const { entry: pageEntry } = await getEmDashEntry('pages', pageSlug, { locale: chrome.locale })
+const pageData = (pageEntry?.data ?? {}) as Record<string, any>
+const $m = stampFor(Astro.request, 'pages', pageEntry ? { id: pageData.id, slug: pageSlug } : null)
 const bg = entry ? mediaUrl(entry.background) : null
 ---
 
-{entry && (
+{entry && pageData.title && (
 	<section class="im-masthead" style={bg ? `background-image:url('${bg}')` : undefined}>
 		<div class="im-container im-masthead-in">
-			<h1 class="im-masthead-title" {...$m('title')}>{entry.title}</h1>
+			<h1 class="im-masthead-title" {...$m('title')}>{pageData.title}</h1>
 			<Breadcrumbs chrome={chrome} trail={trail} onBand />
 		</div>
 	</section>
