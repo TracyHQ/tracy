@@ -13,40 +13,54 @@ const B = { kind: 'business', name: 'identity' }
 const EXACT = {
   'pages.title': ['editorial.heading'],
   'pages.body': ['editorial.paragraph'],
-  'posts.title': ['article.title'],
-  'posts.excerpt': ['article.lead'],
-  'posts.body': ['editorial.paragraph'],
-  'posts.date': ['article.date'],
-  'posts.created': ['article.date'],
-  'posts.cover': ['article.image'],
-  'posts.author_avatar': ['person.image', { kind: 'person', name: 'author' }],
-  'posts.author': ['person.name', { kind: 'person', name: 'author' }],
-  'chrome.footer_link_text': ['editorial.menu_label'],
-  'chrome.footer_link_to': ['editorial.navigation_url'],
-  'posts.tags': ['editorial.menu_label'],
   'chrome.brand_name': ['business.name', B],
   'chrome.copyright': ['business.copyright', B],
   'chrome.logo_dark': ['business.logo', B],
-  'chrome.topbar_address': ['contact.address', C],
-  'chrome.footer_address': ['contact.address', C],
-  'chrome.topbar_phone': ['contact.phone', C],
-  'chrome.footer_phone': ['contact.phone', C],
-  'chrome.footer_email': ['contact.email', C],
-  'chrome.footer_hours': ['contact.hours', C],
-  'chrome.not_found_code': [],
-  'chrome.footer_links_text': ['editorial.menu_label'],
-  'chrome.book_link': ['editorial.navigation_url'],
+  'chrome.donate_link': ['editorial.navigation_url'],
   'chrome.title': ['editorial.heading'],
+  'chrome.currency_symbol': ['editorial.design_element'],
+  'chrome.footer_col1_links': ['editorial.menu_label'],
+  'chrome.footer_col2_links': ['editorial.menu_label'],
+  'chrome.footer_col3_links': ['editorial.menu_label'],
+  'chrome.footer_col4_links': ['editorial.menu_label'],
   'contact.address': ['contact.address', C],
   'contact.phone': ['contact.phone', C],
   'contact.email': ['contact.email', C],
-  'contact.socials': ['editorial.menu_label'],
-  'contact.intro': ['editorial.paragraph'],
-  'happyhours.hp_info': ['contact.hours', C],
-  'happyhours.hp_badge': ['editorial.heading'],
-  'book_table.book_phone': ['contact.phone', C],
-  'happyhours.hp_link_text': ['editorial.button_label'],
-  'masthead.background': ['editorial.illustration']
+  'contact.hours_1_time': ['contact.hours', C],
+  'contact.hours_1_days': ['contact.hours', C],
+  'contact.hours_2_time': ['contact.hours', C],
+  'contact.hours_2_days': ['contact.hours', C],
+  'masthead.background': ['editorial.illustration'],
+  'masthead.description': ['editorial.paragraph'],
+  'donations.location': ['editorial.menu_label'],
+  'donations.raise': ['editorial.heading'],
+  'donations.goal': ['editorial.heading'],
+  'events.start_date': ['editorial.heading'],
+  'events.event_time': ['contact.hours', C],
+  'events.event_location': ['contact.address', C],
+  'events.event_fee': ['editorial.heading'],
+  'events.button_link': ['editorial.navigation_url'],
+  'events.card_bg': [],
+  'events.date_bg': [],
+  'events.button_type': [],
+  'events.ordering': [],
+  'donations.ordering': [],
+  'events.featured': [],
+  'donations.featured': []
+}
+for (const c of ['posts', 'donations', 'events']) {
+  Object.assign(EXACT, {
+    [`${c}.title`]: ['article.title'],
+    [`${c}.excerpt`]: ['article.lead'],
+    [`${c}.body`]: ['editorial.paragraph'],
+    [`${c}.date`]: ['article.date'],
+    [`${c}.created`]: ['article.date'],
+    [`${c}.cover`]: ['article.image'],
+    [`${c}.banner`]: ['article.image'],
+    [`${c}.author_avatar`]: ['person.image', { kind: 'person', name: 'author' }],
+    [`${c}.author`]: ['person.name', { kind: 'person', name: 'author' }],
+    [`${c}.tags`]: ['editorial.menu_label']
+  })
 }
 const KEEPNONE = /^(view|path|form_id)$/
 const NONE =
@@ -76,7 +90,7 @@ const guess = (name, source) => {
 }
 const SUB = {
   'hero.items': {
-    image_decor: 'editorial.illustration',
+    image_hero: 'editorial.illustration',
     sub_title: 'editorial.heading',
     title: 'editorial.heading',
     desc: 'editorial.paragraph',
@@ -85,38 +99,17 @@ const SUB = {
     button_2: 'editorial.button_label',
     btn_link_2: 'editorial.navigation_url'
   },
-  'features_intro.items': {
-    img_bg: 'editorial.illustration',
-    img_icon: 'editorial.illustration',
+  'contact_info.items': {
+    font_icon: 'editorial.design_element',
+    sub_title: 'editorial.heading',
     title: 'editorial.heading',
-    description: 'editorial.paragraph',
-    link: 'editorial.navigation_url',
-    action_title: 'editorial.button_label'
+    heading: 'editorial.heading',
+    link: 'editorial.navigation_url'
   },
-  'menu.items': {
-    dish_name: 'offering.name',
-    dish_description: 'offering.description',
-    dish_price: 'offering.price',
-    img_icon: 'editorial.illustration',
-    title: 'offering.name',
-    description: 'offering.description',
-    price: 'offering.price'
-  },
-  'gallery.items': { gallery_image: 'editorial.illustration', gallery_alt: 'editorial.paragraph' },
-  'testimonials.items': { desc: 'quote.text', author: 'quote.author_name' },
-  'teams.items': {
-    img: 'person.image',
-    name_member: 'person.name',
-    name_office: 'person.role',
-    description: 'person.bio',
-    link_social: 'person.social_url'
-  }
+  'social.items': { font_icon: 'editorial.design_element', title: 'editorial.menu_label', link: 'editorial.navigation_url' },
+  'accordion.items': { accordion_name: 'editorial.heading', accordion_desc: 'editorial.paragraph' }
 }
-const GROUP = {
-  'menu.items': { kind: 'menu_item' },
-  'testimonials.items': { kind: 'quote' },
-  'teams.items': { kind: 'person' }
-}
+const GROUP = {}
 // every sub-field of a repeater carries a role, those the seed leaves empty too (the model's types list them)
 const model = JSON.parse(readFileSync(new URL('../seed/site-model.json', import.meta.url), 'utf8'))
 const subFieldsOf = (key) => {
@@ -143,43 +136,21 @@ for (const [key, f] of Object.entries(map.fields)) {
 map.roleVocabularyVersion = 'place-content-roles/3'
 map.settings = { title: { role: 'business.name', group: B }, tagline: { role: 'business.tagline', group: B } }
 map.taxonomyRoles = { category: { role: 'editorial.heading' } }
-// a dish description that names an extra price ("+ chicken $3") and the location tile that holds an address are single slots that
-// play another role than their field's other entries (label rule R2)
+// the contact rows of the top bar and the footer band are single slots that play the role of their own words, and so is the helpline number
 const seed = JSON.parse(readFileSync(new URL('../seed/seed.json', import.meta.url), 'utf8'))
 map.slotRoles = {}
-for (const e of seed.content.menu ?? [])
+const ROW = [
+  [/address/i, 'contact.address'],
+  [/e-?mail/i, 'contact.email'],
+  [/helpline|support|phone/i, 'contact.phone']
+]
+for (const e of seed.content.contact_info ?? [])
   (e.data.items ?? []).forEach((it, i) => {
-    if (/\$\s?\d/.test(it.dish_description ?? ''))
-      map.slotRoles[`menu.${e.slug}.items[${i}].dish_description`] = {
-        role: 'offering.price',
-        group: { kind: 'menu_item' }
-      }
+    const role = ROW.find(([re]) => re.test(it.sub_title ?? ''))?.[1]
+    if (role)
+      map.slotRoles[`contact_info.${e.slug}.items[${i}].title`] = { role, group: { kind: 'contact', name: 'contact' } }
   })
-for (const e of seed.content.features_intro ?? [])
-  if (e.slug === 'home-visit')
-    (e.data.items ?? []).forEach((_, i) => {
-      map.slotRoles[`features_intro.${e.slug}.items[${i}].description`] = {
-        role: 'contact.address',
-        group: { kind: 'contact', name: 'contact' }
-      }
-    })
-// the Private Events cards' action line holds a price in one card and opening hours in another: each is a single slot that
-// plays the role of its own words
-for (const e of seed.content.features_intro ?? [])
-  if (e.slug === 'home-events')
-    (e.data.items ?? []).forEach((it, i) => {
-      const words = String(it.action_title ?? '')
-      if (/\$\s?\d/.test(words))
-        map.slotRoles[`features_intro.${e.slug}.items[${i}].action_title`] = {
-          role: 'contact.cta_label',
-          group: { kind: 'contact', name: `action${i}` }
-        }
-      else if (/\d{1,2}:\d{2}/.test(words))
-        map.slotRoles[`features_intro.${e.slug}.items[${i}].action_title`] = {
-          role: 'contact.hours',
-          group: { kind: 'contact', name: `action${i}` }
-        }
-    })
+map.slotRoles['cta.home-helpline.cta_highlight'] = { role: 'contact.phone', group: { kind: 'contact', name: 'contact' } }
 writeFileSync(file, JSON.stringify(map, null, 2) + '\n')
 console.log(
   `assign-field-roles: ${Object.values(map.fields).filter((f) => f.role || f.subRoles).length} of ${Object.keys(map.fields).length} fields carry a role`

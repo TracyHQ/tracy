@@ -72,6 +72,7 @@ export function htmlToPortableText(html) {
   }
   let caption = null
   let quoteCaption = false
+  let alertDepth = 0 // inside <div class="alert …">: the source's blue pull-quote box, kept as quote blocks
   let quote = 0 // inside <blockquote>: its paragraphs and its author line stay quote blocks
   const text = (t) => {
     if (!t) return
@@ -79,6 +80,7 @@ export function htmlToPortableText(html) {
       caption += t
       return
     }
+    if (!cur && quote && !list.length) open('blockquote')
     if (!cur)
       open(
         list.length ? 'normal' : 'normal',
@@ -95,7 +97,11 @@ export function htmlToPortableText(html) {
     }
     const [, slash, rawTag, attrs] = m
     const tag = rawTag.toLowerCase()
-    if (tag === 'blockquote') {
+    if (tag === 'div' && (alertDepth > 0 || (!slash && /class\s*=\s*"[^"]*\balert\b/.test(attrs)))) {
+      close()
+      alertDepth += slash ? -1 : 1
+      quote = alertDepth > 0 ? 1 : 0
+    } else if (tag === 'blockquote') {
       close()
       quote = slash ? 0 : 1
     } else if (quote && (tag === 'p' || tag === 'small' || tag === 'footer')) {

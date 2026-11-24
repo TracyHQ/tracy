@@ -12,7 +12,7 @@ import SectionHead from '@/components/blocks/SectionHead.astro'
 import type { Chrome } from '@/lib/chrome'
 import { href, type Locale } from '@/lib/i18n'
 import { section } from '@/lib/content'
-import { loadArticles } from '@/lib/articles'
+import { loadArticles, blogPosts } from '@/lib/articles'
 import { livePosts } from '@/lib/link-gate'
 import { stampFor } from '@/lib/stamps'
 import { getEmDashEntry } from 'emdash'
@@ -28,7 +28,7 @@ const [{ entry: pageEntry }, masthead, all] = await Promise.all([
   section('masthead', 'blog', locale),
   loadArticles('posts', locale)
 ])
-const list = await livePosts(Astro.request, locale, all)
+const list = await livePosts(Astro.request, locale, blogPosts(all))
 const pages = Math.max(1, Math.ceil(list.length / PER_PAGE))
 const raw = Astro.url.searchParams.get('page')
 const page = raw === null ? 1 : /^[0-9]+$/.test(raw) ? Number(raw) : 0

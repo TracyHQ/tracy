@@ -36,7 +36,9 @@ const RULES = [
   ['fund-title', '.im-fund-title', HOME],
   ['card-title', '.im-card-feature h3', HOME],
   ['donation-title', '.im-donation-title', HOME],
-  ['stats-figure', '.im-tile-figure', HOME],
+  ['stats-figure-success', '.im-tile-figure.is-success', HOME],
+  ['stats-figure-warning', '.im-tile-figure.is-warning', HOME],
+  ['stats-figure-primary', '.im-tile-figure.is-primary', HOME],
   ['event-title', '.im-event h3', HOME],
   ['post-title', '.im-post h3', HOME],
   ['connected-title', '.im-connected h2', HOME],
@@ -54,17 +56,41 @@ const DEFAULT_PROPS = [
   'background-color'
 ]
 const BASE = ['body-type', 'nav-link', 'nav-font', 'p-font', 'footer-title', 'footer-text', 'copyright']
+const POST = 'category-blog/charity-branding-is-yourbrand-digital-ready/index.html'
+const DON = 'donations/community-center/index.html'
+const EVT = 'events/feed-the-world/index.html'
+RULES.push(
+  ['masthead-title', '.im-masthead-title', 'about/index.html'],
+  ['detail-title', '.im-detail-title', DON],
+  ['article-title', '.im-article-title', POST],
+  ['widget-title', '.im-widget h3', POST],
+  ['pagination', '.im-pagination a', 'blog/index.html', true],
+  ['nf-title', '.im-error h1', 'nope-404/index.html']
+)
+const mast = (id, path, src, view, title, cols, extra = {}) => ({
+  id, path, src, view, identity: '.im-masthead', cols: ['chrome', 'pages', 'masthead', ...cols],
+  rules: [], content: [['masthead', '.im-masthead-title', 'field', `masthead/${path.slice(1)}.title`, title]], ...extra
+})
 const PAGES = [
   {
-    id: 'en-home',
-    path: '/',
-    src: HOME,
-    view: 'Home',
-    identity: '.im-hero',
+    id: 'en-home', path: '/', src: HOME, view: 'Home', identity: '.im-hero',
     cols: ['chrome', 'pages', 'hero', 'features', 'cta', 'social', 'contact_info', 'donations', 'events', 'posts'],
-    rules: [],
-    content: [['hero', '.im-hero-title', 'field', 'hero/home-hero.items[0].title', 'How to engage help our planet']]
-  }
+    rules: [], content: [['hero', '.im-hero-title', 'field', 'hero/home-hero.items[0].title', 'How to engage help our planet']]
+  },
+  mast('en-about', '/about', 'about/index.html', 'About', 'Who we are', ['features']),
+  mast('en-donations', '/donations', 'donations/index.html', 'DonationsList', 'Our causes', ['donations'], { family: 'list' }),
+  { id: 'en-donation', path: '/donations/community-center', src: DON, view: 'Donation', identity: '.im-crumb-bar', cols: ['chrome', 'donations'], rules: [], family: 'detail',
+    content: [['title', '.im-detail-title', 'field', 'donations/community-center.title', 'Community center']] },
+  mast('en-events', '/events', 'events/index.html', 'EventsList', 'Our Events', ['events'], { family: 'list' }),
+  { id: 'en-event', path: '/events/feed-the-world', src: EVT, view: 'Event', identity: '.im-crumb-bar', cols: ['chrome', 'events', 'cta'], rules: [], family: 'detail',
+    content: [['title', '.im-detail-title', 'field', 'events/feed-the-world.title', 'Feed the world']] },
+  mast('en-blog', '/blog', 'blog/index.html', 'BlogList', 'Blog', ['posts'], { family: 'list' }),
+  { id: 'en-post', path: '/blog/charity-branding-is-yourbrand-digital-ready', src: POST, view: 'Post', identity: '.im-crumb-bar', cols: ['chrome', 'posts'], rules: [], family: 'detail',
+    content: [['title', '.im-article-title', 'field', 'posts/charity-branding-is-yourbrand-digital-ready.title', 'Charity branding: is yourbrand digital ready?']] },
+  mast('en-faq', '/help-faqs', 'help-faqs/index.html', 'Faq', 'Help & FAQs', ['accordion']),
+  mast('en-contact', '/contact', 'contact/index.html', 'Contact', 'Contact', ['contact']),
+  { id: 'en-not-found', path: '/404', src: 'nope-404/index.html', view: 'NotFound', identity: '.im-error', cols: ['chrome'], status: 404, rules: [],
+    content: [['code', '.im-error-digits', 'field', 'chrome.not_found_code', '404']] }
 ]
 const PAGE_URL = Object.fromEntries(PAGES.map((p) => [p.id, p.path]))
 // a page carries every rule whose selector matches a visible element on it (found at the widest variant), so the coverage
@@ -209,7 +235,7 @@ contract.interactions = {}
 contract.fonts = {
   selectors: ['h1', 'h2', 'h3', 'p', 'a', 'button', 'span', 'li'],
   platform: 'Chromium (Playwright). One family is shipped locally (src/fonts.json): Readex Pro, a variable file per subset.',
-  allowed: { en: ['Readex Pro', 'FA Solid', 'FA Brands'] }
+  allowed: { en: ['Readex Pro', 'Font Awesome 6 Free Solid', 'Font Awesome 6 Brands Regular'] }
 }
 contract.capabilities = ['audit-log', 'seo', 'media', 'forms']
 contract.reviews.forms = { mode: 'required' }

@@ -84,7 +84,7 @@ const noHash = (v) =>
   Array.isArray(v)
     ? v.map(noHash)
     : v && typeof v === 'object'
-      ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, k === 'link' && x === '#' ? '' : noHash(x)]))
+      ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, k === 'link' && (x === '#' || /pages\/user\//.test(String(x))) ? '' : noHash(x)]))
       : v
 for (const r of model.records) r.values = noHash(r.values)
 
@@ -227,7 +227,9 @@ model.records = model.records.filter((r) => r.type !== 'posts')
 // Straight from the dump: the model drops an article whose title another one already has (the Blog holds "Charity of the month
 // plan international UK" twice, 17 July and 2 August, and the Home prints the second), so every published article of the three
 // categories is built from its own row. The Joomla alias is the slug.
-const TYPE_OF_CAT = { 8: 'posts', 13: 'donations', 10: 'events' }
+const TYPE_OF_CAT = { 8: 'posts', 9: 'posts', 13: 'donations', 10: 'events' }
+// the Joomla category keeps its name and alias: Animals (the blog) and Children (printed with its count in the sidebar, D16)
+const TERM_OF_CAT = { 8: 'animals', 9: 'children' }
 const rows = inventory.content
   .filter((c) => String(c.state) === '1' && TYPE_OF_CAT[c.catid])
   .sort((a, b) => Number(a.catid) - Number(b.catid) || Number(a.ordering) - Number(b.ordering) || Number(a.id) - Number(b.id))
@@ -264,7 +266,7 @@ for (const row of rows) {
       card_bg: f['bg-content'] ?? '',
       date_bg: f['bg-startdate'] ?? '',
       button_type: f['btn-type'] ?? '',
-      button_link: f['btn-redirect-link'] ?? '',
+      button_link: /pages\/user\//.test(String(f['btn-redirect-link'] ?? '')) ? '' : (f['btn-redirect-link'] ?? ''),
       ordering: Number(row.ordering),
       featured: featured.has(String(row.id)) ? '1' : ''
     })
@@ -273,7 +275,7 @@ for (const row of rows) {
     slug: row.alias,
     locale: 'en',
     status: 'published',
-    terms: type === 'posts' ? { category: ['blog'] } : {},
+    terms: type === 'posts' ? { category: [TERM_OF_CAT[row.catid]] } : {},
     values
   })
 }
@@ -281,7 +283,10 @@ for (const t of ['posts', 'donations', 'events'])
   for (const r of model.records.filter((x) => x.type === t))
     model.routes.push({ path: `/${t === 'posts' ? 'blog' : t}/${r.slug}`, kind: 'detail', type: t, slug: r.slug })
 for (const tax of model.taxonomies ?? []) {
-  tax.terms = [{ slug: 'blog', label: { en: 'Blog' } }]
+  tax.terms = [
+    { slug: 'animals', label: { en: 'Animals' } },
+    { slug: 'children', label: { en: 'Children' } }
+  ]
   tax.appliesTo = ['posts']
 }
 
@@ -323,7 +328,7 @@ const footerAbout = secText((aboutHtml.match(/<p[^>]*>([\s\S]*?)<\/p>/) ?? [])[1
 const footerMenus = Object.fromEntries(
   JSON.parse(readFileSync(file, 'utf8')).menus
     .filter((m) => m.name !== 'mainmenu')
-    .map((m) => [m.name, m.items.map((i) => ({ label: i.label.en, path: i.path }))])
+    .map((m) => [m.name, m.items.map((i) => ({ label: i.label.en, path: /pages\/user\//.test(String(i.path)) ? '' : i.path }))])
 )
 const col = (name) =>
   footerMenus[name]

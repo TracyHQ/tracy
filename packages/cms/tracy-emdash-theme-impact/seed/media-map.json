@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-24T06:25:07.738Z",
+	"generatedAt": "2026-11-24T06:53:21.269Z",
 	"source": "JA Impact j6 1.0.6 webroot",
 	"items": [
 		{
@@ -667,6 +667,12 @@
 					"path": "author_avatar"
 				},
 				{
+					"collection": "posts",
+					"slug": "a-journey-of-discovery-and-learning",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
 					"collection": "donations",
 					"slug": "water-treatment-projects",
 					"locale": "en",
@@ -821,6 +827,396 @@
 					"slug": "charity-of-the-month-plan-international-uk-2",
 					"locale": "en",
 					"path": "body[12].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/item-4",
+			"file": "images/joomlart/blog/children/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "212f4efc6a038c59b85a8f7ac0c415c9855a344ce15114ad79766151a6a74c96",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "silly-stories-and-jokes-for-young-readers",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/detail-4",
+			"file": "images/joomlart/blog/children/detail-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1a7d116b5406ef9bd0c2ded19201a6d84ae7957f09fedd09ae9e18f5f22804db",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "silly-stories-and-jokes-for-young-readers",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/9",
+			"file": "images/joomlart/authors/9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1b9e5b378d64e70e7350649fb0513ca20cb7e0946b25aaba9fb1931990cfca31",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "silly-stories-and-jokes-for-young-readers",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "legends-and-folktales-from-around-the-world",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "exploring-the-beauty-of-the-animal-kingdom",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "heartwarming-tales-of-kindness-and-togetherness",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "exciting-adventures-to-the-past-and-future",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/item-1",
+			"file": "images/joomlart/blog/children/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "084a77f9f66902dea2f94fd507afd6b1de5759d2e85282de0ed83ce7b17cfb19",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-many-people-in-africa-don-t-have-food",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/detail-1",
+			"file": "images/joomlart/blog/children/detail-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8825f41e0981d1dab93a179d6dee0829ab50fcc75383a2866cad725796d49b82",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-many-people-in-africa-don-t-have-food",
+					"locale": "en",
+					"path": "banner"
+				},
+				{
+					"collection": "posts",
+					"slug": "silly-stories-and-jokes-for-young-readers",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-many-people-in-africa-don-t-have-food",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "exploring-magical-worlds",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "legends-and-folktales-from-around-the-world",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "a-journey-of-discovery-and-learning",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "exploring-the-beauty-of-the-animal-kingdom",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "heartwarming-tales-of-kindness-and-togetherness",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "a-journey-through-enchanted-lands",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "exciting-adventures-to-the-past-and-future",
+					"locale": "en",
+					"path": "body[10].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/8",
+			"file": "images/joomlart/authors/8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "0e232eb00c6e31f01296e1ee1757a67088f8b4f6ab03bffc37403681c3550b0a",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-many-people-in-africa-don-t-have-food",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "exploring-magical-worlds",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "a-journey-through-enchanted-lands",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/detail-3",
+			"file": "images/joomlart/blog/children/detail-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a5d6d8686307759afe5a542cb710e85234cbda894ac136aff1117e8ae2c9f899",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "exploring-magical-worlds",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "exploring-magical-worlds",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/item-6",
+			"file": "images/joomlart/blog/children/item-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1ac9b53f6d22296c44e356f170c168bf157bf60e7caf6a9892ab54960c6d3de4",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "legends-and-folktales-from-around-the-world",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/detail-6",
+			"file": "images/joomlart/blog/children/detail-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1229970f3ae5645cacdb346dcd92d91beb13dc861715aef86a3cddc3f8d96a06",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "legends-and-folktales-from-around-the-world",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/detail-7",
+			"file": "images/joomlart/blog/children/detail-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "371c41aab9d9d71e0a75a9e0434fd20e35107fff216ed20cc17f49214f854916",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "a-journey-of-discovery-and-learning",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/detail-5",
+			"file": "images/joomlart/blog/children/detail-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "192512313056584391e629aa308874ef9396017b72d3550c7601862fb21af912",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "exploring-the-beauty-of-the-animal-kingdom",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/detail-8",
+			"file": "images/joomlart/blog/children/detail-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e71b4c7449d1575f9a87be127184461275dca94ca7bf31ed2fa256cd1ca75e33",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "heartwarming-tales-of-kindness-and-togetherness",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/item-2",
+			"file": "images/joomlart/blog/children/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ba51a63138ea86fe80be8bb2ad4ad30242bac57443104f602d2505ce1d1a33c5",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "a-journey-through-enchanted-lands",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/detail-2",
+			"file": "images/joomlart/blog/children/detail-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d2b4bc22db8592618bae445b5aebf48e5593fdf1a236ebfff05b6ea0780345a0",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "a-journey-through-enchanted-lands",
+					"locale": "en",
+					"path": "banner"
+				},
+				{
+					"collection": "posts",
+					"slug": "silly-stories-and-jokes-for-young-readers",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-many-people-in-africa-don-t-have-food",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "exploring-magical-worlds",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "legends-and-folktales-from-around-the-world",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "a-journey-of-discovery-and-learning",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "exploring-the-beauty-of-the-animal-kingdom",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "heartwarming-tales-of-kindness-and-togetherness",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "a-journey-through-enchanted-lands",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "exciting-adventures-to-the-past-and-future",
+					"locale": "en",
+					"path": "body[12].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/item-9",
+			"file": "images/joomlart/blog/children/item-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "0d2445b689757f11af2b34e63d8e56f84f71dfd0e260c8aee1be28da474c7c06",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "exciting-adventures-to-the-past-and-future",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/children/detail-9",
+			"file": "images/joomlart/blog/children/detail-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "7de74dc6501f70d868c0b005bddc750223f8cddbda34454f12cf41cf0d6a0e1d",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "exciting-adventures-to-the-past-and-future",
+					"locale": "en",
+					"path": "banner"
 				}
 			]
 		},

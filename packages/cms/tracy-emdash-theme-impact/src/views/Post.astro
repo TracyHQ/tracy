@@ -14,6 +14,11 @@ import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
 import { uiTag } from '@/lib/ui'
 import { uiDate } from '@/lib/ui-words'
+import BlogGrid from '@/components/blocks/BlogGrid.astro'
+import SectionHead from '@/components/blocks/SectionHead.astro'
+import { loadArticles, blogPosts, articlePath } from '@/lib/articles'
+import { livePosts } from '@/lib/link-gate'
+import { publicOrigin } from '@/lib/public-origin'
 import { getEmDashEntry } from 'emdash'
 
 interface Props {
@@ -32,6 +37,20 @@ const picture = mediaUrl(a.banner) ?? mediaUrl(a.cover)
 const $p = stampFor(Astro.request, 'posts', { id: a.id, slug })
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const tag = uiTag(locale)
+const list = await livePosts(Astro.request, locale, blogPosts(await loadArticles('posts', locale)))
+const at = list.findIndex((p) => p.slug === slug)
+const newer = at > 0 ? list[at - 1] : undefined
+const older = at >= 0 ? list[at + 1] : undefined
+const related = list.filter((p) => p.slug !== slug).slice(0, 3)
+// plain share addresses of each network's own page: no script, no request before the click
+const postUrl = encodeURIComponent(`${publicOrigin(Astro.url)}${Astro.url.pathname}`)
+const postTitle = encodeURIComponent(String(a.title ?? ''))
+const share = [
+  { icon: 'facebook', name: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${postUrl}` },
+  { icon: 'twitter', name: 'X', href: `https://twitter.com/intent/tweet?url=${postUrl}&text=${postTitle}` },
+  { icon: 'tumblr', name: 'Tumblr', href: `https://www.tumblr.com/share/link?url=${postUrl}&name=${postTitle}` },
+  { icon: 'whatsapp', name: 'WhatsApp', href: `https://api.whatsapp.com/send?text=${postTitle}%20${postUrl}` }
+]
 // the source prints the short publish date (`Aug 27, 2023`)
 const published = uiDate(tag, new Date(`${String(a.date ?? '').replace(' ', 'T')}${/[zZ]|[+-]\d\d:?\d\d$/.test(String(a.date)) ? '' : 'Z'}`), { month: 'short', day: '2-digit', year: 'numeric' })
 ---
@@ -48,11 +67,26 @@ const published = uiDate(tag, new Date(`${String(a.date ?? '').replace(' ', 'T')
 						<p class="im-article-meta"><span {...$p('date')}>{published}</span>{a.author && <> <span class="im-dash">—</span> <span {...$c('by_label')}>{chrome.site.by_label}</span> <span class="im-post-author" {...$p('author')}>{a.author}</span></>}</p>
 						<h1 class="im-article-title" {...$p('title')}>{a.title}</h1>
 						<ArticleBody value={a.body} stamp={$p} locale={locale} />
+						<ul class="im-share">{share.map((n) => <li><a href={n.href} target="_blank" rel="noopener" aria-label={`${chrome.site.share_label} ${n.name}`}><span class={`im-fa is-brand`} data-icon={n.icon} aria-hidden="true"></span></a></li>)}</ul>
+						{(newer || older) && (
+							<nav class="im-post-nav" aria-label={chrome.site.pagination_label}>
+								{older ? <a class="is-prev" href={href(locale, articlePath('posts', older.slug))} rel="prev"><span class="im-fa" data-icon="arrow" style="transform:scaleX(-1)" aria-hidden="true"></span><span>{older.title}</span></a> : <span></span>}
+								{newer ? <a class="is-next" href={href(locale, articlePath('posts', newer.slug))} rel="next"><span>{newer.title}</span><span class="im-fa" data-icon="arrow" aria-hidden="true"></span></a> : <span></span>}
+							</nav>
+						)}
 					</article>
 					<div class="im-page-side"><Sidebar chrome={chrome} /></div>
 				</div>
 			</div>
 		</div>
+		{related.length > 0 && (
+			<section class="im-section bottom-large">
+				<div class="im-container">
+					<SectionHead label={chrome.site.blog_label} title={chrome.site.related_title} stamp={$c} labelPath="blog_label" titlePath="related_title" />
+					<BlogGrid entries={related} chrome={chrome} short />
+				</div>
+			</section>
+		)}
 	</main>
 	<script src="@/lib/site-client.ts"></script>
 </Base>

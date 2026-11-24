@@ -28,7 +28,7 @@ const money = (v: unknown) => `${site.currency_symbol ?? ''}${v}`
 ---
 
 <article class="im-donation">
-	{img && <a class="im-donation-image" href={href(chrome.locale, articlePath('donations', entry.slug))} tabindex="-1" aria-hidden="true"><img src={img} alt="" loading="lazy" decoding="async" /></a>}
+	{img && <a class="im-donation-image" href={href(chrome.locale, articlePath('donations', entry.slug))} tabindex="-1" aria-hidden="true"><img src={img} alt="" decoding="async" /></a>}
 	<div class="im-donation-info">
 		<div class="im-donation-top">
 			<div class="im-donation-meta">

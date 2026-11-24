@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T06:25:07.593Z",
+  "generatedAt": "2026-11-24T06:53:21.140Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -22,7 +22,57 @@
       "role": "editorial.heading"
     }
   },
-  "slotRoles": {},
+  "slotRoles": {
+    "contact_info.topbar-contact.items[0].title": {
+      "role": "contact.address",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
+    },
+    "contact_info.topbar-contact.items[1].title": {
+      "role": "contact.email",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
+    },
+    "contact_info.topbar-contact.items[2].title": {
+      "role": "contact.phone",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
+    },
+    "contact_info.footer-contact.items[0].title": {
+      "role": "contact.email",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
+    },
+    "contact_info.footer-contact.items[1].title": {
+      "role": "contact.address",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
+    },
+    "contact_info.footer-contact.items[2].title": {
+      "role": "contact.phone",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
+    },
+    "cta.home-helpline.cta_highlight": {
+      "role": "contact.phone",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
+    }
+  },
   "fields": {
     "pages.title": {
       "source": "text",
@@ -63,7 +113,7 @@
       "target": "repeater",
       "label": "Items",
       "subRoles": {
-        "image_decor": "editorial.illustration",
+        "image_hero": "editorial.illustration",
         "sub_title": "editorial.heading",
         "title": "editorial.heading",
         "desc": "editorial.paragraph",
@@ -71,7 +121,6 @@
         "btn_link": "editorial.navigation_url",
         "button_2": "editorial.button_label",
         "btn_link_2": "editorial.navigation_url",
-        "image_hero": "editorial.illustration",
         "btn_icon": "editorial.button_label",
         "btn_type": "editorial.design_element",
         "btn_icon_2": "editorial.button_label",
@@ -423,11 +472,11 @@
       "label": "Items",
       "subRoles": {
         "font_icon": "editorial.design_element",
-        "icon_color": "editorial.paragraph",
         "sub_title": "editorial.heading",
         "title": "editorial.heading",
+        "heading": "editorial.heading",
         "link": "editorial.navigation_url",
-        "heading": "editorial.heading"
+        "icon_color": "editorial.paragraph"
       }
     },
     "contact_info.section_label": {
@@ -472,7 +521,7 @@
       "label": "Items",
       "subRoles": {
         "font_icon": "editorial.design_element",
-        "title": "editorial.heading",
+        "title": "editorial.menu_label",
         "link": "editorial.navigation_url"
       }
     },
@@ -657,7 +706,7 @@
       "source": "image",
       "target": "image",
       "label": "Banner",
-      "role": "editorial.illustration"
+      "role": "article.image"
     },
     "posts.author": {
       "source": "text",
@@ -700,13 +749,13 @@
       "source": "text",
       "target": "string",
       "label": "Title",
-      "role": "editorial.heading"
+      "role": "article.title"
     },
     "donations.excerpt": {
       "source": "prose",
       "target": "portableText",
       "label": "Excerpt",
-      "role": "editorial.paragraph"
+      "role": "article.lead"
     },
     "donations.body": {
       "source": "prose",
@@ -718,67 +767,73 @@
       "source": "date",
       "target": "datetime",
       "label": "Date",
-      "role": "editorial.paragraph"
+      "role": "article.date"
     },
     "donations.cover": {
       "source": "image",
       "target": "image",
       "label": "Cover",
-      "role": "editorial.illustration"
+      "role": "article.image"
     },
     "donations.banner": {
       "source": "image",
       "target": "image",
       "label": "Banner",
-      "role": "editorial.illustration"
+      "role": "article.image"
     },
     "donations.author": {
       "source": "text",
       "target": "string",
       "label": "Author",
-      "role": "editorial.heading"
+      "role": "person.name",
+      "group": {
+        "kind": "person",
+        "name": "author"
+      }
     },
     "donations.author_avatar": {
       "source": "image",
       "target": "image",
       "label": "Author avatar",
-      "role": "editorial.illustration"
+      "role": "person.image",
+      "group": {
+        "kind": "person",
+        "name": "author"
+      }
     },
     "donations.tags": {
       "source": "text",
       "target": "string",
       "label": "Tags",
-      "role": "editorial.paragraph"
+      "role": "editorial.menu_label"
     },
     "donations.location": {
       "source": "text",
       "target": "string",
       "label": "Location",
-      "role": "editorial.paragraph"
+      "role": "editorial.menu_label"
     },
     "donations.raise": {
       "source": "text",
       "target": "string",
       "label": "Raise",
-      "role": "editorial.paragraph"
+      "role": "editorial.heading"
     },
     "donations.goal": {
       "source": "text",
       "target": "string",
       "label": "Goal",
-      "role": "editorial.paragraph"
+      "role": "editorial.heading"
     },
     "donations.featured": {
       "source": "text",
       "target": "string",
-      "label": "Featured",
-      "role": "editorial.paragraph"
+      "label": "Featured"
     },
     "donations.ordering": {
       "source": "number",
       "target": "integer",
-      "label": "Ordering",
-      "role": "editorial.paragraph"
+      "label": "Ordering"
     },
     "donations.path": {
       "source": "text",
@@ -789,13 +844,13 @@
       "source": "text",
       "target": "string",
       "label": "Title",
-      "role": "editorial.heading"
+      "role": "article.title"
     },
     "events.excerpt": {
       "source": "prose",
       "target": "portableText",
       "label": "Excerpt",
-      "role": "editorial.paragraph"
+      "role": "article.lead"
     },
     "events.body": {
       "source": "prose",
@@ -807,97 +862,108 @@
       "source": "date",
       "target": "datetime",
       "label": "Date",
-      "role": "editorial.paragraph"
+      "role": "article.date"
     },
     "events.cover": {
       "source": "image",
       "target": "image",
       "label": "Cover",
-      "role": "editorial.illustration"
+      "role": "article.image"
     },
     "events.banner": {
       "source": "image",
       "target": "image",
       "label": "Banner",
-      "role": "editorial.illustration"
+      "role": "article.image"
     },
     "events.author": {
       "source": "text",
       "target": "string",
       "label": "Author",
-      "role": "editorial.heading"
+      "role": "person.name",
+      "group": {
+        "kind": "person",
+        "name": "author"
+      }
     },
     "events.author_avatar": {
       "source": "image",
       "target": "image",
       "label": "Author avatar",
-      "role": "editorial.illustration"
+      "role": "person.image",
+      "group": {
+        "kind": "person",
+        "name": "author"
+      }
     },
     "events.tags": {
       "source": "text",
       "target": "string",
       "label": "Tags",
-      "role": "editorial.paragraph"
+      "role": "editorial.menu_label"
     },
     "events.start_date": {
       "source": "text",
       "target": "string",
       "label": "Start date",
-      "role": "editorial.paragraph"
+      "role": "editorial.heading"
     },
     "events.event_time": {
       "source": "text",
       "target": "string",
       "label": "Event time",
-      "role": "editorial.paragraph"
+      "role": "contact.hours",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
     },
     "events.event_location": {
       "source": "text",
       "target": "string",
       "label": "Event location",
-      "role": "editorial.paragraph"
+      "role": "contact.address",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
     },
     "events.event_fee": {
       "source": "text",
       "target": "string",
       "label": "Event fee",
-      "role": "editorial.paragraph"
+      "role": "editorial.heading"
     },
     "events.card_bg": {
       "source": "text",
       "target": "string",
-      "label": "Card bg",
-      "role": "editorial.paragraph"
+      "label": "Card bg"
     },
     "events.date_bg": {
       "source": "text",
       "target": "string",
-      "label": "Date bg",
-      "role": "editorial.paragraph"
+      "label": "Date bg"
     },
     "events.button_type": {
       "source": "text",
       "target": "string",
-      "label": "Button type",
-      "role": "editorial.button_label"
+      "label": "Button type"
     },
     "events.button_link": {
       "source": "text",
       "target": "string",
       "label": "Button link",
-      "role": "editorial.button_label"
+      "role": "editorial.navigation_url"
     },
     "events.featured": {
       "source": "text",
       "target": "string",
-      "label": "Featured",
-      "role": "editorial.paragraph"
+      "label": "Featured"
     },
     "events.ordering": {
       "source": "number",
       "target": "integer",
-      "label": "Ordering",
-      "role": "editorial.paragraph"
+      "label": "Ordering"
     },
     "events.path": {
       "source": "text",
@@ -1064,25 +1130,41 @@
       "source": "text",
       "target": "string",
       "label": "Hours 1 time",
-      "role": "editorial.paragraph"
+      "role": "contact.hours",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
     },
     "contact.hours_1_days": {
       "source": "text",
       "target": "string",
       "label": "Hours 1 days",
-      "role": "editorial.paragraph"
+      "role": "contact.hours",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
     },
     "contact.hours_2_time": {
       "source": "text",
       "target": "string",
       "label": "Hours 2 time",
-      "role": "editorial.paragraph"
+      "role": "contact.hours",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
     },
     "contact.hours_2_days": {
       "source": "text",
       "target": "string",
       "label": "Hours 2 days",
-      "role": "editorial.paragraph"
+      "role": "contact.hours",
+      "group": {
+        "kind": "contact",
+        "name": "contact"
+      }
     },
     "contact.required_label": {
       "source": "text",
@@ -1121,7 +1203,7 @@
       "source": "text",
       "target": "string",
       "label": "Donate link",
-      "role": "editorial.paragraph"
+      "role": "editorial.navigation_url"
     },
     "chrome.footer_about": {
       "source": "text",
@@ -1139,7 +1221,7 @@
       "source": "text",
       "target": "string",
       "label": "Footer col1 links",
-      "role": "editorial.paragraph"
+      "role": "editorial.menu_label"
     },
     "chrome.footer_col2_title": {
       "source": "text",
@@ -1151,7 +1233,7 @@
       "source": "text",
       "target": "string",
       "label": "Footer col2 links",
-      "role": "editorial.paragraph"
+      "role": "editorial.menu_label"
     },
     "chrome.footer_col3_title": {
       "source": "text",
@@ -1163,7 +1245,7 @@
       "source": "text",
       "target": "string",
       "label": "Footer col3 links",
-      "role": "editorial.paragraph"
+      "role": "editorial.menu_label"
     },
     "chrome.footer_col4_title": {
       "source": "text",
@@ -1175,7 +1257,7 @@
       "source": "text",
       "target": "string",
       "label": "Footer col4 links",
-      "role": "editorial.paragraph"
+      "role": "editorial.menu_label"
     },
     "chrome.copyright": {
       "source": "text",
@@ -1418,7 +1500,8 @@
     "chrome.not_found_code": {
       "source": "text",
       "target": "string",
-      "label": "Not found code"
+      "label": "Not found code",
+      "role": "editorial.paragraph"
     },
     "chrome.not_found_title": {
       "source": "text",
@@ -1520,7 +1603,7 @@
       "source": "text",
       "target": "string",
       "label": "Currency symbol",
-      "role": "editorial.paragraph"
+      "role": "editorial.design_element"
     },
     "chrome.form_id": {
       "source": "text",

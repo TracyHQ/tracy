@@ -71,7 +71,7 @@
 	.im-fa[data-icon="facebook"] { --fa: "\f39e"; } .im-fa[data-icon="twitter"] { --fa: "\f099"; } .im-fa[data-icon="tiktok"] { --fa: "\e07b"; }
 	.im-fa[data-icon="search"] { --fa: "\f002"; } .im-fa[data-icon="calendar"] { --fa: "\f073"; } .im-fa[data-icon="clock"] { --fa: "\f017"; }
 	.im-fa[data-icon="dollar"] { --fa: "\24"; } .im-fa[data-icon="tag"] { --fa: "\f02b"; } .im-fa[data-icon="minus"] { --fa: "\f068"; }
-	.im-fa[data-icon="pinterest"] { --fa: "\f0d2"; } .im-fa[data-icon="instagram"] { --fa: "\f16d"; } .im-fa[data-icon="youtube"] { --fa: "\f167"; }
+	.im-fa[data-icon="pinterest"] { --fa: "\f0d2"; } .im-fa[data-icon="instagram"] { --fa: "\f16d"; } .im-fa[data-icon="youtube"] { --fa: "\f167"; } .im-fa[data-icon="tumblr"] { --fa: "\f173"; } .im-fa[data-icon="whatsapp"] { --fa: "\f232"; }
 
 	/* buttons: 8 px radius, 500 weight; the theme buttons fill with their colour, hover keeps it at 85 percent (`theme.tpl.css:171-180`) */
 	.im-btn {

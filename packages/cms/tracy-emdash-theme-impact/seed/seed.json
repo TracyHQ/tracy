@@ -1707,9 +1707,15 @@
 			"locale": "en",
 			"terms": [
 				{
-					"id": "term:category:blog:en",
-					"slug": "blog",
-					"label": "Blog",
+					"id": "term:category:animals:en",
+					"slug": "animals",
+					"label": "Animals",
+					"locale": "en"
+				},
+				{
+					"id": "term:category:children:en",
+					"slug": "children",
+					"label": "Children",
 					"locale": "en"
 				}
 			]
@@ -2499,39 +2505,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b11",
-							"style": "normal",
+							"_key": "b13",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s13",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s14",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s15",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b17",
+							"_key": "b19",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s18",
+									"_key": "s20",
 									"text": "The desire to make a difference",
 									"marks": []
 								}
@@ -2539,13 +2533,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b21",
+							"_key": "b23",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s22",
+									"_key": "s24",
 									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
 									"marks": []
 								}
@@ -2553,13 +2547,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b25",
+							"_key": "b27",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s26",
+									"_key": "s28",
 									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
 									"marks": []
 								}
@@ -2567,28 +2561,14 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Effective giving",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "b33",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "s34",
-									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
 									"marks": []
 								}
 							]
@@ -2601,7 +2581,21 @@
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s37",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
 									"text": " ",
 									"marks": []
 								}
@@ -2609,18 +2603,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i39",
+							"_key": "i41",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b40",
+							"_key": "b42",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s42",
+									"_key": "s44",
 									"text": " ",
 									"marks": []
 								}
@@ -2628,18 +2622,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i44",
+							"_key": "i46",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b45",
+							"_key": "b47",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s47",
+									"_key": "s49",
 									"text": " ",
 									"marks": []
 								}
@@ -2647,13 +2641,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b49",
+							"_key": "b51",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s50",
+									"_key": "s52",
 									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
 									"marks": []
 								}
@@ -2671,7 +2665,7 @@
 				},
 				"taxonomies": {
 					"category": [
-						"blog"
+						"animals"
 					]
 				}
 			},
@@ -2743,39 +2737,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b11",
-							"style": "normal",
+							"_key": "b13",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s13",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s14",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s15",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b17",
+							"_key": "b19",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s18",
+									"_key": "s20",
 									"text": "The desire to make a difference",
 									"marks": []
 								}
@@ -2783,13 +2765,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b21",
+							"_key": "b23",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s22",
+									"_key": "s24",
 									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
 									"marks": []
 								}
@@ -2797,13 +2779,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b25",
+							"_key": "b27",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s26",
+									"_key": "s28",
 									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
 									"marks": []
 								}
@@ -2811,28 +2793,14 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Effective giving",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "b33",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "s34",
-									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
 									"marks": []
 								}
 							]
@@ -2845,7 +2813,21 @@
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s37",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
 									"text": " ",
 									"marks": []
 								}
@@ -2853,18 +2835,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i39",
+							"_key": "i41",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b40",
+							"_key": "b42",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s42",
+									"_key": "s44",
 									"text": " ",
 									"marks": []
 								}
@@ -2872,18 +2854,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i44",
+							"_key": "i46",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b45",
+							"_key": "b47",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s47",
+									"_key": "s49",
 									"text": " ",
 									"marks": []
 								}
@@ -2891,13 +2873,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b49",
+							"_key": "b51",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s50",
+									"_key": "s52",
 									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
 									"marks": []
 								}
@@ -2915,7 +2897,7 @@
 				},
 				"taxonomies": {
 					"category": [
-						"blog"
+						"animals"
 					]
 				}
 			},
@@ -2987,39 +2969,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b11",
-							"style": "normal",
+							"_key": "b13",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s13",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s14",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s15",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b17",
+							"_key": "b19",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s18",
+									"_key": "s20",
 									"text": "The desire to make a difference",
 									"marks": []
 								}
@@ -3027,13 +2997,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b21",
+							"_key": "b23",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s22",
+									"_key": "s24",
 									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
 									"marks": []
 								}
@@ -3041,13 +3011,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b25",
+							"_key": "b27",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s26",
+									"_key": "s28",
 									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
 									"marks": []
 								}
@@ -3055,28 +3025,14 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Effective giving",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "b33",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "s34",
-									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
 									"marks": []
 								}
 							]
@@ -3089,7 +3045,21 @@
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s37",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
 									"text": " ",
 									"marks": []
 								}
@@ -3097,18 +3067,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i39",
+							"_key": "i41",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b40",
+							"_key": "b42",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s42",
+									"_key": "s44",
 									"text": " ",
 									"marks": []
 								}
@@ -3116,18 +3086,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i44",
+							"_key": "i46",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b45",
+							"_key": "b47",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s47",
+									"_key": "s49",
 									"text": " ",
 									"marks": []
 								}
@@ -3135,13 +3105,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b49",
+							"_key": "b51",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s50",
+									"_key": "s52",
 									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
 									"marks": []
 								}
@@ -3159,7 +3129,7 @@
 				},
 				"taxonomies": {
 					"category": [
-						"blog"
+						"animals"
 					]
 				}
 			},
@@ -3231,39 +3201,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b11",
-							"style": "normal",
+							"_key": "b13",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s13",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s14",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s15",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b17",
+							"_key": "b19",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s18",
+									"_key": "s20",
 									"text": "The desire to make a difference",
 									"marks": []
 								}
@@ -3271,13 +3229,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b21",
+							"_key": "b23",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s22",
+									"_key": "s24",
 									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
 									"marks": []
 								}
@@ -3285,13 +3243,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b25",
+							"_key": "b27",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s26",
+									"_key": "s28",
 									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
 									"marks": []
 								}
@@ -3299,28 +3257,14 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Effective giving",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "b33",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "s34",
-									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
 									"marks": []
 								}
 							]
@@ -3333,7 +3277,21 @@
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s37",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
 									"text": " ",
 									"marks": []
 								}
@@ -3341,18 +3299,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i39",
+							"_key": "i41",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b40",
+							"_key": "b42",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s42",
+									"_key": "s44",
 									"text": " ",
 									"marks": []
 								}
@@ -3360,18 +3318,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i44",
+							"_key": "i46",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b45",
+							"_key": "b47",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s47",
+									"_key": "s49",
 									"text": " ",
 									"marks": []
 								}
@@ -3379,13 +3337,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b49",
+							"_key": "b51",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s50",
+									"_key": "s52",
 									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
 									"marks": []
 								}
@@ -3403,7 +3361,7 @@
 				},
 				"taxonomies": {
 					"category": [
-						"blog"
+						"animals"
 					]
 				}
 			},
@@ -3475,39 +3433,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b11",
-							"style": "normal",
+							"_key": "b13",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s13",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s14",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s15",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b17",
+							"_key": "b19",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s18",
+									"_key": "s20",
 									"text": "The desire to make a difference",
 									"marks": []
 								}
@@ -3515,13 +3461,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b21",
+							"_key": "b23",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s22",
+									"_key": "s24",
 									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
 									"marks": []
 								}
@@ -3529,13 +3475,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b25",
+							"_key": "b27",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s26",
+									"_key": "s28",
 									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
 									"marks": []
 								}
@@ -3543,28 +3489,14 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Effective giving",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "b33",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "s34",
-									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
 									"marks": []
 								}
 							]
@@ -3577,7 +3509,21 @@
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s37",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
 									"text": " ",
 									"marks": []
 								}
@@ -3585,18 +3531,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i39",
+							"_key": "i41",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b40",
+							"_key": "b42",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s42",
+									"_key": "s44",
 									"text": " ",
 									"marks": []
 								}
@@ -3604,18 +3550,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i44",
+							"_key": "i46",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b45",
+							"_key": "b47",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s47",
+									"_key": "s49",
 									"text": " ",
 									"marks": []
 								}
@@ -3623,13 +3569,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b49",
+							"_key": "b51",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s50",
+									"_key": "s52",
 									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
 									"marks": []
 								}
@@ -3647,7 +3593,7 @@
 				},
 				"taxonomies": {
 					"category": [
-						"blog"
+						"animals"
 					]
 				}
 			},
@@ -3719,39 +3665,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b11",
-							"style": "normal",
+							"_key": "b13",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s13",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s14",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s15",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b17",
+							"_key": "b19",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s18",
+									"_key": "s20",
 									"text": "The desire to make a difference",
 									"marks": []
 								}
@@ -3759,13 +3693,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b21",
+							"_key": "b23",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s22",
+									"_key": "s24",
 									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
 									"marks": []
 								}
@@ -3773,13 +3707,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b25",
+							"_key": "b27",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s26",
+									"_key": "s28",
 									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
 									"marks": []
 								}
@@ -3787,28 +3721,14 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Effective giving",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "b33",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "s34",
-									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
 									"marks": []
 								}
 							]
@@ -3821,7 +3741,21 @@
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s37",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
 									"text": " ",
 									"marks": []
 								}
@@ -3829,18 +3763,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i39",
+							"_key": "i41",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b40",
+							"_key": "b42",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s42",
+									"_key": "s44",
 									"text": " ",
 									"marks": []
 								}
@@ -3848,18 +3782,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i44",
+							"_key": "i46",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b45",
+							"_key": "b47",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s47",
+									"_key": "s49",
 									"text": " ",
 									"marks": []
 								}
@@ -3867,13 +3801,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b49",
+							"_key": "b51",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s50",
+									"_key": "s52",
 									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
 									"marks": []
 								}
@@ -3891,7 +3825,7 @@
 				},
 				"taxonomies": {
 					"category": [
-						"blog"
+						"animals"
 					]
 				}
 			},
@@ -3963,39 +3897,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b11",
-							"style": "normal",
+							"_key": "b13",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s13",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s14",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s15",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b17",
+							"_key": "b19",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s18",
+									"_key": "s20",
 									"text": "The desire to make a difference",
 									"marks": []
 								}
@@ -4003,13 +3925,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b21",
+							"_key": "b23",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s22",
+									"_key": "s24",
 									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
 									"marks": []
 								}
@@ -4017,13 +3939,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b25",
+							"_key": "b27",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s26",
+									"_key": "s28",
 									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
 									"marks": []
 								}
@@ -4031,28 +3953,14 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Effective giving",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "b33",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "s34",
-									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
 									"marks": []
 								}
 							]
@@ -4065,7 +3973,21 @@
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s37",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
 									"text": " ",
 									"marks": []
 								}
@@ -4073,18 +3995,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i39",
+							"_key": "i41",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b40",
+							"_key": "b42",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s42",
+									"_key": "s44",
 									"text": " ",
 									"marks": []
 								}
@@ -4092,18 +4014,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i44",
+							"_key": "i46",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b45",
+							"_key": "b47",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s47",
+									"_key": "s49",
 									"text": " ",
 									"marks": []
 								}
@@ -4111,13 +4033,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b49",
+							"_key": "b51",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s50",
+									"_key": "s52",
 									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
 									"marks": []
 								}
@@ -4135,7 +4057,7 @@
 				},
 				"taxonomies": {
 					"category": [
-						"blog"
+						"animals"
 					]
 				}
 			},
@@ -4207,39 +4129,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b11",
-							"style": "normal",
+							"_key": "b13",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s13",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s14",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s15",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b17",
+							"_key": "b19",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s18",
+									"_key": "s20",
 									"text": "The desire to make a difference",
 									"marks": []
 								}
@@ -4247,13 +4157,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b21",
+							"_key": "b23",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s22",
+									"_key": "s24",
 									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
 									"marks": []
 								}
@@ -4261,13 +4171,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b25",
+							"_key": "b27",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s26",
+									"_key": "s28",
 									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
 									"marks": []
 								}
@@ -4275,28 +4185,14 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Effective giving",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "b33",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "s34",
-									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
 									"marks": []
 								}
 							]
@@ -4309,7 +4205,21 @@
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s37",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
 									"text": " ",
 									"marks": []
 								}
@@ -4317,18 +4227,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i39",
+							"_key": "i41",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b40",
+							"_key": "b42",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s42",
+									"_key": "s44",
 									"text": " ",
 									"marks": []
 								}
@@ -4336,18 +4246,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i44",
+							"_key": "i46",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b45",
+							"_key": "b47",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s47",
+									"_key": "s49",
 									"text": " ",
 									"marks": []
 								}
@@ -4355,13 +4265,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b49",
+							"_key": "b51",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s50",
+									"_key": "s52",
 									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
 									"marks": []
 								}
@@ -4379,7 +4289,7 @@
 				},
 				"taxonomies": {
 					"category": [
-						"blog"
+						"animals"
 					]
 				}
 			},
@@ -4451,39 +4361,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b11",
-							"style": "normal",
+							"_key": "b13",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s13",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s14",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s15",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b17",
+							"_key": "b19",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s18",
+									"_key": "s20",
 									"text": "The desire to make a difference",
 									"marks": []
 								}
@@ -4491,13 +4389,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b21",
+							"_key": "b23",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s22",
+									"_key": "s24",
 									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
 									"marks": []
 								}
@@ -4505,13 +4403,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b25",
+							"_key": "b27",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s26",
+									"_key": "s28",
 									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
 									"marks": []
 								}
@@ -4519,28 +4417,14 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Effective giving",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "b33",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "s34",
-									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
 									"marks": []
 								}
 							]
@@ -4553,7 +4437,21 @@
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s37",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
 									"text": " ",
 									"marks": []
 								}
@@ -4561,18 +4459,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i39",
+							"_key": "i41",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b40",
+							"_key": "b42",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s42",
+									"_key": "s44",
 									"text": " ",
 									"marks": []
 								}
@@ -4580,18 +4478,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i44",
+							"_key": "i46",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b45",
+							"_key": "b47",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s47",
+									"_key": "s49",
 									"text": " ",
 									"marks": []
 								}
@@ -4599,13 +4497,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b49",
+							"_key": "b51",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s50",
+									"_key": "s52",
 									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
 									"marks": []
 								}
@@ -4623,7 +4521,7 @@
 				},
 				"taxonomies": {
 					"category": [
-						"blog"
+						"animals"
 					]
 				}
 			},
@@ -4695,39 +4593,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b11",
-							"style": "normal",
+							"_key": "b13",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s13",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s14",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s15",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b17",
+							"_key": "b19",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s18",
+									"_key": "s20",
 									"text": "The desire to make a difference",
 									"marks": []
 								}
@@ -4735,13 +4621,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b21",
+							"_key": "b23",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s22",
+									"_key": "s24",
 									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
 									"marks": []
 								}
@@ -4749,13 +4635,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b25",
+							"_key": "b27",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s26",
+									"_key": "s28",
 									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
 									"marks": []
 								}
@@ -4763,28 +4649,14 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Effective giving",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "b33",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "s34",
-									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
 									"marks": []
 								}
 							]
@@ -4797,7 +4669,21 @@
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s37",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
 									"text": " ",
 									"marks": []
 								}
@@ -4805,18 +4691,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i39",
+							"_key": "i41",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b40",
+							"_key": "b42",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s42",
+									"_key": "s44",
 									"text": " ",
 									"marks": []
 								}
@@ -4824,18 +4710,18 @@
 						},
 						{
 							"_type": "image",
-							"_key": "i44",
+							"_key": "i46",
 							"alt": ""
 						},
 						{
 							"_type": "block",
-							"_key": "b45",
+							"_key": "b47",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s47",
+									"_key": "s49",
 									"text": " ",
 									"marks": []
 								}
@@ -4843,13 +4729,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b49",
+							"_key": "b51",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s50",
+									"_key": "s52",
 									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
 									"marks": []
 								}
@@ -4867,7 +4753,2095 @@
 				},
 				"taxonomies": {
 					"category": [
-						"blog"
+						"animals"
+					]
+				}
+			},
+			{
+				"id": "posts:silly-stories-and-jokes-for-young-readers:en",
+				"slug": "silly-stories-and-jokes-for-young-readers",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Silly Stories and Jokes for Young Readers",
+					"excerpt": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "blockquote",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s15",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b19",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s20",
+									"text": "The desire to make a difference",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b23",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s24",
+									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b27",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s28",
+									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b31",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s32",
+									"text": "Effective giving",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b35",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i41",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b42",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s44",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i46",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b47",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s49",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b51",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s52",
+									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2023-08-10T09:35:10.000Z",
+					"cover": "images/joomlart/blog/children/item-4.jpg",
+					"banner": "images/joomlart/blog/children/detail-4.jpg",
+					"author": "D. Smith",
+					"author_avatar": "images/joomlart/authors/9.jpg",
+					"tags": "",
+					"created": "2023-08-10T09:35:10.000Z",
+					"path": "/blog/silly-stories-and-jokes-for-young-readers"
+				},
+				"taxonomies": {
+					"category": [
+						"children"
+					]
+				}
+			},
+			{
+				"id": "posts:how-many-people-in-africa-don-t-have-food:en",
+				"slug": "how-many-people-in-africa-don-t-have-food",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "How many people in Africa don’t have food?",
+					"excerpt": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "blockquote",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s15",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b19",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s20",
+									"text": "The desire to make a difference",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b23",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s24",
+									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b27",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s28",
+									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b31",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s32",
+									"text": "Effective giving",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b35",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i41",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b42",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s44",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i46",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b47",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s49",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b51",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s52",
+									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2023-08-10T06:28:08.000Z",
+					"cover": "images/joomlart/blog/children/item-1.jpg",
+					"banner": "images/joomlart/blog/children/detail-1.jpg",
+					"author": "Sara J. Lee",
+					"author_avatar": "images/joomlart/authors/8.jpg",
+					"tags": "",
+					"created": "2023-08-10T06:28:08.000Z",
+					"path": "/blog/how-many-people-in-africa-don-t-have-food"
+				},
+				"taxonomies": {
+					"category": [
+						"children"
+					]
+				}
+			},
+			{
+				"id": "posts:exploring-magical-worlds:en",
+				"slug": "exploring-magical-worlds",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Exploring Magical Worlds",
+					"excerpt": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "blockquote",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s15",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b19",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s20",
+									"text": "The desire to make a difference",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b23",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s24",
+									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b27",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s28",
+									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b31",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s32",
+									"text": "Effective giving",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b35",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i41",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b42",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s44",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i46",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b47",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s49",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b51",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s52",
+									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2023-08-10T09:31:56.000Z",
+					"cover": "images/joomlart/blog/children/detail-3.jpg",
+					"banner": "images/joomlart/blog/children/detail-3.jpg",
+					"author": "Sara J. Lee",
+					"author_avatar": "images/joomlart/authors/8.jpg",
+					"tags": "",
+					"created": "2023-08-10T09:31:56.000Z",
+					"path": "/blog/exploring-magical-worlds"
+				},
+				"taxonomies": {
+					"category": [
+						"children"
+					]
+				}
+			},
+			{
+				"id": "posts:legends-and-folktales-from-around-the-world:en",
+				"slug": "legends-and-folktales-from-around-the-world",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Legends and Folktales from Around the World",
+					"excerpt": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "blockquote",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s15",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b19",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s20",
+									"text": "The desire to make a difference",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b23",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s24",
+									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b27",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s28",
+									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b31",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s32",
+									"text": "Effective giving",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b35",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i41",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b42",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s44",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i46",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b47",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s49",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b51",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s52",
+									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2023-08-10T09:37:41.000Z",
+					"cover": "images/joomlart/blog/children/item-6.jpg",
+					"banner": "images/joomlart/blog/children/detail-6.jpg",
+					"author": "D. Smith",
+					"author_avatar": "images/joomlart/authors/9.jpg",
+					"tags": "",
+					"created": "2023-08-10T09:37:41.000Z",
+					"path": "/blog/legends-and-folktales-from-around-the-world"
+				},
+				"taxonomies": {
+					"category": [
+						"children"
+					]
+				}
+			},
+			{
+				"id": "posts:a-journey-of-discovery-and-learning:en",
+				"slug": "a-journey-of-discovery-and-learning",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "A Journey of Discovery and Learning",
+					"excerpt": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "blockquote",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s15",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b19",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s20",
+									"text": "The desire to make a difference",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b23",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s24",
+									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b27",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s28",
+									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b31",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s32",
+									"text": "Effective giving",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b35",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i41",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b42",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s44",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i46",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b47",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s49",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b51",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s52",
+									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2023-08-10T09:33:03.000Z",
+					"cover": "",
+					"banner": "images/joomlart/blog/children/detail-7.jpg",
+					"author": "J. Steele",
+					"author_avatar": "images/joomlart/authors/3.jpg",
+					"tags": "",
+					"created": "2023-08-10T09:33:03.000Z",
+					"path": "/blog/a-journey-of-discovery-and-learning"
+				},
+				"taxonomies": {
+					"category": [
+						"children"
+					]
+				}
+			},
+			{
+				"id": "posts:exploring-the-beauty-of-the-animal-kingdom:en",
+				"slug": "exploring-the-beauty-of-the-animal-kingdom",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Exploring the Beauty of the Animal Kingdom",
+					"excerpt": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "blockquote",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s15",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b19",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s20",
+									"text": "The desire to make a difference",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b23",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s24",
+									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b27",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s28",
+									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b31",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s32",
+									"text": "Effective giving",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b35",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i41",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b42",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s44",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i46",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b47",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s49",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b51",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s52",
+									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2023-08-10T09:36:24.000Z",
+					"cover": "",
+					"banner": "images/joomlart/blog/children/detail-5.jpg",
+					"author": "D. Smith",
+					"author_avatar": "images/joomlart/authors/9.jpg",
+					"tags": "",
+					"created": "2023-08-10T09:36:24.000Z",
+					"path": "/blog/exploring-the-beauty-of-the-animal-kingdom"
+				},
+				"taxonomies": {
+					"category": [
+						"children"
+					]
+				}
+			},
+			{
+				"id": "posts:heartwarming-tales-of-kindness-and-togetherness:en",
+				"slug": "heartwarming-tales-of-kindness-and-togetherness",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "Heartwarming Tales of Kindness and Togetherness",
+					"excerpt": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "blockquote",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s15",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b19",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s20",
+									"text": "The desire to make a difference",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b23",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s24",
+									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b27",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s28",
+									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b31",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s32",
+									"text": "Effective giving",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b35",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i41",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b42",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s44",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i46",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b47",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s49",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b51",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s52",
+									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2023-08-10T09:37:40.000Z",
+					"cover": "",
+					"banner": "images/joomlart/blog/children/detail-8.jpg",
+					"author": "D. Smith",
+					"author_avatar": "images/joomlart/authors/9.jpg",
+					"tags": "",
+					"created": "2023-08-10T09:37:40.000Z",
+					"path": "/blog/heartwarming-tales-of-kindness-and-togetherness"
+				},
+				"taxonomies": {
+					"category": [
+						"children"
+					]
+				}
+			},
+			{
+				"id": "posts:a-journey-through-enchanted-lands:en",
+				"slug": "a-journey-through-enchanted-lands",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "A Journey Through Enchanted Lands",
+					"excerpt": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "blockquote",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s15",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b19",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s20",
+									"text": "The desire to make a difference",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b23",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s24",
+									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b27",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s28",
+									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b31",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s32",
+									"text": "Effective giving",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b35",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i41",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b42",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s44",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i46",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b47",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s49",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b51",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s52",
+									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2023-08-10T06:29:39.000Z",
+					"cover": "images/joomlart/blog/children/item-2.jpg",
+					"banner": "images/joomlart/blog/children/detail-2.jpg",
+					"author": "Sara J. Lee",
+					"author_avatar": "images/joomlart/authors/8.jpg",
+					"tags": "",
+					"created": "2023-08-10T06:29:39.000Z",
+					"path": "/blog/a-journey-through-enchanted-lands"
+				},
+				"taxonomies": {
+					"category": [
+						"children"
+					]
+				}
+			},
+			{
+				"id": "posts:exciting-adventures-to-the-past-and-future:en",
+				"slug": "exciting-adventures-to-the-past-and-future",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": " Exciting Adventures to the Past and Future",
+					"excerpt": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "b1",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s2",
+									"text": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b5",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s6",
+									"text": "Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b9",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s10",
+									"text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b13",
+							"style": "blockquote",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s15",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b19",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s20",
+									"text": "The desire to make a difference",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b23",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s24",
+									"text": "If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b27",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s28",
+									"text": "The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b31",
+							"style": "h3",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s32",
+									"text": "Effective giving",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b35",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s36",
+									"text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b37",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s39",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i41",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b42",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s44",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "image",
+							"_key": "i46",
+							"alt": ""
+						},
+						{
+							"_type": "block",
+							"_key": "b47",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s49",
+									"text": " ",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "b51",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "s52",
+									"text": "Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est",
+									"marks": []
+								}
+							]
+						}
+					],
+					"date": "2023-08-10T09:37:39.000Z",
+					"cover": "images/joomlart/blog/children/item-9.jpg",
+					"banner": "images/joomlart/blog/children/detail-9.jpg",
+					"author": "D. Smith",
+					"author_avatar": "images/joomlart/authors/9.jpg",
+					"tags": "",
+					"created": "2023-08-10T09:37:39.000Z",
+					"path": "/blog/exciting-adventures-to-the-past-and-future"
+				},
+				"taxonomies": {
+					"category": [
+						"children"
 					]
 				}
 			}
@@ -5438,7 +7412,7 @@
 					"card_bg": "default",
 					"date_bg": "warning",
 					"button_type": "success",
-					"button_link": "index.php/pages/user/registration-form",
+					"button_link": "",
 					"ordering": -1,
 					"featured": "",
 					"path": "/events/afforestation-program"
@@ -6009,7 +7983,7 @@
 					"card_bg": "default",
 					"date_bg": "default",
 					"button_type": "success",
-					"button_link": "index.php/pages/user/registration-form",
+					"button_link": "",
 					"ordering": 0,
 					"featured": "1",
 					"path": "/events/natures-hidden-gems"
@@ -6580,7 +8554,7 @@
 					"card_bg": "default",
 					"date_bg": "warning",
 					"button_type": "success",
-					"button_link": "index.php/pages/user/registration-form",
+					"button_link": "",
 					"ordering": 1,
 					"featured": "",
 					"path": "/events/feed-the-world"
@@ -7151,7 +9125,7 @@
 					"card_bg": "default",
 					"date_bg": "warning",
 					"button_type": "success",
-					"button_link": "index.php/pages/user/registration-form",
+					"button_link": "",
 					"ordering": 2,
 					"featured": "1",
 					"path": "/events/an-adventure-with-animals"
@@ -7722,7 +9696,7 @@
 					"card_bg": "default",
 					"date_bg": "warning",
 					"button_type": "success",
-					"button_link": "index.php/pages/user/registration-form",
+					"button_link": "",
 					"ordering": 3,
 					"featured": "",
 					"path": "/events/charity-journey-to-africa"
@@ -8293,7 +10267,7 @@
 					"card_bg": "success",
 					"date_bg": "default",
 					"button_type": "white",
-					"button_link": "index.php/pages/user/registration-form",
+					"button_link": "",
 					"ordering": 4,
 					"featured": "1",
 					"path": "/events/unveiling-natures-best-kept-treasures"
@@ -8864,7 +10838,7 @@
 					"card_bg": "default",
 					"date_bg": "warning",
 					"button_type": "success",
-					"button_link": "index.php/pages/user/registration-form",
+					"button_link": "",
 					"ordering": 5,
 					"featured": "",
 					"path": "/events/the-day-of-the-african-child"
@@ -9435,7 +11409,7 @@
 					"card_bg": "default",
 					"date_bg": "warning",
 					"button_type": "success",
-					"button_link": "index.php/pages/user/registration-form",
+					"button_link": "",
 					"ordering": 6,
 					"featured": "",
 					"path": "/events/saving-nature"
@@ -10006,7 +11980,7 @@
 					"card_bg": "default",
 					"date_bg": "warning",
 					"button_type": "success",
-					"button_link": "index.php/pages/user/registration-form",
+					"button_link": "",
 					"ordering": 7,
 					"featured": "",
 					"path": "/events/a-microscopic-marvel"
@@ -10134,39 +12108,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -10174,13 +12136,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -10188,13 +12150,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -10335,39 +12297,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -10375,13 +12325,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -10389,13 +12339,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -10536,39 +12486,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -10576,13 +12514,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -10590,13 +12528,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -10737,39 +12675,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -10777,13 +12703,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -10791,13 +12717,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -10938,39 +12864,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -10978,13 +12892,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -10992,13 +12906,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -11139,39 +13053,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -11179,13 +13081,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -11193,13 +13095,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -11340,39 +13242,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -11380,13 +13270,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -11394,13 +13284,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -11541,39 +13431,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -11581,13 +13459,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -11595,13 +13473,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -11742,39 +13620,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -11782,13 +13648,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -11796,13 +13662,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -11943,39 +13809,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -11983,13 +13837,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -11997,13 +13851,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -12144,39 +13998,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -12184,13 +14026,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -12198,13 +14040,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -12345,39 +14187,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -12385,13 +14215,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -12399,13 +14229,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -12546,39 +14376,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b23",
-							"style": "normal",
+							"_key": "b25",
+							"style": "blockquote",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s25",
-									"text": " ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "s26",
-									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
-									"marks": []
-								},
-								{
-									"_type": "span",
 									"_key": "s27",
-									"text": " ",
+									"text": " “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ” ",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "b29",
+							"_key": "b31",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s30",
+									"_key": "s32",
 									"text": "Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.",
 									"marks": []
 								}
@@ -12586,13 +14404,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b33",
+							"_key": "b35",
 							"style": "h3",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s34",
+									"_key": "s36",
 									"text": "Final thoughts",
 									"marks": []
 								}
@@ -12600,13 +14418,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "b37",
+							"_key": "b39",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "s38",
+									"_key": "s40",
 									"text": "Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in.",
 									"marks": []
 								}
@@ -12761,7 +14579,7 @@
 					"footer_col2_title": "Guide",
 					"footer_col2_links": "Store Locations\nRegistry\nBlog | /blog\nShipping info",
 					"footer_col3_title": "Need help",
-					"footer_col3_links": "Help & FAQs | /help-faqs\nYour account | /pages/user/login-form\nTrack your order\nContact info | /contact",
+					"footer_col3_links": "Help & FAQs | /help-faqs\nYour account\nTrack your order\nContact info | /contact",
 					"footer_col4_title": "Follow us",
 					"footer_col4_links": "Twitter\nFacebook\nInstagram\nThreads",
 					"copyright": "Copyright © {year} {name}. All Rights Reserved.",

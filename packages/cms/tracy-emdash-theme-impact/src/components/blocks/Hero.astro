@@ -32,7 +32,7 @@ const lines = (v: unknown) => String(v ?? '').split('\n')
 					<div class="im-container">
 						<div class="im-hero-content">
 							{it.sub_title && <div class="im-hero-sub" {...$h(`items[${i}].sub_title`)}>{it.sub_title}</div>}
-							<h1 class="im-hero-title" {...$h(`items[${i}].title`)}>{it.title}</h1>
+							{i === 0 ? <h1 class="im-hero-title" {...$h(`items[${i}].title`)}>{it.title}</h1> : <p class="im-hero-title" {...$h(`items[${i}].title`)}>{it.title}</p>}
 							<p class="im-hero-desc" {...$h(`items[${i}].desc`)}>{it.desc}</p>
 							<div class="im-hero-actions">
 								{it.button && live(it.btn_link) && <a class="im-btn" href={link(it.btn_link)!} {...$h(`items[${i}].button`)}>{it.button}<Icon name={it.btn_icon} /></a>}

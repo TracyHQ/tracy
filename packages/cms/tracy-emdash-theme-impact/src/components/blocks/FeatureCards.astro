@@ -27,7 +27,7 @@ const lines = (v: unknown) => String(v ?? '').split('\n')
 		<ul class="im-cards-track" data-track>
 			{items.map((it, i) => (
 				<li class="im-card-feature" data-slide>
-					{mediaUrl(it.img_icon) && <span class="im-card-icon"><img src={mediaUrl(it.img_icon)!} alt="" width="120" height="120" loading="lazy" decoding="async" /></span>}
+					{mediaUrl(it.img_icon) && <span class="im-card-icon"><img src={mediaUrl(it.img_icon)!} alt="" width="120" height="120" decoding="async" /></span>}
 					<h3 {...$s(`items[${i}].title`)}>{it.title}</h3>
 					<p {...$s(`items[${i}].description`)}>{it.description}</p>
 					{it.label && live(it.link) && <a class:list={['im-btn', BTN[it.button_type]]} href={link(it.link)!} {...$s(`items[${i}].label`)}>{it.label}<Icon name="fa-solid fa-arrow-right-long" /></a>}
@@ -44,7 +44,7 @@ const lines = (v: unknown) => String(v ?? '').split('\n')
 	{entry.block_description && (
 		<div class:list={['im-band', BAND[entry.bg_content]]}>
 			<div class="im-band-left">
-				{mediaUrl(entry.block_img) && <img src={mediaUrl(entry.block_img)!} alt="" width="64" height="64" loading="lazy" decoding="async" />}
+				{mediaUrl(entry.block_img) && <img src={mediaUrl(entry.block_img)!} alt="" width="64" height="64" decoding="async" />}
 				<p {...$s('block_description')}>{lines(entry.block_description).map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
 			</div>
 			{entry.btn_block_label && live(entry.btn_block_link) && <a class:list={['im-btn', BTN[entry.btn_block_type]]} href={link(entry.btn_block_link)!} {...$s('btn_block_label')}>{entry.btn_block_label}<Icon name="fa-solid fa-arrow-right-long" /></a>}

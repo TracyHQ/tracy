@@ -19,7 +19,7 @@ import SectionHead from '@/components/blocks/SectionHead.astro'
 import type { Chrome } from '@/lib/chrome'
 import type { Locale } from '@/lib/i18n'
 import { section } from '@/lib/content'
-import { loadArticles } from '@/lib/articles'
+import { loadArticles, blogPosts } from '@/lib/articles'
 import { livePosts } from '@/lib/link-gate'
 import { stampFor } from '@/lib/stamps'
 import { getEmDashEntry } from 'emdash'
@@ -48,7 +48,7 @@ const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 
 // the source module lists the Donations category by title, descending, nine cards
 const stories = [...donations].sort((a, b) => String(b.title).localeCompare(String(a.title), 'en', { sensitivity: 'base' })).slice(0, 9)
 const coming = events.filter((e) => e.featured).slice(0, 3)
-const latest = await livePosts(Astro.request, locale, posts.slice(0, 6))
+const latest = await livePosts(Astro.request, locale, blogPosts(posts).slice(0, 6))
 const $w = whatWeDo ? stampFor(Astro.request, 'features', { id: whatWeDo.id, slug: whatWeDo.slug }) : undefined
 ---
 

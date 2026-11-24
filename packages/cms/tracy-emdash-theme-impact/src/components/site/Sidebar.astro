@@ -4,7 +4,7 @@ import type { Chrome } from '@/lib/chrome'
 import { href } from '@/lib/i18n'
 import { mediaUrl } from '@/lib/media'
 import { stampFor } from '@/lib/stamps'
-import { loadArticles, articlePath } from '@/lib/articles'
+import { loadArticles, articlePath, blogPosts } from '@/lib/articles'
 import { liveLinks } from '@/lib/link-gate'
 
 interface Props {
@@ -14,12 +14,15 @@ const { chrome } = Astro.props
 const { site, locale } = chrome
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const [events, posts, donations] = await Promise.all([loadArticles('events', locale), loadArticles('posts', locale), loadArticles('donations', locale)])
+const kids = posts.filter((p) => p.category?.slug === 'children')
+const animals = blogPosts(posts)
 const lists = [
   { label: site.events_name, url: '/events', count: events.length, path: 'events_name' },
-  { label: site.blog_name, url: '/blog', count: posts.length, path: 'blog_name' },
+  { label: animals[0]?.category?.label, url: '/blog', count: animals.length, path: '' },
+  { label: kids[0]?.category?.label, url: '', count: kids.length, path: '' },
   { label: site.donations_name, url: '/donations', count: donations.length, path: 'donations_name' }
 ]
-const recent = posts.slice(0, 5)
+const recent = animals.slice(0, 5)
 const tags = [...new Set([...posts, ...donations, ...events].flatMap((a) => String(a.tags ?? '').split('\n')).map((t) => t.trim()).filter(Boolean))]
 const live = await liveLinks(Astro.request, locale, [...lists.map((l) => l.url), ...recent.map((p) => articlePath('posts', p.slug))])
 ---
@@ -28,7 +31,7 @@ const live = await liveLinks(Astro.request, locale, [...lists.map((l) => l.url),
 	<section class="im-widget">
 		<h3 {...$c('categories_title')}>{site.categories_title}</h3>
 		<ul class="im-widget-list">
-			{lists.filter((l) => live(l.url)).map((l) => <li><a href={href(locale, l.url)} {...$c(l.path)}>{l.label}</a><span class="im-count">{l.count}</span></li>)}
+			{lists.filter((l) => l.label && (!l.url || live(l.url))).map((l) => <li>{l.url ? <a href={href(locale, l.url)} {...(l.path ? $c(l.path) : {})}>{l.label}</a> : <span>{l.label}</span>}<span class="im-count">{l.count}</span></li>)}
 		</ul>
 	</section>
 	<form class="im-widget im-search-box" role="search" action={href(locale, '/search')} method="get">
