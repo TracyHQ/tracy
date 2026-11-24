@@ -1,8 +1,8 @@
 {
-  "id": "REG-PR-738-wo-find-cache-clock",
+  "id": "REG-PR-744-wo-find-cache-clock",
   "kind": "fix",
-  "title": "The Find prefetch ranking suite keeps passing after its fixture date is a month old: the prefetch clock and the source fetchedAt follow the real clock Postgres now() compares them with",
-  "pr": 738,
+  "title": "(develop, as #738 on main) The Find prefetch ranking suite keeps passing after its fixture date is a month old: the prefetch clock and the source fetchedAt follow the real clock Postgres now() compares them with",
+  "pr": 744,
   "area": "website-opportunities/prefetch",
   "cms": ["any"],
   "needs": ["postgres"],
