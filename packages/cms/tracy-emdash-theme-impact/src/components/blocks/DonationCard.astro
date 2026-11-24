@@ -1,0 +1,49 @@
+---
+/** One donation card: the picture fills it, the tag and place on top, the title and intro under them, the progress bar and the two amounts at the bottom. */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { articlePath, percent, type Article } from '@/lib/articles'
+import { plainText } from '@/lib/prose-text'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  entry: Article
+  chrome: Chrome
+  /** The tag line printed on the card: the entry's first tag. */
+  titleTag?: string
+}
+const { entry, chrome } = Astro.props
+const $d = stampFor(Astro.request, 'donations', { id: entry.id, slug: entry.slug })
+const site = chrome.site
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const img = mediaUrl(entry.cover)
+const pct = percent(entry.raise, entry.goal)
+const tag = String(entry.tags ?? '').split('\n')[0]
+const money = (v: unknown) => `${site.currency_symbol ?? ''}${v}`
+---
+
+<article class="im-donation">
+	{img && <a class="im-donation-image" href={href(chrome.locale, articlePath('donations', entry.slug))} tabindex="-1" aria-hidden="true"><img src={img} alt="" loading="lazy" decoding="async" /></a>}
+	<div class="im-donation-info">
+		<div class="im-donation-top">
+			<div class="im-donation-meta">
+				{tag && <span class="im-donation-tag" {...$d('tags')}><Icon name="fa-solid fa-bookmark" />{tag}</span>}
+				{entry.location && <span class="im-donation-place" {...$d('location')}><Icon name="fa-solid fa-location-dot" />{entry.location}</span>}
+			</div>
+			<h3 class="im-donation-title"><a href={href(chrome.locale, articlePath('donations', entry.slug))} {...$d('title')}>{entry.title}</a></h3>
+			<p class="im-donation-intro" {...$d('excerpt')}>{plainText(entry.excerpt, 160)}</p>
+		</div>
+		<div class="im-donation-bottom">
+			<div class="im-progress-wrap">
+				<span class="im-progress-pct" style={`left:${pct}%`}>{pct}%</span>
+				<div class="im-progress" role="progressbar" aria-label={site.raise_label} aria-valuenow={pct} aria-valuemin="0" aria-valuemax="100"><div style={`width:${pct}%`}></div></div>
+			</div>
+			<div class="im-donation-money">
+				<span><strong {...$d('raise')}>{money(entry.raise)}</strong> <span {...$c('raise_label')}>{site.raise_label}</span></span>
+				<span><strong {...$d('goal')}>{money(entry.goal)}</strong> <span {...$c('goal_label')}>{site.goal_label}</span></span>
+			</div>
+		</div>
+	</div>
+</article>

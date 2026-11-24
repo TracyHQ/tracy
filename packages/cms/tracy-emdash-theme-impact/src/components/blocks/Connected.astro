@@ -1,0 +1,56 @@
+---
+/** acm features style-7: a picture with a play button on one half; a heading, a line, the newsletter form and the social glyphs on the other. */
+import type { Chrome } from '@/lib/chrome'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import Social from '@/components/site/Social.astro'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+  follow: Record<string, any> | null
+}
+const { entry, chrome, follow } = Astro.props
+const $s = stampFor(Astro.request, 'features', { id: entry.id, slug: entry.slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const media = mediaUrl(entry.ft_video)
+const video = entry.id_video ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(entry.id_video)}?autoplay=1` : null
+const lines = (v: unknown) => String(v ?? '').split('\n')
+const site = chrome.site
+// No form is bound yet (forms plugin, P4): the box is drawn complete and its button stays disabled until `chrome.form_id` names a form.
+const formId = site.form_id as string | undefined
+---
+
+<div class:list={['im-connected', entry.video_align === 'right' && 'is-media-right']}>
+	<div class="im-connected-media" style={media ? `background-image:url('${media}')` : undefined}>
+		{video && (
+			<>
+				<button type="button" class="im-play" data-video={video} aria-label={site.play_label} {...$c('play_label')}><span class="im-fa" data-icon="play" aria-hidden="true"></span></button>
+			</>
+		)}
+	</div>
+	<div class="im-connected-info">
+		<div class="im-connected-in">
+			<h2 {...$s('feature_title')}>{entry.feature_title}</h2>
+			<p class="im-connected-lead" {...$s('feature_desc')}>{lines(entry.feature_desc).map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
+			<form class="im-news" data-newsletter method="post" action="/_emdash/api/plugins/emdash-forms/submit" data-form-id={formId}>
+				{formId && <input type="hidden" name="formId" value={formId} />}
+				<label class="im-field"><span class="sr-only">{site.newsletter_name_label}</span><input type="text" name="name" placeholder={site.newsletter_name_label} autocomplete="name" /></label>
+				<label class="im-field"><span class="sr-only">{site.newsletter_email_label}</span><input type="email" name="email" placeholder={site.newsletter_email_label} autocomplete="email" required /></label>
+				<button type="submit" class="im-btn" disabled={!formId} {...$c('newsletter_button')}>{site.newsletter_button}<span class="im-fa" data-icon="arrow" aria-hidden="true"></span></button>
+				<p class="im-news-status" role="status" data-status hidden {...$c('newsletter_done')}>{site.newsletter_done}</p>
+			</form>
+			{follow && (
+				<div class="im-connected-follow">
+					<h3 {...$s('follow_title')}>{follow.social_title || follow.title}</h3>
+					<Social entry={follow} class="is-tiles" />
+				</div>
+			)}
+		</div>
+	</div>
+</div>
+{formId && <script src="@/lib/newsletter-client.ts"></script>}
+<dialog class="im-video-dialog" data-video-dialog aria-label={site.play_label}>
+	<button type="button" class="im-video-close" data-video-close aria-label={site.close_label}><span class="im-fa" data-icon="xmark" aria-hidden="true"></span></button>
+	<div class="im-video-frame" data-video-frame></div>
+</dialog>

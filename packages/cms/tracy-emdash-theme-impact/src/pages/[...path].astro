@@ -1,0 +1,33 @@
+---
+/**
+ * One router for every locale. Astro resolves `Astro.currentLocale` from the URL, so a single catch-all serves the whole
+ * site; unknown paths render the 404 view with a 404 status. Route table: seed/site-model.json routes: the home, the pages of
+ * the header menu, the lists at `/blog`, `/donations` and `/events`, an entry at `/<list>/<slug>` and the search.
+ */
+export const prerender = false
+import { splitPath } from '@/lib/i18n'
+import { loadChrome } from '@/lib/chrome'
+import Home from '@/views/Home.astro'
+// the page families are added to PAGES and the detail routes below as they are built (STATUS.md, P5)
+import NotFound from '@/views/NotFound.astro'
+import { childLive } from '@/lib/link-gate'
+
+const { locale, path } = splitPath(Astro.url.pathname)
+const chrome = await loadChrome(locale)
+const segs = path.split('/').filter(Boolean)
+const SLUG = /^[a-z0-9][a-z0-9-]*$/
+const clean = segs.length === 0 ? '/' : `/${segs.join('/')}`
+
+type View = { component: any; props: Record<string, unknown> } | null
+let view: View = null
+const PAGES: Record<string, any> = {}
+if (clean === '/') view = { component: Home, props: {} }
+else if (segs.length === 1 && PAGES[segs[0]]) view = { component: PAGES[segs[0]], props: {} }
+
+// a page the customer unticked (its record is unpublished), and everything that hangs under it, answers 404
+if (view && !(await childLive(Astro.request, locale, clean))) view = null
+const Component = view?.component ?? NotFound
+if (!view) Astro.response.status = 404
+---
+
+<Component chrome={chrome} locale={locale} path={path} {...(view?.props ?? {})} />

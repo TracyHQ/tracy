@@ -63,9 +63,11 @@ for (const [type, mods] of Object.entries(byType)) {
 }
 model.records = model.records.filter((r) => !dropped.has(r))
 
+// A heading the source breaks by hand (`</br>`, `((/br))`) holds a line break in the field: a newline, never markup.
+const breaks = (t) => t.replace(/[ \t]*(?:<\/?br\s*\/?>|\(\(\/?br\)\))[ \t]*/gi, '\n').replace(/[ \t]{2,}/g, ' ')
 const mark = (v) =>
   typeof v === 'string'
-    ? v.replace(/<span class=['"](?:hightlight|text-highlight)['"]>([\s\S]*?)<\/span>/g, '<mark>$1</mark>')
+    ? breaks(v).replace(/<span class=['"](?:hightlight|text-highlight)['"]>([\s\S]*?)<\/span>/g, '<mark>$1</mark>')
     : Array.isArray(v)
       ? v.map(mark)
       : v && typeof v === 'object'
@@ -98,7 +100,7 @@ for (const [slug, info] of Object.entries(sectionStyle)) {
   const mod = inventory.modules.find((m) => String(m.id) === info.module)
   const p = JSON.parse(mod.params)
   const type = model.types.find((t) => t.name === info.type)
-  for (const name of ['section_label', 'section_title', 'section_class'])
+  for (const name of slug === 'home-raise-fund' ? ['section_label', 'section_title', 'section_class', 'charity_label', 'donation_label'] : ['section_label', 'section_title', 'section_class'])
     if (!type.fields.some((f) => f.name === name)) type.fields.push({ name, ...text })
   const rec = model.records.find((r) => r.type === info.type && r.slug === slug)
   Object.assign(rec.values, {
@@ -106,6 +108,7 @@ for (const [slug, info] of Object.entries(sectionStyle)) {
     section_title: String(mod.showtitle) === '1' ? secText(mod.title) : '',
     section_class: String(p.moduleclass_sfx ?? '')
   })
+  if (slug === 'home-raise-fund') Object.assign(rec.values, { charity_label: 'Charity', donation_label: 'Donation' })
   sectionStyle[slug].bg = p['bg-color'] ?? ''
   sectionStyle[slug].spacing = {
     top: p['top-space'] ?? '',
@@ -162,8 +165,7 @@ const tagsOf = (cid) =>
     .join('\n')
 const img = (row, key) => String(JSON.parse(row.images || '{}')[key] ?? '').split('#')[0]
 const featured = new Set(inventory.content_frontpage.map((f) => String(f.content_id)))
-const fieldsOf = (alias) => content.posts.find((p) => p.slug === alias)?.joomla?.fields ?? {}
-const slugOf = Object.fromEntries(model.records.filter((r) => r.type === 'posts').map((r) => [r.slug, r]))
+const fieldsOf = (id) => content.posts.find((p) => String(p.joomla?.articleId) === String(id))?.joomla?.fields ?? {}
 
 const common = [
   ['title', 'text'],
@@ -193,7 +195,8 @@ defineType('donations', 'Donations', [
   ['location', 'text'],
   ['raise', 'text'],
   ['goal', 'text'],
-  ['featured', 'text']
+  ['featured', 'text'],
+  ['ordering', 'number']
 ])
 defineType('events', 'Events', [
   ['start_date', 'text'],
@@ -204,19 +207,20 @@ defineType('events', 'Events', [
   ['date_bg', 'text'],
   ['button_type', 'text'],
   ['button_link', 'text'],
-  ['featured', 'text']
+  ['featured', 'text'],
+  ['ordering', 'number']
 ])
-const oldPosts = model.records.filter((r) => r.type === 'posts')
 model.records = model.records.filter((r) => r.type !== 'posts')
-for (const r of oldPosts) {
-  const cat = r.terms?.category?.[0]
-  const type = { animals: 'posts', donations: 'donations', events: 'events' }[cat]
-  if (!type) continue
-  // the model's slug is its own spelling of the title; the source address is the Joomla alias, which the route table keeps
-  const row =
-    inventory.content.find((c) => c.alias === r.slug) ??
-    inventory.content.find((c) => c.title.trim() === decode(r.values.title).trim())
-  const f = fieldsOf(row.alias)
+// Straight from the dump: the model drops an article whose title another one already has (the Blog holds "Charity of the month
+// plan international UK" twice, 17 July and 2 August, and the Home prints the second), so every published article of the three
+// categories is built from its own row. The Joomla alias is the slug.
+const TYPE_OF_CAT = { 8: 'posts', 13: 'donations', 10: 'events' }
+const rows = inventory.content
+  .filter((c) => String(c.state) === '1' && TYPE_OF_CAT[c.catid])
+  .sort((a, b) => Number(a.catid) - Number(b.catid) || Number(a.ordering) - Number(b.ordering) || Number(a.id) - Number(b.id))
+for (const row of rows) {
+  const type = TYPE_OF_CAT[row.catid]
+  const f = fieldsOf(row.id)
   const u = usersById[row.created_by]
   const values = {
     title: decode(row.title),
@@ -235,6 +239,7 @@ for (const r of oldPosts) {
       location: f.location ?? '',
       raise: f.raise ?? '',
       goal: f.goal ?? '',
+      ordering: Number(row.ordering),
       featured: featured.has(String(row.id)) ? '1' : ''
     })
   if (type === 'events')
@@ -247,6 +252,7 @@ for (const r of oldPosts) {
       date_bg: f['bg-startdate'] ?? '',
       button_type: f['btn-type'] ?? '',
       button_link: f['btn-redirect-link'] ?? '',
+      ordering: Number(row.ordering),
       featured: featured.has(String(row.id)) ? '1' : ''
     })
   model.records.push({
@@ -345,6 +351,13 @@ const chromeFields = [
   'join_label',
   'donate_cta',
   'view_all_label',
+  'view_all_blog_label',
+  'stories_label',
+  'stories_title',
+  'events_label',
+  'events_title',
+  'blog_label',
+  'blog_title',
   'not_found_code',
   'not_found_title',
   'not_found_text',
@@ -360,6 +373,10 @@ const chromeFields = [
   'newsletter_button',
   'newsletter_done',
   'play_label',
+  'slides_label',
+  'slide_label',
+  'currency_symbol',
+  'form_id',
   'logo_dark'
 ]
 model.types.push({
@@ -408,6 +425,13 @@ model.records.push({
     join_label: 'Join our event',
     donate_cta: 'Donate now',
     view_all_label: 'View all',
+    view_all_blog_label: 'View all our blog',
+    stories_label: 'Funds',
+    stories_title: 'Listen to their stories',
+    events_label: 'Coming soon',
+    events_title: 'You can check out our work our best events.',
+    blog_label: 'Our blog',
+    blog_title: 'Latest news & articles',
     not_found_code: '404',
     not_found_title: 'Page not found',
     not_found_text: 'An error has occurred while processing your request.',
@@ -423,6 +447,10 @@ model.records.push({
     newsletter_button: 'Subscribe',
     newsletter_done: 'Thank you for subscribing.',
     play_label: 'Play video',
+    slides_label: 'Slides',
+    slide_label: 'Slide',
+    currency_symbol: '$',
+    form_id: '',
     logo_dark: ''
   }
 })

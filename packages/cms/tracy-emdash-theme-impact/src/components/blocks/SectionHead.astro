@@ -1,0 +1,21 @@
+---
+/** The title block of a section: the small green line over the heading (the module's sub-title and title). */
+interface Props {
+  label?: string | null
+  title?: string | null
+  align?: 'center' | 'start'
+  stamp?: (path: string) => Record<string, string>
+  labelPath?: string
+  titlePath?: string
+}
+const { label, title, align = 'center', stamp, labelPath = 'section_label', titlePath = 'section_title' } = Astro.props
+const st = (p: string) => (stamp ? stamp(p) : {})
+const lines = (v: unknown) => String(v ?? '').split('\n')
+---
+
+{(label || title) && (
+	<div class:list={['im-section-head', align === 'start' && 'is-start']}>
+		{label && <span class="im-eyebrow" {...st(labelPath)}>{label}</span>}
+		{title && <h2 class="im-section-title" {...st(titlePath)}>{lines(title).map((l, i) => <>{i > 0 && <br />}{l}</>)}</h2>}
+	</div>
+)}

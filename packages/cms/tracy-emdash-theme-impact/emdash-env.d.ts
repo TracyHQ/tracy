@@ -21,6 +21,21 @@ export interface Page {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
+export interface Hero {
+  id: string;
+  slug: string | null;
+  status: string;
+  title?: string;
+  subtitle?: string;
+  items?: { "image_hero"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "sub_title"?: string | null; "title"?: string | null; "desc"?: string | null; "button"?: string | null; "btn_link"?: string | null; "btn_icon"?: string | null; "btn_type"?: string | null; "button_2"?: string | null; "btn_link_2"?: string | null; "btn_icon_2"?: string | null; "btn_type_2"?: string | null }[];
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
 export interface Post {
   id: string;
   slug: string | null;
@@ -30,10 +45,11 @@ export interface Post {
   body?: PortableTextBlock[];
   date?: string;
   cover?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  created?: string;
+  banner?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
   author?: string;
   author_avatar?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
   tags?: string;
+  created?: string;
   path?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -43,13 +59,25 @@ export interface Post {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
-export interface Hero {
+export interface Donation {
   id: string;
   slug: string | null;
   status: string;
   title?: string;
-  subtitle?: string;
-  items?: { "image_decor"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "sub_title"?: string | null; "title"?: string | null; "desc"?: string | null; "button"?: string | null; "btn_link"?: string | null; "btn_type"?: string | null; "button_2"?: string | null; "btn_link_2"?: string | null; "btn_type_2"?: string | null }[];
+  excerpt?: PortableTextBlock[];
+  body?: PortableTextBlock[];
+  date?: string;
+  cover?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  banner?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  author?: string;
+  author_avatar?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  tags?: string;
+  location?: string;
+  raise?: string;
+  goal?: string;
+  featured?: string;
+  ordering?: number;
+  path?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -58,168 +86,174 @@ export interface Hero {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
-export interface FeaturesIntro {
+export interface Feature {
   id: string;
   slug: string | null;
   status: string;
+  feature_main_img?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  media_alignment?: string;
+  feature_tag?: string;
+  feature_title?: string;
+  feature_desc?: string;
+  title?: string;
   columns?: string;
   align?: string;
+  image_type?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  img_icon?: string;
+  description?: string;
+  link?: string;
+  feature_text_align?: string;
+  feature_sub_col?: string;
+  label?: string;
+  icon?: string;
+  feature_col?: string;
+  feature_count_item?: string;
+  bg_content?: string;
+  block_img?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  block_description?: string;
+  btn_block_label?: string;
+  btn_block_link?: string;
+  btn_block_type?: string;
+  feature_media?: string;
+  feature_date?: string;
+  feature_month?: string;
+  bg_datemonth?: string;
+  feature_text_color?: string;
+  feature_location?: string;
+  btn_label?: string;
+  btn_link?: string;
+  btn_icon?: string;
+  btn_bg_content?: string;
+  id_video?: string;
+  ft_video?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  video_align?: string;
+  position?: string;
+  position_2?: string;
+  feature_subtitle?: string;
+  feature_charity?: string;
+  feature_donation?: string;
+  items?: { "sub_feature_img"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "sub_feature_desc"?: string | null; "sub_media_alignment"?: string | null; "feature_highlight"?: string | null; "feature_text_align"?: string | null; "sub_feature_title"?: string | null; "feature_item_col_width"?: string | null; "sub_title_color"?: string | null; "bg_content"?: string | null; "feature_tag"?: string | null; "feature_title"?: string | null; "feature_desc"?: string | null; "btn_label"?: string | null; "btn_link"?: string | null; "btn_icon"?: string | null; "btn_bg_content"?: string | null; "number"?: string | null; "img_icon"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "bg"?: string | null; "image_bg"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "title"?: string | null; "description"?: string | null; "link"?: string | null; "label"?: string | null; "button_type"?: string | null; "sub_feature_media"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null }[];
+  section_label?: string;
+  section_title?: string;
+  section_class?: string;
+  charity_label?: string;
+  donation_label?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface ContactInfo {
+  id: string;
+  slug: string | null;
+  status: string;
+  align_section?: string;
   title?: string;
-  more_info?: string;
-  align_media?: string;
-  intro_img?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  align_content?: string;
-  sub_title?: string;
+  subtitle?: string;
+  testimonials?: string;
+  items?: { "font_icon"?: string | null; "icon_color"?: string | null; "sub_title"?: string | null; "title"?: string | null; "link"?: string | null; "heading"?: string | null }[];
+  section_label?: string;
+  section_title?: string;
+  section_class?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Event {
+  id: string;
+  slug: string | null;
+  status: string;
+  title?: string;
+  excerpt?: PortableTextBlock[];
+  body?: PortableTextBlock[];
+  date?: string;
+  cover?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  banner?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  author?: string;
+  author_avatar?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  tags?: string;
+  start_date?: string;
+  event_time?: string;
+  event_location?: string;
+  event_fee?: string;
+  card_bg?: string;
+  date_bg?: string;
+  button_type?: string;
+  button_link?: string;
+  featured?: string;
+  ordering?: number;
+  path?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Social {
+  id: string;
+  slug: string | null;
+  status: string;
+  social_style?: string;
+  social_title?: string;
+  title?: string;
+  items?: { "font_icon"?: string | null; "title"?: string | null; "link"?: string | null }[];
+  section_label?: string;
+  section_title?: string;
+  section_class?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Cta {
+  id: string;
+  slug: string | null;
+  status: string;
+  cta_media?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  cta_align_media?: string;
+  cta_desc?: string;
+  cta_highlight?: string;
+  cta_link?: string;
+  cta_link_title?: string;
+  cta_link_type?: string;
+  title?: string;
+  bg_content?: string;
+  cta_title?: string;
+  section_label?: string;
+  section_title?: string;
+  section_class?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Accordion {
+  id: string;
+  slug: string | null;
+  status: string;
   info_title?: string;
   info_desc?: string;
-  button?: string;
-  btn_link?: string;
-  btn_type?: string;
-  subtitle?: string;
-  img_video?: string;
-  img?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  id_video?: string;
-  desc?: string;
-  button_link?: string;
-  type?: string;
-  items?: { "img_icon"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "title"?: string | null; "description"?: string | null; "link"?: string | null; "bg_color"?: string | null; "img_bg"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "action_title"?: string | null; "font_icon"?: string | null }[];
+  text_align?: string;
+  title?: string;
+  items?: { "accordion_name"?: string | null; "accordion_desc"?: string | null }[];
   section_label?: string;
   section_title?: string;
-  section_desc?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Menu {
-  id: string;
-  slug: string | null;
-  status: string;
-  columns?: string;
-  menu_type?: string;
-  title?: string;
-  align_media?: string;
-  menu_image?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  align?: string;
-  items?: { "dish_name"?: string | null; "dish_description"?: string | null; "dish_price"?: string | null; "img_icon"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "title"?: string | null; "description"?: string | null; "price"?: string | null }[];
-  section_label?: string;
-  section_title?: string;
-  section_desc?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Gallery {
-  id: string;
-  slug: string | null;
-  status: string;
-  number_col?: string;
-  auto_play?: string;
-  auto_time?: string;
-  title?: string;
-  type_gallery?: string;
-  col?: string;
-  colmb?: string;
-  coltb?: string;
-  coldt?: string;
-  gutter?: string;
-  items?: { "gallery_image"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "gallery_alt"?: string | null; "selectitem"?: string | null; "img"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "alt"?: string | null }[];
-  section_label?: string;
-  section_title?: string;
-  section_desc?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Testimonial {
-  id: string;
-  slug: string | null;
-  status: string;
-  title?: string;
-  testimonial_title?: string;
-  testimonial_desc?: string;
-  items?: { "desc"?: string | null; "author"?: string | null; "title"?: string | null; "star"?: string | null; "img"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "name"?: string | null; "member_position"?: string | null; "member_description"?: string | null }[];
-  section_label?: string;
-  section_title?: string;
-  section_desc?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Team {
-  id: string;
-  slug: string | null;
-  status: string;
-  number_column?: string;
-  title_btn?: string;
-  btn_link?: string;
-  title?: string;
-  items?: { "img"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null; "name_member"?: string | null; "name_office"?: string | null; "description"?: string | null; "link_social"?: string | null }[];
-  section_label?: string;
-  section_title?: string;
-  section_desc?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Happyhour {
-  id: string;
-  slug: string | null;
-  status: string;
-  logo_img?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  align_box?: string;
-  hp_img?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  hp_title?: string;
-  hp_desc?: string;
-  hp_info?: string;
-  hp_badge?: string;
-  hp_link_text?: string;
-  hp_link?: string;
-  title?: string;
-  section_label?: string;
-  section_title?: string;
-  section_desc?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface BookTable {
-  id: string;
-  slug: string | null;
-  status: string;
-  book_btn?: string;
-  book_btn_type?: string;
-  book_desc?: string;
-  book_phone_title?: string;
-  book_phone?: string;
-  order_title?: string;
-  order_btn?: string;
-  order_btn_link?: string;
-  order_btn_type?: string;
-  title?: string;
+  section_class?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -249,24 +283,19 @@ export interface Chrome {
   status: string;
   title?: string;
   brand_name?: string;
-  topbar_address?: string;
-  topbar_phone_label?: string;
-  topbar_phone?: string;
-  footer_about_title?: string;
+  donate_label?: string;
+  donate_link?: string;
   footer_about?: string;
-  footer_visit_title?: string;
-  footer_address?: string;
-  footer_phone?: string;
-  footer_email?: string;
-  footer_reservations_title?: string;
-  footer_reservations_button?: string;
-  footer_hours_title?: string;
-  footer_hours?: string;
-  footer_links_title?: string;
-  footer_link_text?: string;
-  footer_link_to?: string;
-  footer_links_text?: string;
+  footer_col1_title?: string;
+  footer_col1_links?: string;
+  footer_col2_title?: string;
+  footer_col2_links?: string;
+  footer_col3_title?: string;
+  footer_col3_links?: string;
+  footer_col4_title?: string;
+  footer_col4_links?: string;
   copyright?: string;
+  license_line?: string;
   skip_label?: string;
   menu_label?: string;
   close_label?: string;
@@ -276,51 +305,43 @@ export interface Chrome {
   read_more?: string;
   by_label?: string;
   related_title?: string;
-  related_text?: string;
   tags_label?: string;
   share_label?: string;
+  raise_label?: string;
+  goal_label?: string;
+  location_label?: string;
+  fee_label?: string;
+  time_label?: string;
+  join_label?: string;
+  donate_cta?: string;
+  view_all_label?: string;
+  view_all_blog_label?: string;
+  stories_label?: string;
+  stories_title?: string;
+  events_label?: string;
+  events_title?: string;
+  blog_label?: string;
+  blog_title?: string;
   not_found_code?: string;
   not_found_title?: string;
   not_found_text?: string;
   not_found_back_label?: string;
-  book_label?: string;
-  book_link?: string;
   search_label?: string;
   search_placeholder?: string;
   search_button?: string;
   no_results?: string;
-  logo_dark?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface Contact {
-  id: string;
-  slug: string | null;
-  status: string;
-  title?: string;
-  heading?: string;
-  intro?: string;
-  email_label?: string;
-  email?: string;
-  address_label?: string;
-  address?: string;
-  phone_label?: string;
-  phone?: string;
-  form_title?: string;
-  form_intro_text?: string;
-  name_label?: string;
-  email_field_label?: string;
-  phone_field_label?: string;
-  subject_label?: string;
-  message_label?: string;
-  submit_label?: string;
-  socials?: string;
+  newsletter_title?: string;
+  newsletter_text?: string;
+  newsletter_name_label?: string;
+  newsletter_email_label?: string;
+  newsletter_button?: string;
+  newsletter_done?: string;
+  play_label?: string;
+  slides_label?: string;
+  slide_label?: string;
+  currency_symbol?: string;
   form_id?: string;
+  logo_dark?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -332,17 +353,16 @@ export interface Contact {
 declare module "emdash" {
   interface EmDashCollections {
     pages: Page;
-    posts: Post;
     hero: Hero;
-    features_intro: FeaturesIntro;
-    menu: Menu;
-    gallery: Gallery;
-    testimonials: Testimonial;
-    teams: Team;
-    happyhours: Happyhour;
-    book_table: BookTable;
+    posts: Post;
+    donations: Donation;
+    features: Feature;
+    contact_info: ContactInfo;
+    events: Event;
+    social: Social;
+    cta: Cta;
+    accordion: Accordion;
     masthead: Masthead;
     chrome: Chrome;
-    contact: Contact;
   }
 }

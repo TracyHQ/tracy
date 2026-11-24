@@ -1,0 +1,42 @@
+---
+/** acm features style-6 (the Home right column): a navy panel with a heading, two progress bars and two boxes with an icon, a title and a line. */
+import type { Chrome } from '@/lib/chrome'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry } = Astro.props
+const $s = stampFor(Astro.request, 'features', { id: entry.id, slug: entry.slug })
+const items: any[] = entry.items ?? []
+const bars = [
+  { label: entry.charity_label, value: entry.feature_charity, path: 'feature_charity' },
+  { label: entry.donation_label, value: entry.feature_donation, path: 'feature_donation' }
+].filter((b) => b.value)
+const lines = (v: unknown) => String(v ?? '').split('\n')
+---
+
+<div class="im-fund">
+	<div class="im-fund-main">
+		{entry.feature_subtitle && <span class="im-eyebrow" {...$s('feature_subtitle')}>{entry.feature_subtitle}</span>}
+		<h2 class="im-fund-title" {...$s('feature_title')}>{lines(entry.feature_title).map((l, i) => <>{i > 0 && <br />}{l}</>)}</h2>
+		<p class="im-fund-lead" {...$s('feature_desc')}>{entry.feature_desc}</p>
+		{bars.map((b) => (
+			<div class="im-bar">
+				<div class="im-bar-head"><h5 {...$s(`${b.path}_label`)}>{b.label}</h5><span>{b.value}%</span></div>
+				<div class="im-progress" role="progressbar" aria-label={b.label} aria-valuenow={Number(b.value)} aria-valuemin="0" aria-valuemax="100"><div style={`width:${Number(b.value)}%`}></div></div>
+			</div>
+		))}
+	</div>
+	{items.map((it, i) => (
+		<div class="im-fund-box">
+			{mediaUrl(it.sub_feature_media) && <img src={mediaUrl(it.sub_feature_media)!} alt="" width="64" height="64" loading="lazy" decoding="async" />}
+			<div>
+				<h4 {...$s(`items[${i}].sub_feature_title`)}>{it.sub_feature_title}</h4>
+				<p {...$s(`items[${i}].sub_feature_desc`)}>{it.sub_feature_desc}</p>
+			</div>
+		</div>
+	))}
+</div>

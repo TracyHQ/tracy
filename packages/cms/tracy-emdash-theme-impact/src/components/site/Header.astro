@@ -1,0 +1,112 @@
+---
+import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { href } from '@/lib/i18n'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import Icon from '@/components/site/Icon.astro'
+import { DEMO_LOGO } from '@/lib/demo-logo'
+import { liveLinks } from '@/lib/link-gate'
+import { menuUrls, pruneMenu } from '@/lib/menu-gate'
+import { dataHref } from '@/lib/data-links'
+import { telHref } from '@/lib/tel'
+import { section } from '@/lib/content'
+
+interface Props {
+  chrome: Chrome
+  currentPath: string
+}
+const { chrome, currentPath } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const settings = await getSiteSettings()
+const logos = brandLogos(settings, site.logo_dark, site.brand_name)
+const active = (item: ChromeMenuItem): boolean => {
+  const u = item.url
+  if (u === '/') return currentPath === '/'
+  return u !== '' && (currentPath === u || currentPath.startsWith(`${u}/`))
+}
+const top = await section('contact_info', 'topbar-contact', locale)
+const topItems: any[] = top?.items ?? []
+const $t = stampFor(Astro.request, 'contact_info', top ? { id: top.id, slug: 'topbar-contact' } : null)
+// the menu without the pages the customer unticked, and the pages under them
+const live = await liveLinks(Astro.request, locale, [...menuUrls(chrome.primary), site.donate_link, ...topItems.map((i) => i.link)])
+const primary = pruneMenu(chrome.primary, live)
+const itemHref = (link: unknown) => {
+  const tel = telHref(link)
+  return tel ?? dataHref(link, (p) => href(locale, p))
+}
+---
+
+<header class="im-header">
+	<div class="im-header-top">
+		<div class="im-container im-header-top-in">
+			<a class="im-brand" href={href(locale, '/')} aria-label={site.brand_name}>
+				<BrandLogo spots={logoSpots(logos, 'dark')} alt={logos.alt || site.brand_name} imgClass="im-logo">
+					<img class="im-logo" src={DEMO_LOGO} alt={site.brand_name} width="213" height="61" />
+				</BrandLogo>
+			</a>
+			<ul class="im-contact-top">
+				{topItems.map((it, i) => (
+					<li>
+						<Icon name={it.font_icon} class={`im-contact-icon is-${it.icon_color || 'success'}`} />
+						<span class="im-contact-text">
+							<span class="im-contact-sub" {...$t(`items[${i}].sub_title`)}>{it.sub_title}</span>
+							{it.link && live(it.link) ? <a class="im-contact-title" href={itemHref(it.link)!} {...$t(`items[${i}].title`)}>{it.title}</a> : <span class="im-contact-title" {...$t(`items[${i}].title`)}>{it.title}</span>}
+						</span>
+					</li>
+				))}
+			</ul>
+			<button type="button" class="im-toggle" data-offcanvas-open aria-expanded="false" aria-controls="offcanvas" aria-label={site.menu_label}>
+				<span class="im-fa" data-icon="bars" aria-hidden="true"></span>
+			</button>
+		</div>
+	</div>
+	<div class="im-header-nav">
+		<div class="im-container im-header-nav-in">
+			<nav class="im-nav" aria-label={site.menu_label}>
+				<ul>
+					{primary.map((item) => (
+						<li class:list={[active(item) && 'is-active']}>
+							<a href={dataHref(item.url, (p) => href(locale, p))} aria-current={active(item) ? 'page' : undefined}>{item.label}</a>
+						</li>
+					))}
+				</ul>
+			</nav>
+			{site.donate_label && live(site.donate_link) && (
+				<a class="im-btn im-donate" href={dataHref(site.donate_link, (p) => href(locale, p))!} {...$c('donate_label')}>{site.donate_label}</a>
+			)}
+		</div>
+	</div>
+</header>
+<div class="im-offcanvas" id="offcanvas" data-offcanvas>
+	<div class="im-offcanvas-backdrop" data-offcanvas-close></div>
+	<div class="im-offcanvas-panel" role="dialog" aria-modal="true" aria-label={site.menu_label}>
+		<div class="im-offcanvas-head">
+			<span>{site.menu_label}</span>
+			<button type="button" class="im-offcanvas-close" data-offcanvas-close aria-label={site.close_label}><span class="im-fa" data-icon="xmark" aria-hidden="true"></span></button>
+		</div>
+		<ul>
+			{primary.map((item) => (
+				<li class:list={[active(item) && 'is-active']}><a href={dataHref(item.url, (p) => href(locale, p))}>{item.label}</a></li>
+			))}
+		</ul>
+		{site.donate_label && live(site.donate_link) && <a class="im-btn im-offcanvas-donate" href={dataHref(site.donate_link, (p) => href(locale, p))!}>{site.donate_label}</a>}
+	</div>
+</div>
+<script is:inline>
+	(function () {
+		const panel = document.getElementById('offcanvas');
+		const open = document.querySelector('[data-offcanvas-open]');
+		if (!panel || !open) return;
+		const set = function (on) {
+			panel.classList.toggle('is-open', on);
+			open.setAttribute('aria-expanded', on ? 'true' : 'false');
+			if (!on) open.focus();
+		};
+		open.addEventListener('click', function () { set(true); });
+		panel.querySelectorAll('[data-offcanvas-close]').forEach(function (b) { b.addEventListener('click', function () { set(false); }); });
+		document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('is-open')) set(false); });
+	})();
+</script>

@@ -1,0 +1,91 @@
+/*
+ * Storefront stylesheet. Imported ONLY by src/layouts/Base.astro (public pages). The EmDash admin at
+ * /_emdash/admin is a separate app and must never receive Tailwind's preflight or these tokens.
+ * Values: measured on the rendered Joomla source (1440 px home); see inventory/visual-contract.md.
+ * Class prefix `im-` = JA Impact component. One file per block under ./blocks/, one per page family under ./pages/.
+ * Design-system roles: the stylesheet reads each role as `var(--ds-…, <the template's own value>)`.
+ */
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./blocks/hero.css";
+@import "./blocks/cta.css";
+@import "./blocks/features.css";
+@import "./blocks/cards.css";
+@import "./blocks/chrome.css";
+@import "./blocks/home.css";
+
+@font-face { font-family: "FA Solid"; src: url("../fonts/fa-solid-900.woff2") format("woff2"); font-weight: 900; font-display: swap; }
+@font-face { font-family: "FA Brands"; src: url("../fonts/fa-brands-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+
+@layer base {
+	html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+	body {
+		background: var(--color-bg);
+		color: var(--color-fg);
+		font-family: var(--font-body);
+		font-size: 16px;
+		line-height: 1.6;
+		font-weight: var(--ds-weight-body, 400);
+		-webkit-font-smoothing: antialiased;
+		overflow-x: hidden;
+	}
+	h1, h2, h3, h4, h5, h6 { margin: 0 0 8px; font-family: var(--font-display); font-weight: var(--ds-weight-display, 500); line-height: 1.2; color: var(--color-heading); }
+	h1 { font-size: var(--h1-size); letter-spacing: -0.02em; }
+	h2 { font-size: var(--h2-size); letter-spacing: -0.0225em; }
+	h3 { font-size: var(--h3-size); letter-spacing: -0.0143em; }
+	h4 { font-size: var(--h4-size); letter-spacing: -0.01em; }
+	h5 { font-size: var(--h5-size); letter-spacing: -0.0089em; }
+	h6 { font-size: var(--h6-size); letter-spacing: -0.01em; }
+	p { margin: 0 0 16px; }
+	a { color: var(--color-heading); text-decoration: none; }
+	a:hover { color: var(--color-accent-text-hover); }
+	img { max-width: 100%; }
+	:focus-visible { outline: 1px solid var(--ds-c-focus-ring, var(--color-accent)); outline-offset: 2px; }
+}
+
+@layer components {
+	.im-container { width: 100%; margin-inline: auto; padding-inline: 16px; }
+	@media (min-width: 576px) { .im-container { max-width: 540px; } }
+	@media (min-width: 768px) { .im-container { max-width: 720px; } }
+	@media (min-width: 992px) { .im-container { max-width: 960px; } }
+	@media (min-width: 1200px) { .im-container { max-width: 1140px; } }
+	@media (min-width: 1400px) { .im-container { max-width: 1376px; } }
+
+	/* the Font Awesome glyphs the demo uses: the font ships under src/fonts, the code points are the ones the source prints */
+	.im-fa { font-family: "FA Solid"; font-weight: 900; font-style: normal; line-height: 1; display: inline-block; -webkit-font-smoothing: antialiased; }
+	.im-fa.is-brand { font-family: "FA Brands"; font-weight: 400; }
+	.im-fa::before { content: var(--fa); }
+	.im-fa[data-icon="earth"] { --fa: "\f57d"; } .im-fa[data-icon="envelope"] { --fa: "\f0e0"; } .im-fa[data-icon="phone"] { --fa: "\f095"; }
+	.im-fa[data-icon="arrow"] { --fa: "\f178"; } .im-fa[data-icon="pin"] { --fa: "\f3c5"; } .im-fa[data-icon="bookmark"] { --fa: "\f02e"; }
+	.im-fa[data-icon="play"] { --fa: "\f04b"; } .im-fa[data-icon="check"] { --fa: "\f00c"; } .im-fa[data-icon="bars"] { --fa: "\f0c9"; }
+	.im-fa[data-icon="plus"] { --fa: "\2b"; } .im-fa[data-icon="minus"] { --fa: "\f068"; } .im-fa[data-icon="xmark"] { --fa: "\f00d"; }
+	.im-fa[data-icon="facebook"] { --fa: "\f39e"; } .im-fa[data-icon="twitter"] { --fa: "\f099"; } .im-fa[data-icon="tiktok"] { --fa: "\e07b"; }
+	.im-fa[data-icon="pinterest"] { --fa: "\f0d2"; } .im-fa[data-icon="instagram"] { --fa: "\f16d"; } .im-fa[data-icon="youtube"] { --fa: "\f167"; }
+
+	/* buttons: 8 px radius, 500 weight; the theme buttons fill with their colour, hover keeps it at 85 percent (`theme.tpl.css:171-180`) */
+	.im-btn {
+		display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 24px; font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+		font-weight: var(--ds-weight-button, 500); text-align: center; cursor: pointer; border: 1px solid var(--color-accent); border-radius: var(--ds-btn-radius, 8px);
+		background: var(--color-accent); color: var(--color-accent-on); transition: opacity .2s, background-color .2s, color .2s;
+	}
+	.im-btn:hover, .im-btn:focus-visible { opacity: .85; color: var(--color-accent-on); }
+	.im-btn .im-fa { font-size: 14px; }
+	.im-btn.is-primary { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-ink); }
+	.im-btn.is-primary:hover { color: var(--color-on-ink); }
+	.im-btn.is-warning { background: var(--color-warn); border-color: var(--color-warn); color: var(--ds-c-accent-on-ink, #fff); }
+	.im-btn.is-white { background: var(--color-bg); border-color: var(--color-bg); color: var(--color-heading); }
+	.im-btn.is-white:hover { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-ink); opacity: 1; }
+	.im-btn.is-dark { background: var(--color-fg-2); border-color: var(--color-fg-2); color: var(--color-bg); }
+
+	/* section chrome (t4 `top-*` / `bottom-*` spacing and the centred title block) */
+	.im-section { position: relative; }
+	.im-section.top-large { padding-top: var(--gutter-large); } .im-section.bottom-large { padding-bottom: var(--gutter-large); }
+	.im-section.top-medium { padding-top: var(--gutter-medium); } .im-section.bottom-medium { padding-bottom: var(--gutter-medium); }
+	.im-section.is-light { background: var(--color-surface-warm); }
+	.im-section.is-blue { background: var(--color-ink); color: var(--color-on-ink); }
+	.im-section-head { text-align: center; max-width: 660px; margin: 0 auto 64px; }
+	.im-section-head.is-start { text-align: start; }
+	.im-eyebrow { display: block; font-size: 16px; line-height: 1.2; font-weight: 400; text-transform: uppercase; letter-spacing: 0; color: var(--color-accent-text); margin: 0 0 16px; }
+	.im-section-title { font-size: var(--h2-size); margin: 0; }
+	.im-text-success { color: var(--color-accent-text); } .im-text-warning { color: var(--color-warn); } .im-text-primary { color: var(--color-heading); }
+}

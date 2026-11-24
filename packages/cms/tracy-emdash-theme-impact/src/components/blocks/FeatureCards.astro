@@ -1,0 +1,53 @@
+---
+/** acm features style-3: a row of cards (icon, title, line, button) that slides when there are more than fit, and the coloured band under it. */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry, chrome } = Astro.props
+const $s = stampFor(Astro.request, 'features', { id: entry.id, slug: entry.slug })
+const items: any[] = entry.items ?? []
+const live = await liveLinks(Astro.request, chrome.locale, [...items.map((i) => i.link), entry.btn_block_link])
+const link = (u: string) => dataHref(u, (p) => href(chrome.locale, p))
+const BTN: Record<string, string> = { primary: 'is-primary', warning: 'is-warning', white: 'is-white', dark: 'is-dark' }
+const BAND: Record<string, string> = { 'bg-warning': 'is-warning', 'bg-success': 'is-success', 'bg-primary': 'is-primary' }
+const lines = (v: unknown) => String(v ?? '').split('\n')
+---
+
+<div class="im-cards" data-carousel data-per-view={entry.columns || 3}>
+	<div class="im-cards-view">
+		<ul class="im-cards-track" data-track>
+			{items.map((it, i) => (
+				<li class="im-card-feature" data-slide>
+					{mediaUrl(it.img_icon) && <span class="im-card-icon"><img src={mediaUrl(it.img_icon)!} alt="" width="120" height="120" loading="lazy" decoding="async" /></span>}
+					<h3 {...$s(`items[${i}].title`)}>{it.title}</h3>
+					<p {...$s(`items[${i}].description`)}>{it.description}</p>
+					{it.label && live(it.link) && <a class:list={['im-btn', BTN[it.button_type]]} href={link(it.link)!} {...$s(`items[${i}].label`)}>{it.label}<Icon name="fa-solid fa-arrow-right-long" /></a>}
+				</li>
+			))}
+		</ul>
+		{items.length > Number(entry.columns || 3) && (
+			<>
+				<button type="button" class="im-nav-btn is-prev" data-prev aria-label={chrome.site.prev_label}><span class="im-fa" data-icon="arrow" style="transform:scaleX(-1)" aria-hidden="true"></span></button>
+				<button type="button" class="im-nav-btn is-next" data-next aria-label={chrome.site.next_label}><span class="im-fa" data-icon="arrow" aria-hidden="true"></span></button>
+			</>
+		)}
+	</div>
+	{entry.block_description && (
+		<div class:list={['im-band', BAND[entry.bg_content]]}>
+			<div class="im-band-left">
+				{mediaUrl(entry.block_img) && <img src={mediaUrl(entry.block_img)!} alt="" width="64" height="64" loading="lazy" decoding="async" />}
+				<p {...$s('block_description')}>{lines(entry.block_description).map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
+			</div>
+			{entry.btn_block_label && live(entry.btn_block_link) && <a class:list={['im-btn', BTN[entry.btn_block_type]]} href={link(entry.btn_block_link)!} {...$s('btn_block_label')}>{entry.btn_block_label}<Icon name="fa-solid fa-arrow-right-long" /></a>}
+		</div>
+	)}
+</div>

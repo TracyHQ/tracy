@@ -1,0 +1,16 @@
+/* the Home's own composition: the overlap under the hero, the two columns, the backgrounds of the causes and stories bands */
+@layer components {
+	.im-home-top { margin-top: 0; }
+	@media (min-width: 1200px) { .im-home-top { margin-top: -128px; } }
+	.im-home-cols { display: flex; flex-direction: column; margin-inline: -16px; }
+	.im-home-left, .im-home-right { padding-inline: 16px; min-width: 0; }
+	.im-home-right { margin-top: 32px; }
+	@media (min-width: 1200px) { .im-home-cols { flex-direction: row; } .im-home-left { flex: 0 0 58.3333%; } .im-home-right { flex: 1 1 0; margin-top: 0; } }
+	.im-home-left .im-cta { position: relative; z-index: 2; }
+	.im-causes { background: var(--color-bg) var(--decor) center / cover no-repeat; }
+	.im-stories { background: var(--color-surface-warm) var(--decor) center / cover no-repeat; padding-inline: 0; }
+	.im-home-intro { padding-top: var(--gutter-medium); }
+	.im-more { text-align: center; margin: 48px 0 0; }
+	.im-blog + .im-more { margin-top: 48px; }
+	html[data-theme="dark"] .im-causes, html[data-theme="dark"] .im-stories { background-blend-mode: multiply; }
+}

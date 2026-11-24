@@ -1,0 +1,18 @@
+---
+/** A Font Awesome glyph the demo content names (`fa-solid fa-earth-americas`, `fa fa-facebook`): the class names are data, the glyphs are `.im-fa` in global.css. */
+interface Props {
+  name?: string | null
+  class?: string
+}
+const { name, class: cls } = Astro.props
+const raw = String(name ?? '')
+const ICONS: Record<string, string> = {
+  'earth-americas': 'earth', envelope: 'envelope', phone: 'phone', 'arrow-right-long': 'arrow', 'long-arrow-right': 'arrow', 'location-dot': 'pin',
+  bookmark: 'bookmark', play: 'play', facebook: 'facebook', 'facebook-f': 'facebook', twitter: 'twitter', tiktok: 'tiktok', pinterest: 'pinterest', instagram: 'instagram', youtube: 'youtube'
+}
+const key = Object.keys(ICONS).find((k) => new RegExp(`(^|[\\s-])fa-${k}(\\s|$)`).test(raw))
+const icon = key ? ICONS[key] : null
+const brand = icon ? ['facebook', 'twitter', 'tiktok', 'pinterest', 'instagram', 'youtube'].includes(icon) : false
+---
+
+{icon && <span class:list={['im-fa', brand && 'is-brand', cls]} data-icon={icon} aria-hidden="true"></span>}

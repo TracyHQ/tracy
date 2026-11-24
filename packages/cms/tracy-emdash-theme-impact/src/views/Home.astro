@@ -1,0 +1,108 @@
+---
+/**
+ * Home (DECISIONS D5): hero · helpline card + donor-base intro (left) with the fund panel (right) · what we do (cards on a picture, band)
+ * · donation strip · meet us · events · stay connected · latest blog posts. The sections are entries; their order and spacing are this view.
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Hero from '@/components/blocks/Hero.astro'
+import Cta from '@/components/blocks/Cta.astro'
+import FeatureIntro from '@/components/blocks/FeatureIntro.astro'
+import FeatureFund from '@/components/blocks/FeatureFund.astro'
+import FeatureCards from '@/components/blocks/FeatureCards.astro'
+import FeatureStats from '@/components/blocks/FeatureStats.astro'
+import DonationCarousel from '@/components/blocks/DonationCarousel.astro'
+import EventsHome from '@/components/blocks/EventsHome.astro'
+import Connected from '@/components/blocks/Connected.astro'
+import BlogGrid from '@/components/blocks/BlogGrid.astro'
+import SectionHead from '@/components/blocks/SectionHead.astro'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { loadArticles } from '@/lib/articles'
+import { livePosts } from '@/lib/link-gate'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, hero, helpline, donor, fund, whatWeDo, meet, connected, follow, donations, events, posts] = await Promise.all([
+  getEmDashEntry('pages', 'home', { locale }),
+  section('hero', 'home-hero', locale),
+  section('cta', 'home-helpline', locale),
+  section('features', 'home-donor-base', locale),
+  section('features', 'home-raise-fund', locale),
+  section('features', 'what-we-do', locale),
+  section('features', 'meet-us', locale),
+  section('features', 'home-connected', locale),
+  section('social', 'home-follow', locale),
+  loadArticles('donations', locale),
+  loadArticles('events', locale),
+  loadArticles('posts', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'home' } : null)
+const stories = donations.slice(0, 9)
+const coming = events.filter((e) => e.featured).slice(0, 3)
+const latest = await livePosts(Astro.request, locale, posts.slice(0, 6))
+const $w = whatWeDo ? stampFor(Astro.request, 'features', { id: whatWeDo.id, slug: whatWeDo.slug }) : undefined
+---
+
+<Base chrome={chrome} title={page.title ?? chrome.site.brand_name} currentPath="/" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'home', toPath: () => '/' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		{hero && <Hero entry={hero} chrome={chrome} />}
+		<section class="im-section im-home-top">
+			<div class="im-container">
+				<div class="im-home-cols">
+					<div class="im-home-left">
+						{helpline && <Cta entry={helpline} chrome={chrome} />}
+						{donor && <div class="im-home-intro"><FeatureIntro entry={donor} chrome={chrome} /></div>}
+					</div>
+					<div class="im-home-right">{fund && <FeatureFund entry={fund} chrome={chrome} />}</div>
+				</div>
+			</div>
+		</section>
+		{whatWeDo && (
+			<section class="im-section top-large bottom-large im-causes" style="--decor: url('/decor/section-causes.jpg')">
+				<div class="im-container">
+					<SectionHead label={whatWeDo.section_label} title={whatWeDo.section_title} stamp={$w} />
+					<FeatureCards entry={whatWeDo} chrome={chrome} />
+				</div>
+			</section>
+		)}
+		{stories.length > 0 && (
+			<section class="im-section top-large bottom-large is-light im-stories" style="--decor: url('/decor/section-stories.png')">
+				<SectionHead label={chrome.site.stories_label} title={chrome.site.stories_title} stamp={stampFor(Astro.request, 'chrome', chrome.entry)} labelPath="stories_label" titlePath="stories_title" />
+				<DonationCarousel entries={stories} chrome={chrome} />
+			</section>
+		)}
+		{meet && (
+			<section class="im-section top-large bottom-large is-blue">
+				<div class="im-container"><FeatureStats entry={meet} chrome={chrome} /></div>
+			</section>
+		)}
+		{coming.length > 0 && (
+			<section class="im-section top-large bottom-large">
+				<div class="im-container">
+					<SectionHead label={chrome.site.events_label} title={chrome.site.events_title} stamp={stampFor(Astro.request, 'chrome', chrome.entry)} labelPath="events_label" titlePath="events_title" />
+					<EventsHome entries={coming} chrome={chrome} />
+				</div>
+			</section>
+		)}
+		{connected && <section class="im-section"><Connected entry={connected} chrome={chrome} follow={follow} /></section>}
+		{latest.length > 0 && (
+			<section class="im-section top-large bottom-large">
+				<div class="im-container">
+					<SectionHead label={chrome.site.blog_label} title={chrome.site.blog_title} stamp={stampFor(Astro.request, 'chrome', chrome.entry)} labelPath="blog_label" titlePath="blog_title" />
+					<BlogGrid entries={latest} chrome={chrome} />
+					{chrome.site.view_all_label && <p class="im-more"><a class="im-btn" href="/blog" {...stampFor(Astro.request, 'chrome', chrome.entry)('view_all_blog_label')}>{chrome.site.view_all_blog_label}</a></p>}
+				</div>
+			</section>
+		)}
+	</main>
+	<script src="@/lib/site-client.ts"></script>
+</Base>

@@ -1,0 +1,37 @@
+---
+/** The Home blog masonry (the source's latest articles of the Blog category): date and author over the title; a picture on top where the article has one, a green card where it has none. */
+import type { Chrome } from '@/lib/chrome'
+import { href, formatDate } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { articlePath, type Article } from '@/lib/articles'
+import { uiTag } from '@/lib/ui'
+
+interface Props {
+  entries: Article[]
+  chrome: Chrome
+}
+const { entries, chrome } = Astro.props
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const tag = uiTag(chrome.locale)
+---
+
+<div class="im-blog">
+	{[0, 1, 2].map((col) => (
+		<div class="im-blog-col">
+	{entries.map((e, i) => ({ e, i })).filter(({ i }) => i % 3 === col).map(({ e, i }) => {
+		const $p = stampFor(Astro.request, 'posts', { id: e.id, slug: e.slug })
+		const img = mediaUrl(e.cover)
+		return (
+			<article class:list={['im-post', !img && i === 0 && 'is-plain']}>
+				{img && <a class="im-post-image" href={href(chrome.locale, articlePath('posts', e.slug))} tabindex="-1" aria-hidden="true"><img src={img} alt="" loading="lazy" decoding="async" /></a>}
+				<div class="im-post-body">
+					<p class="im-post-meta"><span {...$p('date')}>{formatDate(e.created || e.date, tag)}</span>{e.author && <> <span class="im-dash">—</span> <span {...$c('by_label')}>{chrome.site.by_label}</span> <span class="im-post-author" {...$p('author')}>{e.author}</span></>}</p>
+					<h3><a href={href(chrome.locale, articlePath('posts', e.slug))} {...$p('title')}>{e.title}</a></h3>
+				</div>
+			</article>
+		)
+	})}
+		</div>
+	))}
+</div>

@@ -1,0 +1,34 @@
+---
+/** acm cta style-1: a card with a title, a line, a highlighted number, a button and a picture that stands on its lower edge. */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref, isScriptUrl } from '@/lib/data-links'
+import { telHref } from '@/lib/tel'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry, chrome } = Astro.props
+const $s = stampFor(Astro.request, 'cta', { id: entry.id, slug: entry.slug })
+const live = await liveLinks(Astro.request, chrome.locale, [entry.cta_link])
+const media = mediaUrl(entry.cta_media)
+const tel = telHref(entry.cta_highlight)
+const BTN: Record<string, string> = { primary: 'is-primary', warning: 'is-warning', white: 'is-white', dark: 'is-dark' }
+---
+
+<div class:list={['im-cta', entry.cta_align_media === 'left' && 'is-media-left']}>
+	<div class="im-cta-body">
+		<h2 class="im-cta-title" {...$s('section_title')}>{entry.section_title || entry.title}</h2>
+		{entry.cta_desc && <p class="im-cta-desc" {...$s('cta_desc')}>{entry.cta_desc}</p>}
+		{entry.cta_highlight && (tel ? <a class="im-cta-highlight" href={tel} {...$s('cta_highlight')}>{entry.cta_highlight}</a> : <p class="im-cta-highlight" {...$s('cta_highlight')}>{entry.cta_highlight}</p>)}
+		{entry.cta_link_title && live(entry.cta_link) && !isScriptUrl(entry.cta_link) && (
+			<a class:list={['im-btn', BTN[entry.cta_link_type]]} href={dataHref(entry.cta_link, (p) => href(chrome.locale, p))!} {...$s('cta_link_title')}>{entry.cta_link_title}<Icon name="fa-solid fa-arrow-right-long" /></a>
+		)}
+	</div>
+	{media && <div class="im-cta-media"><img src={media} alt="" loading="lazy" decoding="async" /></div>}
+</div>

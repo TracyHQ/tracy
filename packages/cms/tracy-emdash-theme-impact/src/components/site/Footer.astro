@@ -1,0 +1,87 @@
+---
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { fill, href } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+import { telHref } from '@/lib/tel'
+import { dataHref } from '@/lib/data-links'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import Social from '@/components/site/Social.astro'
+import { DEMO_LOGO } from '@/lib/demo-logo'
+import { lines } from '@/lib/html'
+import { section } from '@/lib/content'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const settings = await getSiteSettings()
+const logos = brandLogos(settings, site.logo_dark, site.brand_name)
+const copyright = fill(site.copyright, { year: new Date().getUTCFullYear(), name: site.brand_name })
+const contact = await section('contact_info', 'footer-contact', locale)
+const follow = await section('social', 'footer-follow', locale)
+const $f = stampFor(Astro.request, 'contact_info', contact ? { id: contact.id, slug: 'footer-contact' } : null)
+const items: any[] = contact?.items ?? []
+// a footer column is one line per link: `Label | /path`, or the label alone when the source's menu item had no page (DECISIONS D11)
+const cols = [1, 2, 3, 4].map((n) => ({
+  n,
+  title: site[`footer_col${n}_title`],
+  links: lines(site[`footer_col${n}_links`]).map((row) => {
+    const [label, path] = row.split('|').map((s) => s.trim())
+    return { label, path: path ?? '' }
+  })
+}))
+const live = await liveLinks(Astro.request, locale, [...cols.flatMap((c) => c.links.map((l) => l.path)), ...items.map((i) => i.link)])
+const target = (link: unknown) => telHref(link) ?? dataHref(link, (p) => href(locale, p))
+---
+
+<footer class="im-footer">
+	{contact && (
+		<section class="im-contact-band">
+			<div class="im-container">
+				{items[0]?.heading && <h2 class="im-contact-heading" {...$f('items[0].heading')}>{lines(items[0].heading).join(' ')}</h2>}
+				<div class="im-contact-cols">
+					{items.map((it, i) => (
+						<div>
+							<p class="im-contact-label" {...$f(`items[${i}].sub_title`)}>{it.sub_title}</p>
+							{it.link && live(it.link) ? <a class="im-contact-value" href={target(it.link)!} {...$f(`items[${i}].title`)}>{it.title}</a> : <p class="im-contact-value" {...$f(`items[${i}].title`)}>{it.title}</p>}
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+	)}
+	<section class="im-footnav">
+		<div class="im-container im-footnav-in">
+			<div class="im-footnav-about">
+				<a class="im-brand" href={href(locale, '/')} aria-label={site.brand_name}>
+					<BrandLogo spots={logoSpots(logos, 'dark')} alt={logos.alt || site.brand_name} imgClass="im-logo">
+						<img class="im-logo" src={DEMO_LOGO} alt={site.brand_name} width="213" height="61" />
+					</BrandLogo>
+				</a>
+				<p {...$c('footer_about')}>{site.footer_about}</p>
+			</div>
+			{cols.map((c) => (
+				<div class="im-footnav-col">
+					<h3 {...$c(`footer_col${c.n}_title`)}>{c.title}</h3>
+					<ul {...$c(`footer_col${c.n}_links`)}>
+						{c.links.map((l) => <li>{l.path && live(l.path) ? <a href={dataHref(l.path, (p) => href(locale, p))!}>{l.label}</a> : <span>{l.label}</span>}</li>)}
+					</ul>
+				</div>
+			))}
+		</div>
+	</section>
+	<section class="im-footer-bottom">
+		<div class="im-container im-footer-bottom-in">
+			<div class="im-copyright">
+				<p {...$c('copyright')}>{copyright}</p>
+				{site.license_line && <p {...$c('license_line')}>{site.license_line}</p>}
+			</div>
+			{follow && <Social entry={follow} />}
+		</div>
+	</section>
+</footer>

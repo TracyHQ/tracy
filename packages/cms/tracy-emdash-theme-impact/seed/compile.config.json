@@ -21,9 +21,6 @@
     "pages.body": {
       "type": "portableText"
     },
-    "features.feature_desc": {
-      "type": "portableText"
-    },
     "modules.content": {
       "type": "portableText"
     }

@@ -1,0 +1,19 @@
+---
+/** The Home strip of donation cards (the source's `mod_articles_category` of the Donations category): full width, three cards across, dots under it. */
+import type { Chrome } from '@/lib/chrome'
+import type { Article } from '@/lib/articles'
+import DonationCard from '@/components/blocks/DonationCard.astro'
+
+interface Props {
+  entries: Article[]
+  chrome: Chrome
+}
+const { entries, chrome } = Astro.props
+---
+
+<div class="im-strip" data-carousel data-per-view="3" data-dots>
+	<ul class="im-strip-track" data-track>
+		{entries.map((e) => <li data-slide><DonationCard entry={e} chrome={chrome} /></li>)}
+	</ul>
+	<div class="im-dots" role="group" aria-label={chrome.site.slides_label}></div>
+</div>

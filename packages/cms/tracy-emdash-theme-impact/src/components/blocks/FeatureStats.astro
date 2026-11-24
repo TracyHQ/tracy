@@ -1,0 +1,32 @@
+---
+/** acm features style-4: a heading and lead on the left and up to three white tiles on the right (icon, figure in green, orange or navy, caption). */
+import type { Chrome } from '@/lib/chrome'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry } = Astro.props
+const $s = stampFor(Astro.request, 'features', { id: entry.id, slug: entry.slug })
+const items: any[] = entry.items ?? []
+const COLOR: Record<string, string> = { success: 'is-success', warning: 'is-warning', primary: 'is-primary' }
+---
+
+<div class="im-stats">
+	<div class="im-stats-head">
+		{entry.feature_tag && <span class="im-eyebrow" {...$s('feature_tag')}>{entry.feature_tag}</span>}
+		<h2 {...$s('feature_title')}>{entry.feature_title}</h2>
+		<p class="im-stats-lead" {...$s('feature_desc')}>{entry.feature_desc}</p>
+	</div>
+	<ul class="im-stats-list">
+		{items.map((it, i) => (
+			<li class="im-tile">
+				{mediaUrl(it.sub_feature_img) && <img src={mediaUrl(it.sub_feature_img)!} alt="" width="64" height="64" loading="lazy" decoding="async" />}
+				<h3 class:list={['im-tile-figure', COLOR[it.sub_title_color]]} {...$s(`items[${i}].sub_feature_title`)}>{it.sub_feature_title}</h3>
+				<p {...$s(`items[${i}].sub_feature_desc`)}>{it.sub_feature_desc}</p>
+			</li>
+		))}
+	</ul>
+</div>

@@ -1,0 +1,33 @@
+---
+/** acm features style-1: an eyebrow, a heading, a lead and a picture with its text beside it; the picture of the entry itself (`feature_main_img`) sits at the side when it has one. */
+import type { Chrome } from '@/lib/chrome'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { cleanHtml } from '@/lib/html'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry } = Astro.props
+const $s = stampFor(Astro.request, 'features', { id: entry.id, slug: entry.slug })
+const main = mediaUrl(entry.feature_main_img)
+const items: any[] = entry.items ?? []
+const lines = (v: unknown) => String(v ?? '').split('\n')
+const side = entry.media_alignment === 'left' ? 'is-left' : 'is-right'
+---
+
+<div class:list={['im-intro', main && 'has-main', main && side, entry.section_class === 'minimal' && 'is-minimal']}>
+	<div class="im-intro-content">
+		{entry.feature_tag && <span class="im-eyebrow" {...$s('feature_tag')}>{entry.feature_tag}</span>}
+		<h2 class="im-intro-title" {...$s('feature_title')}>{lines(entry.feature_title).map((l, i) => <>{i > 0 && <br />}{l}</>)}</h2>
+		{entry.feature_desc && <div class="im-intro-lead" {...$s('feature_desc')}><Fragment set:html={cleanHtml(entry.feature_desc)} /></div>}
+		{items.map((it, i) => (
+			<div class="im-intro-sub">
+				{mediaUrl(it.sub_feature_img) && <div class="im-intro-sub-media"><img src={mediaUrl(it.sub_feature_img)!} alt="" loading="lazy" decoding="async" /></div>}
+				<div class="im-intro-sub-text" {...$s(`items[${i}].sub_feature_desc`)}>{it.sub_feature_desc}</div>
+			</div>
+		))}
+	</div>
+	{main && <div class="im-intro-main"><img src={main} alt="" loading="lazy" decoding="async" /></div>}
+</div>

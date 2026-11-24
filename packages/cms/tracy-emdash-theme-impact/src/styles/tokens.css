@@ -1,0 +1,82 @@
+/*
+ * JA Impact design tokens. Values are the source template's own (`etc/theme/default.json`, `css/darkmode.css`, measured on
+ * the rendered source home: inventory/visual-contract.md). Every colour reads its Design-system role first
+ * (`--ds-c-<role>`, the names of design-system-roles.json) and keeps the template's own value as the fallback, so with no
+ * system worn the site looks exactly as designed. The source has a dark theme (`html[data-theme="dark"]`, DECISIONS D12):
+ * the tokens of that theme are the second block.
+ */
+@theme {
+	--font-display: var(--ds-font-display, var(--font-readex-pro), "Readex Pro", Helvetica, Arial, sans-serif);
+	--font-body: var(--ds-font-body, var(--font-readex-pro), "Readex Pro", Helvetica, Arial, sans-serif);
+
+	--color-bg: var(--ds-c-bg, #ffffff);
+	--color-surface: var(--ds-c-surface, #fbfbfb);
+	--color-surface-warm: var(--ds-c-surface-warm, #fff9ef);
+	--color-fg: var(--ds-c-fg, #495057);
+	--color-fg-2: var(--ds-c-fg-2, #212529);
+	--color-heading: var(--ds-c-heading, #1d3677);
+	--color-meta: var(--ds-c-meta, #6c757d);
+	--color-muted: var(--ds-c-muted, #adb5bd);
+	--color-line: var(--ds-c-border, #dee2e6);
+	--color-line-soft: var(--ds-c-border-soft, #e9ecef);
+
+	--color-accent: var(--ds-c-accent, #0cb76d);
+	--color-accent-on: var(--ds-c-accent-on, #ffffff);
+	--color-accent-hover: var(--ds-c-accent-hover, #0cb76d);
+	--color-accent-text: var(--ds-c-accent-text, #0cb76d);
+	--color-accent-text-hover: var(--ds-c-accent-text-hover, #0cb76d);
+	--color-ink: var(--ds-c-ink, #1d3677);
+	--color-on-ink: var(--ds-c-on-ink, #ffffff);
+	--color-info: var(--ds-c-info, #2970db);
+	--color-warn: var(--ds-c-warn, #f48a29);
+	--color-danger: var(--ds-c-danger, #dc3545);
+	--color-success: var(--ds-c-success, #0cb76d);
+
+	/* shadcn semantic tokens, mapped onto the design */
+	--color-background: var(--color-bg);
+	--color-foreground: var(--color-fg);
+	--color-primary: var(--color-ink);
+	--color-primary-foreground: var(--color-on-ink);
+	--color-card: var(--color-surface);
+	--color-card-foreground: var(--color-fg);
+	--color-border: var(--color-line);
+	--color-input: var(--color-line);
+	--color-ring: var(--color-accent);
+	--radius: var(--ds-card-radius, 8px);
+}
+
+/* the dark theme of the source (`css/darkmode.css` tokens `--dm-*`): the roles a system does not set keep these values */
+html[data-theme="dark"] {
+	--color-bg: var(--ds-c-bg, #111a2c);
+	--color-surface: var(--ds-c-surface, #1e2a45);
+	--color-surface-warm: var(--ds-c-surface-warm, #141d33);
+	--color-fg: var(--ds-c-fg, #c2c9d6);
+	--color-fg-2: var(--ds-c-fg-2, #c2c9d6);
+	--color-heading: var(--ds-c-heading, #eef1f6);
+	--color-meta: var(--ds-c-meta, #8c97a8);
+	--color-muted: var(--ds-c-muted, #8c97a8);
+	--color-line: var(--ds-c-border, #33415e);
+	--color-line-soft: var(--ds-c-border-soft, #28354f);
+	--color-accent-text: var(--ds-c-accent-text, #2fd98a);
+	--color-ink: var(--ds-c-ink, #1d3677);
+	color-scheme: dark;
+}
+
+/* the t4 section spacing (`top-large` 128 px from 1200 px, else 48; `top-medium` 64 px from 992 px, else 48) and the heading
+   scale: 72 px h1 down to 56 below 1200 and 40 below 992 px (`scss/tpl/theme.tpl.scss:24-36`) */
+:root {
+	--gutter-large: 48px;
+	--gutter-medium: 48px;
+	--h1-size: var(--ds-size-display, 40px);
+	--h2-size: var(--ds-size-heading, 28px);
+	--h3-size: 24px;
+	--h4-size: 20px;
+	--h5-size: 16px;
+	--h6-size: 16px;
+}
+@media (min-width: 992px) {
+	:root { --gutter-medium: 64px; --h1-size: var(--ds-size-display, 56px); --h2-size: var(--ds-size-heading, 40px); --h3-size: 28px; --h4-size: 24px; --h5-size: 18px; }
+}
+@media (min-width: 1200px) {
+	:root { --gutter-large: 128px; --h1-size: var(--ds-size-display, 72px); }
+}

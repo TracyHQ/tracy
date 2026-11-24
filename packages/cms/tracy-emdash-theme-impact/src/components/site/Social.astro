@@ -1,0 +1,27 @@
+---
+/** The social glyphs of a `social` entry. The demo's links are `#`, so no link is drawn for one (DECISIONS D11): a glyph with a real address becomes a link. */
+import Icon from '@/components/site/Icon.astro'
+import { stampFor } from '@/lib/stamps'
+import { isScriptUrl } from '@/lib/data-links'
+
+interface Props {
+  entry: Record<string, any>
+  class?: string
+}
+const { entry, class: cls } = Astro.props
+const $s = stampFor(Astro.request, 'social', { id: entry.id, slug: entry.slug })
+const items: any[] = entry.items ?? []
+const real = (l: unknown) => typeof l === 'string' && /^(https?:)?\/\//i.test(l.trim()) && !isScriptUrl(l)
+---
+
+<ul class:list={['im-social', cls]}>
+	{items.map((it, i) => (
+		<li>
+			{real(it.link) ? (
+				<a href={String(it.link).trim()} rel="noopener" aria-label={it.title || String(it.font_icon).replace(/^.*fa-/, '')} {...$s(`items[${i}].link`)}><Icon name={it.font_icon} /></a>
+			) : (
+				<span {...$s(`items[${i}].font_icon`)}><Icon name={it.font_icon} /></span>
+			)}
+		</li>
+	))}
+</ul>

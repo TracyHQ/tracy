@@ -1,0 +1,50 @@
+---
+/** The Home events (the source's list of the featured Events): the first and the third in a column on the left, the second tall on the right; each card by the colours the event carries. */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { articlePath, type Article } from '@/lib/articles'
+import { plainText } from '@/lib/prose-text'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  entries: Article[]
+  chrome: Chrome
+}
+const { entries, chrome } = Astro.props
+const site = chrome.site
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const live = await liveLinks(Astro.request, chrome.locale, entries.map((e) => e.button_link))
+const split = (d: unknown) => {
+  const m = /^\s*(\d{1,2})\s+([A-Za-z]+)/.exec(String(d ?? ''))
+  return m ? { day: m[1], month: m[2] } : { day: '', month: String(d ?? '') }
+}
+---
+
+<div class="im-events">
+	{entries.map((e, i) => {
+		const $e = stampFor(Astro.request, 'events', { id: e.id, slug: e.slug })
+		const { day, month } = split(e.start_date)
+		const img = mediaUrl(e.cover)
+		const tone = e.card_bg === 'success' ? 'is-success' : e.card_bg === 'primary' ? 'is-primary' : ''
+		return (
+			<article class:list={['im-event', tone, i === 1 && 'is-highlight', img && 'has-image']}>
+				{img && <a class="im-event-image" href={href(chrome.locale, articlePath('events', e.slug))} tabindex="-1" aria-hidden="true"><img src={img} alt="" loading="lazy" decoding="async" /></a>}
+				<div class="im-event-content">
+					<div class:list={['im-date', e.date_bg === 'warning' ? 'is-warning' : e.date_bg === 'success' ? 'is-success' : '']}>
+						<strong {...$e('start_date')}>{day}</strong><span>{month}</span>
+					</div>
+					<div class="im-event-text">
+						<h3><a href={href(chrome.locale, articlePath('events', e.slug))} {...$e('title')}>{e.title}</a></h3>
+						{e.event_location && <p class="im-event-location"><Icon name="fa-solid fa-location-dot" class="im-event-pin" /><span {...$c('location_label')}>{site.location_label}</span>: <span {...$e('event_location')}>{e.event_location}</span></p>}
+						<p class="im-event-intro" {...$e('excerpt')}>{plainText(e.excerpt, 160)}</p>
+						<a class:list={['im-btn', e.card_bg === 'success' || !e.card_bg ? '' : '', tone === 'is-success' ? 'is-white' : '']} href={dataHref(e.button_link && live(e.button_link) ? e.button_link : articlePath('events', e.slug), (p) => href(chrome.locale, p))!} {...$c('join_label')}>{site.join_label}<Icon name="fa-solid fa-arrow-right-long" /></a>
+					</div>
+				</div>
+			</article>
+		)
+	})}
+</div>

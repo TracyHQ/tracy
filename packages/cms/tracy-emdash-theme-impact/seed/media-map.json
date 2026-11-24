@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-24T05:34:01.271Z",
+	"generatedAt": "2026-11-24T05:52:06.861Z",
 	"source": "JA Impact j6 1.0.6 webroot",
 	"items": [
 		{
@@ -242,13 +242,31 @@
 				},
 				{
 					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
 					"slug": "feed-the-world",
 					"locale": "en",
 					"path": "body[32].asset"
 				},
 				{
 					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
 					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
 					"locale": "en",
 					"path": "body[32].asset"
 				},
@@ -267,24 +285,6 @@
 				{
 					"collection": "events",
 					"slug": "a-microscopic-marvel",
-					"locale": "en",
-					"path": "body[32].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "unveiling-natures-best-kept-treasures",
-					"locale": "en",
-					"path": "body[32].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "an-adventure-with-animals",
-					"locale": "en",
-					"path": "body[32].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "natures-hidden-gems",
 					"locale": "en",
 					"path": "body[32].asset"
 				}
@@ -365,7 +365,7 @@
 				},
 				{
 					"collection": "posts",
-					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"slug": "charity-of-the-month-plan-international-uk",
 					"locale": "en",
 					"path": "author_avatar"
 				},
@@ -383,22 +383,37 @@
 				},
 				{
 					"collection": "posts",
-					"slug": "charity-of-the-month-plan-international-uk",
+					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
 					"locale": "en",
 					"path": "author_avatar"
 				}
 			]
 		},
 		{
-			"key": "images/joomlart/blog/animal/detail-10",
-			"file": "images/joomlart/blog/animal/detail-10.jpg",
+			"key": "images/joomlart/blog/animal/item-1",
+			"file": "images/joomlart/blog/animal/item-1.jpg",
 			"alt": "",
 			"mime": "image/jpeg",
-			"sha256": "19987b8e883b22b70f20886f5d745e3cee0779266dcfcc3010644310e8e99aa7",
+			"sha256": "a61157f434fd44c729cce603d7812220a6d1b407718071bdc6e39a485fbc2067",
 			"targets": [
 				{
 					"collection": "posts",
-					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"slug": "charity-of-the-month-plan-international-uk",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-1",
+			"file": "images/joomlart/blog/animal/detail-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "246b98237740f127d2d2bbf7304c82bb3ca5232ba3e988186ef7d6194ab78727",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "charity-of-the-month-plan-international-uk",
 					"locale": "en",
 					"path": "banner"
 				}
@@ -470,7 +485,7 @@
 				},
 				{
 					"collection": "posts",
-					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"slug": "charity-of-the-month-plan-international-uk",
 					"locale": "en",
 					"path": "body[10].asset"
 				},
@@ -500,6 +515,12 @@
 				},
 				{
 					"collection": "posts",
+					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
 					"slug": "charity-branding-is-yourbrand-digital-ready",
 					"locale": "en",
 					"path": "body[10].asset"
@@ -512,7 +533,7 @@
 				},
 				{
 					"collection": "posts",
-					"slug": "charity-of-the-month-plan-international-uk",
+					"slug": "charity-of-the-month-plan-international-uk-2",
 					"locale": "en",
 					"path": "body[10].asset"
 				}
@@ -634,10 +655,31 @@
 					"path": "author_avatar"
 				},
 				{
+					"collection": "posts",
+					"slug": "charity-of-the-month-plan-international-uk-2",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
 					"collection": "donations",
 					"slug": "water-treatment-projects",
 					"locale": "en",
 					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-10",
+			"file": "images/joomlart/blog/animal/detail-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "19987b8e883b22b70f20886f5d745e3cee0779266dcfcc3010644310e8e99aa7",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"locale": "en",
+					"path": "banner"
 				}
 			]
 		},
@@ -687,32 +729,92 @@
 			]
 		},
 		{
-			"key": "images/joomlart/blog/animal/item-1",
-			"file": "images/joomlart/blog/animal/item-1.jpg",
+			"key": "images/joomlart/blog/animal/item-7",
+			"file": "images/joomlart/blog/animal/item-7.jpg",
 			"alt": "",
 			"mime": "image/jpeg",
-			"sha256": "a61157f434fd44c729cce603d7812220a6d1b407718071bdc6e39a485fbc2067",
+			"sha256": "c445bfaee2df5b6431431aef3c6dea405499c14e07ce44155bb857c6de1e072f",
 			"targets": [
 				{
 					"collection": "posts",
-					"slug": "charity-of-the-month-plan-international-uk",
+					"slug": "charity-of-the-month-plan-international-uk-2",
 					"locale": "en",
 					"path": "cover"
 				}
 			]
 		},
 		{
-			"key": "images/joomlart/blog/animal/detail-1",
-			"file": "images/joomlart/blog/animal/detail-1.jpg",
+			"key": "images/joomlart/blog/animal/detail-7",
+			"file": "images/joomlart/blog/animal/detail-7.jpg",
 			"alt": "",
 			"mime": "image/jpeg",
-			"sha256": "246b98237740f127d2d2bbf7304c82bb3ca5232ba3e988186ef7d6194ab78727",
+			"sha256": "601981129293c4d68abd16f71158c572595c09f5f3c8219f97aed869a6bcca2c",
 			"targets": [
+				{
+					"collection": "posts",
+					"slug": "charity-of-the-month-plan-international-uk-2",
+					"locale": "en",
+					"path": "banner"
+				},
+				{
+					"collection": "posts",
+					"slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
 				{
 					"collection": "posts",
 					"slug": "charity-of-the-month-plan-international-uk",
 					"locale": "en",
-					"path": "banner"
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "weve-reached-1-million-indonations-and-counting",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-empathy-throughremote-user-research",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "charity-branding-is-yourbrand-digital-ready",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "donation-and-cleaning-program-foundation",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "charity-of-the-month-plan-international-uk-2",
+					"locale": "en",
+					"path": "body[12].asset"
 				}
 			]
 		},
@@ -1200,171 +1302,6 @@
 			]
 		},
 		{
-			"key": "images/joomlart/events/intro/intro-2",
-			"file": "images/joomlart/events/intro/intro-2.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "ffa8600e9e6401fe434406b87769b8ec8b4b9416fa0994f00372f7c2329084d1",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "feed-the-world",
-					"locale": "en",
-					"path": "cover"
-				},
-				{
-					"collection": "events",
-					"slug": "an-adventure-with-animals",
-					"locale": "en",
-					"path": "cover"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/events/detail/detail-8",
-			"file": "images/joomlart/events/detail/detail-8.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "e89cef55aa9037346965972a6fec1bd5e18b2af3a06ca3c358ef978c4452fefb",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "feed-the-world",
-					"locale": "en",
-					"path": "banner"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/events/detail/detail-7",
-			"file": "images/joomlart/events/detail/detail-7.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "a7fc15051d31cc2cd6e761957e1fd85b3623dd0391ff97f59e3f809c5c4bfc80",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "charity-journey-to-africa",
-					"locale": "en",
-					"path": "banner"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/events/detail/detail-6",
-			"file": "images/joomlart/events/detail/detail-6.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "e92bd6792d6fe824bad80305ae1199f548617864cf318ebaab3ec9896358782c",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "the-day-of-the-african-child",
-					"locale": "en",
-					"path": "banner"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/authors/7",
-			"file": "images/joomlart/authors/7.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "153ebde8695fcb2db65122f8ff18a135883fdaf5f63bb74cd6ea1828fc1b02dc",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "the-day-of-the-african-child",
-					"locale": "en",
-					"path": "author_avatar"
-				},
-				{
-					"collection": "events",
-					"slug": "saving-nature",
-					"locale": "en",
-					"path": "author_avatar"
-				},
-				{
-					"collection": "events",
-					"slug": "a-microscopic-marvel",
-					"locale": "en",
-					"path": "author_avatar"
-				},
-				{
-					"collection": "events",
-					"slug": "unveiling-natures-best-kept-treasures",
-					"locale": "en",
-					"path": "author_avatar"
-				},
-				{
-					"collection": "events",
-					"slug": "an-adventure-with-animals",
-					"locale": "en",
-					"path": "author_avatar"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/events/detail/detail-5",
-			"file": "images/joomlart/events/detail/detail-5.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "57f4d99fc3d1945ef65d77b33aa4cfed02dbe95656b006507452da91f32505f6",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "saving-nature",
-					"locale": "en",
-					"path": "banner"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/events/detail/detail-4",
-			"file": "images/joomlart/events/detail/detail-4.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "85170c44249dcebadaad79de827ab259629b3616db6ca6158e66e74ed5e091d9",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "a-microscopic-marvel",
-					"locale": "en",
-					"path": "banner"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/events/detail/detail-3",
-			"file": "images/joomlart/events/detail/detail-3.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "09da20d929788e89f51c14d4840b9489fff8e69ebf150c509fc7688eb93ad3f2",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "unveiling-natures-best-kept-treasures",
-					"locale": "en",
-					"path": "banner"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/events/detail/detail-2",
-			"file": "images/joomlart/events/detail/detail-2.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "bf82939b4c258e70e47e403bde3f1100ace75393cea5a04550ab0b0e64cadc87",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "an-adventure-with-animals",
-					"locale": "en",
-					"path": "banner"
-				}
-			]
-		},
-		{
 			"key": "images/joomlart/events/intro/intro-1",
 			"file": "images/joomlart/events/intro/intro-1.jpg",
 			"alt": "",
@@ -1406,6 +1343,171 @@
 					"slug": "natures-hidden-gems",
 					"locale": "en",
 					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/intro/intro-2",
+			"file": "images/joomlart/events/intro/intro-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ffa8600e9e6401fe434406b87769b8ec8b4b9416fa0994f00372f7c2329084d1",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-8",
+			"file": "images/joomlart/events/detail/detail-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e89cef55aa9037346965972a6fec1bd5e18b2af3a06ca3c358ef978c4452fefb",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-2",
+			"file": "images/joomlart/events/detail/detail-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "bf82939b4c258e70e47e403bde3f1100ace75393cea5a04550ab0b0e64cadc87",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/7",
+			"file": "images/joomlart/authors/7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "153ebde8695fcb2db65122f8ff18a135883fdaf5f63bb74cd6ea1828fc1b02dc",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-7",
+			"file": "images/joomlart/events/detail/detail-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a7fc15051d31cc2cd6e761957e1fd85b3623dd0391ff97f59e3f809c5c4bfc80",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-3",
+			"file": "images/joomlart/events/detail/detail-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "09da20d929788e89f51c14d4840b9489fff8e69ebf150c509fc7688eb93ad3f2",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-6",
+			"file": "images/joomlart/events/detail/detail-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e92bd6792d6fe824bad80305ae1199f548617864cf318ebaab3ec9896358782c",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-5",
+			"file": "images/joomlart/events/detail/detail-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "57f4d99fc3d1945ef65d77b33aa4cfed02dbe95656b006507452da91f32505f6",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-4",
+			"file": "images/joomlart/events/detail/detail-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "85170c44249dcebadaad79de827ab259629b3616db6ca6158e66e74ed5e091d9",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "banner"
 				}
 			]
 		},
@@ -1461,65 +1563,254 @@
 			]
 		},
 		{
-			"key": "images/joomlart/blog/animal/detail-7",
-			"file": "images/joomlart/blog/animal/detail-7.jpg",
+			"key": "images/joomlart/gallery/detail-event-1",
+			"file": "images/joomlart/gallery/detail-event-1.jpg",
 			"alt": "",
 			"mime": "image/jpeg",
-			"sha256": "601981129293c4d68abd16f71158c572595c09f5f3c8219f97aed869a6bcca2c",
+			"sha256": "344d11a50e54e9bb6bca07cde8c09c6534a7bf0b7286513e2b503d2b5905be40",
 			"targets": [
 				{
-					"collection": "posts",
-					"slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+					"collection": "events",
+					"slug": "afforestation-program",
 					"locale": "en",
-					"path": "body[12].asset"
+					"path": "body[11].asset"
 				},
 				{
-					"collection": "posts",
-					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"collection": "events",
+					"slug": "natures-hidden-gems",
 					"locale": "en",
-					"path": "body[12].asset"
+					"path": "body[11].asset"
 				},
 				{
-					"collection": "posts",
-					"slug": "weve-reached-1-million-indonations-and-counting",
+					"collection": "events",
+					"slug": "feed-the-world",
 					"locale": "en",
-					"path": "body[12].asset"
+					"path": "body[11].asset"
 				},
 				{
-					"collection": "posts",
-					"slug": "building-empathy-throughremote-user-research",
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
 					"locale": "en",
-					"path": "body[12].asset"
+					"path": "body[11].asset"
 				},
 				{
-					"collection": "posts",
-					"slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
 					"locale": "en",
-					"path": "body[12].asset"
+					"path": "body[11].asset"
 				},
 				{
-					"collection": "posts",
-					"slug": "im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
 					"locale": "en",
-					"path": "body[12].asset"
+					"path": "body[11].asset"
 				},
 				{
-					"collection": "posts",
-					"slug": "charity-branding-is-yourbrand-digital-ready",
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
 					"locale": "en",
-					"path": "body[12].asset"
+					"path": "body[11].asset"
 				},
 				{
-					"collection": "posts",
-					"slug": "donation-and-cleaning-program-foundation",
+					"collection": "events",
+					"slug": "saving-nature",
 					"locale": "en",
-					"path": "body[12].asset"
+					"path": "body[11].asset"
 				},
 				{
-					"collection": "posts",
-					"slug": "charity-of-the-month-plan-international-uk",
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
 					"locale": "en",
-					"path": "body[12].asset"
+					"path": "body[11].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-5",
+			"file": "images/joomlart/features/icon-5.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "910ba83a0b4e9b640e3179c335cdd210b62b0fa6abcce7eecee5f28dbe42e4c9",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "afforestation-program",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "body[17].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-6",
+			"file": "images/joomlart/features/icon-6.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "af47e65380e6d705dd306ceca881ea8893db9860f1e1bb24623c3c37b6125414",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "afforestation-program",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "body[22].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-7",
+			"file": "images/joomlart/features/icon-7.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "81c5d632c108a3f5c2f006b9d04ab1983617be3c6eec7662181f11b27d1f2dcb",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "afforestation-program",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "body[27].asset"
 				}
 			]
 		},
@@ -1694,258 +1985,6 @@
 					"slug": "the-african-wildlife-chronicles",
 					"locale": "en",
 					"path": "body[5].asset"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/gallery/detail-event-1",
-			"file": "images/joomlart/gallery/detail-event-1.jpg",
-			"alt": "",
-			"mime": "image/jpeg",
-			"sha256": "344d11a50e54e9bb6bca07cde8c09c6534a7bf0b7286513e2b503d2b5905be40",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "afforestation-program",
-					"locale": "en",
-					"path": "body[11].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "feed-the-world",
-					"locale": "en",
-					"path": "body[11].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "charity-journey-to-africa",
-					"locale": "en",
-					"path": "body[11].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "the-day-of-the-african-child",
-					"locale": "en",
-					"path": "body[11].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "saving-nature",
-					"locale": "en",
-					"path": "body[11].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "a-microscopic-marvel",
-					"locale": "en",
-					"path": "body[11].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "unveiling-natures-best-kept-treasures",
-					"locale": "en",
-					"path": "body[11].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "an-adventure-with-animals",
-					"locale": "en",
-					"path": "body[11].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "natures-hidden-gems",
-					"locale": "en",
-					"path": "body[11].asset"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/features/icon-5",
-			"file": "images/joomlart/features/icon-5.png",
-			"alt": "",
-			"mime": "image/png",
-			"sha256": "910ba83a0b4e9b640e3179c335cdd210b62b0fa6abcce7eecee5f28dbe42e4c9",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "afforestation-program",
-					"locale": "en",
-					"path": "body[17].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "feed-the-world",
-					"locale": "en",
-					"path": "body[17].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "charity-journey-to-africa",
-					"locale": "en",
-					"path": "body[17].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "the-day-of-the-african-child",
-					"locale": "en",
-					"path": "body[17].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "saving-nature",
-					"locale": "en",
-					"path": "body[17].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "a-microscopic-marvel",
-					"locale": "en",
-					"path": "body[17].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "unveiling-natures-best-kept-treasures",
-					"locale": "en",
-					"path": "body[17].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "an-adventure-with-animals",
-					"locale": "en",
-					"path": "body[17].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "natures-hidden-gems",
-					"locale": "en",
-					"path": "body[17].asset"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/features/icon-6",
-			"file": "images/joomlart/features/icon-6.png",
-			"alt": "",
-			"mime": "image/png",
-			"sha256": "af47e65380e6d705dd306ceca881ea8893db9860f1e1bb24623c3c37b6125414",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "afforestation-program",
-					"locale": "en",
-					"path": "body[22].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "feed-the-world",
-					"locale": "en",
-					"path": "body[22].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "charity-journey-to-africa",
-					"locale": "en",
-					"path": "body[22].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "the-day-of-the-african-child",
-					"locale": "en",
-					"path": "body[22].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "saving-nature",
-					"locale": "en",
-					"path": "body[22].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "a-microscopic-marvel",
-					"locale": "en",
-					"path": "body[22].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "unveiling-natures-best-kept-treasures",
-					"locale": "en",
-					"path": "body[22].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "an-adventure-with-animals",
-					"locale": "en",
-					"path": "body[22].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "natures-hidden-gems",
-					"locale": "en",
-					"path": "body[22].asset"
-				}
-			]
-		},
-		{
-			"key": "images/joomlart/features/icon-7",
-			"file": "images/joomlart/features/icon-7.png",
-			"alt": "",
-			"mime": "image/png",
-			"sha256": "81c5d632c108a3f5c2f006b9d04ab1983617be3c6eec7662181f11b27d1f2dcb",
-			"targets": [
-				{
-					"collection": "events",
-					"slug": "afforestation-program",
-					"locale": "en",
-					"path": "body[27].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "feed-the-world",
-					"locale": "en",
-					"path": "body[27].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "charity-journey-to-africa",
-					"locale": "en",
-					"path": "body[27].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "the-day-of-the-african-child",
-					"locale": "en",
-					"path": "body[27].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "saving-nature",
-					"locale": "en",
-					"path": "body[27].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "a-microscopic-marvel",
-					"locale": "en",
-					"path": "body[27].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "unveiling-natures-best-kept-treasures",
-					"locale": "en",
-					"path": "body[27].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "an-adventure-with-animals",
-					"locale": "en",
-					"path": "body[27].asset"
-				},
-				{
-					"collection": "events",
-					"slug": "natures-hidden-gems",
-					"locale": "en",
-					"path": "body[27].asset"
 				}
 			]
 		}

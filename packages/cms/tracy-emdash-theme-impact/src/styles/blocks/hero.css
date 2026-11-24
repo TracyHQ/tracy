@@ -1,0 +1,20 @@
+/* acm hero style-1: 814 px tall at 1440, a picture per slide under a dark wash, text in the left half */
+@layer components {
+	.im-hero { position: relative; overflow: hidden; background: var(--color-ink); }
+	.im-hero-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; scroll-behavior: smooth; }
+	.im-hero-track::-webkit-scrollbar { display: none; }
+	.im-hero-slide { flex: 0 0 100%; scroll-snap-align: start; min-height: 814px; display: flex; align-items: flex-start; background-size: cover; background-position: center; position: relative; color: #fff; }
+	.im-hero-slide::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0, 0, 0, .45), rgba(0, 0, 0, .1) 60%, transparent); }
+	.im-hero-slide > .im-container { position: relative; }
+	.im-hero-content { max-width: 656px; padding-top: 160px; padding-bottom: 96px; }
+	.im-hero-sub { font-size: 24px; line-height: 1.2; font-weight: 500; letter-spacing: -0.01em; color: var(--color-accent-text); margin: 0 0 8px; }
+	.im-hero-title { font-size: var(--h1-size); line-height: 1.2; margin: 0 0 8px; color: #fff; }
+	.im-hero-desc { font-size: 18px; line-height: 1.6; color: #dee2e6; margin: 0 0 48px; }
+	.im-hero-actions { display: flex; flex-wrap: wrap; gap: 16px; }
+	.im-dots { display: flex; justify-content: center; gap: 8px; }
+	.im-hero .im-dots { position: absolute; left: 0; right: 0; bottom: 120px; }
+	.im-dot { width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .85); cursor: pointer; }
+	.im-dot.is-active { background: var(--color-accent); }
+	@media (max-width: 991.98px) { .im-hero-slide { min-height: 560px; } .im-hero-content { padding-top: 96px; padding-bottom: 80px; } .im-hero .im-dots { bottom: 24px; } }
+	@media (max-width: 575.98px) { .im-hero-slide { min-height: 520px; } .im-hero-sub { font-size: 20px; } }
+}

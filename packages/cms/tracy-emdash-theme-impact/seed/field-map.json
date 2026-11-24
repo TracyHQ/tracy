@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T05:34:01.180Z",
+  "generatedAt": "2026-11-24T05:52:06.758Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -104,7 +104,7 @@
     },
     "features.feature_desc": {
       "source": "prose",
-      "target": "portableText",
+      "target": "text",
       "label": "Feature desc",
       "role": "editorial.paragraph"
     },
@@ -380,6 +380,18 @@
       "target": "string",
       "label": "Section class",
       "role": "editorial.heading"
+    },
+    "features.charity_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Charity label",
+      "role": "editorial.button_label"
+    },
+    "features.donation_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Donation label",
+      "role": "editorial.button_label"
     },
     "contact_info.align_section": {
       "source": "text",
@@ -762,6 +774,12 @@
       "label": "Featured",
       "role": "editorial.paragraph"
     },
+    "donations.ordering": {
+      "source": "number",
+      "target": "integer",
+      "label": "Ordering",
+      "role": "editorial.paragraph"
+    },
     "donations.path": {
       "source": "text",
       "target": "string",
@@ -873,6 +891,12 @@
       "source": "text",
       "target": "string",
       "label": "Featured",
+      "role": "editorial.paragraph"
+    },
+    "events.ordering": {
+      "source": "number",
+      "target": "integer",
+      "label": "Ordering",
       "role": "editorial.paragraph"
     },
     "events.path": {
@@ -1110,6 +1134,48 @@
       "label": "View all label",
       "role": "editorial.button_label"
     },
+    "chrome.view_all_blog_label": {
+      "source": "text",
+      "target": "string",
+      "label": "View all blog label",
+      "role": "editorial.button_label"
+    },
+    "chrome.stories_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Stories label",
+      "role": "editorial.button_label"
+    },
+    "chrome.stories_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Stories title",
+      "role": "editorial.heading"
+    },
+    "chrome.events_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Events label",
+      "role": "editorial.button_label"
+    },
+    "chrome.events_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Events title",
+      "role": "editorial.heading"
+    },
+    "chrome.blog_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Blog label",
+      "role": "editorial.button_label"
+    },
+    "chrome.blog_title": {
+      "source": "text",
+      "target": "string",
+      "label": "Blog title",
+      "role": "editorial.heading"
+    },
     "chrome.not_found_code": {
       "source": "text",
       "target": "string",
@@ -1198,6 +1264,29 @@
       "target": "string",
       "label": "Play label",
       "role": "editorial.button_label"
+    },
+    "chrome.slides_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Slides label",
+      "role": "editorial.button_label"
+    },
+    "chrome.slide_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Slide label",
+      "role": "editorial.button_label"
+    },
+    "chrome.currency_symbol": {
+      "source": "text",
+      "target": "string",
+      "label": "Currency symbol",
+      "role": "editorial.paragraph"
+    },
+    "chrome.form_id": {
+      "source": "text",
+      "target": "string",
+      "label": "Form id"
     },
     "chrome.logo_dark": {
       "source": "text",

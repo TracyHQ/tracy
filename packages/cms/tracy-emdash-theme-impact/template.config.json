@@ -1,13 +1,13 @@
 {
 	"id": "tracy-impact",
-	"label": "New template",
+	"label": "JA Impact",
 	"version": "0.1.0",
 	"locales": [
 		"en"
 	],
 	"defaultLocale": "en",
 	"site": {
-		"title": "Site title",
+		"title": "JA Impact",
 		"tagline": ""
 	},
 	"contentOrder": [],
