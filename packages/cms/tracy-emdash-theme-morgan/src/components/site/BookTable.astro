@@ -1,0 +1,40 @@
+---
+/** The Book Table dialog (acm book-table style-1): the header button opens it. Text, phone and the order link are the `book_table` entry's. */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { telHref } from '@/lib/tel'
+import { dataHref } from '@/lib/data-links'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry, chrome } = Astro.props
+const { locale, site } = chrome
+const $b = stampFor(Astro.request, 'book_table', { id: entry.id, slug: entry.slug })
+const live = await liveLinks(Astro.request, locale, [entry.order_btn_link])
+const phone = telHref(entry.book_phone)
+const order = live(entry.order_btn_link) ? dataHref(entry.order_btn_link, (p) => href(locale, p)) : null
+---
+
+<dialog class="fr-book" id="book-table" aria-labelledby="book-table-title">
+	<button type="button" class="fr-book-close" data-book-close aria-label={site.close_label ?? '×'}>×</button>
+	<div class="fr-book-grid">
+		<div class="fr-book-left">
+			<h2 id="book-table-title" {...$b('book_btn')}>{entry.book_btn}</h2>
+			<p {...$b('book_desc')}>{entry.book_desc}</p>
+		</div>
+		<div class="fr-book-right">
+			<div class="fr-book-phone">
+				<h3 {...$b('book_phone_title')}>{entry.book_phone_title}</h3>
+				{phone ? <a href={phone} {...$b('book_phone')}>{entry.book_phone}</a> : <span {...$b('book_phone')}>{entry.book_phone}</span>}
+			</div>
+			<div class="fr-book-order">
+				<h3 {...$b('order_title')}>{entry.order_title}</h3>
+				{order && <a class="fr-btn" href={order} {...$b('order_btn')}>{entry.order_btn}</a>}
+			</div>
+		</div>
+	</div>
+</dialog>

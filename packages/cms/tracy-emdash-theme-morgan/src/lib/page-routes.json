@@ -1,0 +1,50 @@
+{
+  "pages": [
+    {
+      "path": "/",
+      "slug": "home",
+      "view": "front-page"
+    },
+    {
+      "path": "/contact",
+      "slug": "contact",
+      "view": "page-contact"
+    },
+    {
+      "path": "/about",
+      "slug": "about",
+      "view": "page-landing"
+    },
+    {
+      "path": "/gallery",
+      "slug": "gallery",
+      "view": "page-landing"
+    },
+    {
+      "path": "/chiefs",
+      "slug": "chiefs",
+      "view": "page-landing"
+    },
+    {
+      "path": "/menu",
+      "slug": "menu",
+      "view": "page-landing"
+    },
+    {
+      "path": "/offer",
+      "slug": "offer",
+      "view": "page-landing"
+    },
+    {
+      "path": "/blog",
+      "slug": "blog",
+      "view": "blog"
+    }
+  ],
+  "lists": [
+    {
+      "path": "/blog",
+      "type": "posts"
+    }
+  ]
+}

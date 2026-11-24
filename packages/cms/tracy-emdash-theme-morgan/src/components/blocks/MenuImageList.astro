@@ -1,0 +1,45 @@
+---
+/**
+ * acm menu style-2: one picture on a half, the dish list (dashed separators) on the other half from 992 px. `align_media`
+ * `left` / `right` puts the picture on that side. The optional `menu_type` is the centred big heading with an accent line.
+ */
+import type { Chrome } from '@/lib/chrome'
+import SectionHead from '@/components/blocks/SectionHead.astro'
+import { spacing } from '@/lib/layout'
+import { stampFor } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+  band?: boolean
+}
+const { entry, band = false } = Astro.props
+const $m = stampFor(Astro.request, 'menu', { id: entry.id, slug: entry.slug })
+const items: any[] = entry.items ?? []
+const img = mediaUrl(entry.menu_image)
+const right = String(entry.align_media).toLowerCase() === 'right'
+---
+
+<section class:list={['fr-section', spacing(entry.slug), band && 'is-band']}>
+	<SectionHead entry={entry} collection="menu" />
+	<div class="fr-container fr-menu-image">
+		{entry.menu_type && <div class="fr-menu-image-type" {...$m('menu_type')}>{entry.menu_type}</div>}
+		<div class:list={['fr-menu-image-row', right && 'is-right']}>
+			<div class="fr-menu-image-media">
+				{img && <img src={img} alt="" width="608" height="608" loading="lazy" decoding="async" {...$m('menu_image')} />}
+			</div>
+			<div class="fr-menu-image-list">
+				{items.map((it, i) => (
+					<div class="fr-menu-image-dish">
+						<div class="fr-menu-image-dish-text">
+							<h3 class="fr-menu-image-name" {...$m(`items[${i}].dish_name`)}>{it.dish_name}</h3>
+							{it.dish_description && <p class="fr-menu-image-desc" {...$m(`items[${i}].dish_description`)}>{it.dish_description}</p>}
+						</div>
+						{it.dish_price && <span class="fr-menu-image-price" {...$m(`items[${i}].dish_price`)}>{it.dish_price}</span>}
+					</div>
+				))}
+			</div>
+		</div>
+	</div>
+</section>

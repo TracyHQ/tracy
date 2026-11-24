@@ -1,0 +1,98 @@
+---
+/**
+ * Search (the source's Smart Search, simplified): the title band, a form, then the posts whose words match. Route: /search?q=…
+ * EmDash `search()` over the posts; where the site has no search index the posts are matched on their own words.
+ */
+import { search } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import PostMeta from '@/components/site/PostMeta.astro'
+import Masthead from '@/components/blocks/Masthead.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { fillWords } from '@/lib/ui-words'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import { loadPosts, postPath } from '@/lib/posts'
+import { livePosts } from '@/lib/link-gate'
+import { firstParagraph, plainText } from '@/lib/prose-text'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const { tag, w } = ui(locale)
+Astro.response.headers.set('cache-control', 'no-store')
+
+const q = (Astro.url.searchParams.get('q') ?? '').trim().slice(0, 200)
+const [all, masthead, found] = await Promise.all([
+  loadPosts(locale),
+  section('masthead', 'blog', locale),
+  q
+    ? search(q, { collections: ['posts'], locale, status: 'published', limit: 50 })
+        .then((r: any) => r.items ?? r)
+        .catch(() => [])
+    : Promise.resolve([])
+])
+const live = await livePosts(Astro.request, locale, all)
+const indexed = (found as any[])
+  .map((r) => live.find((p) => p.slug === (r.slug ?? r.id)))
+  .filter(Boolean) as typeof live
+const words = q.toLowerCase().split(/\s+/).filter(Boolean)
+const results =
+  indexed.length > 0 || words.length === 0
+    ? indexed
+    : live.filter((p) => {
+        const hay =
+          `${p.title} ${plainText(p.excerpt, 5000)} ${plainText(p.body, 100000)} ${p.author} ${p.tags}`.toLowerCase()
+        return words.every((x) => hay.includes(x))
+      })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+---
+
+<Base chrome={chrome} title={site.search_label} currentPath="/search" robots="noindex, follow">
+	<main id="main">
+		<PageOwner stamp={$c} />
+		<Masthead entry={masthead} title={site.search_label} describe />
+		<div class="fr-main-body">
+			<div class="fr-container fr-fixed">
+				<div class="fr-search">
+					<form class="fr-search-form" action={href(locale, '/search')} method="get" role="search">
+						<label for="fr-q">{w.search}</label>
+						<div class="fr-search-row">
+							<input id="fr-q" type="search" name="q" value={q} placeholder={site.search_placeholder} autocomplete="off" />
+							<button type="submit" class="fr-btn is-solid" {...$c('search_button')}>{site.search_button}</button>
+						</div>
+					</form>
+					{q && (
+						<div class="fr-search-results" aria-live="polite">
+							{results.length === 0 ? (
+								<p class="fr-search-empty" {...$c('no_results')}>{site.no_results}</p>
+							) : (
+								<>
+									<h2 class="fr-search-count">{fillWords(w.searchResultsLine, { count: results.length, query: q })}</h2>
+									<ol>
+										{results.map((p) => {
+											const $p = stampFor(Astro.request, 'posts', { id: p.id, slug: p.slug })
+											const intro = firstParagraph(p.excerpt) || firstParagraph(p.body)
+											return (
+												<li {...$p()}>
+													<h3><a href={href(locale, postPath(p))} {...$p('title')}>{p.title}</a></h3>
+													<PostMeta post={p} tag={tag} by={site.by_label} stamp={$p} byStamp={$c('by_label')} />
+													{intro && <p class="fr-search-intro" {...$p('body')}>{intro}</p>}
+												</li>
+											)
+										})}
+									</ol>
+								</>
+							)}
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	</main>
+</Base>

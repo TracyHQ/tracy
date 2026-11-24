@@ -1,0 +1,116 @@
+---
+import type { Chrome, ChromeMenuItem } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { href } from '@/lib/i18n'
+import { brandLogos, logoSpots } from '@/lib/brand'
+import { getSiteSettings } from 'emdash'
+import BrandLogo from '@/components/site/BrandLogo.astro'
+import BookTable from '@/components/site/BookTable.astro'
+import { DEMO_LOGO } from '@/lib/demo-logo'
+import { liveLinks } from '@/lib/link-gate'
+import { menuUrls, pruneMenu } from '@/lib/menu-gate'
+import { dataHref } from '@/lib/data-links'
+import { telHref } from '@/lib/tel'
+import { section } from '@/lib/content'
+
+interface Props {
+  chrome: Chrome
+  currentPath: string
+}
+const { chrome, currentPath } = Astro.props
+const { site, locale } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const settings = await getSiteSettings()
+const logos = brandLogos(settings, site.logo_dark, site.brand_name)
+const active = (item: ChromeMenuItem): boolean => {
+  const u = item.url
+  if (u === '/') return currentPath === '/'
+  return u !== '' && (currentPath === u || currentPath.startsWith(`${u}/`))
+}
+// the menu without the pages the customer unticked, and the pages under them
+const live = await liveLinks(Astro.request, locale, [...menuUrls(chrome.primary), site.book_link])
+const primary = pruneMenu(chrome.primary, live)
+const book = await section('book_table', 'book-table', locale)
+// the source's default layout (blog, posts, contact) shows the phone in its top bar below 576 px; its home layout (every other page) shows the address
+const inner = /^\/(blog|contact|search)(\/|$)/.test(currentPath)
+// a post (the source's blog-detail layout) shows both rows, the address and the phone under it
+const post = /^\/blog\/[^/]+/.test(Astro.url.pathname)
+const phone = telHref(site.topbar_phone)
+---
+
+<div class:list={['fr-topbar', post && 'is-post']}>
+	<p class:list={['fr-topbar-l', inner && !post && 'not-home']} {...$c('topbar_address')}>
+		<span class="fr-topbar-icon" aria-hidden="true"><svg viewBox="0 0 384 512"><path d="M172 501C27 291 0 269 0 192 0 86 86 0 192 0s192 86 192 192c0 77-27 99-172 309a24 24 0 0 1-40 0zm20-229a80 80 0 1 0 0-160 80 80 0 0 0 0 160z" /></svg></span>{site.topbar_address}
+	</p>
+	<p class:list={['fr-topbar-r', !inner && !post && 'is-home']}>
+		<span class="fr-topbar-icon" aria-hidden="true"><svg viewBox="0 0 512 512"><path d="M493 25 387 1a24 24 0 0 0-27 14l-49 114a24 24 0 0 0 7 28l60 49a371 371 0 0 1-178 178l-49-60a24 24 0 0 0-28-7L1 360a24 24 0 0 0-1 27l24 106a24 24 0 0 0 23 19c256 0 465-207 465-465a24 24 0 0 0-19-22z" /></svg></span><span {...$c('topbar_phone_label')}>{site.topbar_phone_label}</span>{' '}{phone ? <a href={phone} {...$c('topbar_phone')}>{site.topbar_phone}</a> : <span {...$c('topbar_phone')}>{site.topbar_phone}</span>}
+	</p>
+</div>
+<header class="fr-header">
+	<div class="fr-header-wrap">
+		<a class="fr-brand" href={href(locale, '/')} aria-label={site.brand_name}>
+			<BrandLogo spots={logoSpots(logos, 'dark')} alt={logos.alt || site.brand_name} imgClass="fr-logo">
+				<img class="fr-logo" src={DEMO_LOGO} alt={site.brand_name} width="117" height="60" />
+				<span class="fr-logo-ink" role="img" aria-label={site.brand_name}></span>
+			</BrandLogo>
+		</a>
+		<nav class="fr-nav" aria-label={site.menu_label}>
+			<ul>
+				{primary.map((item) => (
+					<li class:list={[active(item) && 'is-active']}>
+						<a href={dataHref(item.url, (p) => href(locale, p))} aria-current={active(item) ? 'page' : undefined}>{item.label}</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+		<div class="fr-header-r">
+			{live(site.book_link) && (
+				<button type="button" class="fr-btn is-solid fr-book-btn" data-book-open aria-haspopup="dialog">
+					<span {...$c('book_label')}>{site.book_label}</span>
+					<svg viewBox="0 0 448 512" aria-hidden="true"><path d="M152 64V24a24 24 0 0 1 48 0v40h96V24a24 24 0 0 1 48 0v40h40c26 0 48 22 48 48v352c0 26-22 48-48 48H48c-26 0-48-22-48-48V112c0-26 22-48 48-48h56V24a24 24 0 0 1 48 0zM48 192v272h352V192zm316 59-132 132a24 24 0 0 1-34 0l-60-60a24 24 0 1 1 34-34l43 43 115-115a24 24 0 0 1 34 34z" /></svg>
+				</button>
+			)}
+			<button type="button" class="fr-toggle" data-offcanvas-open aria-expanded="false" aria-controls="offcanvas" aria-label={site.menu_label}>
+				<svg viewBox="0 0 448 512" aria-hidden="true"><path d="M0 96h448v48H0zm0 136h448v48H0zm0 136h448v48H0z" /></svg>
+			</button>
+		</div>
+	</div>
+</header>
+<div class="fr-offcanvas" id="offcanvas" data-offcanvas>
+	<div class="fr-offcanvas-backdrop" data-offcanvas-close></div>
+	<div class="fr-offcanvas-panel" role="dialog" aria-modal="true" aria-label={site.menu_label}>
+		<div class="fr-offcanvas-head">
+			<a href={href(locale, '/')} aria-label={site.brand_name}><img src={DEMO_LOGO} alt="" width="87" height="45" /></a>
+			<button type="button" class="fr-offcanvas-close" data-offcanvas-close aria-label={site.close_label ?? '×'}>×</button>
+		</div>
+		<ul>
+			{primary.map((item) => (
+				<li class:list={[active(item) && 'is-active']}><a href={dataHref(item.url, (p) => href(locale, p))}>{item.label}</a></li>
+			))}
+		</ul>
+	</div>
+</div>
+{book && live(site.book_link) && <BookTable entry={book} chrome={chrome} />}
+<script is:inline>
+	(function () {
+		const panel = document.getElementById('offcanvas');
+		const open = document.querySelector('[data-offcanvas-open]');
+		if (panel && open) {
+			const set = function (on) {
+				panel.classList.toggle('is-open', on);
+				open.setAttribute('aria-expanded', on ? 'true' : 'false');
+				if (!on) open.focus();
+			};
+			open.addEventListener('click', function () { set(true); });
+			panel.querySelectorAll('[data-offcanvas-close]').forEach(function (b) { b.addEventListener('click', function () { set(false); }); });
+			document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('is-open')) set(false); });
+		}
+		const dlg = document.getElementById('book-table');
+		const btn = document.querySelector('[data-book-open]');
+		if (dlg && btn && dlg.showModal) {
+			btn.addEventListener('click', function () { dlg.showModal(); });
+			dlg.querySelectorAll('[data-book-close]').forEach(function (b) { b.addEventListener('click', function () { dlg.close(); }); });
+			dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+		}
+	})();
+</script>

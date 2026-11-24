@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "key": "logo",
+      "file": "logo.png",
+      "alt": "Atelier Nord",
+      "mime": "image/png",
+      "targets": [
+        { "collection": "seiten", "slug": "start", "locale": "de", "path": "bild" },
+        { "collection": "seiten", "slug": "start", "locale": "fr", "path": "bild" }
+      ]
+    }
+  ]
+}
