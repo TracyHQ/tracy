@@ -29,6 +29,7 @@ const PACKAGE = Object.freeze({
   'tracy-restaurant': 'tracy-emdash-theme-restaurant',
   'tracy-diner': 'tracy-emdash-theme-diner',
   'tracy-fresco': 'tracy-emdash-theme-fresco',
+  'tracy-impact': 'tracy-emdash-theme-impact',
   'tracy-essence': 'tracy-emdash-theme-essence'
 })
 

@@ -37,6 +37,7 @@ test('the image carries every seed file the tool reads, for every template that 
     ['tracy-restaurant', 'tracy-emdash-theme-restaurant'],
     ['tracy-diner', 'tracy-emdash-theme-diner'],
     ['tracy-fresco', 'tracy-emdash-theme-fresco'],
+    ['tracy-impact', 'tracy-emdash-theme-impact'],
     ['tracy-essence', 'tracy-emdash-theme-essence']
   ]) {
     const copied = new Set(

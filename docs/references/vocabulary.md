@@ -424,6 +424,7 @@ from the block below, and the block must not keep dead names. `scripts/check-voc
 @tracy/emdash-theme-diner
 @tracy/emdash-theme-essence
 @tracy/emdash-theme-fresco
+@tracy/emdash-theme-impact
 @tracy/emdash-theme-restaurant
 @tracy/emdash-theme-saas
 @tracy/harness-web

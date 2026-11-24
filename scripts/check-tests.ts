@@ -161,6 +161,7 @@ const PARTS = [
   'standalone:restaurant',
   'standalone:diner',
   'standalone:fresco',
+  'standalone:impact',
   'vendor',
   'rest',
   'owner'
@@ -1690,6 +1691,7 @@ function main(): void {
       else if (spec.part === 'standalone:restaurant') runStandalone(STANDALONE[4])
       else if (spec.part === 'standalone:diner') runStandalone(STANDALONE[5])
       else if (spec.part === 'standalone:fresco') runStandalone(STANDALONE[6])
+      else if (spec.part === 'standalone:impact') runStandalone(STANDALONE[8])
       else if (spec.part === 'vendor') runVendor()
       else if (spec.part === 'owner') runOwner(spec.owner ?? '', spec.shard)
       else {
