@@ -31,8 +31,8 @@
 	.im-nav li:last-child { border-right: 1px solid var(--color-line-soft); }
 	.im-nav a { display: inline-flex; align-items: center; padding: 22px 32px; font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--color-heading); }
 	.im-nav a:hover, .im-nav li.is-active > a { color: var(--color-accent-text-hover); }
-	.im-nav li.is-active > a { font-weight: 700; }
-	.im-donate { align-self: stretch; border-radius: 0; padding: 22px 32px; min-width: 160px; }
+	
+	.im-btn.im-donate { align-self: stretch; border-radius: 0; border-width: 0; padding: 22px 32px; min-width: 160px; }
 
 	/* off-canvas menu (below 992 px) */
 	.im-offcanvas { position: fixed; inset: 0; z-index: 60; visibility: hidden; }
@@ -67,6 +67,7 @@
 	.im-footnav-about p { margin: 24px 0 0; max-width: 360px; color: color-mix(in srgb, var(--color-on-ink) 80%, transparent); }
 	.im-footnav-about .im-logo { height: 61px; width: auto; }
 	.im-footnav h3 { font-size: 24px; line-height: 1.2; margin: 0 0 31px; color: var(--color-on-ink); }
+	@media (max-width: 991.98px) { .im-footnav h3 { font-size: 20px; } }
 	.im-footnav ul { list-style: none; margin: 0; padding: 0; }
 	.im-footnav li { margin: 0; padding: 6px 0; font-size: 15px; line-height: 25px; color: color-mix(in srgb, var(--color-on-ink) 80%, transparent); }
 	.im-footer-bottom { border-top: 1px solid color-mix(in srgb, var(--color-on-ink) 12%, transparent); font-size: 14px; line-height: 22px; }

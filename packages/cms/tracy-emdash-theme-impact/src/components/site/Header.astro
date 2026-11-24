@@ -85,7 +85,7 @@ const itemHref = (link: unknown) => {
 	<div class="im-offcanvas-backdrop" data-offcanvas-close></div>
 	<div class="im-offcanvas-panel" role="dialog" aria-modal="true" aria-label={site.menu_label}>
 		<div class="im-offcanvas-head">
-			<span>{site.menu_label}</span>
+			<a href={href(locale, '/')} aria-label={site.brand_name}><img src={DEMO_LOGO} alt="" width="87" height="25" /></a>
 			<button type="button" class="im-offcanvas-close" data-offcanvas-close aria-label={site.close_label}><span class="im-fa" data-icon="xmark" aria-hidden="true"></span></button>
 		</div>
 		<ul>

@@ -3,7 +3,7 @@
 	/* style-2 */
 	.im-mission { list-style: none; margin: 0; padding: 0 0 32px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
 	@media (min-width: 768px) { .im-mission { grid-template-columns: repeat(2, minmax(0, 1fr)); } .im-mission-item.is-wide { grid-column: 1 / -1; } }
-	.im-mission-box { --box: var(--color-info); position: relative; height: 100%; overflow: hidden; border-radius: var(--ds-card-radius, 8px); background: var(--box); color: var(--color-line-soft); }
+	.im-mission-box { --box: var(--color-info); position: relative; height: 100%; overflow: hidden; border-radius: var(--ds-card-radius, 8px); background: var(--box); color: var(--color-on-ink); }
 	.im-mission-box.is-primary { --box: var(--color-ink); }
 	.im-mission-box.is-success { --box: var(--color-accent); }
 	.im-mission-box.is-warning { --box: var(--color-warn); }

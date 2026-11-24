@@ -1723,40 +1723,40 @@
           },
           "768-light": {
             "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
-            "font-size": "24px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "28.8px",
-            "letter-spacing": "-0.24px",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
             "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
-            "font-size": "24px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "28.8px",
-            "letter-spacing": "-0.24px",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-light": {
             "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
-            "font-size": "24px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "28.8px",
-            "letter-spacing": "-0.24px",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
             "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
-            "font-size": "24px",
+            "font-size": "20px",
             "font-weight": "500",
-            "line-height": "28.8px",
-            "letter-spacing": "-0.24px",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px",
             "text-transform": "none",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgba(0, 0, 0, 0)"
@@ -1976,7 +1976,7 @@
             "line-height": "28.8px",
             "letter-spacing": "-0.24px",
             "text-transform": "none",
-            "color": "rgb(12, 183, 109)",
+            "color": "rgb(10, 125, 75)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
@@ -1996,7 +1996,7 @@
             "line-height": "28.8px",
             "letter-spacing": "-0.24px",
             "text-transform": "none",
-            "color": "rgb(12, 183, 109)",
+            "color": "rgb(10, 125, 75)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
@@ -2016,7 +2016,7 @@
             "line-height": "24px",
             "letter-spacing": "-0.2px",
             "text-transform": "none",
-            "color": "rgb(12, 183, 109)",
+            "color": "rgb(10, 125, 75)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
@@ -2043,7 +2043,7 @@
             "line-height": "19.2px",
             "letter-spacing": "normal",
             "text-transform": "uppercase",
-            "color": "rgb(12, 183, 109)",
+            "color": "rgb(10, 125, 75)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
@@ -2063,7 +2063,7 @@
             "line-height": "19.2px",
             "letter-spacing": "normal",
             "text-transform": "uppercase",
-            "color": "rgb(12, 183, 109)",
+            "color": "rgb(10, 125, 75)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
@@ -2083,7 +2083,7 @@
             "line-height": "19.2px",
             "letter-spacing": "normal",
             "text-transform": "uppercase",
-            "color": "rgb(12, 183, 109)",
+            "color": "rgb(10, 125, 75)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
@@ -2311,7 +2311,7 @@
             "line-height": "48px",
             "letter-spacing": "-0.8px",
             "text-transform": "none",
-            "color": "rgb(244, 138, 41)",
+            "color": "rgb(181, 87, 10)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
@@ -2331,7 +2331,7 @@
             "line-height": "33.6px",
             "letter-spacing": "-0.56px",
             "text-transform": "none",
-            "color": "rgb(244, 138, 41)",
+            "color": "rgb(181, 87, 10)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
@@ -2351,7 +2351,7 @@
             "line-height": "33.6px",
             "letter-spacing": "-0.56px",
             "text-transform": "none",
-            "color": "rgb(244, 138, 41)",
+            "color": "rgb(181, 87, 10)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
@@ -2579,7 +2579,7 @@
             "line-height": "48px",
             "letter-spacing": "-0.4px",
             "text-transform": "none",
-            "color": "rgb(12, 183, 109)",
+            "color": "rgb(10, 125, 75)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
@@ -2599,7 +2599,7 @@
             "line-height": "33.6px",
             "letter-spacing": "-0.28px",
             "text-transform": "none",
-            "color": "rgb(12, 183, 109)",
+            "color": "rgb(10, 125, 75)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
@@ -2619,7 +2619,7 @@
             "line-height": "33.6px",
             "letter-spacing": "-0.28px",
             "text-transform": "none",
-            "color": "rgb(12, 183, 109)",
+            "color": "rgb(10, 125, 75)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
@@ -2646,7 +2646,7 @@
             "line-height": "48px",
             "letter-spacing": "-0.4px",
             "text-transform": "none",
-            "color": "rgb(244, 138, 41)",
+            "color": "rgb(181, 87, 10)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
@@ -2666,7 +2666,7 @@
             "line-height": "33.6px",
             "letter-spacing": "-0.28px",
             "text-transform": "none",
-            "color": "rgb(244, 138, 41)",
+            "color": "rgb(181, 87, 10)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
@@ -2686,7 +2686,7 @@
             "line-height": "33.6px",
             "letter-spacing": "-0.28px",
             "text-transform": "none",
-            "color": "rgb(244, 138, 41)",
+            "color": "rgb(181, 87, 10)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {
@@ -3045,43 +3045,43 @@
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
-            "padding-top": "16px",
-            "padding-left": "24px"
+            "padding-top": "17px",
+            "padding-left": "25px"
           },
           "1440-dark": {
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
-            "padding-top": "16px",
-            "padding-left": "24px"
+            "padding-top": "17px",
+            "padding-left": "25px"
           },
           "768-light": {
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
-            "padding-top": "16px",
-            "padding-left": "24px"
+            "padding-top": "17px",
+            "padding-left": "25px"
           },
           "768-dark": {
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
-            "padding-top": "16px",
-            "padding-left": "24px"
+            "padding-top": "17px",
+            "padding-left": "25px"
           },
           "390-light": {
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
-            "padding-top": "16px",
-            "padding-left": "24px"
+            "padding-top": "17px",
+            "padding-left": "25px"
           },
           "390-dark": {
             "font-size": "16px",
             "font-weight": "500",
             "border-radius": "8px",
-            "padding-top": "16px",
-            "padding-left": "24px"
+            "padding-top": "17px",
+            "padding-left": "25px"
           }
         }
       },
@@ -3354,6 +3354,470 @@
         }
       },
       {
+        "id": "stats-head-title",
+        "selector": ".im-stats-head h2",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "500",
+            "line-height": "48px",
+            "letter-spacing": "-0.8px",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "500",
+            "line-height": "48px",
+            "letter-spacing": "-0.8px",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.56px",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.56px",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.56px",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.56px",
+            "text-transform": "none",
+            "color": "rgb(255, 255, 255)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "follow-title",
+        "selector": ".im-connected-follow h3",
+        "source": "index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px",
+            "text-transform": "none",
+            "color": "rgb(29, 54, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "20px",
+            "font-weight": "500",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px",
+            "text-transform": "none",
+            "color": "rgb(29, 54, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "20px",
+            "font-weight": "500",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "20px",
+            "font-weight": "500",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px",
+            "text-transform": "none",
+            "color": "rgb(29, 54, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "20px",
+            "font-weight": "500",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "mission-title",
+        "selector": ".im-mission h3",
+        "source": "about/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.28px"
+          },
+          "1440-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.28px"
+          },
+          "768-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "768-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "390-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "390-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          }
+        }
+      },
+      {
+        "id": "give-title",
+        "selector": ".im-give h3",
+        "source": "about/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.28px"
+          },
+          "1440-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.28px"
+          },
+          "768-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "768-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "390-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "390-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          }
+        }
+      },
+      {
+        "id": "prose-h3",
+        "selector": ".im-prose h3",
+        "source": "category-blog/charity-branding-is-yourbrand-digital-ready/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "1440-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "768-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "20px",
+            "font-weight": "500",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px"
+          },
+          "768-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "20px",
+            "font-weight": "500",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px"
+          },
+          "390-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "20px",
+            "font-weight": "500",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px"
+          },
+          "390-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "20px",
+            "font-weight": "500",
+            "line-height": "24px",
+            "letter-spacing": "-0.2px"
+          }
+        }
+      },
+      {
+        "id": "cta-card-title",
+        "selector": ".im-cta-card-title",
+        "source": "events/feed-the-world/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.28px"
+          },
+          "1440-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.28px"
+          },
+          "768-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "768-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "390-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          },
+          "390-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px"
+          }
+        }
+      },
+      {
+        "id": "accordion-title",
+        "selector": ".im-accordion-title",
+        "source": "help-faqs/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "500",
+            "line-height": "48px",
+            "letter-spacing": "-0.8px",
+            "text-transform": "none",
+            "color": "rgb(29, 54, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "40px",
+            "font-weight": "500",
+            "line-height": "48px",
+            "letter-spacing": "-0.8px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.56px",
+            "text-transform": "none",
+            "color": "rgb(29, 54, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.56px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.56px",
+            "text-transform": "none",
+            "color": "rgb(29, 54, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.56px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
+        "id": "contact-head",
+        "selector": ".im-contact-head",
+        "source": "contact/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.28px",
+            "text-transform": "none",
+            "color": "rgb(29, 54, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "1440-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "28px",
+            "font-weight": "500",
+            "line-height": "33.6px",
+            "letter-spacing": "-0.28px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px",
+            "text-transform": "none",
+            "color": "rgb(29, 54, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "768-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-light": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px",
+            "text-transform": "none",
+            "color": "rgb(29, 54, 119)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          },
+          "390-dark": {
+            "font-family": "\"Readex Pro-6331d5b12fba9df4\", \"Readex Pro-6331d5b12fba9df4 fallback: Arial\", sans-serif, \"Readex Pro\", Helvetica, Arial, sans-serif",
+            "font-size": "24px",
+            "font-weight": "500",
+            "line-height": "28.8px",
+            "letter-spacing": "-0.24px",
+            "text-transform": "none",
+            "color": "rgb(238, 241, 246)",
+            "background-color": "rgba(0, 0, 0, 0)"
+          }
+        }
+      },
+      {
         "id": "pagination",
         "selector": ".im-pagination a",
         "source": "blog/index.html",
@@ -3536,7 +4000,20 @@
       "scope": "body",
       "placeholder": null
     },
-    "exceptions": []
+    "exceptions": [
+      {
+        "kind": "scan:contrast",
+        "match": "^span\\.im-give-count$",
+        "reason": "The 01 and 02 numerals of the give cards are decorative, aria-hidden and drawn light grey as in the source (acm features style-5)",
+        "decision": "DECISIONS D23"
+      },
+      {
+        "kind": "scan:dark-on-dark",
+        "match": "^span\\.im-give-count$",
+        "reason": "The 01 and 02 numerals of the give cards are decorative, aria-hidden and drawn light grey as in the source (acm features style-5)",
+        "decision": "DECISIONS D23"
+      }
+    ]
   },
   "interactions": {},
   "fonts": {
@@ -3620,7 +4097,9 @@
         "post-title",
         "connected-title",
         "contact-heading",
-        "btn"
+        "btn",
+        "stats-head-title",
+        "follow-title"
       ],
       "parity": [
         "nav",
@@ -3686,13 +4165,17 @@
         "stats-figure-primary",
         "contact-heading",
         "btn",
-        "masthead-title"
+        "masthead-title",
+        "stats-head-title",
+        "mission-title",
+        "give-title"
       ],
       "parity": [
         "nav",
         "footerTitle",
         "ground"
       ],
+      "images": "placeholders",
       "content": [
         {
           "id": "masthead",
@@ -3803,7 +4286,8 @@
         "copyright",
         "contact-heading",
         "detail-title",
-        "widget-title"
+        "widget-title",
+        "prose-h3"
       ],
       "parity": [
         "nav",
@@ -3922,7 +4406,9 @@
         "copyright",
         "contact-heading",
         "btn",
-        "detail-title"
+        "detail-title",
+        "prose-h3",
+        "cta-card-title"
       ],
       "parity": [
         "nav",
@@ -4042,7 +4528,8 @@
         "post-title",
         "contact-heading",
         "article-title",
-        "widget-title"
+        "widget-title",
+        "prose-h3"
       ],
       "parity": [
         "nav",
@@ -4099,7 +4586,8 @@
         "footer-text",
         "copyright",
         "contact-heading",
-        "masthead-title"
+        "masthead-title",
+        "accordion-title"
       ],
       "parity": [
         "nav",
@@ -4156,7 +4644,8 @@
         "footer-text",
         "copyright",
         "contact-heading",
-        "masthead-title"
+        "masthead-title",
+        "contact-head"
       ],
       "parity": [
         "nav",
@@ -4558,7 +5047,36 @@
       }
     ],
     "fastGate": {
-      "add": []
+      "add": [
+        {
+          "page": "en-about",
+          "reason": "About draws the mission boxes, the give cards and the fact tiles (own components)"
+        },
+        {
+          "page": "en-contact",
+          "reason": "Contact draws the form, the map link and the sidebar cards (own components)"
+        },
+        {
+          "page": "en-donations",
+          "reason": "The causes list draws the donation card grid and its pagination (own components)"
+        },
+        {
+          "page": "en-event",
+          "reason": "The event page draws the info panel and the join card (own components)"
+        },
+        {
+          "page": "en-events",
+          "reason": "The events list draws the event cards in a grid (own components)"
+        },
+        {
+          "page": "en-faq",
+          "reason": "FAQ draws the accordion (own component)"
+        },
+        {
+          "page": "en-post",
+          "reason": "The post draws the share row, the neighbours and the related posts (own components)"
+        }
+      ]
     },
     "renderInputs": [
       "src/styles/**",

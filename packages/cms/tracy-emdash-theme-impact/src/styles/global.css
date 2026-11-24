@@ -5,7 +5,7 @@
  * Class prefix `im-` = JA Impact component. One file per block under ./blocks/, one per page family under ./pages/.
  * Design-system roles: the stylesheet reads each role as `var(--ds-…, <the template's own value>)`.
  */
-/* ds-not-used: --ds-c-accent-active, --ds-c-success-bg, --ds-c-success-text, --ds-c-warn-bg, --ds-c-warn-text, --ds-c-danger-bg, --ds-c-danger-text, --ds-c-info-bg, --ds-c-info-text — the site draws no alert or status box: a form's status line is plain text and a button's pressed state is its hover (opacity .85) */
+/* ds-not-used: --ds-c-accent-active, --ds-c-success-bg, --ds-c-success-text, --ds-c-warn-bg, --ds-c-danger-bg, --ds-c-danger-text, --ds-c-info-bg, --ds-c-info-text — the site draws no alert or status box: a form's status line is plain text and a button's pressed state is its hover (opacity .85) */
 /* ds-not-used: --ds-c-disabled-bg, --ds-c-disabled-fg — a disabled button or field is drawn at 60% opacity, it has no ground or text colour of its own */
 @import "tailwindcss";
 @import "./tokens.css";
@@ -75,18 +75,18 @@
 
 	/* buttons: 8 px radius, 500 weight; the theme buttons fill with their colour, hover keeps it at 85 percent (`theme.tpl.css:171-180`) */
 	.im-btn {
-		display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 24px; font-family: var(--font-body); font-size: 16px; line-height: 1.5;
-		font-weight: var(--ds-weight-button, 500); text-align: center; cursor: pointer; border: 1px solid var(--color-accent); border-radius: var(--ds-btn-radius, 8px);
+		display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 17px 25px; font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+		font-weight: var(--ds-weight-button, 500); text-align: center; cursor: pointer; border: 0; border-radius: var(--ds-btn-radius, 8px);
 		background: var(--color-accent); color: var(--color-accent-on); transition: opacity .2s, background-color .2s, color .2s;
 	}
 	.im-btn:hover, .im-btn:focus-visible { opacity: .85; color: var(--color-accent-on); }
 	.im-btn .im-fa { font-size: 14px; }
-	.im-btn.is-primary { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-ink); }
+	.im-btn.is-primary { background: var(--color-ink); color: var(--color-on-ink); }
 	.im-btn.is-primary:hover { color: var(--color-on-ink); }
-	.im-btn.is-warning { background: var(--color-warn); border-color: var(--color-warn); color: var(--ds-c-accent-on-ink, #fff); }
-	.im-btn.is-white { background: var(--color-bg); border-color: var(--color-bg); color: var(--color-heading); }
-	.im-btn.is-white:hover { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-ink); opacity: 1; }
-	.im-btn.is-dark { background: var(--color-fg-2); border-color: var(--color-fg-2); color: var(--color-bg); }
+	.im-btn.is-warning { background: var(--color-warn); color: var(--color-accent-on); }
+	.im-btn.is-white { background: var(--color-bg); color: var(--color-heading); }
+	.im-btn.is-white:hover { background: var(--color-ink); color: var(--color-on-ink); opacity: 1; }
+	.im-btn.is-dark { background: var(--color-fg-2); color: var(--color-bg); }
 
 	/* section chrome (t4 `top-*` / `bottom-*` spacing and the centred title block) */
 	.im-section { position: relative; }
@@ -94,6 +94,7 @@
 	.im-section.top-medium { padding-top: var(--gutter-medium); } .im-section.bottom-medium { padding-bottom: var(--gutter-medium); }
 	.im-section.is-light { background: var(--color-surface-warm); }
 	.im-section.is-blue { background: var(--color-ink); color: var(--color-on-ink); }
+	.im-section.is-blue .im-eyebrow, .im-fund .im-eyebrow { color: var(--ds-c-accent-on-ink, #2fd98a); }
 	.im-section-head { text-align: center; max-width: 660px; margin: 0 auto 64px; }
 	.im-section-head.is-start { text-align: start; }
 	.im-eyebrow { display: block; font-size: 16px; line-height: 1.2; font-weight: 400; text-transform: uppercase; letter-spacing: 0; color: var(--color-accent-text); margin: 0 0 16px; }

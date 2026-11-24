@@ -1,5 +1,5 @@
 /*
- * JA Impact design tokens. Values are the source template's own (`etc/theme/default.json`, `css/darkmode.css`, measured on
+ * JA Impact design tokens. Text on the green and orange fills, and green or orange text on a light ground, take the darker values (DECISIONS D22: the source's white on #0cb76d is 2.6:1 and its orange on white 2.4:1; here every text reaches WCAG AA). Values are the source template's own (`etc/theme/default.json`, `css/darkmode.css`, measured on
  * the rendered source home: inventory/visual-contract.md). Every colour reads its Design-system role first
  * (`--ds-c-<role>`, the names of design-system-roles.json) and keeps the template's own value as the fallback, so with no
  * system worn the site looks exactly as designed. The source has a dark theme (`html[data-theme="dark"]`, DECISIONS D12):
@@ -21,10 +21,11 @@
 	--color-line-soft: var(--ds-c-border-soft, #e9ecef);
 
 	--color-accent: var(--ds-c-accent, #0cb76d);
-	--color-accent-on: var(--ds-c-accent-on, #ffffff);
+	--color-accent-on: var(--ds-c-accent-on, #10285f);
 	--color-accent-hover: var(--ds-c-accent-hover, #0cb76d);
-	--color-accent-text: var(--ds-c-accent-text, #0cb76d);
-	--color-accent-text-hover: var(--ds-c-accent-text-hover, #0cb76d);
+	--color-accent-text: var(--ds-c-accent-text, #0a7d4b);
+	--color-accent-text-hover: var(--ds-c-accent-text-hover, #0a7d4b);
+	--color-warn-text: var(--ds-c-warn-text, #b5570a);
 	--color-ink: var(--ds-c-ink, #1d3677);
 	--color-on-ink: var(--ds-c-on-ink, #ffffff);
 	--color-info: var(--ds-c-info, #2970db);
@@ -58,6 +59,8 @@ html[data-theme="dark"] {
 	--color-line: var(--ds-c-border, #33415e);
 	--color-line-soft: var(--ds-c-border-soft, #28354f);
 	--color-accent-text: var(--ds-c-accent-text, #2fd98a);
+	--color-accent-text-hover: var(--ds-c-accent-text-hover, #2fd98a);
+	--color-warn-text: var(--ds-c-warn-text, #f48a29);
 	--color-ink: var(--ds-c-ink, #1d3677);
 	color-scheme: dark;
 }

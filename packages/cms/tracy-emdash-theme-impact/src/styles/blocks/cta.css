@@ -4,8 +4,8 @@
 	.im-cta-body { flex: 1 1 60%; padding: 64px 0 64px 64px; align-self: center; }
 	.im-cta-title { font-size: var(--h4-size); margin: 0 0 16px; }
 	.im-cta-desc { font-size: 18px; margin: 0 0 16px; }
-	.im-cta-highlight { display: block; font-family: var(--font-display); font-size: var(--h2-size); line-height: 1.2; font-weight: 500; letter-spacing: -0.02em; color: var(--color-warn); margin: 0 0 32px; }
-	a.im-cta-highlight:hover { color: var(--color-warn); }
+	.im-cta-highlight { display: block; font-family: var(--font-display); font-size: var(--h2-size); line-height: 1.2; font-weight: 500; letter-spacing: -0.02em; color: var(--color-warn-text); margin: 0 0 32px; }
+	a.im-cta-highlight:hover { color: var(--color-warn-text); }
 	.im-cta-media { flex: 0 0 40%; position: relative; }
 	.im-cta-media img { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 260px; max-width: none; height: auto; }
 	.im-cta.is-media-left { flex-direction: row-reverse; }

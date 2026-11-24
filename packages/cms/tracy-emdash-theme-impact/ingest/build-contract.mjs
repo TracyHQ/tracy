@@ -59,11 +59,20 @@ const BASE = ['body-type', 'nav-link', 'nav-font', 'p-font', 'footer-title', 'fo
 const POST = 'category-blog/charity-branding-is-yourbrand-digital-ready/index.html'
 const DON = 'donations/community-center/index.html'
 const EVT = 'events/feed-the-world/index.html'
+const TYPE = ['font-family', 'font-size', 'font-weight', 'line-height', 'letter-spacing']
 RULES.push(
   ['masthead-title', '.im-masthead-title', 'about/index.html'],
   ['detail-title', '.im-detail-title', DON],
   ['article-title', '.im-article-title', POST],
   ['widget-title', '.im-widget h3', POST],
+  ['stats-head-title', '.im-stats-head h2', HOME],
+  ['follow-title', '.im-connected-follow h3', HOME],
+  ['mission-title', '.im-mission h3', 'about/index.html', false, TYPE],
+  ['give-title', '.im-give h3', 'about/index.html', false, TYPE],
+  ['prose-h3', '.im-prose h3', POST, false, TYPE],
+  ['cta-card-title', '.im-cta-card-title', EVT, false, TYPE],
+  ['accordion-title', '.im-accordion-title', 'help-faqs/index.html'],
+  ['contact-head', '.im-contact-head', 'contact/index.html'],
   ['pagination', '.im-pagination a', 'blog/index.html', true],
   ['nf-title', '.im-error h1', 'nope-404/index.html']
 )
@@ -188,7 +197,7 @@ contract.pages = PAGES.map((p) => ({
   render: { view: `src/views/${p.view}.astro`, collections: p.cols },
   rules: p.rules,
   parity: p.id === 'en-not-found' ? ['ground'] : ['nav', 'footerTitle', 'ground'],
-  ...(p.id === 'en-home' ? { images: 'placeholders' } : {}),
+  ...(['en-home', 'en-about'].includes(p.id) ? { images: 'placeholders' } : {}),
   content: p.content.map((c) => F(c[0], c[1], p.src, c[2], c[3], c[4]))
 }))
 const byView = new Map()
@@ -218,7 +227,20 @@ contract.design.coverage = [
   { selector: '.im-nav a', properties: ['font-size'] }
 ]
 contract.design.images = { scope: 'body', placeholder: null }
-contract.design.exceptions = []
+contract.design.exceptions = [
+  {
+    kind: 'scan:contrast',
+    match: '^span\\.im-give-count$',
+    reason: 'The 01 and 02 numerals of the give cards are decorative, aria-hidden and drawn light grey as in the source (acm features style-5)',
+    decision: 'DECISIONS D23'
+  },
+  {
+    kind: 'scan:dark-on-dark',
+    match: '^span\\.im-give-count$',
+    reason: 'The 01 and 02 numerals of the give cards are decorative, aria-hidden and drawn light grey as in the source (acm features style-5)',
+    decision: 'DECISIONS D23'
+  }
+]
 // differences the owner already decided (DECISIONS): read as accepted by the lens readers and closers, listed in ingest/accepted-differences.json; they match
 // review notes (kind `lens-note`), never a machine finding
 for (const x of JSON.parse(readFileSync(new URL('./accepted-differences.json', import.meta.url), 'utf8')))
@@ -271,7 +293,13 @@ contract.visual = {
   ],
   fastGate: {
     add: [
-      // filled when the page families are built
+      { page: 'en-about', reason: 'About draws the mission boxes, the give cards and the fact tiles (own components)' },
+      { page: 'en-contact', reason: 'Contact draws the form, the map link and the sidebar cards (own components)' },
+      { page: 'en-donations', reason: 'The causes list draws the donation card grid and its pagination (own components)' },
+      { page: 'en-event', reason: 'The event page draws the info panel and the join card (own components)' },
+      { page: 'en-events', reason: 'The events list draws the event cards in a grid (own components)' },
+      { page: 'en-faq', reason: 'FAQ draws the accordion (own component)' },
+      { page: 'en-post', reason: 'The post draws the share row, the neighbours and the related posts (own components)' }
     ]
   },
   renderInputs: [

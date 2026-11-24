@@ -37,8 +37,8 @@
 	.im-contact .ec-form .ec-form-error:empty { display: none; }
 	.im-contact .ec-form .ec-form-nav { display: flex; gap: 12px; margin-top: 64px; }
 	.im-contact .ec-form .ec-form-submit, .im-contact .ec-form .ec-form-next, .im-contact .ec-form .ec-form-prev {
-		display: inline-flex; align-items: center; gap: 8px; padding: 17px 32px; border: 1px solid var(--color-accent); border-radius: var(--ds-btn-radius, 8px);
-		background: var(--color-accent); color: var(--color-accent-on); font: inherit; font-weight: var(--ds-weight-button, 500); line-height: 20px; cursor: pointer; transition: opacity .2s;
+		display: inline-flex; align-items: center; gap: 8px; padding: 17px 32px; border: 0; border-radius: var(--ds-btn-radius, 8px);
+		background: var(--color-accent); color: var(--color-accent-on) !important; font: inherit; font-weight: var(--ds-weight-button, 500); line-height: 20px; cursor: pointer; transition: opacity .2s;
 	}
 	.im-contact .ec-form .ec-form-submit::after { content: "\f178"; font-family: "FA Solid"; font-weight: 900; font-size: 14px; }
 	.im-contact .ec-form .ec-form-submit:hover:not(:disabled), .im-contact .ec-form .ec-form-submit:focus-visible { opacity: .85; }
@@ -56,7 +56,7 @@
 	.im-contact-rows > div { padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid var(--color-line-soft); }
 	.im-contact-rows > div:last-child { margin-bottom: 0; }
 	.im-contact-rows.is-hours > div:last-child { padding-bottom: 0; border-bottom: 0; }
-	.im-contact-rows dt { margin: 0 0 4px; font-size: 16px; line-height: 1.6; font-weight: 400; text-transform: uppercase; color: var(--color-muted); }
+	.im-contact-rows dt { margin: 0 0 4px; font-size: 16px; line-height: 1.6; font-weight: 400; text-transform: uppercase; color: var(--color-meta); }
 	.im-contact-rows dd { margin: 0; font-size: 18px; line-height: 1.5; font-weight: 500; color: var(--color-heading); }
 	.im-contact-rows dd a { color: inherit; }
 	.im-contact-rows.is-hours dt { margin: 0 0 8px; text-transform: none; font-size: 18px; font-weight: 500; color: var(--color-heading); }
