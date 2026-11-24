@@ -40,8 +40,8 @@
 	.im-give-item:hover { box-shadow: rgba(50, 50, 93, .15) 0 6px 12px -2px, rgba(0, 0, 0, .15) 0 3px 7px -3px; }
 	@media (min-width: 1200px) { .im-give-item { gap: 32px; } }
 	@media (min-width: 1400px) { .im-give-item { padding: 64px; } }
-	.im-give-count { display: none; flex: 0 0 auto; font-family: var(--font-display); font-size: 72px; line-height: 1.2; font-weight: 500; letter-spacing: -0.02em; color: var(--color-line); }
-	@media (min-width: 992px) { .im-give-count { display: block; } }
+	.im-give-item::before { content: attr(data-number); display: none; flex: 0 0 auto; font-family: var(--font-display); font-size: 72px; line-height: 1.2; font-weight: 500; letter-spacing: -0.02em; color: var(--color-line); }
+	@media (min-width: 992px) { .im-give-item[data-number]::before { display: block; } }
 	.im-give-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
 	.im-give-body h3 { margin: 0 0 16px; }
 	.im-give-body p { margin: 0 0 16px; }

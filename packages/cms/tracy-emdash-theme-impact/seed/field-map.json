@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T07:27:12.542Z",
+  "generatedAt": "2026-11-24T07:48:38.858Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -63,6 +63,13 @@
       "group": {
         "kind": "contact",
         "name": "contact"
+      }
+    },
+    "cta.home-helpline.cta_media": {
+      "role": "person.image",
+      "group": {
+        "kind": "person",
+        "name": "volunteer"
       }
     },
     "cta.home-helpline.cta_highlight": {

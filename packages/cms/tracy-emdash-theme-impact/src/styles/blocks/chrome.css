@@ -61,7 +61,7 @@
 	@media (max-width: 1199.98px) { .im-contact-value { font-size: 16px; line-height: 24px; } .im-contact-cols { gap: 24px 32px; } .im-footnav-about p { max-width: none; } .im-footer-bottom-in { flex-direction: column; text-align: center; } }
 	a.im-contact-value:hover { color: var(--color-accent-text-hover) !important; }
 	.im-footnav { padding-block: 80px; }
-	.im-footnav-in { display: grid; grid-template-columns: 1fr; gap: 32px; }
+	.im-footnav-in { display: grid; grid-template-columns: 1fr; gap: 32px 64px; }
 	@media (min-width: 768px) { .im-footnav-in { grid-template-columns: repeat(4, 1fr); } .im-footnav-about { grid-column: 1 / -1; } }
 	@media (min-width: 1200px) { .im-footnav-in { grid-template-columns: 2fr repeat(4, 1fr); } .im-footnav-about { grid-column: auto; } }
 	@media (max-width: 767.98px) { .im-footnav-in { grid-template-columns: 1fr 1fr; } .im-footnav-about { grid-column: 1 / -1; } }

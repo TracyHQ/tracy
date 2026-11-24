@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Impact",
-	"generatedAt": "2026-11-24T07:34:12.462Z",
+	"generatedAt": "2026-11-24T07:55:14.481Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,14 +75,14 @@
 		"docs/content-model.md": "sha256:f02342db67a0aba7f74154a220484a522f5c6ea0d278d9bf49f57e9e5b524023",
 		"docs/content-rules.md": "sha256:e9696061af5fef30089d714cc5b3d227f7cfe9e94462e73c7f92d24c0a9046da",
 		"docs/design-system.md": "sha256:fd7e6f1483f84b6e5fbf4eab56b1cc43435e800665066e81385691b8f12018b3",
-		"docs/generated/inventory.json": "sha256:a711f0c00ad6c0fbe7f6abc3d39dcda6592532c9f7ad794db5a7a165501a7315",
+		"docs/generated/inventory.json": "sha256:295da893098ef92b2a9f170170729cd1aaf463f5063110e519de4ebc6d334f8e",
 		"docs/generated/inventory.md": "sha256:51913b99b4a339551c60ae31f0f71cbeaec9c9f173e30f8e03a80c9eb64faaf2",
 		"docs/install.md": "sha256:6a2658c2c19c4f884e006207056b221ea8a9a4113a3c908f00ce5b2f3553981f",
 		"docs/languages.md": "sha256:46108a25ebd4d4826848ba520bfb599e1f3f99553b0bbe2d0cd73064da175cb5",
 		"template.config.json": "sha256:3eb558876ca023bdf012748c2a844498f3852e7f1e1ef3d652eb75acbfeeebe3",
 		"seed/seed.json": "sha256:e21048a841889282f4e085867bbce701436cda35b2fdf92038b1fdc5c3627f3b",
-		"seed/media-map.json": "sha256:1ea0211503842b53d4650f718c818bcc7a1a91495e9c097627ec7b9259089297",
-		"seed/field-map.json": "sha256:ca6d4c956207895ed6bdd5c18e6e7d124065a784817a6856f9f3a50381e0c71e",
+		"seed/media-map.json": "sha256:3413a6dd9d3841a377c208e7baac83907d7b3a410ee98badf713b7c046190c05",
+		"seed/field-map.json": "sha256:91d51a20a8568b42d2058af38f2b556ddec9659f06928abd06b9113a09f0a8ba",
 		"pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
 		"tools/forms.json": "sha256:a22301fcc3b88a1f1062f50ce4414477f9d89fb41f35b0facc5c99cc1f029dfb",
 		"seed/media/*": "sha256:c185454c7f8658da110b24bed3570e4626a95120acf97a6982130d32e2bb71f0 (101 files)"

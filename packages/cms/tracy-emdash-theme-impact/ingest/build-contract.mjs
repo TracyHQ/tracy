@@ -230,13 +230,13 @@ contract.design.images = { scope: 'body', placeholder: null }
 contract.design.exceptions = [
   {
     kind: 'scan:contrast',
-    match: '^span\\.im-give-count$',
+    match: '^(span\\.im-give-count|li\\.im-give-item)$',
     reason: 'The 01 and 02 numerals of the give cards are decorative, aria-hidden and drawn light grey as in the source (acm features style-5)',
     decision: 'DECISIONS D23'
   },
   {
     kind: 'scan:dark-on-dark',
-    match: '^span\\.im-give-count$',
+    match: '^(span\\.im-give-count|li\\.im-give-item)$',
     reason: 'The 01 and 02 numerals of the give cards are decorative, aria-hidden and drawn light grey as in the source (acm features style-5)',
     decision: 'DECISIONS D23'
   }

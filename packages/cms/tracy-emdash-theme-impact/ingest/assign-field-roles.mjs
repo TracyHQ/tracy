@@ -150,6 +150,7 @@ for (const e of seed.content.contact_info ?? [])
     if (role)
       map.slotRoles[`contact_info.${e.slug}.items[${i}].title`] = { role, group: { kind: 'contact', name: 'contact' } }
   })
+map.slotRoles['cta.home-helpline.cta_media'] = { role: 'person.image', group: { kind: 'person', name: 'volunteer' } }
 map.slotRoles['cta.home-helpline.cta_highlight'] = { role: 'contact.phone', group: { kind: 'contact', name: 'contact' } }
 writeFileSync(file, JSON.stringify(map, null, 2) + '\n')
 console.log(

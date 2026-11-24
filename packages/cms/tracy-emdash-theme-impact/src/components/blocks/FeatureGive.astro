@@ -21,8 +21,7 @@ const lines = (v: unknown) => String(v ?? '').split('\n')
 
 <ul class="im-give">
 	{items.map((it, i) => (
-		<li class:list={['im-give-item', it.bg_content === 'white' ? 'is-white' : 'is-tinted']}>
-			{it.number && <span class="im-give-count" aria-hidden="true" {...$s(`items[${i}].number`)}>{it.number}</span>}
+		<li class:list={['im-give-item', it.bg_content === 'white' ? 'is-white' : 'is-tinted']} data-number={it.number || undefined}>
 			<div class="im-give-col">
 			<div class="im-give-body">
 				{it.feature_tag && <span class="im-eyebrow" {...$s(`items[${i}].feature_tag`)}>{it.feature_tag}</span>}

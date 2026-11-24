@@ -7,17 +7,17 @@
  "platform": "emdash",
  "contract": {
   "id": "tracy-impact/emdash-0.x/0.1.0",
-  "contentMapSha256": "1ecbe5b66fe88836a2beb07cc05f61fd8527eb38a99c3c5a1c7bcaf9343f9012",
+  "contentMapSha256": "412d752fcfa0deaa9cbb8ce3ab78ee3ddfe92d5a0425986a0cf9727e08ef4499",
   "presentationLockSha256": null
  },
- "measuredAt": "2026-11-24T07:36:39.952Z",
+ "measuredAt": "2026-11-24T07:50:38.542Z",
  "viewports": [
   "desktop",
   "phone"
  ],
  "bound": {
   "stamp": 2210,
-  "entry": 892,
+  "entry": 994,
   "menu": 529,
   "clone": 280,
   "excerpt": 22,
@@ -63,13 +63,13 @@
   },
   "links": {
    "total": 173,
-   "matched": 94,
+   "matched": 96,
    "locked": 0,
    "capture": 0,
    "captureLocked": 0,
    "template": 0,
    "core": 0,
-   "unknown": 79,
+   "unknown": 77,
    "catalogue": 0,
    "ignored": 1
   }
@@ -77,7 +77,7 @@
  "coverage": {
   "text": 93,
   "images": 100,
-  "links": 54.3
+  "links": 55.5
  },
  "holes": [
   {
@@ -707,7 +707,8 @@
    "cause": "an address no link slot, menu, page, term or source holds",
    "evidence": "div.im-contact > div.im-contact-main > div.im-contact-map > a",
    "pages": 1,
-   "firstPage": "/contact"
+   "firstPage": "/contact",
+   "accepted": "The Open in Google Maps link of the Contact page (DECISIONS D14, D20): its address is built at request time from the contact address slot; a link the visitor follows, no map code is embedded."
   },
   {
    "kind": "link",
@@ -898,15 +899,6 @@
    "pages": 1,
    "firstPage": "/blog/weve-reached-1-million-indonations-and-counting",
    "accepted": "The share row of a post (DECISIONS D25, same rule as Fresco D42): the address of each network's own share page is built at request time from the post's own address and title; it is a link the visitor follows, not content a customer writes, and no script or request leaves the page before the click."
-  },
-  {
-   "kind": "link",
-   "value": "tel:24",
-   "class": "unknown",
-   "cause": "an address no link slot, menu, page, term or source holds",
-   "evidence": "ul.im-contact-top > li > span.im-contact-text > a.im-contact-title",
-   "pages": 102,
-   "firstPage": "/"
   },
   {
    "kind": "text",
@@ -1563,7 +1555,7 @@
   "roleVocabularyVersion": "place-content-roles/3",
   "applies": true,
   "r1": {
-   "facts": 119,
+   "facts": 120,
    "slots": 1096,
    "percent": 10.9
   },

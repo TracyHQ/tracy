@@ -44,8 +44,8 @@ const money = (v: unknown) => `${site.currency_symbol ?? ''}${v}`
 				<div class="im-progress" role="progressbar" aria-label={site.raise_label} aria-valuenow={pct} aria-valuemin="0" aria-valuemax="100"><div style={`width:${pct}%`}></div></div>
 			</div>
 			<div class="im-donation-money">
-				<span><strong {...$d('raise')}>{money(entry.raise)}</strong> <span {...$c('raise_label')}>{site.raise_label}</span></span>
-				<span><strong {...$d('goal')}>{money(entry.goal)}</strong> <span {...$c('goal_label')}>{site.goal_label}</span></span>
+				<div><strong {...$d('raise')}>{money(entry.raise)}</strong><span {...$c('raise_label')}>{site.raise_label}</span></div>
+				<div><strong {...$d('goal')}>{money(entry.goal)}</strong><span {...$c('goal_label')}>{site.goal_label}</span></div>
 			</div>
 		</div>
 	</div>

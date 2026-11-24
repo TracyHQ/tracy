@@ -67,3 +67,4 @@
 	.im-contact-social [data-icon="tiktok"] { color: var(--color-fg-2); }
 	.im-contact-social [data-icon="pinterest"] { color: var(--color-danger); }
 }
+@layer components { .im-map-place { display: flex; flex-direction: column; align-items: center; gap: 4px; } }
