@@ -23,8 +23,7 @@ test('the router imports views that exist', () => {
     assert.ok(existsSync(new URL(`src/views/${m[1]}.astro`, root)), m[1])
 })
 
-test('the demo logo and favicon exist', () => {
-  assert.ok(existsSync(new URL('public/brand/logo.png', root)))
+test('the favicon exists (the demo logo is a text lockup of the chrome entry, not a file)', () => {
   assert.ok(existsSync(new URL('public/favicon.svg', root)))
 })
 
@@ -32,13 +31,10 @@ test('every shipped font has a licence notice and the Vietnamese range (LANG-2)'
   const fonts = JSON.parse(read('src/fonts.json'))
   for (const f of fonts) {
     assert.equal(f.provider, 'local')
-    const slug = f.name.toLowerCase().replace(/ /g, '-')
+    // PT Root UI ships no notice in the quickstart (DECISIONS D8); the Vietnamese face is Be Vietnam Pro, whose OFL notice ships
+    assert.ok(existsSync(new URL('src/fonts/be-vietnam-pro-OFL.txt', root)), 'Be Vietnam Pro notice')
     assert.ok(
-      existsSync(new URL(`src/fonts/${slug === 'roboto' ? 'roboto' : slug}-OFL.txt`, root)),
-      `${f.name} notice`
-    )
-    assert.ok(
-      f.variants.some((v) => v.unicodeRange.includes('U+1EA0-1EF9')),
+      f.variants.some((v) => (v.unicodeRange ?? []).includes('U+1EA0-1EF9')),
       `${f.name} has no Vietnamese face`
     )
     for (const v of f.variants)
@@ -49,15 +45,16 @@ test('every shipped font has a licence notice and the Vietnamese range (LANG-2)'
 test('the chrome entry carries every word the header and footer print', () => {
   const chrome = seed.content.chrome[0].data
   for (const k of [
-    'book_label',
-    'book_link',
+    'brand_name',
     'menu_label',
     'close_label',
-    'footer_link_text',
-    'footer_link_to',
-    'footer_links_text',
+    'theme_label',
     'copyright',
-    'topbar_address'
+    'topbar_address',
+    'topbar_phone',
+    'read_more',
+    'not_found_title',
+    'search_label'
   ])
     assert.ok(String(chrome[k] ?? '').length > 0, k)
 })

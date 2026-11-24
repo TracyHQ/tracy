@@ -6,14 +6,12 @@ import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { DEMO_LOGO, DEMO_LOGO_SMALL } from '../src/lib/demo-logo.ts'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const read = (file) => readFileSync(path.join(ROOT, file), 'utf8')
 
-test('the demo logo files exist', () => {
-  for (const file of [DEMO_LOGO, DEMO_LOGO_SMALL])
-    assert.ok(existsSync(path.join(ROOT, 'public', file)), file)
+test('the demo logo is a text lockup of the chrome entry: the header and the off-canvas menu print the brand name, no file', () => {
+  assert.match(read('src/components/site/Header.astro'), /class="mg-logo">\{site\.brand_name\}<b>\.<\/b>/)
 })
 
 test('a dark logo has its place in the questionnaire map', () => {

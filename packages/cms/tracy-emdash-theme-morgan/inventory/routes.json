@@ -1,0 +1,628 @@
+{
+  "note": "path = the route the EmDash site serves (site-model routes). source.url = what the running Joomla answers for it, when the crawl met it; the model drops the article id and the category segment Joomla keeps, so many detail routes have no equal path on the source.",
+  "unknownRouteBehaviour": {
+    "status": 404,
+    "chrome": true,
+    "view": "NotFound"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "home",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php",
+        "joomla": {
+          "menuId": "157",
+          "joomlaPath": "/",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "front-page",
+        "sections": [
+          {
+            "position": "hero",
+            "via": "layout",
+            "modules": [
+              "169"
+            ]
+          },
+          {
+            "position": "section-top",
+            "via": "layout",
+            "modules": [
+              "170",
+              "167"
+            ]
+          },
+          {
+            "position": "section-bottom",
+            "via": "layout",
+            "modules": [
+              "174"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/about-us",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "about-us",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/about-us",
+        "joomla": {
+          "menuId": "154",
+          "joomlaPath": "/about-us",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": [
+              "103"
+            ]
+          },
+          {
+            "position": "section-top",
+            "via": "layout",
+            "modules": [
+              "144",
+              "138",
+              "139",
+              "140",
+              "136"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/services",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "services",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/contact-us",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "contact-us",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/contact-us",
+        "joomla": {
+          "menuId": "125",
+          "joomlaPath": "/contact-us",
+          "option": "com_contact",
+          "view": "contact",
+          "id": "1"
+        },
+        "view": "page-contact",
+        "sections": []
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog",
+      "kind": "list",
+      "cms": {
+        "collection": "posts",
+        "slug": "blog",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/category-blog/3-student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/how-co-parents-can-stay-on-the-same-financial-page",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "how-co-parents-can-stay-on-the-same-financial-page",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/category-blog/4-how-co-parents-can-stay-on-the-same-financial-page",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/category-blog/5-heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/category-blog/6-basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/category-blog/7-this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/the-world-needs-to-get-serious-about-combating-carbon-emissions",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "the-world-needs-to-get-serious-about-combating-carbon-emissions",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/category-blog/8-the-world-needs-to-get-serious-about-combating-carbon-emissions",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/9-business-growth-advice/14-extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/17-pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/11-business-insights/20-marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/23-real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/category-blog/9-china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/9-business-growth-advice/15-china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/18-congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/11-business-insights/21-fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/24-nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/14-retirement-planning/26-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/15-tax-planning/28-house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/category-blog/10-stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/9-business-growth-advice/16-trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/19-state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/11-business-insights/22-ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/25-for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/14-retirement-planning/27-beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/joomlart-content/list-all-categories/15-tax-planning/29-farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/404",
+      "kind": "system",
+      "cms": {
+        "collection": null,
+        "slug": null,
+        "found": false
+      },
+      "source": {
+        "url": "/index.php/nope-404",
+        "joomla": null,
+        "view": "error",
+        "sections": null
+      },
+      "expected": {
+        "status": 404
+      }
+    }
+  ]
+}

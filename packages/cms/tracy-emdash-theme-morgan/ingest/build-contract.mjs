@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // Builds qa.contract.json: every DECISION (which pages, which rules, the strings the source says) is written here; every number is
-// MEASURED on the running site (SITE_URL) per variant and frozen in the contract. The source has no light/dark switch, so the
-// `-light` and `-dark` variants draw the same page (DECISIONS D12).
+// MEASURED on the running site (SITE_URL) per variant and frozen in the contract. The source has a light/dark switch (DECISIONS D15).
 //   node tools/qa-contract.mjs init source/snapshot qa.contract.json --config template.config.json   # once
 //   node ingest/build-contract.mjs --site http://127.0.0.1:4360 [--out qa.contract.json]
 import { withPatches } from '../tools/qa-contract.mjs'
@@ -17,57 +16,52 @@ const ALL = contract.variants.map((v) => v.id)
 const seed = JSON.parse(readFileSync('seed/seed.json', 'utf8'))
 
 // ── rules: id → site selector, source file, optional?, properties ──
-const HOME = 'index.html'
-const POST = 'pages/j-content/category-blog/valentines-day-at-soul-kitchen/index.html'
+const HOME = 'index.php/home/home-style-1/index.html'
+const ABOUT = 'index.php/about-us/index.html'
+const SERVICES = 'index.php/services-page/index.html'
+const CONTACT = 'index.php/contact-us/index.html'
+const BLOG = 'index.php/joomlart-content/category-blog/index.html'
+const POST = 'index.php/joomlart-content/single-article/index.html'
+const POST2 =
+  'index.php/joomlart-content/category-blog/3-student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt/index.html'
+const SEARCH = 'index.php/other-pages/smart-search/index.html'
+const NOT_FOUND = 'index.php/nope-404/index.html'
 const RULES = [
   ['body-type', 'body', HOME],
-  ['nav-link', '.fr-nav li:not(.is-active) a:not(:hover)', HOME, true],
-  ['nav-font', '.fr-nav a', HOME, true, ['font-size']],
+  ['nav-link', '.mg-nav li:not(.is-active) a:not(:hover)', HOME, true],
+  ['nav-font', '.mg-nav a', HOME, true, ['font-size']],
   ['p-font', 'main p:not(blockquote p)', HOME, false, ['font-family']],
-  ['footer-title', '.fr-footer h3', HOME],
-  ['footer-text', '.fr-footer-cols > div:nth-child(1) p', HOME],
-  ['copyright', '.fr-copyright p', HOME],
-  ['sr-title', 'main > h1.sr-only', 'menu/index.html'],
-  ['hero-title', '.fr-hero-title', HOME],
-  ['section-label', '.fr-section-title', HOME],
-  ['main-title', '.fr-main-title', HOME],
-  ['dish-name', '.fr-menu-list.cols-2 .fr-dish-name', HOME],
-  ['dish-name-3', '.fr-menu-list.cols-3 .fr-dish-name', HOME],
-  ['dish-price', '.fr-menu-list.cols-2 .fr-dish-price', HOME],
-  ['dish-price-3', '.fr-menu-list.cols-3 .fr-dish-price', HOME],
-  ['t-quote', '.fr-t-desc', HOME],
-  ['fi-title', '.fr-fi-inner h3', HOME],
-  ['fi2-title', '.fr-fi2-item.is-primary .fr-fi2-title', HOME],
-  ['fi2-title-dark', '.fr-fi2-item.is-dark .fr-fi2-title', HOME],
-  ['fi2-action', '.fr-fi2-item.is-primary .fr-fi2-action-title h3', HOME],
-  ['fi2-action-dark', '.fr-fi2-item.is-dark .fr-fi2-action-title h3', HOME],
-  ['menu-card-title', '.fr-menu-card-title', 'menu/index.html'],
-  ['menu-image-name', '.fr-menu-image-name', 'menu/index.html'],
-  ['fa4-title', '.fr-fa4-title', 'about/index.html'],
-  ['fa5-title', '.fr-fa5-title', 'about/index.html'],
-  ['member-name', '.fr-member-name', 'about/index.html'],
-  ['hh-title', '.fr-hh-title', 'offer/index.html'],
-  ['contact-h2', '.fr-contact-info h2', 'contact/index.html'],
-  ['contact-lead', '.fr-contact-lead h2', 'contact/index.html'],
-  ['post-lead-title', '.fr-post-lead .fr-post-title', 'pages/j-content/category-blog/index.html'],
-  ['post-card-title', '.fr-post-card .fr-post-title', 'pages/j-content/category-blog/index.html'],
-  ['post-related-title', '.fr-post-related .fr-post-title', POST],
-  ['blog-more', '.fr-blog-more h3', 'pages/j-content/category-blog/index.html'],
-  ['article-quote', '.fr-prose blockquote p:first-child', POST],
-  ['article-quote-author', '.fr-prose blockquote p + p', POST],
-  ['prose-h2', '.fr-prose h2', POST],
-  ['search-count', '.fr-search-count', 'pages/j-pages/smart-search/index.html'],
-  [
-    'search-result-title',
-    '.fr-search-results h3',
-    'pages/j-content/category-blog/index.html',
-    false,
-    ['font-family', 'font-weight']
-  ],
-  ['masthead-title', '.fr-masthead:not(:has(.fr-post-band-chip)) .fr-masthead-title', 'about/index.html'],
-  ['post-masthead-title', '.fr-masthead:has(.fr-post-band-chip) .fr-masthead-title', POST],
-  ['nf-code', '.fr-error-code', 'nope-404/index.html'],
-  ['nf-title', '.fr-error h1', 'nope-404/index.html']
+  ['footer-title', '.mg-footer h3', HOME],
+  ['footer-text', '.mg-footer li', HOME],
+  ['copyright', '.mg-copyright p', HOME],
+  ['topbar', '.mg-topbar-item', HOME, true],
+  ['slide-title', '.mg-slide-h', HOME],
+  ['section-label', '.mg-sub', HOME],
+  ['section-title', '.mg-sec-h', HOME],
+  ['card-title', '.mg-card h4', HOME],
+  ['box-title', '.mg-box h4', HOME],
+  ['panel-title', '.mg-panel summary', HOME],
+  ['case-title', '.mg-case h4', HOME],
+  ['member-name', '.mg-member h4', HOME],
+  ['hiring', '.mg-hiring', HOME],
+  ['quote-text', '.mg-fquote blockquote', HOME],
+  ['tile-title', '.mg-tile-text h4', SERVICES],
+  ['praise-text', '.mg-quote-card blockquote', SERVICES],
+  ['cta-title', '.mg-cta-panel .mg-sec-h', SERVICES],
+  ['masthead-title', '.mg-masthead:not(:has(.mg-post-band-chip)) .mg-masthead-title', ABOUT],
+  ['masthead-desc', '.mg-masthead-desc', ABOUT],
+  ['contact-card-title', '.mg-contact-card h4', CONTACT],
+  ['contact-form-title', '.mg-contact-form .mg-sec-h', CONTACT],
+  ['post-card-title', '.mg-post-card .mg-post-title, .mg-post .mg-post-title', BLOG],
+  ['post-card-meta', '.mg-meta', BLOG],
+  ['side-title', '.mg-side-title', BLOG],
+  ['pagination', '.mg-pagination li a, .mg-pagination li span', BLOG],
+  ['post-masthead-title', '.mg-masthead:has(.mg-post-band-chip) .mg-masthead-title', POST],
+  ['prose-h3', '.mg-prose h3', POST],
+  ['prose-text', '.mg-prose p', POST],
+  ['search-count', '.mg-search-count', SEARCH],
+  ['nf-code', '.mg-error-code', NOT_FOUND],
+  ['nf-title', '.mg-error h1', NOT_FOUND]
 ]
 const DEFAULT_PROPS = [
   'font-family',
@@ -79,143 +73,107 @@ const DEFAULT_PROPS = [
   'color',
   'background-color'
 ]
-const BASE = ['body-type', 'nav-link', 'nav-font', 'p-font', 'footer-title', 'footer-text', 'copyright']
-const postSlugs = [
-  'valentines-day-at-soul-kitchen',
-  'mother-s-day-lunch-special',
-  'an-interview-with-chef-milo-ferndandes',
-  'culinary-journeys-around-the-world',
-  'savoring-the-art-of-cooking',
-  'farm-to-fork-sustainable-eating'
-]
+const BASE = ['body-type', 'nav-link', 'nav-font', 'p-font', 'footer-title', 'footer-text', 'copyright', 'topbar']
 const POSTS = Object.fromEntries(seed.content.posts.map((p) => [p.slug, p.data.title]))
-const postSrc = (s) => `pages/j-content/category-blog/${s}/index.html`
+const POST_SLUG = 'strong-job-growth-is-back-payrolls-jump-in-june-well-above-expectations'
+const POST2_SLUG = 'student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt'
 const PAGES = [
   {
     id: 'en-home',
     path: '/',
     src: HOME,
     view: 'Home',
-    identity: '.fr-hero',
-    cols: ['chrome', 'pages', 'hero', 'features_intro', 'menu', 'gallery', 'testimonials', 'book_table'],
-    rules: [...BASE, 'hero-title', 'section-label', 'main-title', 'dish-name', 'dish-price', 't-quote'],
-    content: [['hero', '.fr-hero-title', 'field', 'hero/home-hero.items[0].title', 'Restaurant & Fresco']]
-  },
-  {
-    id: 'en-menu',
-    path: '/menu',
-    src: 'menu/index.html',
-    view: 'MenuPage',
-    identity: '.fr-menu-list',
-    cols: ['chrome', 'pages', 'menu'],
-    rules: [...BASE, 'main-title', 'dish-name', 'dish-price'],
-    content: [['title', '.fr-main-title', 'field', 'menu/menu-columns.section_title', 'Multi Column Layout']]
+    identity: '.mg-slideshow',
+    cols: ['chrome', 'footer_links', 'pages', 'slideshow', 'features_intro', 'accordion', 'testimonials', 'teams', 'clients', 'contact'],
+    rules: [...BASE, 'slide-title', 'section-label', 'section-title', 'card-title', 'box-title', 'panel-title', 'case-title', 'member-name', 'hiring', 'quote-text'],
+    content: [
+      ['slide', '.mg-slide-h', 'field', 'slideshow/home-slideshow.items[0].title', 'Not for Profit.\nFor People.'],
+      ['intro', '.mg-sec-intro .mg-sec-h', 'field', 'features_intro/home-intro.title', 'Morgan help Business Performance and Scalability.']
+    ]
   },
   {
     id: 'en-about',
-    path: '/about',
-    src: 'about/index.html',
+    path: '/about-us',
+    src: ABOUT,
     view: 'About',
-    identity: '.fr-masthead',
-    cols: ['chrome', 'pages', 'masthead', 'features_intro', 'testimonials', 'teams'],
-    rules: [...BASE, 'masthead-title', 'main-title'],
-    content: [['masthead', '.fr-masthead-title', 'field', 'masthead/about.title', 'About']]
+    identity: '.mg-masthead',
+    cols: ['chrome', 'footer_links', 'pages', 'masthead', 'features_intro', 'teams', 'clients'],
+    rules: [...BASE, 'masthead-title', 'masthead-desc', 'section-label', 'section-title', 'card-title', 'member-name'],
+    content: [['title', '.mg-masthead-title', 'field', 'masthead/about-us.title', 'About Us']]
   },
   {
-    id: 'en-gallery',
-    path: '/gallery',
-    src: 'gallery/index.html',
-    view: 'GalleryPage',
-    identity: 'main section',
-    cols: ['chrome', 'pages', 'gallery'],
-    rules: [...BASE, 'main-title'],
-    content: [['title', '.fr-main-title', 'field', 'gallery/gallery-one.section_title', 'Gallery 1']]
-  },
-  {
-    id: 'en-chiefs',
-    path: '/chiefs',
-    src: 'chiefs/index.html',
-    view: 'Chiefs',
-    identity: '.fr-masthead',
-    cols: ['chrome', 'pages', 'masthead', 'teams'],
-    rules: [...BASE, 'masthead-title'],
-    content: [['masthead', '.fr-masthead-title', 'field', 'masthead/chiefs.title', 'Chiefs']]
-  },
-  {
-    id: 'en-offer',
-    path: '/offer',
-    src: 'offer/index.html',
-    view: 'Offer',
-    identity: 'main section',
-    cols: ['chrome', 'pages', 'happyhours'],
-    rules: [...BASE],
-    content: [['title', '.fr-hh-title', 'field', 'happyhours/offer-hour-1.hp_title', 'Happy Hours']]
-  },
-  {
-    id: 'en-contact',
-    path: '/contact',
-    src: 'contact/index.html',
-    view: 'Contact',
-    identity: '.fr-masthead',
-    cols: ['chrome', 'pages', 'masthead', 'contact'],
-    rules: [...BASE, 'masthead-title'],
-    content: [['masthead', '.fr-masthead-title', 'field', 'masthead/contact.title', 'Contact Us']]
+    id: 'en-services',
+    path: '/services',
+    src: SERVICES,
+    view: 'Services',
+    identity: '.mg-tiles',
+    cols: ['chrome', 'footer_links', 'pages', 'masthead', 'features_intro', 'testimonials', 'clients'],
+    rules: [...BASE, 'masthead-title', 'masthead-desc', 'section-label', 'section-title', 'tile-title', 'case-title', 'praise-text', 'cta-title'],
+    content: [['title', '.mg-masthead-title', 'field', 'masthead/services.title', 'Our Services']]
   },
   {
     id: 'en-blog',
     path: '/blog',
-    src: 'pages/j-content/category-blog/index.html',
+    src: BLOG,
     view: 'BlogList',
-    identity: '.fr-masthead',
-    cols: ['chrome', 'pages', 'masthead', 'posts'],
-    rules: [...BASE, 'masthead-title'],
-    family: 'list',
-    content: [['masthead', '.fr-masthead-title', 'field', 'masthead/blog.title', 'Category Blog']]
+    identity: '.mg-blog-grid',
+    cols: ['chrome', 'footer_links', 'pages', 'posts', 'masthead'],
+    rules: [...BASE, 'masthead-title', 'masthead-desc', 'post-card-title', 'post-card-meta', 'side-title', 'pagination'],
+    content: [['title', '.mg-masthead-title', 'field', 'masthead/blog.title', 'JA Morgan']]
+  },
+  {
+    id: 'en-contact',
+    path: '/contact-us',
+    src: CONTACT,
+    view: 'Contact',
+    identity: '.mg-contact-cards',
+    cols: ['chrome', 'footer_links', 'pages', 'contact'],
+    rules: [...BASE, 'section-label', 'section-title', 'contact-card-title', 'contact-form-title'],
+    content: [['heading', '.mg-sec-contact-cards .mg-sec-h', 'field', 'contact/contact-info.heading', 'JA Morgan']]
   },
   {
     id: 'en-search',
-    path: '/search',
-    src: 'pages/j-pages/smart-search/index.html',
+    path: '/search?q=growth',
+    src: SEARCH,
     view: 'Search',
-    identity: 'main',
-    cols: ['chrome', 'posts'],
-    rules: [...BASE],
-    content: [['h1', '.fr-masthead-title', 'field', 'chrome.search_label', 'Smart Search']]
-  },
-  {
-    // the results state of the port has no source page (the source snapshot is the landing page); it is held to the
-    // rules the template shares and its tiles are read against the landing page under D36
-    id: 'en-search-results',
-    path: '/search?q=food',
-    src: 'pages/j-pages/smart-search/index.html',
-    view: 'Search',
-    identity: 'main',
-    cols: ['chrome', 'posts'],
-    rules: [...BASE],
-    content: [['h1', '.fr-masthead-title', 'field', 'chrome.search_label', 'Smart Search']]
+    identity: '.mg-search',
+    cols: ['chrome', 'footer_links', 'posts', 'masthead'],
+    rules: [...BASE, 'masthead-title', 'masthead-desc', 'search-count'],
+    content: [['title', '.mg-masthead-title', 'field', 'chrome.search_label', 'Smart Search']]
   },
   {
     id: 'en-not-found',
     path: '/404',
-    src: 'nope-404/index.html',
+    src: NOT_FOUND,
     view: 'NotFound',
-    identity: '.fr-error',
-    cols: ['chrome'],
+    identity: '.mg-error',
+    cols: ['chrome', 'masthead'],
     status: 404,
     rules: ['nf-code', 'nf-title'],
-    content: [['code', '.fr-error-code', 'field', 'chrome.not_found_code', '404']]
+    content: [['code', '.mg-error-code', 'field', 'chrome.not_found_code', '404']]
   },
-  ...postSlugs.map((s, i) => ({
-    id: i === 0 ? 'en-post' : `en-post-${i + 1}`,
-    path: `/blog/${s}`,
-    src: postSrc(s),
+  {
+    id: 'en-post',
+    path: `/blog/${POST_SLUG}`,
+    src: POST,
     view: 'Post',
-    identity: '.fr-masthead',
-    cols: ['chrome', 'posts', 'masthead'],
-    rules: [...BASE, 'post-masthead-title'],
+    identity: '.mg-masthead',
+    cols: ['chrome', 'footer_links', 'posts', 'masthead'],
+    rules: [...BASE, 'post-masthead-title', 'prose-h3', 'prose-text', 'side-title'],
     family: 'detail',
-    content: [['title', '.fr-masthead-title', 'field', 'posts.title', POSTS[s]]]
-  }))
+    content: [['title', '.mg-masthead-title', 'field', 'posts.title', POSTS[POST_SLUG]]]
+  },
+  {
+    id: 'en-post-2',
+    path: `/blog/${POST2_SLUG}`,
+    src: POST2,
+    view: 'Post',
+    identity: '.mg-masthead',
+    cols: ['chrome', 'footer_links', 'posts', 'masthead'],
+    rules: [...BASE, 'post-masthead-title', 'prose-text', 'side-title'],
+    family: 'detail',
+    content: [['title', '.mg-masthead-title', 'field', 'posts.title', POSTS[POST2_SLUG]]]
+  }
 ]
 const PAGE_URL = Object.fromEntries(PAGES.map((p) => [p.id, p.path]))
 // a page carries every rule whose selector matches a visible element on it (found at the widest variant), so the coverage
@@ -329,8 +287,8 @@ contract.layouts = [...byView.entries()].map(([view, ps]) => ({
 }))
 contract.design.parity = {
   selectors: {
-    nav: { site: '.fr-nav li:nth-child(3) a', source: '.t4-megamenu .nav-item:nth-child(3) .nav-link' },
-    footerTitle: { site: '.fr-footer h3', source: '#t4-footer .module-title' },
+    nav: { site: '.mg-nav li:nth-child(3) a', source: '.t3-megamenu .navbar-nav > li:nth-child(3) > a' },
+    footerTitle: { site: '.mg-footer h3', source: '.t3-footer .t3-module .module-title' },
     ground: 'html'
   },
   properties: ['font-size', 'font-weight', 'letter-spacing', 'padding-top', 'padding-left'],
@@ -340,25 +298,10 @@ contract.design.parity = {
 contract.design.coverage = [
   { selector: 'main h1, main h2, main h3', properties: ['font-family', 'font-weight'] },
   { selector: 'main p', properties: ['font-family'] },
-  { selector: '.fr-nav a', properties: ['font-size'] }
+  { selector: '.mg-nav a', properties: ['font-size'] }
 ]
 contract.design.images = { scope: 'body', placeholder: null }
-contract.design.exceptions = [
-  {
-    kind: 'scan:bright-border',
-    match: '^div\\.fr-hh-info',
-    reason:
-      'The Happy Hours info box has the 1 px light frame the source draws (acm happyhours style-1 `.hp-info`)',
-    decision: 'DECISIONS D19'
-  },
-  {
-    kind: 'scan:dark-on-dark',
-    match: '^(h2\\.fr-fi2-title|h3\\.|span\\.)$',
-    reason:
-      'The Private Events tile prints #111 text on its accent colour mask exactly as the source does (docs/blocks.md features-intro style-2: only Dark tiles switch to white); the scanner reads the page behind the mask',
-    decision: 'DECISIONS D19'
-  }
-]
+contract.design.exceptions = []
 // differences the owner already decided (DECISIONS): read as accepted by the lens readers and closers, listed in ingest/accepted-differences.json; they match
 // review notes (kind `lens-note`), never a machine finding
 for (const x of JSON.parse(readFileSync(new URL('./accepted-differences.json', import.meta.url), 'utf8')))
@@ -370,14 +313,14 @@ for (const x of JSON.parse(readFileSync(new URL('./accepted-differences.json', i
     reason: x.reason,
     decision: x.decision
   })
-contract.design.accentBorders = ['rgb(230, 201, 162)']
+contract.design.accentBorders = ['rgb(217, 48, 48)']
 // the off-canvas menu exists below 992 px only (its button is hidden above), so no `interactions` state is declared for the 1440 frame
 contract.interactions = {}
 contract.fonts = {
   selectors: ['h1', 'h2', 'h3', 'p', 'a', 'button', 'span', 'li'],
   platform:
-    'Chromium (Playwright). Two families are shipped locally (src/fonts.json): Playfair Display (display) and Roboto (body).',
-  allowed: { en: ['Playfair Display', 'Roboto'] }
+    'Chromium (Playwright). One family is shipped locally (src/fonts.json): PT Root UI 400, 500 and 700 for the display and the body.',
+  allowed: { en: ['PT Root UI'] }
 }
 contract.capabilities = ['audit-log', 'seo', 'media', 'forms']
 contract.reviews.forms = { mode: 'required' }
@@ -413,10 +356,10 @@ contract.visual = {
   ],
   fastGate: {
     add: [
-      { page: 'en-about', reason: 'About draws the feature cards and the team grid (own components)' },
-      { page: 'en-offer', reason: 'Offer draws the three happy-hour panels (own components)' },
-      { page: 'en-gallery', reason: 'Gallery draws the lightbox grids (own components)' },
-      { page: 'en-menu', reason: 'Menu draws the image lists and the dish cards (own components)' }
+      { page: 'en-about', reason: 'About draws the split bands and the team grid (own components)' },
+      { page: 'en-services', reason: 'Services draws the tile grid and the call to action (own components)' },
+      { page: 'en-contact', reason: 'Contact draws the info cards and the form on navy (own components)' },
+      { page: 'en-post', reason: 'A post draws the title band, the prose and the sidebar' }
     ]
   },
   renderInputs: [
@@ -432,7 +375,7 @@ contract.visual = {
 }
 const mapped = new Set(contract.pages.flatMap((p) => p.source))
 const REASONS = [
-  [/home\/home-/, 'Home 2 and Home 3 are not ported (DECISIONS D6)'],
+  [/home\/home-/, 'Home Styles 2 to 4 are not ported (DECISIONS D6)'],
   [
     /author|j-pages|users/,
     'Joomla utility pages (authors, accounts, demo pages) are not ported (DECISIONS D7)'
@@ -487,7 +430,6 @@ contract.distribution = {
     'tools/personalize.mjs',
     'tools/forms.json',
     'public/favicon.svg',
-    'public/brand/logo.png',
     'seed/seed.json',
     'seed/media-map.json',
     'seed/field-map.json',

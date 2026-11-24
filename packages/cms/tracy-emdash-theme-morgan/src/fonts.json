@@ -24,6 +24,54 @@
         "src": [
           "./src/fonts/PT_Root_UI_Bold-webfont.woff"
         ]
+      },
+      {
+        "weight": 400,
+        "style": "normal",
+        "src": [
+          "./src/fonts/be-vietnam-pro-400.woff2"
+        ],
+        "unicodeRange": [
+          "U+0102-0103",
+          "U+0110-0111",
+          "U+0128-0129",
+          "U+0168-0169",
+          "U+01A0-01A1",
+          "U+01AF-01B0",
+          "U+1EA0-1EF9"
+        ]
+      },
+      {
+        "weight": 600,
+        "style": "normal",
+        "src": [
+          "./src/fonts/be-vietnam-pro-600.woff2"
+        ],
+        "unicodeRange": [
+          "U+0102-0103",
+          "U+0110-0111",
+          "U+0128-0129",
+          "U+0168-0169",
+          "U+01A0-01A1",
+          "U+01AF-01B0",
+          "U+1EA0-1EF9"
+        ]
+      },
+      {
+        "weight": 700,
+        "style": "normal",
+        "src": [
+          "./src/fonts/be-vietnam-pro-700.woff2"
+        ],
+        "unicodeRange": [
+          "U+0102-0103",
+          "U+0110-0111",
+          "U+0128-0129",
+          "U+0168-0169",
+          "U+01A0-01A1",
+          "U+01AF-01B0",
+          "U+1EA0-1EF9"
+        ]
       }
     ],
     "fallbacks": [

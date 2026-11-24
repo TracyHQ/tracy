@@ -1,15 +1,61 @@
 {
   "version": 1,
   "scope": "entry-scalars",
-  "note": "Tracy Content API: one row per collection of seed/site-model.json. type is page, article, service, project, shared or generic; urlPattern is the public path ({slug} for one entry per page), null when the collection has no page of its own. chrome names the shared entry the header and footer print. tools/content-api-gate.mjs refuses a collection of the model that has no row here.",
+  "note": "Tracy Content API: one row per collection of seed/site-model.json. type is page, article, service, project, shared or generic; urlPattern is the public path ({slug} for one entry per page), null when the collection has no page of its own. chrome names the shared entry the header and footer print. tools/content-api-gate.mjs refuses a collection of the model that has no row here. pages and posts keep their own public path in the data field `path` (urlField): this template's post paths (`/blog/<slug>`) are recorded in the data field `path` (ingest/bind-paths.mjs). Section collections have no page of their own.",
   "collections": {
-    "site": {
+    "pages": {
+      "type": "page",
+      "urlPattern": null,
+      "urlField": "path"
+    },
+    "slideshow": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "features_intro": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "accordion": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "testimonials": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "teams": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "clients": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "footer_links": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "posts": {
+      "type": "article",
+      "urlPattern": null,
+      "urlField": "path"
+    },
+    "masthead": {
+      "type": "generic",
+      "urlPattern": null
+    },
+    "chrome": {
       "type": "shared",
+      "urlPattern": null
+    },
+    "contact": {
+      "type": "generic",
       "urlPattern": null
     }
   },
   "chrome": {
-    "collection": "site",
-    "slug": "site"
+    "collection": "chrome",
+    "slug": "chrome"
   }
 }

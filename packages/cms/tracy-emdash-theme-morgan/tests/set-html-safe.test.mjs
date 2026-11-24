@@ -60,12 +60,10 @@ test('every set:html in src prints cleaned text or a constant of the code', () =
     const text = readFileSync(f, 'utf8')
     for (const m of text.matchAll(/set:html=(\{[^\n]*)/g)) found.push([path.relative(SRC, f), m[1]])
   }
-  assert.ok(found.length >= 4, `expected the known set:html sites, found ${found.length}`)
+  assert.ok(found.length >= 2, `expected the known set:html sites, found ${found.length}`)
   for (const [f, expr] of found)
     assert.ok(
       ALLOWED.some((re) => re.test(expr)),
       `${f}: set:html=${expr.slice(0, 80)}`
     )
-  const about = readFileSync(path.join(SRC, 'components/blocks/FeaturesAbout.astro'), 'utf8')
-  assert.match(about, /const desc = aboutDesc\(entry\.desc\)/)
 })

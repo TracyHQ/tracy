@@ -1,0 +1,2023 @@
+{
+	"source": "/home/agent/out/morgan/snapshot",
+	"generatedAt": "2026-11-24T13:57:51.537Z",
+	"files": [
+		{
+			"path": "crawl.json",
+			"bytes": 53092,
+			"sha256": "cf8e30a28ac87e98105fad5aa7a5d7f33c9c1350f9e476c805546e462f723a6e",
+			"ext": ".json"
+		},
+		{
+			"path": "images/joomlart/blog/img-1-thumb.jpg",
+			"bytes": 85089,
+			"sha256": "d1e8d24645d3515e6d2f92b47b149c6bfe30fc70097b8ec689e44d3b272c2b71",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-1.jpg",
+			"bytes": 130017,
+			"sha256": "be302f79e7c33102328b29aeb604eb3ae5a8bb4f1dd1142935fd7f405041434b",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-10.jpg",
+			"bytes": 274924,
+			"sha256": "8e446cdaa22d35148d1b07447e7af8f8345c6242158114b44497c892eaa6e672",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-11-thumb.jpg",
+			"bytes": 114662,
+			"sha256": "b02ba083d7c99947d939da65c56d0c4182762be5080c1908d93a14d09507a0f0",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-11.jpg",
+			"bytes": 181713,
+			"sha256": "6e3b6ecc3a54fd3ba0cac9a8ef8c4eb5a283071ca39ce45e4c68c6146d716f94",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-12-thumb.jpg",
+			"bytes": 132887,
+			"sha256": "ea466be872258c21b3139318b021f56d6944b529790d6e2998a03914b678bca6",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-12.jpg",
+			"bytes": 344578,
+			"sha256": "5fcfe74da5ab7a1003bcbac82b84c461224dba275e8f3c7da6745baada8427cb",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-13-thumb.jpg",
+			"bytes": 157518,
+			"sha256": "804b26a8c0f7c996493a4c2486a62c32add487ca89dd50a41cd7f5363814108e",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-13.jpg",
+			"bytes": 450755,
+			"sha256": "d22b86f761563079d67070a74208d6737aa95a76f6835479fae6bef01a918c73",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-14-thumb.jpg",
+			"bytes": 89322,
+			"sha256": "46cf685932f7e517f8ed79f716ba03d26d4af4fe1442de2f7f6aa29e4dbbd06f",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-14.jpg",
+			"bytes": 204428,
+			"sha256": "e0b9baa06fda47f0841d4573cd92d279119188b79c71b53f8ac2d5ec7215aaa4",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-15-thumb.jpg",
+			"bytes": 95158,
+			"sha256": "a2964fb5d4a1a05c068680c9de40c0201b700cced5d8c5621287f4fbff286a3f",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-15.jpg",
+			"bytes": 386618,
+			"sha256": "4f0ddb05e1629cc65bf3ef8b80921ae65c935a1c5cfc34457c8314f6aee445cd",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-16-thumb.jpg",
+			"bytes": 87756,
+			"sha256": "a1b632e22dbce411b8e15a458bd659d37fe0b19deedd07c721d3b0e291689a5c",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-16.jpg",
+			"bytes": 160785,
+			"sha256": "b7bb7cc0b1b0ce30922a1d69ace659970e4b4a8005ceaaac8949c32c2e0d9e20",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-17-thumb.jpg",
+			"bytes": 87419,
+			"sha256": "cb1c03c0346fc323b2ee838c051d1a407a485f1237713edb662591b273b24206",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-17.jpg",
+			"bytes": 230311,
+			"sha256": "7e41691f4107411fa23899a766fd8efe5da40bc37b91972f72e9fa11c6e35c8c",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-18-thumb.jpg",
+			"bytes": 61961,
+			"sha256": "fd2f52cff31ba61ffc24e10dfbfb456894d3b43223400b8a7091348ed010660b",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-18.jpg",
+			"bytes": 241047,
+			"sha256": "7cc68f75aaac53d66f16f63992eaacff7fbd11d6404404719b2434ea2ddc831f",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-19-thumb.jpg",
+			"bytes": 168636,
+			"sha256": "19bbd4904feaedfcd3f1662d6452aa06b90fe24b4a38eb747e57ff9a1bcd2eb5",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-19.jpg",
+			"bytes": 350408,
+			"sha256": "2e3a46e2d042e3d600dee0623b61985b4aa4777372ddca1e6cfdc01409682b07",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-2-thumb.jpg",
+			"bytes": 119722,
+			"sha256": "ed6ba08c126b1773ba3db4901188e455fbf3fa0de02464e6120727385e03a5ac",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-2.jpg",
+			"bytes": 282661,
+			"sha256": "bcf42e897adb09a1080d443b5113cfdcae5c6c7826670bd74b6feaa9fcb5f9fb",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-20-thumb.jpg",
+			"bytes": 55329,
+			"sha256": "79cc8f42f8b0a0eb754b81408fdb500db10c35cbbd4ec635dfa8500e9adb2415",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-20.jpg",
+			"bytes": 145219,
+			"sha256": "79d2cbab6506445fd70f83a2e97484ab589a0711a96d37ae8ebcfdf6ff753200",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-3-thumb.jpg",
+			"bytes": 191761,
+			"sha256": "dac4dc3ffb482e16174d2c68eec4c086e8703913177dbfeec299ca96348271e9",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-3.jpg",
+			"bytes": 454749,
+			"sha256": "1f3b55e5a1461ca70ce7e0cb4393b62248474642290148e144da9e6916f194c9",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-4-thumb.jpg",
+			"bytes": 121337,
+			"sha256": "4f4186282b1aad2d5186f791a4aefd175151278418cc6b5eed0d0a37e0e39aca",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-4.jpg",
+			"bytes": 291501,
+			"sha256": "6a9ad9a687ce08a73deded62dc9c1bb05f631b2682d06d53c6b09ce304db4dbe",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-5-thumb.jpg",
+			"bytes": 166008,
+			"sha256": "8d363a3c055ffbb4766b6a3e53f795e48c770e59db88e13feb22f5b0dbc051be",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-5.jpg",
+			"bytes": 497720,
+			"sha256": "b60954c9ebdf0016a673891f9184a0540184ee3531b5c0506a2e74d0fe95c33d",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-6-thumb.jpg",
+			"bytes": 129887,
+			"sha256": "5730f24fd6d16972161847fb48f22f2e90fd8c57c5f688887d60ae0c4d5decff",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-6.jpg",
+			"bytes": 277715,
+			"sha256": "148285e9277000b7188d9d88397e9b368a814e5637df988f7d22306118ac6892",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-7-thumb.jpg",
+			"bytes": 34030,
+			"sha256": "cfefa689a19981e250a5244645190b8315d6d44408660d456c6482a1855a8cf9",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-7.jpg",
+			"bytes": 88412,
+			"sha256": "985116d8fc8471c1ab0ad4dcff6e3f685b8186abd519fee292f40271746573a8",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-8-thumb.jpg",
+			"bytes": 160491,
+			"sha256": "f9f1111cf73b6a2098d8e4aa81df6e119f3958365ad5d912cf4c61e8cddb20e0",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-8.jpg",
+			"bytes": 395400,
+			"sha256": "4d0071511f1b2e331eb80ffe2b7409c48f15f0b0c640674a9a93d21e6c3c5884",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-9-thumb.jpg",
+			"bytes": 178744,
+			"sha256": "9aa3a01fc9f80ff056a1250059da6eb3b5803be2e1a81b607864178a156279a0",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/blog/img-9.jpg",
+			"bytes": 638965,
+			"sha256": "c45eff91feed5cb8c43343c72cdb9d17a339360620da01333e7279a502833a26",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/clients/item-1.png",
+			"bytes": 4254,
+			"sha256": "d37fadeaf09a850e666660c09f50f05d405a8d9c742aab40958e5d726c1d0691",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/clients/item-2.png",
+			"bytes": 3214,
+			"sha256": "68b015a781459eab19feb187c078e52ee1691e467e31ecc234ce95b1a5cdfc61",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/clients/item-3.png",
+			"bytes": 2642,
+			"sha256": "a14befca486cd05fb0ab7ae0a0b47ee929745c62f08e77a51cd64340b84f7683",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/clients/item-4.png",
+			"bytes": 3595,
+			"sha256": "f4e88db3bbe70eae6776544f8f4046566ba291472b9c8f2a96ec1cecbae3d043",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/clients/item-5.png",
+			"bytes": 3573,
+			"sha256": "46014d814b89620a9951d276622674f1de205f947af583d9f173da963482325f",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/clients/item-6.png",
+			"bytes": 2706,
+			"sha256": "9e753a10bc0f80082a67cc7e313337cc91f3d5b564b8c1387c8feb0b790ff5e7",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/features/about-us.jpg",
+			"bytes": 131051,
+			"sha256": "2bf8287b914d2116af99d5e34b55138a64e6d2495343b73f58f60f7cfbaae933",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/bg-services.jpg",
+			"bytes": 148310,
+			"sha256": "88fdbe30f3c59ec1dafb683a691f2813e186bd1999e0f2681dbbe2e4ac205f75",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/blog-page.jpg",
+			"bytes": 91267,
+			"sha256": "75375278418abf2d0980bedc0dc9f0a8a92de92334307d503366873f09aca258",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/contact-page.jpg",
+			"bytes": 42566,
+			"sha256": "dd3f0460309e02d89342b605be58317d1fafb1f1e0fc291614a135f4a0da82c0",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/home-01.jpg",
+			"bytes": 178214,
+			"sha256": "b6f57cd72f6eb542c68f1f047bbf14beda4c688e51cc4b64fe5543682d037e4f",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/home-02.jpg",
+			"bytes": 161735,
+			"sha256": "5e437f0d470019f0911cea304cafd62414e8c99eb30133b7c181dfccf300da5f",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/home-03.jpg",
+			"bytes": 185689,
+			"sha256": "b9cce0d41fe5a95563065735ccef315ce2a48a42b3392b45f946f02b3485811c",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/home-04.jpg",
+			"bytes": 208790,
+			"sha256": "0cd230f1a4a2316f7706c15bdb6461dfb1225c20e563ae1d8330442462003786",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/home-landing-xs.jpg",
+			"bytes": 14810,
+			"sha256": "8ed3fa249959ccbb133383e67bd74c13dfb47a9fe7c4b8ac1391b00d67d8867c",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/home-landing.jpg",
+			"bytes": 126206,
+			"sha256": "0d8671286d5cede7fd2f779c9791b33418a0851ea2659fd04bf263142abc54ba",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/icon/item-1.png",
+			"bytes": 2798,
+			"sha256": "fb59c859160a3a2d327e89604477c090bb55761b60845467918d8e6e117d67ef",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/features/icon/item-2.png",
+			"bytes": 3565,
+			"sha256": "383fd907ca0d74bb5f4f00ef67151c33c264d1b92acd43da0473775819958e6a",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/features/icon/item-3.png",
+			"bytes": 2805,
+			"sha256": "70b1b259e0b0f3d6d12337b82fb46146c8568248c4c90533697e52349510bb70",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/features/icon/item-4.png",
+			"bytes": 3645,
+			"sha256": "aaac1ae34853ec820063588000b755ed6bd3f4fa205f53165b0be6878afec696",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/features/icon/item-5.png",
+			"bytes": 2226,
+			"sha256": "9d3db3a46f2f8df33dfe78ac202751cc91673f077ae22f34dcca2b202fa59d9f",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/features/icon/item-6.png",
+			"bytes": 2950,
+			"sha256": "4038aeba6061e21b1eae5690b9d954ed59d1d40bfb088cd5d3e0b21c80dc38d5",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/features/icon/item-7.png",
+			"bytes": 2436,
+			"sha256": "0f6031b33919b85cdd508a981c47e90a283239aec5ca65136686fc9a1074eb09",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/features/icon/item-8.png",
+			"bytes": 2918,
+			"sha256": "1dfbabbe78cc16e6af7c7023f88e8e81c66a096db6c2ee2e4386fca364f428a8",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/features/item-1.jpg",
+			"bytes": 13934,
+			"sha256": "a0d49311c76d7a3c67c1e6dd5112806b7d1c1c2d78906d7b92191e772e030465",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-10.jpg",
+			"bytes": 176385,
+			"sha256": "01c1850294d65c6bb065e99bfa8200bdc644a115c8044a98dd17ccf4af7aed16",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-11.jpg",
+			"bytes": 106907,
+			"sha256": "9c740bb1df65c1ff4400a5226400f74b3e3674bd95abce5f0987c9c04860c02c",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-12.jpg",
+			"bytes": 65589,
+			"sha256": "0b92a4e33e61d66c87a9c6f0392ebfc86f9afecb8bc1c059191b9e70224fa7b1",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-13.jpg",
+			"bytes": 82361,
+			"sha256": "dca12f26ce2051565db1d3610c30e5a2430d967144906bdc5e358fcca7e6ce3a",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-14.jpg",
+			"bytes": 90243,
+			"sha256": "fc9cad35beec55c1e37ea4518d4b811cb9d36992b977716103b8abc9c281d829",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-15.jpg",
+			"bytes": 46525,
+			"sha256": "8cfdedf17f20cba9d2788312d7a71f7ae2b173f8eca8e1b3ab695d7c32f28277",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-16.jpg",
+			"bytes": 52436,
+			"sha256": "a370ec01254607daea6c526972fbdc44d5dcf6408d2d2a182d9e5726e40df57f",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-17.jpg",
+			"bytes": 49815,
+			"sha256": "d11849c0fe1691ff9a6137dcb28f650a41ff8ccae3c5f75b179bc609e36d9681",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-2.jpg",
+			"bytes": 20409,
+			"sha256": "40622d6ed901cc5e819e7587456d13abc2752be9ef2c818ff57b53e6da3d3501",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-3.jpg",
+			"bytes": 33847,
+			"sha256": "273a8a5631260d5c24116127fb6421c587d6b8678a6979e4a4570438f67e9af2",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-4.jpg",
+			"bytes": 69781,
+			"sha256": "8ee72d323b58394683ed07fd7133a175c062866f10314d7d11902e04ff7fa885",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-5.jpg",
+			"bytes": 117895,
+			"sha256": "b8635fee46c8fa9e2aa515584f4716424b88830108c173597c11f1b1465f860a",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-6.jpg",
+			"bytes": 50582,
+			"sha256": "c8e0d1a59ca65698b1c8a862b212ecd32d020679a1647d62aa3311009a550500",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-7.jpg",
+			"bytes": 58475,
+			"sha256": "68dc71a21d57b91159e589fc92a51b1bb1aca1e7a775f69c0e357911f34e8dbf",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-8.jpg",
+			"bytes": 43578,
+			"sha256": "115a0485fb05305fdb487c1c02574ba8f394cd7ac44178aeb4b445e54fa77fde",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/item-9.jpg",
+			"bytes": 45225,
+			"sha256": "b182b9b322317ffabdb05142ddecb21e02f9613a039552dc98e18df0d74af0ed",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/services-page.jpg",
+			"bytes": 146029,
+			"sha256": "d8e98c9f027c13baab5432070209611493d80a897412b3cefae5a570b99df773",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/features/single-article.jpg",
+			"bytes": 101005,
+			"sha256": "11c6af289daf144be1865ba32e713ec118f6f95694d91d3689f7f54e19f039f1",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/hero/item-1.jpg",
+			"bytes": 103161,
+			"sha256": "4c15e03988902d06e7dbeca9cf738858899538d9c8cf83b20f718c765026125b",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/hero/item-2.jpg",
+			"bytes": 69536,
+			"sha256": "16fd6850543de8fb7c3633388296406c5a64b382499de935c573c38581908453",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/hero/item-3.jpg",
+			"bytes": 147071,
+			"sha256": "3e13fbf189dc382cd528b17cbe5833301e55dfdbbaaf4527bd521c882cb21686",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/hero/item-4.jpg",
+			"bytes": 114297,
+			"sha256": "055197ed0f059297124ca5655f1b066d1a925f1cbf11e21d153a033cfffab930",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/others/bg-masthead-2.jpg",
+			"bytes": 342019,
+			"sha256": "50295dd8099281391fc2b0b4487b29169cacbd6b38418ad8e763abfb3f0d65a8",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/others/bg-masthead.jpg",
+			"bytes": 226303,
+			"sha256": "50b28343616ed9b6ed7a64fd758f21570a70688b5d2a4d426f1bffc849000766",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/others/bg_contact.jpg",
+			"bytes": 319611,
+			"sha256": "2ca75c5e3a1f780104831b04e2ca66de4df7d44b6d38134a2fef524eeb203fdd",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/others/bg_masthead.jpg",
+			"bytes": 147889,
+			"sha256": "65a82da978ed0e565abff22c1923a43373ca0bb825c0c4314c5959a50c78701c",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/others/mask-map-2.png",
+			"bytes": 49381,
+			"sha256": "5e640b5d650e09fa66ca68493052ef1e191f7cc8e5a570108c136930f675079f",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/others/mask-map-3.png",
+			"bytes": 30640,
+			"sha256": "1364610f00d02886de1127a0175c45158a239ebbb4d61e4b1d6540ad09d1859e",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/others/mask-map.png",
+			"bytes": 73636,
+			"sha256": "adad489a7390d2b7cef963577ab49a4729c26d1891938a93d8a2cbe5a54ac23a",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/others/page-404.jpg",
+			"bytes": 196977,
+			"sha256": "56e8d9a3753e02489152126a61846c1f31f709efbc8a189c66a0136e0285e16d",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/others/page-offline.jpg",
+			"bytes": 26520,
+			"sha256": "5708755c4c08c49f8a2c5c9c7c379a2ba8b57ac2c1db71561a59ae0ba517ba58",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/others/sign-icon.png",
+			"bytes": 3435,
+			"sha256": "c863b18390d6cb7565dd4d718efc59aba55e153b8d9929bf5087b065f99dc6db",
+			"ext": ".png"
+		},
+		{
+			"path": "images/joomlart/slideshow/item-1.jpg",
+			"bytes": 52330,
+			"sha256": "92eab6c2a62813c6efbad64ca46fa7ff6af3637c3599af95228c8378d417eea1",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/slideshow/item-2.jpg",
+			"bytes": 107171,
+			"sha256": "ad6a9edc4368104e0792cf06453e1c00890f79fde115523290749d061fae4902",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/slideshow/item-3.jpg",
+			"bytes": 174500,
+			"sha256": "4c05048515ecef903285c611943711bb8ae8fb056963b76081df6f3217806abc",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/slideshow/item-4.jpg",
+			"bytes": 87583,
+			"sha256": "8d47b6be5e95c32b11b9107510a10c0e33bfa401197b004a9be011a6500155e6",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/teams/item-1.jpg",
+			"bytes": 15046,
+			"sha256": "6f9f4a7dfc20b2c161eeceb923bfa3e8c546b732ea0e1ddfd7a670bb0abbe2af",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/teams/item-2.jpg",
+			"bytes": 23580,
+			"sha256": "d125da1854d2caa291e404f53b89fe2b73a390a801040540a92e392d7e9e61f9",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/teams/item-3.jpg",
+			"bytes": 24824,
+			"sha256": "b32792671a7c18f4c854cab6d9dc33bb0726130735e4a8b74af243a4a8c4f2a0",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/teams/item-4.jpg",
+			"bytes": 23058,
+			"sha256": "9ca44fe42987a98556ea29899af74064322852adbe5b69c43fbd881bde173e69",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/teams/item-5.jpg",
+			"bytes": 16461,
+			"sha256": "213cc25869a690fd1ffb4f666e6ea8a8baf843a12816229bf4c7f4edf56c4cac",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/teams/item-6.jpg",
+			"bytes": 18979,
+			"sha256": "91857b7ec4cf02fdd5498f3792fdb990d3fce4abdfece888073b3f5cc05fede1",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/teams/item-7.jpg",
+			"bytes": 19978,
+			"sha256": "1e57f7d49518179ac450a3850436e61dc6e1cc0e968ea68737df6389f6406568",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/teams/item-8.jpg",
+			"bytes": 15812,
+			"sha256": "d980f33f01d241401637312e5ca34bb38a8316efda1226e0bb20fd02af41fb34",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-1.jpg",
+			"bytes": 13037,
+			"sha256": "d7c2264506d30cdf0d58e9dcbf6c9f7480f90cc0e7e2c92e5f068f21d0f7dc3f",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-10.jpg",
+			"bytes": 22514,
+			"sha256": "b52d1b94ca1a13511c729be6230c8bd2c2ac2d3bbd882ee336aa9e8d66601186",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-12.jpg",
+			"bytes": 31848,
+			"sha256": "ea101c8be06b7f064930801d9687a7074624080da2f780b53b2cc252c61b9134",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-13.jpg",
+			"bytes": 34518,
+			"sha256": "24bb750a65c2fbbb4c349bf196a5e422a4d9a196a6315f1595d927f16ca89972",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-2.jpg",
+			"bytes": 19558,
+			"sha256": "3aa51df7d3bd85437389f307e0c9527481573ce1c6934c03ce730c6d2f0ee87b",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-3.jpg",
+			"bytes": 17630,
+			"sha256": "accd1d200f4c9706bce3d2f3bc954bf8db99e416ef7790ab59f29a6ee6193819",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-4.jpg",
+			"bytes": 24528,
+			"sha256": "3e816058165f5b1a0937d9a7bd7b77414782f1a9ab2317fbe2a3b250c0dafc33",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-5.jpg",
+			"bytes": 2865,
+			"sha256": "25430a3eeb8850f5fc839f90cc585ccdddb3ea25c96f0f1d71d99ed97df63bdc",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-6.jpg",
+			"bytes": 2627,
+			"sha256": "51a210f3270213a71785a3f95c659d84ee1ef8f9dbc3f9d3c9e15ebe73c34834",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-7.jpg",
+			"bytes": 2696,
+			"sha256": "15737102f5c46ca6e4e5097a53d44528035680f9691ecbdd27008b7da149091c",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-8.jpg",
+			"bytes": 3255,
+			"sha256": "00d08fcc582e8d4263dd0d08ec60f37123bc95f991a37cd3e26e0e83c994115e",
+			"ext": ".jpg"
+		},
+		{
+			"path": "images/joomlart/testimonials/item-9.jpg",
+			"bytes": 2966,
+			"sha256": "4f165b93a9766ae649abced3b1cb9cfd0190ff52637798fd9008ad2170627aa6",
+			"ext": ".jpg"
+		},
+		{
+			"path": "index.html",
+			"bytes": 29965,
+			"sha256": "8459780f01784cb18fc8d11c119532e07152b51fbb513498fc5d4fd70210dbc2",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/about-us/index.html",
+			"bytes": 31772,
+			"sha256": "0595f6da8c322199cdc6cee30812c60e4c147fae5e0ef159b7ccc01350b645a3",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/contact-us/index.html",
+			"bytes": 26640,
+			"sha256": "feeeb945c213c0e368d9f2d771fad7781efa25b77bbfb5e8200b72e2be1bee39",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/home/home-style-1/index.html",
+			"bytes": 54343,
+			"sha256": "f5c580cc35dee1acebe739dbe20a6d775982ed59b6ea6e7f2ce4db33972755ba",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/home/home-style-2/index.html",
+			"bytes": 50591,
+			"sha256": "888681f0096900cd0507dacd867634a6012cc1232124890192f0e3155f64f2ac",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/home/home-style-3/index.html",
+			"bytes": 38072,
+			"sha256": "329feaa9b8b145b1a807337778670ff524cd8dd58ebc28d66d98d4f470e47164",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/home/home-style-4/index.html",
+			"bytes": 37717,
+			"sha256": "df95c477e72ff148c7b0569b43ed6342a11a62795c8e64c3d20c56db41dead7d",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/j-pages/login/index.html",
+			"bytes": 22297,
+			"sha256": "664b1147798857dd32c430572952c184b8df44f012d9d1a4d90edbddd5bc29c3",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/j-pages/registration/index.html",
+			"bytes": 31900,
+			"sha256": "76020faecbd9c0fdc29dcc66a965b4bd6e7a9164b22090265c3b8be4a64fbee6",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/category-blog/10-stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more/index.html",
+			"bytes": 31931,
+			"sha256": "c60904b8114cf3d4f2b63d19510f8cbea1e06ca8cfd255c12a705e44fed0721c",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/category-blog/3-student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt/index.html",
+			"bytes": 32931,
+			"sha256": "f8270f913694d2331581a01fc53432842d0c30965337d435c3aa80b1c97c362e",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/category-blog/4-how-co-parents-can-stay-on-the-same-financial-page/index.html",
+			"bytes": 32707,
+			"sha256": "8fe98544b48dbc8306bdba08fc2a3fc4c936be0a96fd9bd971638476262aa179",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/category-blog/5-heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen/index.html",
+			"bytes": 33811,
+			"sha256": "367ba6b8d563d99f9ecc0b47f5ff3954dc87f3abce05c2df9dc3c2e84a2d48ee",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/category-blog/6-basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole/index.html",
+			"bytes": 32514,
+			"sha256": "c8015d74cefddcfbb3eaf6a7fe2756ce5eab665cd03f32112453392048041edb",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/category-blog/7-this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently/index.html",
+			"bytes": 33528,
+			"sha256": "3307bad6c6fa283b6a891110b80806488a38673fda6dbb6e80bc4ba1f5c3740b",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/category-blog/8-the-world-needs-to-get-serious-about-combating-carbon-emissions/index.html",
+			"bytes": 32961,
+			"sha256": "982b862015d645f26fa24fb1e181d37597aa3f7bc2743739b58b2d3edd6f5060",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/category-blog/9-china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association/index.html",
+			"bytes": 32648,
+			"sha256": "43e27ccba0b4c76371c8c6f4245eaebec989dce5a0620bfc563dbee9d1d3d51c",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/category-blog/index.html",
+			"bytes": 44312,
+			"sha256": "107acdb1d246838693771f750bc0f850b90151500d5334ffe41d15556d33ab91",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/category-blog/index~start=6.html",
+			"bytes": 34822,
+			"sha256": "7144e69fb90c0c6ab2612d9e4fc77acc279d89bc036882ae7ae59ef09bd78f4e",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/featured-articles/index.html",
+			"bytes": 40922,
+			"sha256": "947f77737f6aebe0a200935e632dade415c3b3180260f89a1b5e73f2d6e18377",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/featured-articles/index~start=12.html",
+			"bytes": 25665,
+			"sha256": "3791b5176c4b62b895c6289d5de44766ad2a8973b0aa0557231164d17a6908c0",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/featured-articles/index~start=6.html",
+			"bytes": 39717,
+			"sha256": "9001489fb32aeffab03ec5d9231cef9742d1eb10de6af0aea56f794ba8386279",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/17-pelosi-s-sharp-message-for-democrats-finds-receptive-audience/index.html",
+			"bytes": 31657,
+			"sha256": "2e4a11546293c48fdf73b5696aeebfe90b44c382d12a962de783cf13ab8f803b",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/18-congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries/index.html",
+			"bytes": 32149,
+			"sha256": "5ab751f0c4dd95fb3cc31a0a76b07f9428b97977c33eeab7e2796e8d309e0598",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/19-state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony/index.html",
+			"bytes": 31768,
+			"sha256": "f5dc1a1a80cc21a1b271b82fb03a7046b793b24c1ac24027b6af0ebfca175bca",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/index.html",
+			"bytes": 34980,
+			"sha256": "9708fc2f11e1cb487c25a1ff130c8132f6eaf0b46f5901f8fdc67501d7cf8864",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/11-business-insights/20-marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost/index.html",
+			"bytes": 31780,
+			"sha256": "c939999eaf513451c99d32cebb83a046e39395987707f4d5cdf248e608fc2855",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/11-business-insights/21-fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia/index.html",
+			"bytes": 32651,
+			"sha256": "b815a2607694e035995589f8c8391c5c737e77a591f41b315a3d972d8b41c05b",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/11-business-insights/22-ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics/index.html",
+			"bytes": 31860,
+			"sha256": "956f3a0f7b7772db47409d574d3c0a5f9bf54c203456b636eae19f92a898ec40",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/11-business-insights/index.html",
+			"bytes": 35276,
+			"sha256": "c2e35d1c38c80d1e21734b838d3a0aec04b78dcfcfd3ec5a3486abb142790f5c",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/23-real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m/index.html",
+			"bytes": 31955,
+			"sha256": "9b4e8136afa5b09ffa5d320905e8109f3a3e600e087869effb466e0dd2009dee",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/24-nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment/index.html",
+			"bytes": 32521,
+			"sha256": "a6062aeea8e4514191d0b0dfaeff3ef207b8e97093b268e2adff8f49b451b71b",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/25-for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment/index.html",
+			"bytes": 32038,
+			"sha256": "edcfc4149a552a093142845026c812d53877337311a8fd0f941ba32417820d4c",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/index.html",
+			"bytes": 35310,
+			"sha256": "2370126e8c045f752139bfccf46e4d0d827033d7d20a6231a9a1f9dd3a087d2d",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/14-retirement-planning/26-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade/index.html",
+			"bytes": 32357,
+			"sha256": "e6f6e77c948cc00e4322067dca05b4364f7493692ecdf2058574c779787c2207",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/14-retirement-planning/27-beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells/index.html",
+			"bytes": 32596,
+			"sha256": "c1f2e441ab2e6c6fca18d1bc811ab8d4719dda060bb20065641a4e9ff2f0f400",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/14-retirement-planning/index.html",
+			"bytes": 31893,
+			"sha256": "c196f1fcbe35030f8034992fd7f31dd3a16c68b2a149ea701bfd3ed477da16ba",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/15-tax-planning/28-house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials/index.html",
+			"bytes": 32259,
+			"sha256": "44c58953310e70c53b9a0684787a9f87dbf8b006bb9361edad496a30c4c2804a",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/15-tax-planning/29-farmers-stockpiling-corn-in-response-to-tough-growing-conditions/index.html",
+			"bytes": 32281,
+			"sha256": "dbd91c0cf73fb235b5f6f16769c520ef8d1756d2c32be7221f13dbc3d2b15b60",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/15-tax-planning/index.html",
+			"bytes": 31260,
+			"sha256": "b3ea961569e8677fdc69f52a842bcd978cabfbd0b6a67d3dcf3da6227065d818",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/9-business-growth-advice/14-extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains/index.html",
+			"bytes": 32380,
+			"sha256": "c5e9cad601d7083d4743c96d041ae870af29b6e1f5cdcf2c282a72f395a11b90",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/9-business-growth-advice/15-china-s-newly-created-dajia-insurance-begins-absorbing-anbang/index.html",
+			"bytes": 32692,
+			"sha256": "734e853cf537b0c9dcb7ab6feb35e24f4d7095b8f22f50531d5245aef716505e",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/9-business-growth-advice/16-trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say/index.html",
+			"bytes": 31784,
+			"sha256": "e5f966376ebb6156ac02abc2997acce72de6ff90347b471ee01dca29ff866053",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/9-business-growth-advice/index.html",
+			"bytes": 34848,
+			"sha256": "72538c6976e1accb994f26ea40cff39b3858bb8b927b2db6533fb887f5288a37",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-all-categories/index.html",
+			"bytes": 30240,
+			"sha256": "a48ef783d350cc64cbad38d28ca5a9787a4cb58c8c3d8a67447c1dabe5799053",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-of-all-tags/business/index.html",
+			"bytes": 34452,
+			"sha256": "47d020a615249ecb92f477df046e98c9246b0ff6101e4aed6c7b8953c832b2c9",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-of-all-tags/finance/index.html",
+			"bytes": 27815,
+			"sha256": "1158cecc9f2636c98bd2786e4a7964d98dbe32c0edb53396683e931661ec694b",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-of-all-tags/joomla/index.html",
+			"bytes": 25379,
+			"sha256": "44b32d022f032d4e6e61a98998bd1a0a91f9ae4172930eedd68667023eb7f0b1",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/list-of-all-tags/joomlart/index.html",
+			"bytes": 31434,
+			"sha256": "70b865866ec3931bfcfed599cd653bb0be817bae7c946fb1f31144e774866b35",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/single-article/index.html",
+			"bytes": 33709,
+			"sha256": "b66f1ad1b5826b53a123f3b6a91d76909bc9f98280b7a5e074333ab99a24d569",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/tagged-items/index.html",
+			"bytes": 33824,
+			"sha256": "4a9233e25da6a55075bb5de28199895ef4b290fbe9d9ecca9e2066b8321f8144",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/joomlart-content/typography/index.html",
+			"bytes": 37829,
+			"sha256": "d926d047d528444e50c7b968d93f3f2514e1dac079b79f8039fce00f5567c48e",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/nope-404/index.html",
+			"bytes": 2195,
+			"sha256": "0151d6839e89ddc125f6f01567d94e8f09b19d59f1ac21be5890cdea36011f15",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/other-pages/error-page/index.html",
+			"bytes": 20239,
+			"sha256": "a4ca8b06e6731e0902782388334de0a0ed4e6044f3925a3ef5121826ef7a2db7",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/other-pages/offline-page/index.html",
+			"bytes": 20263,
+			"sha256": "26cc5738c4c48d847f2e307ed6b634275458ad5671372d8314a6b38466ab57d4",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/other-pages/smart-search/index.html",
+			"bytes": 27642,
+			"sha256": "6f5444fa8a0cd99920502881498283565a2b589960791957ff8eb2c60ffe5a60",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/password-reset/index.html",
+			"bytes": 19403,
+			"sha256": "16dbc7b42d8d9b88fa5f1e05259cb743845c0d30f38dad398a9f159c1acf1443",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/services-page/index.html",
+			"bytes": 32481,
+			"sha256": "56847407cfdd54840e21de26918e59fe0e676702f883df140cd2445f243bb21d",
+			"ext": ".html"
+		},
+		{
+			"path": "index.php/username-reminder-request/index.html",
+			"bytes": 19576,
+			"sha256": "4e8983fac96ce5b7e5070ad65f793862eb06cd5f5efddb89b6f261598d67fac3",
+			"ext": ".html"
+		},
+		{
+			"path": "media/com_finder/css/finder.min.css",
+			"bytes": 1765,
+			"sha256": "0376f10fb61436bda3ba56b432ee050ba691a3483118ab57aa7dc07eb42ea4cd",
+			"ext": ".css"
+		},
+		{
+			"path": "media/com_finder/js/finder.min.js",
+			"bytes": 1381,
+			"sha256": "a3ccb2cd02bb4362be9d0b1f737aec5f7304af71730a1e4017ba003854fce5d6",
+			"ext": ".js"
+		},
+		{
+			"path": "media/com_tags/js/tag-default.min.js",
+			"bytes": 486,
+			"sha256": "7c97dc019c350c50f44a79b631a853a7c9dc409c2d252394eaab8201dcd25d27",
+			"ext": ".js"
+		},
+		{
+			"path": "media/system/css/fields/calendar.min.css",
+			"bytes": 4317,
+			"sha256": "e130941535508f3dbd044224def5004648c3f25644ea9f16c5cf2c22da79b958",
+			"ext": ".css"
+		},
+		{
+			"path": "media/system/images/select-bg.svg",
+			"bytes": 504,
+			"sha256": "0aca0d7b534234c0f5c680504d4f37784c71c4733e272d9da6e4521b185cad6b",
+			"ext": ".svg"
+		},
+		{
+			"path": "media/system/js/core.min.js",
+			"bytes": 7786,
+			"sha256": "045181e3f5ea2f3afd09831dd18ea871b8a98fcb8cb3233af395fe123bdd3934",
+			"ext": ".js"
+		},
+		{
+			"path": "media/system/js/fields/calendar-locales/date/gregorian/date-helper.min.js",
+			"bytes": 5065,
+			"sha256": "0b38b69c2d3cde558c1850edfa64674f7142b60e3d5a3e2502bbfd14e5e7731a",
+			"ext": ".js"
+		},
+		{
+			"path": "media/system/js/fields/calendar.min.js",
+			"bytes": 25195,
+			"sha256": "b4d8c60e15ad1dc5c7df10c7801571340052b80f34de7c8d6533fbe8c1888d06",
+			"ext": ".js"
+		},
+		{
+			"path": "media/system/js/fields/passwordstrength.min.js",
+			"bytes": 2750,
+			"sha256": "ba9b9bf4d2a0ccb718ad407262d5d25b5312860e038bdadf490c28a6a3c89026",
+			"ext": ".js"
+		},
+		{
+			"path": "media/system/js/fields/passwordview.min.js",
+			"bytes": 1237,
+			"sha256": "1ba2fcc7648c62b2c7cf2d539092cec381ee03631114f3e5a851b398a2c8ff25",
+			"ext": ".js"
+		},
+		{
+			"path": "media/system/js/fields/validate.min.js",
+			"bytes": 8574,
+			"sha256": "2eb3c772ac894af82059fcf115b2ee545599cacf490eae2826c6e71a069c1f37",
+			"ext": ".js"
+		},
+		{
+			"path": "media/system/js/joomla-hidden-mail.min.js",
+			"bytes": 1569,
+			"sha256": "1aacba2d5d0e5f070a52691efbf51b7183bba1fe42c6569ed5f2025c6e409f19",
+			"ext": ".js"
+		},
+		{
+			"path": "media/system/js/keepalive.min.js",
+			"bytes": 741,
+			"sha256": "983c4e677c121da92edce183d530881200e0ce545ddca1174bdb3eedb7588619",
+			"ext": ".js"
+		},
+		{
+			"path": "media/system/js/messages.min.js",
+			"bytes": 5542,
+			"sha256": "09426cb3251a9408374f3f37bb5ec75a921c2e71d8717a83e7ab0acf16addf0a",
+			"ext": ".js"
+		},
+		{
+			"path": "media/vendor/awesomplete/css/awesomplete.css",
+			"bytes": 1755,
+			"sha256": "8570c166966479f18cd0be77bb56947a3abc05b914257698134e652274b5ffa8",
+			"ext": ".css"
+		},
+		{
+			"path": "media/vendor/awesomplete/js/awesomplete.min.js",
+			"bytes": 8003,
+			"sha256": "b88cd20ce7955245180991050108b764c14a17986e7eae2daee92273eb7f75df",
+			"ext": ".js"
+		},
+		{
+			"path": "media/vendor/bootstrap/js/collapse.min.js",
+			"bytes": 3994,
+			"sha256": "cf9de80f69ca7fb0965323fb377b2424b59d4ab961f5a7802e537c7effb98320",
+			"ext": ".js"
+		},
+		{
+			"path": "media/vendor/bootstrap/js/popover.min.js",
+			"bytes": 11363,
+			"sha256": "4a5cd0b98e61e9968d173f7f030e7538303f55e13fce6105b8dd33bedcee4fcb",
+			"ext": ".js"
+		},
+		{
+			"path": "media/vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
+			"bytes": 210792,
+			"sha256": "808443ae6c8204395add8543da8a90a60b9376fb0f87ed8e8ea37d109596d805",
+			"ext": ".ttf"
+		},
+		{
+			"path": "media/vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
+			"bytes": 118684,
+			"sha256": "d7236a19bf23cbb2027280e8f51dc99d6c45976a2ed60de73382b034b18a2b68",
+			"ext": ".woff2"
+		},
+		{
+			"path": "media/vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
+			"bytes": 68064,
+			"sha256": "54cf6086f7bb21f9d072ad494a19b4681fa516dd0a14cee52da01d3651a913a3",
+			"ext": ".ttf"
+		},
+		{
+			"path": "media/vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
+			"bytes": 25472,
+			"sha256": "e3456d1283b9d75337a773dfd147bf908fd02c01b4bf48576d8603a69b13cbe5",
+			"ext": ".woff2"
+		},
+		{
+			"path": "media/vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
+			"bytes": 426112,
+			"sha256": "d2f0593540b0e33ba6de255a54f272d466e31144806956bea8cfdbf7edffc9bd",
+			"ext": ".ttf"
+		},
+		{
+			"path": "media/vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
+			"bytes": 158220,
+			"sha256": "aa75998623a391e61c6901794ace832e3ecdd288b56d608f21bea0411acc0b8e",
+			"ext": ".woff2"
+		},
+		{
+			"path": "media/vendor/joomla-custom-elements/css/joomla-alert.min.css",
+			"bytes": 3654,
+			"sha256": "df8eb5ad4051778586df18f3e6a7d3368820b8e8134751fa5ac845cead9318cb",
+			"ext": ".css"
+		},
+		{
+			"path": "media/vendor/jquery/js/jquery-noconflict.min.js",
+			"bytes": 30,
+			"sha256": "b7bbe381cf509577690654422e09b73e9fdbb0b70d47028146147da7a7a0c5fa",
+			"ext": ".js"
+		},
+		{
+			"path": "media/vendor/jquery/js/jquery.min.js",
+			"bytes": 87533,
+			"sha256": "fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a",
+			"ext": ".js"
+		},
+		{
+			"path": "modules/mod_jaquickcontact/assets/images/letter-pattern.png",
+			"bytes": 10766,
+			"sha256": "3130cc14ddbbab3df4a12ecbba86ea8d5aa4f19bb2e3d0fde98a9ff46df3196c",
+			"ext": ".png"
+		},
+		{
+			"path": "plugins/system/t3/base-bs3/bootstrap/fonts/glyphicons-halflings-regular.ttf",
+			"bytes": 45404,
+			"sha256": "e395044093757d82afcb138957d06a1ea9361bdcf0b442d06a18a8051af57456",
+			"ext": ".ttf"
+		},
+		{
+			"path": "plugins/system/t3/base-bs3/bootstrap/fonts/glyphicons-halflings-regular.woff",
+			"bytes": 23424,
+			"sha256": "a26394f7ede100ca118eff2eda08596275a9839b959c226e15439557a5a80742",
+			"ext": ".woff"
+		},
+		{
+			"path": "plugins/system/t3/base-bs3/bootstrap/fonts/glyphicons-halflings-regular.woff2",
+			"bytes": 18028,
+			"sha256": "fe185d11a49676890d47bb783312a0cda5a44c4039214094e7957b4c040ef11c",
+			"ext": ".woff2"
+		},
+		{
+			"path": "plugins/system/t3/base-bs3/fonts/font-awesome/css/font-awesome-base.css",
+			"bytes": 31181,
+			"sha256": "e245536ad67af96de8ffb12352b93d3e84cd21e8a8e39507510fa6ee4a5e76be",
+			"ext": ".css"
+		},
+		{
+			"path": "plugins/system/t3/base-bs3/fonts/font-awesome/font/fontawesome-webfont.ttf",
+			"bytes": 79076,
+			"sha256": "14dcb8f02b3b81c2baab230610c349a94282bbd976693759e9b4a8694d486451",
+			"ext": ".ttf"
+		},
+		{
+			"path": "plugins/system/t3/base-bs3/fonts/font-awesome/font/fontawesome-webfont.woff",
+			"bytes": 43572,
+			"sha256": "18e6b5ff511b90edf098e62ac45ed9d6673a3eee10165d0de4164d4d02a3a77f",
+			"ext": ".woff"
+		},
+		{
+			"path": "plugins/system/t3/base-bs3/js/respond.min.js",
+			"bytes": 4377,
+			"sha256": "83a8807ef669fa70d0d9375347f5552897f76c6ae8e2e6f97ef592595462d8d1",
+			"ext": ".js"
+		},
+		{
+			"path": "t3-assets/css/css-151e5-55514.css",
+			"bytes": 147997,
+			"sha256": "5b85afe56b9c55e1ffac65146eb99443d5f6dbf2c30aa77ce5b823b07c54a0b3",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-19ef6-55514.css",
+			"bytes": 148645,
+			"sha256": "90b2720cb0ae251f47de334174dcc7ad6bc4319955523867036d6699e7edfcc2",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-2f472-05668.css",
+			"bytes": 214139,
+			"sha256": "91211345e699e447dcde523a4d3cbf65c921b75d8727dcdc16fe4b4f00f2bf17",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-36224-05668.css",
+			"bytes": 222418,
+			"sha256": "871f23d990c57457765e7379f09e785a72f46f189912bb987c893ba4a3c7af15",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-37289-55514.css",
+			"bytes": 147986,
+			"sha256": "d79e6b904095187c1022aa8d66c3266b68e76826f883121d87d1f0bd92a222e1",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-67cae-67518.css",
+			"bytes": 102810,
+			"sha256": "5e905d52a829a07f7e3b9d9098b1c2888025bb85602d043df4d928da2c11f3bc",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-67f36-05668.css",
+			"bytes": 221158,
+			"sha256": "0d5adcf3cfd799a659207fd9991e5cfc301afcf8d27b1fee9f7dd34dba564cd9",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-6fedd-55514.css",
+			"bytes": 147853,
+			"sha256": "7021ed1b61317ecb4e0cabeb93a00f526f3f4c2279eaa37c7e0f840bdf7d259e",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-952db-05668.css",
+			"bytes": 218222,
+			"sha256": "75e0d3c2a89f7b5cda5390a34cd1cb6c00c7b27662c6fb9ce7a8375e53412262",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-adef3-05668.css",
+			"bytes": 91198,
+			"sha256": "0b9a0f36d4d255fbb41074cc30d65c366596eda37b6df739a0cde2dcb5fdf314",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-d3fa4-05668.css",
+			"bytes": 84243,
+			"sha256": "15121f3b18de4931eede643be0f47ab85b2610d6f9d34b12706fdca9f5859f1f",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/css/css-fe78d-05668.css",
+			"bytes": 85135,
+			"sha256": "2948117401e311d2e4da36a63b0b3fcbe83bfd0dd8b93299437161120c716233",
+			"ext": ".css"
+		},
+		{
+			"path": "t3-assets/js/js-214c5-55514.js",
+			"bytes": 214692,
+			"sha256": "0422921ae7c6da6fdd68e090fe929f3b0523f9734d3e2178feee099140629b47",
+			"ext": ".js"
+		},
+		{
+			"path": "t3-assets/js/js-36ed4-55514.js",
+			"bytes": 218188,
+			"sha256": "6d68353a2472ebde4d396ef0ed3d00e6d0f184f37b030b9366c9feb3cf46883f",
+			"ext": ".js"
+		},
+		{
+			"path": "t3-assets/js/js-e901b-55514.js",
+			"bytes": 214523,
+			"sha256": "f91dcd70796ac6b7a17c1602ba6c62f5754884ef22dde1603762a9309cd2cdc9",
+			"ext": ".js"
+		},
+		{
+			"path": "t3-assets/js/js-ec378-55514.js",
+			"bytes": 214356,
+			"sha256": "93e94941f8b6c044ae9b93c54655895fecd32135bc2bdab2df54fa135ce7b5b0",
+			"ext": ".js"
+		},
+		{
+			"path": "templates/ja_morgan/css/darkmode.css",
+			"bytes": 62336,
+			"sha256": "704ca7128f7892a5261e3fbd8df1023924802ff1966069f252a8fd4f4b5196b1",
+			"ext": ".css"
+		},
+		{
+			"path": "templates/ja_morgan/css/error.css",
+			"bytes": 3150,
+			"sha256": "8abcc5b7a5fcf6e80f23198f8e75c2ab12ec94161768c222d4ca664aed902861",
+			"ext": ".css"
+		},
+		{
+			"path": "templates/ja_morgan/favicon.ico",
+			"bytes": 1150,
+			"sha256": "0e626ccb9a1ad74985a5813c6741d8702ff7a1a864e3f7d9fe99969d2468d1ce",
+			"ext": ".ico"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/font-awesome/fonts/fontawesome-webfont.svg",
+			"bytes": 365616,
+			"sha256": "d67041fe5d50eef9ef671643968f7ce6b130eaaaaa2ce4d496b18d0a33aeb87b",
+			"ext": ".svg"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/font-awesome/fonts/fontawesome-webfont.ttf",
+			"bytes": 142072,
+			"sha256": "7b5a4320fba0d4c8f79327645b4b9cc875a2ec617a557e849b813918eb733499",
+			"ext": ".ttf"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/font-awesome/fonts/fontawesome-webfont.woff",
+			"bytes": 83588,
+			"sha256": "c812ddc9e475d3e65d68a6b3b589ce598a2a5babb7afc55477d59215c4a38a40",
+			"ext": ".woff"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/font-awesome/fonts/fontawesome-webfont.woff2",
+			"bytes": 66624,
+			"sha256": "ff82aeed6b9bb6701696c84d1b223d2e682eb78c89117a438ce6cfea8c498995",
+			"ext": ".woff2"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/ionicons/fonts/ionicons.svg",
+			"bytes": 312748,
+			"sha256": "38d00ff0c1e2da9ff59d5681e6b2379a6a172a3cfa3136b419479ff7dfdf95f4",
+			"ext": ".svg"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/ionicons/fonts/ionicons.ttf",
+			"bytes": 112472,
+			"sha256": "0ac8438926cd5e11bdaf75b479a5cc25c6b38070965242d6303ddcaadbf1fa63",
+			"ext": ".ttf"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/ionicons/fonts/ionicons.woff",
+			"bytes": 65908,
+			"sha256": "c5b89b6e219ff5a5cf7fd80ab8c39cb5a819bab81471e272d6fb3106f26ee6ff",
+			"ext": ".woff"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/ionicons/fonts/ionicons.woff2",
+			"bytes": 50556,
+			"sha256": "2d02d165cb720aec2fde78a93113a459729e0503951353f719076bc5b4a7a845",
+			"ext": ".woff2"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/ptrootui/PT_Root_UI_Bold-webfont.woff",
+			"bytes": 25320,
+			"sha256": "832fa2ae125ad3d9ccebfbd0d9fb4ad350be2e7354a361062789195fd680d9f3",
+			"ext": ".woff"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/ptrootui/PT_Root_UI_Medium-webfont.woff",
+			"bytes": 24964,
+			"sha256": "70a7941f662745d3c7c46d65e98e83f255d9ba4de8a32fe04e192e66e198e158",
+			"ext": ".woff"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/ptrootui/PT_Root_UI_Regular-webfont.woff",
+			"bytes": 24324,
+			"sha256": "301d1fc1a34a968fdf902e8095e5cbeaab583f2eed9afdcc112890d34af69af0",
+			"ext": ".woff"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/ptrootui/be-vietnam-pro-400.woff2",
+			"bytes": 35580,
+			"sha256": "0aacb05b6a50bf4ebb3b53a9e55e59cbebd17f76c7278f18e9670a84181e853e",
+			"ext": ".woff2"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/ptrootui/be-vietnam-pro-600.woff2",
+			"bytes": 37952,
+			"sha256": "c47eaa9130e63b20de882e52bc8dbc689d2699fbdab5c63933f1f3fc3313cf55",
+			"ext": ".woff2"
+		},
+		{
+			"path": "templates/ja_morgan/fonts/ptrootui/be-vietnam-pro-700.woff2",
+			"bytes": 38876,
+			"sha256": "8041f8cb445f3f2e553ca6c4062c23f41376e048162f7a6a67799d0d67b69a8a",
+			"ext": ".woff2"
+		},
+		{
+			"path": "templates/ja_morgan/images/bg-404.jpg",
+			"bytes": 443050,
+			"sha256": "991862d49152377ea0be1803aa8a852f90c5623bcfa76740b8875e4abc5a3d66",
+			"ext": ".jpg"
+		},
+		{
+			"path": "templates/ja_morgan/images/bg_masthead.jpg",
+			"bytes": 147889,
+			"sha256": "65a82da978ed0e565abff22c1923a43373ca0bb825c0c4314c5959a50c78701c",
+			"ext": ".jpg"
+		},
+		{
+			"path": "templates/ja_morgan/images/ico/search-inverse.png",
+			"bytes": 1249,
+			"sha256": "69e6ad70600e76f192d4711f04b86107fa9e4dff07cfd76a45a6b01f3fd1ca7d",
+			"ext": ".png"
+		},
+		{
+			"path": "templates/ja_morgan/images/ico/search.png",
+			"bytes": 1296,
+			"sha256": "9b1192685dd08d942fe184358edd8449d7de9a96f4c064a5949a665061656154",
+			"ext": ".png"
+		},
+		{
+			"path": "templates/ja_morgan/images/logo.png",
+			"bytes": 5748,
+			"sha256": "bca261ab2562fd4342152ab19bb5ae294c1613558aa4c15ffc198b69f161bdef",
+			"ext": ".png"
+		},
+		{
+			"path": "templates/ja_morgan/js/owl-carousel/owl.video.play.png",
+			"bytes": 4976,
+			"sha256": "0436045686fddf10ccbbe2568e0cbffb457e7de7d43d1115c0056e81e97149ff",
+			"ext": ".png"
+		}
+	],
+	"pages": [
+		{
+			"file": "index.html",
+			"sha256": "8459780f01784cb18fc8d11c119532e07152b51fbb513498fc5d4fd70210dbc2",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Creative multipurpose Joomla template for business - JA Morgan"
+		},
+		{
+			"file": "index.php/about-us/index.html",
+			"sha256": "0595f6da8c322199cdc6cee30812c60e4c147fae5e0ef159b7ccc01350b645a3",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "About Us"
+		},
+		{
+			"file": "index.php/contact-us/index.html",
+			"sha256": "feeeb945c213c0e368d9f2d771fad7781efa25b77bbfb5e8200b72e2be1bee39",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Contact Us"
+		},
+		{
+			"file": "index.php/home/home-style-1/index.html",
+			"sha256": "f5c580cc35dee1acebe739dbe20a6d775982ed59b6ea6e7f2ce4db33972755ba",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Getting Started"
+		},
+		{
+			"file": "index.php/home/home-style-2/index.html",
+			"sha256": "888681f0096900cd0507dacd867634a6012cc1232124890192f0e3155f64f2ac",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Home Style 2"
+		},
+		{
+			"file": "index.php/home/home-style-3/index.html",
+			"sha256": "329feaa9b8b145b1a807337778670ff524cd8dd58ebc28d66d98d4f470e47164",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Home Style 3"
+		},
+		{
+			"file": "index.php/home/home-style-4/index.html",
+			"sha256": "df95c477e72ff148c7b0569b43ed6342a11a62795c8e64c3d20c56db41dead7d",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Home Style 4"
+		},
+		{
+			"file": "index.php/j-pages/login/index.html",
+			"sha256": "664b1147798857dd32c430572952c184b8df44f012d9d1a4d90edbddd5bc29c3",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Login"
+		},
+		{
+			"file": "index.php/j-pages/registration/index.html",
+			"sha256": "76020faecbd9c0fdc29dcc66a965b4bd6e7a9164b22090265c3b8be4a64fbee6",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Registration"
+		},
+		{
+			"file": "index.php/joomlart-content/category-blog/10-stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more/index.html",
+			"sha256": "c60904b8114cf3d4f2b63d19510f8cbea1e06ca8cfd255c12a705e44fed0721c",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Stocks making the biggest moves midday: DaVita, AMD, 3M, Acacia Communications and more"
+		},
+		{
+			"file": "index.php/joomlart-content/category-blog/3-student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt/index.html",
+			"sha256": "f8270f913694d2331581a01fc53432842d0c30965337d435c3aa80b1c97c362e",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Student loan borrowers who say they were defrauded sue Betsy DeVos for failing to cancel their debt"
+		},
+		{
+			"file": "index.php/joomlart-content/category-blog/4-how-co-parents-can-stay-on-the-same-financial-page/index.html",
+			"sha256": "8fe98544b48dbc8306bdba08fc2a3fc4c936be0a96fd9bd971638476262aa179",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "How co-parents can stay on the same financial page"
+		},
+		{
+			"file": "index.php/joomlart-content/category-blog/5-heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen/index.html",
+			"sha256": "367ba6b8d563d99f9ecc0b47f5ff3954dc87f3abce05c2df9dc3c2e84a2d48ee",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Heavy Debt Humbles China’s Business Champions, Including the Jewelry Queen"
+		},
+		{
+			"file": "index.php/joomlart-content/category-blog/6-basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole/index.html",
+			"sha256": "c8015d74cefddcfbb3eaf6a7fe2756ce5eab665cd03f32112453392048041edb",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "BASF Issues Profit Warning on U.S.-China Trade Concerns Longe and Parole"
+		},
+		{
+			"file": "index.php/joomlart-content/category-blog/7-this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently/index.html",
+			"sha256": "3307bad6c6fa283b6a891110b80806488a38673fda6dbb6e80bc4ba1f5c3740b",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "This is what super savers who plan to retire early are doing differently"
+		},
+		{
+			"file": "index.php/joomlart-content/category-blog/8-the-world-needs-to-get-serious-about-combating-carbon-emissions/index.html",
+			"sha256": "982b862015d645f26fa24fb1e181d37597aa3f7bc2743739b58b2d3edd6f5060",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "The world needs to get serious about combating carbon emissions"
+		},
+		{
+			"file": "index.php/joomlart-content/category-blog/9-china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association/index.html",
+			"sha256": "43e27ccba0b4c76371c8c6f4245eaebec989dce5a0620bfc563dbee9d1d3d51c",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "China's June vehicle sales down 9.6% year-on-year: Industry association"
+		},
+		{
+			"file": "index.php/joomlart-content/category-blog/index.html",
+			"sha256": "107acdb1d246838693771f750bc0f850b90151500d5334ffe41d15556d33ab91",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Category Blog"
+		},
+		{
+			"file": "index.php/joomlart-content/category-blog/index~start=6.html",
+			"sha256": "7144e69fb90c0c6ab2612d9e4fc77acc279d89bc036882ae7ae59ef09bd78f4e",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index~start=6",
+			"title": "Category Blog"
+		},
+		{
+			"file": "index.php/joomlart-content/featured-articles/index.html",
+			"sha256": "947f77737f6aebe0a200935e632dade415c3b3180260f89a1b5e73f2d6e18377",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Featured Articles"
+		},
+		{
+			"file": "index.php/joomlart-content/featured-articles/index~start=12.html",
+			"sha256": "3791b5176c4b62b895c6289d5de44766ad2a8973b0aa0557231164d17a6908c0",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index~start=12",
+			"title": "Featured Articles"
+		},
+		{
+			"file": "index.php/joomlart-content/featured-articles/index~start=6.html",
+			"sha256": "9001489fb32aeffab03ec5d9231cef9742d1eb10de6af0aea56f794ba8386279",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index~start=6",
+			"title": "Featured Articles"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/17-pelosi-s-sharp-message-for-democrats-finds-receptive-audience/index.html",
+			"sha256": "2e4a11546293c48fdf73b5696aeebfe90b44c382d12a962de783cf13ab8f803b",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Pelosi’s Sharp Message for Democrats Finds Receptive Audience"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/18-congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries/index.html",
+			"sha256": "5ab751f0c4dd95fb3cc31a0a76b07f9428b97977c33eeab7e2796e8d309e0598",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Congress Presses for More Details About Acosta’s Role in Epstein Plea Deal Worries"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/19-state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony/index.html",
+			"sha256": "f5dc1a1a80cc21a1b271b82fb03a7046b793b24c1ac24027b6af0ebfca175bca",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "State Department Analyst Resigns After White House Blocked Climate Change Testimony"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/10-tax-advice-and-management/index.html",
+			"sha256": "9708fc2f11e1cb487c25a1ff130c8132f6eaf0b46f5901f8fdc67501d7cf8864",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Tax Advice &amp; Management"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/11-business-insights/20-marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost/index.html",
+			"sha256": "c939999eaf513451c99d32cebb83a046e39395987707f4d5cdf248e608fc2855",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Marco Rubio Introduces a Bill to Boost the U.S. Rare-Earth Industry Vokalia and Consonantia Bill to Boost"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/11-business-insights/21-fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia/index.html",
+			"sha256": "b815a2607694e035995589f8c8391c5c737e77a591f41b315a3d972d8b41c05b",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Fed Chairman Hints at Lower Interest Rates, Cites Trade Uncertainty Lower Interest Rates Vokalia and Consonantia"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/11-business-insights/22-ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics/index.html",
+			"sha256": "956f3a0f7b7772db47409d574d3c0a5f9bf54c203456b636eae19f92a898ec40",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Ivanka Trump Pushes Initiative to Give Women Bigger Role in Global Peace Efforts of The Semantics"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/11-business-insights/index.html",
+			"sha256": "c2e35d1c38c80d1e21734b838d3a0aec04b78dcfcfd3ec5a3486abb142790f5c",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Business Insights"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/23-real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m/index.html",
+			"sha256": "9b4e8136afa5b09ffa5d320905e8109f3a3e600e087869effb466e0dd2009dee",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Real Estate Mogul William Zeckendorf Sells Park Avenue Apartment  Language Ocean for $29.5M"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/24-nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment/index.html",
+			"sha256": "a6062aeea8e4514191d0b0dfaeff3ef207b8e97093b268e2adff8f49b451b71b",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Nintendo Moves Forward with a Cheaper Switch Console Sells Park Avenue Apartment"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/25-for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment/index.html",
+			"sha256": "edcfc4149a552a093142845026c812d53877337311a8fd0f941ba32417820d4c",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "For Sale in Malta: A Path to EU Citizenship Cheaper Sells Park Avenue Apartment"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/12-investment-and-superannuation/index.html",
+			"sha256": "2370126e8c045f752139bfccf46e4d0d827033d7d20a6231a9a1f9dd3a087d2d",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Investment &amp; Superannuation"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/14-retirement-planning/26-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade/index.html",
+			"sha256": "e6f6e77c948cc00e4322067dca05b4364f7493692ecdf2058574c779787c2207",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Cargill Profit Drops on Trade, A Path to EU Citizenship Cheaper Sells Flooding Challenges Profit Drops on Trade"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/14-retirement-planning/27-beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells/index.html",
+			"sha256": "c1f2e441ab2e6c6fca18d1bc811ab8d4719dda060bb20065641a4e9ff2f0f400",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Beleaguered Money Managers Find Bright Spot in ESG Cargill Profit Drops on Trade, A Path to EU Citizenship Cheaper Sells"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/14-retirement-planning/index.html",
+			"sha256": "c196f1fcbe35030f8034992fd7f31dd3a16c68b2a149ea701bfd3ed477da16ba",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Retirement Planning"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/15-tax-planning/28-house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials/index.html",
+			"sha256": "44c58953310e70c53b9a0684787a9f87dbf8b006bb9361edad496a30c4c2804a",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "House Judiciary Committee Authorizes Subpoenas to Ex-Trump Campaign Officials"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/15-tax-planning/29-farmers-stockpiling-corn-in-response-to-tough-growing-conditions/index.html",
+			"sha256": "dbd91c0cf73fb235b5f6f16769c520ef8d1756d2c32be7221f13dbc3d2b15b60",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Farmers Stockpiling Corn in Response to Tough Growing Conditions"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/15-tax-planning/index.html",
+			"sha256": "b3ea961569e8677fdc69f52a842bcd978cabfbd0b6a67d3dcf3da6227065d818",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Tax Planning"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/9-business-growth-advice/14-extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains/index.html",
+			"sha256": "c5e9cad601d7083d4743c96d041ae870af29b6e1f5cdcf2c282a72f395a11b90",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Extreme Trash Recycling: 104 Protocols, 30,000 Inspectors Behind The Word Mountains"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/9-business-growth-advice/15-china-s-newly-created-dajia-insurance-begins-absorbing-anbang/index.html",
+			"sha256": "734e853cf537b0c9dcb7ab6feb35e24f4d7095b8f22f50531d5245aef716505e",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "China’s Newly Created Dajia Insurance Begins Absorbing Anbang"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/9-business-growth-advice/16-trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say/index.html",
+			"sha256": "e5f966376ebb6156ac02abc2997acce72de6ff90347b471ee01dca29ff866053",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Trump Administration Hasn’t Briefed Congress on New Rules for Cyberattacks, Lawmakers Say"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/9-business-growth-advice/index.html",
+			"sha256": "72538c6976e1accb994f26ea40cff39b3858bb8b927b2db6533fb887f5288a37",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Business Growth Advice"
+		},
+		{
+			"file": "index.php/joomlart-content/list-all-categories/index.html",
+			"sha256": "a48ef783d350cc64cbad38d28ca5a9787a4cb58c8c3d8a67447c1dabe5799053",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "List All Categories"
+		},
+		{
+			"file": "index.php/joomlart-content/list-of-all-tags/business/index.html",
+			"sha256": "47d020a615249ecb92f477df046e98c9246b0ff6101e4aed6c7b8953c832b2c9",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Business"
+		},
+		{
+			"file": "index.php/joomlart-content/list-of-all-tags/finance/index.html",
+			"sha256": "1158cecc9f2636c98bd2786e4a7964d98dbe32c0edb53396683e931661ec694b",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Finance"
+		},
+		{
+			"file": "index.php/joomlart-content/list-of-all-tags/joomla/index.html",
+			"sha256": "44b32d022f032d4e6e61a98998bd1a0a91f9ae4172930eedd68667023eb7f0b1",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Joomla"
+		},
+		{
+			"file": "index.php/joomlart-content/list-of-all-tags/joomlart/index.html",
+			"sha256": "70b865866ec3931bfcfed599cd653bb0be817bae7c946fb1f31144e774866b35",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "JoomlArt"
+		},
+		{
+			"file": "index.php/joomlart-content/single-article/index.html",
+			"sha256": "b66f1ad1b5826b53a123f3b6a91d76909bc9f98280b7a5e074333ab99a24d569",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Strong job growth is back: Payrolls jump in June well above expectations"
+		},
+		{
+			"file": "index.php/joomlart-content/tagged-items/index.html",
+			"sha256": "4a9233e25da6a55075bb5de28199895ef4b290fbe9d9ecca9e2066b8321f8144",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Morgan"
+		},
+		{
+			"file": "index.php/joomlart-content/typography/index.html",
+			"sha256": "d926d047d528444e50c7b968d93f3f2514e1dac079b79f8039fce00f5567c48e",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Typography"
+		},
+		{
+			"file": "index.php/nope-404/index.html",
+			"sha256": "0151d6839e89ddc125f6f01567d94e8f09b19d59f1ac21be5890cdea36011f15",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "404 - Error: 404"
+		},
+		{
+			"file": "index.php/other-pages/error-page/index.html",
+			"sha256": "a4ca8b06e6731e0902782388334de0a0ed4e6044f3925a3ef5121826ef7a2db7",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Error Page"
+		},
+		{
+			"file": "index.php/other-pages/offline-page/index.html",
+			"sha256": "26cc5738c4c48d847f2e307ed6b634275458ad5671372d8314a6b38466ab57d4",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Offline Page"
+		},
+		{
+			"file": "index.php/other-pages/smart-search/index.html",
+			"sha256": "6f5444fa8a0cd99920502881498283565a2b589960791957ff8eb2c60ffe5a60",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Smart Search"
+		},
+		{
+			"file": "index.php/password-reset/index.html",
+			"sha256": "16dbc7b42d8d9b88fa5f1e05259cb743845c0d30f38dad398a9f159c1acf1443",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Password Reset"
+		},
+		{
+			"file": "index.php/services-page/index.html",
+			"sha256": "56847407cfdd54840e21de26918e59fe0e676702f883df140cd2445f243bb21d",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Services"
+		},
+		{
+			"file": "index.php/username-reminder-request/index.html",
+			"sha256": "4e8983fac96ce5b7e5070ad65f793862eb06cd5f5efddb89b6f261598d67fac3",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Username Reminder Request"
+		}
+	],
+	"totals": {
+		"files": 254,
+		"bytes": 21713526,
+		"html": 59,
+		"byExt": {
+			".json": 1,
+			".jpg": 104,
+			".png": 23,
+			".html": 59,
+			".css": 19,
+			".js": 21,
+			".svg": 3,
+			".ttf": 7,
+			".woff2": 9,
+			".woff": 7,
+			".ico": 1
+		},
+		"dataScripts": 0
+	}
+}
