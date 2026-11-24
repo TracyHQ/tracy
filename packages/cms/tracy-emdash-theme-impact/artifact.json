@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Impact",
-	"generatedAt": "2026-11-24T11:10:52.781Z",
+	"generatedAt": "2026-11-24T11:24:24.251Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,14 +75,14 @@
 		"docs/content-model.md": "sha256:f02342db67a0aba7f74154a220484a522f5c6ea0d278d9bf49f57e9e5b524023",
 		"docs/content-rules.md": "sha256:e9696061af5fef30089d714cc5b3d227f7cfe9e94462e73c7f92d24c0a9046da",
 		"docs/design-system.md": "sha256:fd7e6f1483f84b6e5fbf4eab56b1cc43435e800665066e81385691b8f12018b3",
-		"docs/generated/inventory.json": "sha256:70f424f9851e5e00d8404a88506af17cd7d7db618404ddc848d12cee8aadb258",
-		"docs/generated/inventory.md": "sha256:632eaeb3991894c91ae00f68ab908251609c5d781fe57b3a373ecfc4bd6fdaae",
+		"docs/generated/inventory.json": "sha256:7475743ad49954a0834a9afd35990b78cfc7b0bc84a2a0edffc41cf271b1c917",
+		"docs/generated/inventory.md": "sha256:9baf055064d1df96f4f9d5c77a942540ccd7c30a3cc1475f74eab4e4c4d1a8c7",
 		"docs/install.md": "sha256:6a2658c2c19c4f884e006207056b221ea8a9a4113a3c908f00ce5b2f3553981f",
 		"docs/languages.md": "sha256:46108a25ebd4d4826848ba520bfb599e1f3f99553b0bbe2d0cd73064da175cb5",
 		"template.config.json": "sha256:3eb558876ca023bdf012748c2a844498f3852e7f1e1ef3d652eb75acbfeeebe3",
-		"seed/seed.json": "sha256:760865a7834c27a5e04583ada0755894cc6be009f7c911d098adc2f21107a731",
-		"seed/media-map.json": "sha256:7cf4fa62da671b5936f988040e6d8d8d25c6c78128981a9dd466798b8f343ee8",
-		"seed/field-map.json": "sha256:725e2c224bd7ad7c9df4082c475c3a99f0babd50dce1b8ea5f1fd4371692a7b2",
+		"seed/seed.json": "sha256:6bd14accfc8eff0f3e9b1120c361fb8a9650584d000897a1950bbcbea3a93958",
+		"seed/media-map.json": "sha256:49bc6b5fd4a3a15265b19c55f0134b9d52b752957df35d61ea4e0eb16cf42d03",
+		"seed/field-map.json": "sha256:0497c6ff80e02e13ffa29baebdfaab88634ecf6ef84a1c4520cae84c5d2731dc",
 		"pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
 		"tools/forms.json": "sha256:a22301fcc3b88a1f1062f50ce4414477f9d89fb41f35b0facc5c99cc1f029dfb",
 		"seed/media/*": "sha256:c185454c7f8658da110b24bed3570e4626a95120acf97a6982130d32e2bb71f0 (101 files)"

@@ -1198,12 +1198,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 95,
-            "height": 19
+            "width": 1344,
+            "height": 44
           },
           "phone": {
-            "width": 95,
-            "height": 19
+            "width": 358,
+            "height": 31
           }
         },
         "lines": {
@@ -1211,10 +1211,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 20,
-          "phone": 17
+          "desktop": 62,
+          "phone": 24
         },
-        "maxCharacters": 17,
+        "maxCharacters": 24,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -27985,7 +27985,7 @@
         "field": "form_intro"
       },
       "type": "text",
-      "sample": "Want to reach out? We'd love to hear from you.",
+      "sample": "Want to reach out? We'd love to hear from you!",
       "label": "Form intro",
       "role": "editorial.paragraph",
       "fit": {
@@ -28874,7 +28874,7 @@
         "field": "footer_col1_links"
       },
       "type": "text",
-      "sample": "About us | /about\nTerm of service\nCareers\nAffiliates",
+      "sample": "{about}\nTerm of service\nCareers\nAffiliates",
       "label": "Footer col1 links",
       "role": "editorial.menu_label",
       "maxCharacters": 72,
@@ -28929,7 +28929,7 @@
         "field": "footer_col2_links"
       },
       "type": "text",
-      "sample": "Store Locations\nRegistry\nBlog | /blog\nShipping info",
+      "sample": "Store Locations\nRegistry\n{blog}\nShipping info",
       "label": "Footer col2 links",
       "role": "editorial.menu_label",
       "maxCharacters": 71,
@@ -28984,7 +28984,7 @@
         "field": "footer_col3_links"
       },
       "type": "text",
-      "sample": "Help & FAQs | /help-faqs\nYour account\nTrack your order\nContact info | /contact",
+      "sample": "{faq}\nYour account\nTrack your order\n{contact}",
       "label": "Footer col3 links",
       "role": "editorial.menu_label",
       "maxCharacters": 85,
@@ -29042,6 +29042,222 @@
       "sample": "Twitter\nFacebook\nInstagram\nThreads",
       "label": "Footer col4 links",
       "role": "editorial.menu_label",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
+      "key": "chrome.chrome.footer_about_label",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "footer_about_label"
+      },
+      "type": "text",
+      "sample": "About us",
+      "label": "Footer about label",
+      "role": "editorial.menu_label",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 68,
+            "height": 19
+          },
+          "phone": {
+            "width": 68,
+            "height": 19
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 21,
+          "phone": 17
+        },
+        "maxCharacters": 17,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "chrome.chrome.footer_about_to",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "footer_about_to"
+      },
+      "type": "text",
+      "sample": "/about",
+      "label": "Footer about to",
+      "role": "editorial.navigation_url",
+      "customize": "keep",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
+      "key": "chrome.chrome.footer_blog_label",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "footer_blog_label"
+      },
+      "type": "text",
+      "sample": "Blog",
+      "label": "Footer blog label",
+      "role": "editorial.menu_label",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 96,
+            "height": 64
+          },
+          "phone": {
+            "width": 35,
+            "height": 20
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 11,
+          "phone": 7
+        },
+        "maxCharacters": 7,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "chrome.chrome.footer_blog_to",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "footer_blog_to"
+      },
+      "type": "text",
+      "sample": "/blog",
+      "label": "Footer blog to",
+      "role": "editorial.navigation_url",
+      "customize": "keep",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
+      "key": "chrome.chrome.footer_faq_label",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "footer_faq_label"
+      },
+      "type": "text",
+      "sample": "Help & FAQs",
+      "label": "Footer faq label",
+      "role": "editorial.menu_label",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 95,
+            "height": 19
+          },
+          "phone": {
+            "width": 90,
+            "height": 19
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 20,
+          "phone": 17
+        },
+        "maxCharacters": 17,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "chrome.chrome.footer_faq_to",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "footer_faq_to"
+      },
+      "type": "text",
+      "sample": "/help-faqs",
+      "label": "Footer faq to",
+      "role": "editorial.navigation_url",
+      "customize": "keep",
+      "fit": {
+        "measured": false
+      }
+    },
+    {
+      "key": "chrome.chrome.footer_contact_label",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "footer_contact_label"
+      },
+      "type": "text",
+      "sample": "Contact info",
+      "label": "Footer contact label",
+      "role": "editorial.menu_label",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 94,
+            "height": 19
+          },
+          "phone": {
+            "width": 94,
+            "height": 19
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 23,
+          "phone": 18
+        },
+        "maxCharacters": 18,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "chrome.chrome.footer_contact_to",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "footer_contact_to"
+      },
+      "type": "text",
+      "sample": "/contact",
+      "label": "Footer contact to",
+      "role": "editorial.navigation_url",
+      "customize": "keep",
       "fit": {
         "measured": false
       }
@@ -29702,28 +29918,7 @@
       "label": "Blog name",
       "role": "editorial.heading",
       "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 96,
-            "height": 64
-          },
-          "phone": {
-            "width": 35,
-            "height": 20
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 11,
-          "phone": 7
-        },
-        "maxCharacters": 7,
-        "casing": "none",
-        "overflow": "rewrite"
+        "measured": false
       }
     },
     {

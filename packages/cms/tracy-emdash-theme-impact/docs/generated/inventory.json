@@ -1147,6 +1147,54 @@
           "required": false
         },
         {
+          "slug": "footer_about_label",
+          "label": "Footer about label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_about_to",
+          "label": "Footer about to",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_blog_label",
+          "label": "Footer blog label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_blog_to",
+          "label": "Footer blog to",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_faq_label",
+          "label": "Footer faq label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_faq_to",
+          "label": "Footer faq to",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_contact_label",
+          "label": "Footer contact label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_contact_to",
+          "label": "Footer contact to",
+          "type": "string",
+          "required": false
+        },
+        {
           "slug": "copyright",
           "label": "Copyright",
           "type": "string",
@@ -1726,9 +1774,9 @@
     "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
     "package.json": "sha256:f4873b850796ace5655fdab638f0e0901893383436290626a081c51942a76909",
     "pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
-    "seed/field-map.json": "sha256:725e2c224bd7ad7c9df4082c475c3a99f0babd50dce1b8ea5f1fd4371692a7b2",
-    "seed/media-map.json": "sha256:7cf4fa62da671b5936f988040e6d8d8d25c6c78128981a9dd466798b8f343ee8",
-    "seed/seed.json": "sha256:760865a7834c27a5e04583ada0755894cc6be009f7c911d098adc2f21107a731",
+    "seed/field-map.json": "sha256:0497c6ff80e02e13ffa29baebdfaab88634ecf6ef84a1c4520cae84c5d2731dc",
+    "seed/media-map.json": "sha256:49bc6b5fd4a3a15265b19c55f0134b9d52b752957df35d61ea4e0eb16cf42d03",
+    "seed/seed.json": "sha256:6bd14accfc8eff0f3e9b1120c361fb8a9650584d000897a1950bbcbea3a93958",
     "src/components/blocks/Accordion.astro": "sha256:2b27f9458f55b6efd12d83525d996e3d64c40d9f73e7dc4b1d54b7c4ff7e309e",
     "src/components/blocks/BlogGrid.astro": "sha256:f37b30174ce9566a90f4784dedc6053b8cdeb7adc3b956a9d2e8110350462fba",
     "src/components/blocks/Connected.astro": "sha256:141c0992bc70676127409d9adaff3644360178634a067fc750a2d63fc034b615",
@@ -1749,7 +1797,7 @@
     "src/components/site/ArticleImages.astro": "sha256:c16441690fbec38e3efa1183b0107a0839a70916ce375e1b1d716383e799a03f",
     "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
     "src/components/site/Breadcrumbs.astro": "sha256:de031db5df797f84c187d451527cd92a831a9b2166d5b35927e2ae26469c979b",
-    "src/components/site/Footer.astro": "sha256:0a411477e1e49956b09570a5665b7c8b911ea67bfe666751a57db81257434edc",
+    "src/components/site/Footer.astro": "sha256:5b6a87cc7b82a8baf4ed73577bd90b881778967a7b10cc68e57990ad595c6f13",
     "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
     "src/components/site/Header.astro": "sha256:b7ace5adb8bc176db249531c1921822e2202fde7c8e4db466fd22b7e5b4e6e59",
     "src/components/site/Icon.astro": "sha256:0be7a0e42d2e270fa53ca7a0a32aaf50b9e93d8c5fea9b9e4b60f78fc25cef2c",

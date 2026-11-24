@@ -261,6 +261,14 @@ Template: JA Impact (tracy-impact). Default locale: en. Locales: en.
 | footer_col3_links | string | no | Footer col3 links |
 | footer_col4_title | string | no | Footer col4 title |
 | footer_col4_links | string | no | Footer col4 links |
+| footer_about_label | string | no | Footer about label |
+| footer_about_to | string | no | Footer about to |
+| footer_blog_label | string | no | Footer blog label |
+| footer_blog_to | string | no | Footer blog to |
+| footer_faq_label | string | no | Footer faq label |
+| footer_faq_to | string | no | Footer faq to |
+| footer_contact_label | string | no | Footer contact label |
+| footer_contact_to | string | no | Footer contact to |
 | copyright | string | no | Copyright |
 | license_line | string | no | License line |
 | skip_label | string | no | Skip label |
