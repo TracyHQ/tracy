@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Impact",
-	"generatedAt": "2026-11-24T12:50:29.820Z",
+	"generatedAt": "2026-11-24T12:59:23.706Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -70,7 +70,7 @@
 	"checksums": {
 		"AGENTS.md": "sha256:68744535bf7a4b694c16966e633c04ac2a61760670072cace94a0e196a73d7e5",
 		"docs/architecture.md": "sha256:661aa810873bc6f17765fa5c59afd2d79008c193bb85589dc18f76b6a0eb41f8",
-		"docs/checks-and-recovery.md": "sha256:be523c14dfba06416eff6bfdae53ffe4352f8ddb95892c875348aa0e56c123b7",
+		"docs/checks-and-recovery.md": "sha256:c51928ce6e462c36e74bf67bd021480954010a373290fc0d0ce9dd61dae00984",
 		"docs/content-api.md": "sha256:e5849b760884393c9fb5f12e2e9895e5cc24fc32703d1e9854051f6333ef5d8c",
 		"docs/content-model.md": "sha256:f02342db67a0aba7f74154a220484a522f5c6ea0d278d9bf49f57e9e5b524023",
 		"docs/content-rules.md": "sha256:e9696061af5fef30089d714cc5b3d227f7cfe9e94462e73c7f92d24c0a9046da",
