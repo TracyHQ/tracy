@@ -1,5 +1,5 @@
-// One contract call for the mapping (ADR 0044, decision 4). The door is all or nothing, so when the plugin refuses some
-// slots a retry goes without exactly those. A refusal that names no slot we sent stops the write: nothing can be dropped
+// One contract call for the mapping (ADR 0044, decision 4), made through the site's own door (`applyContract`,
+// site-doors/index.js). The door is all or nothing, so when the plugin refuses some slots a retry goes without exactly those. A refusal that names no slot we sent stops the write: nothing can be dropped
 // to get past it. Refused calls change nothing, so the reading stays good for every retry and is not asked for again.
 // A link slot the plugin will not empty because it goes only with a kept row (SLOT_NOT_HIDEABLE) is written, on the retry, with
 // the living address `mapping.relink` gives it (ADR 0044, decision 29, card AM), so the row never links to a hidden page.
@@ -42,7 +42,7 @@ function attributable(errors, changes, emptySlots) {
 }
 
 /**
- * @param {{ applyJoomlaContract: Function, apply: Function, siteKey: string, reading: object,
+ * @param {{ applyContract: Function, apply: Function, siteKey: string, reading: object,
  *   mapping: { contract: string, changes: Record<string,string>, evidence: Record<string,string>, emptySlots?: string[],
  *     relink?: Record<string,string> },
  *   isCancelled: () => Promise<boolean>, sleep: (ms: number) => Promise<void> }} input
@@ -51,15 +51,7 @@ function attributable(errors, changes, emptySlots) {
  *   cancelled?: boolean, stop?: { code: string, reason: string } }>} `written` and `emptied` stay empty unless a call was
  *   accepted
  */
-export async function writeContract({
-  applyJoomlaContract,
-  apply,
-  siteKey,
-  reading,
-  mapping,
-  isCancelled,
-  sleep
-}) {
+export async function writeContract({ applyContract, apply, siteKey, reading, mapping, isCancelled, sleep }) {
   const changes = { ...mapping.changes }
   const evidence = { ...mapping.evidence }
   let emptySlots = [...(mapping.emptySlots ?? [])]
@@ -73,7 +65,7 @@ export async function writeContract({
     if (!Object.keys(changes).length && !emptySlots.length) return { written: [], refused, rounds, relinked }
     rounds += 1
     try {
-      await applyJoomlaContract({
+      await applyContract({
         apply: door,
         siteKey,
         mapping: {

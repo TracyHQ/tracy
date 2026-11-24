@@ -1,0 +1,111 @@
+// The site door of each CMS the write step writes (src/write-step/site-doors/index.js): the Joomla door sends exactly the
+// calls the seeder's own contract caller sends, and a run on a CMS with no door that writes stops before any call.
+import assert from 'node:assert/strict'
+import { test } from 'node:test'
+
+import { seeder } from '../src/lib/seeder.js'
+import { platformStop, siteDoorFor } from '../src/write-step/site-doors/index.js'
+import { runWriteStep } from '../src/write-step/write-step.js'
+
+const CONTRACT = 'harbour-test/j6/0.0.1'
+
+/** A Claude Cowork for Joomla stand-in that keeps every call and answers inspect and apply. */
+function recordingSite() {
+  const calls = []
+  const apply = async (call) => {
+    calls.push(structuredClone(call))
+    if (call.params?.operation === 'inspect')
+      return {
+        ok: true,
+        contract: CONTRACT,
+        revision: 'rev-1',
+        slots: [{ key: 'block-1.0' }, { key: 'block-1.1' }]
+      }
+    if (call.params?.operation === 'apply') return { ok: true, revision: 'rev-2' }
+    return { ok: false, error: 'UNKNOWN_OPERATION' }
+  }
+  return { apply, calls }
+}
+
+const MAPPING = {
+  contract: CONTRACT,
+  revision: 'rev-1',
+  changes: { 'block-1.0': 'Harbour Kitchen', 'block-1.1': 'Fresh fish every morning' },
+  evidence: {},
+  emptyLinks: [],
+  emptySlots: [],
+  pending: []
+}
+
+test('the Joomla door writes the contract with the very calls the seeder caller sends', async () => {
+  const door = siteDoorFor('joomla')
+  assert.equal(door.platform, 'joomla')
+  assert.equal(door.writes, true)
+
+  const through = recordingSite()
+  const answer = await door.applyContract({ apply: through.apply, siteKey: 'harbour', mapping: MAPPING })
+
+  const direct = recordingSite()
+  const { applyJoomlaContract } = await seeder('apply-joomla-contract')
+  const expected = await applyJoomlaContract({ apply: direct.apply, siteKey: 'harbour', mapping: MAPPING })
+
+  assert.deepEqual(through.calls, direct.calls)
+  assert.deepEqual(answer, expected)
+  assert.deepEqual(
+    through.calls.map((c) => c.params.operation),
+    ['inspect', 'apply']
+  )
+})
+
+test("the Joomla door words a refusal in the plugin's own words, as the seeder does", async () => {
+  const refused = { ok: false, error: 'CONTENT_CHANGED', message: 'Content changed since inspect' }
+  const { doorRefusal } = await seeder('apply-joomla-contract')
+  assert.equal(await siteDoorFor('joomla').refusal(refused), doorRefusal(refused))
+})
+
+test('WordPress and EmDash have no door that writes yet, and an unknown platform has none at all', () => {
+  for (const platform of ['wordpress', 'emdash']) {
+    const door = siteDoorFor(platform)
+    assert.equal(door.platform, platform)
+    assert.equal(door.writes, false)
+    assert.match(door.missing, /\w/)
+  }
+  assert.equal(siteDoorFor('drupal'), null)
+  assert.equal(siteDoorFor(undefined), null)
+})
+
+test('a kit stops the write by its platform: none for Joomla, a code for the others and for none', () => {
+  assert.equal(platformStop({ ref: CONTRACT, platform: 'joomla' }), null)
+  const wp = platformStop({ ref: 'ja-diner/wp7/1.0.4', platform: 'wordpress' })
+  assert.equal(wp.code, 'WRITE_STEP_NOT_ON_PLATFORM')
+  assert.match(wp.reason, /WordPress site/)
+  assert.match(wp.reason, /Nothing was read or written/)
+  const em = platformStop({ ref: 'tracy-diner/emdash-0.x/0.1.4', platform: 'emdash' })
+  assert.equal(em.code, 'WRITE_STEP_NOT_ON_PLATFORM')
+  assert.match(em.reason, /EmDash site/)
+  // A kit that names no platform is an error, never taken for Joomla.
+  const none = platformStop({ ref: 'test-kit' })
+  assert.equal(none.code, 'WRITE_STEP_KIT_PLATFORM')
+  assert.match(none.reason, /test-kit/)
+})
+
+for (const [platform, code] of [
+  ['wordpress', 'WRITE_STEP_NOT_ON_PLATFORM'],
+  ['emdash', 'WRITE_STEP_NOT_ON_PLATFORM'],
+  [undefined, 'WRITE_STEP_KIT_PLATFORM']
+]) {
+  test(`a write step run on a ${platform ?? 'platform-less'} kit stops with ${code} before any call or file read`, async () => {
+    const site = recordingSite()
+    const report = await runWriteStep({
+      door: { apply: site.apply },
+      siteKey: 'harbour',
+      kit: { ref: 'ja-diner/wp7/1.0.4', doc: { contract: 'ja-diner/wp7/1.0.4' }, platform },
+      contentMap: null,
+      // Files that do not exist: a run that read them would stop on a file problem instead.
+      files: { plan: '/nowhere/plan.json', copy: '/nowhere/site-copy.json' }
+    })
+    assert.equal(report.status, 'stopped')
+    assert.equal(report.cause.code, code)
+    assert.deepEqual(site.calls, [])
+  })
+}

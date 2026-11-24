@@ -265,6 +265,7 @@ test('a door that throws stops the run and the report carries the words', async 
 test('another kit and contract id flow through with no change: nothing is pinned in the write step', async () => {
   const kit = {
     ref: 'made-up/x9/7.7.7',
+    platform: 'joomla',
     doc: { ...KIT().doc, contract: 'made-up/x9/7.7.7', kit: 'tracy-template-kit/2 made-up/x9/7.7.7' }
   }
   const p = plan()
