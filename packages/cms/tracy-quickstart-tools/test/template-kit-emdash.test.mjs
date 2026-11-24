@@ -20,7 +20,7 @@ import {
   logoPlacesOf,
   readEmdashSettings
 } from '../template-kit/lib/site/adapters/emdash.mjs'
-import { withEmdashPages } from '../template-kit/lib/site/adapters/emdash-map.mjs'
+import { sectionsOfPages, withEmdashPages } from '../template-kit/lib/site/adapters/emdash-map.mjs'
 import { buildLogoSpots } from '../template-kit/lib/site/logo-spots.mjs'
 import { measureBrandColours } from '../template-kit/lib/site/colour-measure.mjs'
 import { sidesOf } from '../template-kit/lib/site/colour-sides.mjs'
@@ -699,4 +699,13 @@ test("a theme's own brand token is its accent when only links are painted with a
     '#bc4220',
     'only a theme that says so wins over links'
   )
+})
+
+test('the kit records which sections each page prints: entries that are no page and no chrome, from the shown parts', () => {
+  const printed = sectionsOfPages(SECTIONS, MAP)
+  assert.deepEqual(Object.keys(printed).sort(), Object.keys(SECTIONS).sort())
+  for (const list of Object.values(printed))
+    for (const entity of list) assert.ok(!/^(pages|chrome)\./.test(entity), `${entity} is a section`)
+  assert.equal(sectionsOfPages(null, MAP), null)
+  assert.equal(sectionsOfPages({}, MAP), null)
 })

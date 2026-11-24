@@ -22,7 +22,7 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 
-import { contractFor } from '../contracts.js'
+import { contractOfRelease } from '../slot-roles-of-release.js'
 import { shownOnInspiration } from '../quickstart-releases.js'
 import { kitOfRelease } from '../template-kit/road-step.js'
 import { fixOf } from './fixes.js'
@@ -87,19 +87,21 @@ function slotIdsHeldByKit(kit) {
 
 /**
  * EmDash: the sections of the content map (an entry of a section collection, entity `<collection>.<slug>`) that hold
- * visual slots and are no block of the kit. The kit names the block of a section that prints one entry of its own
- * `block-<collection>-<slug>` (adapters/emdash-map.mjs `partEntity`); a section printed with others lives in a block named
- * after its page and position, and then holds its slots by id. So a section is in the kit when that block exists (its
- * source, or contained by one) or when a block holds any of its visual slots.
+ * visual slots, are printed on a page the kit holds and are no block of the kit. The kit names the block of a section
+ * that prints one entry of its own `block-<collection>-<slug>` (adapters/emdash-map.mjs `partEntity`); a section printed
+ * with others lives in a block named after its page and position, and then holds its slots by id. So a section is in
+ * the kit when that block exists (its source, or contained by one) or when a block holds any of its visual slots.
  *
- * The committed map says no page prints a section (the page parts are read from the site at kit build and kept in the
- * work folder's emdash-sections.json). When the map does carry `pages[].assignedModules` (the map of a kit run), only
- * sections printed on a page the kit holds are judged; else every section is, and `pages` is empty.
+ * Which page prints a section is the kit's own record (`sectionsOfPage`, written by the kit tool from its read of the
+ * site, template-kit/lib/kit.mjs). No map, seed or view file says it for every theme (page composition is theme code),
+ * so a kit settled before the tool wrote it is not judged: the answer is `null`, never a guess.
  * @param {any} kit the kit document
  * @param {any} map the content map
- * @returns {{ section: string, slots: number, pages: string[] }[]}
+ * @returns {{ section: string, slots: number, pages: string[] }[] | null} null when the kit does not say which page prints what
  */
 export function sectionsMissingFromKit(kit, map) {
+  const printed = kit?.sectionsOfPage
+  if (!printed || typeof printed !== 'object' || Array.isArray(printed)) return null
   const known = new Set()
   for (const block of each(kit?.blocks)) {
     const source = block?.source ?? {}
@@ -107,18 +109,7 @@ export function sectionsMissingFromKit(kit, map) {
     for (const inner of each(source.contains)) known.add(inner)
   }
   const held = slotIdsHeldByKit(kit)
-  const kitPaths = new Set(each(kit?.pages).map((p) => p?.path))
-  const printedOn = new Map()
-  let assigned = false
-  for (const page of each(map?.pages)) {
-    if (!Array.isArray(page?.assignedModules)) continue
-    assigned = true
-    const at = pathOfRoute(page?.openAs ?? page?.route)
-    for (const a of page.assignedModules) {
-      if (typeof a?.entity !== 'string') continue
-      printedOn.set(a.entity, [...(printedOn.get(a.entity) ?? []), at])
-    }
-  }
+  const kitPaths = each(kit?.pages).map((p) => p?.path)
   /** @type {Map<string, { section: string, slots: number, held: boolean }>} */
   const sections = new Map()
   for (const s of each(map?.slots)) {
@@ -133,11 +124,8 @@ export function sectionsMissingFromKit(kit, map) {
   const out = []
   for (const { section, slots, held: isHeld } of sections.values()) {
     if (isHeld || known.has(`block-${section.replace('.', '-')}`)) continue
-    const pages = assigned
-      ? (printedOn.get(`block-${section.replace('.', '-')}`) ?? []).filter((p) => kitPaths.has(p))
-      : []
-    if (assigned && !pages.length) continue
-    out.push({ section, slots, pages: [...new Set(pages)] })
+    const pages = kitPaths.filter((at) => each(printed[at]).includes(section))
+    if (pages.length) out.push({ section, slots, pages })
   }
   return out.sort((a, b) => (a.section < b.section ? -1 : 1))
 }
@@ -151,8 +139,7 @@ export const KIT_MODULES_CHECK = Object.freeze({
     if (kit?.state !== 'read') return null
     let map = world?.contentMap
     if (map === undefined) {
-      const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
-      const dir = contractFor(world?.contracts ?? new Map(), release?.tag, version)?.dir
+      const dir = contractOfRelease(release, world?.contracts ?? new Map())?.dir
       if (!dir) return null
       try {
         map = JSON.parse(readFileSync(path.join(dir, 'content-map.json'), 'utf8'))
@@ -162,7 +149,7 @@ export const KIT_MODULES_CHECK = Object.freeze({
     }
     if (release.platform === 'emdash') {
       const sections = sectionsMissingFromKit(kit.doc, map)
-      if (!sections.length) return null
+      if (!sections?.length) return null
       const sectionNames = sections.map((m) => m.section).join(', ')
       return {
         state: shownOnInspiration(release) ? 'warn' : 'todo',

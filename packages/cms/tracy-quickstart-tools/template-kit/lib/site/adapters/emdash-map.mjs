@@ -11,6 +11,33 @@
 import { normText } from '../../../../content-coverage/lib/normalize.mjs'
 import { slugOfPath } from '../../kit-paths.mjs'
 
+/**
+ * Which sections each page prints, as the kit run read them: per page path, the `<collection>.<slug>` of every entry
+ * (no page of its own, no chrome) whose fields the page's shown parts stamp. The kit records it (`sectionsOfPage`) so
+ * a check can tell a section no kit block holds on a page the kit holds from one printed only on pages the kit leaves
+ * out. Null when the run read no page.
+ * @param {Record<string, {before: object[], main: object[], after: object[]}> | null} sections
+ * @param {object} map the raw content map
+ * @returns {Record<string, string[]> | null}
+ */
+export function sectionsOfPages(sections, map) {
+  if (!sections || !Object.keys(sections).length) return null
+  const pageEntities = new Set((map.pages ?? []).map((p) => p.entity))
+  const out = {}
+  for (const [path, read] of Object.entries(sections)) {
+    const seen = new Set()
+    for (const part of [...read.before, ...read.main, ...read.after]) {
+      if (!part.shown) continue
+      for (const st of part.stamps ?? []) {
+        const entity = `${st.collection}.${st.slug}`
+        if (st.field && !pageEntities.has(entity) && !entity.startsWith('chrome.')) seen.add(entity)
+      }
+    }
+    out[path] = [...seen].sort()
+  }
+  return out
+}
+
 /** What an EmDash content map does not declare, and so what the kit leaves empty, each with its reason. */
 export const EMDASH_MAP_GAPS = Object.freeze([
   {
