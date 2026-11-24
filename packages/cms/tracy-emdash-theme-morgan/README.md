@@ -86,7 +86,7 @@ The answer keys are the question ids of `seed/questions.json`: `name`, `language
 | `tools/forms.json` | the Contact form (`contact-en`) for the Forms plugin |
 | `src/views/`, `src/components/site/` | one view per page family; page composition is code |
 | `src/styles/` | `tokens.css` and `global.css` with `pages/*.css`; no reset, no admin styling |
-| `src/fonts.json`, `src/fonts/` | font declarations; Playfair Display and Roboto woff2 files |
+| `src/fonts.json`, `src/fonts/` | font declarations; PT Root UI (woff) and Be Vietnam Pro (woff2, Vietnamese range) files with their OFL texts |
 | `ingest/`, `contract/` | rebuild of the seed from the source (`ingest/rebuild-seed.sh`), the contract builder and the model validator |
 | `tools/` | importer (`seed-apply.mjs`), acceptance (`qa.mjs`, `qa-contract.mjs`, `qa-receipt.mjs`, `distribution.mjs`), backup/restore, `recovery-check.mjs`, `forms-check.mjs` |
 | `docs/`, `AGENTS.md` | guidance for a maintenance agent |
