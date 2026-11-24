@@ -1,4 +1,4 @@
-// The Road to live pre-check of the first release (TCQR ABOUT-2, LANG-2, PAGE-5, PAGE-8; TDSR DEF-1, TEXT-1): the
+// The Road to live pre-check of the first release (TCQR ABOUT-2, LANG-2, PAGE-5, PAGE-8; TDSR DEF-1): the
 // package's own copy of what those rules read, so a later change cannot bring a finding back unseen.
 import assert from 'node:assert/strict'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
@@ -58,8 +58,8 @@ test('LANG-2: personalize labels names every collection that has an interface-wo
  * a short text field of the seed, printed as `<entry>.<field>` or named as an edit attribute, that no copy, facts, identity or rewrite rule writes, whose
  * key is not an enumeration or a name, and that `chromeLabelsOf` (the tool's own reading of the rules) does not offer.
  */
-// Known and decided (D48): the alt text of the demo pictures of the two gallery blocks. Nothing else.
-const KNOWN_GAPS = /^gallery\/[a-z0-9-]+\.items\[\]\.gallery_alt$/
+// No known gap: every interface word a component prints from a labels collection is offered to the tool.
+const KNOWN_GAPS = /^$^/
 
 function untranslatedInterfaceWords(labelsMap) {
   const enumeration =
@@ -148,7 +148,7 @@ test('LANG-2: every interface word the components print from a labels collection
 // '<collection>', …)`; the variables `entry` (the stamped collection), `site` (chrome), `c` (contact), `page` and `p`
 // (pages) and `post` and `a` (posts) name the entry a field is read from, and an edit attribute `$x('<field>')` names the
 // field it makes editable. Any reference counts: visible text, aria-label, aria-labelledby target, alt, title, sr-only.
-const SECTION_COLLECTIONS = ['features_intro', 'menu', 'gallery', 'testimonials', 'teams', 'happyhours']
+const SECTION_COLLECTIONS = ['features_intro', 'testimonials', 'teams', 'clients', 'accordion', 'slideshow']
 const ENTRY_VARIABLES = {
   site: 'chrome',
   'chrome.site': 'chrome',
@@ -248,7 +248,7 @@ test('LANG-2: every text a component prints (visible or as an accessible name) i
   assert.deepEqual(uncoveredPrintedFields(map), [])
 })
 
-test('LANG-2: the derivation finds what is missing (hero.title, book_btn and a key the tool reads as an address are taken out in turn)', () => {
+test('LANG-2: the derivation finds what is missing (a field of each rule is taken out in turn)', () => {
   const without = (collection, field) => ({
     ...map,
     labels: map.labels.map((l) =>
@@ -256,14 +256,11 @@ test('LANG-2: the derivation finds what is missing (hero.title, book_btn and a k
     )
   })
   for (const [collection, field] of [
-    ['hero', 'title'],
-    ['book_table', 'book_btn'],
-    ['book_table', 'order_btn'],
-    ['teams', 'title_btn'],
-    ['features_intro', 'button'],
-    ['happyhours', 'hp_link_text'],
-    ['testimonials', 'title'],
-    ['gallery', 'title'],
+    ['features_intro', 'btn_title'],
+    ['features_intro', 'section_label'],
+    ['testimonials', 'btn_title'],
+    ['teams', 'more_cta'],
+    ['footer_links', 'label'],
     ['masthead', 'title'],
     ['pages', 'title']
   ])
@@ -300,47 +297,30 @@ test('PAGE-8: the Blog page is covered by the trim rule of its posts, and no tri
   assert.deepEqual(map.hide, [])
 })
 
-test('DEF-1 and TEXT-1: no invented design-system role, no ground role painted as text', () => {
+test('DEF-1: no design-system role the slot does not define', () => {
+  // the roles the template's slot contract (design-system-roles.json of the quickstart) declares, plus the knobs the kit reads
   const css = styles()
-  assert.ok(!css.includes('--ds-c-ink-raised'))
-  assert.ok(!/\.fr-hh-badge \{[^}]*[^-]color: var\(--ds-c-bg/.test(css))
-})
-
-test('CON-1, CON-2, ICON-1, BORDER-1: text and controls read the role of their own ground', () => {
-  const css = styles()
-  // a section description follows the system's text colour, and the on-ink one on an ink band
-  assert.match(css, /\.fr-top-desc \{[^}]*color: var\(--ds-c-fg, rgba\(255, 255, 255, 0\.8\)\)/)
-  assert.match(
-    css,
-    /\.fr-section\.is-band :is\([^)]*\.fr-dish-desc[^)]*\.fr-top-desc\) \{ color: var\(--ds-c-on-ink,/
+  const known = new Set(
+    JSON.parse(read('contracts/design-system-roles.json')).declared
   )
-  assert.match(css, /\.fr-t-nav \{[^}]*color: var\(--color-on-ink\)/)
-  assert.match(css, /\.fr-pagination li\.is-active > span \{[^}]*border-color: var\(--color-accent\)/)
-  // no text colour written as a bare white on a template ground
-  assert.ok(!/\.fr-top-desc \{[^}]*color: rgba\(255, 255, 255/.test(css))
+  const used = new Set([...css.matchAll(/var\((--ds-[a-z0-9-]+)/g)].map((m) => m[1]))
+  const extra = new Set(['--ds-weight-body', '--ds-weight-display', '--ds-weight-heading', '--ds-weight-button', '--ds-size-heading', '--ds-size-heading-phone', '--ds-size-display', '--ds-leading-display', '--ds-tracking-display'])
+  assert.deepEqual([...used].filter((r) => !known.has(r) && !extra.has(r)), [])
 })
 
-test('FORM-1: the contact and search fields are painted from the slot, with the template value as fallback', () => {
-  for (const file of ['contact', 'search']) {
-    const css = read(`src/styles/pages/${file}.css`)
-    assert.match(css, /background: var\(--ds-c-surface, rgba\(255, 255, 255, \.06\)\)/)
-    assert.match(css, /border: 1px solid var\(--ds-c-border, rgba\(255, 255, 255, \.07\)\)/)
-    assert.match(css, /color: var\(--ds-c-fg, #fff\)/)
-    assert.ok(!/background: color-mix/.test(css), `${file}.css fills a field with a color-mix`)
-  }
-})
-
-test('IDENT-2: under a system the demo logo is drawn in the heading colour through a mask of the same picture', () => {
+test('IDENT-2: the logo stays visible on a dark ground under a design system', () => {
   const css = read('src/styles/global.css')
-  assert.match(
-    css,
-    /html\[data-ds-worn\] \.fr-brand \.fr-logo-ink \{[^}]*background: linear-gradient\(var\(--ds-c-heading, #fff\)[^}]*mask: url\("\/brand\/logo\.png"\)/
-  )
-  assert.match(
-    css,
-    /html\[data-ds-worn\] \.fr-brand \.fr-logo\[src\$="brand\/logo\.png"\] \{ display: none; \}/
-  )
-  assert.match(read('src/components/site/Header.astro'), /class="fr-logo-ink" role="img"/)
+  // the text lockup reads the heading role (dark on a light page, light on a dark one), never a fixed navy on a dark ground
+  assert.match(css, /\.mg-logo \{[^}]*color: var\(--ds-c-heading,/)
+  assert.match(css, /html\[data-theme="dark"\] \.mg-logo \{ color: var\(--color-heading\); \}/)
+})
+
+test('TDSR MODE-2: the theme toggle selector is the one the slot contract declares', () => {
+  const cfg = JSON.parse(read('template.config.json'))
+  assert.equal(cfg.qa.theme.selector, 'html')
+  assert.equal(cfg.qa.theme.attribute, 'data-theme')
+  assert.equal(cfg.qa.theme.values.dark, 'dark')
+  assert.match(read('src/components/site/Header.astro'), /data-theme-toggle/)
 })
 
 test("LANG-2: every form of tools/forms.json has a `forms` rule (its words are translated and its mailbox is the customer's), and the taxonomy and the hero words are covered", () => {
@@ -354,7 +334,7 @@ test("LANG-2: every form of tools/forms.json has a `forms` rule (its words are t
     )
   }
   assert.ok((map.terms ?? []).some((r) => r.taxonomy === 'category' && r.collections.includes('posts')))
-  const hero = map.copy.find((c) => c.collection === 'hero' && c.field === 'items')
-  for (const prop of ['sub_title', 'title', 'desc', 'button', 'button_2'])
-    assert.ok(hero.itemFields.includes(prop), `hero ${prop}`)
+  const slides = map.copy.find((c) => c.collection === 'slideshow' && c.field === 'items')
+  for (const prop of ['title_dot', 'title', 'desc', 'btn_title'])
+    assert.ok(slides.itemFields.includes(prop), `slideshow ${prop}`)
 })

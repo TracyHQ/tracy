@@ -181,8 +181,8 @@
 					"type": "string"
 				},
 				{
-					"slug": "section_bg",
-					"label": "Section bg",
+					"slug": "section_style",
+					"label": "Section style",
 					"type": "string"
 				},
 				{
@@ -257,11 +257,6 @@
 					"slug": "img_features",
 					"label": "Img features",
 					"type": "image"
-				},
-				{
-					"slug": "position",
-					"label": "Position",
-					"type": "string"
 				},
 				{
 					"slug": "btn_title",
@@ -368,8 +363,8 @@
 					"type": "string"
 				},
 				{
-					"slug": "section_bg",
-					"label": "Section bg",
+					"slug": "section_style",
+					"label": "Section style",
 					"type": "string"
 				},
 				{
@@ -420,8 +415,8 @@
 					"type": "string"
 				},
 				{
-					"slug": "section_bg",
-					"label": "Section bg",
+					"slug": "section_style",
+					"label": "Section style",
 					"type": "string"
 				},
 				{
@@ -537,8 +532,8 @@
 					"type": "string"
 				},
 				{
-					"slug": "section_bg",
-					"label": "Section bg",
+					"slug": "section_style",
+					"label": "Section style",
 					"type": "string"
 				},
 				{
@@ -624,8 +619,8 @@
 					"type": "string"
 				},
 				{
-					"slug": "section_bg",
-					"label": "Section bg",
+					"slug": "section_style",
+					"label": "Section style",
 					"type": "string"
 				},
 				{
@@ -691,8 +686,8 @@
 					"type": "string"
 				},
 				{
-					"slug": "section_bg",
-					"label": "Section bg",
+					"slug": "section_style",
+					"label": "Section style",
 					"type": "string"
 				},
 				{
@@ -1287,7 +1282,7 @@
 						}
 					],
 					"section_label": "",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": ""
 				}
 			}
@@ -1318,7 +1313,7 @@
 						}
 					],
 					"section_label": "Introducing",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": "images/joomlart/others/mask-map-2.png"
 				}
 			},
@@ -1361,7 +1356,7 @@
 						}
 					],
 					"section_label": "Our Services",
-					"section_bg": "gray",
+					"section_style": "gray",
 					"section_mask": ""
 				}
 			},
@@ -1389,12 +1384,11 @@
 					],
 					"align": "1",
 					"img_features": "images/joomlart/features/item-3.jpg",
-					"position": "acm-accordion",
 					"btn_title": "",
 					"btn_link": "/services",
 					"title": "Morgan Provides Services in the Financial Sector.",
 					"section_label": "Our Missions",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": ""
 				}
 			},
@@ -1470,12 +1464,11 @@
 					],
 					"align": "0",
 					"img_features": "images/joomlart/features/item-4.jpg",
-					"position": "",
 					"btn_title": "Book a Consultation",
 					"btn_link": "/contact-us",
 					"title": "Morgan help Business  Performance & Scalability.",
 					"section_label": "Our Philosophy",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": ""
 				}
 			},
@@ -1503,12 +1496,11 @@
 					],
 					"align": "1",
 					"img_features": "images/joomlart/features/item-5.jpg",
-					"position": "quick-contact",
 					"btn_title": "",
 					"btn_link": "/services",
 					"title": "Morgan help Business  Performance & Scalability.",
 					"section_label": "Free Consultation",
-					"section_bg": "secondary",
+					"section_style": "secondary",
 					"section_mask": ""
 				}
 			},
@@ -1550,12 +1542,11 @@
 					],
 					"align": "1",
 					"img_features": "images/joomlart/features/item-12.jpg",
-					"position": "",
 					"btn_title": "",
 					"btn_link": "/services",
 					"title": " Interested in working with Morgan, a large language ocean? ",
 					"section_label": "Careers at Morgan",
-					"section_bg": "gray",
+					"section_style": "gray",
 					"section_mask": ""
 				}
 			},
@@ -1597,12 +1588,11 @@
 					],
 					"align": "0",
 					"img_features": "images/joomlart/features/item-11.jpg",
-					"position": "",
 					"btn_title": "",
 					"btn_link": "/services",
 					"title": "Passionate People on Our Team, Their Place and Supplies.",
 					"section_label": "Expert People",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": ""
 				}
 			},
@@ -1643,7 +1633,7 @@
 						}
 					],
 					"section_label": "Our Services",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": "images/joomlart/others/mask-map-2.png"
 				}
 			},
@@ -1702,7 +1692,7 @@
 						}
 					],
 					"section_label": "Our Services",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": "images/joomlart/others/mask-map.png"
 				}
 			},
@@ -1734,7 +1724,7 @@
 					"btn_type": "primary",
 					"title": "We’d love to hear from you. Let's see how we can assist you",
 					"section_label": "Get in touch",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": ""
 				}
 			}
@@ -1762,7 +1752,7 @@
 						}
 					],
 					"section_label": "",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": ""
 				}
 			}
@@ -1808,7 +1798,7 @@
 						}
 					],
 					"section_label": "Case Studies",
-					"section_bg": "gray",
+					"section_style": "gray",
 					"section_mask": ""
 				}
 			},
@@ -1834,7 +1824,7 @@
 						}
 					],
 					"section_label": "",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": ""
 				}
 			},
@@ -1873,7 +1863,7 @@
 						}
 					],
 					"section_label": "Case Studies",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": ""
 				}
 			},
@@ -1917,7 +1907,7 @@
 						}
 					],
 					"section_label": "Testimonials",
-					"section_bg": "gray",
+					"section_style": "gray",
 					"section_mask": ""
 				}
 			}
@@ -1962,7 +1952,7 @@
 					],
 					"more_cta": "Join Our Team",
 					"section_label": "Expert People",
-					"section_bg": "gray",
+					"section_style": "gray",
 					"section_mask": ""
 				}
 			},
@@ -2028,7 +2018,7 @@
 					],
 					"more_cta": "",
 					"section_label": "Our Team",
-					"section_bg": "gray",
+					"section_style": "gray",
 					"section_mask": ""
 				}
 			}
@@ -2076,7 +2066,7 @@
 						}
 					],
 					"section_label": "",
-					"section_bg": "white",
+					"section_style": "white",
 					"section_mask": ""
 				}
 			}
@@ -6338,7 +6328,7 @@
 				"status": "published",
 				"locale": "en",
 				"data": {
-					"title": "Our Sevices",
+					"title": "Our Services",
 					"description": "Quisque dolor fringilla semper, libero hendrerit allis, magna augue putate nibh ucibus enim eros acumin arcu a proper human room although a little too small, lay peacefully between its four familiar walls.",
 					"background": "images/joomlart/others/bg-masthead-2.jpg"
 				}
@@ -6352,6 +6342,17 @@
 					"title": "About Us",
 					"description": "Quisque dolor fringilla semper, libero hendrerit allis, magna augue putate nibh ucibus enim eros acumin arcu a proper human room although a little too small, lay peacefully between its four familiar walls.",
 					"background": "images/joomlart/others/bg_masthead.jpg"
+				}
+			},
+			{
+				"id": "masthead:not-found:en",
+				"slug": "not-found",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"title": "",
+					"description": "",
+					"background": "templates/ja_morgan/images/bg-404.jpg"
 				}
 			},
 			{
@@ -6379,17 +6380,6 @@
 			{
 				"id": "masthead:search:en",
 				"slug": "search",
-				"status": "published",
-				"locale": "en",
-				"data": {
-					"title": "JA Morgan",
-					"description": "Quisque dolor fringilla semper, libero hendrerit allis, magna augue putate nibh ucibus enim eros acumin arcu",
-					"background": "images/joomlart/others/bg-masthead.jpg"
-				}
-			},
-			{
-				"id": "masthead:not-found:en",
-				"slug": "not-found",
 				"status": "published",
 				"locale": "en",
 				"data": {

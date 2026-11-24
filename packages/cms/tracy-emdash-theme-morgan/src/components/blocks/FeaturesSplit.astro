@@ -22,7 +22,7 @@ const { entry, name, locale, live } = Astro.props
 const $s = stampFor(Astro.request, 'features_intro', { id: entry.id, slug: entry.slug })
 const left = String(entry.align) === '1'
 const pic = mediaUrl(entry.img_features)
-const secondary = entry.section_bg === 'secondary'
+const secondary = entry.section_style === 'secondary'
 const hasBody = Astro.slots.has('default')
 ---
 

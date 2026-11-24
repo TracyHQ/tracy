@@ -66,6 +66,15 @@
   "qa": {
     "expectedStatus": {
       "/404": 404
+    },
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": null,
+        "dark": "dark"
+      },
+      "storageKey": "tracy-morgan-theme"
     }
   },
   "$comment": "Template identity and site-specific wiring read by the generic tools. Demo content: the JA Morgan sample site (Joomla 6 quickstart 1.0.9)."

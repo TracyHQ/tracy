@@ -4,7 +4,9 @@
 	.mg-masthead:has(.mg-post-band-chip) .mg-masthead-detail { max-width: 1260px; margin: 0; text-align: left; padding: 90px 0 100px; }
 	.mg-masthead:has(.mg-post-band-chip) .mg-masthead-title { font-size: 40px; line-height: 50px; max-width: 760px; margin: 30px 0 40px; }
 	.mg-masthead:has(.mg-post-band-chip) .mg-meta { color: rgba(255, 255, 255, .8); }
-	.mg-post-band-chip { display: inline-block; }
+	.mg-masthead:has(.mg-post-band-chip) .mg-masthead-detail { display: flex; flex-direction: column; align-items: flex-start; }
+	.mg-masthead:has(.mg-post-band-chip) .mg-post-band-chip { order: -1; }
+	.mg-masthead:has(.mg-post-band-chip) .mg-masthead-title { margin: 22px 0 28px; }
 
 	.mg-prose { margin: 0 0 30px; font-size: 14px; line-height: 25px; }
 	.mg-prose p { margin: 0 0 25px; }

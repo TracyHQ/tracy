@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-24T13:53:40.259Z",
+	"generatedAt": "2026-11-24T13:57:06.824Z",
 	"source": "JA Diner j6 1.0.5 webroot",
 	"items": [
 		{
@@ -1431,6 +1431,21 @@
 			]
 		},
 		{
+			"key": "templates/ja_morgan/images/bg-404",
+			"file": "templates/ja_morgan/images/bg-404.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "991862d49152377ea0be1803aa8a852f90c5623bcfa76740b8875e4abc5a3d66",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "not-found",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
 			"key": "images/joomlart/others/bg-masthead",
 			"file": "images/joomlart/others/bg-masthead.jpg",
 			"alt": "",
@@ -1452,12 +1467,6 @@
 				{
 					"collection": "masthead",
 					"slug": "search",
-					"locale": "en",
-					"path": "background"
-				},
-				{
-					"collection": "masthead",
-					"slug": "not-found",
 					"locale": "en",
 					"path": "background"
 				}

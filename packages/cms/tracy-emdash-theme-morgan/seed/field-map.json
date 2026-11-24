@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T13:53:40.134Z",
+  "generatedAt": "2026-11-24T13:57:06.713Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -144,10 +144,10 @@
       "label": "Section label",
       "role": "editorial.button_label"
     },
-    "slideshow.section_bg": {
+    "slideshow.section_style": {
       "source": "text",
       "target": "string",
-      "label": "Section bg",
+      "label": "Section style",
       "role": "editorial.heading"
     },
     "slideshow.section_mask": {
@@ -222,12 +222,6 @@
       "label": "Img features",
       "role": "editorial.illustration"
     },
-    "features_intro.position": {
-      "source": "text",
-      "target": "string",
-      "label": "Position",
-      "role": "editorial.paragraph"
-    },
     "features_intro.btn_title": {
       "source": "text",
       "target": "string",
@@ -296,10 +290,10 @@
       "label": "Section label",
       "role": "editorial.button_label"
     },
-    "features_intro.section_bg": {
+    "features_intro.section_style": {
       "source": "text",
       "target": "string",
-      "label": "Section bg",
+      "label": "Section style",
       "role": "editorial.heading"
     },
     "features_intro.section_mask": {
@@ -329,10 +323,10 @@
       "label": "Section label",
       "role": "editorial.button_label"
     },
-    "accordion.section_bg": {
+    "accordion.section_style": {
       "source": "text",
       "target": "string",
-      "label": "Section bg",
+      "label": "Section style",
       "role": "editorial.heading"
     },
     "accordion.section_mask": {
@@ -399,10 +393,10 @@
       "label": "Section label",
       "role": "editorial.button_label"
     },
-    "testimonials.section_bg": {
+    "testimonials.section_style": {
       "source": "text",
       "target": "string",
-      "label": "Section bg",
+      "label": "Section style",
       "role": "editorial.heading"
     },
     "testimonials.section_mask": {
@@ -472,10 +466,10 @@
       "label": "Section label",
       "role": "editorial.button_label"
     },
-    "teams.section_bg": {
+    "teams.section_style": {
       "source": "text",
       "target": "string",
-      "label": "Section bg",
+      "label": "Section style",
       "role": "editorial.heading"
     },
     "teams.section_mask": {
@@ -518,10 +512,10 @@
       "label": "Section label",
       "role": "editorial.button_label"
     },
-    "clients.section_bg": {
+    "clients.section_style": {
       "source": "text",
       "target": "string",
-      "label": "Section bg",
+      "label": "Section style",
       "role": "editorial.heading"
     },
     "clients.section_mask": {

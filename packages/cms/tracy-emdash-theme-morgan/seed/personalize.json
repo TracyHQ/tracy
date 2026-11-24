@@ -1,49 +1,582 @@
 {
   "schemaVersion": "tracy-personalize/v1",
-  "note": "What tools/personalize.mjs changes on a customer's copy of THIS template from their questionnaire answers (seed/questions.json). Five kinds, and the difference between them is what may be INVENTED: `identity` is the customer's own words, written exactly (an answer they did not give EMPTIES the field — it never keeps the demo value); `replace` rewrites the demo brand everywhere it appears; `copy` is prose a model writes for their sector, with the demo text as the length-and-register reference; `rewrite` does the same for whole demo entries; `facts` are CLAIMS about a real business — counts, founding years, certifications, named clients, prices — and those are REMOVED, never written, because a made-up \"380 projects since 2004\" is a lie in the customer's name. `hide` unpublishes pages that are nothing but claims and drops their menu items. Values use {name} {NAME} {initials} {phone} {address} {year} {sector}; a rule whose value needs an answer the customer did not give is skipped and reported, never guessed. Fill every list for this template's own collections, slugs and fields — an empty map means a customer's site keeps the demo words.",
+  "note": "What tools/personalize.mjs changes on a customer's copy of THIS template from their questionnaire answers (seed/questions.json). Five kinds, and the difference between them is what may be INVENTED: `identity` is the customer's own words, written exactly (an answer they did not give keeps the template's value as a placeholder, named in the report under `unanswered`); `replace` rewrites the demo brand everywhere it appears; `copy` is prose a model writes for their sector, with the demo text as the length-and-register reference; `rewrite` does the same for whole demo entries; `facts` are CLAIMS about a real business (named people, named clients, addresses of the demo) and those are REMOVED, never written, because a made-up name is a lie in the customer's name. `labels` are the words the template prints itself, translated into the site's language. Values use {name} {NAME} {initials} {phone} {address} {year} {sector}; a rule whose value needs an answer the customer did not give is skipped and reported, never guessed.",
   "settings": {
     "title": "{name}"
   },
+  "brand": {
+    "note": "Where the customer's brand pictures go: the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below.",
+    "logoDark": {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "logo_dark",
+      "label": "Logo for dark backgrounds"
+    }
+  },
   "identity": [
     {
-      "collection": "site",
-      "slug": "site",
+      "collection": "chrome",
+      "slug": "chrome",
       "field": "brand_name",
+      "value": "{name}"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "copyright",
+      "value": {
+        "en": "Copyright © {year} {name}. All Rights Reserved.",
+        "vi": "Bản quyền © {year} {name}. Bảo lưu mọi quyền.",
+        "de": "Copyright © {year} {name}. Alle Rechte vorbehalten.",
+        "fr": "Copyright © {year} {name}. Tous droits réservés.",
+        "it": "Copyright © {year} {name}. Tutti i diritti riservati.",
+        "nl": "Copyright © {year} {name}. Alle rechten voorbehouden.",
+        "es": "Copyright © {year} {name}. Todos los derechos reservados.",
+        "zh": "版权所有 © {year} {name}。保留所有权利。"
+      }
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "topbar_address",
+      "value": "{address}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "topbar_phone",
+      "value": "{phone}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact-info",
+      "field": "address",
+      "value": "{address}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact-info",
+      "field": "phone",
+      "value": "{phone}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact-info",
+      "field": "email",
+      "value": "{email}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact-info",
+      "field": "heading",
       "value": "{name}"
     }
   ],
   "replace": [
     {
-      "find": "__THE DEMO BRAND, LONGEST FORM FIRST__",
+      "find": "JA Morgan",
+      "with": "{name}"
+    },
+    {
+      "find": "Morgan",
       "with": "{name}"
     }
   ],
   "copy": [
     {
-      "collection": "site",
-      "slug": "site",
-      "field": "__a field whose demo words a model must write for this sector__",
-      "brief": "what this text is for, in the author's words",
+      "collection": "features_intro",
+      "slug": "home-intro",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
       "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro",
+      "field": "block_intro",
+      "brief": "one or two sentences about what this business offers its clients, no year, number, price or name of a person",
+      "maxWords": 36
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
+      "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro",
+      "field": "block_intro",
+      "brief": "one or two sentences about what this business offers its clients, no year, number, price or name of a person",
+      "maxWords": 36
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-services",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-missions",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-philosophy",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-consult",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-careers",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-people",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-cta",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-missions",
+      "field": "description",
+      "brief": "one or two sentences about what this business offers its clients, no year, number, price or name of a person",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-philosophy",
+      "field": "description",
+      "brief": "one or two sentences about what this business offers its clients, no year, number, price or name of a person",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-consult",
+      "field": "description",
+      "brief": "one or two sentences about what this business offers its clients, no year, number, price or name of a person",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-careers",
+      "field": "description",
+      "brief": "one or two sentences about what this business offers its clients, no year, number, price or name of a person",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-people",
+      "field": "description",
+      "brief": "one or two sentences about what this business offers its clients, no year, number, price or name of a person",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-cta",
+      "field": "description",
+      "brief": "one or two sentences about what this business offers its clients, no year, number, price or name of a person",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-tiles",
+      "field": "ft_desc",
+      "brief": "one or two sentences introducing the services of this business, no number",
+      "maxWords": 30
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-tiles",
+      "field": "title",
+      "brief": "the short name of the services section",
+      "maxWords": 3
+    },
+    {
+      "collection": "testimonials",
+      "slug": "home-cases",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
+      "maxWords": 12
+    },
+    {
+      "collection": "testimonials",
+      "slug": "services-cases",
+      "field": "title",
+      "brief": "a section heading of the website of this business, in the register of its example, no year, number or name of a person",
+      "maxWords": 14
+    },
+    {
+      "collection": "testimonials",
+      "slug": "services-praise",
+      "field": "title",
+      "brief": "the heading above the praise of clients",
+      "maxWords": 5
+    },
+    {
+      "collection": "teams",
+      "slug": "home-team",
+      "field": "title",
+      "brief": "the heading above the people of the team",
+      "maxWords": 5
+    },
+    {
+      "collection": "teams",
+      "slug": "home-team",
+      "field": "more_title",
+      "brief": "one sentence inviting people to join the team, no number",
+      "maxWords": 18
+    },
+    {
+      "collection": "teams",
+      "slug": "about-team",
+      "field": "title",
+      "brief": "the heading above the people of the team",
+      "maxWords": 5
+    },
+    {
+      "collection": "masthead",
+      "slug": "services",
+      "field": "description",
+      "brief": "one line under the page title about this business",
+      "maxWords": 18
+    },
+    {
+      "collection": "masthead",
+      "slug": "about-us",
+      "field": "description",
+      "brief": "one line under the page title about this business",
+      "maxWords": 18
+    },
+    {
+      "collection": "masthead",
+      "slug": "blog",
+      "field": "description",
+      "brief": "one line under the title about this business",
+      "maxWords": 18
+    },
+    {
+      "collection": "masthead",
+      "slug": "post",
+      "field": "description",
+      "brief": "one line under the title about this business",
+      "maxWords": 18
+    },
+    {
+      "collection": "masthead",
+      "slug": "search",
+      "field": "description",
+      "brief": "one line under the title about this business",
+      "maxWords": 18
+    },
+    {
+      "collection": "slideshow",
+      "slug": "home-slideshow",
+      "field": "items",
+      "itemFields": [
+        "title_dot",
+        "title",
+        "desc",
+        "btn_title"
+      ],
+      "brief": "one slide of the home page of this business: a short topic, a two-line headline, one sentence and the words of its button"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description"
+      ],
+      "brief": "one service of this business: its name and one sentence"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description"
+      ],
+      "brief": "one strength of this business: its name and one sentence"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-services",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description"
+      ],
+      "brief": "one strength of this business: its name and one sentence"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-tiles",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description",
+        "ft_link_title"
+      ],
+      "brief": "one service of this business: its name, one sentence and the words of its link"
+    },
+    {
+      "collection": "accordion",
+      "slug": "home-missions-list",
+      "field": "items",
+      "itemFields": [
+        "accordion_name",
+        "accordion_desc"
+      ],
+      "brief": "one value or mission of this business: its name and one sentence"
+    },
+    {
+      "collection": "testimonials",
+      "slug": "home-cases",
+      "field": "items",
+      "itemFields": [
+        "label",
+        "title",
+        "desc"
+      ],
+      "brief": "one case study of this business: its field, its title and one sentence"
+    },
+    {
+      "collection": "testimonials",
+      "slug": "services-cases",
+      "field": "items",
+      "itemFields": [
+        "title"
+      ],
+      "brief": "one case study of this business: its title"
+    },
+    {
+      "collection": "teams",
+      "slug": "home-team",
+      "field": "items",
+      "itemFields": [
+        "position"
+      ],
+      "brief": "the job title of a member of the team of this business"
+    },
+    {
+      "collection": "teams",
+      "slug": "about-team",
+      "field": "items",
+      "itemFields": [
+        "position"
+      ],
+      "brief": "the job title of a member of the team of this business"
     }
   ],
-  "rewrite": [],
+  "rewrite": [
+    {
+      "collection": "posts",
+      "brief": "one news article this business would publish for its clients: a market insight, advice or news from the firm",
+      "fields": [
+        "title",
+        "excerpt",
+        "body"
+      ],
+      "body": "body",
+      "bodyWords": 160,
+      "batch": 3,
+      "decides": [
+        "title"
+      ]
+    }
+  ],
   "facts": [
     {
-      "collection": "__page__",
-      "slug": "__page__",
-      "field": "__a field that CLAIMS something about the business__",
-      "why": "counts, years, certifications, named clients or prices — removed, never invented"
+      "collection": "teams",
+      "slug": "home-team",
+      "field": "items",
+      "why": "named members of the demo team and their pictures"
+    },
+    {
+      "collection": "teams",
+      "slug": "about-team",
+      "field": "items",
+      "why": "named members of the demo team and their pictures"
+    },
+    {
+      "collection": "testimonials",
+      "slug": "services-praise",
+      "field": "items",
+      "why": "named clients of the demo business and what they said"
+    },
+    {
+      "collection": "testimonials",
+      "slug": "footer-quote",
+      "field": "items",
+      "why": "a named client of the demo business and what they said"
+    },
+    {
+      "collection": "clients",
+      "slug": "clients",
+      "field": "items",
+      "why": "the demo business’s client logos"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact-info",
+      "field": "website",
+      "why": "the demo business’s own website address"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_social_facebook",
+      "why": "the demo business’s social address"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_social_twitter",
+      "why": "the demo business’s social address"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_social_instagram",
+      "why": "the demo business’s social address"
     }
   ],
   "hide": [],
-  "brand": {
-    "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, from the kit's brand PR; a tool without it ignores this block): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none. Name the chrome entry the header and footer read (references/brand-and-pages.md).",
-    "logoDark": {
-      "collection": "site",
-      "slug": "site",
-      "field": "logo_dark",
-      "label": "Logo for dark backgrounds"
+  "demoCompanyNames": [
+    "JA Morgan",
+    "Morgan"
+  ],
+  "labels": [
+    {
+      "collection": "features_intro",
+      "fields": [
+        "btn_title",
+        "title_more",
+        "section_label"
+      ]
+    },
+    {
+      "collection": "testimonials",
+      "fields": [
+        "btn_title",
+        "section_label",
+        "title"
+      ]
+    },
+    {
+      "collection": "teams",
+      "fields": [
+        "more_cta",
+        "section_label"
+      ]
+    },
+    {
+      "collection": "accordion",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "collection": "slideshow",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "collection": "clients",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "collection": "footer_links",
+      "fields": [
+        "column",
+        "label"
+      ]
+    },
+    {
+      "collection": "chrome"
+    },
+    {
+      "collection": "contact"
+    },
+    {
+      "collection": "masthead",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "collection": "pages",
+      "fields": [
+        "title"
+      ]
     }
-  }
+  ],
+  "trim": [
+    {
+      "collection": "posts",
+      "slug": "blog",
+      "keep": 25,
+      "list": {
+        "collection": "pages",
+        "slug": "blog"
+      },
+      "why": "the Blog page is a header link; this rule declares it for PAGE-8. The tool trims demo rows only for a customer who described the business, with a model to rewrite what stays, and keep is every demo post, so it cuts nothing today"
+    }
+  ],
+  "keptText": [
+    "chrome/chrome.copyright_credit",
+    "chrome/chrome.license_note",
+    "chrome/chrome.not_found_code"
+  ],
+  "forms": [
+    {
+      "slug": "contact",
+      "fields": {},
+      "brief": "the contact form of this business"
+    }
+  ],
+  "terms": [
+    {
+      "taxonomy": "category",
+      "collections": [
+        "posts"
+      ],
+      "brief": "a group of articles this business publishes (market insight, advice, news, planning)"
+    }
+  ]
 }

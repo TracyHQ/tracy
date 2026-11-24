@@ -149,7 +149,7 @@
           "type": "text"
         },
         {
-          "name": "section_bg",
+          "name": "section_style",
           "type": "text"
         },
         {
@@ -208,10 +208,6 @@
         {
           "name": "img_features",
           "type": "image"
-        },
-        {
-          "name": "position",
-          "type": "text"
         },
         {
           "name": "btn_title",
@@ -296,7 +292,7 @@
           "type": "text"
         },
         {
-          "name": "section_bg",
+          "name": "section_style",
           "type": "text"
         },
         {
@@ -335,7 +331,7 @@
           "type": "text"
         },
         {
-          "name": "section_bg",
+          "name": "section_style",
           "type": "text"
         },
         {
@@ -426,7 +422,7 @@
           "type": "text"
         },
         {
-          "name": "section_bg",
+          "name": "section_style",
           "type": "text"
         },
         {
@@ -493,7 +489,7 @@
           "type": "text"
         },
         {
-          "name": "section_bg",
+          "name": "section_style",
           "type": "text"
         },
         {
@@ -544,7 +540,7 @@
           "type": "text"
         },
         {
-          "name": "section_bg",
+          "name": "section_style",
           "type": "text"
         },
         {
@@ -994,7 +990,7 @@
           }
         ],
         "section_label": "",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": ""
       }
     },
@@ -1023,7 +1019,7 @@
           }
         ],
         "section_label": "Introducing",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": "images/joomlart/others/mask-map-2.png"
       }
     },
@@ -1066,7 +1062,7 @@
           }
         ],
         "section_label": "Our Services",
-        "section_bg": "gray",
+        "section_style": "gray",
         "section_mask": ""
       }
     },
@@ -1079,12 +1075,11 @@
         "description": "Duis tristique leo sed libero mattis, id ulla mcorper elit ligula viverra. Duis ante metus, efficitur id orci eget, semper posuere nibh.",
         "align": "1",
         "img_features": "images/joomlart/features/item-3.jpg",
-        "position": "acm-accordion",
         "btn_title": "",
         "btn_link": "/services",
         "title": "Morgan Provides Services in the Financial Sector.",
         "section_label": "Our Missions",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": ""
       }
     },
@@ -1097,12 +1092,11 @@
         "description": "Egestas nulla ac efficitur eleifend. Quisque dolor \nfringilla semper, libero hendrerit allis, magna augue putate nibh ucibus enim.\n\n<ul class='list-check'>\n\t<li>Collection of Global Solutions.</li>\n\t<li>Full Support all the time.</li>\n\t<li>VIP Custom Solutions.</li>\n</ul>",
         "align": "0",
         "img_features": "images/joomlart/features/item-4.jpg",
-        "position": "",
         "btn_title": "Book a Consultation",
         "btn_link": "/contact-us",
         "title": "Morgan help Business  Performance & Scalability.",
         "section_label": "Our Philosophy",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": ""
       }
     },
@@ -1115,12 +1109,11 @@
         "description": "Duis tristique leo sed libero mattis, id ullamcorper elit. Duis ante metus, efficitur id orci eget, semper posuere nibh. In in neque in ex feugiat.",
         "align": "1",
         "img_features": "images/joomlart/features/item-5.jpg",
-        "position": "quick-contact",
         "btn_title": "",
         "btn_link": "/services",
         "title": "Morgan help Business  Performance & Scalability.",
         "section_label": "Free Consultation",
-        "section_bg": "secondary",
+        "section_style": "secondary",
         "section_mask": ""
       }
     },
@@ -1133,12 +1126,11 @@
         "description": "<p>Egestas nulla ac efficitur eleifend. Quisque dolor fringilla their place and supplies it with the semper, libero hendrerit allis, a large language, magna augue putate nibh ucibus enim eros acumin arcu ligula scelerisque.</p>Donec quis purus their place and supplies it with the congue ligula named Duden flows by ocean acumins acumins ligula acumins fringilla.",
         "align": "1",
         "img_features": "images/joomlart/features/item-12.jpg",
-        "position": "",
         "btn_title": "",
         "btn_link": "/services",
         "title": " Interested in working with Morgan, a large language ocean? ",
         "section_label": "Careers at Morgan",
-        "section_bg": "gray",
+        "section_style": "gray",
         "section_mask": ""
       }
     },
@@ -1151,12 +1143,11 @@
         "description": "<p>Egestas nulla ac efficitur eleifend. Quisque dolor fringilla semper, libero hendrerit allis, magna augue putate nibh ucibus enim eros acumin arcu ligula scelerisque. Donec quis purus congue ligula acumins acumins ligula acumins fringilla.</p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text.",
         "align": "0",
         "img_features": "images/joomlart/features/item-11.jpg",
-        "position": "",
         "btn_title": "",
         "btn_link": "/services",
         "title": "Passionate People on Our Team, Their Place and Supplies.",
         "section_label": "Expert People",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": ""
       }
     },
@@ -1197,7 +1188,7 @@
           }
         ],
         "section_label": "Our Services",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": "images/joomlart/others/mask-map-2.png"
       }
     },
@@ -1256,7 +1247,7 @@
           }
         ],
         "section_label": "Our Services",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": "images/joomlart/others/mask-map.png"
       }
     },
@@ -1273,7 +1264,7 @@
         "btn_type": "primary",
         "title": "We’d love to hear from you. Let's see how we can assist you",
         "section_label": "Get in touch",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": ""
       }
     },
@@ -1299,7 +1290,7 @@
           }
         ],
         "section_label": "",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": ""
       }
     },
@@ -1343,7 +1334,7 @@
           }
         ],
         "section_label": "Case Studies",
-        "section_bg": "gray",
+        "section_style": "gray",
         "section_mask": ""
       }
     },
@@ -1369,7 +1360,7 @@
           }
         ],
         "section_label": "",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": ""
       }
     },
@@ -1408,7 +1399,7 @@
           }
         ],
         "section_label": "Case Studies",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": ""
       }
     },
@@ -1452,7 +1443,7 @@
           }
         ],
         "section_label": "Testimonials",
-        "section_bg": "gray",
+        "section_style": "gray",
         "section_mask": ""
       }
     },
@@ -1495,7 +1486,7 @@
         ],
         "more_cta": "Join Our Team",
         "section_label": "Expert People",
-        "section_bg": "gray",
+        "section_style": "gray",
         "section_mask": ""
       }
     },
@@ -1561,7 +1552,7 @@
         ],
         "more_cta": "",
         "section_label": "Our Team",
-        "section_bg": "gray",
+        "section_style": "gray",
         "section_mask": ""
       }
     },
@@ -1607,7 +1598,7 @@
           }
         ],
         "section_label": "",
-        "section_bg": "white",
+        "section_style": "white",
         "section_mask": ""
       }
     },
@@ -2204,7 +2195,7 @@
       "locale": "en",
       "status": "published",
       "values": {
-        "title": "Our Sevices",
+        "title": "Our Services",
         "description": "Quisque dolor fringilla semper, libero hendrerit allis, magna augue putate nibh ucibus enim eros acumin arcu a proper human room although a little too small, lay peacefully between its four familiar walls.",
         "background": "images/joomlart/others/bg-masthead-2.jpg"
       }
@@ -2218,6 +2209,17 @@
         "title": "About Us",
         "description": "Quisque dolor fringilla semper, libero hendrerit allis, magna augue putate nibh ucibus enim eros acumin arcu a proper human room although a little too small, lay peacefully between its four familiar walls.",
         "background": "images/joomlart/others/bg_masthead.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "not-found",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "",
+        "description": "",
+        "background": "templates/ja_morgan/images/bg-404.jpg"
       }
     },
     {
@@ -2245,17 +2247,6 @@
     {
       "type": "masthead",
       "slug": "search",
-      "locale": "en",
-      "status": "published",
-      "values": {
-        "title": "JA Morgan",
-        "description": "Quisque dolor fringilla semper, libero hendrerit allis, magna augue putate nibh ucibus enim eros acumin arcu",
-        "background": "images/joomlart/others/bg-masthead.jpg"
-      }
-    },
-    {
-      "type": "masthead",
-      "slug": "not-found",
       "locale": "en",
       "status": "published",
       "values": {

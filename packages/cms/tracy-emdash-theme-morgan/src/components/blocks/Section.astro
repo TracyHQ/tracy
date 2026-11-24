@@ -10,7 +10,7 @@ interface Props {
 }
 const { entry, name, flush = false } = Astro.props
 const mask = mediaUrl(entry.section_mask)
-const bg = ['gray', 'secondary'].includes(entry.section_bg) ? entry.section_bg : 'white'
+const bg = ['gray', 'secondary'].includes(entry.section_style) ? entry.section_style : 'white'
 ---
 
 <section class:list={['mg-sec', `mg-sec-${name}`, `is-${bg}`, flush && 'is-flush', mask && 'has-mask']} style={mask ? `--mask:url('${mask}')` : undefined}>

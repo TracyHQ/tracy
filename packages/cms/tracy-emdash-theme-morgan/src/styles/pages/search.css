@@ -20,17 +20,14 @@
 	.mg-search-results .mg-meta { justify-content: flex-start; }
 	.mg-search-intro { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 12px 0 0; }
 
-	/* error page (source error.php + jpages.scss): no header or footer, a centred 900 px panel */
-	.mg-error { display: flex; align-items: center; justify-content: center; min-height: 60vh; padding: 16px; text-align: center; }
-	.mg-error-wrap { width: 900px; max-width: 100%; padding: 64px; background: rgba(225, 225, 225, .04); } /* ds-keep: translucent shade, scrim or one-off glyph over a photograph or a dark panel: the pair keeps the template value under every system */
-	@media (max-width: 767.98px) { .mg-error-wrap { padding: 32px 24px; } }
-	.mg-error-code { display: block; font-family: var(--font-display); font-size: 208px; line-height: 1; color: var(--color-heading); }
+	/* error page (source error.php): a full-screen picture under a dark veil, no header or footer */
+	.mg-error { position: relative; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 16px; text-align: center; background-size: cover; background-position: center; background-color: var(--color-ink); color: #fff; }
+	.mg-error::before { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, .55); }
+	.mg-error-wrap { position: relative; width: 900px; max-width: 100%; padding: 32px; }
+	.mg-error-code { display: block; font-family: var(--font-display); font-size: 208px; line-height: 1; font-weight: 400; color: #fff; }
 	@media (min-width: 768px) { .mg-error-code { font-size: 288px; } }
-	.mg-error-info h1 { margin: 64px 0 24px; font-size: 35.2px; line-height: 1.2; font-weight: 400; color: var(--color-heading); }
-	@media (min-width: 768px) { .mg-error-info h1 { font-size: 44.8px; } }
-	.mg-error-other p { margin: 0; line-height: 1.6; }
-	.mg-error-redirect { padding-top: 24px; }
-	@media (min-width: 768px) { .mg-error-redirect { padding-top: 32px; } }
-	.mg-error-redirect a { display: inline-block; padding: 10.4px 32px; border: 1px solid var(--color-accent); background: var(--color-accent); color: var(--color-accent-on); font-size: 14px; line-height: 22.4px; letter-spacing: 1px; text-transform: uppercase; transition: opacity .2s; }
-	.mg-error-redirect a:hover, .mg-error-redirect a:focus-visible { opacity: .85; color: var(--color-accent-on); }
+	.mg-error-info h1 { margin: 24px 0 16px; font-size: 44px; line-height: 1.2; font-weight: 700; color: #fff; }
+	.mg-error-other p { margin: 0 0 30px; color: rgba(255, 255, 255, .7); }
+	.mg-error-redirect a { display: inline-block; padding: 18px 40px; background: var(--color-accent); color: var(--color-accent-on); font-weight: 600; }
+	.mg-error-redirect a:hover, .mg-error-redirect a:focus-visible { background: var(--color-accent-hover); color: var(--color-accent-on); }
 }

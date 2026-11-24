@@ -34,7 +34,8 @@ export async function loadChrome(locale: Locale): Promise<Chrome> {
     getEmDashCollection('footer_links', { locale, status: 'published' })
   ])
   const footer: Chrome['footer'] = []
-  for (const e of footerRes.entries) {
+  // the collection answers newest first: the slugs (`col1-01`) carry the order of the seed
+  for (const e of [...footerRes.entries].sort((a, b) => String(a.id).localeCompare(String(b.id)))) {
     const d = e.data as Record<string, any>
     let col = footer.find((c) => c.title === d.column)
     if (!col) footer.push((col = { title: String(d.column ?? ''), links: [] }))

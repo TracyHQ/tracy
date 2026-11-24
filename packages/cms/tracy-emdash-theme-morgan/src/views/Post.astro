@@ -82,7 +82,7 @@ const components = {
   type: { mgImages: PostImages, ...($post.owner ? { blockquoteGroup: ProseQuote } : {}) },
   ...($post.owner ? { block: ProseBlock, listItem: ProseListItem } : {})
 }
-const band = { ...(masthead ?? { id: undefined, slug: 'post' }), background: masthead?.background ?? a.cover }
+const band = { ...(masthead ?? { id: undefined, slug: 'post' }), background: a.cover ?? masthead?.background }
 ---
 
 <Base chrome={chrome} title={a.title} image={cover} currentPath="/blog" type="article" content={{ collection: 'posts', id: a.id, slug, toPath: () => `/blog/${slug}` }}>

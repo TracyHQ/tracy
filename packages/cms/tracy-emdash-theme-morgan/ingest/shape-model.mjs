@@ -116,6 +116,14 @@ for (const r of model.records.filter((x) => x.type === 'teams')) {
   r.values.more_title = m ? m[1] : (r.values.more_title ?? '')
 }
 
+// `position` names the Joomla module position a style-3 band hangs its extras on (an accordion, the form): the template places them
+// by its own composition, so the field is dropped
+{
+  const t = model.types.find((x) => x.name === 'features_intro')
+  t.fields = t.fields.filter((f) => f.name !== 'position')
+  for (const r of model.records.filter((x) => x.type === 'features_intro')) delete r.values.position
+}
+
 // a link that is `#` in the source goes nowhere: the field is empty and the page prints no link (DECISIONS D10)
 const clearHash = (v) =>
   Array.isArray(v)
@@ -147,7 +155,7 @@ for (const [slug, info] of Object.entries(sectionStyle)) {
   const type = model.types.find((t) => t.name === info.type)
   for (const [name, t] of [
     ['section_label', 'text'],
-    ['section_bg', 'text'],
+    ['section_style', 'text'],
     ['section_mask', 'image']
   ])
     if (!type.fields.some((f) => f.name === name)) type.fields.push({ name, type: t })
@@ -155,7 +163,7 @@ for (const [slug, info] of Object.entries(sectionStyle)) {
   const label = decode(stripTags(String(p['sub-heading'] ?? ''))).trim()
   Object.assign(rec.values, {
     section_label: label.replace(/\.$/, ''),
-    section_bg: ['gray', 'secondary'].includes(p['color-module']) ? p['color-module'] : 'white',
+    section_style: ['gray', 'secondary'].includes(p['color-module']) ? p['color-module'] : 'white',
     section_mask: isImg(p['bg-module']) ? fullPath(p['bg-module']) : ''
   })
 }
@@ -292,7 +300,15 @@ for (const r of model.records.filter((x) => x.type === 'posts')) {
     })
   }
   const dflt = fullPath(cfg.background[3])
-  for (const slug of ['blog', 'post', 'search', 'not-found'])
+  // the error page's own picture (templates/ja_morgan/error.php): a full-screen photo with no title band
+  model.records.push({
+    type: 'masthead',
+    slug: 'not-found',
+    locale: 'en',
+    status: 'published',
+    values: { title: '', description: '', background: 'templates/ja_morgan/images/bg-404.jpg' }
+  })
+  for (const slug of ['blog', 'post', 'search'])
     model.records.push({
       type: 'masthead',
       slug,
@@ -497,6 +513,8 @@ model.types = model.types.filter((t) => t.name !== 'modules')
 
 // the model's media list names the entries by their old slugs; the media map is built from the records and the webroot
 model.media = []
+// two typos of the demo data are corrected (DECISIONS D14)
+for (const r of model.records) if (r.type === 'masthead' && r.values?.title === 'Our Sevices') r.values.title = 'Our Services'
 model.site = { ...model.site, title: { en: 'JA Morgan' }, tagline: { en: '' } }
 
 // ---- a scalar field that arrives as a list holds the first non-empty value

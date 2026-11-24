@@ -1,12 +1,14 @@
 ---
 /**
- * The error page (source: templates/ja_morgan/error.php): a centred panel (the site header and footer stay: an unknown address answers 404 with the chrome, DECISIONS D16) with the huge code, the title,
+ * The error page (source: templates/ja_morgan/error.php): a full-screen picture under a dark veil, with no header or footer (as the source), the huge code, the title,
  * one line and a button home. Every word is the site entry's.
  */
 import Base from '@/layouts/Base.astro'
 import type { Chrome } from '@/lib/chrome'
 import { href, type Locale } from '@/lib/i18n'
 import { stampFor } from '@/lib/stamps'
+import { mediaUrl } from '@/lib/media'
+import { section } from '@/lib/content'
 
 interface Props {
   chrome: Chrome
@@ -16,10 +18,12 @@ const { chrome, locale } = Astro.props
 const { site } = chrome
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 Astro.response.status = 404
+const band = await section('masthead', 'not-found', locale)
+const bg = mediaUrl(band?.background)
 ---
 
-<Base chrome={chrome} title={site.not_found_title ?? site.not_found_code ?? ''} currentPath="/404" robots="noindex, nofollow" bodyClass="mg-error-body">
-	<main id="main" class="mg-error">
+<Base chrome={chrome} title={site.not_found_title ?? site.not_found_code ?? ''} currentPath="/404" robots="noindex, nofollow" bodyClass="mg-error-body" bare>
+	<main id="main" class="mg-error" style={bg ? `background-image:url('${bg}')` : undefined}>
 		<div class="mg-error-wrap">
 			<div class="mg-error-info">
 				<span class="mg-error-code" {...$c('not_found_code')}>{site.not_found_code}</span>
