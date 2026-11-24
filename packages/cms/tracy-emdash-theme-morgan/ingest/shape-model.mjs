@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Applies the porting decisions of DECISIONS.md (D5-D7, D10, D11) to site-model.json before compile-seed: keeps the pages and
+// Applies the porting decisions of DECISIONS.md (D5-D7, D9-D12) to site-model.json before compile-seed: keeps the pages and
 // the section entries the template ports, gives every kept section a stable name, adds what the model drops (site chrome,
-// mastheads, the article that is a menu item, authors, tags) and names the header menu `primary`.
+// mastheads, authors, tags, the footer links) and names the header menu `primary`.
 //   node ingest/shape-model.mjs <seed/site-model.json> <j6/inventory.json> <spec/sections.json> <spec/page-map.json>
 import { readFileSync, writeFileSync } from 'node:fs'
 import { decodeWith, stripTags } from './text.mjs'
@@ -24,63 +24,52 @@ if (!file || !inventoryFile || !sectionsFile || !pageMapFile) {
 const model = JSON.parse(readFileSync(file, 'utf8'))
 const inventory = JSON.parse(readFileSync(inventoryFile, 'utf8'))
 const sections = JSON.parse(readFileSync(sectionsFile, 'utf8'))
-const pageMap = JSON.parse(readFileSync(pageMapFile, 'utf8'))
 const before = model.records.length
 
-// ---- sections: the model names a collection's entries by title (`gallery`, `gallery-124`); the module id is the only link back
-// to the page that places it. Entries of one type are in module-id order in both files, so they pair by position.
+// ---- sections: the model names a collection's entries by title; the module id is the only link back to the page that places it.
+// Entries of one type are in module-id order in both files, so they pair by position. Module ids that are not named here are
+// dropped (the other Home styles, the showcase front page, the Joomla pages).
 const NAME = {
-  112: 'home-hero',
-  114: 'home-services',
-  115: 'home-explore',
-  116: 'home-events',
-  117: 'home-sea',
-  118: 'home-land',
-  119: 'home-sky',
-  121: 'home-gallery-1',
-  122: 'home-desserts',
-  123: 'home-tea',
-  124: 'home-gallery-2',
-  127: 'home-testimonials',
-  128: 'home-visit',
-  143: 'about-intro',
-  150: 'about-features',
-  168: 'about-testimonials',
-  153: 'about-team',
-  163: 'chiefs-team',
-  148: 'gallery-two',
-  165: 'gallery-one',
-  158: 'menu-columns',
-  164: 'menu-grid',
-  159: 'menu-list-1',
-  162: 'menu-list-2',
-  169: 'offer-hour-1',
-  170: 'offer-hour-2',
-  171: 'offer-hour-3',
-  172: 'book-table'
+  98: 'home-slideshow',
+  101: 'home-intro',
+  102: 'home-services',
+  104: 'home-missions',
+  105: 'home-missions-list',
+  106: 'home-cases',
+  108: 'home-philosophy',
+  109: 'home-team',
+  113: 'home-consult',
+  118: 'clients',
+  120: 'footer-quote',
+  144: 'about-intro',
+  138: 'about-careers',
+  139: 'about-people',
+  140: 'about-team',
+  151: 'services-tiles',
+  153: 'services-cases',
+  155: 'services-praise',
+  156: 'services-cta'
 }
-const KEEP_PATHS = new Set(['/', '/about', '/gallery', '/chiefs', '/menu', '/offer', '/contact'])
-const usedBy = new Map()
-for (const pg of pageMap.pages)
-  for (const s of pg.sections)
-    for (const m of s.modules) usedBy.set(String(m), [...(usedBy.get(String(m)) ?? []), pg.path])
-const dropped = new Set()
 const byType = {}
 for (const m of sections.acm) (byType[m.type.replace(/-/g, '_')] ??= []).push(m)
+const dropped = new Set()
 const sectionStyle = {}
 for (const [type, mods] of Object.entries(byType)) {
   const recs = model.records.filter((r) => r.type === type)
   if (recs.length !== mods.length) throw new Error(`${type}: ${recs.length} entries, ${mods.length} modules`)
   recs.forEach((rec, i) => {
     const id = String(mods[i].id)
-    // module 172 (Book Table) is placed by the header, not by a page
-    const keep = NAME[id] && (id === '172' || (usedBy.get(id) ?? []).some((p) => KEEP_PATHS.has(p)))
-    if (!keep) return dropped.add(rec)
+    if (!NAME[id]) return dropped.add(rec)
     rec.slug = NAME[id]
     sectionStyle[NAME[id]] = { type, style: mods[i].style, module: id, spacing: mods[i].spacing }
   })
 }
 model.records = model.records.filter((r) => !dropped.has(r))
+// no collection is left empty: a type with no kept entry (hero) is dropped, so the admin does not list a dead collection
+const usedTypes = new Set(model.records.map((r) => r.type))
+model.types = model.types.filter((t) => usedTypes.has(t.name) || ['pages', 'posts'].includes(t.name))
+
+// the demo's `<span class="hightlight">` marks a word; the seed keeps it as <mark>
 const mark = (v) =>
   typeof v === 'string'
     ? v.replace(/<span class=['"](?:hightlight|text-highlight)['"]>([\s\S]*?)<\/span>/g, '<mark>$1</mark>')
@@ -90,6 +79,7 @@ const mark = (v) =>
         ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, mark(x)]))
         : v
 for (const r of model.records) if (r.type !== 'pages' && r.type !== 'posts') r.values = mark(r.values)
+
 // The model keeps a picture as a bare basename (`item-1.jpg`), which several folders share; the module's own parameters carry the
 // whole path (`images/joomlart/feature/item-1.jpg#joomlaImage://...`), so every picture field gets it back.
 const fullPath = (v) => String(v).split('#')[0]
@@ -106,31 +96,48 @@ for (const [slug, info] of Object.entries(sectionStyle)) {
         rec.values.items[i][norm(k)] = fullPath(v)
   })
 }
-// the section's own heading block (Joomla module title when shown, `main-section`, `top-desc`): module parameters the model drops
-const secText = (h) =>
-  decode(
-    stripTags(
-      String(h ?? '')
-        .replace(/\r?\n/g, ' ')
-        .replace(/<\/p>\s*<p[^>]*>/gi, '\n')
-        .replace(/<br\s*\/?>/gi, ' ')
-    )
-  )
-    .replace(/[ \t]*\r?\n[ \t\r\n]*/g, '\n')
-    .replace(/[ \t]+/g, ' ')
-    .trim()
+
+// a link that is `#` in the source goes nowhere: the field is empty and the page prints no link (DECISIONS D10)
+const clearHash = (v) =>
+  Array.isArray(v)
+    ? v.map(clearHash)
+    : v && typeof v === 'object'
+      ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, clearHash(x)]))
+      : v === '#'
+        ? ''
+        : v
+for (const r of model.records) if (r.type !== 'pages' && r.type !== 'posts') r.values = clearHash(r.values)
+// the demo's own addresses move to the ported ones
+const PATHS = { '/services-page': '/services', '/contact-us': '/contact-us', '/about-us': '/about-us' }
+const fixLinks = (v) =>
+  Array.isArray(v)
+    ? v.map(fixLinks)
+    : v && typeof v === 'object'
+      ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, fixLinks(x)]))
+      : typeof v === 'string' && PATHS[v]
+        ? PATHS[v]
+        : v
+for (const r of model.records) if (r.type !== 'pages' && r.type !== 'posts') r.values = fixLinks(r.values)
+
+// the section's own heading: the module title when shown, the small red label above it is the module's `sub-heading`; the
+// background (white / gray / secondary) and the faint world map behind it are the module's `color-module` / `bg-module`
+const text = { type: 'text' }
 for (const [slug, info] of Object.entries(sectionStyle)) {
-  if (info.type === 'hero' || info.type === 'book_table') continue
   const mod = inventory.modules.find((m) => String(m.id) === info.module)
   const p = JSON.parse(mod.params)
   const type = model.types.find((t) => t.name === info.type)
-  for (const name of ['section_label', 'section_title', 'section_desc'])
-    if (!type.fields.some((f) => f.name === name)) type.fields.push({ name, type: 'text' })
+  for (const [name, t] of [
+    ['section_label', 'text'],
+    ['section_bg', 'text'],
+    ['section_mask', 'image']
+  ])
+    if (!type.fields.some((f) => f.name === name)) type.fields.push({ name, type: t })
   const rec = model.records.find((r) => r.type === info.type && r.slug === slug)
+  const label = decode(stripTags(String(p['sub-heading'] ?? ''))).trim()
   Object.assign(rec.values, {
-    section_label: String(mod.showtitle) === '1' ? decode(mod.title) : '',
-    section_title: secText(p['main-section']),
-    section_desc: secText(p['top-desc'])
+    section_label: label.replace(/\.$/, ''),
+    section_bg: ['gray', 'secondary'].includes(p['color-module']) ? p['color-module'] : 'white',
+    section_mask: isImg(p['bg-module']) ? fullPath(p['bg-module']) : ''
   })
 }
 writeFileSync(
@@ -138,34 +145,44 @@ writeFileSync(
   JSON.stringify(sectionStyle, null, 2) + '\n'
 )
 
-// ---- pages
-const KEEP_PAGES = new Set(['front-page', 'about', 'gallery', 'chiefs', 'menu', 'offer', 'contact'])
-model.records = model.records.filter((r) => r.type !== 'pages' || KEEP_PAGES.has(r.slug))
-for (const r of model.records) if (r.type === 'pages' && r.slug === 'front-page') r.slug = 'home'
+// ---- pages: Home is the "Home Style 1" article (DECISIONS D6)
+const KEEP = { 'home-style-1': 'home', 'about-us': 'about-us', 'services-page': 'services', 'contact-us': 'contact-us' }
+model.records = model.records.filter((r) => r.type !== 'pages' || KEEP[r.slug])
+for (const r of model.records) if (r.type === 'pages') r.slug = KEEP[r.slug]
+const PAGE_TITLE = { home: 'Home', services: 'Services' }
+for (const r of model.records)
+  if (r.type === 'pages') {
+    if (PAGE_TITLE[r.slug]) r.values.title = PAGE_TITLE[r.slug]
+    r.values.view = r.slug === 'home' ? 'front-page' : r.slug === 'contact-us' ? 'page-contact' : 'page-landing'
+  }
 // the blog gets a page record of its own, so a customer can hide it from the header
 model.records.push({
   type: 'pages',
   slug: 'blog',
   locale: 'en',
   status: 'published',
-  values: { title: 'Blog', body: '', view: 'blog' }
+  values: { title: 'News & Update', body: '', view: 'blog' }
 })
-// routes: the pages, the blog list at /blog and every post under it (the source's /pages/j-content/... is the Joomla menu tree)
 model.routes = [
-  ...model.routes.filter((r) => r.kind === 'page' && KEEP_PATHS.has(r.path)),
+  { path: '/', kind: 'page' },
+  { path: '/about-us', kind: 'page' },
+  { path: '/services', kind: 'page' },
+  { path: '/contact-us', kind: 'page' },
   { path: '/blog', kind: 'list', type: 'posts' }
 ]
-// the main menu without the Home demos, and the footer "About" menu (its links are `#` except one: see chrome.footer_links_text)
+// the main menu without the Home styles
 model.menus = model.menus.filter((m) => m.name === 'mainmenu')
 for (const m of model.menus) {
   m.name = 'primary'
   m.label = { en: 'Primary' }
-  m.items = (m.items ?? []).map(({ children: _c, ...it }) => it)
+  m.items = (m.items ?? []).map(({ children: _c, ...it }) => ({
+    ...it,
+    path: { '/joomlart-content/category-blog': '/blog', '/services-page': '/services' }[it.path] ?? it.path
+  }))
 }
 
-// ---- posts: the article that is a menu item (`blog-detail`) is a post too; author, creation date and tags
+// ---- posts: author, creation date and tags; only the articles of the blog categories (the demo's page articles are not posts)
 const postType = model.types.find((t) => t.name === 'posts')
-// Search: the words of a post are what the search index holds; without a `searchable` field the CMS refuses to build it.
 for (const f of postType.fields) if (['title', 'excerpt', 'body'].includes(f.name)) f.searchable = true
 postType.fields.push(
   { name: 'created', type: 'date' },
@@ -175,9 +192,7 @@ postType.fields.push(
 )
 const byId = Object.fromEntries(inventory.users.map((u) => [u.id, u]))
 const avatar = (uid) => {
-  const row = inventory.user_profiles.find(
-    (p) => p.user_id === uid && p.profile_key === 'profile.user_avatar'
-  )
+  const row = inventory.user_profiles.find((p) => p.user_id === uid && p.profile_key === 'profile.user_avatar')
   return row ? String(JSON.parse(row.profile_value)).split('#')[0] : ''
 }
 const tagsOf = (cid) =>
@@ -186,31 +201,19 @@ const tagsOf = (cid) =>
     .map((m) => inventory.tags.find((t) => t.id === m.tag_id)?.title)
     .filter(Boolean)
     .join('\n')
-const coverOf = (row) => String(JSON.parse(row.images || '{}').image_intro ?? '').split('#')[0]
-if (!model.records.some((r) => r.type === 'posts' && r.slug === 'soul-kitchen-kumquat-thyme-cocktail')) {
-  const row = inventory.content.find((c) => c.alias === 'soul-kitchen-kumquat-thyme-cocktail')
-  model.records.push({
-    type: 'posts',
-    slug: row.alias,
-    locale: 'en',
-    status: 'published',
-    terms: { category: ['food'] },
-    values: {
-      title: decode(row.title),
-      excerpt: '',
-      body: `${row.introtext}\n${row.fulltext}`,
-      date: row.publish_up,
-      cover: coverOf(row)
-    }
-  })
+const imagesOf = (row, key) => String(JSON.parse(row.images || '{}')[key] ?? '').split('#')[0]
+const POST_CATS = new Set(['9', '10', '11', '12', '13', '14', '15'])
+const isPost = (r) => {
+  const row = inventory.content.find((c) => c.alias === r.slug)
+  return Boolean(row && POST_CATS.has(row.catid))
 }
+model.records = model.records.filter((r) => r.type !== 'posts' || isPost(r))
 for (const r of model.records.filter((x) => x.type === 'posts')) {
   const row = inventory.content.find((c) => c.alias === r.slug)
   const u = byId[row.created_by]
-  // the model rewrites the body's pictures to bare basenames; the article's own text keeps their paths
   Object.assign(r.values, {
     body: `${row.introtext}\n${row.fulltext}`,
-    cover: coverOf(row),
+    cover: imagesOf(row, 'image_intro'),
     created: row.created,
     author: u?.name ?? '',
     author_avatar: avatar(row.created_by),
@@ -222,15 +225,14 @@ for (const r of model.records.filter((x) => x.type === 'posts')) {
     .filter((r) => r.type === 'posts')
     .sort((a, b) => String(b.values.date).localeCompare(String(a.values.date)))
   model.records = [...model.records.filter((r) => r.type !== 'posts'), ...posts]
+  for (const r of posts) model.routes.push({ path: `/blog/${r.slug}`, kind: 'detail', type: 'posts', slug: r.slug })
 }
 
-for (const r of model.records.filter((x) => x.type === 'posts'))
-  model.routes.push({ path: `/blog/${r.slug}`, kind: 'detail', type: 'posts', slug: r.slug })
-
-// ---- mastheads: module 136 keeps one title / description / background per menu item in its params
+// ---- mastheads: module 103 keeps one title / description / background per menu item in its params; the blog, the search and the
+// article pages print the module's default title and description
 {
-  const mod = inventory.modules.find((m) => String(m.id) === '136')
-  const cfg = JSON.parse(mod.params).menuitem_config
+  const p = JSON.parse(inventory.modules.find((m) => String(m.id) === '103').params)
+  const cfg = p.menuitem_config
   model.types.push({
     name: 'masthead',
     mode: 'list',
@@ -241,7 +243,7 @@ for (const r of model.records.filter((x) => x.type === 'posts'))
       { name: 'background', type: 'image' }
     ]
   })
-  const SLUG = { 109: 'blog', 117: 'contact', 126: 'chiefs', 124: 'about' }
+  const SLUG = { 154: 'about-us', 156: 'services' }
   for (const [i, ids] of Object.entries(cfg.item_id)) {
     const slug = SLUG[[].concat(ids)[0]]
     if (!slug) continue
@@ -250,39 +252,32 @@ for (const r of model.records.filter((x) => x.type === 'posts'))
       slug,
       locale: 'en',
       status: 'published',
-      values: {
-        title: cfg.title[i],
-        description: cfg.description[i],
-        background: String(cfg.background[i]).split('#')[0]
-      }
+      values: { title: cfg.title[i], description: cfg.description[i], background: fullPath(cfg.background[i]) }
     })
   }
-  // an article page shows its own title in the band, over the article banner picture (the full text image every demo article carries)
-  const bannerOf = (row) => String(JSON.parse(row.images || '{}').image_fulltext ?? '').split('#')[0]
-  const banner = inventory.content.map(bannerOf).find(Boolean) || String(cfg.background[5]).split('#')[0]
-  model.records.push({
-    type: 'masthead',
-    slug: 'post',
-    locale: 'en',
-    status: 'published',
-    values: { title: '', description: '', background: banner }
-  })
+  const dflt = fullPath(cfg.background[3])
+  for (const slug of ['blog', 'post', 'search', 'not-found'])
+    model.records.push({
+      type: 'masthead',
+      slug,
+      locale: 'en',
+      status: 'published',
+      values: { title: p['default-title'], description: p['default-description'], background: dflt }
+    })
 }
 
-// ---- site chrome: top bar, footer columns, the words the template prints itself
+// ---- site chrome: top bar, header contact, footer, the words the template prints itself
 const mod = (slug) => model.records.find((r) => r.type === 'modules' && r.slug === slug)?.values ?? {}
 const lines = (h) =>
   decode(stripTags(String(h ?? '').replace(/<br\s*\/?>/gi, '\n')))
     .split(/\n/)
     .map((s) => s.replace(/\s+/g, ' ').trim())
     .filter(Boolean)
-const welcome = mod('welcome-to-fresco'),
-  visit = mod('visit'),
-  hours = mod('hours'),
-  resa = mod('reservations')
-const tl = mod('topbar-left'),
-  tr = mod('topbar-right')
-const text = { type: 'text' }
+const tl = mod('topbar-left')
+const office = mod('morgan-office')
+const talk = mod('start-a-conversation')
+const copy = mod('copyright')
+const c = inventory.contact_details[0]
 model.types.push({
   name: 'chrome',
   mode: 'single',
@@ -291,41 +286,34 @@ model.types.push({
     'title',
     'brand_name',
     'topbar_address',
-    'topbar_phone_label',
     'topbar_phone',
-    'footer_about_title',
-    'footer_about',
-    'footer_visit_title',
-    'footer_address',
-    'footer_phone',
-    'footer_email',
-    'footer_reservations_title',
-    'footer_reservations_button',
-    'footer_hours_title',
-    'footer_hours',
-    'footer_links_title',
-    'footer_link_text',
-    'footer_link_to',
-    'footer_links_text',
+    'topbar_facebook',
+    'topbar_twitter',
+    'topbar_instagram',
+    'footer_social_title',
+    'footer_social_facebook',
+    'footer_social_twitter',
+    'footer_social_instagram',
     'copyright',
+    'copyright_credit',
+    'license_note',
     'skip_label',
     'menu_label',
     'close_label',
+    'theme_label',
     'prev_label',
     'next_label',
-    'more_label',
     'read_more',
     'by_label',
-    'related_title',
-    'related_text',
+    'hits_label',
     'tags_label',
+    'categories_label',
+    'recent_label',
     'share_label',
     'not_found_code',
     'not_found_title',
     'not_found_text',
     'not_found_back_label',
-    'book_label',
-    'book_link',
     'search_label',
     'search_placeholder',
     'search_button',
@@ -334,7 +322,6 @@ model.types.push({
     .map((name) => ({ name, ...text }))
     .concat([{ name: 'logo_dark', type: 'image' }])
 })
-const aboutMenu = inventory.menu.filter((m) => m.menutype === 'about' && m.published === '1')
 model.records.push({
   type: 'chrome',
   slug: 'chrome',
@@ -342,91 +329,110 @@ model.records.push({
   status: 'published',
   values: {
     title: 'Site chrome',
-    brand_name: 'JA Fresco',
-    topbar_address: lines(tl.content).join(' '),
-    topbar_phone_label: lines(tr.content)[0]?.replace(/\s*\d.*$/, '') ?? '',
-    topbar_phone: lines(tr.content)
-      .join(' ')
-      .replace(/^.*?:\s*/, ''),
-    footer_about_title: lines(welcome.title).join(' '),
-    footer_about: lines(welcome.content).join('\n'),
-    footer_visit_title: lines(visit.title).join(' '),
-    footer_address: lines(visit.content)[0] ?? '',
-    footer_phone: lines(visit.content)[1] ?? '',
-    footer_email: lines(visit.content)[2] ?? '',
-    footer_reservations_title: lines(resa.title).join(' '),
-    footer_reservations_button: lines(resa.content)
-      .join(' ')
-      .replace(/^Book you table$/i, 'Book your table'),
-    footer_hours_title: lines(hours.title).join(' '),
-    footer_hours: lines(hours.content).join('\n'),
-    footer_links_title: 'About',
-    // the one linked entry of the "About" menu (the contact page) and the source's `#` entries, which print as plain text (DECISIONS D11)
-    footer_link_text: aboutMenu.filter((m) => /Itemid=117/.test(m.link)).map((m) => decode(m.title))[0] ?? '',
-    footer_link_to: aboutMenu.some((m) => /Itemid=117/.test(m.link)) ? '/contact' : '',
-    footer_links_text: aboutMenu
-      .filter((m) => !/Itemid=117/.test(m.link))
-      .map((m) => decode(m.title))
-      .join('\n'),
+    brand_name: 'Morgan',
+    topbar_address: lines(tl.content)[0] ?? '',
+    topbar_phone: lines(tl.content)[1] ?? '',
+    topbar_facebook: '',
+    topbar_twitter: '',
+    topbar_instagram: '',
+    footer_social_title: 'Social',
+    footer_social_facebook: 'https://www.joomlart.com/',
+    footer_social_twitter: 'https://www.joomlart.com/',
+    footer_social_instagram: 'https://www.joomlart.com/',
     copyright: 'Copyright © {year} {name}. All Rights Reserved.',
+    copyright_credit: 'Designed by JoomlArt.',
+    license_note: 'Joomla! is Free Software released under the GNU General Public License.',
     skip_label: 'Skip to content',
     menu_label: 'Menu',
     close_label: 'Close',
-    prev_label: 'Prev',
+    theme_label: 'Switch colour theme',
+    prev_label: 'Previous',
     next_label: 'Next',
-    more_label: 'More Articles …',
     read_more: 'Read more',
     by_label: 'By',
-    related_title: 'Related Posts',
-    related_text:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...",
-    tags_label: 'Tags:',
+    hits_label: 'Hits',
+    tags_label: 'Tags',
+    categories_label: 'Categories',
+    recent_label: 'News & Update',
     share_label: 'Share article:',
     not_found_code: '404',
     not_found_title: 'Page not found',
     not_found_text: 'An error has occurred while processing your request.',
     not_found_back_label: 'Home Page',
-    // the header button is a `#` link in the source; the hero's and the footer's "book a table" buttons go to the contact page
-    book_label: 'Book Table',
-    book_link: '/contact',
     search_label: 'Smart Search',
-    search_placeholder: '',
+    search_placeholder: 'Search …',
     search_button: 'Search',
     no_results: 'No results found.'
   }
 })
+void office
+void talk
+void copy
+
+// ---- the footer: five columns of links; a link with no destination in the source is a plain label (empty address slot)
+{
+  model.types.push({
+    name: 'footer_links',
+    mode: 'list',
+    label: { en: 'Footer links' },
+    fields: [
+      { name: 'title', type: 'text' },
+      { name: 'column', type: 'text' },
+      { name: 'label', type: 'text' },
+      { name: 'link', type: 'url' }
+    ]
+  })
+  const COLUMNS = { navigate: 'Navigate', services: 'Services', support: 'Support', careers: 'Careers', 'terms-privacy': 'Terms & Privacy' }
+  const TO = { Home: '/', Services: '/services', News: '/blog', Testimonials: '/services', Advisors: '/about-us', 'Contact Us': '/contact-us' }
+  for (const [menutype, column] of Object.entries(COLUMNS))
+    for (const [i, row] of inventory.menu
+      .filter((m) => m.menutype === menutype && m.published === '1')
+      .sort((a, b) => Number(a.lft ?? 0) - Number(b.lft ?? 0))
+      .entries()) {
+      const label = decode(row.title).trim()
+      model.records.push({
+        type: 'footer_links',
+        slug: `${menutype}-${i + 1}`,
+        locale: 'en',
+        status: 'published',
+        values: { title: `${column}: ${label}`, column, label, link: menutype === 'navigate' ? (TO[label] ?? '') : '' }
+      })
+    }
+}
+
 model.records = model.records.filter((r) => r.type !== 'modules')
 model.types = model.types.filter((t) => t.name !== 'modules')
-model.types = model.types.filter((t) => t.name !== 'text_slider')
 
-// ---- the contact record and the words of its form
+// ---- the contact record: the four cards (address, email, phone, website), the form and its words
 {
-  const c = inventory.contact_details[0]
   model.types.push({
     name: 'contact',
     mode: 'single',
     label: { en: 'Contact' },
     fields: [
       'title',
+      'label',
       'heading',
-      'intro',
-      'email_label',
-      'email',
       'address_label',
       'address',
+      'email_label',
+      'email',
       'phone_label',
       'phone',
+      'website_label',
+      'website',
       'form_title',
       'form_intro_text',
       'name_label',
       'email_field_label',
-      'phone_field_label',
       'subject_label',
       'message_label',
+      'copy_label',
       'submit_label',
-      'socials',
       'form_id'
-    ].map((name) => ({ name, ...text }))
+    ]
+      .map((name) => ({ name, ...text }))
+      .concat([{ name: 'photo', type: 'image' }])
   })
   model.records.push({
     type: 'contact',
@@ -435,45 +441,39 @@ model.types = model.types.filter((t) => t.name !== 'text_slider')
     status: 'published',
     values: {
       title: 'Contact',
-      heading: 'Have question?\nGet in touch!',
-      intro: decode(c.misc).trim(),
-      email_label: 'Write email',
+      label: 'Contact',
+      heading: c.name.replace(/^Ja /, 'JA '),
+      address_label: 'Address',
+      address: decode(c.address).replace(/\r?\n/g, ', '),
+      email_label: 'Email',
       email: c.email_to,
-      address_label: 'Visit office',
-      address: c.address,
-      phone_label: 'Mobile',
-      phone: c.mobile,
-      form_title: 'Always here to help you',
-      form_intro_text: 'Write a Message',
-      name_label: 'Your name',
-      email_field_label: 'Email address',
-      phone_field_label: 'Your phone',
+      phone_label: 'Phone',
+      phone: c.telephone,
+      website_label: 'Website',
+      website: c.webpage,
+      form_title: 'Contact Form',
+      form_intro_text: 'Send an Email. All fields with an asterisk (*) are required.',
+      name_label: 'Name',
+      email_field_label: 'Email',
       subject_label: 'Subject',
-      message_label: 'How we can help?',
-      submit_label: 'Send a message',
-      // the source draws no social row on its contact page (its three links are data of the contact entry that the template does not render): D36
-      socials: '',
+      message_label: 'Message',
+      copy_label: 'Send a copy to yourself',
+      submit_label: 'Send Email',
+      photo: fullPath(c.image),
       form_id: ''
     }
   })
 }
 
-// the model's media list names the entries by their old slugs; the media map is built from the records and the webroot (build-media-map.mjs)
+// the model's media list names the entries by their old slugs; the media map is built from the records and the webroot
 model.media = []
-
-// the site identity template.config.json declares
-// two typos of the demo data are corrected (DECISIONS D22): a dish name cut mid-word and the footer's booking button
-for (const r of model.records)
-  for (const it of r.values?.items ?? [])
-    if (it?.dish_name === 'Blackened Fish Sandwic') it.dish_name = 'Blackened Fish Sandwich'
-model.site = { ...model.site, title: { en: 'JA Fresco' }, tagline: { en: '' } }
+model.site = { ...model.site, title: { en: 'JA Morgan' }, tagline: { en: '' } }
 
 // ---- a scalar field that arrives as a list holds the first non-empty value
 for (const r of model.records) {
   const type = model.types.find((t) => t.name === r.type)
   for (const f of type.fields)
-    if (f.type !== 'group' && Array.isArray(r.values[f.name]))
-      r.values[f.name] = r.values[f.name].find((v) => v) ?? ''
+    if (f.type !== 'group' && Array.isArray(r.values[f.name])) r.values[f.name] = r.values[f.name].find((v) => v) ?? ''
 }
 console.log(
   `shape-model: ${before - model.records.length} record(s) net dropped, ${model.records.length} kept, menus: ${model.menus.map((m) => m.name)}`

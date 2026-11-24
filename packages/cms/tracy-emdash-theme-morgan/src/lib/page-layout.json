@@ -1,8 +1,17 @@
 {
-  "home-hero": {
-    "type": "hero",
+  "home-slideshow": {
+    "type": "slideshow",
+    "style": "style-owl",
+    "module": "98",
+    "spacing": {
+      "top": null,
+      "bottom": null
+    }
+  },
+  "home-intro": {
+    "type": "features_intro",
     "style": "style-1",
-    "module": "112",
+    "module": "101",
     "spacing": {
       "top": null,
       "bottom": null
@@ -10,245 +19,155 @@
   },
   "home-services": {
     "type": "features_intro",
-    "style": "style-1",
-    "module": "114",
-    "spacing": {
-      "top": "large",
-      "bottom": "large"
-    }
-  },
-  "home-events": {
-    "type": "features_intro",
     "style": "style-2",
-    "module": "116",
+    "module": "102",
     "spacing": {
-      "top": "blank",
-      "bottom": "blank"
+      "top": null,
+      "bottom": null
     }
   },
-  "home-visit": {
+  "home-missions": {
     "type": "features_intro",
-    "style": "style-1",
-    "module": "128",
+    "style": "style-3",
+    "module": "104",
     "spacing": {
-      "top": "large",
-      "bottom": "large"
+      "top": null,
+      "bottom": null
+    }
+  },
+  "home-philosophy": {
+    "type": "features_intro",
+    "style": "style-3",
+    "module": "108",
+    "spacing": {
+      "top": null,
+      "bottom": null
+    }
+  },
+  "home-consult": {
+    "type": "features_intro",
+    "style": "style-3",
+    "module": "113",
+    "spacing": {
+      "top": null,
+      "bottom": null
+    }
+  },
+  "about-careers": {
+    "type": "features_intro",
+    "style": "style-3",
+    "module": "138",
+    "spacing": {
+      "top": null,
+      "bottom": null
+    }
+  },
+  "about-people": {
+    "type": "features_intro",
+    "style": "style-3",
+    "module": "139",
+    "spacing": {
+      "top": null,
+      "bottom": null
     }
   },
   "about-intro": {
     "type": "features_intro",
-    "style": "style-4",
-    "module": "143",
+    "style": "style-1",
+    "module": "144",
     "spacing": {
-      "top": "blank",
-      "bottom": "large"
+      "top": null,
+      "bottom": null
     }
   },
-  "about-features": {
+  "services-tiles": {
+    "type": "features_intro",
+    "style": "style-4",
+    "module": "151",
+    "spacing": {
+      "top": null,
+      "bottom": null
+    }
+  },
+  "services-cta": {
     "type": "features_intro",
     "style": "style-5",
-    "module": "150",
+    "module": "156",
     "spacing": {
-      "top": "blank",
-      "bottom": "large"
+      "top": null,
+      "bottom": null
     }
   },
-  "home-explore": {
-    "type": "menu",
+  "home-missions-list": {
+    "type": "accordion",
     "style": "style-1",
-    "module": "115",
+    "module": "105",
     "spacing": {
-      "top": "blank",
-      "bottom": "large"
+      "top": null,
+      "bottom": null
     }
   },
-  "home-sea": {
-    "type": "menu",
+  "home-cases": {
+    "type": "testimonials",
     "style": "style-1",
-    "module": "117",
+    "module": "106",
     "spacing": {
-      "top": "large",
-      "bottom": "blank"
+      "top": null,
+      "bottom": null
     }
   },
-  "home-land": {
-    "type": "menu",
-    "style": "style-1",
-    "module": "118",
-    "spacing": {
-      "top": "normal",
-      "bottom": "blank"
-    }
-  },
-  "home-sky": {
-    "type": "menu",
-    "style": "style-1",
-    "module": "119",
-    "spacing": {
-      "top": "normal",
-      "bottom": "large"
-    }
-  },
-  "home-desserts": {
-    "type": "menu",
-    "style": "style-1",
-    "module": "122",
-    "spacing": {
-      "top": "large",
-      "bottom": "blank"
-    }
-  },
-  "home-tea": {
-    "type": "menu",
-    "style": "style-1",
-    "module": "123",
-    "spacing": {
-      "top": "normal",
-      "bottom": "large"
-    }
-  },
-  "menu-columns": {
-    "type": "menu",
-    "style": "style-1",
-    "module": "158",
-    "spacing": {
-      "top": "large",
-      "bottom": "large"
-    }
-  },
-  "menu-list-1": {
-    "type": "menu",
+  "footer-quote": {
+    "type": "testimonials",
     "style": "style-2",
-    "module": "159",
+    "module": "120",
     "spacing": {
-      "top": "large",
-      "bottom": "normal"
+      "top": null,
+      "bottom": null
     }
   },
-  "menu-list-2": {
-    "type": "menu",
-    "style": "style-2",
-    "module": "162",
+  "services-cases": {
+    "type": "testimonials",
+    "style": "style-1",
+    "module": "153",
     "spacing": {
-      "top": "blank",
-      "bottom": "large"
+      "top": null,
+      "bottom": null
     }
   },
-  "menu-grid": {
-    "type": "menu",
+  "services-praise": {
+    "type": "testimonials",
     "style": "style-3",
-    "module": "164",
+    "module": "155",
     "spacing": {
-      "top": "large",
-      "bottom": "large"
+      "top": null,
+      "bottom": null
     }
   },
-  "home-gallery-1": {
-    "type": "gallery",
+  "home-team": {
+    "type": "teams",
     "style": "style-1",
-    "module": "121",
+    "module": "109",
     "spacing": {
-      "top": "blank",
-      "bottom": "blank"
-    }
-  },
-  "home-gallery-2": {
-    "type": "gallery",
-    "style": "style-1",
-    "module": "124",
-    "spacing": {
-      "top": "blank",
-      "bottom": "blank"
-    }
-  },
-  "gallery-two": {
-    "type": "gallery",
-    "style": "style-2",
-    "module": "148",
-    "spacing": {
-      "top": "normal",
-      "bottom": "large"
-    }
-  },
-  "gallery-one": {
-    "type": "gallery",
-    "style": "style-2",
-    "module": "165",
-    "spacing": {
-      "top": "large",
-      "bottom": "normal"
-    }
-  },
-  "home-testimonials": {
-    "type": "testimonials",
-    "style": "style-1",
-    "module": "127",
-    "spacing": {
-      "top": "large",
-      "bottom": "large"
-    }
-  },
-  "about-testimonials": {
-    "type": "testimonials",
-    "style": "style-1",
-    "module": "168",
-    "spacing": {
-      "top": "large",
-      "bottom": "large"
+      "top": null,
+      "bottom": null
     }
   },
   "about-team": {
     "type": "teams",
     "style": "style-1",
-    "module": "153",
+    "module": "140",
     "spacing": {
-      "top": "large",
-      "bottom": "large"
+      "top": null,
+      "bottom": null
     }
   },
-  "chiefs-team": {
-    "type": "teams",
+  "clients": {
+    "type": "clients",
     "style": "style-1",
-    "module": "163",
+    "module": "118",
     "spacing": {
-      "top": "blank",
-      "bottom": "large"
-    }
-  },
-  "offer-hour-1": {
-    "type": "happyhours",
-    "style": "style-1",
-    "module": "169",
-    "spacing": {
-      "top": "large",
-      "bottom": "large"
-    }
-  },
-  "offer-hour-2": {
-    "type": "happyhours",
-    "style": "style-2",
-    "module": "170",
-    "spacing": {
-      "top": "blank",
-      "bottom": "large"
-    }
-  },
-  "offer-hour-3": {
-    "type": "happyhours",
-    "style": "style-3",
-    "module": "171",
-    "spacing": {
-      "top": "blank",
-      "bottom": "large"
-    }
-  },
-  "book-table": {
-    "type": "book_table",
-    "style": "style-1",
-    "module": "172",
-    "spacing": {
-      "top": "large",
-      "bottom": "large"
+      "top": null,
+      "bottom": null
     }
   }
 }

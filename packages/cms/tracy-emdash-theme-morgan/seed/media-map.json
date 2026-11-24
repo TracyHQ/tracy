@@ -1,0 +1,1842 @@
+{
+	"generatedAt": "2026-11-24T13:40:46.467Z",
+	"source": "JA Diner j6 1.0.5 webroot",
+	"items": [
+		{
+			"key": "images/joomlart/blog/img-12-thumb",
+			"file": "images/joomlart/blog/img-12-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ea466be872258c21b3139318b021f56d6944b529790d6e2998a03914b678bca6",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-2-thumb",
+			"file": "images/joomlart/blog/img-2-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ed6ba08c126b1773ba3db4901188e455fbf3fa0de02464e6120727385e03a5ac",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-co-parents-can-stay-on-the-same-financial-page",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+					"locale": "en",
+					"path": "body[9].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-13-thumb",
+			"file": "images/joomlart/blog/img-13-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "804b26a8c0f7c996493a4c2486a62c32add487ca89dd50a41cd7f5363814108e",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
+					"locale": "en",
+					"path": "body[7].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-18-thumb",
+			"file": "images/joomlart/blog/img-18-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "fd2f52cff31ba61ffc24e10dfbfb456894d3b43223400b8a7091348ed010660b",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
+					"locale": "en",
+					"path": "body[6].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
+					"locale": "en",
+					"path": "body[8].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
+					"locale": "en",
+					"path": "body[9].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-3-thumb",
+			"file": "images/joomlart/blog/img-3-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "dac4dc3ffb482e16174d2c68eec4c086e8703913177dbfeec299ca96348271e9",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-15-thumb",
+			"file": "images/joomlart/blog/img-15-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a2964fb5d4a1a05c068680c9de40c0201b700cced5d8c5621287f4fbff286a3f",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "the-world-needs-to-get-serious-about-combating-carbon-emissions",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-6-thumb",
+			"file": "images/joomlart/blog/img-6-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "5730f24fd6d16972161847fb48f22f2e90fd8c57c5f688887d60ae0c4d5decff",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+					"locale": "en",
+					"path": "body[8].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
+					"locale": "en",
+					"path": "body[8].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+					"locale": "en",
+					"path": "body[2].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-16-thumb",
+			"file": "images/joomlart/blog/img-16-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a1b632e22dbce411b8e15a458bd659d37fe0b19deedd07c721d3b0e291689a5c",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
+					"locale": "en",
+					"path": "body[7].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+					"locale": "en",
+					"path": "body[2].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "body[8].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-9-thumb",
+			"file": "images/joomlart/blog/img-9-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9aa3a01fc9f80ff056a1250059da6eb3b5803be2e1a81b607864178a156279a0",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-co-parents-can-stay-on-the-same-financial-page",
+					"locale": "en",
+					"path": "body[8].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
+					"locale": "en",
+					"path": "body[8].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-5-thumb",
+			"file": "images/joomlart/blog/img-5-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8d363a3c055ffbb4766b6a3e53f795e48c770e59db88e13feb22f5b0dbc051be",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "body[10].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-4-thumb",
+			"file": "images/joomlart/blog/img-4-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4f4186282b1aad2d5186f791a4aefd175151278418cc6b5eed0d0a37e0e39aca",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "body[8].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+					"locale": "en",
+					"path": "body[5].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-17-thumb",
+			"file": "images/joomlart/blog/img-17-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "cb1c03c0346fc323b2ee838c051d1a407a485f1237713edb662591b273b24206",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-co-parents-can-stay-on-the-same-financial-page",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+					"locale": "en",
+					"path": "body[11].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+					"locale": "en",
+					"path": "body[8].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+					"locale": "en",
+					"path": "body[10].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-7-thumb",
+			"file": "images/joomlart/blog/img-7-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "cfefa689a19981e250a5244645190b8315d6d44408660d456c6482a1855a8cf9",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "how-co-parents-can-stay-on-the-same-financial-page",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
+					"locale": "en",
+					"path": "body[7].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+					"locale": "en",
+					"path": "body[10].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-1-thumb",
+			"file": "images/joomlart/blog/img-1-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d1e8d24645d3515e6d2f92b47b149c6bfe30fc70097b8ec689e44d3b272c2b71",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells-flooding-challenges-profit-drops-on-trade",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+					"locale": "en",
+					"path": "body[8].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+					"locale": "en",
+					"path": "body[4].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-8-thumb",
+			"file": "images/joomlart/blog/img-8-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "f9f1111cf73b6a2098d8e4aa81df6e119f3958365ad5d912cf4c61e8cddb20e0",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
+					"locale": "en",
+					"path": "body[7].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-20-thumb",
+			"file": "images/joomlart/blog/img-20-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "79cc8f42f8b0a0eb754b81408fdb500db10c35cbbd4ec635dfa8500e9adb2415",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "posts",
+					"slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "body[7].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/slideshow/item-1",
+			"file": "images/joomlart/slideshow/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "92eab6c2a62813c6efbad64ca46fa7ff6af3637c3599af95228c8378d417eea1",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "home-slideshow",
+					"locale": "en",
+					"path": "items[0].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/slideshow/item-2",
+			"file": "images/joomlart/slideshow/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ad6a9edc4368104e0792cf06453e1c00890f79fde115523290749d061fae4902",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "home-slideshow",
+					"locale": "en",
+					"path": "items[1].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/slideshow/item-3",
+			"file": "images/joomlart/slideshow/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4c05048515ecef903285c611943711bb8ae8fb056963b76081df6f3217806abc",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "home-slideshow",
+					"locale": "en",
+					"path": "items[2].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/slideshow/item-4",
+			"file": "images/joomlart/slideshow/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8d47b6be5e95c32b11b9107510a10c0e33bfa401197b004a9be011a6500155e6",
+			"targets": [
+				{
+					"collection": "slideshow",
+					"slug": "home-slideshow",
+					"locale": "en",
+					"path": "items[3].image"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/mask-map-2",
+			"file": "images/joomlart/others/mask-map-2.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "5e640b5d650e09fa66ca68493052ef1e191f7cc8e5a570108c136930f675079f",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-intro",
+					"locale": "en",
+					"path": "section_mask"
+				},
+				{
+					"collection": "features_intro",
+					"slug": "about-intro",
+					"locale": "en",
+					"path": "section_mask"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-1",
+			"file": "images/joomlart/features/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a0d49311c76d7a3c67c1e6dd5112806b7d1c1c2d78906d7b92191e772e030465",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-intro",
+					"locale": "en",
+					"path": "items[0].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-2",
+			"file": "images/joomlart/features/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "40622d6ed901cc5e819e7587456d13abc2752be9ef2c818ff57b53e6da3d3501",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-intro",
+					"locale": "en",
+					"path": "items[1].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon/item-1",
+			"file": "images/joomlart/features/icon/item-1.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "fb59c859160a3a2d327e89604477c090bb55761b60845467918d8e6e117d67ef",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-services",
+					"locale": "en",
+					"path": "items[0].img_icon"
+				},
+				{
+					"collection": "features_intro",
+					"slug": "about-intro",
+					"locale": "en",
+					"path": "items[0].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon/item-2",
+			"file": "images/joomlart/features/icon/item-2.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "383fd907ca0d74bb5f4f00ef67151c33c264d1b92acd43da0473775819958e6a",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-services",
+					"locale": "en",
+					"path": "items[1].img_icon"
+				},
+				{
+					"collection": "features_intro",
+					"slug": "about-intro",
+					"locale": "en",
+					"path": "items[1].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon/item-3",
+			"file": "images/joomlart/features/icon/item-3.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "70b1b259e0b0f3d6d12337b82fb46146c8568248c4c90533697e52349510bb70",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-services",
+					"locale": "en",
+					"path": "items[2].img_icon"
+				},
+				{
+					"collection": "features_intro",
+					"slug": "about-intro",
+					"locale": "en",
+					"path": "items[2].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon/item-4",
+			"file": "images/joomlart/features/icon/item-4.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "aaac1ae34853ec820063588000b755ed6bd3f4fa205f53165b0be6878afec696",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-services",
+					"locale": "en",
+					"path": "items[3].img_icon"
+				},
+				{
+					"collection": "features_intro",
+					"slug": "about-intro",
+					"locale": "en",
+					"path": "items[3].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-3",
+			"file": "images/joomlart/features/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "273a8a5631260d5c24116127fb6421c587d6b8678a6979e4a4570438f67e9af2",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-missions",
+					"locale": "en",
+					"path": "img_features"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-4",
+			"file": "images/joomlart/features/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8ee72d323b58394683ed07fd7133a175c062866f10314d7d11902e04ff7fa885",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-philosophy",
+					"locale": "en",
+					"path": "img_features"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-5",
+			"file": "images/joomlart/features/item-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b8635fee46c8fa9e2aa515584f4716424b88830108c173597c11f1b1465f860a",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "home-consult",
+					"locale": "en",
+					"path": "img_features"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-12",
+			"file": "images/joomlart/features/item-12.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "0b92a4e33e61d66c87a9c6f0392ebfc86f9afecb8bc1c059191b9e70224fa7b1",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "about-careers",
+					"locale": "en",
+					"path": "img_features"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-11",
+			"file": "images/joomlart/features/item-11.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9c740bb1df65c1ff4400a5226400f74b3e3674bd95abce5f0987c9c04860c02c",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "about-people",
+					"locale": "en",
+					"path": "img_features"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/mask-map",
+			"file": "images/joomlart/others/mask-map.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "adad489a7390d2b7cef963577ab49a4729c26d1891938a93d8a2cbe5a54ac23a",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "services-tiles",
+					"locale": "en",
+					"path": "section_mask"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon/item-5",
+			"file": "images/joomlart/features/icon/item-5.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "9d3db3a46f2f8df33dfe78ac202751cc91673f077ae22f34dcca2b202fa59d9f",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "services-tiles",
+					"locale": "en",
+					"path": "items[0].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-15",
+			"file": "images/joomlart/features/item-15.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8cfdedf17f20cba9d2788312d7a71f7ae2b173f8eca8e1b3ab695d7c32f28277",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "services-tiles",
+					"locale": "en",
+					"path": "items[0].img_intro"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon/item-6",
+			"file": "images/joomlart/features/icon/item-6.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "4038aeba6061e21b1eae5690b9d954ed59d1d40bfb088cd5d3e0b21c80dc38d5",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "services-tiles",
+					"locale": "en",
+					"path": "items[1].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-17",
+			"file": "images/joomlart/features/item-17.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d11849c0fe1691ff9a6137dcb28f650a41ff8ccae3c5f75b179bc609e36d9681",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "services-tiles",
+					"locale": "en",
+					"path": "items[1].img_intro"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon/item-7",
+			"file": "images/joomlart/features/icon/item-7.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "0f6031b33919b85cdd508a981c47e90a283239aec5ca65136686fc9a1074eb09",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "services-tiles",
+					"locale": "en",
+					"path": "items[2].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-16",
+			"file": "images/joomlart/features/item-16.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a370ec01254607daea6c526972fbdc44d5dcf6408d2d2a182d9e5726e40df57f",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "services-tiles",
+					"locale": "en",
+					"path": "items[2].img_intro"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon/item-8",
+			"file": "images/joomlart/features/icon/item-8.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "1dfbabbe78cc16e6af7c7023f88e8e81c66a096db6c2ee2e4386fca364f428a8",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "services-tiles",
+					"locale": "en",
+					"path": "items[3].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/item-8",
+			"file": "images/joomlart/features/item-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "115a0485fb05305fdb487c1c02574ba8f394cd7ac44178aeb4b445e54fa77fde",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "services-tiles",
+					"locale": "en",
+					"path": "items[3].img_intro"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/bg-services",
+			"file": "images/joomlart/features/bg-services.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "88fdbe30f3c59ec1dafb683a691f2813e186bd1999e0f2681dbbe2e4ac205f75",
+			"targets": [
+				{
+					"collection": "features_intro",
+					"slug": "services-cta",
+					"locale": "en",
+					"path": "ft_bg"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-1",
+			"file": "images/joomlart/testimonials/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d7c2264506d30cdf0d58e9dcbf6c9f7480f90cc0e7e2c92e5f068f21d0f7dc3f",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "home-cases",
+					"locale": "en",
+					"path": "items[0].img"
+				},
+				{
+					"collection": "testimonials",
+					"slug": "home-cases",
+					"locale": "en",
+					"path": "items[3].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-2",
+			"file": "images/joomlart/testimonials/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3aa51df7d3bd85437389f307e0c9527481573ce1c6934c03ce730c6d2f0ee87b",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "home-cases",
+					"locale": "en",
+					"path": "items[1].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-3",
+			"file": "images/joomlart/testimonials/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "accd1d200f4c9706bce3d2f3bc954bf8db99e416ef7790ab59f29a6ee6193819",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "home-cases",
+					"locale": "en",
+					"path": "items[2].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-4",
+			"file": "images/joomlart/testimonials/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3e816058165f5b1a0937d9a7bd7b77414782f1a9ab2317fbe2a3b250c0dafc33",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "footer-quote",
+					"locale": "en",
+					"path": "items[0].avatar"
+				},
+				{
+					"collection": "testimonials",
+					"slug": "footer-quote",
+					"locale": "en",
+					"path": "items[1].avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-12",
+			"file": "images/joomlart/testimonials/item-12.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ea101c8be06b7f064930801d9687a7074624080da2f780b53b2cc252c61b9134",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "services-cases",
+					"locale": "en",
+					"path": "items[0].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-13",
+			"file": "images/joomlart/testimonials/item-13.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "24bb750a65c2fbbb4c349bf196a5e422a4d9a196a6315f1595d927f16ca89972",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "services-cases",
+					"locale": "en",
+					"path": "items[1].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-10",
+			"file": "images/joomlart/testimonials/item-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b52d1b94ca1a13511c729be6230c8bd2c2ac2d3bbd882ee336aa9e8d66601186",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "services-cases",
+					"locale": "en",
+					"path": "items[2].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-5",
+			"file": "images/joomlart/testimonials/item-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "25430a3eeb8850f5fc839f90cc585ccdddb3ea25c96f0f1d71d99ed97df63bdc",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "services-praise",
+					"locale": "en",
+					"path": "items[0].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-6",
+			"file": "images/joomlart/testimonials/item-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "51a210f3270213a71785a3f95c659d84ee1ef8f9dbc3f9d3c9e15ebe73c34834",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "services-praise",
+					"locale": "en",
+					"path": "items[1].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-7",
+			"file": "images/joomlart/testimonials/item-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "15737102f5c46ca6e4e5097a53d44528035680f9691ecbdd27008b7da149091c",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "services-praise",
+					"locale": "en",
+					"path": "items[2].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-8",
+			"file": "images/joomlart/testimonials/item-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "00d08fcc582e8d4263dd0d08ec60f37123bc95f991a37cd3e26e0e83c994115e",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "services-praise",
+					"locale": "en",
+					"path": "items[3].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/testimonials/item-9",
+			"file": "images/joomlart/testimonials/item-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4f165b93a9766ae649abced3b1cb9cfd0190ff52637798fd9008ad2170627aa6",
+			"targets": [
+				{
+					"collection": "testimonials",
+					"slug": "services-praise",
+					"locale": "en",
+					"path": "items[4].img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/teams/item-1",
+			"file": "images/joomlart/teams/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6f9f4a7dfc20b2c161eeceb923bfa3e8c546b732ea0e1ddfd7a670bb0abbe2af",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "home-team",
+					"locale": "en",
+					"path": "items[0].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[0].avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/teams/item-2",
+			"file": "images/joomlart/teams/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d125da1854d2caa291e404f53b89fe2b73a390a801040540a92e392d7e9e61f9",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "home-team",
+					"locale": "en",
+					"path": "items[1].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[1].avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/teams/item-3",
+			"file": "images/joomlart/teams/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b32792671a7c18f4c854cab6d9dc33bb0726130735e4a8b74af243a4a8c4f2a0",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "home-team",
+					"locale": "en",
+					"path": "items[2].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[2].avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/teams/item-4",
+			"file": "images/joomlart/teams/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9ca44fe42987a98556ea29899af74064322852adbe5b69c43fbd881bde173e69",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "home-team",
+					"locale": "en",
+					"path": "items[3].avatar"
+				},
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[3].avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/teams/item-5",
+			"file": "images/joomlart/teams/item-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "213cc25869a690fd1ffb4f666e6ea8a8baf843a12816229bf4c7f4edf56c4cac",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[4].avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/teams/item-6",
+			"file": "images/joomlart/teams/item-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "91857b7ec4cf02fdd5498f3792fdb990d3fce4abdfece888073b3f5cc05fede1",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[5].avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/teams/item-7",
+			"file": "images/joomlart/teams/item-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1e57f7d49518179ac450a3850436e61dc6e1cc0e968ea68737df6389f6406568",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[6].avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/teams/item-8",
+			"file": "images/joomlart/teams/item-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d980f33f01d241401637312e5ca34bb38a8316efda1226e0bb20fd02af41fb34",
+			"targets": [
+				{
+					"collection": "teams",
+					"slug": "about-team",
+					"locale": "en",
+					"path": "items[7].avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/clients/item-1",
+			"file": "images/joomlart/clients/item-1.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "d37fadeaf09a850e666660c09f50f05d405a8d9c742aab40958e5d726c1d0691",
+			"targets": [
+				{
+					"collection": "clients",
+					"slug": "clients",
+					"locale": "en",
+					"path": "items[0].client_logo"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/clients/item-2",
+			"file": "images/joomlart/clients/item-2.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "68b015a781459eab19feb187c078e52ee1691e467e31ecc234ce95b1a5cdfc61",
+			"targets": [
+				{
+					"collection": "clients",
+					"slug": "clients",
+					"locale": "en",
+					"path": "items[1].client_logo"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/clients/item-3",
+			"file": "images/joomlart/clients/item-3.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "a14befca486cd05fb0ab7ae0a0b47ee929745c62f08e77a51cd64340b84f7683",
+			"targets": [
+				{
+					"collection": "clients",
+					"slug": "clients",
+					"locale": "en",
+					"path": "items[2].client_logo"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/clients/item-4",
+			"file": "images/joomlart/clients/item-4.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "f4e88db3bbe70eae6776544f8f4046566ba291472b9c8f2a96ec1cecbae3d043",
+			"targets": [
+				{
+					"collection": "clients",
+					"slug": "clients",
+					"locale": "en",
+					"path": "items[3].client_logo"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/clients/item-5",
+			"file": "images/joomlart/clients/item-5.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "46014d814b89620a9951d276622674f1de205f947af583d9f173da963482325f",
+			"targets": [
+				{
+					"collection": "clients",
+					"slug": "clients",
+					"locale": "en",
+					"path": "items[4].client_logo"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/clients/item-6",
+			"file": "images/joomlart/clients/item-6.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "9e753a10bc0f80082a67cc7e313337cc91f3d5b564b8c1387c8feb0b790ff5e7",
+			"targets": [
+				{
+					"collection": "clients",
+					"slug": "clients",
+					"locale": "en",
+					"path": "items[5].client_logo"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/bg-masthead-2",
+			"file": "images/joomlart/others/bg-masthead-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "50295dd8099281391fc2b0b4487b29169cacbd6b38418ad8e763abfb3f0d65a8",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "services",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/bg_masthead",
+			"file": "images/joomlart/others/bg_masthead.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "65a82da978ed0e565abff22c1923a43373ca0bb825c0c4314c5959a50c78701c",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "about-us",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/bg-masthead",
+			"file": "images/joomlart/others/bg-masthead.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "50b28343616ed9b6ed7a64fd758f21570a70688b5d2a4d426f1bffc849000766",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "blog",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "post",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "search",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "not-found",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/others/bg_contact",
+			"file": "images/joomlart/others/bg_contact.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2ca75c5e3a1f780104831b04e2ca66de4df7d44b6d38134a2fef524eeb203fdd",
+			"targets": [
+				{
+					"collection": "contact",
+					"slug": "contact-info",
+					"locale": "en",
+					"path": "photo"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-1",
+			"file": "images/joomlart/blog/img-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "be302f79e7c33102328b29aeb604eb3ae5a8bb4f1dd1142935fd7f405041434b",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "student-loan-borrowers-who-say-they-were-defrauded-sue-betsy-devos-for-failing-to-cancel-their-debt",
+					"locale": "en",
+					"path": "body[3].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-6",
+			"file": "images/joomlart/blog/img-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "148285e9277000b7188d9d88397e9b368a814e5637df988f7d22306118ac6892",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "how-co-parents-can-stay-on-the-same-financial-page",
+					"locale": "en",
+					"path": "body[3].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-3",
+			"file": "images/joomlart/blog/img-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1f3b55e5a1461ca70ce7e0cb4393b62248474642290148e144da9e6916f194c9",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
+					"locale": "en",
+					"path": "body[4].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-20",
+			"file": "images/joomlart/blog/img-20.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "79d2cbab6506445fd70f83a2e97484ab589a0711a96d37ae8ebcfdf6ff753200",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "heavy-debt-humbles-china-s-business-champions-including-the-jewelry-queen",
+					"locale": "en",
+					"path": "body[12].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-4",
+			"file": "images/joomlart/blog/img-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6a9ad9a687ce08a73deded62dc9c1bb05f631b2682d06d53c6b09ce304db4dbe",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "basf-issues-profit-warning-on-u-s-china-trade-concerns-longe-and-parole",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "fed-chairman-hints-at-lower-interest-rates-cites-trade-uncertainty-lower-interest-rates-vokalia-and-consonantia",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "trump-administration-hasn-t-briefed-congress-on-new-rules-for-cyberattacks-lawmakers-say",
+					"locale": "en",
+					"path": "body[4].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-11",
+			"file": "images/joomlart/blog/img-11.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6e3b6ecc3a54fd3ba0cac9a8ef8c4eb5a283071ca39ce45e4c68c6146d716f94",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
+					"locale": "en",
+					"path": "body[8].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-19",
+			"file": "images/joomlart/blog/img-19.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2e3a46e2d042e3d600dee0623b61985b4aa4777372ddca1e6cfdc01409682b07",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "this-is-what-super-savers-who-plan-to-retire-early-are-doing-differently",
+					"locale": "en",
+					"path": "body[11].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+					"locale": "en",
+					"path": "body[4].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-13",
+			"file": "images/joomlart/blog/img-13.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d22b86f761563079d67070a74208d6737aa95a76f6835479fae6bef01a918c73",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "the-world-needs-to-get-serious-about-combating-carbon-emissions",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
+					"locale": "en",
+					"path": "body[8].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-16",
+			"file": "images/joomlart/blog/img-16.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b7bb7cc0b1b0ce30922a1d69ace659970e4b4a8005ceaaac8949c32c2e0d9e20",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "the-world-needs-to-get-serious-about-combating-carbon-emissions",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+					"locale": "en",
+					"path": "body[2].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-8",
+			"file": "images/joomlart/blog/img-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4d0071511f1b2e331eb80ffe2b7409c48f15f0b0c640674a9a93d21e6c3c5884",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "extreme-trash-recycling-104-protocols-30-000-inspectors-behind-the-word-mountains",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "congress-presses-for-more-details-about-acosta-s-role-in-epstein-plea-deal-worries",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
+					"locale": "en",
+					"path": "body[9].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-2",
+			"file": "images/joomlart/blog/img-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "bcf42e897adb09a1080d443b5113cfdcae5c6c7826670bd74b6feaa9fcb5f9fb",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "pelosi-s-sharp-message-for-democrats-finds-receptive-audience",
+					"locale": "en",
+					"path": "body[3].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-14",
+			"file": "images/joomlart/blog/img-14.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e0b9baa06fda47f0841d4573cd92d279119188b79c71b53f8ac2d5ec7215aaa4",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "marco-rubio-introduces-a-bill-to-boost-the-u-s-rare-earth-industry-vokalia-and-consonantia-bill-to-boost",
+					"locale": "en",
+					"path": "body[4].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "stocks-making-the-biggest-moves-midday-davita-amd-3m-acacia-communications-and-more",
+					"locale": "en",
+					"path": "body[4].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-15",
+			"file": "images/joomlart/blog/img-15.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4f0ddb05e1629cc65bf3ef8b80921ae65c935a1c5cfc34457c8314f6aee445cd",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "real-estate-mogul-william-zeckendorf-sells-park-avenue-apartment-language-ocean-for-29-5m",
+					"locale": "en",
+					"path": "body[4].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-12",
+			"file": "images/joomlart/blog/img-12.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "5fcfe74da5ab7a1003bcbac82b84c461224dba275e8f3c7da6745baada8427cb",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "china-s-june-vehicle-sales-down-9-6-year-on-year-industry-association",
+					"locale": "en",
+					"path": "body[3].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-11-thumb",
+			"file": "images/joomlart/blog/img-11-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b02ba083d7c99947d939da65c56d0c4182762be5080c1908d93a14d09507a0f0",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "china-s-newly-created-dajia-insurance-begins-absorbing-anbang",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "body[5].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-9",
+			"file": "images/joomlart/blog/img-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "c45eff91feed5cb8c43343c72cdb9d17a339360620da01333e7279a502833a26",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "nintendo-moves-forward-with-a-cheaper-switch-console-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "body[4].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-19-thumb",
+			"file": "images/joomlart/blog/img-19-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "19bbd4904feaedfcd3f1662d6452aa06b90fe24b4a38eb747e57ff9a1bcd2eb5",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "house-judiciary-committee-authorizes-subpoenas-to-ex-trump-campaign-officials",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "beleaguered-money-managers-find-bright-spot-in-esg-cargill-profit-drops-on-trade-a-path-to-eu-citizenship-cheaper-sells",
+					"locale": "en",
+					"path": "body[9].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "farmers-stockpiling-corn-in-response-to-tough-growing-conditions",
+					"locale": "en",
+					"path": "body[11].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-18",
+			"file": "images/joomlart/blog/img-18.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "7cc68f75aaac53d66f16f63992eaacff7fbd11d6404404719b2434ea2ddc831f",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "state-department-analyst-resigns-after-white-house-blocked-climate-change-testimony",
+					"locale": "en",
+					"path": "body[3].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-5",
+			"file": "images/joomlart/blog/img-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b60954c9ebdf0016a673891f9184a0540184ee3531b5c0506a2e74d0fe95c33d",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "ivanka-trump-pushes-initiative-to-give-women-bigger-role-in-global-peace-efforts-of-the-semantics",
+					"locale": "en",
+					"path": "body[4].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/img-14-thumb",
+			"file": "images/joomlart/blog/img-14-thumb.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "46cf685932f7e517f8ed79f716ba03d26d4af4fe1442de2f7f6aa29e4dbbd06f",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "for-sale-in-malta-a-path-to-eu-citizenship-cheaper-sells-park-avenue-apartment",
+					"locale": "en",
+					"path": "body[9].asset"
+				}
+			]
+		}
+	]
+}
