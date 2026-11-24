@@ -67,3 +67,4 @@
 	.im-post.is-plain h3 a, .im-post.is-plain .im-post-meta, .im-post.is-plain .im-post-author { color: var(--color-accent-on); }
 }
 @layer components { .im-donation-money > div { display: flex; align-items: baseline; gap: 4px; } }
+@layer components { .im-donation-money .im-currency { font-size: 24px; font-weight: 500; margin-right: -4px; } }

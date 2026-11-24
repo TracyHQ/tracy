@@ -24,7 +24,6 @@ const tag = String(entry.tags ?? '').split('\n')[0]
 // the source cuts the intro at 21 words and ends it with an ellipsis
 const plain = plainText(entry.excerpt, 600).split(/\s+/).filter(Boolean)
 const intro = plain.length > 21 ? `${plain.slice(0, 21).join(' ')} …` : plain.join(' ')
-const money = (v: unknown) => `${site.currency_symbol ?? ''}${v}`
 ---
 
 <article class="im-donation">
@@ -44,8 +43,8 @@ const money = (v: unknown) => `${site.currency_symbol ?? ''}${v}`
 				<div class="im-progress" role="progressbar" aria-label={site.raise_label} aria-valuenow={pct} aria-valuemin="0" aria-valuemax="100"><div style={`width:${pct}%`}></div></div>
 			</div>
 			<div class="im-donation-money">
-				<div><strong {...$d('raise')}>{money(entry.raise)}</strong><span {...$c('raise_label')}>{site.raise_label}</span></div>
-				<div><strong {...$d('goal')}>{money(entry.goal)}</strong><span {...$c('goal_label')}>{site.goal_label}</span></div>
+				<div>{site.currency_symbol && <span class="im-currency" {...$c('currency_symbol')}>{site.currency_symbol}</span>}<strong {...$d('raise')}>{entry.raise}</strong><span {...$c('raise_label')}>{site.raise_label}</span></div>
+				<div>{site.currency_symbol && <span class="im-currency" {...$c('currency_symbol')}>{site.currency_symbol}</span>}<strong {...$d('goal')}>{entry.goal}</strong><span {...$c('goal_label')}>{site.goal_label}</span></div>
 			</div>
 		</div>
 	</div>

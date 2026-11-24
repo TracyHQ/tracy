@@ -7,17 +7,17 @@
  "platform": "emdash",
  "contract": {
   "id": "tracy-impact/emdash-0.x/0.1.0",
-  "contentMapSha256": "412d752fcfa0deaa9cbb8ce3ab78ee3ddfe92d5a0425986a0cf9727e08ef4499",
+  "contentMapSha256": "1efe045c7c4ebb71a3977ef64a48b4badeb03a9ec1a99158c515c8e0dfaa81af",
   "presentationLockSha256": null
  },
- "measuredAt": "2026-11-24T07:50:38.542Z",
+ "measuredAt": "2026-11-24T08:00:33.107Z",
  "viewports": [
   "desktop",
   "phone"
  ],
  "bound": {
-  "stamp": 2210,
-  "entry": 994,
+  "stamp": 2328,
+  "entry": 992,
   "menu": 529,
   "clone": 280,
   "excerpt": 22,
@@ -38,12 +38,12 @@
  },
  "counts": {
   "text": {
-   "total": 888,
-   "matched": 822,
+   "total": 889,
+   "matched": 849,
    "locked": 0,
    "capture": 0,
    "captureLocked": 0,
-   "template": 29,
+   "template": 3,
    "core": 4,
    "unknown": 33,
    "catalogue": 0,
@@ -75,7 +75,7 @@
   }
  },
  "coverage": {
-  "text": 93,
+  "text": 95.9,
   "images": 100,
   "links": 55.5
  },
@@ -107,26 +107,6 @@
    "cause": "words in the template's own source",
    "evidence": "article.im-event > div.im-event-content > div.im-date > span",
    "pages": 3,
-   "firstPage": "/",
-   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
-  },
-  {
-   "kind": "text",
-   "value": "$#,# Goal",
-   "class": "template",
-   "cause": "words in the template's own source (stamped donations.water-treatment-projects field goal: no slot holds these words)",
-   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-donation-money > span",
-   "pages": 35,
-   "firstPage": "/",
-   "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
-  },
-  {
-   "kind": "text",
-   "value": "$#,# Raise",
-   "class": "template",
-   "cause": "words in the template's own source (stamped donations.water-treatment-projects field raise: no slot holds these words)",
-   "evidence": "div.im-donation-info > div.im-donation-bottom > div.im-donation-money > span",
-   "pages": 35,
    "firstPage": "/",
    "accepted": "Interface wording the template prints around a count, a date or an amount (the percentage, the Raise and Goal labels, the month of an event date, the Forms plugin's hidden honeypot label); the wording is the template's own and carries no business fact (the figures themselves are stamped fields)."
   },
@@ -1592,34 +1572,13 @@
    },
    "R8": {
     "title": "adjacent short slots on one line (a cut heading)",
-    "count": 7,
-    "keys": [
-     "chrome.chrome.footer_col1_title + chrome.chrome.footer_col2_title",
-     "chrome.chrome.footer_col2_title + chrome.chrome.footer_col3_title",
-     "chrome.chrome.footer_col3_title + chrome.chrome.footer_col4_title",
-     "features.about-give.items[0].number + features.about-give.items[0].feature_tag",
-     "features.about-give.items[0].feature_tag + features.about-give.items[1].number",
-     "features.about-give.items[1].number + features.about-give.items[1].feature_tag",
-     "contact.contact.address + contact.contact.map_label"
-    ]
+    "count": 0,
+    "keys": []
    },
    "R9": {
     "title": "fact-like hole",
-    "count": 26,
-    "keys": [
-     "$4,500 Raise",
-     "$9,000 Goal",
-     "$23,000 Raise",
-     "$30,000 Goal",
-     "$24,270 Raise",
-     "$40,000 Goal",
-     "$14,000 Raise",
-     "$24,000 Goal",
-     "$16,000 Raise",
-     "$24,000 Goal",
-     "$14,000 Raise",
-     "$20,000 Goal"
-    ]
+    "count": 0,
+    "keys": []
    }
   }
  }

@@ -12445,10 +12445,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 27,
-          "phone": 22
+          "desktop": 24,
+          "phone": 20
         },
-        "maxCharacters": 22,
+        "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -19603,7 +19603,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 66,
+            "height": 38
+          },
+          "phone": {
+            "width": 66,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 9,
+          "phone": 9
+        },
+        "maxCharacters": 9,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -19619,7 +19640,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 65,
+            "height": 38
+          },
+          "phone": {
+            "width": 65,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 9,
+          "phone": 9
+        },
+        "maxCharacters": 9,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -19922,7 +19964,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 80,
+            "height": 38
+          },
+          "phone": {
+            "width": 80,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -19938,7 +20001,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 80,
+            "height": 38
+          },
+          "phone": {
+            "width": 80,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -20241,7 +20325,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 79,
+            "height": 38
+          },
+          "phone": {
+            "width": 79,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -20257,7 +20362,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 80,
+            "height": 38
+          },
+          "phone": {
+            "width": 80,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -20560,7 +20686,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 65,
+            "height": 38
+          },
+          "phone": {
+            "width": 65,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 9,
+          "phone": 9
+        },
+        "maxCharacters": 9,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -20576,7 +20723,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 80,
+            "height": 38
+          },
+          "phone": {
+            "width": 80,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -20879,7 +21047,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 78,
+            "height": 38
+          },
+          "phone": {
+            "width": 78,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -20895,7 +21084,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 79,
+            "height": 38
+          },
+          "phone": {
+            "width": 79,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -21198,7 +21408,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 76,
+            "height": 38
+          },
+          "phone": {
+            "width": 76,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 11,
+          "phone": 11
+        },
+        "maxCharacters": 11,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -21214,7 +21445,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 79,
+            "height": 38
+          },
+          "phone": {
+            "width": 79,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -21517,7 +21769,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 74,
+            "height": 38
+          },
+          "phone": {
+            "width": 74,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 11,
+          "phone": 11
+        },
+        "maxCharacters": 11,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -21533,7 +21806,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 82,
+            "height": 38
+          },
+          "phone": {
+            "width": 82,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -21836,7 +22130,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 79,
+            "height": 38
+          },
+          "phone": {
+            "width": 79,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -21852,7 +22167,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 80,
+            "height": 38
+          },
+          "phone": {
+            "width": 80,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -22155,7 +22491,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 74,
+            "height": 38
+          },
+          "phone": {
+            "width": 74,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 11,
+          "phone": 11
+        },
+        "maxCharacters": 11,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -22171,7 +22528,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 78,
+            "height": 38
+          },
+          "phone": {
+            "width": 78,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -22474,7 +22852,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 78,
+            "height": 38
+          },
+          "phone": {
+            "width": 78,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -22490,7 +22889,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 80,
+            "height": 38
+          },
+          "phone": {
+            "width": 80,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -22793,7 +23213,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 79,
+            "height": 38
+          },
+          "phone": {
+            "width": 79,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -22809,7 +23250,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 80,
+            "height": 38
+          },
+          "phone": {
+            "width": 80,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -23112,7 +23574,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 80,
+            "height": 38
+          },
+          "phone": {
+            "width": 80,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -23128,7 +23611,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 80,
+            "height": 38
+          },
+          "phone": {
+            "width": 80,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -23431,7 +23935,28 @@
       "label": "Raise",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 76,
+            "height": 38
+          },
+          "phone": {
+            "width": 76,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 11,
+          "phone": 11
+        },
+        "maxCharacters": 11,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -23447,7 +23972,28 @@
       "label": "Goal",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 82,
+            "height": 38
+          },
+          "phone": {
+            "width": 82,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 10,
+          "phone": 10
+        },
+        "maxCharacters": 10,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -27788,10 +28334,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 24,
-          "phone": 19
+          "desktop": 22,
+          "phone": 17
         },
-        "maxCharacters": 19,
+        "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -27928,10 +28474,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 40,
-          "phone": 37
+          "desktop": 19,
+          "phone": 19
         },
-        "maxCharacters": 37,
+        "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -28388,10 +28934,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 45,
-          "phone": 42
+          "desktop": 21,
+          "phone": 21
         },
-        "maxCharacters": 42,
+        "maxCharacters": 21,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -28831,11 +29377,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 203,
+            "width": 181,
             "height": 29
           },
           "phone": {
-            "width": 163,
+            "width": 147,
             "height": 24
           }
         },
@@ -28844,10 +29390,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 16,
-          "phone": 15
+          "desktop": 14,
+          "phone": 14
         },
-        "maxCharacters": 15,
+        "maxCharacters": 14,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -28884,11 +29430,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 203,
+            "width": 181,
             "height": 29
           },
           "phone": {
-            "width": 163,
+            "width": 147,
             "height": 24
           }
         },
@@ -28897,10 +29443,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 14,
-          "phone": 14
+          "desktop": 13,
+          "phone": 12
         },
-        "maxCharacters": 14,
+        "maxCharacters": 12,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -28937,11 +29483,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 203,
+            "width": 181,
             "height": 29
           },
           "phone": {
-            "width": 163,
+            "width": 147,
             "height": 24
           }
         },
@@ -28950,10 +29496,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 15,
-          "phone": 14
+          "desktop": 13,
+          "phone": 13
         },
-        "maxCharacters": 14,
+        "maxCharacters": 13,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -28990,11 +29536,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 203,
+            "width": 181,
             "height": 29
           },
           "phone": {
-            "width": 163,
+            "width": 147,
             "height": 24
           }
         },
@@ -29003,10 +29549,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 16,
-          "phone": 16
+          "desktop": 15,
+          "phone": 14
         },
-        "maxCharacters": 16,
+        "maxCharacters": 14,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -29295,7 +29841,28 @@
       "label": "Raise label",
       "role": "editorial.button_label",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 41,
+            "height": 26
+          },
+          "phone": {
+            "width": 41,
+            "height": 26
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 15,
+          "phone": 13
+        },
+        "maxCharacters": 13,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -29311,7 +29878,28 @@
       "label": "Goal label",
       "role": "editorial.button_label",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 35,
+            "height": 26
+          },
+          "phone": {
+            "width": 35,
+            "height": 26
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 14,
+          "phone": 12
+        },
+        "maxCharacters": 12,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -30299,7 +30887,28 @@
       "role": "editorial.design_element",
       "customize": "keep",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 15,
+            "height": 38
+          },
+          "phone": {
+            "width": 15,
+            "height": 38
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 8,
+          "phone": 7
+        },
+        "maxCharacters": 7,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {

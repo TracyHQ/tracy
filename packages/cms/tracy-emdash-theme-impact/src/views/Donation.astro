@@ -31,7 +31,6 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const banner = mediaUrl(a.banner)
 const pct = percent(a.raise, a.goal)
 const tag = String(a.tags ?? '').split('\n')[0].trim()
-const money = (v: unknown) => `${site.currency_symbol ?? ''}${v}`
 const hasAmounts = String(a.raise ?? '') !== '' || String(a.goal ?? '') !== ''
 ---
 
@@ -60,8 +59,8 @@ const hasAmounts = String(a.raise ?? '') !== '' || String(a.goal ?? '') !== ''
 											<div class="im-progress" role="progressbar" aria-label={site.raise_label} aria-valuenow={pct} aria-valuemin="0" aria-valuemax="100"><div style={`width:${pct}%`}></div></div>
 										</div>
 										<div class="im-donation-money">
-											<div><strong {...$d('raise')}>{money(a.raise)}</strong><span {...$c('raise_label')}>{site.raise_label}</span></div>
-											<div><strong {...$d('goal')}>{money(a.goal)}</strong><span {...$c('goal_label')}>{site.goal_label}</span></div>
+											<div>{site.currency_symbol && <span class="im-currency" {...$c('currency_symbol')}>{site.currency_symbol}</span>}<strong {...$d('raise')}>{a.raise}</strong><span {...$c('raise_label')}>{site.raise_label}</span></div>
+											<div>{site.currency_symbol && <span class="im-currency" {...$c('currency_symbol')}>{site.currency_symbol}</span>}<strong {...$d('goal')}>{a.goal}</strong><span {...$c('goal_label')}>{site.goal_label}</span></div>
 										</div>
 									</div>
 								)}
