@@ -4743,6 +4743,55 @@
       "match": "^/Volumes/x$",
       "kind": "false-positive",
       "reason": "a sample absolute path in the kit's path-safety check, not a machine path of anyone"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-impact/seed/*.json",
+      "category": "email",
+      "match": "^helpus24@gmail\\.com$",
+      "kind": "placeholder",
+      "reason": "the demo contact address of the JA Impact quickstart this template ports (a public JoomlArt demo mailbox); the personalization step replaces it with the customer's own, and it is read into the generated content map and the kit"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-impact/contracts/**",
+      "category": "email",
+      "match": "^helpus24@gmail\\.com$",
+      "kind": "placeholder",
+      "reason": "the demo contact address of the JA Impact quickstart this template ports (a public JoomlArt demo mailbox); the personalization step replaces it with the customer's own, and it is read into the generated content map and the kit"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-impact/pnpm-workspace.yaml",
+      "category": "email",
+      "match": "^picomatch@(2\\.3\\.2|4\\.0\\.7)\\.patch$",
+      "kind": "false-positive",
+      "reason": "a pnpm patch file name (<package>@<version>.patch), not an e-mail address"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-impact/tests/*.test.mjs",
+      "category": "email",
+      "match": "^(picomatch@(2\\.3\\.2|4\\.0\\.7)|scope__pkg@1\\.0\\.0)\\.patch$",
+      "kind": "false-positive",
+      "reason": "pnpm patch file names in the kit's distribution tests, not e-mail addresses"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-impact/tests/personalize-demo-street.test.mjs",
+      "category": "email",
+      "match": "^Info@joomlart\\.com$",
+      "kind": "third-party-content",
+      "reason": "footer address of the JA Diner template demo content that the kit's personalize test must replace"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-impact/tools/distribution.mjs",
+      "category": "machine-path",
+      "match": "^/Volumes/x$",
+      "kind": "false-positive",
+      "reason": "a sample absolute path in the kit's path-safety check, not a machine path of anyone"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-impact/tools/forms.json",
+      "category": "email",
+      "match": "^helpus24@gmail\\.com$",
+      "kind": "placeholder",
+      "reason": "the demo recipient of the contact form of the JA Impact quickstart; the personalization step replaces it with the customer's own"
     }
   ],
   "excludeReasons": {
