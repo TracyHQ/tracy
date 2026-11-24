@@ -687,7 +687,7 @@
       "entity": "pages.about",
       "route": "/about",
       "openAs": "/about",
-      "title": "About",
+      "title": "Who we are",
       "view": "page-landing"
     },
     {
@@ -1115,11 +1115,32 @@
         "field": "title"
       },
       "type": "text",
-      "sample": "About",
+      "sample": "Who we are",
       "label": "Title",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1344,
+            "height": 44
+          },
+          "phone": {
+            "width": 358,
+            "height": 31
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 61,
+          "phone": 23
+        },
+        "maxCharacters": 23,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -1135,7 +1156,28 @@
       "label": "Title",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1344,
+            "height": 44
+          },
+          "phone": {
+            "width": 358,
+            "height": 31
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 64,
+          "phone": 24
+        },
+        "maxCharacters": 24,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -1151,7 +1193,28 @@
       "label": "Title",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 90,
+            "height": 19
+          },
+          "phone": {
+            "width": 90,
+            "height": 19
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 22,
+          "phone": 17
+        },
+        "maxCharacters": 17,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -1167,7 +1230,28 @@
       "label": "Title",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1344,
+            "height": 44
+          },
+          "phone": {
+            "width": 358,
+            "height": 31
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 64,
+          "phone": 24
+        },
+        "maxCharacters": 24,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -1183,7 +1267,28 @@
       "label": "Title",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1344,
+            "height": 44
+          },
+          "phone": {
+            "width": 358,
+            "height": 31
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 64,
+          "phone": 24
+        },
+        "maxCharacters": 24,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -1199,7 +1304,28 @@
       "label": "Title",
       "role": "editorial.heading",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 1344,
+            "height": 44
+          },
+          "phone": {
+            "width": 358,
+            "height": 31
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 61,
+          "phone": 23
+        },
+        "maxCharacters": 23,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {
@@ -27805,59 +27931,6 @@
       }
     },
     {
-      "key": "masthead.about.title",
-      "entity": "masthead.about",
-      "target": {
-        "collection": "masthead",
-        "entry": "about",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Who we are",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 1344,
-            "height": 44
-          },
-          "phone": {
-            "width": 358,
-            "height": 31
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 61,
-          "phone": 23
-        },
-        "maxCharacters": 23,
-        "casing": "none",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "masthead.about.description",
-      "entity": "masthead.about",
-      "target": {
-        "collection": "masthead",
-        "entry": "about",
-        "field": "description"
-      },
-      "type": "text",
-      "sample": "",
-      "label": "Description",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "masthead.about.background",
       "entity": "masthead.about",
       "target": {
@@ -27889,59 +27962,6 @@
         "tolerance": 0.02,
         "minWidth": 2160,
         "crop": "cover"
-      }
-    },
-    {
-      "key": "masthead.blog.title",
-      "entity": "masthead.blog",
-      "target": {
-        "collection": "masthead",
-        "entry": "blog",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Blog",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 1344,
-            "height": 44
-          },
-          "phone": {
-            "width": 358,
-            "height": 31
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 61,
-          "phone": 23
-        },
-        "maxCharacters": 23,
-        "casing": "none",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "masthead.blog.description",
-      "entity": "masthead.blog",
-      "target": {
-        "collection": "masthead",
-        "entry": "blog",
-        "field": "description"
-      },
-      "type": "text",
-      "sample": "",
-      "label": "Description",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
       }
     },
     {
@@ -27979,38 +27999,6 @@
       }
     },
     {
-      "key": "masthead.post.title",
-      "entity": "masthead.post",
-      "target": {
-        "collection": "masthead",
-        "entry": "post",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Blog",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
-      "key": "masthead.post.description",
-      "entity": "masthead.post",
-      "target": {
-        "collection": "masthead",
-        "entry": "post",
-        "field": "description"
-      },
-      "type": "text",
-      "sample": "",
-      "label": "Description",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "masthead.post.background",
       "entity": "masthead.post",
       "target": {
@@ -28042,59 +28030,6 @@
         "tolerance": 0.02,
         "minWidth": 2160,
         "crop": "cover"
-      }
-    },
-    {
-      "key": "masthead.events.title",
-      "entity": "masthead.events",
-      "target": {
-        "collection": "masthead",
-        "entry": "events",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Our Events",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 1344,
-            "height": 44
-          },
-          "phone": {
-            "width": 358,
-            "height": 31
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 64,
-          "phone": 24
-        },
-        "maxCharacters": 24,
-        "casing": "none",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "masthead.events.description",
-      "entity": "masthead.events",
-      "target": {
-        "collection": "masthead",
-        "entry": "events",
-        "field": "description"
-      },
-      "type": "text",
-      "sample": "",
-      "label": "Description",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
       }
     },
     {
@@ -28132,59 +28067,6 @@
       }
     },
     {
-      "key": "masthead.contact.title",
-      "entity": "masthead.contact",
-      "target": {
-        "collection": "masthead",
-        "entry": "contact",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Contact",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 1344,
-            "height": 44
-          },
-          "phone": {
-            "width": 358,
-            "height": 31
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 64,
-          "phone": 24
-        },
-        "maxCharacters": 24,
-        "casing": "none",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "masthead.contact.description",
-      "entity": "masthead.contact",
-      "target": {
-        "collection": "masthead",
-        "entry": "contact",
-        "field": "description"
-      },
-      "type": "text",
-      "sample": "",
-      "label": "Description",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "masthead.contact.background",
       "entity": "masthead.contact",
       "target": {
@@ -28219,59 +28101,6 @@
       }
     },
     {
-      "key": "masthead.donations.title",
-      "entity": "masthead.donations",
-      "target": {
-        "collection": "masthead",
-        "entry": "donations",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Our causes",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 1344,
-            "height": 44
-          },
-          "phone": {
-            "width": 358,
-            "height": 31
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 64,
-          "phone": 24
-        },
-        "maxCharacters": 24,
-        "casing": "none",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "masthead.donations.description",
-      "entity": "masthead.donations",
-      "target": {
-        "collection": "masthead",
-        "entry": "donations",
-        "field": "description"
-      },
-      "type": "text",
-      "sample": "",
-      "label": "Description",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
-      }
-    },
-    {
       "key": "masthead.donations.background",
       "entity": "masthead.donations",
       "target": {
@@ -28303,59 +28132,6 @@
         "tolerance": 0.02,
         "minWidth": 2160,
         "crop": "cover"
-      }
-    },
-    {
-      "key": "masthead.faq.title",
-      "entity": "masthead.faq",
-      "target": {
-        "collection": "masthead",
-        "entry": "faq",
-        "field": "title"
-      },
-      "type": "text",
-      "sample": "Help & FAQs",
-      "label": "Title",
-      "role": "editorial.heading",
-      "fit": {
-        "measured": true,
-        "boxes": {
-          "desktop": {
-            "width": 90,
-            "height": 19
-          },
-          "phone": {
-            "width": 90,
-            "height": 19
-          }
-        },
-        "lines": {
-          "desktop": 1,
-          "phone": 1
-        },
-        "maxChars": {
-          "desktop": 22,
-          "phone": 17
-        },
-        "maxCharacters": 17,
-        "casing": "none",
-        "overflow": "rewrite"
-      }
-    },
-    {
-      "key": "masthead.faq.description",
-      "entity": "masthead.faq",
-      "target": {
-        "collection": "masthead",
-        "entry": "faq",
-        "field": "description"
-      },
-      "type": "text",
-      "sample": "",
-      "label": "Description",
-      "role": "editorial.paragraph",
-      "fit": {
-        "measured": false
       }
     },
     {

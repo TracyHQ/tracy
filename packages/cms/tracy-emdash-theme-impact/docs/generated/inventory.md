@@ -216,8 +216,6 @@ Template: JA Impact (tracy-impact). Default locale: en. Locales: en.
 
 | Field | Type | Required | Label |
 | --- | --- | --- | --- |
-| title | string | no | Title |
-| description | string | no | Description |
 | background | image | no | Background |
 
 ### contact

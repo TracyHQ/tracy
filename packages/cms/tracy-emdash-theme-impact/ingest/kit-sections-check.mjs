@@ -27,7 +27,10 @@ for (const page of kit.pages)
   groupBlocks.set(page.group, [...(groupBlocks.get(page.group) ?? []), ...(page.blocks?.['1440'] ?? [])])
 // a detail page's own parts (its breadcrumb bar) are blocks named after it and listed outside the group's representative page
 const ofPage = (page) => kit.blocks.filter((b) => b.id.includes(`-${page.path.slice(1).replace(/\//g, '_')}-`) || b.id.startsWith(`block-${page.path.slice(1).replace(/\//g, '_')}-`)).map((b) => b.id)
+const everywhere = new Set(kit.blocks.flatMap((b) => (b.slots ?? []).map((x) => x.id)))
+const has = (set, k) => [...set].some((id) => id === k || id.startsWith(`${k}.`) || id.startsWith(`${k}[`))
 const missing = []
+const repeated = []
 let checked = 0
 for (const page of kit.pages) {
   const printed = sections[page.path]
@@ -42,10 +45,18 @@ for (const page of kit.pages) {
       const inMap = keys.filter((k) => [...slotIds].some((id) => id === k || id.startsWith(`${k}.`) || id.startsWith(`${k}[`)))
       if (inMap.length === 0) continue
       checked++
-      const covered = inMap.some((k) => [...have].some((id) => id === k || id.startsWith(`${k}.`) || id.startsWith(`${k}[`)))
-      if (!covered) missing.push(`${page.path}  ${part}  ${sec.selector.split(' > ').slice(-1)[0]}  (${inMap.slice(0, 3).join(', ')})`)
+      const covered = inMap.some((k) => has(have, k))
+      // a part of a page the kit names after it (a detail page's breadcrumb bar: its words map to the page title slot by text)
+      const own = ofPage(page).some((id) => (sec.classes ?? []).some((c) => id.endsWith(`-${c.replace(/^im-/, '')}`)))
+      // a listing strip a page repeats from another page (the Home's events): its slots are held by the block of the page that owns the list
+      if (!covered && !own && inMap.every((k) => has(everywhere, k))) {
+        repeated.push(`${page.path}  ${part}  ${sec.selector.split(' > ').slice(-1)[0]}`)
+        continue
+      }
+      if (!covered && !own) missing.push(`${page.path}  ${part}  ${sec.selector.split(' > ').slice(-1)[0]}  (${inMap.slice(0, 3).join(', ')})`)
     }
 }
-console.log(`kit-sections-check: ${checked} sections with slots on ${kit.pages.length} pages, ${missing.length} not a block of the kit`)
+console.log(`kit-sections-check: ${checked} sections with slots on ${kit.pages.length} pages, ${missing.length} not a block of the kit, ${repeated.length} a strip repeated from the block of another page`)
+for (const r of repeated) console.log(`  repeated: ${r}`)
 for (const m of missing) console.log(`  ${m}`)
 process.exit(missing.length ? 1 : 0)

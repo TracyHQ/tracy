@@ -7,10 +7,10 @@
  "platform": "emdash",
  "contract": {
   "id": "tracy-impact/emdash-0.x/0.1.0",
-  "contentMapSha256": "1efe045c7c4ebb71a3977ef64a48b4badeb03a9ec1a99158c515c8e0dfaa81af",
+  "contentMapSha256": "771d84684cf452c87cab51fa8dacec99500904a882af7bb8d24fe2c5e7751a5e",
   "presentationLockSha256": null
  },
- "measuredAt": "2026-11-24T08:00:33.107Z",
+ "measuredAt": "2026-11-24T08:20:40.692Z",
  "viewports": [
   "desktop",
   "phone"
@@ -19,7 +19,7 @@
   "stamp": 2328,
   "entry": 992,
   "menu": 529,
-  "clone": 280,
+  "clone": 281,
   "excerpt": 22,
   "words": 579,
   "media": 385,
@@ -38,8 +38,8 @@
  },
  "counts": {
   "text": {
-   "total": 889,
-   "matched": 849,
+   "total": 890,
+   "matched": 850,
    "locked": 0,
    "capture": 0,
    "captureLocked": 0,
@@ -1202,7 +1202,7 @@
   },
   {
    "entity": "pages.about",
-   "title": "About",
+   "title": "Who we are",
    "route": "/about",
    "opens": "live",
    "status": 200
@@ -1536,8 +1536,8 @@
   "applies": true,
   "r1": {
    "facts": 120,
-   "slots": 1096,
-   "percent": 10.9
+   "slots": 1082,
+   "percent": 11.1
   },
   "rules": {
    "R2": {
