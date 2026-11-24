@@ -32,8 +32,10 @@ const cols = [1, 2, 3, 4].map((n) => ({
   n,
   title: site[`footer_col${n}_title`],
   links: lines(site[`footer_col${n}_links`]).map((row) => {
+    const token = /^\{([a-z]+)\}$/.exec(row.trim())
+    if (token) return { label: site[`footer_${token[1]}_label`] ?? '', path: String(site[`footer_${token[1]}_to`] ?? ''), field: `footer_${token[1]}_label` }
     const [label, path] = row.split('|').map((s) => s.trim())
-    return { label, path: path ?? '' }
+    return { label, path: path ?? '', field: '' }
   })
 }))
 const live = await liveLinks(Astro.request, locale, [...cols.flatMap((c) => c.links.map((l) => l.path)), ...items.map((i) => i.link)])
@@ -72,7 +74,7 @@ const target = (link: unknown) =>
 				<div class="im-footnav-col">
 					<h3 {...$c(`footer_col${c.n}_title`)}>{c.title}</h3>
 					<ul {...$c(`footer_col${c.n}_links`)}>
-						{c.links.map((l) => <li>{l.path && live(l.path) ? <a href={dataHref(l.path, (p) => href(locale, p))!} aria-current={l.path === here ? 'page' : undefined}>{l.label}</a> : <span>{l.label}</span>}</li>)}
+						{c.links.map((l) => <li>{l.path && live(l.path) ? <a href={dataHref(l.path, (p) => href(locale, p))!} aria-current={l.path === here ? 'page' : undefined} {...(l.field ? $c(l.field) : {})}>{l.label}</a> : <span {...(l.field ? $c(l.field) : {})}>{l.label}</span>}</li>)}
 					</ul>
 				</div>
 			))}

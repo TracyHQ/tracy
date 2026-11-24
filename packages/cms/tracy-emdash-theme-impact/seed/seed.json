@@ -1322,6 +1322,46 @@
 					"type": "string"
 				},
 				{
+					"slug": "footer_about_label",
+					"label": "Footer about label",
+					"type": "string"
+				},
+				{
+					"slug": "footer_about_to",
+					"label": "Footer about to",
+					"type": "string"
+				},
+				{
+					"slug": "footer_blog_label",
+					"label": "Footer blog label",
+					"type": "string"
+				},
+				{
+					"slug": "footer_blog_to",
+					"label": "Footer blog to",
+					"type": "string"
+				},
+				{
+					"slug": "footer_faq_label",
+					"label": "Footer faq label",
+					"type": "string"
+				},
+				{
+					"slug": "footer_faq_to",
+					"label": "Footer faq to",
+					"type": "string"
+				},
+				{
+					"slug": "footer_contact_label",
+					"label": "Footer contact label",
+					"type": "string"
+				},
+				{
+					"slug": "footer_contact_to",
+					"label": "Footer contact to",
+					"type": "string"
+				},
+				{
 					"slug": "copyright",
 					"label": "Copyright",
 					"type": "string"
@@ -14205,7 +14245,7 @@
 					"location_title": "Our Location",
 					"map_label": "Open in Google Maps",
 					"form_title": "Drop Us a Line",
-					"form_intro": "Want to reach out? We'd love to hear from you.",
+					"form_intro": "Want to reach out? We'd love to hear from you!",
 					"first_name_label": "First name",
 					"email_field_label": "Email address",
 					"subject_label": "Your subject",
@@ -14244,13 +14284,21 @@
 					"donate_link": "/donations",
 					"footer_about": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along",
 					"footer_col1_title": "Get to know us",
-					"footer_col1_links": "About us | /about\nTerm of service\nCareers\nAffiliates",
+					"footer_col1_links": "{about}\nTerm of service\nCareers\nAffiliates",
 					"footer_col2_title": "Guide",
-					"footer_col2_links": "Store Locations\nRegistry\nBlog | /blog\nShipping info",
+					"footer_col2_links": "Store Locations\nRegistry\n{blog}\nShipping info",
 					"footer_col3_title": "Need help",
-					"footer_col3_links": "Help & FAQs | /help-faqs\nYour account\nTrack your order\nContact info | /contact",
+					"footer_col3_links": "{faq}\nYour account\nTrack your order\n{contact}",
 					"footer_col4_title": "Follow us",
 					"footer_col4_links": "Twitter\nFacebook\nInstagram\nThreads",
+					"footer_about_label": "About us",
+					"footer_about_to": "/about",
+					"footer_blog_label": "Blog",
+					"footer_blog_to": "/blog",
+					"footer_faq_label": "Help & FAQs",
+					"footer_faq_to": "/help-faqs",
+					"footer_contact_label": "Contact info",
+					"footer_contact_to": "/contact",
 					"copyright": "Copyright © {year} {name}. All Rights Reserved.",
 					"license_line": "",
 					"skip_label": "Skip to content",

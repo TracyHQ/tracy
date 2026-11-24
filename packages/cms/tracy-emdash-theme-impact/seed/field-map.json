@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T09:11:23.051Z",
+  "generatedAt": "2026-11-24T11:23:58.272Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -1217,6 +1217,54 @@
       "target": "string",
       "label": "Footer col4 links",
       "role": "editorial.menu_label"
+    },
+    "chrome.footer_about_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer about label",
+      "role": "editorial.menu_label"
+    },
+    "chrome.footer_about_to": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer about to",
+      "role": "editorial.navigation_url"
+    },
+    "chrome.footer_blog_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer blog label",
+      "role": "editorial.menu_label"
+    },
+    "chrome.footer_blog_to": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer blog to",
+      "role": "editorial.navigation_url"
+    },
+    "chrome.footer_faq_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer faq label",
+      "role": "editorial.menu_label"
+    },
+    "chrome.footer_faq_to": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer faq to",
+      "role": "editorial.navigation_url"
+    },
+    "chrome.footer_contact_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer contact label",
+      "role": "editorial.menu_label"
+    },
+    "chrome.footer_contact_to": {
+      "source": "text",
+      "target": "string",
+      "label": "Footer contact to",
+      "role": "editorial.navigation_url"
     },
     "chrome.copyright": {
       "source": "text",

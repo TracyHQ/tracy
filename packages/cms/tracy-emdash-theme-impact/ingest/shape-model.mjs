@@ -337,9 +337,21 @@ const footerMenus = Object.fromEntries(
     .filter((m) => m.name !== 'mainmenu')
     .map((m) => [m.name, m.items.map((i) => ({ label: i.label.en, path: /pages\/user\//.test(String(i.path)) ? '' : i.path }))])
 )
+// a linked entry of a footer column is a line `{key}`: its words and its address are the chrome fields footer_<key>_label and
+// footer_<key>_to, so the kit sees a real link with its own label slot; the other entries stay plain lines (`Label | /path` for the rest)
+const FOOTER_LINKS = { '/about': 'about', '/blog': 'blog', '/help-faqs': 'faq', '/contact': 'contact' }
+const footerLinkWords = {}
 const col = (name) =>
   footerMenus[name]
-    .map((i) => `${i.label}${i.path && i.path !== '#' ? ` | ${i.path}` : ''}`)
+    .map((i) => {
+      const key = FOOTER_LINKS[i.path]
+      if (key) {
+        footerLinkWords[`footer_${key}_label`] = i.label
+        footerLinkWords[`footer_${key}_to`] = i.path
+        return `{${key}}`
+      }
+      return `${i.label}${i.path && i.path !== '#' ? ` | ${i.path}` : ''}`
+    })
     .join('\n')
 const chromeFields = [
   'title',
@@ -355,6 +367,14 @@ const chromeFields = [
   'footer_col3_links',
   'footer_col4_title',
   'footer_col4_links',
+  'footer_about_label',
+  'footer_about_to',
+  'footer_blog_label',
+  'footer_blog_to',
+  'footer_faq_label',
+  'footer_faq_to',
+  'footer_contact_label',
+  'footer_contact_to',
   'copyright',
   'license_line',
   'skip_label',
@@ -491,6 +511,7 @@ model.records.push({
     footer_col3_links: col('need-help'),
     footer_col4_title: 'Follow us',
     footer_col4_links: col('follow-us'),
+    ...footerLinkWords,
     copyright: 'Copyright © {year} {name}. All Rights Reserved.',
     license_line: '',
     skip_label: 'Skip to content',
