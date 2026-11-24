@@ -1066,7 +1066,9 @@
         "id": "settings.title.identity.0",
         "item": 0,
         "kind": "business"
-      }
+      },
+      "nonVisual": true,
+      "nonVisualFrom": "the site title is used only in the document `<title>` and `og:site_name` (Base.astro) and as the logo's alt text when the brand has no name of its own: no page draws it in a box and the setting declares no maxLength, so it has no limit (the business name the footer prints is its own slot, chrome.brand_name, which is measured)"
     },
     {
       "key": "settings.tagline",
@@ -1248,7 +1250,9 @@
       "type": "text",
       "sample": "Get help now",
       "label": "Items 1 \u2014 Button",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 36,
+      "maxCharactersFrom": "declared by the theme: the hero button is one line in a button 175 px wide that grows with its words up to the width of the slide; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 74 at 1440 px, 74 at 768 px, 36 at 390 px"
     },
     {
       "key": "hero.home-hero.items[0].btn_link",
@@ -6754,7 +6758,9 @@
       "type": "text",
       "sample": "Take action",
       "label": "Items 3 \u2014 Label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 22,
+      "maxCharactersFrom": "declared by the theme: the card button is one line in a button the width of the card (measured on the first card button that has the same box); filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 34 at 1440 px, 22 at 768 px, 25 at 390 px"
     },
     {
       "key": "features.what-we-do.items[2].button_type",
@@ -7084,7 +7090,9 @@
       "type": "text",
       "sample": "Dolor Sit Amet",
       "label": "Items 4 \u2014 Title",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 23,
+      "maxCharactersFrom": "declared by the theme: a cause card heading is one line in the card's column; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 32 at 1440 px, 23 at 768 px, 25 at 390 px"
     },
     {
       "key": "features.what-we-do.items[3].description",
@@ -7130,7 +7138,9 @@
       "type": "text",
       "sample": "Take action",
       "label": "Items 4 \u2014 Label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 22,
+      "maxCharactersFrom": "declared by the theme: the card button is one line in a button the width of the card (measured on the first card button that has the same box); filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 34 at 1440 px, 22 at 768 px, 25 at 390 px"
     },
     {
       "key": "features.what-we-do.items[3].button_type",
@@ -7460,7 +7470,9 @@
       "type": "text",
       "sample": "Vivamus Porttitor",
       "label": "Items 5 \u2014 Title",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 23,
+      "maxCharactersFrom": "declared by the theme: a cause card heading is one line in the card's column; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 32 at 1440 px, 23 at 768 px, 25 at 390 px"
     },
     {
       "key": "features.what-we-do.items[4].description",
@@ -7506,7 +7518,9 @@
       "type": "text",
       "sample": "Take action",
       "label": "Items 5 \u2014 Label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 22,
+      "maxCharactersFrom": "declared by the theme: the card button is one line in a button the width of the card (measured on the first card button that has the same box); filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 34 at 1440 px, 22 at 768 px, 25 at 390 px"
     },
     {
       "key": "features.what-we-do.items[4].button_type",
@@ -7836,7 +7850,9 @@
       "type": "text",
       "sample": "Praesent Tempus",
       "label": "Items 6 \u2014 Title",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 23,
+      "maxCharactersFrom": "declared by the theme: a cause card heading is one line in the card's column; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 32 at 1440 px, 23 at 768 px, 25 at 390 px"
     },
     {
       "key": "features.what-we-do.items[5].description",
@@ -10262,7 +10278,9 @@
       "type": "text",
       "sample": "Which kind of experts do I have access to?",
       "label": "Items 1 \u2014 Accordion name",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 88,
+      "maxCharactersFrom": "declared by the theme: a question of the Help & FAQs list wraps in the bar (as many rows as it needs); the limit is the characters that keep it within one row more than today's; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 143 at 768 px, 88 at 390 px"
     },
     {
       "key": "accordion.faq.items[0].accordion_desc",
@@ -10292,7 +10310,9 @@
       "type": "text",
       "sample": "Can I reach out to an Expert in another location?",
       "label": "Items 2 \u2014 Accordion name",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 88,
+      "maxCharactersFrom": "declared by the theme: a question of the Help & FAQs list wraps in the bar (as many rows as it needs); the limit is the characters that keep it within one row more than today's; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 143 at 768 px, 88 at 390 px"
     },
     {
       "key": "accordion.faq.items[1].accordion_desc",
@@ -10322,7 +10342,9 @@
       "type": "text",
       "sample": "Why should I pay to ask someone a question?",
       "label": "Items 3 \u2014 Accordion name",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 88,
+      "maxCharactersFrom": "declared by the theme: a question of the Help & FAQs list wraps in the bar (as many rows as it needs); the limit is the characters that keep it within one row more than today's; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 143 at 768 px, 88 at 390 px"
     },
     {
       "key": "accordion.faq.items[2].accordion_desc",
@@ -10352,7 +10374,9 @@
       "type": "text",
       "sample": "What are the fastest animals on Earth?",
       "label": "Items 4 \u2014 Accordion name",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 83,
+      "maxCharactersFrom": "declared by the theme: a question of the Help & FAQs list wraps in the bar (as many rows as it needs); the limit is the characters that keep it within one row more than today's; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 143 at 768 px, 83 at 390 px"
     },
     {
       "key": "accordion.faq.items[3].accordion_desc",
@@ -10382,7 +10406,9 @@
       "type": "text",
       "sample": "How do animals communicate with each other?",
       "label": "Items 5 \u2014 Accordion name",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 88,
+      "maxCharactersFrom": "declared by the theme: a question of the Help & FAQs list wraps in the bar (as many rows as it needs); the limit is the characters that keep it within one row more than today's; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 143 at 768 px, 88 at 390 px"
     },
     {
       "key": "accordion.faq.items[4].accordion_desc",
@@ -10412,7 +10438,9 @@
       "type": "text",
       "sample": "What is the largest mammal in the world?",
       "label": "Items 6 \u2014 Accordion name",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 88,
+      "maxCharactersFrom": "declared by the theme: a question of the Help & FAQs list wraps in the bar (as many rows as it needs); the limit is the characters that keep it within one row more than today's; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 143 at 768 px, 88 at 390 px"
     },
     {
       "key": "accordion.faq.items[5].accordion_desc",
@@ -10442,7 +10470,9 @@
       "type": "text",
       "sample": "Which animal can hold its breath the longest underwater?",
       "label": "Items 7 \u2014 Accordion name",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 118,
+      "maxCharactersFrom": "declared by the theme: a question of the Help & FAQs list wraps in the bar (as many rows as it needs); the limit is the characters that keep it within one row more than today's; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 143 at 768 px, 118 at 390 px"
     },
     {
       "key": "accordion.faq.items[6].accordion_desc",
@@ -10472,7 +10502,9 @@
       "type": "text",
       "sample": "What are some of the most intelligent animals besides humans?",
       "label": "Items 8 \u2014 Accordion name",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 118,
+      "maxCharactersFrom": "declared by the theme: a question of the Help & FAQs list wraps in the bar (as many rows as it needs); the limit is the characters that keep it within one row more than today's; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 143 at 768 px, 118 at 390 px"
     },
     {
       "key": "accordion.faq.items[7].accordion_desc",
@@ -10502,7 +10534,9 @@
       "type": "text",
       "sample": "How do animals adapt to their environments?",
       "label": "Items 9 \u2014 Accordion name",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 88,
+      "maxCharactersFrom": "declared by the theme: a question of the Help & FAQs list wraps in the bar (as many rows as it needs); the limit is the characters that keep it within one row more than today's; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 143 at 768 px, 88 at 390 px"
     },
     {
       "key": "accordion.faq.items[8].accordion_desc",
@@ -10532,7 +10566,9 @@
       "type": "text",
       "sample": "What are some of the most endangered animal species?",
       "label": "Items 10 \u2014 Accordion name",
-      "role": "editorial.heading"
+      "role": "editorial.heading",
+      "maxCharacters": 88,
+      "maxCharactersFrom": "declared by the theme: a question of the Help & FAQs list wraps in the bar (as many rows as it needs); the limit is the characters that keep it within one row more than today's; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 143 at 768 px, 88 at 390 px"
     },
     {
       "key": "accordion.faq.items[9].accordion_desc",
@@ -10853,7 +10889,9 @@
       "type": "text",
       "sample": "Animals\nCharity\nMedia\nNature",
       "label": "Tags",
-      "role": "editorial.menu_label"
+      "role": "editorial.menu_label",
+      "maxCharacters": 43,
+      "maxCharactersFrom": "declared by the theme: the tags of a post are chips in the sidebar's Tags widget, wrapping onto further rows; every tag filled with running text until the widget gained two rows beyond today's (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 12 characters per tag at 1440 px, 29 at 768 px, 10 at 390 px, so 4 tags x 10 plus the 3 line breaks"
     },
     {
       "key": "posts.charity-of-the-month-plan-international-uk.created",
@@ -17862,7 +17900,9 @@
       "type": "text",
       "sample": "First name",
       "label": "First name label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 39,
+      "maxCharactersFrom": "declared by the theme: the placeholder of the contact form's First name field (also its accessible name); the number is the width of the field's text area (one line); filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 50 at 1440 px, 39 at 768 px, 40 at 390 px"
     },
     {
       "key": "contact.contact.email_field_label",
@@ -17875,7 +17915,9 @@
       "type": "text",
       "sample": "Email address",
       "label": "Email field label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 39,
+      "maxCharactersFrom": "declared by the theme: the placeholder of the contact form's Email address field (also its accessible name); the number is the width of the field's text area (one line); filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 50 at 1440 px, 39 at 768 px, 40 at 390 px"
     },
     {
       "key": "contact.contact.subject_label",
@@ -17888,7 +17930,9 @@
       "type": "text",
       "sample": "Your subject",
       "label": "Subject label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 40,
+      "maxCharactersFrom": "declared by the theme: the placeholder of the contact form's Subject field (also its accessible name); the number is the width of the field's text area (one line); filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 109 at 1440 px, 84 at 768 px, 40 at 390 px"
     },
     {
       "key": "contact.contact.message_label",
@@ -17901,7 +17945,9 @@
       "type": "text",
       "sample": "Message",
       "label": "Message label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 40,
+      "maxCharactersFrom": "declared by the theme: the placeholder of the contact form's Message field (also its accessible name); the number is the width of the field's text area (one line); filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 109 at 1440 px, 84 at 768 px, 40 at 390 px"
     },
     {
       "key": "contact.contact.privacy_title",
@@ -18188,7 +18234,9 @@
         "id": "chrome.chrome.identity.0",
         "item": 0,
         "kind": "business"
-      }
+      },
+      "maxCharacters": 12,
+      "maxCharactersFrom": "declared by the theme: the business name is printed as visible words only in the footer copyright line (Footer.astro, `{name}` of `copyright`), so the number is the name's length; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 155 at 1440 px, 62 at 768 px, 12 at 390 px"
     },
     {
       "key": "chrome.chrome.donate_label",
@@ -18254,7 +18302,9 @@
       "type": "text",
       "sample": "About us | /about\nTerm of service\nCareers\nAffiliates",
       "label": "Footer col1 links",
-      "role": "editorial.menu_label"
+      "role": "editorial.menu_label",
+      "maxCharacters": 72,
+      "maxCharactersFrom": "declared by the theme: 4 plain lines, one list row each in footer column 1; filled with running text until a row gains a line (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 23 at 1440 px, 15 at 768 px, 19 at 390 px characters per line, so 4 x 15 plus the 3 line breaks plus 9 characters of link addresses (` | /path`) the demo lines carry"
     },
     {
       "key": "chrome.chrome.footer_col2_title",
@@ -18280,7 +18330,9 @@
       "type": "text",
       "sample": "Store Locations\nRegistry\nBlog | /blog\nShipping info",
       "label": "Footer col2 links",
-      "role": "editorial.menu_label"
+      "role": "editorial.menu_label",
+      "maxCharacters": 71,
+      "maxCharactersFrom": "declared by the theme: 4 plain lines, one list row each in footer column 2; filled with running text until a row gains a line (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 23 at 1440 px, 15 at 768 px, 19 at 390 px characters per line, so 4 x 15 plus the 3 line breaks plus 8 characters of link addresses (` | /path`) the demo lines carry"
     },
     {
       "key": "chrome.chrome.footer_col3_title",
@@ -18306,7 +18358,9 @@
       "type": "text",
       "sample": "Help & FAQs | /help-faqs\nYour account\nTrack your order\nContact info | /contact",
       "label": "Footer col3 links",
-      "role": "editorial.menu_label"
+      "role": "editorial.menu_label",
+      "maxCharacters": 85,
+      "maxCharactersFrom": "declared by the theme: 4 plain lines, one list row each in footer column 3; filled with running text until a row gains a line (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 23 at 1440 px, 15 at 768 px, 19 at 390 px characters per line, so 4 x 15 plus the 3 line breaks plus 22 characters of link addresses (` | /path`) the demo lines carry"
     },
     {
       "key": "chrome.chrome.footer_col4_title",
@@ -18350,7 +18404,9 @@
         "id": "chrome.chrome.identity.0",
         "item": 0,
         "kind": "business"
-      }
+      },
+      "maxCharacters": 52,
+      "maxCharactersFrom": "declared by the theme: the whole copyright line is one paragraph in the footer; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 195 at 1440 px, 101 at 768 px, 52 at 390 px"
     },
     {
       "key": "chrome.chrome.license_line",
@@ -18415,7 +18471,9 @@
       "type": "text",
       "sample": "Previous",
       "label": "Prev label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "nonVisual": true,
+      "nonVisualFrom": "used only as the accessible name (`aria-label`) of the round previous/next arrows of the cause slider and of the pagination: the arrows draw an icon and no words, so no box limits the words"
     },
     {
       "key": "chrome.chrome.next_label",
@@ -18428,7 +18486,9 @@
       "type": "text",
       "sample": "Next",
       "label": "Next label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "nonVisual": true,
+      "nonVisualFrom": "used only as the accessible name (`aria-label`) of the round previous/next arrows of the cause slider and of the pagination: the arrows draw an icon and no words, so no box limits the words"
     },
     {
       "key": "chrome.chrome.more_label",
@@ -18909,7 +18969,9 @@
       "type": "text",
       "sample": "Search",
       "label": "Search label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 52,
+      "maxCharactersFrom": "declared by the theme: the label above the search field of the search page (one line, 877 px at 1440 px); filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 127 at 1440 px, 101 at 768 px, 52 at 390 px"
     },
     {
       "key": "chrome.chrome.search_placeholder",
@@ -18922,7 +18984,9 @@
       "type": "text",
       "sample": "Search\u2026",
       "label": "Search placeholder",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 39,
+      "maxCharactersFrom": "declared by the theme: the placeholder of the search box in the sidebar; the number is the width of the field's text area; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 46 at 1440 px, 88 at 768 px, 39 at 390 px"
     },
     {
       "key": "chrome.chrome.search_button",
@@ -18987,7 +19051,9 @@
       "type": "text",
       "sample": "Name",
       "label": "Newsletter name label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 40,
+      "maxCharactersFrom": "declared by the theme: the placeholder of the newsletter Name field (its visible label is read by screen readers only); the number is the width of the field's text area; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 50 at 1440 px, 50 at 768 px, 40 at 390 px"
     },
     {
       "key": "chrome.chrome.newsletter_email_label",
@@ -19000,7 +19066,9 @@
       "type": "text",
       "sample": "Email",
       "label": "Newsletter email label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "maxCharacters": 40,
+      "maxCharactersFrom": "declared by the theme: the placeholder of the newsletter Email field (its visible label is read by screen readers only); the number is the width of the field's text area; filled with Latin running text until it gains a row beyond today's rows or runs past its box (Playwright, Chromium, 1440 / 768 / 390 px, on a clean install of this theme, perf/slot-limits.mjs): 50 at 1440 px, 50 at 768 px, 40 at 390 px"
     },
     {
       "key": "chrome.chrome.newsletter_button",
@@ -19039,7 +19107,9 @@
       "type": "text",
       "sample": "Play video",
       "label": "Play label",
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "nonVisual": true,
+      "nonVisualFrom": "used only as the accessible name (`aria-label`) of the round play button of the Stay connected video: the button draws an icon and no words, so no box limits the words"
     },
     {
       "key": "chrome.chrome.slides_label",
