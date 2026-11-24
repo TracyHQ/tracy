@@ -10894,7 +10894,7 @@
             "height": 48
           },
           "phone": {
-            "width": 310,
+            "width": 358,
             "height": 34
           }
         },
@@ -10904,7 +10904,7 @@
         },
         "maxChars": {
           "desktop": 20,
-          "phone": 21
+          "phone": 24
         },
         "maxCharacters": 20,
         "casing": "none",
@@ -10931,7 +10931,7 @@
             "height": 86
           },
           "phone": {
-            "width": 310,
+            "width": 358,
             "height": 86
           }
         },
@@ -10941,9 +10941,9 @@
         },
         "maxChars": {
           "desktop": 147,
-          "phone": 105
+          "phone": 120
         },
-        "maxCharacters": 105,
+        "maxCharacters": 120,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -30474,7 +30474,7 @@
             "height": 58
           },
           "phone": {
-            "width": 150,
+            "width": 358,
             "height": 58
           }
         },
@@ -30484,9 +30484,9 @@
         },
         "maxChars": {
           "desktop": 49,
-          "phone": 35
+          "phone": 41
         },
-        "maxCharacters": 35,
+        "maxCharacters": 41,
         "casing": "none",
         "overflow": "rewrite"
       }

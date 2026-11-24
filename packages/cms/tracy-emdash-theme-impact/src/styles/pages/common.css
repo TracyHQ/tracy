@@ -60,6 +60,6 @@
 	.im-prose-row img { display: block; width: 100%; height: auto; border-radius: var(--ds-card-radius, 8px); }
 }
 @layer components {
-	.im-prose h3 { font-size: var(--h3-size); margin-top: 48px; }
+	.im-prose h3 { margin-top: 48px; }
 	.im-pagination a, .im-pagination span { min-width: 48px; height: 48px; }
 }
