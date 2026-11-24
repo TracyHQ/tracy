@@ -8,7 +8,7 @@ export type Article = Record<string, any> & { slug: string; id: string }
 /** Every published entry of a collection with its slug as `slug`, in the order the seed gave them (donations, events) or newest first (posts). */
 export async function loadArticles(collection: 'posts' | 'donations' | 'events', locale: Locale): Promise<Article[]> {
   const { entries } = await getEmDashCollection(collection, { locale, status: 'published' })
-  const rows = entries.map((e: any) => ({ ...(e.data as Record<string, any>), slug: e.id as string, id: e.data.id as string }))
+  const rows: Article[] = entries.map((e: any) => ({ ...(e.data as Record<string, any>), slug: e.id as string, id: e.data.id as string }))
   // events and donations keep the order the source gives them (Joomla `ordering`, then id); the store does not promise insertion order
   if (collection !== 'posts') return rows.sort((a, b) => Number(a.ordering ?? 0) - Number(b.ordering ?? 0) || (a.slug < b.slug ? -1 : 1))
   return rows.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : a.slug < b.slug ? -1 : 1))

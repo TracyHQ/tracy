@@ -1,7 +1,14 @@
 ---
 /** STUB: this view is built in P5 (STATUS.md). */
 import NotFound from '@/views/NotFound.astro'
-const props = Astro.props
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  slug?: string
+}
+const { chrome, locale } = Astro.props
 ---
 
-<NotFound {...props} />
+<NotFound chrome={chrome} locale={locale} />

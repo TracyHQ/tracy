@@ -1,3 +1,4 @@
+export {}
 // The behaviours of the page that need a script: carousels (scroll-snap tracks with dots and arrows), the hero's dots and the video dialog.
 // Everything works without it: the tracks scroll by touch and keyboard, the dialog is a link-less button that does nothing until the script runs.
 for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
@@ -54,7 +55,7 @@ document.querySelectorAll<HTMLElement>('[data-video]').forEach((b) =>
     dialog.showModal()
   })
 )
-const stop = () => frame?.replaceChildren()
+const clearVideo = () => frame?.replaceChildren()
 dialog?.querySelector('[data-video-close]')?.addEventListener('click', () => dialog.close())
-dialog?.addEventListener('close', stop)
+dialog?.addEventListener('close', clearVideo)
 dialog?.addEventListener('click', (e) => { if (e.target === dialog) dialog.close() })

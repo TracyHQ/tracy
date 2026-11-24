@@ -1,0 +1,38 @@
+---
+/**
+ * The body of an article (post, donation or event): Portable Text through EmDash's renderer, with the pictures of one run grouped
+ * so two or more sit side by side (Portable Text is flat: a renderer sees one block at a time), links to pages the customer
+ * unticked drawn as plain text, and the provenance stamps of the Content API on a stamped request.
+ */
+import { PortableText } from 'emdash/ui'
+import ArticleImages from '@/components/site/ArticleImages.astro'
+import ProseBlock from '@/components/site/ProseBlock.astro'
+import ProseListItem from '@/components/site/ProseListItem.astro'
+import ProseQuote from '@/components/site/ProseQuote.astro'
+import { stampBlocks, type Stamp } from '@/lib/stamps'
+import { liveBlocks } from '@/lib/link-gate'
+
+interface Props {
+  value: unknown
+  /** The entry's stamp function (`stampFor(Astro.request, <collection>, <entry>)`). */
+  stamp: Stamp
+  locale: string
+  field?: string
+}
+const { value, stamp, locale, field = 'body' } = Astro.props
+const stamped = await liveBlocks(Astro.request, locale, stampBlocks(stamp, field, value as any))
+const blocks: any[] = []
+for (const b of stamped as any[]) {
+  const last = blocks[blocks.length - 1]
+  if (b?._type === 'image') {
+    if (last?._type === 'imImages') last.images.push(b)
+    else blocks.push({ _type: 'imImages', _key: `img-${b._key}`, images: [b] })
+  } else blocks.push(b)
+}
+const components = {
+  type: { imImages: ArticleImages, ...(stamp.owner ? { blockquoteGroup: ProseQuote } : {}) },
+  ...(stamp.owner ? { block: ProseBlock, listItem: ProseListItem } : {})
+}
+---
+
+<div class="im-prose" {...stamp(field)}><PortableText value={blocks} components={components} /></div>
