@@ -1,5 +1,7 @@
 /* Contact: the location tile and the form on the left, the contact and hours cards on the right; the Forms plugin's markup (.ec-form) is dressed here */
 @layer components {
+	.im-privacy-title { margin: 0 0 8px; font-weight: 600; color: var(--color-heading); }
+	.im-privacy-star { margin-inline-start: 4px; color: var(--color-danger); }
 	.im-contact { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
 	@media (min-width: 992px) { .im-contact { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 64px; } }
 	@media (min-width: 1200px) { .im-contact { grid-template-columns: minmax(0, 875fr) minmax(0, 405fr); } }

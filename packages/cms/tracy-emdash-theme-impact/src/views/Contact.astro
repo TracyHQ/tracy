@@ -90,6 +90,7 @@ const dead = [
 												</div>
 											))}
 											<div class="ec-form-field ec-form-field--checkbox">
+												{c.privacy_title && <p class="im-privacy-title"><span {...$c('privacy_title')}>{c.privacy_title}</span><span class="im-privacy-star" aria-hidden="true">*</span></p>}
 												<label class="ec-form-checkbox-label"><input type="checkbox" name="privacy" required /> <span {...$c('privacy_text')}>{c.privacy_text}</span> <span class="sr-only" {...$c('required_label')}>{c.required_label}</span></label>
 											</div>
 											<div class="ec-form-field ec-form-field--checkbox">

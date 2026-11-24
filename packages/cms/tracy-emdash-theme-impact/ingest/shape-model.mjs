@@ -434,7 +434,7 @@ model.records.push({
     location_title: decode(cd.name),
     map_label: 'Open in Google Maps',
     form_title: 'Drop Us a Line',
-    form_intro: "Want to reach out? We'd love to hear from you.",
+    form_intro: "Want to reach out? We'd love to hear from you!",
     first_name_label: 'First name',
     email_field_label: 'Email address',
     subject_label: 'Your subject',

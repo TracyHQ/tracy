@@ -17,6 +17,7 @@ interface Props {
   chrome: Chrome
 }
 const { chrome } = Astro.props
+const here = Astro.url.pathname.replace(/\/$/, '') || '/'
 const { site, locale } = chrome
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const settings = await getSiteSettings()
@@ -71,7 +72,7 @@ const target = (link: unknown) =>
 				<div class="im-footnav-col">
 					<h3 {...$c(`footer_col${c.n}_title`)}>{c.title}</h3>
 					<ul {...$c(`footer_col${c.n}_links`)}>
-						{c.links.map((l) => <li>{l.path && live(l.path) ? <a href={dataHref(l.path, (p) => href(locale, p))!}>{l.label}</a> : <span>{l.label}</span>}</li>)}
+						{c.links.map((l) => <li>{l.path && live(l.path) ? <a href={dataHref(l.path, (p) => href(locale, p))!} aria-current={l.path === here ? 'page' : undefined}>{l.label}</a> : <span>{l.label}</span>}</li>)}
 					</ul>
 				</div>
 			))}

@@ -6,10 +6,10 @@
 	.im-masthead-in { position: relative; }
 	.im-masthead-title { font-size: var(--h2-size); line-height: 1.1; margin: 0 0 24px; color: #fff; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
 	.im-crumbs ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0; font-size: 14px; line-height: 26px; }
-	.im-crumbs li + li::before { content: "›"; margin-inline: 12px; opacity: .8; }
+	.im-crumbs li:not(:last-child)::after { content: "›"; margin-inline: 12px; opacity: .8; }
 	.im-crumbs a, .im-crumbs span { color: var(--color-fg); }
 	.im-crumbs.on-band a, .im-crumbs.on-band span { color: #fff; font-size: 16px; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
-	.im-crumbs.on-band li + li::before { color: #fff; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
+	.im-crumbs.on-band li:not(:last-child)::after { color: #fff; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
 	.im-crumb-bar { background: var(--color-line-soft); padding-block: 32px; }
 	html[data-theme="dark"] .im-crumb-bar { background: var(--color-surface-warm); }
 
