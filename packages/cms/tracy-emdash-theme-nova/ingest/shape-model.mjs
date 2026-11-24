@@ -400,6 +400,18 @@ model.site = { ...model.site, title: { en: 'JA Nova' }, tagline: { en: '' } }
   for (const r of model.records) if (r.type !== 'posts' && r.type !== 'pages') r.values = walk(r.values)
 }
 
+// ---- the social row of the blog list and the contact page (module 119, custom HTML) is a second social entry; its demo links point at the vendor's site, so they are left empty
+{
+  const html = inventory.modules.find((m) => String(m.id) === '119').content
+  const items = [...html.matchAll(/<li class="(\w+)">[\s\S]*?fa-(\w+)/g)].map((m) => ({ font_icon: `fa-brands fa-${m[2]}`, title: m[1][0].toUpperCase() + m[1].slice(1), link: '' }))
+  model.records.push({ type: 'social', slug: 'social-page', locale: 'en', status: 'published', values: { social_style: '1', title: 'Social page', items } })
+}
+// the services page shows its cards without the "View all services" button of the Home copy
+{
+  const r = model.records.find((x) => x.type === 'features_intro' && x.slug === 'services-cards')
+  Object.assign(r.values, { bottom_btn_title: '', bottom_btn_link: '', bottom_btn_type: '' })
+}
+
 // ---- a scalar field that arrives as a list holds the first non-empty value
 for (const r of model.records) {
   const type = model.types.find((t) => t.name === r.type)

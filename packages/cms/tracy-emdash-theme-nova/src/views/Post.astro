@@ -43,7 +43,7 @@ if (post && isProject && intro && paragraphs(body)[0] === intro) {
   const i = (body as any[]).findIndex((b) => b?._type === 'block' && !b.listItem && (b.style ?? 'normal') === 'normal' && (b.children ?? []).map((c: any) => c?.text ?? '').join('').trim() === intro)
   body = (body as any[]).filter((_, j) => j !== i)
 }
-const stamped = post ? stampBlocks($p, 'body', body) : []
+const stamped = post ? stampBlocks($p, 'body', body as any[]) : []
 const tags = post ? tagsOf(post) : []
 const catLabel = post?.category?.label ?? ''
 const trail = post

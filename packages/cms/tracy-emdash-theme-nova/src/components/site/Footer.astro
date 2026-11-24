@@ -41,7 +41,7 @@ const ctaInfo = (layout.sections as Record<string, { type: string; style: string
 const ctaRow = await section('cta', 'cta-contact', locale)
 ---
 
-{ctaRow && ctaInfo && <Cta chrome={chrome} row={ctaRow} style={ctaInfo.style} info={ctaInfo} />}
+{ctaRow && ctaInfo && <Cta chrome={chrome} row={ctaRow} style={ctaInfo.style} info={ctaInfo as any} />}
 <footer class="nv-footer">
 	<div class="nv-container">
 		<div class="nv-footer-info">

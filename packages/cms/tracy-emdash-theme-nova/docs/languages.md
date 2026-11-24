@@ -1,9 +1,5 @@
 # Languages
 
-DOCS_REQUIRED: Describe configured locales, default-prefix policy, translation
-relationships, switcher URLs, localized menus/forms and canonical/hreflang behavior.
+Read ../AGENTS.md and generated/inventory.md. One stored locale, `en` (`template.config.json`, `src/lib/i18n.ts` `LOCALES`), never prefixed (a prefix would 404 the admin) and with no `i18n.fallback` (a fallback would turn a 404 under a locale into a 302). `<html lang>` and hreflang follow the display tag `tools/personalize.mjs` may write (`src/lib/display-locale.ts`): the root stays `en` while the page can say, for example, `en-US` or another language the customer chose; the words the template prints itself come from `src/lib/ui-words.ts` by display tag, falling back to English. Canonical = path plus `page`; every indexable page names its alternates and `x-default` (audit policy in `template.config.json`). There are no localized menus or forms: the contact form is `contact-en`. Unknown paths answer 404.
 
-Read ../AGENTS.md and generated/inventory.md. Use native CMS i18n where supported;
-do not install another translation layer merely because the site has two languages.
-Do not assume EN/RU or Northgate conventions apply to every template. Explain
-missing translations, unknown-path status and the work required to add a locale.
+To add a stored locale: add it to `LOCALES` (`src/lib/i18n.ts`) and to `i18n.locales` in `astro.config.mjs` and `template.config.json`, translate the entries in the admin (native EmDash i18n), add a localized form binding, and re-run the audit. `seed/questions.json` lists the questionnaire languages for personalization; they are not site locales.

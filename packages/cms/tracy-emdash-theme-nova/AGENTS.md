@@ -1,6 +1,6 @@
 # Installed template: agent instructions
 
-DOCS_REQUIRED: Identify this template and its supported runtime from package/config.
+This is **JA Nova** (`tracy-nova`, version 0.1.0): Tracy's EmDash business and start-up template ported from JoomlArt's Joomla 6 template JA Nova (release `quickstart/ja-nova/j6` 1.0.12). EmDash 1.1.0 on Astro 7.4.12 (SSR, Node adapter), Tailwind CSS 4.3.3, English only. Identity and wiring: `template.config.json`; pins: `package.json`, `pnpm-lock.yaml`.
 
 Read docs/architecture.md before changing the application. Use docs/install.md for
 an empty-target install and docs/content-api.md before touching CMS state. Identify

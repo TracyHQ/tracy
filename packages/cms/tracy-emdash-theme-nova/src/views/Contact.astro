@@ -28,7 +28,7 @@ const $p = stampFor(Astro.request, 'pages', page)
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const banner = c ? mediaUrl(c.banner) : null
 const heading = lines(c?.heading)
-const social = chrome.social.social
+const social = chrome.social['social-page']
 const tel = c ? telHref(c.phone) : null
 const cards = c
   ? [
@@ -75,7 +75,7 @@ if (!c) Astro.response.status = 404
 									<div class="nv-contact-follow">
 										<h4 {...$k('follow_label')}>{c.follow_label}</h4>
 										<ul class="nv-contact-links">
-											{social.items.map((s) => {
+											{social.items.map((s: any) => {
 												const url = dataHref(s.link, (p) => href(locale, p))
 												return <li class={`is-${networkOf(s.font_icon, s.title)}`}>{url ? <a href={url} aria-label={s.title} target="_blank" rel="noopener noreferrer"><SocialIcon name={networkOf(s.font_icon, s.title)} size={16} /></a> : <span role="img" aria-label={s.title}><SocialIcon name={networkOf(s.font_icon, s.title)} size={16} /></span>}</li>
 											})}

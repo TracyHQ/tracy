@@ -61,7 +61,7 @@ const rows = await Promise.all(
   }
   if (!r.row || !r.info) return null
   const t = r.info.type
-  const common = { chrome, row: r.row, style: r.info.style, info: r.info }
+  const common = { chrome, row: r.row, style: r.info.style, info: r.info as any }
   return t === 'hero' ? <Hero {...common} /> :
     t === 'features_intro' ? <FeaturesIntro {...common} /> :
     t === 'text_slider' ? <TextSlider {...common} /> :

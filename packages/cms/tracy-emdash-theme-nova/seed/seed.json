@@ -4621,9 +4621,9 @@
 					],
 					"main_title": "<span class=\"text-red\">Start building</span> the products your customers want",
 					"bottom_desc": "",
-					"bottom_btn_title": "View all services",
-					"bottom_btn_link": "/services",
-					"bottom_btn_type": "primary"
+					"bottom_btn_title": "",
+					"bottom_btn_link": "",
+					"bottom_btn_type": ""
 				}
 			},
 			{
@@ -5035,6 +5035,33 @@
 					"bottom_btn_title": "",
 					"bottom_btn_link": "",
 					"bottom_btn_type": ""
+				}
+			},
+			{
+				"id": "social:social-page:en",
+				"slug": "social-page",
+				"status": "published",
+				"locale": "en",
+				"data": {
+					"social_style": "1",
+					"title": "Social page",
+					"items": [
+						{
+							"font_icon": "fa-brands fa-facebook",
+							"title": "Facebook",
+							"link": ""
+						},
+						{
+							"font_icon": "fa-brands fa-twitter",
+							"title": "Twitter",
+							"link": ""
+						},
+						{
+							"font_icon": "fa-brands fa-youtube",
+							"title": "Youtube",
+							"link": ""
+						}
+					]
 				}
 			}
 		],

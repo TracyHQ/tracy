@@ -122,7 +122,7 @@ const skipStamp = stampFor(Astro.request, 'chrome', chrome.entry)('skip_label')
 		{/* The template's icon only while the customer has none: EmDashHead prints theirs from settings.favicon. */}
 		{templateIconWanted(settings) && <link rel="icon" href="/favicon.svg" type="image/svg+xml" />}
 		<meta name="color-scheme" content="light dark" />
-		{fonts.map((f) => <Font cssVariable={f.cssVariable as any} preload={f.preload !== false} />)}
+		{fonts.map((f: any) => <Font cssVariable={f.cssVariable as any} preload={f.preload !== false} />)}
 		<EmDashHead page={pageCtx} />
 		{dsSlot?.fontsHref && <link rel="stylesheet" href={dsSlot.fontsHref} />}
 		{dsSlot && <style id="tracy-ds-slot" data-ds={dsSlot.id ?? ''} set:html={dsSlot.css} />}

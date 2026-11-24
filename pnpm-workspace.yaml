@@ -29,6 +29,8 @@ packages:
   - '!packages/cms/tracy-emdash-theme-essence'
   # Same shape, same reason: JA Fresco, the EmDash template built from the JA Fresco Joomla site.
   - '!packages/cms/tracy-emdash-theme-fresco'
+  # Same shape, same reason: JA Nova, the EmDash template built from the JA Nova Joomla (T4) site.
+  - '!packages/cms/tracy-emdash-theme-nova'
   # SPIKE: dsh as workspace source instead of registry.
   - vendor/tracy/dsh-better-locale
   - vendor/tracy/dsh-better-sidebar

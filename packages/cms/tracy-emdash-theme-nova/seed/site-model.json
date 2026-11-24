@@ -1954,9 +1954,9 @@
         ],
         "main_title": "<span class=\"text-red\">Start building</span> the products your customers want",
         "bottom_desc": "",
-        "bottom_btn_title": "View all services",
-        "bottom_btn_link": "/services",
-        "bottom_btn_type": "primary"
+        "bottom_btn_title": "",
+        "bottom_btn_link": "",
+        "bottom_btn_type": ""
       }
     },
     {
@@ -3959,6 +3959,33 @@
         "banner": "images/joomlart/others/bg-contact.jpg",
         "socials": "",
         "form_id": ""
+      }
+    },
+    {
+      "type": "social",
+      "slug": "social-page",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "social_style": "1",
+        "title": "Social page",
+        "items": [
+          {
+            "font_icon": "fa-brands fa-facebook",
+            "title": "Facebook",
+            "link": ""
+          },
+          {
+            "font_icon": "fa-brands fa-twitter",
+            "title": "Twitter",
+            "link": ""
+          },
+          {
+            "font_icon": "fa-brands fa-youtube",
+            "title": "Youtube",
+            "link": ""
+          }
+        ]
       }
     }
   ],

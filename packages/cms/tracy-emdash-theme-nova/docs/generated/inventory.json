@@ -1,0 +1,1791 @@
+{
+  "format": 1,
+  "scope": "Source baseline only. No live IDs, credentials, entry bodies or runtime verification.",
+  "template": {
+    "id": "tracy-nova",
+    "label": "JA Nova",
+    "version": "0.1.0"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "collections": [
+    {
+      "slug": "pages",
+      "label": "Pages",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "view",
+          "label": "View",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "banner",
+          "label": "Banner",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "summary",
+          "label": "Summary",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sub_title",
+          "label": "Sub title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 14
+    },
+    {
+      "slug": "posts",
+      "label": "Posts",
+      "routable": true,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "excerpt",
+          "label": "Excerpt",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "required": false
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "cover",
+          "label": "Cover",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "created",
+          "label": "Created",
+          "type": "datetime",
+          "required": false
+        },
+        {
+          "slug": "author",
+          "label": "Author",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "author_avatar",
+          "label": "Author avatar",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "tags",
+          "label": "Tags",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "hits",
+          "label": "Hits",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "kind",
+          "label": "Kind",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "banner",
+          "label": "Banner",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "project_client",
+          "label": "Project client",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "project_budget",
+          "label": "Project budget",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "project_client_name",
+          "label": "Project client name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "project_services",
+          "label": "Project services",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "project_date",
+          "label": "Project date",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "project_link",
+          "label": "Project link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "sort",
+          "label": "Sort",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "path",
+          "label": "Path",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 45
+    },
+    {
+      "slug": "hero",
+      "label": "hero",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "image_decor",
+          "label": "Image decor",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "desc",
+          "label": "Desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "button",
+          "label": "Button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_link",
+          "label": "Btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_type",
+          "label": "Btn type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "button_2",
+          "label": "Button 2",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_link_2",
+          "label": "Btn link 2",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_type_2",
+          "label": "Btn type 2",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "features_intro",
+      "label": "features intro",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "intro_img",
+          "label": "Intro img",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "align_media",
+          "label": "Align media",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "info_title",
+          "label": "Info title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "info_desc",
+          "label": "Info desc",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "info_icon",
+          "label": "Info icon",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "info_cta",
+          "label": "Info cta",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "button",
+          "label": "Button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_link",
+          "label": "Btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_type",
+          "label": "Btn type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "columns",
+          "label": "Columns",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "align",
+          "label": "Align",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image_type",
+          "label": "Image type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "ft_title",
+          "label": "Ft title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "content_featured",
+          "label": "Content featured",
+          "type": "text",
+          "required": false
+        },
+        {
+          "slug": "description",
+          "label": "Description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "id_video",
+          "label": "Id video",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "image",
+          "label": "Image",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "subtitle",
+          "label": "Subtitle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "main_title",
+          "label": "Main title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_desc",
+          "label": "Bottom desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_title",
+          "label": "Bottom btn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_link",
+          "label": "Bottom btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_type",
+          "label": "Bottom btn type",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 13
+    },
+    {
+      "slug": "text_slider",
+      "label": "text slider",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "slide_direct",
+          "label": "Slide direct",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "autoplay",
+          "label": "Autoplay",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "auto_time",
+          "label": "Auto time",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "main_title",
+          "label": "Main title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_desc",
+          "label": "Bottom desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_title",
+          "label": "Bottom btn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_link",
+          "label": "Bottom btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_type",
+          "label": "Bottom btn type",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "cta",
+      "label": "cta",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "cta_title",
+          "label": "Cta title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_desc",
+          "label": "Cta desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "cta_link",
+          "label": "Cta link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_type",
+          "label": "Btn type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "main_title",
+          "label": "Main title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_desc",
+          "label": "Bottom desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_title",
+          "label": "Bottom btn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_link",
+          "label": "Bottom btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_type",
+          "label": "Bottom btn type",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "clients",
+      "label": "clients",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "col_lg",
+          "label": "Col lg",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "col_md",
+          "label": "Col md",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "col_xs",
+          "label": "Col xs",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "slide_direct",
+          "label": "Slide direct",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "autoplay",
+          "label": "Autoplay",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "auto_time",
+          "label": "Auto time",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "main_title",
+          "label": "Main title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_desc",
+          "label": "Bottom desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_title",
+          "label": "Bottom btn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_link",
+          "label": "Bottom btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_type",
+          "label": "Bottom btn type",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "teams",
+      "label": "teams",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "team_desc",
+          "label": "Team desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "columns",
+          "label": "Columns",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "main_title",
+          "label": "Main title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_desc",
+          "label": "Bottom desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_title",
+          "label": "Bottom btn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_link",
+          "label": "Bottom btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_type",
+          "label": "Bottom btn type",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "pricing",
+      "label": "pricing",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "main_title",
+          "label": "Main title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_desc",
+          "label": "Bottom desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_title",
+          "label": "Bottom btn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_link",
+          "label": "Bottom btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_type",
+          "label": "Bottom btn type",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "accordion",
+      "label": "accordion",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "info_title",
+          "label": "Info title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "info_desc",
+          "label": "Info desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "button",
+          "label": "Button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_link",
+          "label": "Btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "btn_type",
+          "label": "Btn type",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "main_title",
+          "label": "Main title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_desc",
+          "label": "Bottom desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_title",
+          "label": "Bottom btn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_link",
+          "label": "Bottom btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_type",
+          "label": "Bottom btn type",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "social",
+      "label": "social",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "social_style",
+          "label": "Social style",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "items",
+          "label": "Items",
+          "type": "repeater",
+          "required": false
+        },
+        {
+          "slug": "main_title",
+          "label": "Main title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_desc",
+          "label": "Bottom desc",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_title",
+          "label": "Bottom btn title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_link",
+          "label": "Bottom btn link",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "bottom_btn_type",
+          "label": "Bottom btn type",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 2
+    },
+    {
+      "slug": "chrome",
+      "label": "Site chrome",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "brand_name",
+          "label": "Brand name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "header_phone",
+          "label": "Header phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "header_email",
+          "label": "Header email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_about",
+          "label": "Footer about",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_company_title",
+          "label": "Footer company title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_work_title",
+          "label": "Footer work title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "footer_services_title",
+          "label": "Footer services title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "copyright",
+          "label": "Copyright",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "skip_label",
+          "label": "Skip label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "menu_label",
+          "label": "Menu label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "close_label",
+          "label": "Close label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "prev_label",
+          "label": "Prev label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "next_label",
+          "label": "Next label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "more_label",
+          "label": "More label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "read_more",
+          "label": "Read more",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "by_label",
+          "label": "By label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "tags_label",
+          "label": "Tags label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "share_label",
+          "label": "Share label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_code",
+          "label": "Not found code",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_title",
+          "label": "Not found title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_text",
+          "label": "Not found text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "not_found_back_label",
+          "label": "Not found back label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_label",
+          "label": "Search label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_placeholder",
+          "label": "Search placeholder",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_button",
+          "label": "Search button",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "no_results",
+          "label": "No results",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "theme_toggle_label",
+          "label": "Theme toggle label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "breadcrumb_home",
+          "label": "Breadcrumb home",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "categories_all_label",
+          "label": "Categories all label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "client_label",
+          "label": "Client label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "services_label",
+          "label": "Services label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "date_label",
+          "label": "Date label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "completed_label",
+          "label": "Completed label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "see_live_label",
+          "label": "See live label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "budget_label",
+          "label": "Budget label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "client_name_label",
+          "label": "Client name label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "recent_work_title",
+          "label": "Recent work title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "related_title",
+          "label": "Related title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "latest_news_title",
+          "label": "Latest news title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "popular_tags_title",
+          "label": "Popular tags title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "service_menu_title",
+          "label": "Service menu title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "follow_label",
+          "label": "Follow label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subscribe_label",
+          "label": "Subscribe label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "logo_dark",
+          "label": "Logo dark",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "social_items",
+          "label": "Social items",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "show_more_label",
+          "label": "Show more label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "show_less_label",
+          "label": "Show less label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "play_video_label",
+          "label": "Play video label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "nav_label",
+          "label": "Nav label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "breadcrumb_label",
+          "label": "Breadcrumb label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "logo_text",
+          "label": "Logo text",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "all_projects_label",
+          "label": "All projects label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "project_tabs_title",
+          "label": "Project tabs title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "project_tabs_nav_label",
+          "label": "Project tabs nav label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "view_all_news_label",
+          "label": "View all news label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "prev_article_label",
+          "label": "Prev article label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "next_article_label",
+          "label": "Next article label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "article_nav_label",
+          "label": "Article nav label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "page_counter_label",
+          "label": "Page counter label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "page_title_label",
+          "label": "Page title label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pager_page_label",
+          "label": "Pager page label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pager_goto_label",
+          "label": "Pager goto label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pager_first_label",
+          "label": "Pager first label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pager_prev_label",
+          "label": "Pager prev label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pager_next_label",
+          "label": "Pager next label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pager_last_label",
+          "label": "Pager last label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "pager_nav_label",
+          "label": "Pager nav label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "share_facebook_label",
+          "label": "Share facebook label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "share_twitter_label",
+          "label": "Share twitter label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "share_reddit_label",
+          "label": "Share reddit label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_terms_label",
+          "label": "Search terms label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_page_title",
+          "label": "Search page title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "search_results_line",
+          "label": "Search results line",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "blog_title",
+          "label": "Blog title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "project_title",
+          "label": "Project title",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    },
+    {
+      "slug": "contact",
+      "label": "Contact",
+      "routable": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "address_label",
+          "label": "Address label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "address",
+          "label": "Address",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone_label",
+          "label": "Phone label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone",
+          "label": "Phone",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email_label",
+          "label": "Email label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email",
+          "label": "Email",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "heading",
+          "label": "Heading",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "intro",
+          "label": "Intro",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "follow_label",
+          "label": "Follow label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "name_label",
+          "label": "Name label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "email_field_label",
+          "label": "Email field label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "phone_field_label",
+          "label": "Phone field label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "subject_label",
+          "label": "Subject label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "message_label",
+          "label": "Message label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "submit_label",
+          "label": "Submit label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "banner",
+          "label": "Banner",
+          "type": "image",
+          "required": false
+        },
+        {
+          "slug": "socials",
+          "label": "Socials",
+          "type": "string",
+          "required": false
+        },
+        {
+          "slug": "form_id",
+          "label": "Form id",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "seedEntries": 1
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": "Primary",
+      "locale": "en",
+      "items": 10
+    },
+    {
+      "name": "services",
+      "label": "Services",
+      "locale": "en",
+      "items": 7
+    },
+    {
+      "name": "footer-company",
+      "label": "Company",
+      "locale": "en",
+      "items": 3
+    },
+    {
+      "name": "footer-work",
+      "label": "Work",
+      "locale": "en",
+      "items": 4
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "locale": "en",
+      "collections": [
+        "posts"
+      ],
+      "terms": 7
+    }
+  ],
+  "formBindings": [
+    {
+      "form": "contact-{locale}",
+      "collection": "contact",
+      "slug": "contact-layout",
+      "field": "form_id"
+    }
+  ],
+  "dependencies": {
+    "@astrojs/node": "11.1.13",
+    "@astrojs/react": "6.0.0",
+    "@cloudflare/kumo": "2.6.0",
+    "@emdash-cms/auth": "1.1.0",
+    "@emdash-cms/plugin-audit-log": "0.2.3",
+    "@emdash-cms/plugin-forms": "0.2.9",
+    "@phosphor-icons/react": "2.1.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.4.12",
+    "better-sqlite3": "12.11.1",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "emdash": "1.1.0",
+    "emdash-smtp": "0.3.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0",
+    "lucide-react": "1.45.0",
+    "radix-ui": "1.6.7",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3"
+  },
+  "dependencyNotice": "Declared pins only; enabled plugin registration is owned by astro.config.mjs. Native CMS capabilities need not be separate dependencies.",
+  "routeFiles": [
+    "src/pages/404.astro",
+    "src/pages/[...path].astro"
+  ],
+  "routeNotice": "Route source files only, not expanded URLs. Dynamic/catch-all dispatch and CMS routes require authored guidance and runtime crawl evidence.",
+  "sourceFiles": [
+    "src/components/blocks/Accordion.astro",
+    "src/components/blocks/CategoryTabs.astro",
+    "src/components/blocks/Clients.astro",
+    "src/components/blocks/Cta.astro",
+    "src/components/blocks/FeaturesIntro.astro",
+    "src/components/blocks/Hero.astro",
+    "src/components/blocks/LatestNews.astro",
+    "src/components/blocks/NewsBand.astro",
+    "src/components/blocks/PopularTags.astro",
+    "src/components/blocks/Pricing.astro",
+    "src/components/blocks/RecentWork.astro",
+    "src/components/blocks/RelatedPosts.astro",
+    "src/components/blocks/Sections.astro",
+    "src/components/blocks/Social.astro",
+    "src/components/blocks/Teams.astro",
+    "src/components/blocks/TextSlider.astro",
+    "src/components/blocks/features/ArticleCards.astro",
+    "src/components/blocks/features/Style1.astro",
+    "src/components/blocks/features/Style2.astro",
+    "src/components/blocks/features/Style3.astro",
+    "src/components/blocks/features/Style4.astro",
+    "src/components/blocks/features/Style5.astro",
+    "src/components/blocks/features/Style6.astro",
+    "src/components/blocks/features/Style7.astro",
+    "src/components/blocks/features/links.ts",
+    "src/components/site/ArticleBody.astro",
+    "src/components/site/ArticleImageRow.astro",
+    "src/components/site/BrandLogo.astro",
+    "src/components/site/Breadcrumbs.astro",
+    "src/components/site/ChromeIcon.astro",
+    "src/components/site/ContactForm.astro",
+    "src/components/site/ContactFormWords.astro",
+    "src/components/site/ContactGlyph.astro",
+    "src/components/site/FileGlyph.astro",
+    "src/components/site/Footer.astro",
+    "src/components/site/FormWords.astro",
+    "src/components/site/Header.astro",
+    "src/components/site/Icon.astro",
+    "src/components/site/NovaLogo.astro",
+    "src/components/site/OffCanvas.astro",
+    "src/components/site/PageOwner.astro",
+    "src/components/site/Pager.astro",
+    "src/components/site/PostCard.astro",
+    "src/components/site/PostNav.astro",
+    "src/components/site/ProjectMeta.astro",
+    "src/components/site/ProseBlock.astro",
+    "src/components/site/ProseListItem.astro",
+    "src/components/site/ProseQuote.astro",
+    "src/components/site/SearchBox.astro",
+    "src/components/site/ShareRow.astro",
+    "src/components/site/SocialIcon.astro",
+    "src/components/site/ThemeToggle.astro",
+    "src/components/site/nova-posts.ts",
+    "src/fonts.json",
+    "src/layouts/Base.astro",
+    "src/lib/about-desc.ts",
+    "src/lib/brand.ts",
+    "src/lib/carousel-client.ts",
+    "src/lib/chrome-labels.ts",
+    "src/lib/chrome.ts",
+    "src/lib/content.ts",
+    "src/lib/data-links.ts",
+    "src/lib/demo-logo.ts",
+    "src/lib/display-locale.ts",
+    "src/lib/ds-slot.ts",
+    "src/lib/font-subsets.mjs",
+    "src/lib/form-embed-words.ts",
+    "src/lib/heading-html.ts",
+    "src/lib/hreflang-plugin.ts",
+    "src/lib/hreflang.ts",
+    "src/lib/html.ts",
+    "src/lib/i18n.ts",
+    "src/lib/layout.ts",
+    "src/lib/link-gate.ts",
+    "src/lib/listed-children.ts",
+    "src/lib/media.ts",
+    "src/lib/menu-gate.ts",
+    "src/lib/newsletter-client.ts",
+    "src/lib/page-layout.json",
+    "src/lib/page-records.ts",
+    "src/lib/page-routes.json",
+    "src/lib/parent-gate.ts",
+    "src/lib/posts.ts",
+    "src/lib/prose-text.ts",
+    "src/lib/public-origin.ts",
+    "src/lib/section-style.ts",
+    "src/lib/stamps.ts",
+    "src/lib/tel.ts",
+    "src/lib/ui-words.ts",
+    "src/lib/ui.ts",
+    "src/lib/utils.ts",
+    "src/live.config.ts",
+    "src/middleware.ts",
+    "src/pages/404.astro",
+    "src/pages/[...path].astro",
+    "src/styles/blocks/bands.css",
+    "src/styles/blocks/carousels.css",
+    "src/styles/blocks/chrome.css",
+    "src/styles/blocks/features.css",
+    "src/styles/blocks/hero.css",
+    "src/styles/global.css",
+    "src/styles/pages/pages.css",
+    "src/styles/pages/posts.css",
+    "src/styles/pages/projects.css",
+    "src/styles/tokens.css",
+    "src/views/BlogList.astro",
+    "src/views/Contact.astro",
+    "src/views/Home.astro",
+    "src/views/NotFound.astro",
+    "src/views/Page.astro",
+    "src/views/Post.astro",
+    "src/views/Search.astro",
+    "src/views/Service.astro"
+  ],
+  "inputs": {
+    "astro.config.mjs": "sha256:c111e5a4874899da9a0590983f5f798b42c51d69dd1a3bfde94278813294c7cd",
+    "package.json": "sha256:fd6131a3ecbc75bdb912c342634b6d09180083cc5d9b03d967062ffed4088398",
+    "pnpm-lock.yaml": "sha256:ce62479079dd519b387ed208f80c2182a76ce5a666762649c7cf2e4d85b05e7b",
+    "seed/field-map.json": "sha256:c75f01eb9eba42f09d002bbe9697ce430281823d4d4089ff87f71c0f54d830cf",
+    "seed/media-map.json": "sha256:1fbc04c32c2e31bee92d9c3180d54c3a2b7d7ce6201dd5cede067f249a32fa7e",
+    "seed/seed.json": "sha256:e9fced48254c864521dd0084489f46b605dce21d2444fdd4073724ae0be1bfb1",
+    "src/components/blocks/Accordion.astro": "sha256:e641987e98d16a36501d101dc1cb75c25114a847b83cf8349d213cfdb34a27d9",
+    "src/components/blocks/CategoryTabs.astro": "sha256:32a99f5a0e5e278ef4b10107a5ad1b034684b5833562b46d1f62d09cfa326d35",
+    "src/components/blocks/Clients.astro": "sha256:75492a1ffbb269476df744ea9cc6604e9856a193cca52a18b11aa4897c89eb63",
+    "src/components/blocks/Cta.astro": "sha256:57039203a4d55c2149b46e4618d86f6744ddc6d144592b55678aab7675bab315",
+    "src/components/blocks/features/ArticleCards.astro": "sha256:a44308b4fe805bc1a99899e858064687b1cb58132bf0d02fb46b37eba3cf4955",
+    "src/components/blocks/features/links.ts": "sha256:e5deb20554112d9b2867a154df85330e36cd634d27f92ad826a5695540f8b6c0",
+    "src/components/blocks/features/Style1.astro": "sha256:4b3995ec620b3a670a75ee1314db011d10247332d54ca13253b49f3da068400a",
+    "src/components/blocks/features/Style2.astro": "sha256:5528d44a7b1c6c027c3e44ee30db3f8a4c154d90e63d35f255a38aaa59c513c7",
+    "src/components/blocks/features/Style3.astro": "sha256:0b9cad65fe6453fd2f6f1556a9852709c6f59703195b82194d3ebd5f927a4cf3",
+    "src/components/blocks/features/Style4.astro": "sha256:17d771686f587144201d042b6cbb927d96485ab2fd34d84f2904a30d00260edd",
+    "src/components/blocks/features/Style5.astro": "sha256:1abcff08e0cc4701a67750e487d319abc6310ac3cf1b4f71d882631b8f8c7ff9",
+    "src/components/blocks/features/Style6.astro": "sha256:272426b56e4db45e547865c97d4311d8832bf9dfe9fa7f0994d8dbdbbaf11499",
+    "src/components/blocks/features/Style7.astro": "sha256:8b705190ae826c91de4c0441b10c1d6e2032fd2be3dc3c29debd3c1f3a60e7f7",
+    "src/components/blocks/FeaturesIntro.astro": "sha256:98f7d39f0aba2d7735cbc1a99d5d6e4a396a112f9d3feb529cdab5a2df408f66",
+    "src/components/blocks/Hero.astro": "sha256:8b770a16ac14fecbfcad83b9faf6102662102d0ed6217a438014273bc712716c",
+    "src/components/blocks/LatestNews.astro": "sha256:c30f8babf809f2a9a0d9e0283bf39e3b6373c81a9c0fff4ac131cbc179f7ca73",
+    "src/components/blocks/NewsBand.astro": "sha256:01782abd4f5c002201d76e8e4bf1b4660738432bd862dfe4092b1849276cb44f",
+    "src/components/blocks/PopularTags.astro": "sha256:9774709195f7c2d1f1b0f0b31d1eaf65a565d0392d82e41cab0a8d17755d6cf7",
+    "src/components/blocks/Pricing.astro": "sha256:96b35caea7af6cf1beab787346f98cb0041714524abac837592d92f4f5a2280f",
+    "src/components/blocks/RecentWork.astro": "sha256:7653fef90ac51143c438889de4ea3968fd8cf1c728dca1678942d5d07a59ca84",
+    "src/components/blocks/RelatedPosts.astro": "sha256:6d2dd9517cd37784da9a9467020ff572f54d066f988e2256cb2feb08e39fee52",
+    "src/components/blocks/Sections.astro": "sha256:6c504ddab4452cd347c843b83bfd13e25fd70cfc38defa06b347324285ec2c8b",
+    "src/components/blocks/Social.astro": "sha256:dc20ed3fb869a93dfd734c59b7963c2ba4eeeabc3c24cc85f864ce41d506708c",
+    "src/components/blocks/Teams.astro": "sha256:4efdc953b18a2a5724c90ea46a07bcffee2ad465efeda07aba08f9cee1897e21",
+    "src/components/blocks/TextSlider.astro": "sha256:0fb7253cb6f07b43377e0a15e18ea167b79b820694cc5c336355d7f0f1baacb6",
+    "src/components/site/ArticleBody.astro": "sha256:e955a22e2db77ba0b2ebb4b64f9c2c37f605c4d3c149ae05f6ede56fa1289ce5",
+    "src/components/site/ArticleImageRow.astro": "sha256:6e4528061bee91b5fbd7fd09f5bb4d01a8787562f91364e6af5d88eff356de61",
+    "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
+    "src/components/site/Breadcrumbs.astro": "sha256:71a54102bce3a26f46db53df337affd597b57720027c3bd1bcba498fc113fa21",
+    "src/components/site/ChromeIcon.astro": "sha256:9094b69ac2add52ce347157a1798de3fccb34682a68cb55071e492995a3b1c04",
+    "src/components/site/ContactForm.astro": "sha256:57be3409ee57e3190326d65a0a5d92307eaf9fc804c0ac2638410f10e2e49d38",
+    "src/components/site/ContactFormWords.astro": "sha256:3b1e15a76737a2818b728aa846b23e0fcaade7ac04ee60c7f9ffca4f2a1f3d1d",
+    "src/components/site/ContactGlyph.astro": "sha256:a09a543a0d4e8109fa3b5238674197fcc80099dddab7602f7afb624f5f31ae56",
+    "src/components/site/FileGlyph.astro": "sha256:79b2aece58f50001beb1f3c893b49955c9c57427d889b44f564cb0054ade1d74",
+    "src/components/site/Footer.astro": "sha256:dbf1b574ccfb077715d6847a423f1c574f108a5fd8c755e1add71abedca9df63",
+    "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
+    "src/components/site/Header.astro": "sha256:c15ba1eb90575ab8153a66a35331e307fdc73a04c6655837ba1aed09fff69380",
+    "src/components/site/Icon.astro": "sha256:7dc75e73d004a77c87d1fcb6716ada1f40c1fb5667a15cae84a5fa71f48db9f9",
+    "src/components/site/nova-posts.ts": "sha256:2d10b0a37fd457bc262bfc5e53d41ac8bfb0698e6b7506d2f629bc260db8cddd",
+    "src/components/site/NovaLogo.astro": "sha256:cec12de0e0c257299984dfdfe85b78a8b612bd5bba0645738a340999ecab4126",
+    "src/components/site/OffCanvas.astro": "sha256:7a79f34922c31fb868ba597efeebd12bd2b3ce81211dec334e854c8a402cda41",
+    "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
+    "src/components/site/Pager.astro": "sha256:37fe3284d02f0902a61ba99da68490831f21b057b48b7f754adf441c13a6ee9e",
+    "src/components/site/PostCard.astro": "sha256:c5ad375f01732e4502faf240bc5ae4f692aafdc660bc69a10b1e2d9a782adc19",
+    "src/components/site/PostNav.astro": "sha256:cb8e7ae792ec232b32ae492b6135bc47b3f9c481fcc3dcd1918af0e7ef9a93ca",
+    "src/components/site/ProjectMeta.astro": "sha256:a8f5b6d69997cf762f77e6163c3ba4718b8c641cc19c0036353b457da3e5f842",
+    "src/components/site/ProseBlock.astro": "sha256:aae09606433eaaa875e7b16087bc404ed440e95c9fb56cf764ad2ea530364240",
+    "src/components/site/ProseListItem.astro": "sha256:e2c0293803a3cc1337b84ec79f684d76be0819335d31b5d2528abef0661e5404",
+    "src/components/site/ProseQuote.astro": "sha256:2d5ecd7987f911a2b7b2497143ab99c2feb4dc14c3fb417327a7a1ca782bda62",
+    "src/components/site/SearchBox.astro": "sha256:150aa83a083f4d4ee0de7bc74350f398c4b730e7204e165ba0fb8dfa0f8844be",
+    "src/components/site/ShareRow.astro": "sha256:8a659d0622cace9926ec3d1e2ef21c1d7fbff532f96aba8cf0796603f074f0f1",
+    "src/components/site/SocialIcon.astro": "sha256:c7dd0fa0473a56717bfbaa83b615edbf6b50cc4e535db35860c1fc998da92dc1",
+    "src/components/site/ThemeToggle.astro": "sha256:4924e5dbfbaf062ad9a209b3bdaa2a5fc206ea9c124a81bdb49408f264dc8a33",
+    "src/fonts.json": "sha256:87e9a23224e75aabe1ab36d69cadc7e51390c98a513f16fc24058b366456314a",
+    "src/layouts/Base.astro": "sha256:6d005ad90434cdb4ffcd4c8c5f9e84f8e5c1d6bd9de788a41cdb606d951385b9",
+    "src/lib/about-desc.ts": "sha256:2c4cfa4f6a39fc8df883f3c36452dbc5f6c2db7cf7a805d182af168f5d8c71c7",
+    "src/lib/brand.ts": "sha256:38f8c2adeaa1e083f4ef5cabdd8e2ceac7d9243b9481414e41212c6d493e8939",
+    "src/lib/carousel-client.ts": "sha256:a06e345f84bbe76fa9781952d3339823c17185b6c36758276a5da957f51fc829",
+    "src/lib/chrome-labels.ts": "sha256:caf6017c4fda7d87717e8fffbe17bcbacc16d948849869dc9544b07b612a1b75",
+    "src/lib/chrome.ts": "sha256:2265a6026a97305b5ffe19ae6144fd022d94adde4de5897c5e9421def3a71355",
+    "src/lib/content.ts": "sha256:684f9fba7ecc3ea9332c640791e917a13a2805eb6fe818cd0004a1e06510e31c",
+    "src/lib/data-links.ts": "sha256:fb08660882cf4e99e35cddf7631c84d95405c9e72d0d761f83d1e935ef62910e",
+    "src/lib/demo-logo.ts": "sha256:250c407f7ecb16c20ae7aacdc37f56856a361aed87065dab44cc42ba4e8ad868",
+    "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
+    "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
+    "src/lib/font-subsets.mjs": "sha256:a70b9e5e524e24bfa151470a3c71642be71f9f8b4f352ed805f987056b822cd8",
+    "src/lib/form-embed-words.ts": "sha256:0f341c8e6aea0a904c3a60eb1f5644dc51edf5dbbdc79512a8249fbc82ec3a66",
+    "src/lib/heading-html.ts": "sha256:744f0660214f2c68408c6ce30c53b9e6b4d2b1d3c0aaf59dfaf2d03a9940f395",
+    "src/lib/hreflang-plugin.ts": "sha256:fb1993974b6296c4a677f4691b7038313c5eb3b222088f4c9160a52e744fbe0d",
+    "src/lib/hreflang.ts": "sha256:924561614f01c3e11fa8f6f06b17ef04e1212a47dc7d1bedd83bb64cfe0f5f98",
+    "src/lib/html.ts": "sha256:30442b05e2b16f22159c04d2dace659f7f553d40a0c6651e25bcb04078d8c5ef",
+    "src/lib/i18n.ts": "sha256:aaea1f019b9b16abf51a977a1b120e6078fd15280354f57c9f9d9960a7577d03",
+    "src/lib/layout.ts": "sha256:c7e937be965bfa2ed8814fc82192e7921d545b4ae06311ae7d9642a9d2ba7568",
+    "src/lib/link-gate.ts": "sha256:a8f7795a0ca92cfcea8f76b9cd4e4f812d07fe582a066c91e53568eea24d8658",
+    "src/lib/listed-children.ts": "sha256:fb03fc5213623a76c22ae6ff13e9f5e6bee4b6a9884b4a9ea5e5e4cf695c13d3",
+    "src/lib/media.ts": "sha256:94a729dd3795edc39ebfdb9378e160b3be43a68d7394c469f8a17669d685b8d6",
+    "src/lib/menu-gate.ts": "sha256:1884514cd874f6edb1a845332a1da81afb4d85abebd65d287538a6a6a79d1441",
+    "src/lib/newsletter-client.ts": "sha256:12327d880e310238857cce2cf6e719fa53c758a2ec01831abf4ddab066ceb507",
+    "src/lib/page-layout.json": "sha256:d96a95822a2f16a1635897a72caae9cacc3f59acddf7bc715d6ae33e9951cec5",
+    "src/lib/page-records.ts": "sha256:490bbe348ae80ac7e429e0342e2f898768e2c43c1331905b83c71e2f51eca1ea",
+    "src/lib/page-routes.json": "sha256:6e4beba5666e055da6734709c819c438ae5d703a8adb10b30895aaac34eccdc5",
+    "src/lib/parent-gate.ts": "sha256:299a77bee7cb473c869e6e3b9642c99afddf4097f492217a3d9be150bb9ca6bc",
+    "src/lib/posts.ts": "sha256:de47f653192ea45c12152c6de87c93a7e069a71643b56188348078372196d076",
+    "src/lib/prose-text.ts": "sha256:56f0adf1e841c5a2196f3fab4135ee9f38ce62a66c1e31924eac4fef9a223bff",
+    "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
+    "src/lib/section-style.ts": "sha256:eba5ca5f967a2bba4e1af446dec5d13dd20fc9e63b02e5305803ae09c8009976",
+    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/tel.ts": "sha256:e4d78945f79f6e0f18ef5e21efe402133d4556fe3030885ca95907d8144c1077",
+    "src/lib/ui-words.ts": "sha256:e3e5d1dab8b3b981efd7b180c95e7bfa1ad573dc65252198c8c006814e3eecbf",
+    "src/lib/ui.ts": "sha256:f83d530f9d9b2c5107f21e14bb2bac40a9cca39733f2b661003250a2fe1171a9",
+    "src/lib/utils.ts": "sha256:0ca01a948ba414a7c7348bda63bf68803a73dbbb6f10b6e8183280e405d3aa13",
+    "src/live.config.ts": "sha256:52f0c8177d0e327ffdf28af8baf680d539d2aae444ba5ceace98baf095f7bf6c",
+    "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
+    "src/pages/[...path].astro": "sha256:f056c869424195f326e06dc49773d04139474bc72909cfbc46638ab62fd10f1e",
+    "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
+    "src/styles/blocks/bands.css": "sha256:3101deb37ac0865c18d8e66a5ad8e35fbb5a515ccd3e668405afa237e6c61f4b",
+    "src/styles/blocks/carousels.css": "sha256:7fa630787c596ee543b10abf25354ba21bfc85af7ab7ab824c29daa50a1a8bcb",
+    "src/styles/blocks/chrome.css": "sha256:4487499d7fb47a51722b662f48b5e9c78f5008d38f6cf889f0b2995f83c41333",
+    "src/styles/blocks/features.css": "sha256:da0c749fdfc88517a26450e696d066067a912c41611172c520fa9eafda82872c",
+    "src/styles/blocks/hero.css": "sha256:c5998e498ed458b292b1f3ab4c46fce08903cc99f6d4ea0afc13547f3fc8d2f9",
+    "src/styles/global.css": "sha256:3b34daf1cd556327e4f39634b2950e351f85bdc3a3a9437e0dd6faf83d448112",
+    "src/styles/pages/pages.css": "sha256:b2ef61da8e8d9066e872e03c840aaae07e36cd8a539c6d1438bb0e5ba7da9db4",
+    "src/styles/pages/posts.css": "sha256:099779ca0d99260682aea7d47c9a4ea4ebd8b1822e6b5215e4b1c310af80fe83",
+    "src/styles/pages/projects.css": "sha256:2158dbbe3bfc146f78406790b23caad9e3b2622b4100d3e7f9a38832974876b3",
+    "src/styles/tokens.css": "sha256:598a5414b3ece39d234d0787c32c66ef72120eefb25a0dfac3eaf31d7d989d86",
+    "src/views/BlogList.astro": "sha256:e2dbf2cbe4b649d1ded8641f6b34b6779e49d89e97a819c161d6823caf656398",
+    "src/views/Contact.astro": "sha256:441f951fe982074f1454b4d5529469944aba10facbceedfad22b433aa84381f0",
+    "src/views/Home.astro": "sha256:6db8853c19d70ba10fb5fa7215426c472d6077caf913a20be98d1ed27d171d84",
+    "src/views/NotFound.astro": "sha256:69ca48fe7d674f7f79d9ed2742aea95bc6ad8f1b9e507ba0c44ffcb12935269e",
+    "src/views/Page.astro": "sha256:2c40897e66dde2a55c7f41da2bf55e42ec9be03f1c7b64c3379cd08a8978836e",
+    "src/views/Post.astro": "sha256:d429e0890413fb54ef9bc55ab4ea044a8ae25b232c35431d0b6a11937b9d2d6c",
+    "src/views/Search.astro": "sha256:715d3b16c3337d08709a06fa7c3cff4982234083f8518f0e72c04be6f7b41995",
+    "src/views/Service.astro": "sha256:82eb16e5512387fd1329c8ee32a0bc349e2a81783305112295a6e3f0ec73475b",
+    "template.config.json": "sha256:c348f96d22bae18c49bdd26bfbaf737d098a9ade95a6df777e84e5165b34ef56",
+    "tools/forms.json": "sha256:596212624b56a8ccca7b637660f7d50556b84e6a3953e204af12a7fb43f8b9f0",
+    "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
+  }
+}

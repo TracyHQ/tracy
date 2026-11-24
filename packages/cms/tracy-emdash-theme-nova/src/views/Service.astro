@@ -27,7 +27,7 @@ const banner = page ? mediaUrl(page.banner) : null
 const here = `/${slug}`
 const menu = chrome.services
 // the source lists the articles in the reverse of the menu: "previous" is the one the menu shows after this one
-const at = menu.findIndex((m) => m.url === here)
+const at = menu.findIndex((m: any) => m.url === here)
 const nav = (i: number) => (menu[i] ? { url: href(locale, menu[i].url), title: menu[i].label } : null)
 const prev = at >= 0 ? nav(at + 1) : null
 const next = at > 0 ? nav(at - 1) : null
@@ -60,7 +60,7 @@ if (!page) Astro.response.status = 404
 								<h3 class="nv-mod-title" {...$c('service_menu_title')}>{chrome.site.service_menu_title}</h3>
 								<nav aria-label={chrome.site.service_menu_title}>
 									<ul>
-										{menu.map((m) => (
+										{menu.map((m: any) => (
 											<li class:list={[m.url === here && 'is-on']}>
 												{m.url ? <a href={href(locale, m.url)} aria-current={m.url === here ? 'page' : undefined}>{m.label}</a> : <span>{m.label}</span>}
 											</li>

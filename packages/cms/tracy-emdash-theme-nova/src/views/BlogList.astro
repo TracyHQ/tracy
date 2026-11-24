@@ -45,7 +45,7 @@ const title = pageNo > 1 ? `${heading} — ${fill(w.page_title_label, { n: pageN
 const trail = isProject
   ? [{ label: w.project_title, url: '/project' }, { label: heading, url: here }]
   : [{ label: heading, url: here }]
-const social = chrome.social.social
+const social = chrome.social['social-page']
 if (isProject && list.length === 0) Astro.response.status = 404
 ---
 
@@ -64,7 +64,7 @@ if (isProject && list.length === 0) Astro.response.status = 404
 								<SearchBox chrome={chrome} locale={locale} id="nv-q-blog" />
 								{social && social.items.length > 0 && (
 									<ul class="nv-listsocial">
-										{social.items.map((s) => {
+										{social.items.map((s: any) => {
 											const net = networkOf(s.font_icon, s.title)
 											const url = dataHref(s.link, (q) => href(locale, q))
 											return <li class={`is-${net}`}>{url ? <a href={url} aria-label={s.title} target="_blank" rel="noopener noreferrer"><SocialIcon name={net} size={16} /></a> : <span role="img" aria-label={s.title}><SocialIcon name={net} size={16} /></span>}</li>

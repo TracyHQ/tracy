@@ -4,46 +4,720 @@
   "settings": {
     "title": "{name}"
   },
+  "brand": {
+    "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, from the kit's brand PR; a tool without it ignores this block): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none. Name the chrome entry the header and footer read (references/brand-and-pages.md).",
+    "logoDark": {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "logo_dark",
+      "label": "Logo for dark backgrounds"
+    }
+  },
   "identity": [
     {
-      "collection": "site",
-      "slug": "site",
+      "collection": "chrome",
+      "slug": "chrome",
       "field": "brand_name",
       "value": "{name}"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "logo_text",
+      "value": "{name}"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "copyright",
+      "value": {
+        "en": "Copyright © {year} {name}. All Rights Reserved.",
+        "vi": "Bản quyền © {year} {name}. Bảo lưu mọi quyền.",
+        "de": "Copyright © {year} {name}. Alle Rechte vorbehalten.",
+        "fr": "Copyright © {year} {name}. Tous droits réservés.",
+        "it": "Copyright © {year} {name}. Tutti i diritti riservati.",
+        "nl": "Copyright © {year} {name}. Alle rechten voorbehouden.",
+        "es": "Copyright © {year} {name}. Todos los derechos reservados.",
+        "zh": "版权所有 © {year} {name}。保留所有权利。"
+      }
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "header_phone",
+      "value": "{phone}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "header_email",
+      "value": "{email}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact-layout",
+      "field": "address",
+      "value": "{address}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact-layout",
+      "field": "phone",
+      "value": "{phone}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "contact",
+      "slug": "contact-layout",
+      "field": "email",
+      "value": "{email}",
+      "unanswered": "keep-demo"
     }
   ],
   "replace": [
     {
-      "find": "__THE DEMO BRAND, LONGEST FORM FIRST__",
+      "find": "JA Nova",
       "with": "{name}"
+    },
+    {
+      "find": "Nova",
+      "with": "{name}",
+      "word": true
+    },
+    {
+      "find": "Salmon",
+      "with": "{name}",
+      "word": true
     }
+  ],
+  "demoCompanyNames": [
+    "JA Nova",
+    "Nova",
+    "Salmon",
+    "Microsoft App Holing Ltd"
   ],
   "copy": [
     {
-      "collection": "site",
-      "slug": "site",
-      "field": "__a field whose demo words a model must write for this sector__",
-      "brief": "what this text is for, in the author's words",
+      "collection": "hero",
+      "slug": "home-hero",
+      "field": "title",
+      "brief": "the home page's main heading: what this business (an IT, software and design company) does for its customers, no brand name",
+      "maxWords": 14
+    },
+    {
+      "collection": "hero",
+      "slug": "home-hero",
+      "field": "desc",
+      "brief": "one or two sentences under the main heading about what this business (an IT, software and design company) offers, no number",
+      "maxWords": 32
+    },
+    {
+      "collection": "chrome",
+      "slug": "chrome",
+      "field": "footer_about",
+      "brief": "one short sentence under the footer logo about this business (an IT, software and design company), no number",
+      "maxWords": 20
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-1",
+      "field": "info_title",
+      "brief": "a heading for one strength of this business (an IT, software and design company)",
       "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-1",
+      "field": "info_desc",
+      "brief": "a short paragraph about that strength of this business (an IT, software and design company), no number",
+      "maxWords": 45
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro-2",
+      "field": "info_title",
+      "brief": "a heading for one strength of this business (an IT, software and design company)",
+      "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro-2",
+      "field": "info_desc",
+      "brief": "a short paragraph about that strength of this business (an IT, software and design company), no number",
+      "maxWords": 45
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-2",
+      "field": "info_title",
+      "brief": "a heading for one strength of this business (an IT, software and design company)",
+      "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-2",
+      "field": "info_desc",
+      "brief": "a short paragraph about that strength of this business (an IT, software and design company), no number",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-3",
+      "field": "info_title",
+      "brief": "a heading for one strength of this business (an IT, software and design company)",
+      "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-3",
+      "field": "info_desc",
+      "brief": "a short paragraph about that strength of this business (an IT, software and design company), no number",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-intro",
+      "field": "info_title",
+      "brief": "a heading for one strength of this business (an IT, software and design company)",
+      "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-intro",
+      "field": "info_desc",
+      "brief": "a short paragraph about that strength of this business (an IT, software and design company), no number",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "products-cards",
+      "field": "main_title",
+      "brief": "the heading above the list of services of this business (an IT, software and design company)",
+      "maxWords": 10
+    },
+    {
+      "collection": "features_intro",
+      "slug": "products-cards",
+      "field": "bottom_desc",
+      "brief": "two sentences under the list of services of this business (an IT, software and design company), no number",
+      "maxWords": 40
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-cards",
+      "field": "main_title",
+      "brief": "the heading above the services page's list of services of this business (an IT, software and design company)",
+      "maxWords": 10
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro",
+      "field": "ft_title",
+      "brief": "a heading about the values of this business (an IT, software and design company)",
+      "maxWords": 14
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro",
+      "field": "content_featured",
+      "brief": "a short paragraph about who this business (an IT, software and design company) is and what it stands for, no year, no number",
+      "maxWords": 50
+    },
+    {
+      "collection": "cta",
+      "slug": "home-cta",
+      "field": "cta_title",
+      "brief": "a call-to-action heading for the visitors of this business (an IT, software and design company)",
+      "maxWords": 12
+    },
+    {
+      "collection": "cta",
+      "slug": "home-cta",
+      "field": "cta_desc",
+      "brief": "one sentence under that heading about what this business (an IT, software and design company) can do for the visitor",
+      "maxWords": 30
+    },
+    {
+      "collection": "teams",
+      "slug": "team",
+      "field": "team_desc",
+      "brief": "a short heading above the team of this business (an IT, software and design company)",
+      "maxWords": 14
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing",
+      "field": "main_title",
+      "brief": "the heading above the price plans of this business (an IT, software and design company)",
+      "maxWords": 10
+    },
+    {
+      "collection": "accordion",
+      "slug": "faq",
+      "field": "info_title",
+      "brief": "the heading beside the questions asked of this business (an IT, software and design company)",
+      "maxWords": 8
+    },
+    {
+      "collection": "accordion",
+      "slug": "faq",
+      "field": "info_desc",
+      "brief": "one or two short lines inviting a visitor to ask more of this business (an IT, software and design company)",
+      "maxWords": 16
+    },
+    {
+      "collection": "contact",
+      "slug": "contact-layout",
+      "field": "intro",
+      "brief": "one or two sentences inviting visitors to contact this business (an IT, software and design company), with no number",
+      "maxWords": 30
     }
   ],
-  "rewrite": [],
+  "rewrite": [
+    {
+      "collection": "posts",
+      "slugs": [
+        "how-business-technology-changed-how-we-think-about-death",
+        "why-the-biggest-myths-about-business-may-actually-be-right",
+        "how-to-create-an-awesome-software-video-about-success-busines",
+        "the-digital-age-of-death-how-business-technology-is-transforming-end-of-life",
+        "virtual-memorials-exploring-the-impact-of-business-technology-on-mourning",
+        "from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance",
+        "the-rise-of-online-funeral-services-business-technology-s-role",
+        "tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye",
+        "revolutionizing-death-care-the-business-tech-disruption-in-funeral-services",
+        "how-business-technology-is-shaping-the-way-we-remember-2023",
+        "examining-the-role-of-business-technology-in-the-mourning-process",
+        "mourning-in-the-digital-age-unpacking-the-influence-of-business-technology",
+        "the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era",
+        "transforming-grief-exploring-the-impact-of-business-technology-on-memorialization",
+        "the-influence-of-business-technology-on-mourning-practices-2023",
+        "digital-tributes-examining-the-changing-face-of-mourning-with-business-technology",
+        "remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning",
+        "the-digital-remembrance-investigating-the-role-of-business-technology-in-grief",
+        "mourning-in-the-digital-world-examining-the-impact-of-business-technology",
+        "from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey",
+        "embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning",
+        "beyond-the-funeral-navigating-grief-in-the-age-of-business-technology",
+        "the-digital-mourning-ritual-examining-the-influence-of-business-technology",
+        "mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones",
+        "virtual-connections-exploring-how-business-technology-is-redefining-mourning",
+        "remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief",
+        "the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process"
+      ],
+      "brief": "one news article this business (an IT, software and design company) would publish for its customers: a practical story, tip or news from its work (tags: three short topic words, one per line)",
+      "fields": [
+        "title",
+        "body",
+        "tags"
+      ],
+      "body": "body",
+      "bodyWords": 160,
+      "batch": 3,
+      "decides": [
+        "title"
+      ]
+    },
+    {
+      "collection": "posts",
+      "slugs": [
+        "landing-page-design",
+        "corporate-website-design",
+        "email-newsletter-design",
+        "design-system-ul-kit",
+        "blog-design-layout",
+        "presentation-design",
+        "realistic-scenarios",
+        "social-media-graphics",
+        "brochure-flyer-design",
+        "mobile-app-design",
+        "brand-identity-design",
+        "packaging-design",
+        "muckup-design",
+        "logo-design-branding",
+        "poster-banner-design",
+        "web-application-design",
+        "infographic-design",
+        "event-invitation-design"
+      ],
+      "brief": "one finished project of this business (an IT, software and design company) written as a case study, with no client name, no budget and no link (tags: three short topic words, one per line)",
+      "fields": [
+        "title",
+        "body",
+        "tags"
+      ],
+      "body": "body",
+      "bodyWords": 140,
+      "batch": 3,
+      "decides": [
+        "title"
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-1",
+      "field": "items",
+      "itemFields": [
+        "desc"
+      ],
+      "brief": "one benefit of this business, a short sentence",
+      "maxCharacters": {
+        "desc": 220
+      }
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro-2",
+      "field": "items",
+      "itemFields": [
+        "desc"
+      ],
+      "brief": "one benefit of this business, a short sentence",
+      "maxCharacters": {
+        "desc": 220
+      }
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-2",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "desc"
+      ],
+      "brief": "one benefit of this business: a short name (title) and one sentence (desc)",
+      "maxCharacters": {
+        "title": 60,
+        "desc": 220
+      }
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-3",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "desc"
+      ],
+      "brief": "one benefit of this business: a short name (title) and one sentence (desc)",
+      "maxCharacters": {
+        "title": 60,
+        "desc": 220
+      }
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-intro",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "desc"
+      ],
+      "brief": "one benefit of this business: a short name (title) and one sentence (desc)",
+      "maxCharacters": {
+        "title": 60,
+        "desc": 220
+      }
+    },
+    {
+      "collection": "features_intro",
+      "slug": "products-cards",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description"
+      ],
+      "brief": "one service of this business: a short name (title) and one or two sentences (description)",
+      "maxCharacters": {
+        "title": 40,
+        "description": 200
+      }
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-cards",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description"
+      ],
+      "brief": "one service of this business: a short name (title) and one or two sentences (description)",
+      "maxCharacters": {
+        "title": 40,
+        "description": 200
+      }
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro",
+      "field": "items",
+      "itemFields": [
+        "title",
+        "description"
+      ],
+      "brief": "one value of this business: one word (title) and one sentence (description)",
+      "maxCharacters": {
+        "title": 24,
+        "description": 160
+      }
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-expertise",
+      "field": "items",
+      "itemFields": [
+        "sub_title",
+        "title",
+        "description",
+        "list_features"
+      ],
+      "brief": "one field of expertise of this business: a one-word tag (sub_title), a name (title), one or two sentences (description) and an HTML list <ul><li>..</li></ul> of three short points (list_features)",
+      "maxCharacters": {
+        "sub_title": 16,
+        "title": 40,
+        "description": 200,
+        "list_features": 260
+      }
+    },
+    {
+      "collection": "text_slider",
+      "slug": "home-chips-1",
+      "field": "items",
+      "itemFields": [
+        "title"
+      ],
+      "brief": "one short service or skill of this business, two or three words",
+      "maxCharacters": {
+        "title": 28
+      }
+    },
+    {
+      "collection": "text_slider",
+      "slug": "home-chips-2",
+      "field": "items",
+      "itemFields": [
+        "title"
+      ],
+      "brief": "one short service or skill of this business, two or three words",
+      "maxCharacters": {
+        "title": 28
+      }
+    },
+    {
+      "collection": "accordion",
+      "slug": "faq",
+      "field": "items",
+      "itemFields": [
+        "accordion_name",
+        "accordion_desc"
+      ],
+      "brief": "one question a customer asks this business (accordion_name) and its short answer (accordion_desc), no number or price",
+      "maxCharacters": {
+        "accordion_name": 80,
+        "accordion_desc": 320
+      }
+    }
+  ],
   "facts": [
     {
-      "collection": "__page__",
-      "slug": "__page__",
-      "field": "__a field that CLAIMS something about the business__",
-      "why": "counts, years, certifications, named clients or prices — removed, never invented"
+      "collection": "features_intro",
+      "slug": "home-intro-1",
+      "field": "info_cta",
+      "why": "a count of brands"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro-2",
+      "field": "info_cta",
+      "why": "a count of brands"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-stats",
+      "field": "main_title",
+      "why": "a count of finished work"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-stats",
+      "field": "items",
+      "why": "counters of the demo company (projects, clients, years)"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-stats",
+      "field": "main_title",
+      "why": "a count of finished work"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-stats",
+      "field": "items",
+      "why": "counters of the demo company (projects, clients, years)"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-video",
+      "field": "id_video",
+      "why": "a video of another company"
+    },
+    {
+      "collection": "features_intro",
+      "slug": "career-positions",
+      "field": "items",
+      "why": "open positions of the demo company"
+    },
+    {
+      "collection": "teams",
+      "slug": "team",
+      "field": "items",
+      "why": "named people of the demo company"
+    },
+    {
+      "collection": "pricing",
+      "slug": "pricing",
+      "field": "items",
+      "why": "prices and plans of the demo company"
+    },
+    {
+      "collection": "posts",
+      "field": "author",
+      "why": "named authors of the demo articles"
+    },
+    {
+      "collection": "posts",
+      "field": "author_avatar",
+      "why": "pictures of the demo authors"
+    },
+    {
+      "collection": "posts",
+      "field": "project_client",
+      "why": "a client company of a demo project"
+    },
+    {
+      "collection": "posts",
+      "field": "project_client_name",
+      "why": "a named person of a demo project"
+    },
+    {
+      "collection": "posts",
+      "field": "project_budget",
+      "why": "a budget of a demo project"
+    },
+    {
+      "collection": "posts",
+      "field": "project_services",
+      "why": "the services of a demo project"
+    },
+    {
+      "collection": "posts",
+      "field": "project_link",
+      "why": "another company's address"
+    },
+    {
+      "collection": "posts",
+      "field": "project_date",
+      "why": "the date of a demo project"
     }
   ],
   "hide": [],
-  "brand": {
-    "note": "Where the customer's brand pictures go (tools/personalize.mjs writeBrand, from the kit's brand PR; a tool without it ignores this block): the light or only logo to core settings.logo, the favicon to core settings.favicon, and the dark-background logo to the image field below, made on the site when its schema has none. Name the chrome entry the header and footer read (references/brand-and-pages.md).",
-    "logoDark": {
-      "collection": "site",
-      "slug": "site",
-      "field": "logo_dark",
-      "label": "Logo for dark backgrounds"
+  "labels": [
+    {
+      "collection": "chrome"
+    },
+    {
+      "collection": "contact"
+    },
+    {
+      "collection": "pages",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "collection": "hero",
+      "fields": [
+        "button",
+        "button_2"
+      ]
+    },
+    {
+      "collection": "features_intro",
+      "fields": [
+        "button",
+        "bottom_btn_title",
+        "main_title",
+        "title"
+      ]
+    },
+    {
+      "collection": "cta",
+      "slug": "cta-contact",
+      "fields": [
+        "cta_desc",
+        "cta_title"
+      ]
+    },
+    {
+      "collection": "cta",
+      "slug": "home-cta",
+      "fields": [
+        "items"
+      ]
+    },
+    {
+      "collection": "teams",
+      "fields": [
+        "bottom_btn_title",
+        "title"
+      ]
+    },
+    {
+      "collection": "pricing",
+      "fields": [
+        "title"
+      ]
+    },
+    {
+      "collection": "accordion",
+      "fields": [
+        "button"
+      ]
+    },
+    {
+      "collection": "social",
+      "fields": [
+        "title",
+        "items"
+      ]
     }
-  }
+  ],
+  "keptText": [],
+  "forms": [
+    {
+      "slug": "contact",
+      "fields": {
+        "name": "the visitor's full name",
+        "email": "the visitor's e-mail address",
+        "phone": "the visitor's phone number",
+        "subject": "what the visitor is writing about",
+        "message": "the visitor's message"
+      },
+      "brief": "the contact form of this business"
+    }
+  ],
+  "terms": [
+    {
+      "taxonomy": "category",
+      "collections": [
+        "posts"
+      ],
+      "brief": "a category of news or project this business publishes"
+    }
+  ]
 }

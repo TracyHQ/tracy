@@ -30,7 +30,8 @@ const TEMPLATES = [
   'tracy-emdash-theme-restaurant',
   'tracy-emdash-theme-diner',
   'tracy-emdash-theme-fresco',
-  'tracy-emdash-theme-essence'
+  'tracy-emdash-theme-essence',
+  'tracy-emdash-theme-nova'
 ]
 
 if (!existsSync(CHECK)) {
