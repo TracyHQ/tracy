@@ -12,7 +12,7 @@
 	.im-intro-sub-media img { display: block; width: 100%; height: auto; border-radius: var(--ds-card-radius, 8px); }
 	.im-intro-main { flex: 0 0 45%; }
 	.im-intro-main img { display: block; width: 100%; height: auto; border-radius: var(--ds-card-radius, 8px); }
-	@media (max-width: 767.98px) { .im-intro { flex-direction: column; } .im-intro-sub { flex-direction: column; } .im-intro-sub-media { flex-basis: auto; width: 100%; } .im-intro-main { flex-basis: auto; width: 100%; } }
+	@media (max-width: 767.98px) { .im-intro-content { text-align: center; } .im-intro { flex-direction: column; } .im-intro-sub { flex-direction: column; } .im-intro-sub-media { flex-basis: auto; width: 100%; } .im-intro-main { flex-basis: auto; width: 100%; } }
 
 	/* style-6, the fund panel */
 	.im-fund { background: var(--color-ink); color: var(--color-on-ink); border-radius: var(--ds-card-radius, 8px); padding: 64px 64px 64px; }
@@ -28,7 +28,7 @@
 	.im-fund-box img { flex: 0 0 64px; width: 64px; height: 64px; }
 	.im-fund-box h4 { color: var(--color-on-ink); margin: 0 0 8px; }
 	.im-fund-box p { margin: 0; color: var(--color-on-ink); }
-	@media (max-width: 575.98px) { .im-fund { padding: 32px 16px 16px; } .im-fund-box { padding: 24px 16px; } }
+	@media (max-width: 575.98px) { .im-fund { padding: 32px 16px 16px; } .im-fund-box { padding: 24px 16px; flex-direction: column; align-items: center; text-align: center; } .im-fund-main { text-align: center; } }
 
 	/* style-3, cards and band */
 	.im-cards-view { position: relative; }
@@ -48,6 +48,7 @@
 	.im-band-left img { width: 64px; height: 64px; }
 	.im-band p { margin: 0; font-size: 24px; line-height: 1.3; font-weight: 500; letter-spacing: -0.01em; color: #fff; }
 	@media (max-width: 991.98px) { .im-card-feature { flex-basis: calc((100% - 24px) / 2); } .im-band { padding: 32px; } }
+	@media (max-width: 767.98px) { .im-band { flex-direction: column; justify-content: center; text-align: center; } .im-band-left { flex-direction: column; } }
 	@media (max-width: 575.98px) { .im-card-feature { flex-basis: 100%; } .im-nav-btn.is-prev { left: 0; } .im-nav-btn.is-next { right: 0; } }
 
 	/* style-4, stats */

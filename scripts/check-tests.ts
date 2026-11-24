@@ -104,7 +104,9 @@ const STANDALONE = [
   // JA Fresco (EmDash port of the JA Fresco Joomla site): same shape as the six above.
   'packages/cms/tracy-emdash-theme-fresco',
   // JA Essence (EmDash port of the JA Essence Joomla site): same shape as the seven above.
-  'packages/cms/tracy-emdash-theme-essence'
+  'packages/cms/tracy-emdash-theme-essence',
+  // JA Impact (EmDash port of the JA Impact Joomla site): same shape as the eight above.
+  'packages/cms/tracy-emdash-theme-impact'
 ] as const
 
 /** One run group: the command that runs it, and the test files that command picks up. */
@@ -126,7 +128,7 @@ const GROUPS: readonly CoverageGroup[] = [
   {
     run: 'standalone',
     files:
-      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant|diner|fresco|essence)\/tests\/[^/]+\.test\.mjs$/
+      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant|diner|fresco|essence|impact)\/tests\/[^/]+\.test\.mjs$/
   }
 ]
 

@@ -1,125 +1,125 @@
 {
 	"source": "/w/packages/cms/tracy-emdash-theme-impact/source/snapshot",
-	"generatedAt": "2026-11-24T05:34:10.260Z",
+	"generatedAt": "2026-11-24T06:08:14.353Z",
 	"files": [
 		{
 			"path": "about/index.html",
-			"bytes": 47656,
-			"sha256": "68190a7d01873d9d64b56d3826f4002e1d0a8c979b87b1308aef928cd1d694df",
+			"bytes": 47474,
+			"sha256": "6fad65403f5d16b674a7290ab3db17ea095796006bbf6e4210150271a6a28475",
 			"ext": ".html"
 		},
 		{
 			"path": "blog/index.html",
-			"bytes": 45977,
-			"sha256": "451a9c38506f4c43af88e14e40398e50350c575677649f770577e5ffc0220892",
+			"bytes": 45597,
+			"sha256": "b50f798e16e728d1addb8b989304b3523642c7ae59a5876a963a999b1af217ab",
 			"ext": ".html"
 		},
 		{
 			"path": "blog/index~start=9.html",
-			"bytes": 31624,
-			"sha256": "dd3cdf2d5437c92c9967927fe3eb3ee1c1bc0301bac0911def9fb25961a5367f",
+			"bytes": 31420,
+			"sha256": "5c410d5f0b756a079233ccf0ac2bbba890b2f850ae44f54406e602386cc59b6f",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/building-empathy-throughremote-user-research/index.html",
-			"bytes": 46369,
-			"sha256": "4bc0c03268cb6a3dbcf36aad5a7a6e4c8799f31c068dc774dbbbc6148867f41d",
+			"bytes": 45857,
+			"sha256": "349fb4468c96b06a491b8b55468fb4f6c2e26ed7a49cbfe4b5d74c200ba2af03",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/charity-branding-is-yourbrand-digital-ready/index.html",
-			"bytes": 46280,
-			"sha256": "2ad4b926545ae9112a8c345baf63aba7ed23ec33e1da3001d44cd9db71a137db",
+			"bytes": 45768,
+			"sha256": "a68b107d1b04882a7e1e75348f7bb361ef3e13787057fcb458b7b21a3b482d02",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/charity-of-the-month-plan-international-uk-2/index.html",
-			"bytes": 45815,
-			"sha256": "5875bf04fe93c5e3b1e049f3c6838d96432667b653eb10f84f20baa7d671aff3",
+			"bytes": 45303,
+			"sha256": "cc0a87346581b2873342eeef49a5a1d1f91e6ef20a239369c447be94be1c9aa4",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/donation-and-cleaning-program-foundation/index.html",
-			"bytes": 46242,
-			"sha256": "834534dfa78a0e6b49914fa1956d4d5a2835250567773e3d96a6f112ea50df7b",
+			"bytes": 45730,
+			"sha256": "e4502895d39c5f29f0a1d81b4648ddb578954b6642dabc1d632fb4326c008488",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation/index.html",
-			"bytes": 46691,
-			"sha256": "290938754ebb0e845c0ced61257ce6625710dde2f7585e1951eac4f5f4c0aa68",
+			"bytes": 46179,
+			"sha256": "331bd48b18bcbca4a8c8c2f4fbf604ea68678e452fb80c6554e3fe4960de6d4a",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during/index.html",
-			"bytes": 46715,
-			"sha256": "6f4973628cc308f8efeb2f720e7180721b499b92df29d9737f9908cf099a063a",
+			"bytes": 46203,
+			"sha256": "9dbac68fdfb5f29c2ca2333abb996648a8bf135df73a9a1a05f608fc2f9cbfb7",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/index.html",
-			"bytes": 46103,
-			"sha256": "5cec4aaa4a8ec7f38acca3a2d1629aa112d74b797c6122471fce30f6c3eb4c1a",
+			"bytes": 45723,
+			"sha256": "bd958177dabae25f4d5c64e6f59f8b998156f40b28e6419e47ce34fd6df2801f",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/index~start=9.html",
-			"bytes": 31694,
-			"sha256": "05b2f4f79a5ea5cc41c36cfcb7652da699172d410da2092f45e4d09a85530b0a",
+			"bytes": 31490,
+			"sha256": "508f7cff338aa62769eddc67b9719053d6fc0503561b51af0bc73e88bd57e395",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults/index.html",
-			"bytes": 46473,
-			"sha256": "69b28f28e6b973dec2095f9f1a332943758d50dafad830011a58b1fc20a3bab4",
+			"bytes": 45961,
+			"sha256": "38004aaad21a25ce4868fd272bf1caa801ee6043ecda380f1c3b1832b5d8aeda",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled/index.html",
-			"bytes": 45919,
-			"sha256": "f0ccf430ab83b2137f7b290f19187d5642da35eb00467fddbd79a1ed0f8af37a",
+			"bytes": 45407,
+			"sha256": "896e9de9780a513f1520a67849f076843d729fe9d91d3fe20ee7c5c8e45accdf",
 			"ext": ".html"
 		},
 		{
 			"path": "category-blog/weve-reached-1-million-indonations-and-counting/index.html",
-			"bytes": 46283,
-			"sha256": "f4c0b5726beb973f09269ce80360b9dfb12d30aa47be10331e0a7036c955bfbf",
+			"bytes": 45771,
+			"sha256": "ed9bbdd7a6549d30497f971bd177c189f42e2d76d7a1d373d585f019a5edc732",
 			"ext": ".html"
 		},
 		{
 			"path": "component/tags/tag/activism/index.html",
-			"bytes": 36319,
-			"sha256": "99ab3b3e16a182e66e2ec348122e7cab62f4337d919773db19dc3f3c31176816",
+			"bytes": 36137,
+			"sha256": "491b33bb3127539c73d6256cca61985a5a53f21b9534567f04953fcc09e1467d",
 			"ext": ".html"
 		},
 		{
 			"path": "component/tags/tag/animals/index.html",
-			"bytes": 36272,
-			"sha256": "1e50167099994c23953998182308a8c56335b0cd4c6be9dd518c78df273ae97b",
+			"bytes": 36090,
+			"sha256": "19d0892bdf405d2654797723fb5e3ac1f73f3f3d7b5e0acf616125b17d8c7f75",
 			"ext": ".html"
 		},
 		{
 			"path": "component/tags/tag/charity/index.html",
-			"bytes": 35234,
-			"sha256": "84d7967a779223d230ce84a6d08ae4b1abfb6bec6999cb7dee2da668d1307791",
+			"bytes": 35052,
+			"sha256": "37db545f014e00b44187426ab23682fac0f2841e974e83dfcfec0db869eb43e7",
 			"ext": ".html"
 		},
 		{
 			"path": "component/tags/tag/media/index.html",
-			"bytes": 33496,
-			"sha256": "d5fcb8191df7e95056ebebc626ac9299cbe936436fb3cc109eb426966cbcd06d",
+			"bytes": 33314,
+			"sha256": "340fdf872b325f499b8f9322681360bee2434187608eb68fa8ecd7b90676755a",
 			"ext": ".html"
 		},
 		{
 			"path": "component/tags/tag/nature/index.html",
-			"bytes": 35590,
-			"sha256": "e1433ceb4fea6d4d2912f8b1035894e4f04e3e7a5b5cdc78ea63b04cd2b25d00",
+			"bytes": 35408,
+			"sha256": "913fc9ec387792df92fc67d2e1a18b6879584e16ecb62f24d3ce33db03f5101a",
 			"ext": ".html"
 		},
 		{
 			"path": "contact/index.html",
-			"bytes": 40331,
-			"sha256": "390abb51674bd69fc0683e5d142424499974b4ab8fe7de1aba009537fe1a39f8",
+			"bytes": 39885,
+			"sha256": "280815f2c98888a95a891dde7217e5079e813ca20576e088f736061172241d2d",
 			"ext": ".html"
 		},
 		{
@@ -130,164 +130,164 @@
 		},
 		{
 			"path": "donations/community-center/index.html",
-			"bytes": 40570,
-			"sha256": "0af08a2503d535e75ee761ae1efa8ce8ca7fa123d2588bf548ff94399ec8fcf3",
+			"bytes": 40080,
+			"sha256": "c613db3ae0b90307f13e42afdd2d0d4a62f8ac2c52473d55e6f5a9649f323aaa",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/endangered-species/index.html",
-			"bytes": 40594,
-			"sha256": "6bb45a85e4d68e34642ce8e660905b344ba894d59b8476706541a38fab96d460",
+			"bytes": 40104,
+			"sha256": "fc5b7dcea3629375f3ec64f28f416a276cf6f4b7c1b82d4e90c0f37d8164be85",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/exploring-the-world-of-feline-friends/index.html",
-			"bytes": 40765,
-			"sha256": "732ecc180f6a0cde55713f56f57a53f71a4a53db8468fbcdfa61a12030c6dc8d",
+			"bytes": 40275,
+			"sha256": "4c46d4e6d92cc8ab4e24a2091670f1ecc5d423b75e2bf6bf392131f31b18d936",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/index.html",
-			"bytes": 51332,
-			"sha256": "f1cd1b683a7894167884045e39f2d09c61f9de26a2d0a66ca66d711ec1f7e8c6",
+			"bytes": 51150,
+			"sha256": "4baea4c25f438bd7e49fedfb2cb5093b6814fb60cc5b5f1d0abc36b367ff71f7",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/index~start=9.html",
-			"bytes": 39640,
-			"sha256": "ce00ceaec50c272af9a97d9a9b6ff0187a40d7c36e45efcff3feb5fa8f0ed359",
+			"bytes": 39458,
+			"sha256": "887ec4dca5c3a2d4672561f8051652269693e5e0f6ec1b290e12ae256f52e373",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/indigenous-people/index.html",
-			"bytes": 40587,
-			"sha256": "38ef4da47d7cf216d7cae30cab5900e4a0c1447e42aa3494c275c2744814f72d",
+			"bytes": 40097,
+			"sha256": "d70b2e8eaff0775db405b5ac8f8f602eb4d46b26879b56d26c99068628dbbd99",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/oil-pollution/index.html",
-			"bytes": 40546,
-			"sha256": "6916f917f9df802fd4631c755fe5def0f1f5f1fdb32d3f04cdb7b7837098bf9d",
+			"bytes": 40056,
+			"sha256": "56aac1593790c0835f802421c451013e64bf45d9362e9c9cbfa521e4aef024f0",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/save-rainforests/index.html",
-			"bytes": 40576,
-			"sha256": "9f2fac2a8c18507b9873c3dca2781a09abe1b49b82500dc86bf484e1c0654886",
+			"bytes": 40086,
+			"sha256": "1ab6039f9d26c211f5442537eadc1a6d6ec4fe0056f9aabca737026d63e63965",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/saving-animal-preserve/index.html",
-			"bytes": 40633,
-			"sha256": "b7cfa61029c82e6611bbf5b211619472d456ffc73cc55db1b82244b368c645cc",
+			"bytes": 40143,
+			"sha256": "b95be97a30c95a01cd955d57c3f6bcd4c5e4a10acba200607bd76520bca53c0b",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/saving-ensdangered-species/index.html",
-			"bytes": 40660,
-			"sha256": "7bf2f645ed49013deceb5166123db93348d0f0b5184f4ab6f9657483f7fec74d",
+			"bytes": 40170,
+			"sha256": "842e54f053223896d9a28e7e1b74ccbdd0e83ba3c081f3d6816c7425d7debff0",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/sea-pollution/index.html",
-			"bytes": 40551,
-			"sha256": "65b80ca416b8f967defc1d775e00031d74acd97452ef3e114df73c7e7fec600c",
+			"bytes": 40061,
+			"sha256": "31ba3283e20156f017449cbf5decddbc179937c50a46aeb28e33bec847ac64a6",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/surviving-the-harsh-polar-realms/index.html",
-			"bytes": 40717,
-			"sha256": "15b42d762d548c5eb50266d4187191c8bf936ecf180dec17e8210a6dc7c7d481",
+			"bytes": 40227,
+			"sha256": "5e6da41bb9805bbf5a5036d05165442cf161072c703a5ca2e494c7f413554d6e",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/the-african-wildlife-chronicles/index.html",
-			"bytes": 40708,
-			"sha256": "de3981a5f44785f7310a12dd23f779b9482457d2f2192ca9d29575c4d6a026b2",
+			"bytes": 40218,
+			"sha256": "57533c90d6671604b8b9cd439bb35751409dd0045e6dd607bb799fa35785f16c",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/the-mysteries-of-the-jungle-creatures/index.html",
-			"bytes": 40767,
-			"sha256": "705cbaa58e24dcf5e91a4c0502a178ad894db7f7d53b4cd1708f29e39e2c232b",
+			"bytes": 40277,
+			"sha256": "965606e5d337ec1f598e24548dc3a79377abde3bf03bd9a659d3a025c33793fb",
 			"ext": ".html"
 		},
 		{
 			"path": "donations/water-treatment-projects/index.html",
-			"bytes": 40639,
-			"sha256": "59dd19cde1ec673be39e6f5eb6ccd00487d687f504ebaf83e1ca70ee77c2ea26",
+			"bytes": 40149,
+			"sha256": "793c97c9f54f6a72e78fddce4afbed56cbc2d7936adfdbef10b3c572c746897b",
 			"ext": ".html"
 		},
 		{
 			"path": "events/a-microscopic-marvel/index.html",
-			"bytes": 38070,
-			"sha256": "17684118c96947d6a93653f4f112c35dc1974207523486a116931544430c7523",
+			"bytes": 37624,
+			"sha256": "c724f6d43878a6872c8d0f6a9c2b5e8e8fb16c501cc0072c9541b7c75ed616a8",
 			"ext": ".html"
 		},
 		{
 			"path": "events/afforestation-program/index.html",
-			"bytes": 38075,
-			"sha256": "b189e062380e1d3981aace64d743ed3944b4127965ffbaa8197fec07ef92670f",
+			"bytes": 37629,
+			"sha256": "b6d26cb8af9284edafa1c214a5bcc08b0f3347a1588846b11c3fdeebb2a75db7",
 			"ext": ".html"
 		},
 		{
 			"path": "events/an-adventure-with-animals/index.html",
-			"bytes": 38171,
-			"sha256": "2ddba06147a1f14c3a27813797501aa5a8278772c8fb03813a98260bcaba26d4",
+			"bytes": 37725,
+			"sha256": "3fefb4a38fffeffb27c35d97d6eea817fcb87900f8cccb3a6c2b566e6df827b8",
 			"ext": ".html"
 		},
 		{
 			"path": "events/charity-journey-to-africa/index.html",
-			"bytes": 37925,
-			"sha256": "24f64718fd2c8edeb2e9277d8b201915d7b61ee6a45a9d160779a35f98befa2e",
+			"bytes": 37479,
+			"sha256": "d4851dbd3a615cba332678180c7159326cfc797bf94121e4ae7cf8c452004998",
 			"ext": ".html"
 		},
 		{
 			"path": "events/feed-the-world/index.html",
-			"bytes": 37884,
-			"sha256": "2c095ad76cf8e86fdafde0735fd39aaaef9283c46a0bb41c5e16d30e9f150f6b",
+			"bytes": 37438,
+			"sha256": "8637e8e56e2db70bc748cc17f28f0871fdbf3bbc17faac60cdabe24dc7c81667",
 			"ext": ".html"
 		},
 		{
 			"path": "events/index.html",
-			"bytes": 37684,
-			"sha256": "c0b1a46c4e58243c02e296f3f88a8d131f7126f853e687c5efea2c9588b71b6a",
+			"bytes": 37502,
+			"sha256": "f54ecdc24e4e4bb3cf0590c56ac113fbd9f0c80b35c20e8a11450dce92da0d2d",
 			"ext": ".html"
 		},
 		{
 			"path": "events/index~start=5.html",
-			"bytes": 31557,
-			"sha256": "99e7ef2cedbc049a31cb8fcd7cca7ecc22a27d732cdf5f9bc38ba1067b2f8cfb",
+			"bytes": 31375,
+			"sha256": "3118b908584f3d7035fee9c7c2b2475d8b12de14e3e4c5e8b7db5d9da800ebe6",
 			"ext": ".html"
 		},
 		{
 			"path": "events/natures-hidden-gems/index.html",
-			"bytes": 38130,
-			"sha256": "c50ae962d44ae5a60c758efa7a562129bf3a0df8788476a19fa3f072fcb13d56",
+			"bytes": 37684,
+			"sha256": "4419170409475b908c82a40d27cb9dd6decaebad8702e0ef31b95a7649a3db42",
 			"ext": ".html"
 		},
 		{
 			"path": "events/saving-nature/index.html",
-			"bytes": 37815,
-			"sha256": "bccf1c32f5dbf194b747b4dd36cd34552c03ab2e93d8a097b7086c06ff45df55",
+			"bytes": 37369,
+			"sha256": "45cf92345c584acee319aac4667a29fab21f0518b39cb6f60c786f93b1650ec0",
 			"ext": ".html"
 		},
 		{
 			"path": "events/the-day-of-the-african-child/index.html",
-			"bytes": 37764,
-			"sha256": "b1a2d57f68faa6778f67e80bcb95e02e76bf223e1bf825f05022c57203b0d1a1",
+			"bytes": 37318,
+			"sha256": "4f21d80c133e614448b560d15d1f8b31964b7eeaf7ffeab9b78df4c08ba9440b",
 			"ext": ".html"
 		},
 		{
 			"path": "events/unveiling-natures-best-kept-treasures/index.html",
-			"bytes": 38124,
-			"sha256": "349144e4a85c43c9a41da748d9f90315a0c4984b2ccff3f28d3a885264cbe395",
+			"bytes": 37678,
+			"sha256": "afa7660cc9d33aadc7a61dfe8548ecc92af9f16ef16d4333fea33405eceb21bc",
 			"ext": ".html"
 		},
 		{
 			"path": "help-faqs/index.html",
-			"bytes": 39776,
-			"sha256": "c6c830b79f558213e8b9b409f0c61e0951ec0cc99bbc5d9fb4d07a045e2831a9",
+			"bytes": 39594,
+			"sha256": "716144e11dd7ad19b0759c308db323858de232fe78f767a7ec9a8cfd58ce6366",
 			"ext": ".html"
 		},
 		{
@@ -916,26 +916,26 @@
 		},
 		{
 			"path": "index.html",
-			"bytes": 96947,
-			"sha256": "2fe4e9041efec2dd00e6249de28b73a58a6d84d373faf0960938cfcc2aaf15e0",
+			"bytes": 96677,
+			"sha256": "7f47f3fe63c8967c833574f0a6739ffd8a61af529695f39d4786b7a97ca274a6",
 			"ext": ".html"
 		},
 		{
 			"path": "index.php/contact/index.html",
-			"bytes": 40341,
-			"sha256": "9fb4383476870d22b74f7afa44384c7398fb104ef38ade4dc4784ce8fc1c71d0",
+			"bytes": 39895,
+			"sha256": "433851933a48256f30059993ee6a2e603280dcfe6d53eaa0607aae022cf5fe1d",
 			"ext": ".html"
 		},
 		{
 			"path": "index.php/donations/index.html",
-			"bytes": 51332,
-			"sha256": "7115237b8f201bd8af97abbcc974be8727832d8089d1e4c9abef4e93324abd7d",
+			"bytes": 51150,
+			"sha256": "0c475ec54ce3982d87cb4c3a81e668669525f4a2643d5089e5a005c2ff2a041e",
 			"ext": ".html"
 		},
 		{
 			"path": "index.php/pages/user/registration-form/index.html",
-			"bytes": 41765,
-			"sha256": "a123f206a9f92c6b2289d1b68cab65a127fe036271d571acb6bee689c382f668",
+			"bytes": 41583,
+			"sha256": "789334f3f827faf12c11128ce65936736cb5e9b1433451091434b0135b5b886d",
 			"ext": ".html"
 		},
 		{
@@ -1191,219 +1191,225 @@
 			"ext": ".js"
 		},
 		{
+			"path": "nope-404/index.html",
+			"bytes": 2591,
+			"sha256": "ec9683db6ba85b7b0ae4e0316711690fbaf3c3eed56f050bd91c18fbc88aedf4",
+			"ext": ".html"
+		},
+		{
 			"path": "pages/j-content/author-listting/author/Gbush/index.html",
-			"bytes": 36884,
-			"sha256": "cdce600e0d077f035c205a98df5f5e438a26a6046a214e4ce845ece0aa78f5cc",
+			"bytes": 36702,
+			"sha256": "a82147e4032ecfc498cb22372900545371076dc4f22194f679a531555a890f4f",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/Gbush/index~start=3.html",
-			"bytes": 35719,
-			"sha256": "d9ec1c36625841835c8b2b0987c54228a32ee22f0d7902a24b6b45837dfdaad0",
+			"bytes": 35537,
+			"sha256": "3593ac6b97c3be08f0e1ba5d7956534feb5a942421ab5fb7cb0d44e74e3201a8",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/Jsteele/index.html",
-			"bytes": 36703,
-			"sha256": "18bcb4c37882a8b82768f2c121ffa1d678605cb9b7912b4f5a1d4bf825712335",
+			"bytes": 36521,
+			"sha256": "a62626f21a7eb48fff6f6b80e5ba714421a46d22ae4e32b44f4a432951ba05df",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/Jsteele/index~start=3.html",
-			"bytes": 36559,
-			"sha256": "b0f89ccb98ea02fc369b6707e9a3f23b1cb484110ddaf2240912955c262b5683",
+			"bytes": 36377,
+			"sha256": "063c48d716c62c4187e90d8cbf4227245b3dba4c9a6cc32c21c9053c79d9afa4",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/clitchfield/index.html",
-			"bytes": 36654,
-			"sha256": "a87f55b061550aa0fff9cf2a5a7272280fcb848739a29c901897e6cd041c1008",
+			"bytes": 36472,
+			"sha256": "3168f56ea6b9aab3d62f72f952a84d87598facb517ac107f4fa3057463ecf058",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/clitchfield/index~start=3.html",
-			"bytes": 35682,
-			"sha256": "a7d66c64221a086c43aa604898135a22fdf542692f123a34b6dfe257737b6d1b",
+			"bytes": 35500,
+			"sha256": "f37284e0e6c1c28a8d2c5ab6463248891abb9cd79e22521c66caeb1ead7a541b",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/jsmith/index.html",
-			"bytes": 36894,
-			"sha256": "321b5f93f5863608d5e5bedf02f25f8bfcd19cd6e482473e5b33f572de9f61f8",
+			"bytes": 36712,
+			"sha256": "3ee570f523c8b5b50de7c3dbf324ce6770a703376f9ebfae4816ed89862d38c7",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/jsmith/index~start=3.html",
-			"bytes": 35745,
-			"sha256": "07dde418dce94d52365aa0ac3b7f60c9a9ed5380b43ffb14f90721cd8c1f6bde",
+			"bytes": 35563,
+			"sha256": "34011a66fa2ffca0b5221b5350e9a563d19c6524124b2d5abe6264a1cd660b34",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/jsteve/index.html",
-			"bytes": 36685,
-			"sha256": "3cb12ea86a34af2cb5ef43837c9f3950e9d8f1a0ccc926300477538d3ce002f1",
+			"bytes": 36503,
+			"sha256": "724cf461bbeed4cfcb97a8f236402fac5e088482f9f3a1a960475e47c94b1021",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/jsteve/index~start=3.html",
-			"bytes": 35625,
-			"sha256": "573d06fa9eea4ae0937d633a3c71385ac6c9fdf669eaedff1a72a3f3bc80c637",
+			"bytes": 35443,
+			"sha256": "b199e0e6b090f44614a781d806ae939d90309ba23945256d344dfeef603767d9",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/mbrown/index.html",
-			"bytes": 36685,
-			"sha256": "ae945db0cd073391cfcb4467d3f5b6a5a06567736f2edd32d3d543cc50fec4d5",
+			"bytes": 36503,
+			"sha256": "c24c6331868b1b2acfc753d1c02a5bb1317530868d90e65b58eea00c933029fd",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/rcoleman/index.html",
-			"bytes": 36772,
-			"sha256": "164f972119af9d3907d3928a6707c1757c34aec03a0e7eee521ec8147f81b46e",
+			"bytes": 36590,
+			"sha256": "74db21ea6ca00dfad8caf7b1ae856065709768c7010c59809823cca7330bcc6a",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/rcoleman/index~start=3.html",
-			"bytes": 36624,
-			"sha256": "88ba70c806136d742668e4a450526c52db76146b6bca355f85914d8fa0322e33",
+			"bytes": 36442,
+			"sha256": "be50a4397d7895b85bca1be3a6003e8125ffd0459b37039ed9361ef1521e9ec5",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/author/slee/index.html",
-			"bytes": 35330,
-			"sha256": "c0f383fa645f76a856fe81fe85db3e52deb659e49bc14b6b0c398fe21e4cf01b",
+			"bytes": 35148,
+			"sha256": "4282cd894ac76ad37d42370f90c5256281b45a0ddba4daebe8b2941cd0473476",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/index.html",
-			"bytes": 40590,
-			"sha256": "17daf8ca3cdfd9b9f93ded55397977b22ba9e2c31e51a8d0fbbd03a24bf8a653",
+			"bytes": 40408,
+			"sha256": "49ed2a588a6abbb6cc8bfaa18fdb5a87fed80c701579e28b48ae0d6deb0e1008",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/author-listting/index~start=6.html",
-			"bytes": 33718,
-			"sha256": "8de14f301e4eb4e85a4a8b2e4ef89bbdfe9c71fc90cf8790d690975a60ef05c5",
+			"bytes": 33536,
+			"sha256": "369acd1229f329ba13cad4a66392be31a13b8194365458040b5af99911f41ca9",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/blog-detail/index.html",
-			"bytes": 47495,
-			"sha256": "d1b902e79e94088190af76076fafc9fbf9b27486ce4a6f0032238efcbc5b6498",
+			"bytes": 46983,
+			"sha256": "390fcb67557c4646903a985c60be92a31fed65d663d0d3ef49bfb098306bb435",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/category-blog/a-journey-of-discovery-and-learning/index.html",
-			"bytes": 46884,
-			"sha256": "2a2ee84b819c49d53c0dc564d36fa7cd01334d610ecb83dd27532740b0faa6a8",
+			"bytes": 46372,
+			"sha256": "b6b806925e6f75dbe9edc4e72a71e9bf0321e2ae7d46c5366ab9b7b8fc4356da",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/category-blog/a-journey-through-enchanted-lands/index.html",
-			"bytes": 46950,
-			"sha256": "3afe5aac21f8f624476cf04ba8dd2bc4f03fe1db48b8f244eaa916a5e7663f1a",
+			"bytes": 46438,
+			"sha256": "4d561132612f50341e89df2873c0860ab837887a9ca3400147d957526313c392",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/category-blog/exciting-adventures-to-the-past-and-future/index.html",
-			"bytes": 46508,
-			"sha256": "cc73a4aedca9c470e63d183b131a43d3cf2e5f9dd59175ed7536872d15dc1128",
+			"bytes": 45996,
+			"sha256": "7851de28aa75d440934feeef6dfbfa113c3f6d87bc44af8aee6cc6a5167a7d9d",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/category-blog/exploring-magical-worlds/index.html",
-			"bytes": 43905,
-			"sha256": "67d3d03a82f9769db548e5e91436adb24693722796fde8af1b56e98e5827a705",
+			"bytes": 43393,
+			"sha256": "8f8ce5eb964504110e5fa272fd8e5b6011661d4ccb310811be6caac45935081d",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/category-blog/exploring-the-beauty-of-the-animal-kingdom/index.html",
-			"bytes": 46912,
-			"sha256": "b6a212a40c83986042e61e3c1e0190a6593a1aebe5fed3762c19863deb984e79",
+			"bytes": 46400,
+			"sha256": "f30f6fb8f4e59b721030a89461469d0c0498683953f9b4d396c5102dc199f45b",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/category-blog/heartwarming-tales-of-kindness-and-togetherness/index.html",
-			"bytes": 46936,
-			"sha256": "7be4f961fb9d7f9753692f3b9ba8d983a0b050f7af1f2a5777abd348d21a27ca",
+			"bytes": 46424,
+			"sha256": "e7d8db994629d1013a11bbf89855964f0ed77dd75419c1d204fe33a463907f11",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/category-blog/how-many-people-in-africa-don-t-have-food/index.html",
-			"bytes": 46945,
-			"sha256": "1c2e1be6930aa373eb391f6b7332ee312c256d62484bff2fc560253559d3b6a2",
+			"bytes": 46433,
+			"sha256": "46f88a118b4d038badaf55ad9f77a82bfdc660d191452e66ea9da50787d8987e",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/category-blog/index.html",
-			"bytes": 45250,
-			"sha256": "b6d20498441610b70b35c3ef1e6f74228724634bfc6f0f257ed1f453026b2db7",
+			"bytes": 44870,
+			"sha256": "166594186a29ebe98d334c48f38835fa4b44ba890fb0e289609e7e0c4479435c",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/category-blog/legends-and-folktales-from-around-the-world/index.html",
-			"bytes": 46910,
-			"sha256": "3abc9307e521ee3c2929cb931fcba53be04df1df51090d4beafc60baa2c8a5cf",
+			"bytes": 46398,
+			"sha256": "171a0d8caa2a97b7ae1b5ad1d865a404e19d3638699d035363c1ebf3b8e8aa07",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/category-blog/silly-stories-and-jokes-for-young-readers/index.html",
-			"bytes": 46515,
-			"sha256": "da316ef4ada47b22219b77969b526bf71d6cdc86a8dabaa2a6ca07a47583d774",
+			"bytes": 46003,
+			"sha256": "108745dc843516e2a62c893fb0a8f5e07f5eacc87df7eb5c2aad37f5a082c168",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/featured-articles/index.html",
-			"bytes": 47080,
-			"sha256": "47c2757adc70ae70fb423577f57d4d0382774a3e5bc3fd7d66cf4ebf31bd687f",
+			"bytes": 46700,
+			"sha256": "c36394ee958b452f14815a7efdaa1b2514e892676529de06cde0aa6071bcd83e",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-content/featured-articles/index~start=9.html",
-			"bytes": 32333,
-			"sha256": "f397ac04c8494ff312e5e4d177f50dd4f8f6e8682b63c4b85ebdc02ba8396db2",
+			"bytes": 32129,
+			"sha256": "580efb107877eaf8f6f4dae1c23d0c9c3c1e6f4f9ba2c95adc76175997a28b57",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-page/error-page/index.html",
-			"bytes": 30720,
-			"sha256": "18f6a132a63f8d8f9e681953f9dded1b68b84abf3f2d8c3773039ddd20bbfdbe",
+			"bytes": 30274,
+			"sha256": "6fd3b375efb07ac43abe503bae7c168d57c2aa530c2af3aa67572ca37fdb81bb",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-page/offline-page/index.html",
-			"bytes": 30891,
-			"sha256": "29d6b0df99cfaf5b42b7ddc8cefd23c9d986ea5d05089967d12d160b5d982018",
+			"bytes": 30445,
+			"sha256": "715e903e4fbb4f923e40e5abe63cdab7c4b8d11e6a108cc9ffbafd62941e9854",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-page/smart-search/index.html",
-			"bytes": 35618,
-			"sha256": "0226a90fb68531bb05b38846688a80560e8d29f5c478d98bab83bbee8e67d874",
+			"bytes": 35414,
+			"sha256": "ab27c88db2dd0b383e2381c35dd10273c4ed267b930efd6510c598bed80c42a3",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/j-page/typography/index.html",
-			"bytes": 49349,
-			"sha256": "21ea3447a0688a2b14ebc2f6ec25ce4ea1060846f4118b2e1a0c81940c21e0dc",
+			"bytes": 48903,
+			"sha256": "dea559e63c7486395c2277821601b44f0da2247e5ae95fb636b8f94e338607dc",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/user/login-form/index.html",
-			"bytes": 32119,
-			"sha256": "34458674480fde7b6011fae689bc7ab061745aaa4c5426ec6521ec93c6193bcb",
+			"bytes": 31937,
+			"sha256": "f35b51198cb7c435da15b9102600f6fb0ae0cc14bd4d06861d0fbec7c7f10a22",
 			"ext": ".html"
 		},
 		{
 			"path": "pages/user/registration-form/index.html",
-			"bytes": 41765,
-			"sha256": "d647ee4acf7e989e6525f098d90aa415107da0ebfbfc6989149ad58da669ab43",
+			"bytes": 41583,
+			"sha256": "1619008ef7e7e344f762d210ddb1a7c64fe1fdd5dbb3a2fb3b7cf4ed9338b911",
 			"ext": ".html"
 		},
 		{
 			"path": "password-reset/index.html",
-			"bytes": 29490,
-			"sha256": "0aa8ddecaffa385ec6462bec1e6a0a78d5fe015e91f45bb9722e55583217a861",
+			"bytes": 29308,
+			"sha256": "c441f0edb23d79604f457e3182075b95d36c784aba66b9226a3d0802831d38f5",
 			"ext": ".html"
 		},
 		{
@@ -1630,15 +1636,15 @@
 		},
 		{
 			"path": "username-reminder-request/index.html",
-			"bytes": 29698,
-			"sha256": "0250212eae5c973b87c2e50ca3195e355f25fb4396fb5f9bbc390f87ae67af57",
+			"bytes": 29516,
+			"sha256": "3e960f9c099872ff662010d66949fc1fbe0cc97a2723177ad8b9b43a7d6f5816",
 			"ext": ".html"
 		}
 	],
 	"pages": [
 		{
 			"file": "about/index.html",
-			"sha256": "68190a7d01873d9d64b56d3826f4002e1d0a8c979b87b1308aef928cd1d694df",
+			"sha256": "6fad65403f5d16b674a7290ab3db17ea095796006bbf6e4210150271a6a28475",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1646,7 +1652,7 @@
 		},
 		{
 			"file": "blog/index.html",
-			"sha256": "451a9c38506f4c43af88e14e40398e50350c575677649f770577e5ffc0220892",
+			"sha256": "b50f798e16e728d1addb8b989304b3523642c7ae59a5876a963a999b1af217ab",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1654,7 +1660,7 @@
 		},
 		{
 			"file": "blog/index~start=9.html",
-			"sha256": "dd3cdf2d5437c92c9967927fe3eb3ee1c1bc0301bac0911def9fb25961a5367f",
+			"sha256": "5c410d5f0b756a079233ccf0ac2bbba890b2f850ae44f54406e602386cc59b6f",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=9",
@@ -1662,7 +1668,7 @@
 		},
 		{
 			"file": "category-blog/building-empathy-throughremote-user-research/index.html",
-			"sha256": "4bc0c03268cb6a3dbcf36aad5a7a6e4c8799f31c068dc774dbbbc6148867f41d",
+			"sha256": "349fb4468c96b06a491b8b55468fb4f6c2e26ed7a49cbfe4b5d74c200ba2af03",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1670,7 +1676,7 @@
 		},
 		{
 			"file": "category-blog/charity-branding-is-yourbrand-digital-ready/index.html",
-			"sha256": "2ad4b926545ae9112a8c345baf63aba7ed23ec33e1da3001d44cd9db71a137db",
+			"sha256": "a68b107d1b04882a7e1e75348f7bb361ef3e13787057fcb458b7b21a3b482d02",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1678,7 +1684,7 @@
 		},
 		{
 			"file": "category-blog/charity-of-the-month-plan-international-uk-2/index.html",
-			"sha256": "5875bf04fe93c5e3b1e049f3c6838d96432667b653eb10f84f20baa7d671aff3",
+			"sha256": "cc0a87346581b2873342eeef49a5a1d1f91e6ef20a239369c447be94be1c9aa4",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1686,7 +1692,7 @@
 		},
 		{
 			"file": "category-blog/donation-and-cleaning-program-foundation/index.html",
-			"sha256": "834534dfa78a0e6b49914fa1956d4d5a2835250567773e3d96a6f112ea50df7b",
+			"sha256": "e4502895d39c5f29f0a1d81b4648ddb578954b6642dabc1d632fb4326c008488",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1694,7 +1700,7 @@
 		},
 		{
 			"file": "category-blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation/index.html",
-			"sha256": "290938754ebb0e845c0ced61257ce6625710dde2f7585e1951eac4f5f4c0aa68",
+			"sha256": "331bd48b18bcbca4a8c8c2f4fbf604ea68678e452fb80c6554e3fe4960de6d4a",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1702,7 +1708,7 @@
 		},
 		{
 			"file": "category-blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during/index.html",
-			"sha256": "6f4973628cc308f8efeb2f720e7180721b499b92df29d9737f9908cf099a063a",
+			"sha256": "9dbac68fdfb5f29c2ca2333abb996648a8bf135df73a9a1a05f608fc2f9cbfb7",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1710,7 +1716,7 @@
 		},
 		{
 			"file": "category-blog/index.html",
-			"sha256": "5cec4aaa4a8ec7f38acca3a2d1629aa112d74b797c6122471fce30f6c3eb4c1a",
+			"sha256": "bd958177dabae25f4d5c64e6f59f8b998156f40b28e6419e47ce34fd6df2801f",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1718,7 +1724,7 @@
 		},
 		{
 			"file": "category-blog/index~start=9.html",
-			"sha256": "05b2f4f79a5ea5cc41c36cfcb7652da699172d410da2092f45e4d09a85530b0a",
+			"sha256": "508f7cff338aa62769eddc67b9719053d6fc0503561b51af0bc73e88bd57e395",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=9",
@@ -1726,7 +1732,7 @@
 		},
 		{
 			"file": "category-blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults/index.html",
-			"sha256": "69b28f28e6b973dec2095f9f1a332943758d50dafad830011a58b1fc20a3bab4",
+			"sha256": "38004aaad21a25ce4868fd272bf1caa801ee6043ecda380f1c3b1832b5d8aeda",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1734,7 +1740,7 @@
 		},
 		{
 			"file": "category-blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled/index.html",
-			"sha256": "f0ccf430ab83b2137f7b290f19187d5642da35eb00467fddbd79a1ed0f8af37a",
+			"sha256": "896e9de9780a513f1520a67849f076843d729fe9d91d3fe20ee7c5c8e45accdf",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1742,7 +1748,7 @@
 		},
 		{
 			"file": "category-blog/weve-reached-1-million-indonations-and-counting/index.html",
-			"sha256": "f4c0b5726beb973f09269ce80360b9dfb12d30aa47be10331e0a7036c955bfbf",
+			"sha256": "ed9bbdd7a6549d30497f971bd177c189f42e2d76d7a1d373d585f019a5edc732",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1750,7 +1756,7 @@
 		},
 		{
 			"file": "component/tags/tag/activism/index.html",
-			"sha256": "99ab3b3e16a182e66e2ec348122e7cab62f4337d919773db19dc3f3c31176816",
+			"sha256": "491b33bb3127539c73d6256cca61985a5a53f21b9534567f04953fcc09e1467d",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1758,7 +1764,7 @@
 		},
 		{
 			"file": "component/tags/tag/animals/index.html",
-			"sha256": "1e50167099994c23953998182308a8c56335b0cd4c6be9dd518c78df273ae97b",
+			"sha256": "19d0892bdf405d2654797723fb5e3ac1f73f3f3d7b5e0acf616125b17d8c7f75",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1766,7 +1772,7 @@
 		},
 		{
 			"file": "component/tags/tag/charity/index.html",
-			"sha256": "84d7967a779223d230ce84a6d08ae4b1abfb6bec6999cb7dee2da668d1307791",
+			"sha256": "37db545f014e00b44187426ab23682fac0f2841e974e83dfcfec0db869eb43e7",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1774,7 +1780,7 @@
 		},
 		{
 			"file": "component/tags/tag/media/index.html",
-			"sha256": "d5fcb8191df7e95056ebebc626ac9299cbe936436fb3cc109eb426966cbcd06d",
+			"sha256": "340fdf872b325f499b8f9322681360bee2434187608eb68fa8ecd7b90676755a",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1782,7 +1788,7 @@
 		},
 		{
 			"file": "component/tags/tag/nature/index.html",
-			"sha256": "e1433ceb4fea6d4d2912f8b1035894e4f04e3e7a5b5cdc78ea63b04cd2b25d00",
+			"sha256": "913fc9ec387792df92fc67d2e1a18b6879584e16ecb62f24d3ce33db03f5101a",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1790,7 +1796,7 @@
 		},
 		{
 			"file": "contact/index.html",
-			"sha256": "390abb51674bd69fc0683e5d142424499974b4ab8fe7de1aba009537fe1a39f8",
+			"sha256": "280815f2c98888a95a891dde7217e5079e813ca20576e088f736061172241d2d",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1798,7 +1804,7 @@
 		},
 		{
 			"file": "donations/community-center/index.html",
-			"sha256": "0af08a2503d535e75ee761ae1efa8ce8ca7fa123d2588bf548ff94399ec8fcf3",
+			"sha256": "c613db3ae0b90307f13e42afdd2d0d4a62f8ac2c52473d55e6f5a9649f323aaa",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1806,7 +1812,7 @@
 		},
 		{
 			"file": "donations/endangered-species/index.html",
-			"sha256": "6bb45a85e4d68e34642ce8e660905b344ba894d59b8476706541a38fab96d460",
+			"sha256": "fc5b7dcea3629375f3ec64f28f416a276cf6f4b7c1b82d4e90c0f37d8164be85",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1814,7 +1820,7 @@
 		},
 		{
 			"file": "donations/exploring-the-world-of-feline-friends/index.html",
-			"sha256": "732ecc180f6a0cde55713f56f57a53f71a4a53db8468fbcdfa61a12030c6dc8d",
+			"sha256": "4c46d4e6d92cc8ab4e24a2091670f1ecc5d423b75e2bf6bf392131f31b18d936",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1822,7 +1828,7 @@
 		},
 		{
 			"file": "donations/index.html",
-			"sha256": "f1cd1b683a7894167884045e39f2d09c61f9de26a2d0a66ca66d711ec1f7e8c6",
+			"sha256": "4baea4c25f438bd7e49fedfb2cb5093b6814fb60cc5b5f1d0abc36b367ff71f7",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1830,7 +1836,7 @@
 		},
 		{
 			"file": "donations/index~start=9.html",
-			"sha256": "ce00ceaec50c272af9a97d9a9b6ff0187a40d7c36e45efcff3feb5fa8f0ed359",
+			"sha256": "887ec4dca5c3a2d4672561f8051652269693e5e0f6ec1b290e12ae256f52e373",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=9",
@@ -1838,7 +1844,7 @@
 		},
 		{
 			"file": "donations/indigenous-people/index.html",
-			"sha256": "38ef4da47d7cf216d7cae30cab5900e4a0c1447e42aa3494c275c2744814f72d",
+			"sha256": "d70b2e8eaff0775db405b5ac8f8f602eb4d46b26879b56d26c99068628dbbd99",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1846,7 +1852,7 @@
 		},
 		{
 			"file": "donations/oil-pollution/index.html",
-			"sha256": "6916f917f9df802fd4631c755fe5def0f1f5f1fdb32d3f04cdb7b7837098bf9d",
+			"sha256": "56aac1593790c0835f802421c451013e64bf45d9362e9c9cbfa521e4aef024f0",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1854,7 +1860,7 @@
 		},
 		{
 			"file": "donations/save-rainforests/index.html",
-			"sha256": "9f2fac2a8c18507b9873c3dca2781a09abe1b49b82500dc86bf484e1c0654886",
+			"sha256": "1ab6039f9d26c211f5442537eadc1a6d6ec4fe0056f9aabca737026d63e63965",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1862,7 +1868,7 @@
 		},
 		{
 			"file": "donations/saving-animal-preserve/index.html",
-			"sha256": "b7cfa61029c82e6611bbf5b211619472d456ffc73cc55db1b82244b368c645cc",
+			"sha256": "b95be97a30c95a01cd955d57c3f6bcd4c5e4a10acba200607bd76520bca53c0b",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1870,7 +1876,7 @@
 		},
 		{
 			"file": "donations/saving-ensdangered-species/index.html",
-			"sha256": "7bf2f645ed49013deceb5166123db93348d0f0b5184f4ab6f9657483f7fec74d",
+			"sha256": "842e54f053223896d9a28e7e1b74ccbdd0e83ba3c081f3d6816c7425d7debff0",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1878,7 +1884,7 @@
 		},
 		{
 			"file": "donations/sea-pollution/index.html",
-			"sha256": "65b80ca416b8f967defc1d775e00031d74acd97452ef3e114df73c7e7fec600c",
+			"sha256": "31ba3283e20156f017449cbf5decddbc179937c50a46aeb28e33bec847ac64a6",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1886,7 +1892,7 @@
 		},
 		{
 			"file": "donations/surviving-the-harsh-polar-realms/index.html",
-			"sha256": "15b42d762d548c5eb50266d4187191c8bf936ecf180dec17e8210a6dc7c7d481",
+			"sha256": "5e6da41bb9805bbf5a5036d05165442cf161072c703a5ca2e494c7f413554d6e",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1894,7 +1900,7 @@
 		},
 		{
 			"file": "donations/the-african-wildlife-chronicles/index.html",
-			"sha256": "de3981a5f44785f7310a12dd23f779b9482457d2f2192ca9d29575c4d6a026b2",
+			"sha256": "57533c90d6671604b8b9cd439bb35751409dd0045e6dd607bb799fa35785f16c",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1902,7 +1908,7 @@
 		},
 		{
 			"file": "donations/the-mysteries-of-the-jungle-creatures/index.html",
-			"sha256": "705cbaa58e24dcf5e91a4c0502a178ad894db7f7d53b4cd1708f29e39e2c232b",
+			"sha256": "965606e5d337ec1f598e24548dc3a79377abde3bf03bd9a659d3a025c33793fb",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1910,7 +1916,7 @@
 		},
 		{
 			"file": "donations/water-treatment-projects/index.html",
-			"sha256": "59dd19cde1ec673be39e6f5eb6ccd00487d687f504ebaf83e1ca70ee77c2ea26",
+			"sha256": "793c97c9f54f6a72e78fddce4afbed56cbc2d7936adfdbef10b3c572c746897b",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1918,7 +1924,7 @@
 		},
 		{
 			"file": "events/a-microscopic-marvel/index.html",
-			"sha256": "17684118c96947d6a93653f4f112c35dc1974207523486a116931544430c7523",
+			"sha256": "c724f6d43878a6872c8d0f6a9c2b5e8e8fb16c501cc0072c9541b7c75ed616a8",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1926,7 +1932,7 @@
 		},
 		{
 			"file": "events/afforestation-program/index.html",
-			"sha256": "b189e062380e1d3981aace64d743ed3944b4127965ffbaa8197fec07ef92670f",
+			"sha256": "b6d26cb8af9284edafa1c214a5bcc08b0f3347a1588846b11c3fdeebb2a75db7",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1934,7 +1940,7 @@
 		},
 		{
 			"file": "events/an-adventure-with-animals/index.html",
-			"sha256": "2ddba06147a1f14c3a27813797501aa5a8278772c8fb03813a98260bcaba26d4",
+			"sha256": "3fefb4a38fffeffb27c35d97d6eea817fcb87900f8cccb3a6c2b566e6df827b8",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1942,7 +1948,7 @@
 		},
 		{
 			"file": "events/charity-journey-to-africa/index.html",
-			"sha256": "24f64718fd2c8edeb2e9277d8b201915d7b61ee6a45a9d160779a35f98befa2e",
+			"sha256": "d4851dbd3a615cba332678180c7159326cfc797bf94121e4ae7cf8c452004998",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1950,7 +1956,7 @@
 		},
 		{
 			"file": "events/feed-the-world/index.html",
-			"sha256": "2c095ad76cf8e86fdafde0735fd39aaaef9283c46a0bb41c5e16d30e9f150f6b",
+			"sha256": "8637e8e56e2db70bc748cc17f28f0871fdbf3bbc17faac60cdabe24dc7c81667",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1958,7 +1964,7 @@
 		},
 		{
 			"file": "events/index.html",
-			"sha256": "c0b1a46c4e58243c02e296f3f88a8d131f7126f853e687c5efea2c9588b71b6a",
+			"sha256": "f54ecdc24e4e4bb3cf0590c56ac113fbd9f0c80b35c20e8a11450dce92da0d2d",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1966,7 +1972,7 @@
 		},
 		{
 			"file": "events/index~start=5.html",
-			"sha256": "99e7ef2cedbc049a31cb8fcd7cca7ecc22a27d732cdf5f9bc38ba1067b2f8cfb",
+			"sha256": "3118b908584f3d7035fee9c7c2b2475d8b12de14e3e4c5e8b7db5d9da800ebe6",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=5",
@@ -1974,7 +1980,7 @@
 		},
 		{
 			"file": "events/natures-hidden-gems/index.html",
-			"sha256": "c50ae962d44ae5a60c758efa7a562129bf3a0df8788476a19fa3f072fcb13d56",
+			"sha256": "4419170409475b908c82a40d27cb9dd6decaebad8702e0ef31b95a7649a3db42",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1982,7 +1988,7 @@
 		},
 		{
 			"file": "events/saving-nature/index.html",
-			"sha256": "bccf1c32f5dbf194b747b4dd36cd34552c03ab2e93d8a097b7086c06ff45df55",
+			"sha256": "45cf92345c584acee319aac4667a29fab21f0518b39cb6f60c786f93b1650ec0",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1990,7 +1996,7 @@
 		},
 		{
 			"file": "events/the-day-of-the-african-child/index.html",
-			"sha256": "b1a2d57f68faa6778f67e80bcb95e02e76bf223e1bf825f05022c57203b0d1a1",
+			"sha256": "4f21d80c133e614448b560d15d1f8b31964b7eeaf7ffeab9b78df4c08ba9440b",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -1998,7 +2004,7 @@
 		},
 		{
 			"file": "events/unveiling-natures-best-kept-treasures/index.html",
-			"sha256": "349144e4a85c43c9a41da748d9f90315a0c4984b2ccff3f28d3a885264cbe395",
+			"sha256": "afa7660cc9d33aadc7a61dfe8548ecc92af9f16ef16d4333fea33405eceb21bc",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2006,7 +2012,7 @@
 		},
 		{
 			"file": "help-faqs/index.html",
-			"sha256": "c6c830b79f558213e8b9b409f0c61e0951ec0cc99bbc5d9fb4d07a045e2831a9",
+			"sha256": "716144e11dd7ad19b0759c308db323858de232fe78f767a7ec9a8cfd58ce6366",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2014,7 +2020,7 @@
 		},
 		{
 			"file": "index.html",
-			"sha256": "2fe4e9041efec2dd00e6249de28b73a58a6d84d373faf0960938cfcc2aaf15e0",
+			"sha256": "7f47f3fe63c8967c833574f0a6739ffd8a61af529695f39d4786b7a97ca274a6",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2022,7 +2028,7 @@
 		},
 		{
 			"file": "index.php/contact/index.html",
-			"sha256": "9fb4383476870d22b74f7afa44384c7398fb104ef38ade4dc4784ce8fc1c71d0",
+			"sha256": "433851933a48256f30059993ee6a2e603280dcfe6d53eaa0607aae022cf5fe1d",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2030,7 +2036,7 @@
 		},
 		{
 			"file": "index.php/donations/index.html",
-			"sha256": "7115237b8f201bd8af97abbcc974be8727832d8089d1e4c9abef4e93324abd7d",
+			"sha256": "0c475ec54ce3982d87cb4c3a81e668669525f4a2643d5089e5a005c2ff2a041e",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2038,15 +2044,23 @@
 		},
 		{
 			"file": "index.php/pages/user/registration-form/index.html",
-			"sha256": "a123f206a9f92c6b2289d1b68cab65a127fe036271d571acb6bee689c382f668",
+			"sha256": "789334f3f827faf12c11128ce65936736cb5e9b1433451091434b0135b5b886d",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
 			"title": "Registration Form"
 		},
 		{
+			"file": "nope-404/index.html",
+			"sha256": "ec9683db6ba85b7b0ae4e0316711690fbaf3c3eed56f050bd91c18fbc88aedf4",
+			"kind": "html",
+			"locale": "en-gb",
+			"page": "index",
+			"title": "Error: 404 Page not found"
+		},
+		{
 			"file": "pages/j-content/author-listting/author/Gbush/index.html",
-			"sha256": "cdce600e0d077f035c205a98df5f5e438a26a6046a214e4ce845ece0aa78f5cc",
+			"sha256": "a82147e4032ecfc498cb22372900545371076dc4f22194f679a531555a890f4f",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2054,7 +2068,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/Gbush/index~start=3.html",
-			"sha256": "d9ec1c36625841835c8b2b0987c54228a32ee22f0d7902a24b6b45837dfdaad0",
+			"sha256": "3593ac6b97c3be08f0e1ba5d7956534feb5a942421ab5fb7cb0d44e74e3201a8",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=3",
@@ -2062,7 +2076,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/Jsteele/index.html",
-			"sha256": "18bcb4c37882a8b82768f2c121ffa1d678605cb9b7912b4f5a1d4bf825712335",
+			"sha256": "a62626f21a7eb48fff6f6b80e5ba714421a46d22ae4e32b44f4a432951ba05df",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2070,7 +2084,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/Jsteele/index~start=3.html",
-			"sha256": "b0f89ccb98ea02fc369b6707e9a3f23b1cb484110ddaf2240912955c262b5683",
+			"sha256": "063c48d716c62c4187e90d8cbf4227245b3dba4c9a6cc32c21c9053c79d9afa4",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=3",
@@ -2078,7 +2092,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/clitchfield/index.html",
-			"sha256": "a87f55b061550aa0fff9cf2a5a7272280fcb848739a29c901897e6cd041c1008",
+			"sha256": "3168f56ea6b9aab3d62f72f952a84d87598facb517ac107f4fa3057463ecf058",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2086,7 +2100,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/clitchfield/index~start=3.html",
-			"sha256": "a7d66c64221a086c43aa604898135a22fdf542692f123a34b6dfe257737b6d1b",
+			"sha256": "f37284e0e6c1c28a8d2c5ab6463248891abb9cd79e22521c66caeb1ead7a541b",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=3",
@@ -2094,7 +2108,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/jsmith/index.html",
-			"sha256": "321b5f93f5863608d5e5bedf02f25f8bfcd19cd6e482473e5b33f572de9f61f8",
+			"sha256": "3ee570f523c8b5b50de7c3dbf324ce6770a703376f9ebfae4816ed89862d38c7",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2102,7 +2116,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/jsmith/index~start=3.html",
-			"sha256": "07dde418dce94d52365aa0ac3b7f60c9a9ed5380b43ffb14f90721cd8c1f6bde",
+			"sha256": "34011a66fa2ffca0b5221b5350e9a563d19c6524124b2d5abe6264a1cd660b34",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=3",
@@ -2110,7 +2124,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/jsteve/index.html",
-			"sha256": "3cb12ea86a34af2cb5ef43837c9f3950e9d8f1a0ccc926300477538d3ce002f1",
+			"sha256": "724cf461bbeed4cfcb97a8f236402fac5e088482f9f3a1a960475e47c94b1021",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2118,7 +2132,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/jsteve/index~start=3.html",
-			"sha256": "573d06fa9eea4ae0937d633a3c71385ac6c9fdf669eaedff1a72a3f3bc80c637",
+			"sha256": "b199e0e6b090f44614a781d806ae939d90309ba23945256d344dfeef603767d9",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=3",
@@ -2126,7 +2140,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/mbrown/index.html",
-			"sha256": "ae945db0cd073391cfcb4467d3f5b6a5a06567736f2edd32d3d543cc50fec4d5",
+			"sha256": "c24c6331868b1b2acfc753d1c02a5bb1317530868d90e65b58eea00c933029fd",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2134,7 +2148,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/rcoleman/index.html",
-			"sha256": "164f972119af9d3907d3928a6707c1757c34aec03a0e7eee521ec8147f81b46e",
+			"sha256": "74db21ea6ca00dfad8caf7b1ae856065709768c7010c59809823cca7330bcc6a",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2142,7 +2156,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/rcoleman/index~start=3.html",
-			"sha256": "88ba70c806136d742668e4a450526c52db76146b6bca355f85914d8fa0322e33",
+			"sha256": "be50a4397d7895b85bca1be3a6003e8125ffd0459b37039ed9361ef1521e9ec5",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=3",
@@ -2150,7 +2164,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/author/slee/index.html",
-			"sha256": "c0f383fa645f76a856fe81fe85db3e52deb659e49bc14b6b0c398fe21e4cf01b",
+			"sha256": "4282cd894ac76ad37d42370f90c5256281b45a0ddba4daebe8b2941cd0473476",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2158,7 +2172,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/index.html",
-			"sha256": "17daf8ca3cdfd9b9f93ded55397977b22ba9e2c31e51a8d0fbbd03a24bf8a653",
+			"sha256": "49ed2a588a6abbb6cc8bfaa18fdb5a87fed80c701579e28b48ae0d6deb0e1008",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2166,7 +2180,7 @@
 		},
 		{
 			"file": "pages/j-content/author-listting/index~start=6.html",
-			"sha256": "8de14f301e4eb4e85a4a8b2e4ef89bbdfe9c71fc90cf8790d690975a60ef05c5",
+			"sha256": "369acd1229f329ba13cad4a66392be31a13b8194365458040b5af99911f41ca9",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=6",
@@ -2174,7 +2188,7 @@
 		},
 		{
 			"file": "pages/j-content/blog-detail/index.html",
-			"sha256": "d1b902e79e94088190af76076fafc9fbf9b27486ce4a6f0032238efcbc5b6498",
+			"sha256": "390fcb67557c4646903a985c60be92a31fed65d663d0d3ef49bfb098306bb435",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2182,7 +2196,7 @@
 		},
 		{
 			"file": "pages/j-content/category-blog/a-journey-of-discovery-and-learning/index.html",
-			"sha256": "2a2ee84b819c49d53c0dc564d36fa7cd01334d610ecb83dd27532740b0faa6a8",
+			"sha256": "b6b806925e6f75dbe9edc4e72a71e9bf0321e2ae7d46c5366ab9b7b8fc4356da",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2190,7 +2204,7 @@
 		},
 		{
 			"file": "pages/j-content/category-blog/a-journey-through-enchanted-lands/index.html",
-			"sha256": "3afe5aac21f8f624476cf04ba8dd2bc4f03fe1db48b8f244eaa916a5e7663f1a",
+			"sha256": "4d561132612f50341e89df2873c0860ab837887a9ca3400147d957526313c392",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2198,7 +2212,7 @@
 		},
 		{
 			"file": "pages/j-content/category-blog/exciting-adventures-to-the-past-and-future/index.html",
-			"sha256": "cc73a4aedca9c470e63d183b131a43d3cf2e5f9dd59175ed7536872d15dc1128",
+			"sha256": "7851de28aa75d440934feeef6dfbfa113c3f6d87bc44af8aee6cc6a5167a7d9d",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2206,7 +2220,7 @@
 		},
 		{
 			"file": "pages/j-content/category-blog/exploring-magical-worlds/index.html",
-			"sha256": "67d3d03a82f9769db548e5e91436adb24693722796fde8af1b56e98e5827a705",
+			"sha256": "8f8ce5eb964504110e5fa272fd8e5b6011661d4ccb310811be6caac45935081d",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2214,7 +2228,7 @@
 		},
 		{
 			"file": "pages/j-content/category-blog/exploring-the-beauty-of-the-animal-kingdom/index.html",
-			"sha256": "b6a212a40c83986042e61e3c1e0190a6593a1aebe5fed3762c19863deb984e79",
+			"sha256": "f30f6fb8f4e59b721030a89461469d0c0498683953f9b4d396c5102dc199f45b",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2222,7 +2236,7 @@
 		},
 		{
 			"file": "pages/j-content/category-blog/heartwarming-tales-of-kindness-and-togetherness/index.html",
-			"sha256": "7be4f961fb9d7f9753692f3b9ba8d983a0b050f7af1f2a5777abd348d21a27ca",
+			"sha256": "e7d8db994629d1013a11bbf89855964f0ed77dd75419c1d204fe33a463907f11",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2230,7 +2244,7 @@
 		},
 		{
 			"file": "pages/j-content/category-blog/how-many-people-in-africa-don-t-have-food/index.html",
-			"sha256": "1c2e1be6930aa373eb391f6b7332ee312c256d62484bff2fc560253559d3b6a2",
+			"sha256": "46f88a118b4d038badaf55ad9f77a82bfdc660d191452e66ea9da50787d8987e",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2238,7 +2252,7 @@
 		},
 		{
 			"file": "pages/j-content/category-blog/index.html",
-			"sha256": "b6d20498441610b70b35c3ef1e6f74228724634bfc6f0f257ed1f453026b2db7",
+			"sha256": "166594186a29ebe98d334c48f38835fa4b44ba890fb0e289609e7e0c4479435c",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2246,7 +2260,7 @@
 		},
 		{
 			"file": "pages/j-content/category-blog/legends-and-folktales-from-around-the-world/index.html",
-			"sha256": "3abc9307e521ee3c2929cb931fcba53be04df1df51090d4beafc60baa2c8a5cf",
+			"sha256": "171a0d8caa2a97b7ae1b5ad1d865a404e19d3638699d035363c1ebf3b8e8aa07",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2254,7 +2268,7 @@
 		},
 		{
 			"file": "pages/j-content/category-blog/silly-stories-and-jokes-for-young-readers/index.html",
-			"sha256": "da316ef4ada47b22219b77969b526bf71d6cdc86a8dabaa2a6ca07a47583d774",
+			"sha256": "108745dc843516e2a62c893fb0a8f5e07f5eacc87df7eb5c2aad37f5a082c168",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2262,7 +2276,7 @@
 		},
 		{
 			"file": "pages/j-content/featured-articles/index.html",
-			"sha256": "47c2757adc70ae70fb423577f57d4d0382774a3e5bc3fd7d66cf4ebf31bd687f",
+			"sha256": "c36394ee958b452f14815a7efdaa1b2514e892676529de06cde0aa6071bcd83e",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2270,7 +2284,7 @@
 		},
 		{
 			"file": "pages/j-content/featured-articles/index~start=9.html",
-			"sha256": "f397ac04c8494ff312e5e4d177f50dd4f8f6e8682b63c4b85ebdc02ba8396db2",
+			"sha256": "580efb107877eaf8f6f4dae1c23d0c9c3c1e6f4f9ba2c95adc76175997a28b57",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index~start=9",
@@ -2278,7 +2292,7 @@
 		},
 		{
 			"file": "pages/j-page/error-page/index.html",
-			"sha256": "18f6a132a63f8d8f9e681953f9dded1b68b84abf3f2d8c3773039ddd20bbfdbe",
+			"sha256": "6fd3b375efb07ac43abe503bae7c168d57c2aa530c2af3aa67572ca37fdb81bb",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2286,7 +2300,7 @@
 		},
 		{
 			"file": "pages/j-page/offline-page/index.html",
-			"sha256": "29d6b0df99cfaf5b42b7ddc8cefd23c9d986ea5d05089967d12d160b5d982018",
+			"sha256": "715e903e4fbb4f923e40e5abe63cdab7c4b8d11e6a108cc9ffbafd62941e9854",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2294,7 +2308,7 @@
 		},
 		{
 			"file": "pages/j-page/smart-search/index.html",
-			"sha256": "0226a90fb68531bb05b38846688a80560e8d29f5c478d98bab83bbee8e67d874",
+			"sha256": "ab27c88db2dd0b383e2381c35dd10273c4ed267b930efd6510c598bed80c42a3",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2302,7 +2316,7 @@
 		},
 		{
 			"file": "pages/j-page/typography/index.html",
-			"sha256": "21ea3447a0688a2b14ebc2f6ec25ce4ea1060846f4118b2e1a0c81940c21e0dc",
+			"sha256": "dea559e63c7486395c2277821601b44f0da2247e5ae95fb636b8f94e338607dc",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2310,7 +2324,7 @@
 		},
 		{
 			"file": "pages/user/login-form/index.html",
-			"sha256": "34458674480fde7b6011fae689bc7ab061745aaa4c5426ec6521ec93c6193bcb",
+			"sha256": "f35b51198cb7c435da15b9102600f6fb0ae0cc14bd4d06861d0fbec7c7f10a22",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2318,7 +2332,7 @@
 		},
 		{
 			"file": "pages/user/registration-form/index.html",
-			"sha256": "d647ee4acf7e989e6525f098d90aa415107da0ebfbfc6989149ad58da669ab43",
+			"sha256": "1619008ef7e7e344f762d210ddb1a7c64fe1fdd5dbb3a2fb3b7cf4ed9338b911",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2326,7 +2340,7 @@
 		},
 		{
 			"file": "password-reset/index.html",
-			"sha256": "0aa8ddecaffa385ec6462bec1e6a0a78d5fe015e91f45bb9722e55583217a861",
+			"sha256": "c441f0edb23d79604f457e3182075b95d36c784aba66b9226a3d0802831d38f5",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2334,7 +2348,7 @@
 		},
 		{
 			"file": "username-reminder-request/index.html",
-			"sha256": "0250212eae5c973b87c2e50ca3195e355f25fb4396fb5f9bbc390f87ae67af57",
+			"sha256": "3e960f9c099872ff662010d66949fc1fbe0cc97a2723177ad8b9b43a7d6f5816",
 			"kind": "html",
 			"locale": "en-gb",
 			"page": "index",
@@ -2342,11 +2356,11 @@
 		}
 	],
 	"totals": {
-		"files": 272,
-		"bytes": 23078056,
-		"html": 88,
+		"files": 273,
+		"bytes": 23049693,
+		"html": 89,
 		"byExt": {
-			".html": 88,
+			".html": 89,
 			".json": 1,
 			".jpg": 90,
 			".png": 17,

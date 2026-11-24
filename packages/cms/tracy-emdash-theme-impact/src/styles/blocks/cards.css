@@ -8,7 +8,7 @@
 	.im-strip .im-dot, .im-cards .im-dot { background: rgba(0, 0, 0, .3); }
 	.im-strip .im-dot.is-active { background: var(--color-accent); }
 	@media (max-width: 991.98px) { .im-strip-track > li { flex-basis: 50%; } }
-	@media (max-width: 575.98px) { .im-strip-track > li { flex-basis: 100%; padding-inline: 16px; } }
+	@media (max-width: 575.98px) { .im-strip-track > li { flex-basis: 100%; padding-inline: 16px; } .im-donation { min-height: 448px; } .im-donation-title { font-size: 24px; } .im-donation-money strong { font-size: 18px; } }
 
 	.im-donation { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 519px; height: 100%; border-radius: var(--ds-card-radius, 8px); overflow: hidden; color: #fff; background: var(--color-ink); }
 	.im-donation-image, .im-donation-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }

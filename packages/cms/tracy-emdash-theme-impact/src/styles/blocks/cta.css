@@ -9,5 +9,5 @@
 	.im-cta-media { flex: 0 0 40%; position: relative; }
 	.im-cta-media img { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 260px; max-width: none; height: auto; }
 	.im-cta.is-media-left { flex-direction: row-reverse; }
-	@media (max-width: 767.98px) { .im-cta { flex-direction: column; margin-top: 32px; } .im-cta-body { padding: 32px; } .im-cta-media { min-height: 260px; } .im-cta-media img { width: 200px; } }
+	@media (max-width: 767.98px) { .im-cta { flex-direction: column; margin-top: 32px; min-height: 0; text-align: center; } .im-cta-body { padding: 32px; } .im-cta-media { display: none; } }
 }

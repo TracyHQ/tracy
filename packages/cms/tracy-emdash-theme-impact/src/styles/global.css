@@ -5,6 +5,8 @@
  * Class prefix `im-` = JA Impact component. One file per block under ./blocks/, one per page family under ./pages/.
  * Design-system roles: the stylesheet reads each role as `var(--ds-…, <the template's own value>)`.
  */
+/* ds-not-used: --ds-c-accent-active, --ds-c-success-bg, --ds-c-success-text, --ds-c-warn-bg, --ds-c-warn-text, --ds-c-danger-bg, --ds-c-danger-text, --ds-c-info-bg, --ds-c-info-text — the site draws no alert or status box: a form's status line is plain text and a button's pressed state is its hover (opacity .85) */
+/* ds-not-used: --ds-c-disabled-bg, --ds-c-disabled-fg — a disabled button or field is drawn at 60% opacity, it has no ground or text colour of its own */
 @import "tailwindcss";
 @import "./tokens.css";
 @import "./blocks/hero.css";

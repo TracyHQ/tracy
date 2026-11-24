@@ -880,7 +880,8 @@
     {
       "file": "images/joomlart/acm/activities-1.jpg",
       "usedBy": [
-        "features/about-activities.feature_main_img"
+        "features/about-activities.feature_main_img",
+        "cta/join-together.cta_media"
       ],
       "inSnapshot": true
     },
@@ -963,10 +964,10 @@
       "usedBy": [
         "features/home-raise-fund.items[0].sub_feature_media",
         "events/afforestation-program.body",
+        "events/natures-hidden-gems.body",
         "events/feed-the-world.body",
-        "events/charity-journey-to-africa.body",
-        "events/the-day-of-the-african-child.body",
-        "events/saving-nature.body"
+        "events/an-adventure-with-animals.body",
+        "events/charity-journey-to-africa.body"
       ],
       "inSnapshot": true
     },
@@ -988,7 +989,7 @@
       "file": "images/joomlart/blog/animal/detail-4.jpg",
       "usedBy": [
         "posts/tracking-the-trash-are-your-plastic-bags-really-being-recycled.body",
-        "posts/outdoor-behavioral-healthcare-services-to-youth-and-young-adults.body",
+        "posts/charity-of-the-month-plan-international-uk.body",
         "posts/weve-reached-1-million-indonations-and-counting.body",
         "posts/building-empathy-throughremote-user-research.body",
         "posts/building-empathy-throughremote-user-research.banner",
@@ -1000,7 +1001,7 @@
       "file": "images/joomlart/blog/animal/detail-7.jpg",
       "usedBy": [
         "posts/tracking-the-trash-are-your-plastic-bags-really-being-recycled.body",
-        "posts/outdoor-behavioral-healthcare-services-to-youth-and-young-adults.body",
+        "posts/charity-of-the-month-plan-international-uk.body",
         "posts/weve-reached-1-million-indonations-and-counting.body",
         "posts/building-empathy-throughremote-user-research.body",
         "posts/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation.body",
@@ -1026,17 +1027,24 @@
       "file": "images/joomlart/authors/2.jpg",
       "usedBy": [
         "posts/tracking-the-trash-are-your-plastic-bags-really-being-recycled.author_avatar",
-        "posts/outdoor-behavioral-healthcare-services-to-youth-and-young-adults.author_avatar",
+        "posts/charity-of-the-month-plan-international-uk.author_avatar",
         "posts/weve-reached-1-million-indonations-and-counting.author_avatar",
         "posts/building-empathy-throughremote-user-research.author_avatar",
-        "posts/charity-of-the-month-plan-international-uk.author_avatar"
+        "posts/outdoor-behavioral-healthcare-services-to-youth-and-young-adults.author_avatar"
       ],
       "inSnapshot": true
     },
     {
-      "file": "images/joomlart/blog/animal/detail-10.jpg",
+      "file": "images/joomlart/blog/animal/item-1.jpg",
       "usedBy": [
-        "posts/outdoor-behavioral-healthcare-services-to-youth-and-young-adults.banner"
+        "posts/charity-of-the-month-plan-international-uk.cover"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/animal/detail-1.jpg",
+      "usedBy": [
+        "posts/charity-of-the-month-plan-international-uk.banner"
       ],
       "inSnapshot": true
     },
@@ -1100,7 +1108,15 @@
         "posts/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during.author_avatar",
         "posts/charity-branding-is-yourbrand-digital-ready.author_avatar",
         "posts/donation-and-cleaning-program-foundation.author_avatar",
+        "posts/charity-of-the-month-plan-international-uk-2.author_avatar",
         "donations/water-treatment-projects.author_avatar"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/blog/animal/detail-10.jpg",
+      "usedBy": [
+        "posts/outdoor-behavioral-healthcare-services-to-youth-and-young-adults.banner"
       ],
       "inSnapshot": true
     },
@@ -1126,16 +1142,164 @@
       "inSnapshot": true
     },
     {
-      "file": "images/joomlart/blog/animal/item-1.jpg",
+      "file": "images/joomlart/blog/animal/item-7.jpg",
       "usedBy": [
-        "posts/charity-of-the-month-plan-international-uk.cover"
+        "posts/charity-of-the-month-plan-international-uk-2.cover"
       ],
       "inSnapshot": true
     },
     {
-      "file": "images/joomlart/blog/animal/detail-1.jpg",
+      "file": "images/joomlart/gallery/detail-event-1.jpg",
       "usedBy": [
-        "posts/charity-of-the-month-plan-international-uk.banner"
+        "events/afforestation-program.body",
+        "events/natures-hidden-gems.body",
+        "events/feed-the-world.body",
+        "events/an-adventure-with-animals.body",
+        "events/charity-journey-to-africa.body",
+        "events/unveiling-natures-best-kept-treasures.body"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/features/icon-5.png",
+      "usedBy": [
+        "events/afforestation-program.body",
+        "events/natures-hidden-gems.body",
+        "events/feed-the-world.body",
+        "events/an-adventure-with-animals.body",
+        "events/charity-journey-to-africa.body",
+        "events/unveiling-natures-best-kept-treasures.body"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/features/icon-6.png",
+      "usedBy": [
+        "events/afforestation-program.body",
+        "events/natures-hidden-gems.body",
+        "events/feed-the-world.body",
+        "events/an-adventure-with-animals.body",
+        "events/charity-journey-to-africa.body",
+        "events/unveiling-natures-best-kept-treasures.body"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/features/icon-7.png",
+      "usedBy": [
+        "events/afforestation-program.body",
+        "events/natures-hidden-gems.body",
+        "events/feed-the-world.body",
+        "events/an-adventure-with-animals.body",
+        "events/charity-journey-to-africa.body",
+        "events/unveiling-natures-best-kept-treasures.body"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/events/detail/detail-9.jpg",
+      "usedBy": [
+        "events/afforestation-program.banner"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/authors/6.jpg",
+      "usedBy": [
+        "events/afforestation-program.author_avatar",
+        "events/feed-the-world.author_avatar",
+        "events/charity-journey-to-africa.author_avatar",
+        "donations/surviving-the-harsh-polar-realms.author_avatar",
+        "donations/the-african-wildlife-chronicles.author_avatar"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/events/intro/intro-1.jpg",
+      "usedBy": [
+        "events/natures-hidden-gems.cover"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/events/detail/detail-1.jpg",
+      "usedBy": [
+        "events/natures-hidden-gems.banner"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/authors/1.jpg",
+      "usedBy": [
+        "events/natures-hidden-gems.author_avatar"
+      ],
+      "inSnapshot": false
+    },
+    {
+      "file": "images/joomlart/events/intro/intro-2.jpg",
+      "usedBy": [
+        "events/feed-the-world.cover",
+        "events/an-adventure-with-animals.cover"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/events/detail/detail-8.jpg",
+      "usedBy": [
+        "events/feed-the-world.banner"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/events/detail/detail-2.jpg",
+      "usedBy": [
+        "events/an-adventure-with-animals.banner"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/authors/7.jpg",
+      "usedBy": [
+        "events/an-adventure-with-animals.author_avatar",
+        "events/unveiling-natures-best-kept-treasures.author_avatar",
+        "events/the-day-of-the-african-child.author_avatar",
+        "events/saving-nature.author_avatar",
+        "events/a-microscopic-marvel.author_avatar"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/events/detail/detail-7.jpg",
+      "usedBy": [
+        "events/charity-journey-to-africa.banner"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/events/detail/detail-3.jpg",
+      "usedBy": [
+        "events/unveiling-natures-best-kept-treasures.banner"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/events/detail/detail-6.jpg",
+      "usedBy": [
+        "events/the-day-of-the-african-child.banner"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/events/detail/detail-5.jpg",
+      "usedBy": [
+        "events/saving-nature.banner"
+      ],
+      "inSnapshot": true
+    },
+    {
+      "file": "images/joomlart/events/detail/detail-4.jpg",
+      "usedBy": [
+        "events/a-microscopic-marvel.banner"
       ],
       "inSnapshot": true
     },
@@ -1343,17 +1507,6 @@
       "inSnapshot": true
     },
     {
-      "file": "images/joomlart/authors/6.jpg",
-      "usedBy": [
-        "donations/surviving-the-harsh-polar-realms.author_avatar",
-        "donations/the-african-wildlife-chronicles.author_avatar",
-        "events/afforestation-program.author_avatar",
-        "events/feed-the-world.author_avatar",
-        "events/charity-journey-to-africa.author_avatar"
-      ],
-      "inSnapshot": true
-    },
-    {
       "file": "images/joomlart/donate/intro/intro-1.jpg",
       "usedBy": [
         "donations/the-african-wildlife-chronicles.cover"
@@ -1366,150 +1519,6 @@
         "donations/the-african-wildlife-chronicles.banner"
       ],
       "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/gallery/detail-event-1.jpg",
-      "usedBy": [
-        "events/afforestation-program.body",
-        "events/feed-the-world.body",
-        "events/charity-journey-to-africa.body",
-        "events/the-day-of-the-african-child.body",
-        "events/saving-nature.body",
-        "events/a-microscopic-marvel.body"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/features/icon-5.png",
-      "usedBy": [
-        "events/afforestation-program.body",
-        "events/feed-the-world.body",
-        "events/charity-journey-to-africa.body",
-        "events/the-day-of-the-african-child.body",
-        "events/saving-nature.body",
-        "events/a-microscopic-marvel.body"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/features/icon-6.png",
-      "usedBy": [
-        "events/afforestation-program.body",
-        "events/feed-the-world.body",
-        "events/charity-journey-to-africa.body",
-        "events/the-day-of-the-african-child.body",
-        "events/saving-nature.body",
-        "events/a-microscopic-marvel.body"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/features/icon-7.png",
-      "usedBy": [
-        "events/afforestation-program.body",
-        "events/feed-the-world.body",
-        "events/charity-journey-to-africa.body",
-        "events/the-day-of-the-african-child.body",
-        "events/saving-nature.body",
-        "events/a-microscopic-marvel.body"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/detail/detail-9.jpg",
-      "usedBy": [
-        "events/afforestation-program.banner"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/intro/intro-2.jpg",
-      "usedBy": [
-        "events/feed-the-world.cover",
-        "events/an-adventure-with-animals.cover"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/detail/detail-8.jpg",
-      "usedBy": [
-        "events/feed-the-world.banner"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/detail/detail-7.jpg",
-      "usedBy": [
-        "events/charity-journey-to-africa.banner"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/detail/detail-6.jpg",
-      "usedBy": [
-        "events/the-day-of-the-african-child.banner"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/authors/7.jpg",
-      "usedBy": [
-        "events/the-day-of-the-african-child.author_avatar",
-        "events/saving-nature.author_avatar",
-        "events/a-microscopic-marvel.author_avatar",
-        "events/unveiling-natures-best-kept-treasures.author_avatar",
-        "events/an-adventure-with-animals.author_avatar"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/detail/detail-5.jpg",
-      "usedBy": [
-        "events/saving-nature.banner"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/detail/detail-4.jpg",
-      "usedBy": [
-        "events/a-microscopic-marvel.banner"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/detail/detail-3.jpg",
-      "usedBy": [
-        "events/unveiling-natures-best-kept-treasures.banner"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/detail/detail-2.jpg",
-      "usedBy": [
-        "events/an-adventure-with-animals.banner"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/intro/intro-1.jpg",
-      "usedBy": [
-        "events/natures-hidden-gems.cover"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/events/detail/detail-1.jpg",
-      "usedBy": [
-        "events/natures-hidden-gems.banner"
-      ],
-      "inSnapshot": true
-    },
-    {
-      "file": "images/joomlart/authors/1.jpg",
-      "usedBy": [
-        "events/natures-hidden-gems.author_avatar"
-      ],
-      "inSnapshot": false
     },
     {
       "file": "images/joomlart/hero/hero-1.jpg",

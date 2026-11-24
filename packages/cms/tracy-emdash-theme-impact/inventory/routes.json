@@ -516,11 +516,11 @@
       }
     },
     {
-      "path": "/blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+      "path": "/blog/charity-of-the-month-plan-international-uk",
       "kind": "detail",
       "cms": {
         "collection": "posts",
-        "slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+        "slug": "charity-of-the-month-plan-international-uk",
         "found": true
       },
       "source": {
@@ -606,6 +606,24 @@
       }
     },
     {
+      "path": "/blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
       "path": "/blog/charity-branding-is-yourbrand-digital-ready",
       "kind": "detail",
       "cms": {
@@ -642,11 +660,11 @@
       }
     },
     {
-      "path": "/blog/charity-of-the-month-plan-international-uk",
+      "path": "/blog/charity-of-the-month-plan-international-uk-2",
       "kind": "detail",
       "cms": {
         "collection": "posts",
-        "slug": "charity-of-the-month-plan-international-uk",
+        "slug": "charity-of-the-month-plan-international-uk-2",
         "found": true
       },
       "source": {
@@ -912,6 +930,24 @@
       }
     },
     {
+      "path": "/events/natures-hidden-gems",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "natures-hidden-gems",
+        "found": true
+      },
+      "source": {
+        "url": "/events/natures-hidden-gems",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
       "path": "/events/feed-the-world",
       "kind": "detail",
       "cms": {
@@ -930,6 +966,24 @@
       }
     },
     {
+      "path": "/events/an-adventure-with-animals",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "an-adventure-with-animals",
+        "found": true
+      },
+      "source": {
+        "url": "/events/an-adventure-with-animals",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
       "path": "/events/charity-journey-to-africa",
       "kind": "detail",
       "cms": {
@@ -939,6 +993,24 @@
       },
       "source": {
         "url": "/events/charity-journey-to-africa",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events/unveiling-natures-best-kept-treasures",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "unveiling-natures-best-kept-treasures",
+        "found": true
+      },
+      "source": {
+        "url": "/events/unveiling-natures-best-kept-treasures",
         "joomla": null,
         "view": null,
         "sections": null
@@ -993,60 +1065,6 @@
       },
       "source": {
         "url": "/events/a-microscopic-marvel",
-        "joomla": null,
-        "view": null,
-        "sections": null
-      },
-      "expected": {
-        "status": 200
-      }
-    },
-    {
-      "path": "/events/unveiling-natures-best-kept-treasures",
-      "kind": "detail",
-      "cms": {
-        "collection": "events",
-        "slug": "unveiling-natures-best-kept-treasures",
-        "found": true
-      },
-      "source": {
-        "url": "/events/unveiling-natures-best-kept-treasures",
-        "joomla": null,
-        "view": null,
-        "sections": null
-      },
-      "expected": {
-        "status": 200
-      }
-    },
-    {
-      "path": "/events/an-adventure-with-animals",
-      "kind": "detail",
-      "cms": {
-        "collection": "events",
-        "slug": "an-adventure-with-animals",
-        "found": true
-      },
-      "source": {
-        "url": "/events/an-adventure-with-animals",
-        "joomla": null,
-        "view": null,
-        "sections": null
-      },
-      "expected": {
-        "status": 200
-      }
-    },
-    {
-      "path": "/events/natures-hidden-gems",
-      "kind": "detail",
-      "cms": {
-        "collection": "events",
-        "slug": "natures-hidden-gems",
-        "found": true
-      },
-      "source": {
-        "url": "/events/natures-hidden-gems",
         "joomla": null,
         "view": null,
         "sections": null

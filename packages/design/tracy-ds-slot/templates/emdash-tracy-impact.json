@@ -1,0 +1,44 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "emdash/tracy-impact",
+  "minVersion": {
+    "tracy-impact/emdash-0.x": "0.1.0"
+  },
+  "maxVersion": {
+    "tracy-impact/emdash-0.x": "0.1.0"
+  },
+  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-btn-radius, --ds-card-radius, --ds-input-radius) and every colour role systems define in src/styles/tokens.css, global.css, blocks/*.css and pages/*.css; src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base. NOT YET MEASURED on a built site (see readyNote).",
+  "release": "tracy-impact/emdash-0.x@0.1.0",
+  "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
+  "readsComponents": true,
+  "readsRoles": true,
+  "readsRolesNote": "src/styles/tokens.css and global.css read every standard role variable, or declare it unused with a reason (ds-not-used) or keep it (ds-keep); the type and shape tokens are read with the template's own value as the fallback",
+  "modes": true,
+  "modesNote": "the source has a dark theme (css/darkmode.css, html[data-theme=\"dark\"]) whose tokens read the roles too (src/styles/tokens.css second block); the pre-paint script in Base.astro always sets data-theme (light or dark, from the stored choice, `?theme=` or the OS) so no unmarked state is left. The source renders no switch (docs/design-system.md, DECISIONS D12), so none is drawn; the selector is declared for a switch a customer or a later release adds.",
+  "selectors": {
+    "themeToggle": "[data-theme-toggle]"
+  },
+  "roles": {
+    "page": "body",
+    "display": ".im-hero-title",
+    "heading": "main .im-section-title",
+    "body": "main .im-intro-lead",
+    "button-primary": ".im-donate",
+    "card": "main .im-card-feature",
+    "container": "main .im-container"
+  },
+  "contrast": {
+    "accent-text": "main .im-eyebrow, main .im-post-author",
+    "muted": "main .im-post-meta",
+    "body": "main p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": false,
+  "readyNote": "NOT READY: the contract is drafted from the JA Fresco EmDash contract and the Joomla JA Impact contract; it has not been measured with flow.mjs on a site built from the 0.1.0 package (no design-system-measurement.json yet). Next: node packages/design/tracy-ds-slot/scripts/flow.mjs --cms emdash on the clean install, then set ready true.",
+  "measureStill": true,
+  "discovered": {},
+  "measureNote": "Carousels (the home slider, the donation strip) are stopped on their first slide before each measure",
+  "measuredPage": "/about"
+}

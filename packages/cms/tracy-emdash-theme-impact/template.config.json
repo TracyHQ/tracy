@@ -10,14 +10,28 @@
 		"title": "JA Impact",
 		"tagline": ""
 	},
-	"contentOrder": [],
+	"contentOrder": [
+		"posts",
+		"donations",
+		"events",
+		"pages",
+		"hero",
+		"features",
+		"cta",
+		"contact_info",
+		"social",
+		"accordion",
+		"masthead",
+		"contact",
+		"chrome"
+	],
 	"forms": {
 		"file": "tools/forms.json",
 		"bindings": []
 	},
 	"mail": {
-		"fromEmail": "",
-		"fromName": ""
+		"fromEmail": "no-reply@ja-impact.example",
+		"fromName": "JA Impact"
 	},
 	"audit": {
 		"indexable": [
@@ -32,6 +46,32 @@
 		"canonicalQuery": [
 			"page"
 		],
-		"unknownProbes": []
-	}
+		"unknownProbes": [
+			"/blog/nope",
+			"/donations/nope",
+			"/events/nope"
+		],
+		"alternates": "all-locales"
+	},
+	"vendor": {
+		"name": "JoomlArt",
+		"domains": [
+			"joomlart.com"
+		]
+	},
+	"qa": {
+		"theme": {
+			"selector": "html",
+			"attribute": "data-theme",
+			"values": {
+				"light": "light",
+				"dark": "dark"
+			},
+			"storageKey": "tracy-impact-theme"
+		},
+		"expectedStatus": {
+			"/404": 404
+		}
+	},
+	"$comment": "Template identity and site-specific wiring read by the generic tools. Demo content: the JA Impact sample site (a charity and fundraising site)."
 }

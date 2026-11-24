@@ -17,5 +17,6 @@
 	.im-dot { width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .85); cursor: pointer; }
 	.im-dot.is-active { background: var(--color-accent); }
 	@media (max-width: 991.98px) { .im-hero-slide { min-height: 429px; } .im-hero-content { padding-top: 96px; padding-bottom: 80px; } .im-hero .im-dots { bottom: 24px; } }
+	@media (max-width: 767.98px) { .im-hero-content { text-align: center; } .im-hero-actions { justify-content: center; } }
 	@media (max-width: 575.98px) { .im-hero-slide { min-height: 506px; } .im-hero-sub { font-size: 20px; } }
 }
