@@ -114,7 +114,7 @@
 
 	/* footer: the quote band, then five link columns and a social column on near-black */
 	.mg-footer-main { background: var(--ds-c-ink, #111111); color: var(--ds-c-on-ink, #888888); padding: 100px 0 40px; }
-	html[data-theme="dark"] .mg-footer-main { background: var(--ds-c-surface, #0c1019); }
+	html[data-theme="dark"] .mg-footer-main { background: var(--ds-c-surface-warm, #0c1019); }
 	.mg-footer-cols { display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; }
 	@media (max-width: 991.98px) { .mg-footer-cols { grid-template-columns: repeat(3, 1fr); } }
 	@media (max-width: 575.98px) { .mg-footer-cols { grid-template-columns: repeat(2, 1fr); } }

@@ -110,7 +110,8 @@ const labels = [
 const keptText = [
   'chrome/chrome.copyright_credit',
   'chrome/chrome.not_found_code',
-  'chrome/chrome.not_found_text'
+  'chrome/chrome.not_found_text',
+  'contact/contact-info.form_intro_text'
 ].filter((id) => {
   const [c, rest] = id.split('/')
   const [slug, field] = rest.split('.')

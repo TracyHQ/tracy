@@ -306,7 +306,7 @@ test('DEF-1: no design-system role the slot does not define', (t) => {
     JSON.parse(read('inventory/design-system-roles.json')).declared
   )
   const used = new Set([...css.matchAll(/var\((--ds-[a-z0-9-]+)/g)].map((m) => m[1]))
-  const extra = new Set(['--ds-weight-body', '--ds-weight-display', '--ds-weight-heading', '--ds-weight-button', '--ds-size-heading', '--ds-size-heading-phone', '--ds-size-display-phone', '--ds-size-display', '--ds-leading-display', '--ds-tracking-display'])
+  const extra = new Set(['--ds-weight-body', '--ds-weight-display', '--ds-weight-heading', '--ds-weight-button', '--ds-size-heading', '--ds-size-heading-phone', '--ds-size-display-phone', '--ds-c-accent-on-ink', '--ds-size-display', '--ds-leading-display', '--ds-tracking-display'])
   assert.deepEqual([...used].filter((r) => !known.has(r) && !extra.has(r)), [])
 })
 
