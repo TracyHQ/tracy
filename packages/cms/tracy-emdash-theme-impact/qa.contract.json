@@ -1976,7 +1976,7 @@
             "line-height": "28.8px",
             "letter-spacing": "-0.24px",
             "text-transform": "none",
-            "color": "rgb(10, 125, 75)",
+            "color": "rgb(47, 217, 138)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "1440-dark": {
@@ -1996,7 +1996,7 @@
             "line-height": "28.8px",
             "letter-spacing": "-0.24px",
             "text-transform": "none",
-            "color": "rgb(10, 125, 75)",
+            "color": "rgb(47, 217, 138)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "768-dark": {
@@ -2016,7 +2016,7 @@
             "line-height": "24px",
             "letter-spacing": "-0.2px",
             "text-transform": "none",
-            "color": "rgb(10, 125, 75)",
+            "color": "rgb(47, 217, 138)",
             "background-color": "rgba(0, 0, 0, 0)"
           },
           "390-dark": {

@@ -240,7 +240,8 @@ for (const row of rows) {
   const values = {
     title: decode(row.title),
     excerpt: secText(row.introtext),
-    body: `${row.introtext}\n${row.fulltext}`,
+    // a blog post prints its full text only (the intro is the list excerpt); a cause or an event prints both
+    body: type === 'posts' && String(row.fulltext ?? '').trim() ? row.fulltext : `${row.introtext}\n${row.fulltext}`,
     date: row.publish_up || row.created,
     cover: img(row, 'image_intro'),
     banner: img(row, 'image_fulltext'),

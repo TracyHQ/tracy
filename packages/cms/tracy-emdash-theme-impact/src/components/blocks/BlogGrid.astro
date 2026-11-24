@@ -24,8 +24,8 @@ const when = (e: Record<string, any>) => {
 }
 ---
 
-{(short ? [1, 2, 3] : [3]).map((n) => (
-	<div class:list={['im-blog', short && `im-blog-${n}`]}>
+{[1, 2, 3].map((n) => (
+	<div class={`im-blog im-blog-${n}`}>
 		{Array.from({ length: n }, (_, col) => entries.filter((_e, i) => i % n === col)).map((col) => (
 			<div class="im-blog-col">
 	{col.map((e) => {

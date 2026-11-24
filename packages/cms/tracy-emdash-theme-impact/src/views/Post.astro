@@ -80,7 +80,7 @@ const published = uiDate(tag, new Date(`${String(a.date ?? '').replace(' ', 'T')
 			</div>
 		</div>
 		{related.length > 0 && (
-			<section class="im-section bottom-large">
+			<section class="im-section bottom-large im-list">
 				<div class="im-container">
 					<SectionHead label={chrome.site.blog_label} title={chrome.site.related_title} stamp={$c} labelPath="blog_label" titlePath="related_title" />
 					<BlogGrid entries={related} chrome={chrome} short />
