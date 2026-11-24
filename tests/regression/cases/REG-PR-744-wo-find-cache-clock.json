@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-744-wo-find-cache-clock",
+  "kind": "fix",
+  "title": "(develop, as #738 on main) The Find prefetch ranking suite keeps passing after its fixture date is a month old: the prefetch clock and the source fetchedAt follow the real clock Postgres now() compares them with",
+  "pr": 744,
+  "area": "website-opportunities/prefetch",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set, run run.cmd.",
+    "S2: Confirm all four tests report ok, on any calendar date."
+  ],
+  "expect": [
+    "'changed Find cache reprioritizes unadmitted places while preserving an existing job and snapshot' claims the first admitted job (claimPlaceJob does not return null).",
+    "'Find auto batches use 20 site and 10 social admissions' polls only the queued, non-deferred social page on the second tick."
+  ],
+  "selectors": {
+    "freshness": "packages/wo/website-opportunities/src/place-jobs.js claimPlaceJob: seed_source.fetchedAt > now() - interval '30 days'",
+    "clock": "apps/tracy-web/test/website-opportunities-dubai-ranking.test.mjs NOW"
+  },
+  "fence": "the suite's fixture times are relative to the real clock, never a fixed calendar date",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": ["node", "--test", "apps/tracy-web/test/website-opportunities-dubai-ranking.test.mjs"]
+  }
+}
