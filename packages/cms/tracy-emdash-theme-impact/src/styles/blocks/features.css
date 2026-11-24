@@ -42,7 +42,7 @@
 	.im-cards-view:not(:hover):not(:focus-within) .im-nav-btn { opacity: 0; }
 	.im-nav-btn { transition: opacity .2s; position: absolute; top: 50%; transform: translateY(-50%); width: 56px; height: 56px; border-radius: 50%; border: 0; background: var(--color-bg); color: var(--color-heading); box-shadow: 0 4px 16px rgba(0, 0, 0, .12); cursor: pointer; z-index: 2; font-size: 16px; }
 	.im-nav-btn.is-prev { left: -24px; } .im-nav-btn.is-next { right: -24px; }
-	.im-band { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; margin-top: 64px; padding: 64px; border-radius: var(--ds-card-radius, 8px); background: #f48a29; color: #10285f; } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
+	.im-band { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; margin-top: 64px; padding: 64px; border-radius: var(--ds-card-radius, 8px); background: var(--ds-c-accent, #f48a29); color: var(--ds-c-accent-on, #10285f); } /* ds-keep: text over a photograph or a dark scrim: a role of the page would not read there */
 	.im-band.is-success { background: var(--color-accent); color: var(--color-accent-on); } .im-band.is-primary { background: var(--color-ink); color: var(--color-on-ink); }
 	.im-band-left { display: flex; align-items: center; gap: 24px; }
 	.im-band-left img { width: 64px; height: 64px; }

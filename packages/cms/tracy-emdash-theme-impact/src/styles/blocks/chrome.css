@@ -32,7 +32,7 @@
 	.im-nav a { display: inline-flex; align-items: center; padding: 22px 32px; font-size: 15px; line-height: 20px; font-weight: 500; letter-spacing: -0.01em; color: var(--color-heading); }
 	.im-nav a:hover, .im-nav li.is-active > a { color: var(--color-accent-text-hover); }
 	
-	.im-btn.im-donate { align-self: stretch; border-radius: var(--ds-btn-radius, 0); border-width: 0; padding: 22px 32px; min-width: 160px; }
+	.im-btn.im-donate { align-self: stretch; border-radius: 0; /* ds-keep: a flush header cell beside square menu cells keeps square corners */ border-width: 0; padding: 22px 32px; min-width: 160px; }
 
 	/* off-canvas menu (below 992 px) */
 	.im-offcanvas { position: fixed; inset: 0; z-index: 60; visibility: hidden; }

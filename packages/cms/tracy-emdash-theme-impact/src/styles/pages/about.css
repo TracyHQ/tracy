@@ -3,10 +3,11 @@
 	/* style-2 */
 	.im-mission { list-style: none; margin: 0; padding: 0 0 32px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
 	@media (min-width: 768px) { .im-mission { grid-template-columns: repeat(2, minmax(0, 1fr)); } .im-mission-item.is-wide { grid-column: 1 / -1; } }
-	.im-mission-box { --box: #2970db; /* ds-keep: a fixed blue fill with its white words (a pair that reads on its own), as the source paints it */ position: relative; height: 100%; overflow: hidden; border-radius: var(--ds-card-radius, 8px); background: var(--box); color: #fff; }
+	/* the info box is blue by default; under a design system it takes the ink role with the ink's own words */
+	.im-mission-box { --box: var(--ds-c-ink, #2970db); position: relative; height: 100%; overflow: hidden; border-radius: var(--ds-card-radius, 8px); background: var(--box); color: var(--ds-c-on-ink, #fff); }
 	.im-mission-box.is-primary { --box: var(--color-ink); color: var(--color-on-ink); }
 	.im-mission-box.is-success { --box: var(--color-accent); color: var(--color-accent-on); }
-	.im-mission-box.is-warning { --box: #f48a29; color: #10285f; } /* ds-keep: a fixed orange fill with its navy words */
+	.im-mission-box.is-warning { --box: var(--ds-c-accent, #f48a29); color: var(--ds-c-accent-on, #10285f); }
 	.im-mission-box.is-light { --box: var(--color-surface-warm); color: var(--color-fg); }
 	.im-mission-box h3 { margin: 0 0 16px; color: inherit; }
 	.im-mission-box.is-light h3 { color: var(--color-heading); }

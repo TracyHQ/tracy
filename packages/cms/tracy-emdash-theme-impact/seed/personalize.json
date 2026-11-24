@@ -745,6 +745,7 @@
     "chrome/chrome.footer_col1_links",
     "chrome/chrome.footer_col3_links",
     "chrome/chrome.events_title",
+    "chrome/chrome.home_events_title",
     "chrome/chrome.not_found_text"
   ],
   "forms": [
