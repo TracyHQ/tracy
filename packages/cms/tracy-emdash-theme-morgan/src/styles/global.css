@@ -5,7 +5,8 @@
  * Class prefix `mg-` = JA Morgan component. One file for the blocks, one per page family under ./pages/.
  * Design-system roles: the stylesheet reads each role as `var(--ds-…, <the template's own value>)`.
  */
-/* ds-not-used: --ds-c-success-bg, --ds-c-success-text, --ds-c-warn, --ds-c-warn-bg, --ds-c-warn-text, --ds-c-danger, --ds-c-danger-bg, --ds-c-danger-text, --ds-c-info, --ds-c-info-bg, --ds-c-info-text, --ds-c-accent-active, --ds-c-fg-2, --ds-font-mono, --ds-pill-radius */
+/* ds-not-used: --ds-c-success-bg, --ds-c-success-text, --ds-c-warn, --ds-c-warn-bg, --ds-c-warn-text, --ds-c-danger, --ds-c-danger-bg, --ds-c-danger-text, --ds-c-info, --ds-c-info-bg, --ds-c-info-text — the site draws no warning, danger or info state: a form's status line is plain text; the only green is the success tick, which reads --ds-c-success */
+/* ds-not-used: --ds-c-accent-active, --ds-c-fg-2, --ds-font-mono, --ds-pill-radius — buttons have a hover state and no pressed state, the template has one body text colour, no monospace text, and its round shapes (dots, the avatar, the social marks) are circles, not corner roles */
 /* ds-not-used: --ds-c-disabled-bg, --ds-c-disabled-fg — a disabled button or field is drawn at 60% opacity, it has no ground or text colour of its own */
 @import "tailwindcss";
 @import "./tokens.css";
@@ -125,7 +126,7 @@
 	.mg-footer a { color: var(--ds-c-on-ink, #888888); }
 	.mg-footer a:hover { color: var(--color-on-ink); }
 	.mg-social { display: flex; gap: 6px; }
-	.mg-social li { margin: 0; }
+	.mg-social li { margin: 0; } /* ds-keep: white marks on the networks' own brand colours */
 	.mg-social a { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; color: #fff; }
 	.mg-social a.is-facebook { background: #3b5998; } /* ds-keep: the networks' own brand colours */
 	.mg-social a.is-twitter { background: #1da1f2; } /* ds-keep: the networks' own brand colours */
