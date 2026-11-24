@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-743-blog-pages",
+  "kind": "fix",
+  "title": "A kept blog post takes its slug, a dropped tag page takes its tag off, and lat32 write and plan faults leave no false blocks",
+  "pr": 743,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A post one category below the blog item is renamed through its article with the router's id kept, and a rerun restores its demo alias; a dropped category view is skipped and a dropped tag page unpublishes its tag; hidden pagination and a dropped post's title leave with the dropped items; alt-only updates pass the look guard; phone and e-mail links printed from their words follow them; a picture-only list is not counted; credit links are hidden with their line; an unshared block decided in sharedBlocks moves to its page."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-blog-pages.test.mjs",
+      "apps/tracy-web/test/write-step-lat32-doors.test.mjs",
+      "apps/tracy-web/test/site-check-reach.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a post one category below the blog item is ordered on its article, keeping the id the router prints",
+      "the stage renames the post through its article, and a rerun gives it back its demo alias, not its address part",
+      "a dropped category view is skipped though a kept post lives under it; a dropped tag page takes its tag off",
+      "a listing's pagination and a dropped post's title in a kept listing leave with the items the plan drops",
+      "a phone or e-mail link the template prints from its words follows them; the row's address slot is the title's",
+      "the look guard lets through an update that changes only the alts of pictures of a row read first",
+      "a credit link of the template is hidden with its hideable line; the business's own links stay as the plan kept them",
+      "a block the kit does not share, decided in sharedBlocks, moves to its one kept page, and leaves with a dropped one",
+      "a list of pictures and addresses has no words to be found by, so it is not measured, never \"the page prints 2\""
+    ]
+  }
+}
