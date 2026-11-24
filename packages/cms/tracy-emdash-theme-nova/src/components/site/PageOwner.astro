@@ -1,0 +1,17 @@
+---
+/**
+ * The entry a page is about, as a provenance stamp (`src/lib/stamps.ts`): one
+ * `<template data-tracy-owner>` as the first child of the view's `<main>`, so every element of the
+ * page body names its entry even where no field stamp reaches. Kept off `<body>` on purpose: the
+ * header and footer print the site chrome, and an owner above them would name the wrong entry for
+ * every word the chrome prints. Renders nothing on an ordinary request.
+ */
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  stamp: Stamp
+}
+const { stamp } = Astro.props
+---
+
+{stamp.owner && <template data-tracy-owner={stamp.owner}></template>}

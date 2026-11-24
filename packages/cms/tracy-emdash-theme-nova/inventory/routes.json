@@ -1,0 +1,444 @@
+{
+  "source": "source/snapshot",
+  "note": "from the seed site-model routes (Joomla SEF paths, rewrite on). Rendered set: see STATUS.",
+  "routes": [
+    {
+      "path": "/",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/login-form",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/registration-form",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/user-profile",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/error-page",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/offline-pages",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/typography",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/featured-articles",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/blog-detail",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/about-us-2/contact",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/project",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/about-us-2",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/services",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/project/project-detail",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/about-us-2/career",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/illustration",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/development",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/mobile-application",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/cloud-solutions",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/it-infrastructure",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/cybersecurity",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/virtualization",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/tags",
+      "kind": "page",
+      "type": null,
+      "slug": null
+    },
+    {
+      "path": "/smart-search",
+      "kind": "list",
+      "type": "posts",
+      "slug": null
+    },
+    {
+      "path": "/category-blog",
+      "kind": "list",
+      "type": "posts",
+      "slug": null
+    },
+    {
+      "path": "/author-listting",
+      "kind": "list",
+      "type": "posts",
+      "slug": null
+    },
+    {
+      "path": "/project/branding",
+      "kind": "list",
+      "type": "posts",
+      "slug": null
+    },
+    {
+      "path": "/project/ui-ux-design",
+      "kind": "list",
+      "type": "posts",
+      "slug": null
+    },
+    {
+      "path": "/project/illustration",
+      "kind": "list",
+      "type": "posts",
+      "slug": null
+    },
+    {
+      "path": "/tagged-items",
+      "kind": "list",
+      "type": "posts",
+      "slug": null
+    },
+    {
+      "path": "/category-blog/how-business-technology-changed-how-we-think-about-death",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "how-business-technology-changed-how-we-think-about-death"
+    },
+    {
+      "path": "/category-blog/why-the-biggest-myths-about-business-may-actually-be-right",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "why-the-biggest-myths-about-business-may-actually-be-right"
+    },
+    {
+      "path": "/category-blog/how-to-create-an-awesome-software-video-about-success-busines",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "how-to-create-an-awesome-software-video-about-success-busines"
+    },
+    {
+      "path": "/category-blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "the-digital-age-of-death-how-business-technology-is-transforming-end-of-life"
+    },
+    {
+      "path": "/category-blog/from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance"
+    },
+    {
+      "path": "/category-blog/the-rise-of-online-funeral-services-business-technology-s-role",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "the-rise-of-online-funeral-services-business-technology-s-role"
+    },
+    {
+      "path": "/category-blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye"
+    },
+    {
+      "path": "/category-blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "revolutionizing-death-care-the-business-tech-disruption-in-funeral-services"
+    },
+    {
+      "path": "/category-blog/how-business-technology-is-shaping-the-way-we-remember-2023",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "how-business-technology-is-shaping-the-way-we-remember-2023"
+    },
+    {
+      "path": "/category-blog/examining-the-role-of-business-technology-in-the-mourning-process",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "examining-the-role-of-business-technology-in-the-mourning-process"
+    },
+    {
+      "path": "/category-blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "mourning-in-the-digital-age-unpacking-the-influence-of-business-technology"
+    },
+    {
+      "path": "/category-blog/the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era"
+    },
+    {
+      "path": "/category-blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "transforming-grief-exploring-the-impact-of-business-technology-on-memorialization"
+    },
+    {
+      "path": "/category-blog/the-influence-of-business-technology-on-mourning-practices-2023",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "the-influence-of-business-technology-on-mourning-practices-2023"
+    },
+    {
+      "path": "/category-blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "digital-tributes-examining-the-changing-face-of-mourning-with-business-technology"
+    },
+    {
+      "path": "/category-blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning"
+    },
+    {
+      "path": "/category-blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "the-digital-remembrance-investigating-the-role-of-business-technology-in-grief"
+    },
+    {
+      "path": "/category-blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "mourning-in-the-digital-world-examining-the-impact-of-business-technology"
+    },
+    {
+      "path": "/category-blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey"
+    },
+    {
+      "path": "/category-blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning"
+    },
+    {
+      "path": "/category-blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "beyond-the-funeral-navigating-grief-in-the-age-of-business-technology"
+    },
+    {
+      "path": "/category-blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "the-digital-mourning-ritual-examining-the-influence-of-business-technology"
+    },
+    {
+      "path": "/category-blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones"
+    },
+    {
+      "path": "/category-blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "virtual-connections-exploring-how-business-technology-is-redefining-mourning"
+    },
+    {
+      "path": "/category-blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief"
+    },
+    {
+      "path": "/category-blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process"
+    },
+    {
+      "path": "/project/branding/landing-page-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "landing-page-design"
+    },
+    {
+      "path": "/project/branding/design-system-and-ul-kit",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "design-system-ul-kit"
+    },
+    {
+      "path": "/project/branding/realistic-scenarios",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "realistic-scenarios"
+    },
+    {
+      "path": "/project/branding/mobile-app-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "mobile-app-design"
+    },
+    {
+      "path": "/project/branding/muckup-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "muckup-design"
+    },
+    {
+      "path": "/project/branding/web-application-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "web-application-design"
+    },
+    {
+      "path": "/project/ui-ux-design/corporate-website-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "corporate-website-design"
+    },
+    {
+      "path": "/project/ui-ux-design/blog-design-and-layout",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "blog-design-layout"
+    },
+    {
+      "path": "/project/ui-ux-design/social-media-graphics",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "social-media-graphics"
+    },
+    {
+      "path": "/project/ui-ux-design/brand-identity-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "brand-identity-design"
+    },
+    {
+      "path": "/project/ui-ux-design/logo-design-and-branding",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "logo-design-branding"
+    },
+    {
+      "path": "/project/ui-ux-design/infographic-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "infographic-design"
+    },
+    {
+      "path": "/project/illustration/email-newsletter-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "email-newsletter-design"
+    },
+    {
+      "path": "/project/illustration/presentation-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "presentation-design"
+    },
+    {
+      "path": "/project/illustration/packaging-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "packaging-design"
+    },
+    {
+      "path": "/project/illustration/poster-and-banner-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "poster-banner-design"
+    },
+    {
+      "path": "/project/illustration/event-invitation-design",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "event-invitation-design"
+    }
+  ]
+}

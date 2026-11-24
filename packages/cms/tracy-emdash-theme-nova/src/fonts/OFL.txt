@@ -1,0 +1,4 @@
+Golos Text, Copyright 2020 The Golos Project Authors (https://github.com/Golos-Fonts/Golos-Text).
+Licensed under the SIL Open Font License, Version 1.1 (https://openfontlicense.org).
+Files: the three weights (400, 500, 700) the source template requests from Google Fonts
+(fonts.googleapis.com/css?family=Golos+Text:400,500,700), fetched 2026-11-24.

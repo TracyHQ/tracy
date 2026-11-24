@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Golos Text",
+    "cssVariable": "--font-golos-text",
+    "provider": "local",
+    "variants": [
+      { "weight": "400", "style": "normal", "src": ["./src/fonts/golos-text-400.ttf"] },
+      { "weight": "500", "style": "normal", "src": ["./src/fonts/golos-text-500.ttf"] },
+      { "weight": "700", "style": "normal", "src": ["./src/fonts/golos-text-700.ttf"] }
+    ],
+    "fallbacks": ["system-ui", "sans-serif"]
+  }
+]

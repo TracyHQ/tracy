@@ -1,0 +1,55 @@
+{
+  "id": "tracy-nova",
+  "label": "JA Nova",
+  "version": "0.1.0",
+  "locales": [
+    "en"
+  ],
+  "defaultLocale": "en",
+  "site": {
+    "title": "JA Nova",
+    "tagline": ""
+  },
+  "contentOrder": [],
+  "forms": {
+    "file": "tools/forms.json",
+    "bindings": []
+  },
+  "mail": {
+    "fromEmail": "no-reply@ja-nova.example",
+    "fromName": "JA Nova"
+  },
+  "audit": {
+    "indexable": [
+      "^/(?!search)(?!404$).*"
+    ],
+    "noindex": [
+      "^/search"
+    ],
+    "notFound": [
+      "^/404$"
+    ],
+    "canonicalQuery": [
+      "page"
+    ],
+    "unknownProbes": [
+      "/blog/nope"
+    ],
+    "alternates": "all-locales"
+  },
+  "qa": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": null,
+        "dark": "dark"
+      },
+      "storageKey": "tracy-nova-theme"
+    },
+    "expectedStatus": {
+      "/404": 404
+    }
+  },
+  "$comment": "Template identity and site-specific wiring read by the generic tools. Demo content: the JA Nova sample site (business and start-up). Forms bindings are added in P2/P5 with the contact and subscribe forms."
+}

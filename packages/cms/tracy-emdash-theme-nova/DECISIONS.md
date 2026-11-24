@@ -1,0 +1,17 @@
+# DECISIONS — tracy-nova
+
+Reversible defaults taken without asking (batched owner questions are at the end of `STATUS.md`).
+`[LEE]` = needs the owner before a release.
+
+| ID | Decision | Why | Reversible by |
+|---|---|---|---|
+| D1 | Package `packages/cms/tracy-emdash-theme-nova`, npm name `@tracy/emdash-theme-nova`, template id `tracy-nova`, label `JA Nova`, version `0.1.0`, English only. | Given by the task. | rename |
+| D2 | Source = release `quickstart/ja-nova/j6` **1.0.12** (Joomla 6.1.1, template `ja_nova`, T4), webroot tarball (sha256 `cbaab832…7135cf`) + database dump (sha256 `38642a7c…1f366c`), both checked against `SHA256SUMS` and `tracy_setting.json`. Stand: `mariadb:11` + a local `php:8.3-apache` image, webroot bind-mounted, `127.0.0.1:18082`; recipe in `source/REBUILD.md`. | The release is webroot + dump (Essence D2). | — |
+| D3 | Road = `contract` (`detect-source`: Joomla, T4/ACM, local): `joomla-dump.mjs --capture` → `from-joomla.mjs` → `site-model.json` (92 records, 12 types, 73 routes) → `compile-seed.mjs`. The WP skill's scripts run from a copy with its own `npm install` outside the repo. Stack pins and `pnpm-workspace.yaml` overrides copied from the sibling Fresco (emdash 1.1.0, astro 7.4.12, Tailwind 4.3.3). | One tested set. | — |
+| D4 | One language (`en`), no prefix, no `i18n.fallback`. | Task; invariant 6. | add a locale |
+| D5 | The WordPress port (`wp7/`, staged 1.1.13; its `SHA256SUMS` names a `wp-ja-nova-1.1.17.zip` that is not staged) is a second reference for layout decisions only; nothing is read from it as a source. | Task. | — |
+| D6 | Fonts: `provider: local`, Golos Text 400/500/700 as the three files of the source's own Google CSS request (`css?family=Golos+Text:400,500,700`, latin subset, ttf), OFL note in `src/fonts/OFL.txt`. Be Vietnam Pro (shipped in the template for Vietnamese) is not carried: English only. | Diner finding: a different file draws wider text; English-only. | add a locale |
+| D7 | The theme toggle (light/dark, `html[data-theme]`, cookie `janova-theme`, `docs/checks.md` 7) is part of the design and is ported; `qa.theme` in `template.config.json` declares it. Dark values are the `--dm-*` tokens of `css/darkmode.css`. | The source has two themes. | drop dark |
+| D8 | **Pages not ported (default, owner may reverse):** front-end accounts (login, registration, profile), Typography, Offline and Error demo pages, the Smart Search and Tagged Items utility pages (the template has its own search page and tag list), as Essence D8. Everything the root Home prints is ported. | Essence precedent. | add the pages |
+| D9 | The crawl snapshot (`<evidence-dir>/snapshot`, 114 pages, 225 assets) is evidence outside the repo; `source/snapshot-SHA256SUMS` is committed (329 files). | Source size. | — |
+| D10 | Evidence lives under `/home/agent/out/nova/` (renders, stand, snapshot, work files), not in the repo. | Task. | — |
