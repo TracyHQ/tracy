@@ -201,8 +201,6 @@
 	.mg-masthead-desc { color: rgba(255, 255, 255, .8); font-size: 18px; line-height: 30px; margin: 0; }
 	@media (max-width: 767.98px) { .mg-masthead-title { font-size: var(--ds-size-display-phone, 38px); line-height: var(--ds-leading-display, 46px); } .mg-masthead-detail { padding: 64px 0; } }
 	.mg-masthead-detail.is-left { max-width: 500px; text-align: left; }
-	@media (max-width: 991.98px) { .mg-masthead-detail.is-left .mg-masthead-title { font-size: 45px; line-height: 54px; } }
-	@media (max-width: 767.98px) { .mg-masthead-detail.is-left .mg-masthead-title { font-size: 36px; line-height: 44px; } .mg-masthead-detail.is-left .mg-masthead-desc { font-size: 16px; line-height: 26px; } }
 }
 
 /* the dark side of the bands the source's dark mode does not reach: line icons and logos are inverted to read on dark cards */
