@@ -1,0 +1,207 @@
+{
+  "home-hero": {
+    "type": "hero",
+    "style": "style-1",
+    "module": "110",
+    "spacing": {
+      "top": "large",
+      "bottom": "blank"
+    }
+  },
+  "about-activities": {
+    "type": "features",
+    "style": "style-1",
+    "module": "111",
+    "spacing": {
+      "top": "medium",
+      "bottom": "blank",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "about-mission": {
+    "type": "features",
+    "style": "style-2",
+    "module": "116",
+    "spacing": {
+      "top": "blank",
+      "bottom": "blank",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "primary",
+    "subColor": "success",
+    "align": "center"
+  },
+  "meet-us": {
+    "type": "features",
+    "style": "style-4",
+    "module": "125",
+    "spacing": {
+      "top": "large",
+      "bottom": "large",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "home-donor-base": {
+    "type": "features",
+    "style": "style-1",
+    "module": "129",
+    "spacing": {
+      "top": "large",
+      "bottom": "blank",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "primary",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "about-give": {
+    "type": "features",
+    "style": "style-5",
+    "module": "132",
+    "spacing": {
+      "top": "large",
+      "bottom": "large",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "what-we-do": {
+    "type": "features",
+    "style": "style-3",
+    "module": "133",
+    "spacing": {
+      "top": "large",
+      "bottom": "large",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "primary",
+    "subColor": "success",
+    "align": "center"
+  },
+  "home-connected": {
+    "type": "features",
+    "style": "style-7",
+    "module": "146",
+    "spacing": {
+      "top": "blank",
+      "bottom": "blank",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "home-raise-fund": {
+    "type": "features",
+    "style": "style-6",
+    "module": "161",
+    "spacing": {
+      "top": "large",
+      "bottom": "blank",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "topbar-contact": {
+    "type": "contact_info",
+    "style": "style-1",
+    "module": "112",
+    "spacing": {
+      "top": "blank",
+      "bottom": "blank",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "footer-contact": {
+    "type": "contact_info",
+    "style": "style-2",
+    "module": "155",
+    "spacing": {
+      "top": "large",
+      "bottom": "medium",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "home-follow": {
+    "type": "social",
+    "style": "style-1",
+    "module": "147",
+    "spacing": {
+      "top": "large",
+      "bottom": "blank",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "footer-follow": {
+    "type": "social",
+    "style": "style-1",
+    "module": "163",
+    "spacing": {
+      "top": "large",
+      "bottom": "blank",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "home-helpline": {
+    "type": "cta",
+    "style": "style-1",
+    "module": "157",
+    "spacing": {
+      "top": "large",
+      "bottom": "blank",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "normal",
+    "subColor": "normal",
+    "align": "center"
+  },
+  "faq": {
+    "type": "accordion",
+    "style": "style-1",
+    "module": "160",
+    "spacing": {
+      "top": "medium",
+      "bottom": "medium",
+      "title": "large"
+    },
+    "bg": "",
+    "titleColor": "primary",
+    "subColor": "success",
+    "align": "center"
+  }
+}

@@ -1,0 +1,1077 @@
+{
+  "note": "path = the route the EmDash site serves (site-model routes). source.url = what the running Joomla answers for it, when the crawl met it; the model drops the article id and the category segment Joomla keeps, so many detail routes have no equal path on the source.",
+  "unknownRouteBehaviour": {
+    "status": 404,
+    "chrome": true,
+    "view": "NotFound"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "home",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php",
+        "joomla": {
+          "menuId": "101",
+          "joomlaPath": "/",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "front-page",
+        "sections": [
+          {
+            "position": "hero",
+            "via": "layout",
+            "modules": [
+              "110"
+            ]
+          },
+          {
+            "position": "content-left",
+            "via": "layout",
+            "modules": [
+              "157",
+              "129"
+            ]
+          },
+          {
+            "position": "content-right",
+            "via": "layout",
+            "modules": [
+              "161"
+            ]
+          },
+          {
+            "position": "section-4",
+            "via": "layout",
+            "modules": [
+              "133"
+            ]
+          },
+          {
+            "position": "section-5",
+            "via": "layout",
+            "modules": [
+              "135"
+            ]
+          },
+          {
+            "position": "section-6",
+            "via": "layout",
+            "modules": [
+              "125"
+            ]
+          },
+          {
+            "position": "section-7",
+            "via": "layout",
+            "modules": [
+              "156"
+            ]
+          },
+          {
+            "position": "section-8",
+            "via": "layout",
+            "modules": [
+              "146"
+            ]
+          },
+          {
+            "position": "section-9",
+            "via": "layout",
+            "modules": [
+              "140"
+            ]
+          },
+          {
+            "position": "contact",
+            "via": "layout",
+            "modules": [
+              "155"
+            ]
+          },
+          {
+            "position": "footer-r",
+            "via": "layout",
+            "modules": [
+              "163"
+            ]
+          },
+          {
+            "position": "topbar",
+            "via": "menu-assignment",
+            "modules": [
+              "112"
+            ]
+          },
+          {
+            "position": "acym",
+            "via": "menu-assignment",
+            "modules": [
+              "141"
+            ]
+          },
+          {
+            "position": "follow",
+            "via": "menu-assignment",
+            "modules": [
+              "147"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/about",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "about",
+        "found": true
+      },
+      "source": {
+        "url": "/about",
+        "joomla": {
+          "menuId": "102",
+          "joomlaPath": "/about",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": [
+              "145"
+            ]
+          },
+          {
+            "position": "section-2",
+            "via": "layout",
+            "modules": [
+              "111"
+            ]
+          },
+          {
+            "position": "section-3",
+            "via": "layout",
+            "modules": [
+              "116"
+            ]
+          },
+          {
+            "position": "section-4",
+            "via": "layout",
+            "modules": [
+              "133"
+            ]
+          },
+          {
+            "position": "section-6",
+            "via": "layout",
+            "modules": [
+              "125"
+            ]
+          },
+          {
+            "position": "section-10",
+            "via": "layout",
+            "modules": [
+              "132"
+            ]
+          },
+          {
+            "position": "contact",
+            "via": "layout",
+            "modules": [
+              "155"
+            ]
+          },
+          {
+            "position": "footer-r",
+            "via": "layout",
+            "modules": [
+              "163"
+            ]
+          },
+          {
+            "position": "topbar",
+            "via": "menu-assignment",
+            "modules": [
+              "112"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/contact",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "contact",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/contact",
+        "joomla": {
+          "menuId": "119",
+          "joomlaPath": "/contact",
+          "option": "com_contact",
+          "view": "contact",
+          "id": "1"
+        },
+        "view": "page-contact",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": [
+              "145"
+            ]
+          },
+          {
+            "position": "contact",
+            "via": "layout",
+            "modules": [
+              "155"
+            ]
+          },
+          {
+            "position": "footer-r",
+            "via": "layout",
+            "modules": [
+              "163"
+            ]
+          },
+          {
+            "position": "topbar",
+            "via": "menu-assignment",
+            "modules": [
+              "112"
+            ]
+          },
+          {
+            "position": "google-map",
+            "via": "menu-assignment",
+            "modules": [
+              "153"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/help-faqs",
+      "kind": "page",
+      "cms": {
+        "collection": "pages",
+        "slug": "help-faqs",
+        "found": true
+      },
+      "source": {
+        "url": "/help-faqs",
+        "joomla": {
+          "menuId": "120",
+          "joomlaPath": "/help-faqs",
+          "option": "com_content",
+          "view": "featured",
+          "id": null
+        },
+        "view": "page-landing",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": [
+              "145"
+            ]
+          },
+          {
+            "position": "section-3",
+            "via": "layout",
+            "modules": [
+              "160"
+            ]
+          },
+          {
+            "position": "contact",
+            "via": "layout",
+            "modules": [
+              "155"
+            ]
+          },
+          {
+            "position": "footer-r",
+            "via": "layout",
+            "modules": [
+              "163"
+            ]
+          },
+          {
+            "position": "topbar",
+            "via": "menu-assignment",
+            "modules": [
+              "112"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations",
+      "kind": "list",
+      "cms": {
+        "collection": "donations",
+        "slug": "donations",
+        "found": true
+      },
+      "source": {
+        "url": "/index.php/donations",
+        "joomla": {
+          "menuId": "103",
+          "joomlaPath": "/donations",
+          "option": "com_content",
+          "view": "category",
+          "id": "13"
+        },
+        "view": "category",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": [
+              "145"
+            ]
+          },
+          {
+            "position": "contact",
+            "via": "layout",
+            "modules": [
+              "155"
+            ]
+          },
+          {
+            "position": "footer-r",
+            "via": "layout",
+            "modules": [
+              "163"
+            ]
+          },
+          {
+            "position": "topbar",
+            "via": "menu-assignment",
+            "modules": [
+              "112"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events",
+      "kind": "list",
+      "cms": {
+        "collection": "events",
+        "slug": "events",
+        "found": true
+      },
+      "source": {
+        "url": "/events",
+        "joomla": {
+          "menuId": "104",
+          "joomlaPath": "/events",
+          "option": "com_content",
+          "view": "category",
+          "id": "10"
+        },
+        "view": "category",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": [
+              "145"
+            ]
+          },
+          {
+            "position": "contact",
+            "via": "layout",
+            "modules": [
+              "155"
+            ]
+          },
+          {
+            "position": "footer-r",
+            "via": "layout",
+            "modules": [
+              "163"
+            ]
+          },
+          {
+            "position": "topbar",
+            "via": "menu-assignment",
+            "modules": [
+              "112"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog",
+      "kind": "list",
+      "cms": {
+        "collection": "posts",
+        "slug": "blog",
+        "found": true
+      },
+      "source": {
+        "url": "/blog",
+        "joomla": {
+          "menuId": "126",
+          "joomlaPath": "/blog",
+          "option": "com_content",
+          "view": "category",
+          "id": "8"
+        },
+        "view": "category",
+        "sections": [
+          {
+            "position": "masthead",
+            "via": "layout",
+            "modules": [
+              "145"
+            ]
+          },
+          {
+            "position": "contact",
+            "via": "layout",
+            "modules": [
+              "155"
+            ]
+          },
+          {
+            "position": "footer-r",
+            "via": "layout",
+            "modules": [
+              "163"
+            ]
+          },
+          {
+            "position": "topbar",
+            "via": "menu-assignment",
+            "modules": [
+              "112"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/weve-reached-1-million-indonations-and-counting",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "weve-reached-1-million-indonations-and-counting",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/building-empathy-throughremote-user-research",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "building-empathy-throughremote-user-research",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/charity-branding-is-yourbrand-digital-ready",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "charity-branding-is-yourbrand-digital-ready",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/donation-and-cleaning-program-foundation",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "donation-and-cleaning-program-foundation",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/blog/charity-of-the-month-plan-international-uk",
+      "kind": "detail",
+      "cms": {
+        "collection": "posts",
+        "slug": "charity-of-the-month-plan-international-uk",
+        "found": true
+      },
+      "source": {
+        "url": null,
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/water-treatment-projects",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "water-treatment-projects",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/water-treatment-projects",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/saving-ensdangered-species",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "saving-ensdangered-species",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/saving-ensdangered-species",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/sea-pollution",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "sea-pollution",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/sea-pollution",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/community-center",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "community-center",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/community-center",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/endangered-species",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "endangered-species",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/endangered-species",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/oil-pollution",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "oil-pollution",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/oil-pollution",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/save-rainforests",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "save-rainforests",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/save-rainforests",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/indigenous-people",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "indigenous-people",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/indigenous-people",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/saving-animal-preserve",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "saving-animal-preserve",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/saving-animal-preserve",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/the-mysteries-of-the-jungle-creatures",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "the-mysteries-of-the-jungle-creatures",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/the-mysteries-of-the-jungle-creatures",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/exploring-the-world-of-feline-friends",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "exploring-the-world-of-feline-friends",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/exploring-the-world-of-feline-friends",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/surviving-the-harsh-polar-realms",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "surviving-the-harsh-polar-realms",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/surviving-the-harsh-polar-realms",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/donations/the-african-wildlife-chronicles",
+      "kind": "detail",
+      "cms": {
+        "collection": "donations",
+        "slug": "the-african-wildlife-chronicles",
+        "found": true
+      },
+      "source": {
+        "url": "/donations/the-african-wildlife-chronicles",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events/afforestation-program",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "afforestation-program",
+        "found": true
+      },
+      "source": {
+        "url": "/events/afforestation-program",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events/feed-the-world",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "feed-the-world",
+        "found": true
+      },
+      "source": {
+        "url": "/events/feed-the-world",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events/charity-journey-to-africa",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "charity-journey-to-africa",
+        "found": true
+      },
+      "source": {
+        "url": "/events/charity-journey-to-africa",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events/the-day-of-the-african-child",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "the-day-of-the-african-child",
+        "found": true
+      },
+      "source": {
+        "url": "/events/the-day-of-the-african-child",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events/saving-nature",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "saving-nature",
+        "found": true
+      },
+      "source": {
+        "url": "/events/saving-nature",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events/a-microscopic-marvel",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "a-microscopic-marvel",
+        "found": true
+      },
+      "source": {
+        "url": "/events/a-microscopic-marvel",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events/unveiling-natures-best-kept-treasures",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "unveiling-natures-best-kept-treasures",
+        "found": true
+      },
+      "source": {
+        "url": "/events/unveiling-natures-best-kept-treasures",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events/an-adventure-with-animals",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "an-adventure-with-animals",
+        "found": true
+      },
+      "source": {
+        "url": "/events/an-adventure-with-animals",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/events/natures-hidden-gems",
+      "kind": "detail",
+      "cms": {
+        "collection": "events",
+        "slug": "natures-hidden-gems",
+        "found": true
+      },
+      "source": {
+        "url": "/events/natures-hidden-gems",
+        "joomla": null,
+        "view": null,
+        "sections": null
+      },
+      "expected": {
+        "status": 200
+      }
+    },
+    {
+      "path": "/404",
+      "kind": "system",
+      "cms": {
+        "collection": null,
+        "slug": null,
+        "found": false
+      },
+      "source": {
+        "url": "/index.php/nope-404",
+        "joomla": null,
+        "view": "error",
+        "sections": null
+      },
+      "expected": {
+        "status": 404
+      }
+    }
+  ]
+}

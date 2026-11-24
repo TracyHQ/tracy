@@ -1,0 +1,53 @@
+{
+  "pages": [
+    {
+      "path": "/",
+      "slug": "home",
+      "view": "front-page"
+    },
+    {
+      "path": "/about",
+      "slug": "about",
+      "view": "page-landing"
+    },
+    {
+      "path": "/contact",
+      "slug": "contact",
+      "view": "page-contact"
+    },
+    {
+      "path": "/help-faqs",
+      "slug": "help-faqs",
+      "view": "page-landing"
+    },
+    {
+      "path": "/donations",
+      "slug": "donations",
+      "view": "donations"
+    },
+    {
+      "path": "/events",
+      "slug": "events",
+      "view": "events"
+    },
+    {
+      "path": "/blog",
+      "slug": "blog",
+      "view": "blog"
+    }
+  ],
+  "lists": [
+    {
+      "path": "/donations",
+      "type": "donations"
+    },
+    {
+      "path": "/events",
+      "type": "events"
+    },
+    {
+      "path": "/blog",
+      "type": "posts"
+    }
+  ]
+}

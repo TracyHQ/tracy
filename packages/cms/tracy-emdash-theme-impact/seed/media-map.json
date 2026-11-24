@@ -1,0 +1,1953 @@
+{
+	"generatedAt": "2026-11-24T05:34:01.271Z",
+	"source": "JA Impact j6 1.0.6 webroot",
+	"items": [
+		{
+			"key": "images/joomlart/hero/item-1",
+			"file": "images/joomlart/hero/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8bb4bf470e588b997bf20390a8546fbc5bb5965eb55cc67034a0d09e7928b609",
+			"targets": [
+				{
+					"collection": "hero",
+					"slug": "home-hero",
+					"locale": "en",
+					"path": "items[0].image_hero"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/hero/item-2",
+			"file": "images/joomlart/hero/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "99d961a9fbd5ca1c55491c70981be9e61ec37e5457bd2f20eb449fa93121cb90",
+			"targets": [
+				{
+					"collection": "hero",
+					"slug": "home-hero",
+					"locale": "en",
+					"path": "items[1].image_hero"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/acm/activities-1",
+			"file": "images/joomlart/acm/activities-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "adf5fd9e8705d41a6211229fce19cd5f8ea86c284ce18f26461fd7b8a9978c7f",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "about-activities",
+					"locale": "en",
+					"path": "feature_main_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/acm/activities-2",
+			"file": "images/joomlart/acm/activities-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "bc9474e1e0b7740434a6960c817765287e2355bce4e4239149eaa7c57829fcb9",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "about-activities",
+					"locale": "en",
+					"path": "items[0].sub_feature_img"
+				},
+				{
+					"collection": "features",
+					"slug": "home-donor-base",
+					"locale": "en",
+					"path": "items[0].sub_feature_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/acm/out-mission",
+			"file": "images/joomlart/acm/out-mission.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3dc32d2a629e9b57ba945c9301d582435213eba9f1c0d8f7e8e2a71f3c2a03f2",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "about-mission",
+					"locale": "en",
+					"path": "items[2].sub_feature_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/acm/assistance_1",
+			"file": "images/joomlart/acm/assistance_1.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "fe06723b3ecd7f60de00ef7f2494b0fe67bea0e82780de674fb7a56dafb0e154",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "meet-us",
+					"locale": "en",
+					"path": "items[0].sub_feature_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/acm/assistance_2",
+			"file": "images/joomlart/acm/assistance_2.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "d41728f0f1d4c0c53c0db2d40c1552e950269e26b8a202d2f5cc994f1c8714ae",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "meet-us",
+					"locale": "en",
+					"path": "items[1].sub_feature_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/acm/assistance_3",
+			"file": "images/joomlart/acm/assistance_3.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "470378ecf54253eac28361a39ac91262be53ca86ca940c4ba21ff4731d290908",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "meet-us",
+					"locale": "en",
+					"path": "items[2].sub_feature_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-4",
+			"file": "images/joomlart/features/icon-4.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "def8480ed4f5ce608dd14bd8e372a50cffb3f415b6bab6c6e769c7d68ef2ff82",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "what-we-do",
+					"locale": "en",
+					"path": "block_img"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-1",
+			"file": "images/joomlart/features/icon-1.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "6a82fee98acf79a88fe87d5e0d3b54f8f9327062e4987eebd08d47f8ebc73c19",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "what-we-do",
+					"locale": "en",
+					"path": "items[0].img_icon"
+				},
+				{
+					"collection": "features",
+					"slug": "what-we-do",
+					"locale": "en",
+					"path": "items[3].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-2",
+			"file": "images/joomlart/features/icon-2.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "a4d3c8d712f21fde2a91ca489148d1133f8f021b7c255fa4b8d8957be8bd10e2",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "what-we-do",
+					"locale": "en",
+					"path": "items[1].img_icon"
+				},
+				{
+					"collection": "features",
+					"slug": "what-we-do",
+					"locale": "en",
+					"path": "items[4].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-3",
+			"file": "images/joomlart/features/icon-3.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "987f4d7ab53db919f4200c65ffdcd6af5981b2e90a3c96af96fc3db8f13d5dcf",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "what-we-do",
+					"locale": "en",
+					"path": "items[2].img_icon"
+				},
+				{
+					"collection": "features",
+					"slug": "what-we-do",
+					"locale": "en",
+					"path": "items[5].img_icon"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/contact-1",
+			"file": "images/joomlart/gallery/contact-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "0799d7adebe0e3399bb60ae44d65d93648e3c37cbc13382f764e4e6c7c946a62",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "home-connected",
+					"locale": "en",
+					"path": "ft_video"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-8",
+			"file": "images/joomlart/features/icon-8.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "b19fdf5a71c055406075f63e6323dfed940c1219b6a720bd4e978ed36e01b8b4",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "home-raise-fund",
+					"locale": "en",
+					"path": "items[0].sub_feature_media"
+				},
+				{
+					"collection": "events",
+					"slug": "afforestation-program",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "body[32].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "body[32].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-9",
+			"file": "images/joomlart/features/icon-9.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "4a915a459cceaf7224d03550abf4130054689be4d3a33a85a0d6ea076c56a873",
+			"targets": [
+				{
+					"collection": "features",
+					"slug": "home-raise-fund",
+					"locale": "en",
+					"path": "items[1].sub_feature_media"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/cta/avatar-1",
+			"file": "images/joomlart/cta/avatar-1.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "205de586521090c42858dd9aee28c18a282b07844ac790aad506c9e95d7bd8a9",
+			"targets": [
+				{
+					"collection": "cta",
+					"slug": "home-helpline",
+					"locale": "en",
+					"path": "cta_media"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/item-2",
+			"file": "images/joomlart/blog/animal/item-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1d9e064e33ac5e6f90d267051a26f59b3be463e1aa5405420e1deaf0e391cafb",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-2",
+			"file": "images/joomlart/blog/animal/detail-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "7aa19dbedf1c634bc197e4543e758cc57239015b97d5cb3af41f10aa13c4053a",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/2",
+			"file": "images/joomlart/authors/2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e5639adf1703549f839f0cd9ba49334ce8c75060d118702aef62a8104b968ed2",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "weve-reached-1-million-indonations-and-counting",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-empathy-throughremote-user-research",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "charity-of-the-month-plan-international-uk",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-10",
+			"file": "images/joomlart/blog/animal/detail-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "19987b8e883b22b70f20886f5d745e3cee0779266dcfcc3010644310e8e99aa7",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/item-3",
+			"file": "images/joomlart/blog/animal/item-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "c435c62d92a9b1edf51e79537f32d1928c6fc0c3f37eed593e5400c80e8b2736",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "weve-reached-1-million-indonations-and-counting",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-3",
+			"file": "images/joomlart/blog/animal/detail-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "f14f1fabfcb1ab3d95a0b54355311c7e1acc1836bd98b415b4da4e46fdda7317",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "weve-reached-1-million-indonations-and-counting",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/item-4",
+			"file": "images/joomlart/blog/animal/item-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1a029c015788b70852178a1298320d139998ac4af09cf2dbd09ee354582e8e04",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "building-empathy-throughremote-user-research",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-4",
+			"file": "images/joomlart/blog/animal/detail-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "823785e903f255aa70d7c3ce8467559159e454bfc269f425fa8a310d909d6557",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "building-empathy-throughremote-user-research",
+					"locale": "en",
+					"path": "banner"
+				},
+				{
+					"collection": "posts",
+					"slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "weve-reached-1-million-indonations-and-counting",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-empathy-throughremote-user-research",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "charity-branding-is-yourbrand-digital-ready",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "donation-and-cleaning-program-foundation",
+					"locale": "en",
+					"path": "body[10].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "charity-of-the-month-plan-international-uk",
+					"locale": "en",
+					"path": "body[10].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/item-5",
+			"file": "images/joomlart/blog/animal/item-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3e6da424d85b0b47c29e9dcff4bdffa3835fc3888c26df45601ea76c6f73c898",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-5",
+			"file": "images/joomlart/blog/animal/detail-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "661768b7a1088054fb06e5cf400ceb28a404c8f68cf82855f3c47b273adc1fe8",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/4",
+			"file": "images/joomlart/authors/4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a4429b838bacd61004c7469afb19f4d2e84f00194fbf7b889e734b6628d9165f",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "saving-ensdangered-species",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "sea-pollution",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "community-center",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "endangered-species",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "oil-pollution",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-9",
+			"file": "images/joomlart/blog/animal/detail-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3ad0a611db59123cd8a697fb13f89f5c432128cff4c32cd56e0ce43c49d7410e",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/3",
+			"file": "images/joomlart/authors/3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9c3304b8cbe760a69435e56dd07da0ff630f16025b430645fcb80047ecb9b6f6",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "charity-branding-is-yourbrand-digital-ready",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "posts",
+					"slug": "donation-and-cleaning-program-foundation",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "water-treatment-projects",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-8",
+			"file": "images/joomlart/blog/animal/detail-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d43c859fc7cc7d92ebece59f8f7006cac78fb14a4592a85fd2720c80a0781993",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "charity-branding-is-yourbrand-digital-ready",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/item-6",
+			"file": "images/joomlart/blog/animal/item-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "f0a66ac18314773c64ad43cd19c91c60330a515f44460dac4185a0feb83a15a9",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "donation-and-cleaning-program-foundation",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-6",
+			"file": "images/joomlart/blog/animal/detail-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9527e5567283f79dd0210441e5c96f2de553e16c952e456a3dd1528d2f4807b3",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "donation-and-cleaning-program-foundation",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/item-1",
+			"file": "images/joomlart/blog/animal/item-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a61157f434fd44c729cce603d7812220a6d1b407718071bdc6e39a485fbc2067",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "charity-of-the-month-plan-international-uk",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-1",
+			"file": "images/joomlart/blog/animal/detail-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "246b98237740f127d2d2bbf7304c82bb3ca5232ba3e988186ef7d6194ab78727",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "charity-of-the-month-plan-international-uk",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-13",
+			"file": "images/joomlart/donate/intro/intro-13.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d1343f91128e10626dd3ddc7ec46cb01c344af5a2048d35c500bb7c2306d0d72",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "water-treatment-projects",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-13",
+			"file": "images/joomlart/donate/detail/detail-13.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9da245f9a7eda0d5001db4d2c4ececead49d5b306ada81eea094def5bc8c2237",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "water-treatment-projects",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-12",
+			"file": "images/joomlart/donate/intro/intro-12.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "8e3c8dd34509bfc6509565626c717065b523145bc888b904cc316a1256dbfd45",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "saving-ensdangered-species",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-12",
+			"file": "images/joomlart/donate/detail/detail-12.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "41c5b5cdb067c81279327860172a168e9747e2735fe9f61afd33d683848f53b3",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "saving-ensdangered-species",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-11",
+			"file": "images/joomlart/donate/intro/intro-11.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2408fbf01a5eb7f6254da38c011c8e07ab1590f3ea568835c4fa56728be5e04d",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "sea-pollution",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-11",
+			"file": "images/joomlart/donate/detail/detail-11.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9a0b95fca354696d629299d09286cec606be3d2ab2b6f171452479580542e486",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "sea-pollution",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-10",
+			"file": "images/joomlart/donate/intro/intro-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "30f1be1d888faa1e9acfd8f3883bd2e8e7f7ad400b18376806edbe10065e001f",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "community-center",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-10",
+			"file": "images/joomlart/donate/detail/detail-10.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "d838ef9832d3152e04df2794267f7657c2a83bb3e1cbc066d0770725b20984e6",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "community-center",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-9",
+			"file": "images/joomlart/donate/intro/intro-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "dc4f60631733f9e9c6dcd5140ac2d6ce3c15cc1225cab17aefe54d3ad8fbbafc",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "endangered-species",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-9",
+			"file": "images/joomlart/donate/detail/detail-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b95f43e39e7c1af7633e4bf20fbd59ff65d37e43544fb18161ec915739a9e1f9",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "endangered-species",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-8",
+			"file": "images/joomlart/donate/intro/intro-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6e23ab9db4c25adddad5d4b570291f414cd699f407e91f09623e19ae23bf17cc",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "oil-pollution",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-8",
+			"file": "images/joomlart/donate/detail/detail-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a2aeff2402823211702a89e23831973bc35f3d15af1a43300f5523dd12449d34",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "oil-pollution",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-7",
+			"file": "images/joomlart/donate/intro/intro-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "1f1b61f64343d14fdf44d2d53d84a9c6560e7a586d0682a96231a888eedebf10",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "save-rainforests",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-7",
+			"file": "images/joomlart/donate/detail/detail-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "52af9b721eec4bc958a47f6364f71a8a802822a567da2bcc3295749ccd602a71",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "save-rainforests",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/5",
+			"file": "images/joomlart/authors/5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "77ffc6bb82206c3ab63ea069a2510c333878ee2ccf2f248e485def5da0de3656",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "save-rainforests",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "indigenous-people",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "saving-animal-preserve",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "the-mysteries-of-the-jungle-creatures",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "exploring-the-world-of-feline-friends",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-6",
+			"file": "images/joomlart/donate/intro/intro-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "cf450350641e1fe1a230bd8a69a42be4ce29b6df5183e0cbe9babcdf1392731a",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "indigenous-people",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-6",
+			"file": "images/joomlart/donate/detail/detail-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "fcc5a488f98028c0ea8abe793e62fa18fdd29477fb461d8cfcc7992c2aa6fec7",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "indigenous-people",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-5",
+			"file": "images/joomlart/donate/intro/intro-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "5156758d5694115479b1b5effbc5695443030a4d2a5455b1a5ab247f3c3aa986",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "saving-animal-preserve",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-5",
+			"file": "images/joomlart/donate/detail/detail-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ae9881bd469888e68b910e8df3c51bc08d8509e3795bcb4650707c3ad304632a",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "saving-animal-preserve",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-4",
+			"file": "images/joomlart/donate/intro/intro-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b69b8cf65910a665ec2ac933f18be989df232f46f2a66bbf7cc47705bf52b704",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "the-mysteries-of-the-jungle-creatures",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-4",
+			"file": "images/joomlart/donate/detail/detail-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "f307cf0fb5b6c988ab4a53f66b210575528890d1f3835d5ce16d4576b8d4c22e",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "the-mysteries-of-the-jungle-creatures",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-3",
+			"file": "images/joomlart/donate/intro/intro-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "0b2760e29d3be42b1bc43be08c5a58a5e14b91c909b98ee6204da16307397319",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "exploring-the-world-of-feline-friends",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-3",
+			"file": "images/joomlart/donate/detail/detail-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "2ea1701124b021ffa02a306f00f4a8bea0031c9c81cfc89ba12b1c0924dc5425",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "exploring-the-world-of-feline-friends",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-2",
+			"file": "images/joomlart/donate/intro/intro-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ea4c1b5d59d4b792e3a2a0a1491bbb989489bd98283aee27b877c19b4f45ef69",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "surviving-the-harsh-polar-realms",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-2",
+			"file": "images/joomlart/donate/detail/detail-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4bd0201770856e26baea6498d6314e02f878cb545e4fb41345e59536f2321949",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "surviving-the-harsh-polar-realms",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/6",
+			"file": "images/joomlart/authors/6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "c445ebd1bcd46d2739a48e91b76af58e4066df2980c967552b650e0a748b72de",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "surviving-the-harsh-polar-realms",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "donations",
+					"slug": "the-african-wildlife-chronicles",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "afforestation-program",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/intro/intro-1",
+			"file": "images/joomlart/donate/intro/intro-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "367336b3c1c3971b4ad2c7b7b86a1af999ecc44703245b87d11bdc235e671f4c",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "the-african-wildlife-chronicles",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/donate/detail/detail-1",
+			"file": "images/joomlart/donate/detail/detail-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "4b38098fc104ecae954de968078a22c822b2426519618b1539bbfffe5d662e51",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "the-african-wildlife-chronicles",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-9",
+			"file": "images/joomlart/events/detail/detail-9.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "7a030ae8b9bf113f386bf4c7588de686c0fb42c2e5f2888372d0a129262fc278",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "afforestation-program",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/intro/intro-2",
+			"file": "images/joomlart/events/intro/intro-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "ffa8600e9e6401fe434406b87769b8ec8b4b9416fa0994f00372f7c2329084d1",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "cover"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-8",
+			"file": "images/joomlart/events/detail/detail-8.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e89cef55aa9037346965972a6fec1bd5e18b2af3a06ca3c358ef978c4452fefb",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-7",
+			"file": "images/joomlart/events/detail/detail-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "a7fc15051d31cc2cd6e761957e1fd85b3623dd0391ff97f59e3f809c5c4bfc80",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-6",
+			"file": "images/joomlart/events/detail/detail-6.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "e92bd6792d6fe824bad80305ae1199f548617864cf318ebaab3ec9896358782c",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/7",
+			"file": "images/joomlart/authors/7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "153ebde8695fcb2db65122f8ff18a135883fdaf5f63bb74cd6ea1828fc1b02dc",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "author_avatar"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-5",
+			"file": "images/joomlart/events/detail/detail-5.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "57f4d99fc3d1945ef65d77b33aa4cfed02dbe95656b006507452da91f32505f6",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-4",
+			"file": "images/joomlart/events/detail/detail-4.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "85170c44249dcebadaad79de827ab259629b3616db6ca6158e66e74ed5e091d9",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-3",
+			"file": "images/joomlart/events/detail/detail-3.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "09da20d929788e89f51c14d4840b9489fff8e69ebf150c509fc7688eb93ad3f2",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-2",
+			"file": "images/joomlart/events/detail/detail-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "bf82939b4c258e70e47e403bde3f1100ace75393cea5a04550ab0b0e64cadc87",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/intro/intro-1",
+			"file": "images/joomlart/events/intro/intro-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "9d48e30d2c2a7b5446b4456de73004cc7ca0435c8e6f2e2d0f2a746e1af954bc",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "cover"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/events/detail/detail-1",
+			"file": "images/joomlart/events/detail/detail-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "3522e3c8f96aedd5272e6fcedc7359a07cf98f48b1ac3e576fa2e7ab66182aeb",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "banner"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/authors/1",
+			"file": "images/joomlart/authors/1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b0fb140154b254d8a20ceae8e062c47f05cf3a7b9f2daf5fe9b2a6d899f20de5",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "author_avatar"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/hero/hero-1",
+			"file": "images/joomlart/hero/hero-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "371b5083d08272485553e5ee80b80d1f538a5214d13914f7162187d53ab796f3",
+			"targets": [
+				{
+					"collection": "masthead",
+					"slug": "about",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "blog",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "post",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "events",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "contact",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "donations",
+					"locale": "en",
+					"path": "background"
+				},
+				{
+					"collection": "masthead",
+					"slug": "faq",
+					"locale": "en",
+					"path": "background"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/blog/animal/detail-7",
+			"file": "images/joomlart/blog/animal/detail-7.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "601981129293c4d68abd16f71158c572595c09f5f3c8219f97aed869a6bcca2c",
+			"targets": [
+				{
+					"collection": "posts",
+					"slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "weve-reached-1-million-indonations-and-counting",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "building-empathy-throughremote-user-research",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "charity-branding-is-yourbrand-digital-ready",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "donation-and-cleaning-program-foundation",
+					"locale": "en",
+					"path": "body[12].asset"
+				},
+				{
+					"collection": "posts",
+					"slug": "charity-of-the-month-plan-international-uk",
+					"locale": "en",
+					"path": "body[12].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/detail-donate-1",
+			"file": "images/joomlart/gallery/detail-donate-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "6dd8dcd05e1fabfe1535f5ac7abaf5225ecf4594dff59cdb7aaaa80e617ece77",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "water-treatment-projects",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "saving-ensdangered-species",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "sea-pollution",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "community-center",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "endangered-species",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "oil-pollution",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "save-rainforests",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "indigenous-people",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "saving-animal-preserve",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "the-mysteries-of-the-jungle-creatures",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "exploring-the-world-of-feline-friends",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "surviving-the-harsh-polar-realms",
+					"locale": "en",
+					"path": "body[3].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "the-african-wildlife-chronicles",
+					"locale": "en",
+					"path": "body[3].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/detail-donate-2",
+			"file": "images/joomlart/gallery/detail-donate-2.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "b21be515bc09111b057f3b8007b3e82139507be0c4e42978242fb6adf2432dad",
+			"targets": [
+				{
+					"collection": "donations",
+					"slug": "water-treatment-projects",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "saving-ensdangered-species",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "sea-pollution",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "community-center",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "endangered-species",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "oil-pollution",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "save-rainforests",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "indigenous-people",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "saving-animal-preserve",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "the-mysteries-of-the-jungle-creatures",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "exploring-the-world-of-feline-friends",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "surviving-the-harsh-polar-realms",
+					"locale": "en",
+					"path": "body[5].asset"
+				},
+				{
+					"collection": "donations",
+					"slug": "the-african-wildlife-chronicles",
+					"locale": "en",
+					"path": "body[5].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/gallery/detail-event-1",
+			"file": "images/joomlart/gallery/detail-event-1.jpg",
+			"alt": "",
+			"mime": "image/jpeg",
+			"sha256": "344d11a50e54e9bb6bca07cde8c09c6534a7bf0b7286513e2b503d2b5905be40",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "afforestation-program",
+					"locale": "en",
+					"path": "body[11].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "body[11].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "body[11].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "body[11].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "body[11].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "body[11].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "body[11].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "body[11].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "body[11].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-5",
+			"file": "images/joomlart/features/icon-5.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "910ba83a0b4e9b640e3179c335cdd210b62b0fa6abcce7eecee5f28dbe42e4c9",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "afforestation-program",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "body[17].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "body[17].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-6",
+			"file": "images/joomlart/features/icon-6.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "af47e65380e6d705dd306ceca881ea8893db9860f1e1bb24623c3c37b6125414",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "afforestation-program",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "body[22].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "body[22].asset"
+				}
+			]
+		},
+		{
+			"key": "images/joomlart/features/icon-7",
+			"file": "images/joomlart/features/icon-7.png",
+			"alt": "",
+			"mime": "image/png",
+			"sha256": "81c5d632c108a3f5c2f006b9d04ab1983617be3c6eec7662181f11b27d1f2dcb",
+			"targets": [
+				{
+					"collection": "events",
+					"slug": "afforestation-program",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "feed-the-world",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "charity-journey-to-africa",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "the-day-of-the-african-child",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "saving-nature",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "a-microscopic-marvel",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "unveiling-natures-best-kept-treasures",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "an-adventure-with-animals",
+					"locale": "en",
+					"path": "body[27].asset"
+				},
+				{
+					"collection": "events",
+					"slug": "natures-hidden-gems",
+					"locale": "en",
+					"path": "body[27].asset"
+				}
+			]
+		}
+	]
+}

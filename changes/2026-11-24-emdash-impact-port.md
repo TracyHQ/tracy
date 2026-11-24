@@ -1,0 +1,2 @@
+- **JA Impact is being ported to an EmDash template (`packages/cms/tracy-emdash-theme-impact`, id `tracy-impact`, 0.1.0, work in progress, nothing released)** — Hano (EmDash templates) · #TBD · `feat/emdash-port-impact` · 2026-11-24
+  **Affects:** EmDash template authors and the CI that holds them: `scripts/check-emdash-kit-sync.ts` now also checks `tracy-emdash-theme-impact` against the kit (level, 139 identical files). Nobody sees the template in Add site until it is released as `tracy-impact/emdash-0.x`.

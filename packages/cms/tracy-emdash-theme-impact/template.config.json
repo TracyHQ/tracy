@@ -1,0 +1,37 @@
+{
+	"id": "tracy-impact",
+	"label": "New template",
+	"version": "0.1.0",
+	"locales": [
+		"en"
+	],
+	"defaultLocale": "en",
+	"site": {
+		"title": "Site title",
+		"tagline": ""
+	},
+	"contentOrder": [],
+	"forms": {
+		"file": "tools/forms.json",
+		"bindings": []
+	},
+	"mail": {
+		"fromEmail": "",
+		"fromName": ""
+	},
+	"audit": {
+		"indexable": [
+			"^/(?!search)(?!404$).*"
+		],
+		"noindex": [
+			"^/search"
+		],
+		"notFound": [
+			"^/404$"
+		],
+		"canonicalQuery": [
+			"page"
+		],
+		"unknownProbes": []
+	}
+}

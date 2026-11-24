@@ -1,0 +1,80 @@
+{
+  "fields": {
+    "posts.body": {
+      "type": "portableText"
+    },
+    "posts.excerpt": {
+      "type": "portableText"
+    },
+    "donations.body": {
+      "type": "portableText"
+    },
+    "donations.excerpt": {
+      "type": "portableText"
+    },
+    "events.body": {
+      "type": "portableText"
+    },
+    "events.excerpt": {
+      "type": "portableText"
+    },
+    "pages.body": {
+      "type": "portableText"
+    },
+    "features.feature_desc": {
+      "type": "portableText"
+    },
+    "modules.content": {
+      "type": "portableText"
+    }
+  },
+  "collections": {
+    "pages": {
+      "label": "Pages",
+      "labelSingular": "Page",
+      "sortOrder": 1,
+      "routable": false,
+      "supports": [
+        "revisions"
+      ],
+      "editLocking": false,
+      "description": "One entry per page of the site."
+    },
+    "posts": {
+      "label": "Posts",
+      "labelSingular": "Post",
+      "sortOrder": 2,
+      "routable": true,
+      "supports": [
+        "revisions",
+        "search"
+      ],
+      "editLocking": false,
+      "description": "Blog articles. `path` records the address a post is served at."
+    },
+    "donations": {
+      "label": "Donations",
+      "labelSingular": "Donation",
+      "sortOrder": 3,
+      "routable": true,
+      "supports": [
+        "revisions",
+        "search"
+      ],
+      "editLocking": false,
+      "description": "Causes people can donate to. `path` records the address."
+    },
+    "events": {
+      "label": "Events",
+      "labelSingular": "Event",
+      "sortOrder": 4,
+      "routable": true,
+      "supports": [
+        "revisions",
+        "search"
+      ],
+      "editLocking": false,
+      "description": "Events. `path` records the address."
+    }
+  }
+}

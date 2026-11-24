@@ -1,0 +1,2922 @@
+{
+  "$schema": "tracy-site-model/v1",
+  "source": {
+    "kind": "joomla",
+    "parity": "measured",
+    "origin": "ja_impact",
+    "capturedAt": "2026-11-24T05:29:02.773Z"
+  },
+  "locales": {
+    "default": "en",
+    "all": [
+      "en"
+    ]
+  },
+  "site": {
+    "title": {
+      "en": "JA Impact"
+    },
+    "tagline": {
+      "en": ""
+    },
+    "postsPerPage": 10
+  },
+  "types": [
+    {
+      "name": "pages",
+      "mode": "list",
+      "label": {
+        "en": "Pages"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "body",
+          "type": "prose"
+        },
+        {
+          "name": "view",
+          "type": "text"
+        },
+        {
+          "name": "path",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "hero",
+      "mode": "list",
+      "label": {
+        "en": "hero"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "subtitle",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "image_hero",
+              "type": "image"
+            },
+            {
+              "name": "sub_title",
+              "type": "text"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "desc",
+              "type": "text"
+            },
+            {
+              "name": "button",
+              "type": "text"
+            },
+            {
+              "name": "btn_link",
+              "type": "url"
+            },
+            {
+              "name": "btn_icon",
+              "type": "text"
+            },
+            {
+              "name": "btn_type",
+              "type": "text"
+            },
+            {
+              "name": "button_2",
+              "type": "text"
+            },
+            {
+              "name": "btn_link_2",
+              "type": "url"
+            },
+            {
+              "name": "btn_icon_2",
+              "type": "text"
+            },
+            {
+              "name": "btn_type_2",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "features",
+      "mode": "list",
+      "label": {
+        "en": "features"
+      },
+      "fields": [
+        {
+          "name": "feature_main_img",
+          "type": "image"
+        },
+        {
+          "name": "media_alignment",
+          "type": "text"
+        },
+        {
+          "name": "feature_tag",
+          "type": "text"
+        },
+        {
+          "name": "feature_title",
+          "type": "text"
+        },
+        {
+          "name": "feature_desc",
+          "type": "prose"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "columns",
+          "type": "text"
+        },
+        {
+          "name": "align",
+          "type": "text"
+        },
+        {
+          "name": "image_type",
+          "type": "image"
+        },
+        {
+          "name": "img_icon",
+          "type": "text"
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "link",
+          "type": "url"
+        },
+        {
+          "name": "feature_text_align",
+          "type": "text"
+        },
+        {
+          "name": "feature_sub_col",
+          "type": "text"
+        },
+        {
+          "name": "label",
+          "type": "text"
+        },
+        {
+          "name": "icon",
+          "type": "text"
+        },
+        {
+          "name": "feature_col",
+          "type": "text"
+        },
+        {
+          "name": "feature_count_item",
+          "type": "text"
+        },
+        {
+          "name": "bg_content",
+          "type": "text"
+        },
+        {
+          "name": "block_img",
+          "type": "image"
+        },
+        {
+          "name": "block_description",
+          "type": "text"
+        },
+        {
+          "name": "btn_block_label",
+          "type": "text"
+        },
+        {
+          "name": "btn_block_link",
+          "type": "url"
+        },
+        {
+          "name": "btn_block_type",
+          "type": "text"
+        },
+        {
+          "name": "feature_media",
+          "type": "text"
+        },
+        {
+          "name": "feature_date",
+          "type": "text"
+        },
+        {
+          "name": "feature_month",
+          "type": "text"
+        },
+        {
+          "name": "bg_datemonth",
+          "type": "text"
+        },
+        {
+          "name": "feature_text_color",
+          "type": "text"
+        },
+        {
+          "name": "feature_location",
+          "type": "text"
+        },
+        {
+          "name": "btn_label",
+          "type": "text"
+        },
+        {
+          "name": "btn_link",
+          "type": "url"
+        },
+        {
+          "name": "btn_icon",
+          "type": "text"
+        },
+        {
+          "name": "btn_bg_content",
+          "type": "text"
+        },
+        {
+          "name": "id_video",
+          "type": "text"
+        },
+        {
+          "name": "ft_video",
+          "type": "image"
+        },
+        {
+          "name": "video_align",
+          "type": "text"
+        },
+        {
+          "name": "position",
+          "type": "text"
+        },
+        {
+          "name": "position_2",
+          "type": "text"
+        },
+        {
+          "name": "feature_subtitle",
+          "type": "text"
+        },
+        {
+          "name": "feature_charity",
+          "type": "text"
+        },
+        {
+          "name": "feature_donation",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "sub_feature_img",
+              "type": "image"
+            },
+            {
+              "name": "sub_feature_desc",
+              "type": "prose"
+            },
+            {
+              "name": "sub_media_alignment",
+              "type": "text"
+            },
+            {
+              "name": "feature_highlight",
+              "type": "text"
+            },
+            {
+              "name": "feature_text_align",
+              "type": "text"
+            },
+            {
+              "name": "sub_feature_title",
+              "type": "text"
+            },
+            {
+              "name": "feature_item_col_width",
+              "type": "text"
+            },
+            {
+              "name": "sub_title_color",
+              "type": "text"
+            },
+            {
+              "name": "bg_content",
+              "type": "text"
+            },
+            {
+              "name": "feature_tag",
+              "type": "text"
+            },
+            {
+              "name": "feature_title",
+              "type": "text"
+            },
+            {
+              "name": "feature_desc",
+              "type": "text"
+            },
+            {
+              "name": "btn_label",
+              "type": "text"
+            },
+            {
+              "name": "btn_link",
+              "type": "url"
+            },
+            {
+              "name": "btn_icon",
+              "type": "text"
+            },
+            {
+              "name": "btn_bg_content",
+              "type": "text"
+            },
+            {
+              "name": "number",
+              "type": "text"
+            },
+            {
+              "name": "img_icon",
+              "type": "image"
+            },
+            {
+              "name": "bg",
+              "type": "text"
+            },
+            {
+              "name": "image_bg",
+              "type": "image"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "description",
+              "type": "text"
+            },
+            {
+              "name": "link",
+              "type": "url"
+            },
+            {
+              "name": "label",
+              "type": "text"
+            },
+            {
+              "name": "button_type",
+              "type": "text"
+            },
+            {
+              "name": "sub_feature_media",
+              "type": "image"
+            }
+          ]
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_class",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "contact_info",
+      "mode": "list",
+      "label": {
+        "en": "contact info"
+      },
+      "fields": [
+        {
+          "name": "align_section",
+          "type": "text"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "subtitle",
+          "type": "text"
+        },
+        {
+          "name": "testimonials",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "font_icon",
+              "type": "text"
+            },
+            {
+              "name": "icon_color",
+              "type": "text"
+            },
+            {
+              "name": "sub_title",
+              "type": "text"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "link",
+              "type": "url"
+            },
+            {
+              "name": "heading",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_class",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "social",
+      "mode": "list",
+      "label": {
+        "en": "social"
+      },
+      "fields": [
+        {
+          "name": "social_style",
+          "type": "text"
+        },
+        {
+          "name": "social_title",
+          "type": "text"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "font_icon",
+              "type": "text"
+            },
+            {
+              "name": "title",
+              "type": "text"
+            },
+            {
+              "name": "link",
+              "type": "url"
+            }
+          ]
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_class",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "cta",
+      "mode": "list",
+      "label": {
+        "en": "cta"
+      },
+      "fields": [
+        {
+          "name": "cta_media",
+          "type": "image"
+        },
+        {
+          "name": "cta_align_media",
+          "type": "text"
+        },
+        {
+          "name": "cta_desc",
+          "type": "text"
+        },
+        {
+          "name": "cta_highlight",
+          "type": "text"
+        },
+        {
+          "name": "cta_link",
+          "type": "url"
+        },
+        {
+          "name": "cta_link_title",
+          "type": "url"
+        },
+        {
+          "name": "cta_link_type",
+          "type": "url"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "bg_content",
+          "type": "text"
+        },
+        {
+          "name": "cta_title",
+          "type": "text"
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_class",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "accordion",
+      "mode": "list",
+      "label": {
+        "en": "accordion"
+      },
+      "fields": [
+        {
+          "name": "info_title",
+          "type": "text"
+        },
+        {
+          "name": "info_desc",
+          "type": "text"
+        },
+        {
+          "name": "text_align",
+          "type": "text"
+        },
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "items",
+          "type": "group",
+          "fields": [
+            {
+              "name": "accordion_name",
+              "type": "text"
+            },
+            {
+              "name": "accordion_desc",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "name": "section_label",
+          "type": "text"
+        },
+        {
+          "name": "section_title",
+          "type": "text"
+        },
+        {
+          "name": "section_class",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "posts",
+      "mode": "list",
+      "label": {
+        "en": "Posts"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "searchable": true
+        },
+        {
+          "name": "excerpt",
+          "type": "prose",
+          "searchable": true
+        },
+        {
+          "name": "body",
+          "type": "prose",
+          "searchable": true
+        },
+        {
+          "name": "date",
+          "type": "date"
+        },
+        {
+          "name": "cover",
+          "type": "image"
+        },
+        {
+          "name": "banner",
+          "type": "image"
+        },
+        {
+          "name": "author",
+          "type": "text"
+        },
+        {
+          "name": "author_avatar",
+          "type": "image"
+        },
+        {
+          "name": "tags",
+          "type": "text"
+        },
+        {
+          "name": "created",
+          "type": "date"
+        },
+        {
+          "name": "path",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "donations",
+      "mode": "list",
+      "label": {
+        "en": "Donations"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "searchable": true
+        },
+        {
+          "name": "excerpt",
+          "type": "prose",
+          "searchable": true
+        },
+        {
+          "name": "body",
+          "type": "prose",
+          "searchable": true
+        },
+        {
+          "name": "date",
+          "type": "date"
+        },
+        {
+          "name": "cover",
+          "type": "image"
+        },
+        {
+          "name": "banner",
+          "type": "image"
+        },
+        {
+          "name": "author",
+          "type": "text"
+        },
+        {
+          "name": "author_avatar",
+          "type": "image"
+        },
+        {
+          "name": "tags",
+          "type": "text"
+        },
+        {
+          "name": "location",
+          "type": "text"
+        },
+        {
+          "name": "raise",
+          "type": "text"
+        },
+        {
+          "name": "goal",
+          "type": "text"
+        },
+        {
+          "name": "featured",
+          "type": "text"
+        },
+        {
+          "name": "path",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "events",
+      "mode": "list",
+      "label": {
+        "en": "Events"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "searchable": true
+        },
+        {
+          "name": "excerpt",
+          "type": "prose",
+          "searchable": true
+        },
+        {
+          "name": "body",
+          "type": "prose",
+          "searchable": true
+        },
+        {
+          "name": "date",
+          "type": "date"
+        },
+        {
+          "name": "cover",
+          "type": "image"
+        },
+        {
+          "name": "banner",
+          "type": "image"
+        },
+        {
+          "name": "author",
+          "type": "text"
+        },
+        {
+          "name": "author_avatar",
+          "type": "image"
+        },
+        {
+          "name": "tags",
+          "type": "text"
+        },
+        {
+          "name": "start_date",
+          "type": "text"
+        },
+        {
+          "name": "event_time",
+          "type": "text"
+        },
+        {
+          "name": "event_location",
+          "type": "text"
+        },
+        {
+          "name": "event_fee",
+          "type": "text"
+        },
+        {
+          "name": "card_bg",
+          "type": "text"
+        },
+        {
+          "name": "date_bg",
+          "type": "text"
+        },
+        {
+          "name": "button_type",
+          "type": "text"
+        },
+        {
+          "name": "button_link",
+          "type": "text"
+        },
+        {
+          "name": "featured",
+          "type": "text"
+        },
+        {
+          "name": "path",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "masthead",
+      "mode": "list",
+      "label": {
+        "en": "Mastheads"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "background",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "chrome",
+      "mode": "single",
+      "label": {
+        "en": "Site chrome"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "brand_name",
+          "type": "text"
+        },
+        {
+          "name": "donate_label",
+          "type": "text"
+        },
+        {
+          "name": "donate_link",
+          "type": "text"
+        },
+        {
+          "name": "footer_about",
+          "type": "text"
+        },
+        {
+          "name": "footer_col1_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_col1_links",
+          "type": "text"
+        },
+        {
+          "name": "footer_col2_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_col2_links",
+          "type": "text"
+        },
+        {
+          "name": "footer_col3_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_col3_links",
+          "type": "text"
+        },
+        {
+          "name": "footer_col4_title",
+          "type": "text"
+        },
+        {
+          "name": "footer_col4_links",
+          "type": "text"
+        },
+        {
+          "name": "copyright",
+          "type": "text"
+        },
+        {
+          "name": "license_line",
+          "type": "text"
+        },
+        {
+          "name": "skip_label",
+          "type": "text"
+        },
+        {
+          "name": "menu_label",
+          "type": "text"
+        },
+        {
+          "name": "close_label",
+          "type": "text"
+        },
+        {
+          "name": "prev_label",
+          "type": "text"
+        },
+        {
+          "name": "next_label",
+          "type": "text"
+        },
+        {
+          "name": "more_label",
+          "type": "text"
+        },
+        {
+          "name": "read_more",
+          "type": "text"
+        },
+        {
+          "name": "by_label",
+          "type": "text"
+        },
+        {
+          "name": "related_title",
+          "type": "text"
+        },
+        {
+          "name": "tags_label",
+          "type": "text"
+        },
+        {
+          "name": "share_label",
+          "type": "text"
+        },
+        {
+          "name": "raise_label",
+          "type": "text"
+        },
+        {
+          "name": "goal_label",
+          "type": "text"
+        },
+        {
+          "name": "location_label",
+          "type": "text"
+        },
+        {
+          "name": "fee_label",
+          "type": "text"
+        },
+        {
+          "name": "time_label",
+          "type": "text"
+        },
+        {
+          "name": "join_label",
+          "type": "text"
+        },
+        {
+          "name": "donate_cta",
+          "type": "text"
+        },
+        {
+          "name": "view_all_label",
+          "type": "text"
+        },
+        {
+          "name": "not_found_code",
+          "type": "text"
+        },
+        {
+          "name": "not_found_title",
+          "type": "text"
+        },
+        {
+          "name": "not_found_text",
+          "type": "text"
+        },
+        {
+          "name": "not_found_back_label",
+          "type": "text"
+        },
+        {
+          "name": "search_label",
+          "type": "text"
+        },
+        {
+          "name": "search_placeholder",
+          "type": "text"
+        },
+        {
+          "name": "search_button",
+          "type": "text"
+        },
+        {
+          "name": "no_results",
+          "type": "text"
+        },
+        {
+          "name": "newsletter_title",
+          "type": "text"
+        },
+        {
+          "name": "newsletter_text",
+          "type": "text"
+        },
+        {
+          "name": "newsletter_name_label",
+          "type": "text"
+        },
+        {
+          "name": "newsletter_email_label",
+          "type": "text"
+        },
+        {
+          "name": "newsletter_button",
+          "type": "text"
+        },
+        {
+          "name": "newsletter_done",
+          "type": "text"
+        },
+        {
+          "name": "play_label",
+          "type": "text"
+        },
+        {
+          "name": "logo_dark",
+          "type": "text"
+        }
+      ]
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "label": {
+        "en": "Categories"
+      },
+      "hierarchical": true,
+      "appliesTo": [
+        "posts"
+      ],
+      "terms": [
+        {
+          "slug": "blog",
+          "label": {
+            "en": "Blog"
+          }
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "type": "pages",
+      "slug": "home",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Home",
+        "body": "",
+        "view": "front-page",
+        "path": "/"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "about",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "About",
+        "body": "",
+        "view": "page-landing",
+        "path": "/about"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "contact",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Contact",
+        "body": "",
+        "view": "page-contact",
+        "path": "/contact"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "help-faqs",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Help & FAQs",
+        "body": "",
+        "view": "page-landing",
+        "path": "/help-faqs"
+      }
+    },
+    {
+      "type": "hero",
+      "slug": "home-hero",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "How to engage help our planet",
+        "subtitle": "All-in-one Giving All-in-one Giving",
+        "items": [
+          {
+            "image_hero": "images/joomlart/hero/item-1.jpg",
+            "sub_title": "All-in-one Giving",
+            "title": "How to engage help our planet",
+            "desc": "We want to make giving simple, fun and meaningful for you.",
+            "button": "Get help now",
+            "btn_link": "/contact",
+            "btn_icon": "fa-solid fa-arrow-right-long",
+            "btn_type": "success",
+            "button_2": "",
+            "btn_link_2": "",
+            "btn_icon_2": "fa-arrow-right-long",
+            "btn_type_2": "success"
+          },
+          {
+            "image_hero": "images/joomlart/hero/item-2.jpg",
+            "sub_title": "All-in-one Giving",
+            "title": "How to engage help our planet",
+            "desc": "We want to make giving simple, fun and meaningful for you.",
+            "button": "Get help now",
+            "btn_link": "/contact",
+            "btn_icon": "fa-solid fa-arrow-right-long",
+            "btn_type": "success",
+            "button_2": "",
+            "btn_link_2": "",
+            "btn_icon_2": "",
+            "btn_type_2": "success"
+          }
+        ]
+      }
+    },
+    {
+      "type": "features",
+      "slug": "about-activities",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "feature_main_img": "images/joomlart/acm/activities-1.jpg",
+        "media_alignment": "right",
+        "feature_tag": "Our Activities",
+        "feature_title": "Let's retain & grow </br>  your donor base",
+        "feature_desc": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet, ne sit justo propriae facilisi, est cu labitur dolorem philosophia. Te latine malorum debitis eum. Mea paulo dictas atomorum ea, suas regione explicari pro ut. Harum possit persecuti.",
+        "title": "Our Activities",
+        "items": [
+          {
+            "sub_feature_img": "images/joomlart/acm/activities-2.jpg",
+            "sub_feature_desc": "With 144 years of experience, we are the second oldest homeless mission in the country and the oldest in Pennsylvania, housing some 240 men each night. More than just a meal and a bed, we build relationships with our guests to give them hope and reorient their lives. Our faith is the foundation.",
+            "sub_media_alignment": "row"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "features",
+      "slug": "about-mission",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "What makes us different?",
+        "items": [
+          {
+            "feature_highlight": "info",
+            "feature_text_align": "start",
+            "sub_feature_img": "",
+            "sub_feature_title": "Safe havens for support",
+            "sub_feature_desc": "With 144 years of experience, we are the second oldest homeless mission in the country and the oldest in Pennsylvania, housing some 240 men each night. More than just a meal and a bed, we build relationships with our guests to give them hope and reorient their lives. Our faith is the foundation.",
+            "sub_media_alignment": "column",
+            "feature_item_col_width": "6"
+          },
+          {
+            "feature_highlight": "primary",
+            "feature_text_align": "start",
+            "sub_feature_img": "",
+            "sub_feature_title": "Good that grows",
+            "sub_feature_desc": "With 144 years of experience, we are the second oldest homeless mission in the country and the oldest in Pennsylvania, housing some 240 men each night. More than just a meal and a bed, we build relationships with our guests to give them hope and reorient their lives. Our faith is the foundation.",
+            "sub_media_alignment": "column-reverse",
+            "feature_item_col_width": "6"
+          },
+          {
+            "feature_highlight": "light",
+            "feature_text_align": "start",
+            "sub_feature_img": "images/joomlart/acm/out-mission.jpg",
+            "sub_feature_title": "Customized programs",
+            "sub_feature_desc": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspicia-tis unde omnis iste natus error sit voluptatem accusantium doloremque. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cup-idatat",
+            "sub_media_alignment": "row",
+            "feature_item_col_width": "12"
+          }
+        ],
+        "section_label": "Our Mission & Vision.",
+        "section_title": "What makes us different?",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "features",
+      "slug": "meet-us",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "feature_tag": "Meet us",
+        "feature_title": "Key to a more eco-friendly world in 2023",
+        "feature_desc": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "feature_text_align": "start",
+        "feature_sub_col": "3",
+        "title": "Meet us",
+        "items": [
+          {
+            "sub_feature_img": "images/joomlart/acm/assistance_1.png",
+            "sub_feature_title": "150M+",
+            "sub_title_color": "success",
+            "sub_feature_desc": "Pounds of litter and recyclables collected"
+          },
+          {
+            "sub_feature_img": "images/joomlart/acm/assistance_2.png",
+            "sub_feature_title": "395",
+            "sub_title_color": "warning",
+            "sub_feature_desc": "Organizations joined the cause"
+          },
+          {
+            "sub_feature_img": "images/joomlart/acm/assistance_3.png",
+            "sub_feature_title": "480",
+            "sub_title_color": "primary",
+            "sub_feature_desc": "Volunteers joined the cause"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "features",
+      "slug": "home-donor-base",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "feature_main_img": "",
+        "media_alignment": "right",
+        "feature_tag": "Our Activities",
+        "feature_title": "Let's retain & grow </br>  your donor base",
+        "feature_desc": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio.  Lorem ipsum dolor sit amet, ne sit justo propriae facilisi, est cu . Mea paulo dictas atomorum ea, suas regione explicari pro ut. Harum possit persecuti.",
+        "title": "Let's retain & grow  your donor base",
+        "items": [
+          {
+            "sub_feature_img": "images/joomlart/acm/activities-2.jpg",
+            "sub_feature_desc": "With 144 years of experience, we are the second oldest homeless mission in the country and the oldest in Pennsylvania, housing some 240 men each night. More than just a meal and a bed, we build relationships with our guests to give them hope and reorient their lives. Our faith is the foundation.",
+            "sub_media_alignment": "row"
+          }
+        ],
+        "section_label": "",
+        "section_title": "Let's retain & grow your donor base",
+        "section_class": "minimal"
+      }
+    },
+    {
+      "type": "features",
+      "slug": "about-give",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "feature_col": "2",
+        "feature_count_item": "0",
+        "feature_text_align": "start",
+        "title": "Give",
+        "items": [
+          {
+            "bg_content": "white",
+            "feature_tag": "GIVE MONEY",
+            "feature_title": "Will you change a child’s  life today?",
+            "feature_desc": "Sed ut perspicia-tis unde omnis iste natus error sit voluptatem accusantium doloremque. Duis aute irure dolor in reprehenderit in voluptate velit esse.",
+            "btn_label": "Donate now",
+            "btn_link": "/donations",
+            "btn_icon": "fa fa-long-arrow-right",
+            "btn_bg_content": "success",
+            "number": "01"
+          },
+          {
+            "bg_content": "white",
+            "feature_tag": "GIVE TIME",
+            "feature_title": "Share your time, share  your love.",
+            "feature_desc": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna .",
+            "btn_label": "Donate now",
+            "btn_link": "/donations",
+            "btn_icon": "fa fa-long-arrow-right",
+            "btn_bg_content": "success",
+            "number": "02"
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "features",
+      "slug": "what-we-do",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "columns": "3",
+        "bg_content": "bg-warning",
+        "block_img": "images/joomlart/features/icon-4.png",
+        "block_description": "Since 1980, we’ve granted more than 120,000</br> wishes all the world.",
+        "btn_block_label": "Donate today",
+        "btn_block_link": "/donations",
+        "btn_block_type": "white",
+        "title": "Saving endangered species is crucial",
+        "items": [
+          {
+            "img_icon": "images/joomlart/features/icon-1.png",
+            "bg": "default",
+            "image_bg": "",
+            "title": "Adélie penguin",
+            "description": "With 144 years of experience, we are the second oldest homeless mission",
+            "link": "/donations",
+            "label": "Take action",
+            "button_type": "success"
+          },
+          {
+            "img_icon": "images/joomlart/features/icon-2.png",
+            "bg": "default",
+            "image_bg": "",
+            "title": "The crabeater seal",
+            "description": "With 144 years of experience, we are the second oldest homeless mission",
+            "link": "/donations",
+            "label": "Take action",
+            "button_type": "success"
+          },
+          {
+            "img_icon": "images/joomlart/features/icon-3.png",
+            "bg": "default",
+            "image_bg": "",
+            "title": "Snowy owl",
+            "description": "With 144 years of experience, we are the second oldest homeless mission",
+            "link": "/donations",
+            "label": "Take action",
+            "button_type": "success"
+          },
+          {
+            "img_icon": "images/joomlart/features/icon-1.png",
+            "bg": "default",
+            "image_bg": "",
+            "title": "Dolor Sit Amet",
+            "description": "With 144 years of experience, we are the second oldest homeless mission",
+            "link": "/donations",
+            "label": "Take action",
+            "button_type": "success"
+          },
+          {
+            "img_icon": "images/joomlart/features/icon-2.png",
+            "bg": "default",
+            "image_bg": "",
+            "title": "Vivamus Porttitor",
+            "description": "With 144 years of experience, we are the second oldest homeless mission",
+            "link": "/donations",
+            "label": "Take action",
+            "button_type": "success"
+          },
+          {
+            "img_icon": "images/joomlart/features/icon-3.png",
+            "bg": "default",
+            "image_bg": "",
+            "title": "Praesent Tempus",
+            "description": "With 144 years of experience, we are the second oldest homeless mission",
+            "link": "/donations",
+            "label": "Take action",
+            "button_type": "success"
+          }
+        ],
+        "section_label": "what we do",
+        "section_title": "Saving endangered species is crucial",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "features",
+      "slug": "home-connected",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "feature_title": "Stay connected",
+        "feature_desc": "Share in the latest transformations within our community</br>\nand opportunities to get involved.",
+        "id_video": "5kozt0uDa4c",
+        "ft_video": "images/joomlart/gallery/contact-1.jpg",
+        "video_align": "left",
+        "position": "acym",
+        "position_2": "follow",
+        "title": "Stay connected",
+        "section_label": "",
+        "section_title": "",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "features",
+      "slug": "home-raise-fund",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "feature_subtitle": "HELPING HANDS",
+        "feature_title": "Raise fund for clean & healthy food",
+        "feature_desc": "Morbi in sem quis dui placerat ornare. Pellentesque odio nisi, euismod in, pharetra a, ultricies more than just a meal and a bed",
+        "feature_charity": "72",
+        "feature_donation": "92",
+        "title": "Raise fund for clean & healthy food",
+        "items": [
+          {
+            "sub_feature_media": "images/joomlart/features/icon-8.png",
+            "sub_feature_title": "Our Mission",
+            "sub_feature_desc": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Quisque volutpat mattis"
+          },
+          {
+            "sub_feature_media": "images/joomlart/features/icon-9.png",
+            "sub_feature_title": "Our Vision",
+            "sub_feature_desc": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Quisque volutpat mattis"
+          }
+        ],
+        "section_label": "",
+        "section_title": "Raise fund for clean & healthy food",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "contact_info",
+      "slug": "topbar-contact",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "align_section": "end",
+        "title": "Contact Info",
+        "subtitle": "Our address: You may send an email   Helpline and support",
+        "items": [
+          {
+            "font_icon": "fa-solid fa-earth-americas",
+            "icon_color": "success",
+            "sub_title": "Our address:",
+            "title": "Melbourne, Australia",
+            "link": ""
+          },
+          {
+            "font_icon": "fa-solid fa-envelope",
+            "icon_color": "success",
+            "sub_title": "You may send an email",
+            "title": "helpus24@gmail.com",
+            "link": "mailto:helpus24@gmail.com"
+          },
+          {
+            "font_icon": "fa-solid fa-phone",
+            "icon_color": "success",
+            "sub_title": "  Helpline and support",
+            "title": "1 800 458 56 97",
+            "link": ""
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "contact_info",
+      "slug": "footer-contact",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Contact Information 2",
+        "subtitle": "Email us Our address Support 24/7",
+        "items": [
+          {
+            "heading": "Our team of qualified plumbers is ready and always available, anytime, anywhere. ",
+            "sub_title": "Email us",
+            "title": "helpus24@gmail.com",
+            "link": "mailto:helpus24@gmail.com"
+          },
+          {
+            "heading": "",
+            "sub_title": "Our address",
+            "title": "Melbourne, Australia",
+            "link": ""
+          },
+          {
+            "heading": "",
+            "sub_title": "Support 24/7",
+            "title": "1 800 458 56 97",
+            "link": ""
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "social",
+      "slug": "home-follow",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "social_style": "1",
+        "social_title": "Follow us",
+        "title": "Follow us",
+        "items": [
+          {
+            "font_icon": "fa fa-facebook",
+            "title": "",
+            "link": "#"
+          },
+          {
+            "font_icon": "fa fa-twitter",
+            "title": "",
+            "link": "#"
+          },
+          {
+            "font_icon": "fa fa-tiktok",
+            "title": "",
+            "link": "#"
+          },
+          {
+            "font_icon": "fa fa-pinterest",
+            "title": "",
+            "link": "#"
+          }
+        ],
+        "section_label": "",
+        "section_title": "Follow us",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "social",
+      "slug": "footer-follow",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "social_style": "2",
+        "social_title": "",
+        "title": "Follow us ",
+        "items": [
+          {
+            "font_icon": "fa fa-facebook",
+            "title": "",
+            "link": "#"
+          },
+          {
+            "font_icon": "fa fa-twitter",
+            "title": "",
+            "link": "#"
+          },
+          {
+            "font_icon": "fa fa-tiktok",
+            "title": "",
+            "link": "#"
+          },
+          {
+            "font_icon": "fa fa-pinterest",
+            "title": "",
+            "link": "#"
+          }
+        ],
+        "section_label": "",
+        "section_title": "Follow us",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "cta",
+      "slug": "home-helpline",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "cta_media": "images/joomlart/cta/avatar-1.png",
+        "cta_align_media": "right",
+        "cta_desc": "Don’t worry, we can help you. Feel free to contact with our team!",
+        "cta_highlight": "1 800 458 56 97",
+        "cta_link": "/contact",
+        "cta_link_title": "Get a quote",
+        "cta_link_type": "success",
+        "title": "Helpline is open 24/7",
+        "section_label": "",
+        "section_title": "Helpline is open 24/7",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "accordion",
+      "slug": "faq",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "info_title": "Frequently asked Questions",
+        "info_desc": "Need help with something? Here are our most frequently asked questions ?",
+        "text_align": "start",
+        "title": "Help & FAQs",
+        "items": [
+          {
+            "accordion_name": "Which kind of experts do I have access to?",
+            "accordion_desc": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about."
+          },
+          {
+            "accordion_name": "Can I reach out to an Expert in another location?",
+            "accordion_desc": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about.\n"
+          },
+          {
+            "accordion_name": "Why should I pay to ask someone a question?",
+            "accordion_desc": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about."
+          },
+          {
+            "accordion_name": "What are the fastest animals on Earth?",
+            "accordion_desc": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about."
+          },
+          {
+            "accordion_name": "How do animals communicate with each other?",
+            "accordion_desc": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about."
+          },
+          {
+            "accordion_name": "What is the largest mammal in the world?",
+            "accordion_desc": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about."
+          },
+          {
+            "accordion_name": "Which animal can hold its breath the longest underwater?",
+            "accordion_desc": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about."
+          },
+          {
+            "accordion_name": "What are some of the most intelligent animals besides humans?",
+            "accordion_desc": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about."
+          },
+          {
+            "accordion_name": "How do animals adapt to their environments?",
+            "accordion_desc": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about."
+          },
+          {
+            "accordion_name": "What are some of the most endangered animal species?",
+            "accordion_desc": "You can find experts from all walks of life from TikTok stars to Lawyers and everyone in between. Find anyone that suits the field or industry that you would like to know more about."
+          }
+        ],
+        "section_label": "",
+        "section_title": "",
+        "section_class": ""
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "donations",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Our causes",
+        "body": "",
+        "view": "donations",
+        "path": "/donations"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "events",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Our Events",
+        "body": "",
+        "view": "events",
+        "path": "/events"
+      }
+    },
+    {
+      "type": "pages",
+      "slug": "blog",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Blog",
+        "body": "",
+        "view": "blog",
+        "path": "/blog"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "blog"
+        ]
+      },
+      "values": {
+        "title": "Tracking the trash: Are your plastic bags really being recycled?",
+        "excerpt": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+        "body": "<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.\r\n</p>\r\n\n\r\n<p class=\"mb-4\">Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.\r\n</p>\r\n\r\n<p>\r\n  There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-5\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n\r\n<h3 class=\"article-header mt-0\"> The desire to make a difference</h3>\r\n<p class=\"mb-4\">\r\n  If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.\r\n</p>\r\n<p class=\"mb-5\">\r\n  The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Effective giving\r\n</h3>\r\n\r\n<p class=\"mb-4\">\r\n  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.\r\n</p>\r\n\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-4.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-4.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-7.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-7.jpg\"/>\r\n  </div>\r\n</div>\r\n\r\n<p>\r\n  Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est\r\n</p>",
+        "date": "2023-07-17 09:38:31",
+        "cover": "images/joomlart/blog/animal/item-2.jpg",
+        "banner": "images/joomlart/blog/animal/detail-2.jpg",
+        "author": "J. Bush",
+        "author_avatar": "images/joomlart/authors/2.jpg",
+        "tags": "",
+        "created": "2023-07-17 09:38:31",
+        "path": "/blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "blog"
+        ]
+      },
+      "values": {
+        "title": "Outdoor behavioral healthcare services to youth and young adults",
+        "excerpt": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+        "body": "<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.\r\n</p>\r\n\n\r\n<p class=\"mb-4\">Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.\r\n</p>\r\n\r\n<p>\r\n  There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-5\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n\r\n<h3 class=\"article-header mt-0\"> The desire to make a difference</h3>\r\n<p class=\"mb-4\">\r\n  If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.\r\n</p>\r\n<p class=\"mb-5\">\r\n  The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Effective giving\r\n</h3>\r\n\r\n<p class=\"mb-4\">\r\n  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.\r\n</p>\r\n\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-4.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-4.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-7.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-7.jpg\"/>\r\n  </div>\r\n</div>\r\n\r\n<p>\r\n  Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est\r\n</p>",
+        "date": "2023-07-26 09:40:46",
+        "cover": "",
+        "banner": "images/joomlart/blog/animal/detail-10.jpg",
+        "author": "J. Bush",
+        "author_avatar": "images/joomlart/authors/2.jpg",
+        "tags": "",
+        "created": "2023-07-17 09:40:46",
+        "path": "/blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "weve-reached-1-million-indonations-and-counting",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "blog"
+        ]
+      },
+      "values": {
+        "title": "We’ve reached 1 million indonations and counting",
+        "excerpt": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+        "body": "<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>\r\n\r\n\n\r\n\r\n<p class=\"mb-4\">Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.\r\n</p>\r\n\r\n<p>\r\n  There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-5\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n\r\n<h3 class=\"article-header mt-0\"> The desire to make a difference</h3>\r\n<p class=\"mb-4\">\r\n  If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.\r\n</p>\r\n<p class=\"mb-5\">\r\n  The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Effective giving\r\n</h3>\r\n\r\n<p class=\"mb-4\">\r\n  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.\r\n</p>\r\n\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-4.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-4.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-7.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-7.jpg\"/>\r\n  </div>\r\n</div>\r\n\r\n<p>\r\n  Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est\r\n</p>",
+        "date": "2023-07-17 10:04:10",
+        "cover": "images/joomlart/blog/animal/item-3.jpg",
+        "banner": "images/joomlart/blog/animal/detail-3.jpg",
+        "author": "J. Bush",
+        "author_avatar": "images/joomlart/authors/2.jpg",
+        "tags": "Animals\nCharity\nMedia\nNature",
+        "created": "2023-07-17 10:04:10",
+        "path": "/blog/weve-reached-1-million-indonations-and-counting"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "building-empathy-throughremote-user-research",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "blog"
+        ]
+      },
+      "values": {
+        "title": "Building empathy throughremote user research",
+        "excerpt": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+        "body": "<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.\r\n</p>\r\n\n\r\n<p class=\"mb-4\">Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.\r\n</p>\r\n\r\n<p>\r\n  There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-5\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n\r\n<h3 class=\"article-header mt-0\"> The desire to make a difference</h3>\r\n<p class=\"mb-4\">\r\n  If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.\r\n</p>\r\n<p class=\"mb-5\">\r\n  The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Effective giving\r\n</h3>\r\n\r\n<p class=\"mb-4\">\r\n  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.\r\n</p>\r\n\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-4.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-4.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-7.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-7.jpg\"/>\r\n  </div>\r\n</div>\r\n\r\n<p>\r\n  Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est\r\n</p>",
+        "date": "2023-08-26 10:06:49",
+        "cover": "images/joomlart/blog/animal/item-4.jpg",
+        "banner": "images/joomlart/blog/animal/detail-4.jpg",
+        "author": "J. Bush",
+        "author_avatar": "images/joomlart/authors/2.jpg",
+        "tags": "Animals\nCharity\nMedia\nNature",
+        "created": "2023-07-17 10:06:49",
+        "path": "/blog/building-empathy-throughremote-user-research"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "blog"
+        ]
+      },
+      "values": {
+        "title": "Framingham: The study and the town that changed the health of a generation",
+        "excerpt": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+        "body": "<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>\r\n\r\n\n\r\n\r\n<p class=\"mb-4\">Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.\r\n</p>\r\n\r\n<p>\r\n  There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-5\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n\r\n<h3 class=\"article-header mt-0\"> The desire to make a difference</h3>\r\n<p class=\"mb-4\">\r\n  If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.\r\n</p>\r\n<p class=\"mb-5\">\r\n  The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Effective giving\r\n</h3>\r\n\r\n<p class=\"mb-4\">\r\n  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.\r\n</p>\r\n\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-4.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-4.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-7.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-7.jpg\"/>\r\n  </div>\r\n</div>\r\n\r\n<p>\r\n  Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est\r\n</p>",
+        "date": "2023-08-26 10:07:19",
+        "cover": "images/joomlart/blog/animal/item-5.jpg",
+        "banner": "images/joomlart/blog/animal/detail-5.jpg",
+        "author": "R. Coleman",
+        "author_avatar": "images/joomlart/authors/4.jpg",
+        "tags": "Animals\nCharity\nMedia\nNature",
+        "created": "2023-07-17 10:07:19",
+        "path": "/blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "blog"
+        ]
+      },
+      "values": {
+        "title": "'I'm thankful for today': Philadelphia shelter feeds homeless and hungry during",
+        "excerpt": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+        "body": "<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.\r\n</p>\r\n\n\r\n<p class=\"mb-4\">Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.\r\n</p>\r\n\r\n<p>\r\n  There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-5\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n\r\n<h3 class=\"article-header mt-0\"> The desire to make a difference</h3>\r\n<p class=\"mb-4\">\r\n  If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.\r\n</p>\r\n<p class=\"mb-5\">\r\n  The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Effective giving\r\n</h3>\r\n\r\n<p class=\"mb-4\">\r\n  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.\r\n</p>\r\n\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-4.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-4.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-7.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-7.jpg\"/>\r\n  </div>\r\n</div>\r\n\r\n<p>\r\n  Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est\r\n</p>",
+        "date": "2023-08-01 10:09:33",
+        "cover": "",
+        "banner": "images/joomlart/blog/animal/detail-9.jpg",
+        "author": "J. Steele",
+        "author_avatar": "images/joomlart/authors/3.jpg",
+        "tags": "",
+        "created": "2023-07-17 10:09:33",
+        "path": "/blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "charity-branding-is-yourbrand-digital-ready",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "blog"
+        ]
+      },
+      "values": {
+        "title": "Charity branding: is yourbrand digital ready?",
+        "excerpt": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+        "body": "<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.\r\n</p>\r\n\n\r\n<p class=\"mb-4\">Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.\r\n</p>\r\n\r\n<p>\r\n  There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-5\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n\r\n<h3 class=\"article-header mt-0\"> The desire to make a difference</h3>\r\n<p class=\"mb-4\">\r\n  If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.\r\n</p>\r\n<p class=\"mb-5\">\r\n  The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Effective giving\r\n</h3>\r\n\r\n<p class=\"mb-4\">\r\n  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.\r\n</p>\r\n\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-4.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-4.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-7.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-7.jpg\"/>\r\n  </div>\r\n</div>\r\n\r\n<p>\r\n  Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est\r\n</p>",
+        "date": "2023-08-27 10:11:27",
+        "cover": "",
+        "banner": "images/joomlart/blog/animal/detail-8.jpg",
+        "author": "J. Steele",
+        "author_avatar": "images/joomlart/authors/3.jpg",
+        "tags": "Animals\nCharity\nMedia\nNature",
+        "created": "2023-07-17 10:11:27",
+        "path": "/blog/charity-branding-is-yourbrand-digital-ready"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "donation-and-cleaning-program-foundation",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "blog"
+        ]
+      },
+      "values": {
+        "title": "Donation and cleaning program foundation",
+        "excerpt": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+        "body": "<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.\r\n</p>\r\n\n\r\n<p class=\"mb-4\">Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.\r\n</p>\r\n\r\n<p>\r\n  There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-5\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n\r\n<h3 class=\"article-header mt-0\"> The desire to make a difference</h3>\r\n<p class=\"mb-4\">\r\n  If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.\r\n</p>\r\n<p class=\"mb-5\">\r\n  The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Effective giving\r\n</h3>\r\n\r\n<p class=\"mb-4\">\r\n  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.\r\n</p>\r\n\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-4.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-4.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-7.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-7.jpg\"/>\r\n  </div>\r\n</div>\r\n\r\n<p>\r\n  Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est\r\n</p>",
+        "date": "2023-07-17 10:12:00",
+        "cover": "images/joomlart/blog/animal/item-6.jpg",
+        "banner": "images/joomlart/blog/animal/detail-6.jpg",
+        "author": "J. Steele",
+        "author_avatar": "images/joomlart/authors/3.jpg",
+        "tags": "Animals\nCharity\nMedia\nNature",
+        "created": "2023-07-17 10:12:00",
+        "path": "/blog/donation-and-cleaning-program-foundation"
+      }
+    },
+    {
+      "type": "posts",
+      "slug": "charity-of-the-month-plan-international-uk",
+      "locale": "en",
+      "status": "published",
+      "terms": {
+        "category": [
+          "blog"
+        ]
+      },
+      "values": {
+        "title": "Charity of the month plan international UK",
+        "excerpt": "Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
+        "body": "<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.\r\n</p>\r\n\n\r\n<p class=\"mb-4\">Ex his velit integre. Eum posse partem vulputate eu, an cum brute probatus. Ut mel puten laoreet delicata, cu sea elit mazim salutatus, eripuit aliquando interesset pro eu. Utroque id rationibus ea vim, duo saepe feugait cu. Utinam id ornatus eu nec, debet invidunt ex his, tempor volumus aliquando qui ad. Erat ipsum oportere id eam, mea te dictas fabellas persequeris, ne sit honestatis scribentur eum. Similique vulp contentiones ut eum. Mea utamur nonumes ad. In acusata scribentur deterruisset mel. Nam te quas volutpat minim, aliquam in cum summo numquam nusqu, inani summo saepe nam ex. Ad antiopam qualisque per, quodsi option cum cu. Pri nobis iracundia consectetuer ei, noluisse inciderint no nam, iisque inimicus aliquando qui at.\r\n</p>\r\n\r\n<p>\r\n  There are many variations of passages of Lorem Ipsum available, but the majority have suffered it alteration in some form, by injected humour, or randomised words which don't look even slightly lorem believable. If you are going to use a passage of nor again is there anyone who loves\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-5\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n\r\n<h3 class=\"article-header mt-0\"> The desire to make a difference</h3>\r\n<p class=\"mb-4\">\r\n  If you are reading this, you probably know that you’d like to make a difference. But many of us are unaware of our extraordinary power to do so.\r\n</p>\r\n<p class=\"mb-5\">\r\n  The philosopher Peter Singer’s now famous “drowning child” thought experiment gets at this disconnect between desire and action: Imagine you are walking by a pond on your way to work or school, and you see a drowning child. You can jump in and rescue the child, but you would ruin your clothes in the process. Do you save the child?\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Effective giving\r\n</h3>\r\n\r\n<p class=\"mb-4\">\r\n  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco. We’ve now covered the desire to make a difference. Let’s discuss the second part of the equation: the foresight to think carefully about it.\r\n</p>\r\n\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-4.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-4.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-md-6\">\r\n    <img src=\"images/joomlart/blog/animal/detail-7.jpg\" loading=\"lazy\" width=\"900\" height=\"675\" data-path=\"local-images:/joomlart/blog/animal/detail-7.jpg\"/>\r\n  </div>\r\n</div>\r\n\r\n<p>\r\n  Otam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est\r\n</p>",
+        "date": "2023-07-17 09:41:16",
+        "cover": "images/joomlart/blog/animal/item-1.jpg",
+        "banner": "images/joomlart/blog/animal/detail-1.jpg",
+        "author": "J. Bush",
+        "author_avatar": "images/joomlart/authors/2.jpg",
+        "tags": "Animals\nCharity\nMedia\nNature",
+        "created": "2023-07-17 09:41:16",
+        "path": "/blog/charity-of-the-month-plan-international-uk"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "water-treatment-projects",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Water treatment projects",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:45",
+        "cover": "images/joomlart/donate/intro/intro-13.jpg",
+        "banner": "images/joomlart/donate/detail/detail-13.jpg",
+        "author": "J. Steele",
+        "author_avatar": "images/joomlart/authors/3.jpg",
+        "tags": "Activism",
+        "location": "America",
+        "raise": "4,500",
+        "goal": "9,000",
+        "featured": "",
+        "path": "/donations/water-treatment-projects"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "saving-ensdangered-species",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Saving ensdangered species",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:44",
+        "cover": "images/joomlart/donate/intro/intro-12.jpg",
+        "banner": "images/joomlart/donate/detail/detail-12.jpg",
+        "author": "R. Coleman",
+        "author_avatar": "images/joomlart/authors/4.jpg",
+        "tags": "Activism",
+        "location": "America",
+        "raise": "14,000",
+        "goal": "20,000",
+        "featured": "",
+        "path": "/donations/saving-ensdangered-species"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "sea-pollution",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Sea pollution",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:43",
+        "cover": "images/joomlart/donate/intro/intro-11.jpg",
+        "banner": "images/joomlart/donate/detail/detail-11.jpg",
+        "author": "R. Coleman",
+        "author_avatar": "images/joomlart/authors/4.jpg",
+        "tags": "Activism",
+        "location": "America",
+        "raise": "16,000",
+        "goal": "24,000",
+        "featured": "",
+        "path": "/donations/sea-pollution"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "community-center",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Community center",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:42",
+        "cover": "images/joomlart/donate/intro/intro-10.jpg",
+        "banner": "images/joomlart/donate/detail/detail-10.jpg",
+        "author": "R. Coleman",
+        "author_avatar": "images/joomlart/authors/4.jpg",
+        "tags": "Activism",
+        "location": "Colombia",
+        "raise": "3,000",
+        "goal": "10,000",
+        "featured": "",
+        "path": "/donations/community-center"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "endangered-species",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Endangered species",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:41",
+        "cover": "images/joomlart/donate/intro/intro-9.jpg",
+        "banner": "images/joomlart/donate/detail/detail-9.jpg",
+        "author": "R. Coleman",
+        "author_avatar": "images/joomlart/authors/4.jpg",
+        "tags": "Activism",
+        "location": "Colombia",
+        "raise": "12,000",
+        "goal": "26,000",
+        "featured": "",
+        "path": "/donations/endangered-species"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "oil-pollution",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Oil pollution",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:40",
+        "cover": "images/joomlart/donate/intro/intro-8.jpg",
+        "banner": "images/joomlart/donate/detail/detail-8.jpg",
+        "author": "R. Coleman",
+        "author_avatar": "images/joomlart/authors/4.jpg",
+        "tags": "Activism",
+        "location": "Kenya",
+        "raise": "11,070",
+        "goal": "15,000",
+        "featured": "",
+        "path": "/donations/oil-pollution"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "save-rainforests",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Save rainforests",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:39",
+        "cover": "images/joomlart/donate/intro/intro-7.jpg",
+        "banner": "images/joomlart/donate/detail/detail-7.jpg",
+        "author": "D. Litchfield",
+        "author_avatar": "images/joomlart/authors/5.jpg",
+        "tags": "Activism",
+        "location": "Kenya",
+        "raise": "21,270",
+        "goal": "40,000",
+        "featured": "",
+        "path": "/donations/save-rainforests"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "indigenous-people",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Indigenous people",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:38",
+        "cover": "images/joomlart/donate/intro/intro-6.jpg",
+        "banner": "images/joomlart/donate/detail/detail-6.jpg",
+        "author": "D. Litchfield",
+        "author_avatar": "images/joomlart/authors/5.jpg",
+        "tags": "Activism",
+        "location": "America",
+        "raise": "25,000",
+        "goal": "30,000",
+        "featured": "",
+        "path": "/donations/indigenous-people"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "saving-animal-preserve",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Saving animal preserve",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:37",
+        "cover": "images/joomlart/donate/intro/intro-5.jpg",
+        "banner": "images/joomlart/donate/detail/detail-5.jpg",
+        "author": "D. Litchfield",
+        "author_avatar": "images/joomlart/authors/5.jpg",
+        "tags": "Activism",
+        "location": "Colombia",
+        "raise": "12,270",
+        "goal": "22,000",
+        "featured": "",
+        "path": "/donations/saving-animal-preserve"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "the-mysteries-of-the-jungle-creatures",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "The Mysteries of the Jungle Creatures",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:36",
+        "cover": "images/joomlart/donate/intro/intro-4.jpg",
+        "banner": "images/joomlart/donate/detail/detail-4.jpg",
+        "author": "D. Litchfield",
+        "author_avatar": "images/joomlart/authors/5.jpg",
+        "tags": "Activism",
+        "location": "America",
+        "raise": "23,000",
+        "goal": "30,000",
+        "featured": "",
+        "path": "/donations/the-mysteries-of-the-jungle-creatures"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "exploring-the-world-of-feline-friends",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Exploring the World of Feline Friends",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:35",
+        "cover": "images/joomlart/donate/intro/intro-3.jpg",
+        "banner": "images/joomlart/donate/detail/detail-3.jpg",
+        "author": "D. Litchfield",
+        "author_avatar": "images/joomlart/authors/5.jpg",
+        "tags": "Activism",
+        "location": "Kenya",
+        "raise": "16,000",
+        "goal": "30,000",
+        "featured": "",
+        "path": "/donations/exploring-the-world-of-feline-friends"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "surviving-the-harsh-polar-realms",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Surviving the Harsh Polar Realms",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:34",
+        "cover": "images/joomlart/donate/intro/intro-2.jpg",
+        "banner": "images/joomlart/donate/detail/detail-2.jpg",
+        "author": "A. Steve",
+        "author_avatar": "images/joomlart/authors/6.jpg",
+        "tags": "Activism",
+        "location": "America",
+        "raise": "14,000",
+        "goal": "24,000",
+        "featured": "",
+        "path": "/donations/surviving-the-harsh-polar-realms"
+      }
+    },
+    {
+      "type": "donations",
+      "slug": "the-african-wildlife-chronicles",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "The African Wildlife Chronicles",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p><span style=\"white-space: pre-wrap;\">As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.</span></p>\r\n\n\r\n<h3 class=\"article-header mt-0\">Engineering discipline</h3>\r\n<div class=\"img-gallery row\">\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-1.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-1.jpg\"/>\r\n  </div>\r\n  <div class=\"col-12 col-sm-6\">\r\n    <img src=\"images/joomlart/gallery/detail-donate-2.jpg\" loading=\"lazy\" width=\"550\" height=\"688\" data-path=\"local-images:/joomlart/gallery/detail-donate-2.jpg\"/>\r\n  </div>\r\n</div>\r\n<p>\r\n  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Lorem ipsum dolor sit amet\r\n</p>\r\n\r\n<div class=\"alert alert-info p-5 my-4\" role=\"alert\">\r\n <span class=\"h4 text-white my-0\">\r\n   “ Nostro vidisse id sea, ut maiorum electram pri. Qui te eros indoctum, ad accumsan abhorreant inciderint cum. In vix dictas forensibus. ”\r\n  </span>\r\n</div>\r\n<p class=\"mb-5\">\r\n  Omnis lorem no, ipsum nobis choro ex sit. Vel id diam case, autem salutatus ius in. Vis eu errem nostrud neglegentur, eum ne dicant accumsan. Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvaret, fierent pertinax repudiandae te sit. No habeo causae dolorum has, melius repudiandae ei est. An sit partiendo efficiantur, ut populo assentior argumentum mei. Ex duo omnis atomorum accommodare, ferri molestiae est ut.\r\n</p>\r\n<h3 class=\"article-header mt-0\">\r\n  Final thoughts\r\n</h3>\r\n\r\n<p>\r\n  Duo ex ornatus principes, simul consul causae sed ne, ad sit elit blandit sapientem. Id eos agam iuvar, fierent pertinax repudi te sit. No habeo causae dolorum has, melius repudiandae ei est an sit partiend. Nobis choro ex sit. Vel id diam case, autem salutatus ius in. \r\n</p>",
+        "date": "2023-07-18 03:27:33",
+        "cover": "images/joomlart/donate/intro/intro-1.jpg",
+        "banner": "images/joomlart/donate/detail/detail-1.jpg",
+        "author": "A. Steve",
+        "author_avatar": "images/joomlart/authors/6.jpg",
+        "tags": "Activism",
+        "location": "America",
+        "raise": "24,270",
+        "goal": "40,000",
+        "featured": "",
+        "path": "/donations/the-african-wildlife-chronicles"
+      }
+    },
+    {
+      "type": "events",
+      "slug": "afforestation-program",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Afforestation program",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p>\r\n  As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along\r\n  with deep, intentional engagement.\r\n</p>\r\n\n\r\n<p class=\"mb-5\">Neque porro est qui dolorem ipsum quia quaed inventore veritatis et quasi architecto beatae vitae\r\n  dicta sunt explicabo. Aelltes port lacus quis enim var sed efficitur turpis gilla sed sit amet finibus eros. Lorem\r\n  Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ndustry standard dummy\r\n  Every child is a precious gift from God and deserves to live in a safe and</p>\r\n<h3 class=\"mt-0 article-header\">Event mission</h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore et dolore\r\n  magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea commod\r\n  consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list row mt-4 mb-4\">\r\n  <div class=\"col-12 col-lg-6\">\r\n    <ul>\r\n      <li>\r\n        <p class=\"mb-0\">Education for all</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">20billion people helped</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">From the streets to safety</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div class=\"col-12 col-lg-6\">\r\n    <div class=\"image\">\r\n      <img src=\"images/joomlart/gallery/detail-event-1.jpg\" loading=\"lazy\" width=\"412\" height=\"257\"\r\n           data-path=\"local-images:/joomlart/gallery/detail-event-1.jpg\" />\r\n    </div>\r\n  </div>\r\n</div>\r\n<p class=\"mb-5\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<h3 class=\"mt-0 article-header\">Why join this event !</h3>\r\n<p class=\"mb-4\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list-service\">\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-5.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-5.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>A real change</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-6.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-6.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>With big strength</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-7.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-7.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Donate & help</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-8.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-8.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Full inspiration</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n</div>",
+        "date": "2023-07-26 08:12:35",
+        "cover": "",
+        "banner": "images/joomlart/events/detail/detail-9.jpg",
+        "author": "A. Steve",
+        "author_avatar": "images/joomlart/authors/6.jpg",
+        "tags": "Animals\nCharity\nNature",
+        "start_date": "20 May, 2020",
+        "event_time": "10:00 am to 2:00 pm",
+        "event_location": "Hall 1, Building A , Golden Street",
+        "event_fee": "Free",
+        "card_bg": "default",
+        "date_bg": "warning",
+        "button_type": "success",
+        "button_link": "index.php/pages/user/registration-form",
+        "featured": "",
+        "path": "/events/afforestation-program"
+      }
+    },
+    {
+      "type": "events",
+      "slug": "feed-the-world",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Feed the world",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p>\r\n  As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along\r\n  with deep, intentional engagement.\r\n</p>\r\n\n\r\n<p class=\"mb-5\">Neque porro est qui dolorem ipsum quia quaed inventore veritatis et quasi architecto beatae vitae\r\n  dicta sunt explicabo. Aelltes port lacus quis enim var sed efficitur turpis gilla sed sit amet finibus eros. Lorem\r\n  Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ndustry standard dummy\r\n  Every child is a precious gift from God and deserves to live in a safe and</p>\r\n<h3 class=\"mt-0 article-header\">Event mission</h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore et dolore\r\n  magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea commod\r\n  consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list row mt-4 mb-4\">\r\n  <div class=\"col-12 col-lg-6\">\r\n    <ul>\r\n      <li>\r\n        <p class=\"mb-0\">Education for all</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">20billion people helped</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">From the streets to safety</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div class=\"col-12 col-lg-6\">\r\n    <div class=\"image\">\r\n      <img src=\"images/joomlart/gallery/detail-event-1.jpg\" loading=\"lazy\" width=\"412\" height=\"257\"\r\n           data-path=\"local-images:/joomlart/gallery/detail-event-1.jpg\" />\r\n    </div>\r\n  </div>\r\n</div>\r\n<p class=\"mb-5\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<h3 class=\"mt-0 article-header\">Why join this event !</h3>\r\n<p class=\"mb-4\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list-service\">\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-5.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-5.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>A real change</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-6.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-6.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>With big strength</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-7.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-7.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Donate & help</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-8.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-8.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Full inspiration</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n</div>",
+        "date": "2023-07-26 08:12:34",
+        "cover": "images/joomlart/events/intro/intro-2.jpg",
+        "banner": "images/joomlart/events/detail/detail-8.jpg",
+        "author": "A. Steve",
+        "author_avatar": "images/joomlart/authors/6.jpg",
+        "tags": "Animals\nCharity",
+        "start_date": "20 May, 2020",
+        "event_time": "10:00 am to 2:00 pm",
+        "event_location": "Hall 1, Building A , Golden Street",
+        "event_fee": "Free",
+        "card_bg": "default",
+        "date_bg": "warning",
+        "button_type": "success",
+        "button_link": "index.php/pages/user/registration-form",
+        "featured": "",
+        "path": "/events/feed-the-world"
+      }
+    },
+    {
+      "type": "events",
+      "slug": "charity-journey-to-africa",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Charity journey to Africa",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p>\r\n  As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along\r\n  with deep, intentional engagement.\r\n</p>\r\n\n\r\n<p class=\"mb-5\">Neque porro est qui dolorem ipsum quia quaed inventore veritatis et quasi architecto beatae vitae\r\n  dicta sunt explicabo. Aelltes port lacus quis enim var sed efficitur turpis gilla sed sit amet finibus eros. Lorem\r\n  Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ndustry standard dummy\r\n  Every child is a precious gift from God and deserves to live in a safe and</p>\r\n<h3 class=\"mt-0 article-header\">Event mission</h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore et dolore\r\n  magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea commod\r\n  consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list row mt-4 mb-4\">\r\n  <div class=\"col-12 col-lg-6\">\r\n    <ul>\r\n      <li>\r\n        <p class=\"mb-0\">Education for all</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">20billion people helped</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">From the streets to safety</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div class=\"col-12 col-lg-6\">\r\n    <div class=\"image\">\r\n      <img src=\"images/joomlart/gallery/detail-event-1.jpg\" loading=\"lazy\" width=\"412\" height=\"257\"\r\n           data-path=\"local-images:/joomlart/gallery/detail-event-1.jpg\" />\r\n    </div>\r\n  </div>\r\n</div>\r\n<p class=\"mb-5\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<h3 class=\"mt-0 article-header\">Why join this event !</h3>\r\n<p class=\"mb-4\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list-service\">\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-5.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-5.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>A real change</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-6.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-6.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>With big strength</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-7.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-7.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Donate & help</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-8.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-8.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Full inspiration</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n</div>",
+        "date": "2023-07-26 08:12:33",
+        "cover": "",
+        "banner": "images/joomlart/events/detail/detail-7.jpg",
+        "author": "A. Steve",
+        "author_avatar": "images/joomlart/authors/6.jpg",
+        "tags": "Nature\nActivism",
+        "start_date": "20 May, 2020",
+        "event_time": "10:00 am to 2:00 pm",
+        "event_location": "Hall 1, Building A , Golden Street",
+        "event_fee": "Free",
+        "card_bg": "default",
+        "date_bg": "warning",
+        "button_type": "success",
+        "button_link": "index.php/pages/user/registration-form",
+        "featured": "",
+        "path": "/events/charity-journey-to-africa"
+      }
+    },
+    {
+      "type": "events",
+      "slug": "the-day-of-the-african-child",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "The day of the African child",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p>\r\n  As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along\r\n  with deep, intentional engagement.\r\n</p>\r\n\n\r\n<p class=\"mb-5\">Neque porro est qui dolorem ipsum quia quaed inventore veritatis et quasi architecto beatae vitae\r\n  dicta sunt explicabo. Aelltes port lacus quis enim var sed efficitur turpis gilla sed sit amet finibus eros. Lorem\r\n  Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ndustry standard dummy\r\n  Every child is a precious gift from God and deserves to live in a safe and</p>\r\n<h3 class=\"mt-0 article-header\">Event mission</h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore et dolore\r\n  magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea commod\r\n  consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list row mt-4 mb-4\">\r\n  <div class=\"col-12 col-lg-6\">\r\n    <ul>\r\n      <li>\r\n        <p class=\"mb-0\">Education for all</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">20billion people helped</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">From the streets to safety</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div class=\"col-12 col-lg-6\">\r\n    <div class=\"image\">\r\n      <img src=\"images/joomlart/gallery/detail-event-1.jpg\" loading=\"lazy\" width=\"412\" height=\"257\"\r\n           data-path=\"local-images:/joomlart/gallery/detail-event-1.jpg\" />\r\n    </div>\r\n  </div>\r\n</div>\r\n<p class=\"mb-5\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<h3 class=\"mt-0 article-header\">Why join this event !</h3>\r\n<p class=\"mb-4\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list-service\">\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-5.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-5.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>A real change</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-6.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-6.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>With big strength</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-7.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-7.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Donate & help</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-8.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-8.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Full inspiration</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n</div>",
+        "date": "2023-07-26 08:12:32",
+        "cover": "",
+        "banner": "images/joomlart/events/detail/detail-6.jpg",
+        "author": "B. Brown",
+        "author_avatar": "images/joomlart/authors/7.jpg",
+        "tags": "Animals",
+        "start_date": "20 May, 2020",
+        "event_time": "10:00 am to 2:00 pm",
+        "event_location": "Hall 1, Building A , Golden Street",
+        "event_fee": "Free",
+        "card_bg": "default",
+        "date_bg": "warning",
+        "button_type": "success",
+        "button_link": "index.php/pages/user/registration-form",
+        "featured": "",
+        "path": "/events/the-day-of-the-african-child"
+      }
+    },
+    {
+      "type": "events",
+      "slug": "saving-nature",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Saving nature",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p>\r\n  As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along\r\n  with deep, intentional engagement.\r\n</p>\r\n\n\r\n<p class=\"mb-5\">Neque porro est qui dolorem ipsum quia quaed inventore veritatis et quasi architecto beatae vitae\r\n  dicta sunt explicabo. Aelltes port lacus quis enim var sed efficitur turpis gilla sed sit amet finibus eros. Lorem\r\n  Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ndustry standard dummy\r\n  Every child is a precious gift from God and deserves to live in a safe and</p>\r\n<h3 class=\"mt-0 article-header\">Event mission</h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore et dolore\r\n  magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea commod\r\n  consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list row mt-4 mb-4\">\r\n  <div class=\"col-12 col-lg-6\">\r\n    <ul>\r\n      <li>\r\n        <p class=\"mb-0\">Education for all</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">20billion people helped</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">From the streets to safety</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div class=\"col-12 col-lg-6\">\r\n    <div class=\"image\">\r\n      <img src=\"images/joomlart/gallery/detail-event-1.jpg\" loading=\"lazy\" width=\"412\" height=\"257\"\r\n           data-path=\"local-images:/joomlart/gallery/detail-event-1.jpg\" />\r\n    </div>\r\n  </div>\r\n</div>\r\n<p class=\"mb-5\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<h3 class=\"mt-0 article-header\">Why join this event !</h3>\r\n<p class=\"mb-4\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list-service\">\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-5.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-5.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>A real change</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-6.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-6.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>With big strength</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-7.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-7.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Donate & help</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-8.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-8.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Full inspiration</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n</div>",
+        "date": "2023-07-26 08:12:31",
+        "cover": "",
+        "banner": "images/joomlart/events/detail/detail-5.jpg",
+        "author": "B. Brown",
+        "author_avatar": "images/joomlart/authors/7.jpg",
+        "tags": "Animals\nNature",
+        "start_date": "20 May, 2020",
+        "event_time": "10:00 am to 2:00 pm",
+        "event_location": "Hall 1, Building A , Golden Street",
+        "event_fee": "Free",
+        "card_bg": "default",
+        "date_bg": "warning",
+        "button_type": "success",
+        "button_link": "index.php/pages/user/registration-form",
+        "featured": "",
+        "path": "/events/saving-nature"
+      }
+    },
+    {
+      "type": "events",
+      "slug": "a-microscopic-marvel",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "A Microscopic Marvel",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p>\r\n  As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along\r\n  with deep, intentional engagement.\r\n</p>\r\n\n\r\n<p class=\"mb-5\">Neque porro est qui dolorem ipsum quia quaed inventore veritatis et quasi architecto beatae vitae\r\n  dicta sunt explicabo. Aelltes port lacus quis enim var sed efficitur turpis gilla sed sit amet finibus eros. Lorem\r\n  Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ndustry standard dummy\r\n  Every child is a precious gift from God and deserves to live in a safe and</p>\r\n<h3 class=\"mt-0 article-header\">Event mission</h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore et dolore\r\n  magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea commod\r\n  consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list row mt-4 mb-4\">\r\n  <div class=\"col-12 col-lg-6\">\r\n    <ul>\r\n      <li>\r\n        <p class=\"mb-0\">Education for all</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">20billion people helped</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">From the streets to safety</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div class=\"col-12 col-lg-6\">\r\n    <div class=\"image\">\r\n      <img src=\"images/joomlart/gallery/detail-event-1.jpg\" loading=\"lazy\" width=\"412\" height=\"257\"\r\n           data-path=\"local-images:/joomlart/gallery/detail-event-1.jpg\" />\r\n    </div>\r\n  </div>\r\n</div>\r\n<p class=\"mb-5\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<h3 class=\"mt-0 article-header\">Why join this event !</h3>\r\n<p class=\"mb-4\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list-service\">\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-5.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-5.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>A real change</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-6.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-6.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>With big strength</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-7.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-7.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Donate & help</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-8.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-8.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Full inspiration</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n</div>",
+        "date": "2023-07-26 08:12:30",
+        "cover": "",
+        "banner": "images/joomlart/events/detail/detail-4.jpg",
+        "author": "B. Brown",
+        "author_avatar": "images/joomlart/authors/7.jpg",
+        "tags": "Animals\nCharity\nActivism",
+        "start_date": "20 May, 2020",
+        "event_time": "10:00 am to 2:00 pm",
+        "event_location": "Hall 1, Building A , Golden Street",
+        "event_fee": "Free",
+        "card_bg": "default",
+        "date_bg": "warning",
+        "button_type": "success",
+        "button_link": "index.php/pages/user/registration-form",
+        "featured": "",
+        "path": "/events/a-microscopic-marvel"
+      }
+    },
+    {
+      "type": "events",
+      "slug": "unveiling-natures-best-kept-treasures",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Unveiling Nature's Best ",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p>\r\n  As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along\r\n  with deep, intentional engagement.\r\n</p>\r\n\n\r\n<p class=\"mb-5\">Neque porro est qui dolorem ipsum quia quaed inventore veritatis et quasi architecto beatae vitae\r\n  dicta sunt explicabo. Aelltes port lacus quis enim var sed efficitur turpis gilla sed sit amet finibus eros. Lorem\r\n  Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ndustry standard dummy\r\n  Every child is a precious gift from God and deserves to live in a safe and</p>\r\n<h3 class=\"mt-0 article-header\">Event mission</h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore et dolore\r\n  magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea commod\r\n  consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list row mt-4 mb-4\">\r\n  <div class=\"col-12 col-lg-6\">\r\n    <ul>\r\n      <li>\r\n        <p class=\"mb-0\">Education for all</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">20billion people helped</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">From the streets to safety</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div class=\"col-12 col-lg-6\">\r\n    <div class=\"image\">\r\n      <img src=\"images/joomlart/gallery/detail-event-1.jpg\" loading=\"lazy\" width=\"412\" height=\"257\"\r\n           data-path=\"local-images:/joomlart/gallery/detail-event-1.jpg\" />\r\n    </div>\r\n  </div>\r\n</div>\r\n<p class=\"mb-5\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<h3 class=\"mt-0 article-header\">Why join this event !</h3>\r\n<p class=\"mb-4\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list-service\">\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-5.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-5.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>A real change</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-6.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-6.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>With big strength</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-7.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-7.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Donate & help</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-8.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-8.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Full inspiration</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n</div>",
+        "date": "2023-07-26 08:12:29",
+        "cover": "",
+        "banner": "images/joomlart/events/detail/detail-3.jpg",
+        "author": "B. Brown",
+        "author_avatar": "images/joomlart/authors/7.jpg",
+        "tags": "Animals\nCharity\nNature",
+        "start_date": "",
+        "event_time": "",
+        "event_location": "",
+        "event_fee": "",
+        "card_bg": "",
+        "date_bg": "",
+        "button_type": "",
+        "button_link": "",
+        "featured": "1",
+        "path": "/events/unveiling-natures-best-kept-treasures"
+      }
+    },
+    {
+      "type": "events",
+      "slug": "an-adventure-with-animals",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "An Adventure with Animals",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p>\r\n  As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along\r\n  with deep, intentional engagement.\r\n</p>\r\n\n\r\n<p class=\"mb-5\">Neque porro est qui dolorem ipsum quia quaed inventore veritatis et quasi architecto beatae vitae\r\n  dicta sunt explicabo. Aelltes port lacus quis enim var sed efficitur turpis gilla sed sit amet finibus eros. Lorem\r\n  Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ndustry standard dummy\r\n  Every child is a precious gift from God and deserves to live in a safe and</p>\r\n<h3 class=\"mt-0 article-header\">Event mission</h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore et dolore\r\n  magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea commod\r\n  consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list row mt-4 mb-4\">\r\n  <div class=\"col-12 col-lg-6\">\r\n    <ul>\r\n      <li>\r\n        <p class=\"mb-0\">Education for all</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">20billion people helped</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">From the streets to safety</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div class=\"col-12 col-lg-6\">\r\n    <div class=\"image\">\r\n      <img src=\"images/joomlart/gallery/detail-event-1.jpg\" loading=\"lazy\" width=\"412\" height=\"257\"\r\n           data-path=\"local-images:/joomlart/gallery/detail-event-1.jpg\" />\r\n    </div>\r\n  </div>\r\n</div>\r\n<p class=\"mb-5\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<h3 class=\"mt-0 article-header\">Why join this event !</h3>\r\n<p class=\"mb-4\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list-service\">\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-5.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-5.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>A real change</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-6.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-6.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>With big strength</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-7.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-7.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Donate & help</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-8.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-8.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Full inspiration</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n</div>",
+        "date": "2023-07-26 08:12:28",
+        "cover": "images/joomlart/events/intro/intro-2.jpg",
+        "banner": "images/joomlart/events/detail/detail-2.jpg",
+        "author": "B. Brown",
+        "author_avatar": "images/joomlart/authors/7.jpg",
+        "tags": "Animals\nNature\nActivism",
+        "start_date": "20 May, 2020",
+        "event_time": "10:00 am to 2:00 pm",
+        "event_location": "Hall 1, Building A , Golden Street",
+        "event_fee": "Free",
+        "card_bg": "default",
+        "date_bg": "warning",
+        "button_type": "success",
+        "button_link": "index.php/pages/user/registration-form",
+        "featured": "1",
+        "path": "/events/an-adventure-with-animals"
+      }
+    },
+    {
+      "type": "events",
+      "slug": "natures-hidden-gems",
+      "locale": "en",
+      "status": "published",
+      "terms": {},
+      "values": {
+        "title": "Nature's Hidden Gems",
+        "excerpt": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along with deep, intentional engagement.",
+        "body": "<p>\r\n  As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along\r\n  with deep, intentional engagement.\r\n</p>\r\n\n\r\n<p class=\"mb-5\">Neque porro est qui dolorem ipsum quia quaed inventore veritatis et quasi architecto beatae vitae\r\n  dicta sunt explicabo. Aelltes port lacus quis enim var sed efficitur turpis gilla sed sit amet finibus eros. Lorem\r\n  Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ndustry standard dummy\r\n  Every child is a precious gift from God and deserves to live in a safe and</p>\r\n<h3 class=\"mt-0 article-header\">Event mission</h3>\r\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore et dolore\r\n  magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea commod\r\n  consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list row mt-4 mb-4\">\r\n  <div class=\"col-12 col-lg-6\">\r\n    <ul>\r\n      <li>\r\n        <p class=\"mb-0\">Education for all</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">20billion people helped</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">From the streets to safety</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n      <li>\r\n        <p class=\"mb-0\">Educating and empowering</p>\r\n      </li>\r\n    </ul>\r\n  </div>\r\n  <div class=\"col-12 col-lg-6\">\r\n    <div class=\"image\">\r\n      <img src=\"images/joomlart/gallery/detail-event-1.jpg\" loading=\"lazy\" width=\"412\" height=\"257\"\r\n           data-path=\"local-images:/joomlart/gallery/detail-event-1.jpg\" />\r\n    </div>\r\n  </div>\r\n</div>\r\n<p class=\"mb-5\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<h3 class=\"mt-0 article-header\">Why join this event !</h3>\r\n<p class=\"mb-4\">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor inci idunt ut labore\r\n  et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercit ation ullamco laboris nisi ut aliquip ex ea\r\n  commod consequat Out of passion to care for the physical, emotional and social well-being of the</p>\r\n<div class=\"list-service\">\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-5.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-5.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>A real change</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-6.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-6.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>With big strength</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-7.png\" loading=\"lazy\" width=\"48\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-7.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Donate & help</h4>\r\n      <p>Quis id cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n  <div class=\"service d-flex\">\r\n    <div class=\"service-image\">\r\n      <img src=\"images/joomlart/features/icon-8.png\" loading=\"lazy\" width=\"49\" height=\"49\"\r\n           data-path=\"local-images:/joomlart/features/icon-8.png\" />\r\n    </div>\r\n    <div class=\"service-content\">\r\n      <h4>Full inspiration</h4>\r\n      <p>Cubilia tempor! Sint quod, perspiciatis voluptatem est pulvinar</p>\r\n    </div>\r\n  </div>\r\n</div>",
+        "date": "2023-07-26 08:12:27",
+        "cover": "images/joomlart/events/intro/intro-1.jpg",
+        "banner": "images/joomlart/events/detail/detail-1.jpg",
+        "author": "Admin",
+        "author_avatar": "images/joomlart/authors/1.jpg",
+        "tags": "Animals\nCharity\nNature",
+        "start_date": "",
+        "event_time": "",
+        "event_location": "",
+        "event_fee": "",
+        "card_bg": "",
+        "date_bg": "",
+        "button_type": "",
+        "button_link": "",
+        "featured": "1",
+        "path": "/events/natures-hidden-gems"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "about",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Who we are",
+        "description": "",
+        "background": "images/joomlart/hero/hero-1.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "blog",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Blog",
+        "description": "",
+        "background": "images/joomlart/hero/hero-1.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "post",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Blog",
+        "description": "",
+        "background": "images/joomlart/hero/hero-1.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "events",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Our Events",
+        "description": "",
+        "background": "images/joomlart/hero/hero-1.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "contact",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Contact",
+        "description": "",
+        "background": "images/joomlart/hero/hero-1.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "donations",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Our causes",
+        "description": "",
+        "background": "images/joomlart/hero/hero-1.jpg"
+      }
+    },
+    {
+      "type": "masthead",
+      "slug": "faq",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Help & FAQs",
+        "description": "",
+        "background": "images/joomlart/hero/hero-1.jpg"
+      }
+    },
+    {
+      "type": "chrome",
+      "slug": "chrome",
+      "locale": "en",
+      "status": "published",
+      "values": {
+        "title": "Site chrome",
+        "brand_name": "JA Impact",
+        "donate_label": "Donate now",
+        "donate_link": "/donations",
+        "footer_about": "As the city’s largest and longest-running shelter, Philly House provides a safe, clean refuge off the streets along",
+        "footer_col1_title": "Get to know us",
+        "footer_col1_links": "About us | /about\nTerm of service\nCareers\nAffiliates",
+        "footer_col2_title": "Guide",
+        "footer_col2_links": "Store Locations\nRegistry\nBlog | /blog\nShipping info",
+        "footer_col3_title": "Need help",
+        "footer_col3_links": "Help & FAQs | /help-faqs\nYour account | /pages/user/login-form\nTrack your order\nContact info | /contact",
+        "footer_col4_title": "Follow us",
+        "footer_col4_links": "Twitter\nFacebook\nInstagram\nThreads",
+        "copyright": "Copyright © {year} {name}. All Rights Reserved.",
+        "license_line": "",
+        "skip_label": "Skip to content",
+        "menu_label": "Menu",
+        "close_label": "Close",
+        "prev_label": "Previous",
+        "next_label": "Next",
+        "more_label": "Read more",
+        "read_more": "Read more",
+        "by_label": "By",
+        "related_title": "Related posts",
+        "tags_label": "Tags",
+        "share_label": "Share",
+        "raise_label": "Raise",
+        "goal_label": "Goal",
+        "location_label": "Location",
+        "fee_label": "Fee",
+        "time_label": "Time",
+        "join_label": "Join our event",
+        "donate_cta": "Donate now",
+        "view_all_label": "View all",
+        "not_found_code": "404",
+        "not_found_title": "Page not found",
+        "not_found_text": "An error has occurred while processing your request.",
+        "not_found_back_label": "Back to the home page",
+        "search_label": "Search",
+        "search_placeholder": "Search…",
+        "search_button": "Search",
+        "no_results": "No results found.",
+        "newsletter_title": "Stay connected",
+        "newsletter_text": "Share in the latest transformations within our community and opportunities to get involved.",
+        "newsletter_name_label": "Name",
+        "newsletter_email_label": "Email",
+        "newsletter_button": "Subscribe",
+        "newsletter_done": "Thank you for subscribing.",
+        "play_label": "Play video",
+        "logo_dark": ""
+      }
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": {
+        "en": "Primary"
+      },
+      "items": [
+        {
+          "label": {
+            "en": "Home"
+          },
+          "path": "/"
+        },
+        {
+          "label": {
+            "en": "About"
+          },
+          "path": "/about"
+        },
+        {
+          "label": {
+            "en": "Donations"
+          },
+          "path": "/donations"
+        },
+        {
+          "label": {
+            "en": "Events"
+          },
+          "path": "/events"
+        },
+        {
+          "label": {
+            "en": "Blog"
+          },
+          "path": "/blog"
+        },
+        {
+          "label": {
+            "en": "Contact"
+          },
+          "path": "/contact"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "kind": "page"
+    },
+    {
+      "path": "/about",
+      "kind": "page"
+    },
+    {
+      "path": "/contact",
+      "kind": "page"
+    },
+    {
+      "path": "/help-faqs",
+      "kind": "page"
+    },
+    {
+      "path": "/donations",
+      "kind": "list",
+      "type": "donations"
+    },
+    {
+      "path": "/events",
+      "kind": "list",
+      "type": "events"
+    },
+    {
+      "path": "/blog",
+      "kind": "list",
+      "type": "posts"
+    },
+    {
+      "path": "/blog/tracking-the-trash-are-your-plastic-bags-really-being-recycled",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "tracking-the-trash-are-your-plastic-bags-really-being-recycled"
+    },
+    {
+      "path": "/blog/outdoor-behavioral-healthcare-services-to-youth-and-young-adults",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "outdoor-behavioral-healthcare-services-to-youth-and-young-adults"
+    },
+    {
+      "path": "/blog/weve-reached-1-million-indonations-and-counting",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "weve-reached-1-million-indonations-and-counting"
+    },
+    {
+      "path": "/blog/building-empathy-throughremote-user-research",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "building-empathy-throughremote-user-research"
+    },
+    {
+      "path": "/blog/framingham-the-study-and-the-town-that-changed-the-health-of-a-generation",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "framingham-the-study-and-the-town-that-changed-the-health-of-a-generation"
+    },
+    {
+      "path": "/blog/im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "im-thankful-for-today-philadelphia-shelter-feeds-homeless-and-hungry-during"
+    },
+    {
+      "path": "/blog/charity-branding-is-yourbrand-digital-ready",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "charity-branding-is-yourbrand-digital-ready"
+    },
+    {
+      "path": "/blog/donation-and-cleaning-program-foundation",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "donation-and-cleaning-program-foundation"
+    },
+    {
+      "path": "/blog/charity-of-the-month-plan-international-uk",
+      "kind": "detail",
+      "type": "posts",
+      "slug": "charity-of-the-month-plan-international-uk"
+    },
+    {
+      "path": "/donations/water-treatment-projects",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "water-treatment-projects"
+    },
+    {
+      "path": "/donations/saving-ensdangered-species",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "saving-ensdangered-species"
+    },
+    {
+      "path": "/donations/sea-pollution",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "sea-pollution"
+    },
+    {
+      "path": "/donations/community-center",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "community-center"
+    },
+    {
+      "path": "/donations/endangered-species",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "endangered-species"
+    },
+    {
+      "path": "/donations/oil-pollution",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "oil-pollution"
+    },
+    {
+      "path": "/donations/save-rainforests",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "save-rainforests"
+    },
+    {
+      "path": "/donations/indigenous-people",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "indigenous-people"
+    },
+    {
+      "path": "/donations/saving-animal-preserve",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "saving-animal-preserve"
+    },
+    {
+      "path": "/donations/the-mysteries-of-the-jungle-creatures",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "the-mysteries-of-the-jungle-creatures"
+    },
+    {
+      "path": "/donations/exploring-the-world-of-feline-friends",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "exploring-the-world-of-feline-friends"
+    },
+    {
+      "path": "/donations/surviving-the-harsh-polar-realms",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "surviving-the-harsh-polar-realms"
+    },
+    {
+      "path": "/donations/the-african-wildlife-chronicles",
+      "kind": "detail",
+      "type": "donations",
+      "slug": "the-african-wildlife-chronicles"
+    },
+    {
+      "path": "/events/afforestation-program",
+      "kind": "detail",
+      "type": "events",
+      "slug": "afforestation-program"
+    },
+    {
+      "path": "/events/feed-the-world",
+      "kind": "detail",
+      "type": "events",
+      "slug": "feed-the-world"
+    },
+    {
+      "path": "/events/charity-journey-to-africa",
+      "kind": "detail",
+      "type": "events",
+      "slug": "charity-journey-to-africa"
+    },
+    {
+      "path": "/events/the-day-of-the-african-child",
+      "kind": "detail",
+      "type": "events",
+      "slug": "the-day-of-the-african-child"
+    },
+    {
+      "path": "/events/saving-nature",
+      "kind": "detail",
+      "type": "events",
+      "slug": "saving-nature"
+    },
+    {
+      "path": "/events/a-microscopic-marvel",
+      "kind": "detail",
+      "type": "events",
+      "slug": "a-microscopic-marvel"
+    },
+    {
+      "path": "/events/unveiling-natures-best-kept-treasures",
+      "kind": "detail",
+      "type": "events",
+      "slug": "unveiling-natures-best-kept-treasures"
+    },
+    {
+      "path": "/events/an-adventure-with-animals",
+      "kind": "detail",
+      "type": "events",
+      "slug": "an-adventure-with-animals"
+    },
+    {
+      "path": "/events/natures-hidden-gems",
+      "kind": "detail",
+      "type": "events",
+      "slug": "natures-hidden-gems"
+    }
+  ],
+  "redirects": [],
+  "media": [],
+  "tokens": {},
+  "facts": []
+}
