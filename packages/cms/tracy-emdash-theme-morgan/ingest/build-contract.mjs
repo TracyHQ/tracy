@@ -68,6 +68,7 @@ const RULES = [
   ['prose-h3', '.mg-prose h3', POST],
   ['prose-text', '.mg-prose p', POST],
   ['search-count', '.mg-search-count', SEARCH],
+  ['search-result-title', '.mg-search-results h3', SEARCH, false, ['font-family', 'font-weight', 'font-size', 'color']],
   ['nf-code', '.mg-error-code', NOT_FOUND],
   ['nf-title', '.mg-error h1', NOT_FOUND]
 ]
@@ -146,7 +147,7 @@ const PAGES = [
     view: 'Search',
     identity: '.mg-search',
     cols: ['chrome', 'footer_links', 'posts', 'masthead'],
-    rules: [...BASE, 'masthead-title', 'masthead-desc', 'search-count'],
+    rules: [...BASE, 'masthead-title', 'masthead-desc', 'search-count', 'search-result-title'],
     content: [['title', '.mg-masthead-title', 'field', 'chrome.search_label', 'Smart Search']]
   },
   {
@@ -279,7 +280,7 @@ contract.pages = PAGES.map((p) => ({
   render: { view: `src/views/${p.view}.astro`, collections: p.cols },
   rules: p.rules,
   parity: p.id === 'en-not-found' ? ['ground'] : ['nav', 'footerTitle', 'ground'],
-  ...(['en-home', 'en-services', 'en-about'].includes(p.id) ? { images: 'placeholders' } : {}),
+  ...(['en-home', 'en-services', 'en-about', 'en-search'].includes(p.id) ? { images: 'placeholders' } : {}),
   content: p.content.map((c) => F(c[0], c[1], p.src, c[2], c[3], c[4]))
 }))
 const byView = new Map()

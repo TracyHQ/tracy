@@ -31,7 +31,7 @@ test('every shipped font has a licence notice and the Vietnamese range (LANG-2)'
   const fonts = JSON.parse(read('src/fonts.json'))
   for (const f of fonts) {
     assert.equal(f.provider, 'local')
-    // PT Root UI ships no notice in the quickstart (DECISIONS D8); the Vietnamese face is Be Vietnam Pro, whose OFL notice ships
+    assert.ok(existsSync(new URL('src/fonts/pt-root-ui-OFL.txt', root)), 'PT Root UI notice')
     assert.ok(existsSync(new URL('src/fonts/be-vietnam-pro-OFL.txt', root)), 'Be Vietnam Pro notice')
     assert.ok(
       f.variants.some((v) => (v.unicodeRange ?? []).includes('U+1EA0-1EF9')),

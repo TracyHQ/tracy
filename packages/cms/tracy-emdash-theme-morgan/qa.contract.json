@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-morgan",
-  "revision": 24,
+  "revision": 26,
   "pending": [],
   "locales": [
     "en"
@@ -3996,6 +3996,49 @@
         }
       },
       {
+        "id": "search-result-title",
+        "selector": ".mg-search-results h3",
+        "source": "index.php/other-pages/smart-search/index.html",
+        "styles": {
+          "1440-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-weight": "500",
+            "font-size": "20px",
+            "color": "rgb(51, 51, 51)"
+          },
+          "1440-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-weight": "500",
+            "font-size": "20px",
+            "color": "rgb(242, 244, 248)"
+          },
+          "768-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-weight": "500",
+            "font-size": "20px",
+            "color": "rgb(51, 51, 51)"
+          },
+          "768-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-weight": "500",
+            "font-size": "20px",
+            "color": "rgb(242, 244, 248)"
+          },
+          "390-light": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-weight": "500",
+            "font-size": "20px",
+            "color": "rgb(51, 51, 51)"
+          },
+          "390-dark": {
+            "font-family": "\"PT Root UI-93723e39a0ddaa96\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial\", \"PT Root UI-93723e39a0ddaa96 fallback: Arial Bold\", Helvetica, Arial, sans-serif, \"PT Root UI\", Helvetica, Arial, sans-serif",
+            "font-weight": "500",
+            "font-size": "20px",
+            "color": "rgb(242, 244, 248)"
+          }
+        }
+      },
+      {
         "id": "nf-code",
         "selector": ".mg-error-code",
         "source": "index.php/nope-404/index.html",
@@ -4592,13 +4635,15 @@
         "topbar",
         "masthead-title",
         "masthead-desc",
-        "search-count"
+        "search-count",
+        "search-result-title"
       ],
       "parity": [
         "nav",
         "footerTitle",
         "ground"
       ],
+      "images": "placeholders",
       "content": [
         {
           "id": "title",
