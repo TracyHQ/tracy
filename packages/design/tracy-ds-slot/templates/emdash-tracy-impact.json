@@ -7,7 +7,7 @@
   "maxVersion": {
     "tracy-impact/emdash-0.x": "0.1.0"
   },
-  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-btn-radius, --ds-card-radius, --ds-input-radius) and every colour role systems define in src/styles/tokens.css, global.css, blocks/*.css and pages/*.css; src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base. NOT YET MEASURED on a built site (see readyNote).",
+  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-btn-radius, --ds-card-radius, --ds-input-radius) and every colour role systems define in src/styles/tokens.css, global.css, blocks/*.css and pages/*.css; src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base.",
   "release": "tracy-impact/emdash-0.x@0.1.0",
   "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
   "readsComponents": true,
@@ -35,8 +35,8 @@
     "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
     "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
   },
-  "ready": false,
-  "readyNote": "NOT READY: the contract is drafted from the JA Fresco EmDash contract and the Joomla JA Impact contract; it has not been measured with flow.mjs on a site built from the 0.1.0 package (no design-system-measurement.json yet). Next: node packages/design/tracy-ds-slot/scripts/flow.mjs --cms emdash on the clean install, then set ready true.",
+  "ready": true,
+  "readyNote": "measured 24/11/2026 with flow.mjs --cms emdash on a site built from the 0.1.0 package (the clean install, About page): the 15 featured systems at 1440 and 390, 64 of 64 steps pass, roles match on every view, the page follows, every text reads at least as well as on the template. With no system worn the site is pixel-identical (0 differences against the baseline). The mission boxes and the orange band keep their fixed blue/orange fills with fixed words (ds-keep); the green, navy and accent boxes read the roles. Measurement: contracts/0.1.0/design-system-measurement.json",
   "measureStill": true,
   "discovered": {},
   "measureNote": "Carousels (the home slider, the donation strip) are stopped on their first slide before each measure",
