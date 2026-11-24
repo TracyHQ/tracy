@@ -1,14 +1,145 @@
 ---
-/** STUB: this view is built in P5 (STATUS.md). */
-import NotFound from '@/views/NotFound.astro'
+/**
+ * Contact (Joomla com_contact, plain style): masthead · two columns. Left: "Our Location" with a map tile that links out to Google Maps
+ * (no embed, no third-party request) and the form. Right: the contact card (e-mail, address, phone, social glyphs) and the hours card.
+ * The form is the Forms plugin's; the `contact` entry's `form_id` names it. No form id = the same form drawn disabled, never a fake submit.
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import FormWords from '@/components/site/FormWords.astro'
+import Masthead from '@/components/site/Masthead.astro'
+import Icon from '@/components/site/Icon.astro'
+import Social from '@/components/site/Social.astro'
+import { blockComponents } from '@emdash-cms/plugin-forms/astro'
 import type { Chrome } from '@/lib/chrome'
 import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { uiTag } from '@/lib/ui'
+import { telHref } from '@/lib/tel'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
 interface Props {
   chrome: Chrome
   locale: Locale
-  slug?: string
 }
 const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, masthead, c, follow] = await Promise.all([
+  getEmDashEntry('pages', 'contact', { locale }),
+  section('masthead', 'contact', locale),
+  section('contact', 'contact', locale),
+  section('social', 'footer-follow', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'contact' } : null)
+const $c = stampFor(Astro.request, 'contact', c ? { id: c.id, slug: c.slug } : null)
+const FormEmbed = (blockComponents as any)['emdash-form']
+const formId = String(c?.form_id ?? '').trim()
+const title = String(page.title ?? masthead?.title ?? c?.title ?? '')
+const email = String(c?.email ?? '').trim()
+const address = String(c?.address ?? '').trim()
+const phone = String(c?.phone ?? '').trim()
+const mapHref = address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}` : null
+const rows = [
+  { label: 'email_label', value: 'email', text: email, href: email ? `mailto:${email}` : null },
+  { label: 'address_label', value: 'address', text: address, href: null },
+  { label: 'phone_label', value: 'phone', text: phone, href: telHref(phone) }
+].filter((r) => r.text)
+const hours = [1, 2].map((n) => ({ time: String(c?.[`hours_${n}_time`] ?? '').trim(), days: String(c?.[`hours_${n}_days`] ?? '').trim(), n })).filter((h) => h.time || h.days)
+// The disabled form: the same fields in the same places, their words the entry's own.
+const dead = [
+  { type: 'text', label: 'first_name_label', half: true },
+  { type: 'email', label: 'email_field_label', half: true },
+  { type: 'text', label: 'subject_label', half: false },
+  { type: 'textarea', label: 'message_label', half: false }
+]
 ---
 
-<NotFound chrome={chrome} locale={locale} />
+<Base chrome={chrome} title={title} currentPath="/contact" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'contact', toPath: () => '/contact' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<Masthead chrome={chrome} slug="contact" entry={masthead} trail={[{ label: title }]} />
+		{c && (
+			<section class="im-section top-large bottom-large">
+				<div class="im-container">
+					<div class="im-contact">
+						<div class="im-contact-main">
+							{mapHref && (
+								<>
+									<h3 class="im-contact-head" {...$c('location_title')}>{c.location_title}</h3>
+									<div class="im-contact-map">
+										<a href={mapHref} target="_blank" rel="noopener noreferrer">
+											<span class="im-map-place"><Icon name="fa-solid fa-location-dot" /><span {...$c('address')}>{address}</span><strong {...$c('map_label')}>{c.map_label}</strong></span>
+										</a>
+									</div>
+								</>
+							)}
+							<div class="im-contact-form">
+								<h3 class="im-contact-head" {...$c('form_title')}>{c.form_title}</h3>
+								{c.form_intro && <p class="im-contact-intro" {...$c('form_intro')}>{c.form_intro}</p>}
+								{formId ? (
+									<FormWords tag={uiTag(locale)}><FormEmbed node={{ formId }} /></FormWords>
+								) : (
+									<form class="ec-form is-disabled" aria-label={c.form_title} aria-disabled="true" onsubmit="return false">
+										<fieldset class="ec-form-page" disabled>
+											{dead.map((f) => (
+												<div class:list={['ec-form-field', f.half && 'ec-form-field--half']}>
+													{f.type === 'textarea'
+														? <textarea class="ec-form-input" placeholder={c[f.label]} aria-label={c[f.label]} {...$c(f.label)}></textarea>
+														: <input class="ec-form-input" type={f.type as any} placeholder={c[f.label]} aria-label={c[f.label]} {...$c(f.label)} />}
+												</div>
+											))}
+											<div class="ec-form-field ec-form-field--checkbox">
+												<label class="ec-form-checkbox-label"><input type="checkbox" name="privacy" required /> <span {...$c('privacy_text')}>{c.privacy_text}</span> <span class="sr-only" {...$c('required_label')}>{c.required_label}</span></label>
+											</div>
+											<div class="ec-form-field ec-form-field--checkbox">
+												<label class="ec-form-checkbox-label"><input type="checkbox" /> <span {...$c('copy_label')}>{c.copy_label}</span></label>
+											</div>
+										</fieldset>
+										<div class="ec-form-nav"><button class="ec-form-submit" type="submit" disabled {...$c('submit_label')}>{c.submit_label}</button></div>
+									</form>
+								)}
+							</div>
+						</div>
+						<aside class="im-contact-side">
+							{(rows.length > 0 || follow) && (
+								<div class="im-contact-card">
+									{c.card_title && <h4 {...$c('card_title')}>{c.card_title}</h4>}
+									<dl class="im-contact-rows">
+										{rows.map((r) => (
+											<div>
+												<dt {...$c(r.label)}>{c[r.label]}</dt>
+												<dd>{r.href ? <a href={r.href} {...$c(r.value)}>{r.text}</a> : <span {...$c(r.value)}>{r.text}</span>}</dd>
+											</div>
+										))}
+									</dl>
+									{follow && <Social entry={follow} class="im-contact-social" />}
+								</div>
+							)}
+							{hours.length > 0 && (
+								<div class="im-contact-card">
+									{c.hours_title && <h4 {...$c('hours_title')}>{c.hours_title}</h4>}
+									<dl class="im-contact-rows is-hours">
+										{hours.map((h) => (
+											<div>
+												<dt {...$c(`hours_${h.n}_time`)}>{h.time}</dt>
+												<dd {...$c(`hours_${h.n}_days`)}>{h.days}</dd>
+											</div>
+										))}
+									</dl>
+								</div>
+							)}
+						</aside>
+					</div>
+				</div>
+			</section>
+		)}
+	</main>
+	<script>
+		// the Forms plugin prints white space between the tags of the message box, which counts as text and hides its placeholder
+		document.querySelectorAll<HTMLTextAreaElement>('.im-contact textarea').forEach((t) => {
+			if (!t.value.trim()) t.value = ''
+		})
+	</script>
+</Base>
+{formId && <script>import '@emdash-cms/plugin-forms/client'</script>}

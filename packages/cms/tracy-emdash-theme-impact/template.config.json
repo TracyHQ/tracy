@@ -27,7 +27,20 @@
 	],
 	"forms": {
 		"file": "tools/forms.json",
-		"bindings": []
+		"bindings": [
+			{
+				"form": "contact-{locale}",
+				"collection": "contact",
+				"slug": "contact",
+				"field": "form_id"
+			},
+			{
+				"form": "subscribe-{locale}",
+				"collection": "chrome",
+				"slug": "chrome",
+				"field": "form_id"
+			}
+		]
 	},
 	"mail": {
 		"fromEmail": "no-reply@ja-impact.example",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T06:05:11.616Z",
+  "generatedAt": "2026-11-24T06:25:07.593Z",
   "roleVocabularyVersion": "place-content-roles/3",
   "settings": {
     "title": {
@@ -1536,6 +1536,48 @@
         "kind": "business",
         "name": "identity"
       }
+    },
+    "chrome.event_date_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Event date label",
+      "role": "editorial.button_label"
+    },
+    "chrome.event_time_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Event time label",
+      "role": "editorial.button_label"
+    },
+    "chrome.event_place_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Event place label",
+      "role": "editorial.button_label"
+    },
+    "chrome.event_fee_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Event fee label",
+      "role": "editorial.button_label"
+    },
+    "chrome.event_category_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Event category label",
+      "role": "editorial.button_label"
+    },
+    "chrome.register_label": {
+      "source": "text",
+      "target": "string",
+      "label": "Register label",
+      "role": "editorial.button_label"
+    },
+    "chrome.not_found_oh": {
+      "source": "text",
+      "target": "string",
+      "label": "Not found oh",
+      "role": "editorial.paragraph"
     }
   }
 }

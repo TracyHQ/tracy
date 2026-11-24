@@ -1,0 +1,69 @@
+/* Contact: the location tile and the form on the left, the contact and hours cards on the right; the Forms plugin's markup (.ec-form) is dressed here */
+@layer components {
+	.im-contact { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+	@media (min-width: 992px) { .im-contact { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 64px; } }
+	@media (min-width: 1200px) { .im-contact { grid-template-columns: minmax(0, 875fr) minmax(0, 405fr); } }
+	.im-contact-head { margin: 0 0 16px; }
+	@media (min-width: 992px) { .im-contact-head { margin-bottom: 48px; } }
+	.im-contact-form .im-contact-head { margin-bottom: 15px; }
+	.im-contact-intro { margin: 0 0 32px; }
+	.im-contact-map { margin-bottom: 32px; }
+	@media (min-width: 992px) { .im-contact-map { margin-bottom: 48px; } }
+	.im-contact-map a { display: flex; align-items: center; justify-content: center; height: 350px; border-radius: var(--ds-card-radius, 8px); background: var(--color-surface-warm); color: var(--color-heading); }
+	@media (min-width: 992px) { .im-contact-map a { height: 530px; } }
+	.im-contact-map a:focus-visible { outline: 1px solid var(--color-accent); outline-offset: 0; }
+	.im-map-place { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; max-width: calc(100% - 32px); padding: 8px 16px; border-radius: 50px; background: var(--color-bg); box-shadow: 0 2px 8px rgba(0, 0, 0, .12); font-size: 14px; }
+	.im-map-place strong { font-weight: 500; }
+
+	/* the form */
+	.im-contact .ec-form { margin: 0; }
+	.im-contact .ec-form .ec-form-page { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin: 0; padding: 0; border: 0; min-width: 0; }
+	.im-contact .ec-form .ec-form-field { grid-column: span 2; min-width: 0; display: block; }
+	.im-contact .ec-form .ec-form-field--half { grid-column: span 1; }
+	.im-contact .ec-form .ec-form-field--checkbox:has(input[name="privacy"]) { margin-bottom: 35px; }
+	.im-contact .ec-form { padding-bottom: 16px; }
+	.im-contact .ec-form .ec-form-field--textarea { margin-bottom: 8px; }
+	.im-contact .ec-form .ec-form-label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+	.im-contact .ec-form input[type="text"], .im-contact .ec-form input[type="email"], .im-contact .ec-form input[type="tel"], .im-contact .ec-form textarea {
+		display: block; width: 100%; height: 56px; padding: 14px; border: 1px solid var(--color-surface); border-radius: var(--ds-card-radius, 8px);
+		background: var(--color-surface); color: var(--color-fg); font: inherit; line-height: 1.6; box-sizing: border-box;
+	}
+	.im-contact .ec-form textarea { height: 286px; resize: vertical; }
+	.im-contact .ec-form ::placeholder { color: var(--color-muted); opacity: 1; }
+	.im-contact .ec-form input:focus, .im-contact .ec-form textarea:focus { outline: 1px solid var(--color-accent); outline-offset: 0; border-color: var(--color-accent); }
+	.im-contact .ec-form .ec-form-checkbox-label { display: flex; align-items: flex-start; gap: 8px; }
+	.im-contact .ec-form .ec-form-checkbox-label input { flex: 0 0 16px; width: 16px; height: 16px; margin: 5px 0 0; accent-color: var(--color-accent); }
+	.im-contact .ec-form .ec-form-error { display: block; margin-top: 4px; font-size: 13px; color: var(--color-danger); }
+	.im-contact .ec-form .ec-form-error:empty { display: none; }
+	.im-contact .ec-form .ec-form-nav { display: flex; gap: 12px; margin-top: 64px; }
+	.im-contact .ec-form .ec-form-submit, .im-contact .ec-form .ec-form-next, .im-contact .ec-form .ec-form-prev {
+		display: inline-flex; align-items: center; gap: 8px; padding: 17px 32px; border: 1px solid var(--color-accent); border-radius: var(--ds-btn-radius, 8px);
+		background: var(--color-accent); color: var(--color-accent-on); font: inherit; font-weight: var(--ds-weight-button, 500); line-height: 20px; cursor: pointer; transition: opacity .2s;
+	}
+	.im-contact .ec-form .ec-form-submit::after { content: "\f178"; font-family: "FA Solid"; font-weight: 900; font-size: 14px; }
+	.im-contact .ec-form .ec-form-submit:hover:not(:disabled), .im-contact .ec-form .ec-form-submit:focus-visible { opacity: .85; }
+	.im-contact .ec-form .ec-form-submit:disabled { opacity: .6; cursor: not-allowed; }
+	.im-contact .ec-form .ec-form-status { padding: 10px 14px; border-left: 3px solid var(--color-accent); background: var(--color-surface); }
+	.im-contact .ec-form .ec-form-status:empty { display: none; }
+	.im-contact .ec-form.is-disabled input:disabled, .im-contact .ec-form.is-disabled textarea:disabled { cursor: not-allowed; }
+	@media (max-width: 575.98px) { .im-contact .ec-form .ec-form-field--half { grid-column: span 2; } }
+
+	/* the cards */
+	.im-contact-side { min-width: 0; }
+	.im-contact-card { margin-bottom: 32px; padding: 32px; border: 1px solid var(--color-line-soft); border-radius: var(--ds-card-radius, 8px); background: var(--color-bg); }
+	.im-contact-card h4 { margin: 0 0 32px; font-size: var(--h4-size); }
+	.im-contact-rows { margin: 0; }
+	.im-contact-rows > div { padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid var(--color-line-soft); }
+	.im-contact-rows > div:last-child { margin-bottom: 0; }
+	.im-contact-rows.is-hours > div:last-child { padding-bottom: 0; border-bottom: 0; }
+	.im-contact-rows dt { margin: 0 0 4px; font-size: 16px; line-height: 1.6; font-weight: 400; text-transform: uppercase; color: var(--color-muted); }
+	.im-contact-rows dd { margin: 0; font-size: 18px; line-height: 1.5; font-weight: 500; color: var(--color-heading); }
+	.im-contact-rows dd a { color: inherit; }
+	.im-contact-rows.is-hours dt { margin: 0 0 8px; text-transform: none; font-size: 18px; font-weight: 500; color: var(--color-heading); }
+	.im-contact-rows.is-hours dd { font-size: 16px; font-weight: 400; color: var(--color-fg); }
+	.im-contact-card .im-contact-social { margin-top: 0; gap: 16px; }
+	.im-contact-social a, .im-contact-social span { width: 48px; height: 48px; border-radius: var(--ds-card-radius, 8px); background: var(--color-surface); color: var(--color-meta); }
+	.im-contact-social [data-icon="facebook"], .im-contact-social [data-icon="twitter"] { color: var(--color-info); }
+	.im-contact-social [data-icon="tiktok"] { color: var(--color-fg-2); }
+	.im-contact-social [data-icon="pinterest"] { color: var(--color-danger); }
+}

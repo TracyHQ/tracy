@@ -515,7 +515,7 @@ model.records.push({
     stories_label: 'Funds',
     stories_title: 'Listen to their stories',
     events_label: 'Coming soon',
-    events_title: 'You can check out our work our best events.',
+    events_title: 'You can check out our work. Our best events.',
     blog_label: 'Our blog',
     blog_title: 'Latest news & articles',
     not_found_code: '404',

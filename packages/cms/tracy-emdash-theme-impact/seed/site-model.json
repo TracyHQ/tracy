@@ -1307,6 +1307,34 @@
         {
           "name": "logo_dark",
           "type": "image"
+        },
+        {
+          "name": "event_date_label",
+          "type": "text"
+        },
+        {
+          "name": "event_time_label",
+          "type": "text"
+        },
+        {
+          "name": "event_place_label",
+          "type": "text"
+        },
+        {
+          "name": "event_fee_label",
+          "type": "text"
+        },
+        {
+          "name": "event_category_label",
+          "type": "text"
+        },
+        {
+          "name": "register_label",
+          "type": "text"
+        },
+        {
+          "name": "not_found_oh",
+          "type": "text"
         }
       ]
     }
@@ -2969,7 +2997,7 @@
         "stories_label": "Funds",
         "stories_title": "Listen to their stories",
         "events_label": "Coming soon",
-        "events_title": "You can check out our work our best events.",
+        "events_title": "You can check out our work. Our best events.",
         "blog_label": "Our blog",
         "blog_title": "Latest news & articles",
         "not_found_code": "404",
@@ -2986,6 +3014,13 @@
         "newsletter_email_label": "Email",
         "newsletter_button": "Subscribe",
         "newsletter_done": "Thank you for subscribing.",
+        "event_date_label": "Event date:",
+        "event_time_label": "Event time:",
+        "event_place_label": "Location:",
+        "event_fee_label": "Registration fee:",
+        "event_category_label": "Category:",
+        "register_label": "Register",
+        "not_found_oh": "OH!",
         "play_label": "Play video",
         "slides_label": "Slides",
         "slide_label": "Slide",

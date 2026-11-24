@@ -735,6 +735,11 @@
       "slug": "contact",
       "fields": {},
       "brief": "the contact form of this charity"
+    },
+    {
+      "slug": "subscribe",
+      "fields": {},
+      "brief": "the newsletter box of this charity"
     }
   ],
   "terms": [

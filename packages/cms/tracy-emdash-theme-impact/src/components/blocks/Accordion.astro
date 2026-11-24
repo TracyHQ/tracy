@@ -1,0 +1,43 @@
+---
+/** acm accordion style-1: a heading and a lead, then the questions in two columns. Native <details>: no script, every answer readable without one. */
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { cleanHtml } from '@/lib/html'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry } = Astro.props
+const $s = stampFor(Astro.request, 'accordion', { id: entry.id, slug: entry.slug })
+const items: any[] = entry.items ?? []
+const half = Math.ceil(items.length / 2)
+const cols = [items.slice(0, half).map((it, i) => ({ it, i })), items.slice(half).map((it, i) => ({ it, i: i + half }))]
+const pad = (n: number) => String(n + 1).padStart(2, '0')
+---
+
+<div class="im-accordion">
+	{(entry.info_title || entry.info_desc) && (
+		<div class="im-accordion-info">
+			{entry.info_title && <h2 class="im-accordion-title" {...$s('info_title')}>{entry.info_title}</h2>}
+			{entry.info_desc && <p class="im-accordion-lead" {...$s('info_desc')}>{entry.info_desc}</p>}
+		</div>
+	)}
+	<div class="im-accordion-cols">
+		{cols.map((col) => (
+			<div class="im-accordion-col">
+				{col.map(({ it, i }) => (
+					<details class="im-faq" open={i === 0}>
+						<summary>
+							<span class="im-faq-number">{pad(i)}</span>
+							<span class="im-faq-name" {...$s(`items[${i}].accordion_name`)}>{it.accordion_name}</span>
+							<span class="im-fa im-faq-glyph is-plus" data-icon="plus" aria-hidden="true"></span>
+							<span class="im-fa im-faq-glyph is-minus" data-icon="minus" aria-hidden="true"></span>
+						</summary>
+						<div class="im-faq-body" {...$s(`items[${i}].accordion_desc`)}><Fragment set:html={cleanHtml(it.accordion_desc)} /></div>
+					</details>
+				))}
+			</div>
+		))}
+	</div>
+</div>

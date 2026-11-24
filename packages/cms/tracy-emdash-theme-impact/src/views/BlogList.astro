@@ -1,14 +1,58 @@
 ---
-/** STUB: this view is built in P5 (STATUS.md). */
-import NotFound from '@/views/NotFound.astro'
+/**
+ * The blog list (source: the Joomla category blog): masthead with the trail Home › Blog · the section head · the masonry of nine post cards
+ * (short publish date) · pagination. `?page=N` names the page (the source's `?start=` offset).
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Masthead from '@/components/site/Masthead.astro'
+import Pagination from '@/components/site/Pagination.astro'
+import BlogGrid from '@/components/blocks/BlogGrid.astro'
+import SectionHead from '@/components/blocks/SectionHead.astro'
 import type { Chrome } from '@/lib/chrome'
-import type { Locale } from '@/lib/i18n'
+import { href, type Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { loadArticles } from '@/lib/articles'
+import { livePosts } from '@/lib/link-gate'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
 interface Props {
   chrome: Chrome
   locale: Locale
-  slug?: string
 }
 const { chrome, locale } = Astro.props
+const PER_PAGE = 9
+const [{ entry: pageEntry }, masthead, all] = await Promise.all([
+  getEmDashEntry('pages', 'blog', { locale }),
+  section('masthead', 'blog', locale),
+  loadArticles('posts', locale)
+])
+const list = await livePosts(Astro.request, locale, all)
+const pages = Math.max(1, Math.ceil(list.length / PER_PAGE))
+const raw = Astro.url.searchParams.get('page')
+const page = raw === null ? 1 : /^[0-9]+$/.test(raw) ? Number(raw) : 0
+if (page < 1 || page > pages) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const shown = list.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+const p = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: p.id, slug: 'blog' } : null)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 ---
 
-<NotFound chrome={chrome} locale={locale} />
+<Base chrome={chrome} title={masthead?.title ?? p.title ?? chrome.site.blog_name} currentPath="/blog" content={pageEntry ? { collection: 'pages', id: p.id, slug: 'blog', toPath: () => '/blog' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<Masthead chrome={chrome} slug="blog" entry={masthead} trail={[{ label: masthead?.title ?? chrome.site.blog_name }]} />
+		<section class="im-section im-list">
+			<div class="im-container">
+				<SectionHead label={chrome.site.blog_label} title={chrome.site.blog_title} stamp={$c} labelPath="blog_label" titlePath="blog_title" />
+				<BlogGrid entries={shown} chrome={chrome} short />
+				<Pagination chrome={chrome} base={href(locale, '/blog')} page={page} pages={pages} />
+			</div>
+		</section>
+	</main>
+	<script src="@/lib/site-client.ts"></script>
+</Base>

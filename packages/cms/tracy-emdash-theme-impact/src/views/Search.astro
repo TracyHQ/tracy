@@ -1,14 +1,98 @@
 ---
-/** STUB: this view is built in P5 (STATUS.md). */
-import NotFound from '@/views/NotFound.astro'
+/**
+ * Search (the source's Smart Search, simplified): the grey breadcrumb bar, the search form, then the posts, donations and events whose words match,
+ * each under the name of its list. Route: /search?q=. EmDash `search()` over the three lists; where a site has no search index the entries are matched on their own words.
+ */
+import { search } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import Sidebar from '@/components/site/Sidebar.astro'
 import type { Chrome } from '@/lib/chrome'
-import type { Locale } from '@/lib/i18n'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { loadArticles, articlePath, type Article } from '@/lib/articles'
+import { liveLinks } from '@/lib/link-gate'
+import { firstParagraph, plainText } from '@/lib/prose-text'
+
 interface Props {
   chrome: Chrome
   locale: Locale
-  slug?: string
 }
 const { chrome, locale } = Astro.props
+const { site } = chrome
+Astro.response.headers.set('cache-control', 'no-store')
+
+const COLLECTIONS = ['posts', 'donations', 'events'] as const
+const NAMES = { posts: 'blog_name', donations: 'donations_name', events: 'events_name' } as const
+const q = (Astro.url.searchParams.get('q') ?? '').trim().slice(0, 200)
+const [lists, found] = await Promise.all([
+  Promise.all(COLLECTIONS.map((c) => loadArticles(c, locale))),
+  q
+    ? search(q, { collections: [...COLLECTIONS], locale, status: 'published', limit: 50 })
+        .then((r: any) => r.items ?? r)
+        .catch(() => [])
+    : Promise.resolve([])
+])
+const all: (Article & { collection: (typeof COLLECTIONS)[number] })[] = COLLECTIONS.flatMap((c, i) => lists[i].map((a) => ({ ...a, collection: c })))
+const live = await liveLinks(Astro.request, locale, all.map((a) => articlePath(a.collection, a.slug)))
+const open = all.filter((a) => live(articlePath(a.collection, a.slug)))
+const indexed = (found as any[])
+  .map((r) => open.find((a) => a.slug === (r.slug ?? r.id) && (!r.collection || a.collection === r.collection)))
+  .filter(Boolean) as typeof open
+const words = q.toLowerCase().split(/\s+/).filter(Boolean)
+const results =
+  indexed.length > 0 || words.length === 0
+    ? indexed
+    : open.filter((a) => {
+        const hay = `${a.title} ${plainText(a.excerpt, 5000)} ${plainText(a.body, 100000)} ${a.author} ${a.tags}`.toLowerCase()
+        return words.every((x) => hay.includes(x))
+      })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 ---
 
-<NotFound chrome={chrome} locale={locale} />
+<Base chrome={chrome} title={site.search_label} currentPath="/search" robots="noindex, follow">
+	<main id="main">
+		<PageOwner stamp={$c} />
+		<div class="im-crumb-bar"><div class="im-container"><Breadcrumbs chrome={chrome} trail={[{ label: site.search_label }]} /></div></div>
+		<div class="im-page">
+			<div class="im-container">
+				<div class="im-page-cols is-article">
+					<div class="im-page-main im-search">
+						<h1 class="sr-only" {...$c('search_label')}>{site.search_label}</h1>
+						<form class="im-search-form" action={href(locale, '/search')} method="get" role="search">
+							<label for="im-q" {...$c('search_label')}>{site.search_label}</label>
+							<div class="im-search-row">
+								<input id="im-q" type="search" name="q" value={q} placeholder={site.search_placeholder} autocomplete="off" />
+								<button type="submit" class="im-btn" {...$c('search_button')}>{site.search_button}</button>
+							</div>
+						</form>
+						{q && (
+							<div class="im-search-results" aria-live="polite">
+								{results.length === 0 ? (
+									<p class="im-search-empty" {...$c('no_results')}>{site.no_results}</p>
+								) : (
+									<ol>
+										{results.map((a) => {
+											const $p = stampFor(Astro.request, a.collection, { id: a.id, slug: a.slug })
+											const intro = firstParagraph(a.excerpt) || firstParagraph(a.body)
+											return (
+												<li {...$p()}>
+													<p class="im-search-kind" {...$c(NAMES[a.collection])}>{site[NAMES[a.collection]]}</p>
+													<h2><a href={href(locale, articlePath(a.collection, a.slug))} {...$p('title')}>{a.title}</a></h2>
+													{intro && <p class="im-search-intro" {...$p('excerpt')}>{intro}</p>}
+												</li>
+											)
+										})}
+									</ol>
+								)}
+							</div>
+						)}
+					</div>
+					<div class="im-page-side"><Sidebar chrome={chrome} /></div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<script src="@/lib/site-client.ts"></script>
+</Base>

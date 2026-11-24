@@ -21,8 +21,19 @@ interface Props {
 }
 const { value, stamp, locale, field = 'body' } = Astro.props
 const stamped = await liveBlocks(Astro.request, locale, stampBlocks(stamp, field, value as any))
+// an empty paragraph between two pictures (the editor's line break) must not split their row
+const blank = (b: any) => b?._type === 'block' && (b.children ?? []).every((c: any) => String(c?.text ?? '').trim() === '')
+const flat = stamped as any[]
+const kept = flat.filter((b, i) => {
+  if (!blank(b)) return true
+  let p = i - 1
+  while (p >= 0 && blank(flat[p])) p--
+  let n = i + 1
+  while (n < flat.length && blank(flat[n])) n++
+  return !(flat[p]?._type === 'image' && flat[n]?._type === 'image')
+})
 const blocks: any[] = []
-for (const b of stamped as any[]) {
+for (const b of kept) {
   const last = blocks[blocks.length - 1]
   if (b?._type === 'image') {
     if (last?._type === 'imImages') last.images.push(b)

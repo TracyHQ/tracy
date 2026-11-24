@@ -1,14 +1,38 @@
 ---
-/** STUB: this view is built in P5 (STATUS.md). */
-import NotFound from '@/views/NotFound.astro'
+/** Help & FAQs: masthead · the question list (accordion entry) in two columns. */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Masthead from '@/components/site/Masthead.astro'
+import Accordion from '@/components/blocks/Accordion.astro'
 import type { Chrome } from '@/lib/chrome'
 import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
 interface Props {
   chrome: Chrome
   locale: Locale
-  slug?: string
 }
 const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, masthead, faq] = await Promise.all([
+  getEmDashEntry('pages', 'help-faqs', { locale }),
+  section('masthead', 'faq', locale),
+  section('accordion', 'faq', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'help-faqs' } : null)
+const title = String(page.title ?? masthead?.title ?? '')
 ---
 
-<NotFound chrome={chrome} locale={locale} />
+<Base chrome={chrome} title={title} currentPath="/help-faqs" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'help-faqs', toPath: () => '/help-faqs' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<Masthead chrome={chrome} slug="faq" entry={masthead} trail={[{ label: title }]} />
+		{faq && (
+			<section class="im-section top-medium bottom-medium">
+				<div class="im-container"><Accordion entry={faq} chrome={chrome} /></div>
+			</section>
+		)}
+	</main>
+</Base>

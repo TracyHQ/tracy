@@ -1,0 +1,34 @@
+---
+/** acm features style-2: boxes in a two-column grid. The item's `feature_highlight` picks the box colour (info, primary, light); an item with a picture puts it beside the text and fades it into the box. */
+import type { Chrome } from '@/lib/chrome'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry } = Astro.props
+const $s = stampFor(Astro.request, 'features', { id: entry.id, slug: entry.slug })
+const items: any[] = entry.items ?? []
+const TONE: Record<string, string> = { info: 'is-info', primary: 'is-primary', light: 'is-light', success: 'is-success', warning: 'is-warning' }
+// `sub_media_alignment`: row = picture before the text, row-reverse = after, column = above, column-reverse = below
+const SIDE: Record<string, string> = { row: 'media-left', 'row-reverse': 'media-right', column: 'media-top', 'column-reverse': 'media-bottom' }
+---
+
+<ul class="im-mission">
+	{items.map((it, i) => {
+		const img = mediaUrl(it.sub_feature_img)
+		return (
+			<li class:list={['im-mission-item', String(it.feature_item_col_width) === '12' && 'is-wide']}>
+				<div class:list={['im-mission-box', TONE[it.feature_highlight] ?? 'is-info', img && (SIDE[it.sub_media_alignment] ?? 'media-left'), img && 'has-media', it.feature_text_align === 'center' && 'is-center']}>
+					{img && <div class="im-mission-media"><img src={img} alt="" loading="lazy" decoding="async" /></div>}
+					<div class="im-mission-body">
+						<h3 {...$s(`items[${i}].sub_feature_title`)}>{it.sub_feature_title}</h3>
+						<p {...$s(`items[${i}].sub_feature_desc`)}>{it.sub_feature_desc}</p>
+					</div>
+				</div>
+			</li>
+		)
+	})}
+</ul>

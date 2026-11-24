@@ -1,0 +1,22 @@
+/* Help & FAQs: the two-column question list (acm accordion style-1), a native <details> per question */
+@layer components {
+	.im-accordion-info { margin-bottom: 32px; }
+	@media (min-width: 992px) { .im-accordion-info { margin-bottom: 64px; } }
+	.im-accordion-title { margin: 0 0 16px; font-size: var(--h2-size); }
+	.im-accordion-lead { margin: 0; font-size: 18px; line-height: 1.6; }
+	.im-accordion-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; align-items: start; }
+	.im-accordion-cols { padding-bottom: 32px; }
+	@media (min-width: 992px) { .im-accordion-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-bottom: 0; } }
+	.im-accordion-col { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
+	.im-faq { border: 1px solid var(--color-ink); border-radius: var(--ds-card-radius, 8px); overflow: hidden; background: var(--color-bg); }
+	.im-faq summary { display: flex; align-items: center; gap: 16px; padding: 16px 24px; background: var(--color-ink); color: var(--color-on-ink); cursor: pointer; list-style: none; }
+	.im-faq summary::-webkit-details-marker { display: none; }
+	.im-faq summary:focus-visible { outline: 1px solid var(--color-accent); outline-offset: -4px; }
+	.im-faq-number { flex: 0 0 auto; font-family: var(--font-display); font-size: var(--h2-size); line-height: 1.2; font-weight: 500; letter-spacing: -0.02em; color: var(--color-line); }
+	.im-faq-name { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+	.im-faq-glyph { flex: 0 0 auto; font-size: 12px; }
+	.im-faq[open] .im-faq-glyph.is-plus, .im-faq:not([open]) .im-faq-glyph.is-minus { display: none; }
+	.im-faq-body { padding: 16px 24px; color: var(--color-fg); }
+	.im-faq-body > :last-child { margin-bottom: 0; }
+	.im-faq-body p { margin: 0 0 16px; }
+}

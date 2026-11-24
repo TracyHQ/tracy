@@ -1,0 +1,8 @@
+{
+  "event_date_label": "Event date:",
+  "event_time_label": "Event time:",
+  "event_place_label": "Location:",
+  "event_fee_label": "Registration fee:",
+  "event_category_label": "Category:",
+  "register_label": "Register"
+}

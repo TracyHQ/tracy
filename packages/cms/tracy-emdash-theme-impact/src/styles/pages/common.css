@@ -1,6 +1,7 @@
 /* shared by the inner pages: the masthead band, the breadcrumb trail, the page body with its sidebar, pagination, the sidebar widgets */
 @layer components {
-	.im-masthead { position: relative; min-height: 350px; display: flex; align-items: center; justify-content: center; background: var(--color-ink) center / cover no-repeat; color: #fff; text-align: center; }
+	.im-masthead { position: relative; min-height: 136px; display: flex; align-items: center; justify-content: center; background: var(--color-ink) center / cover no-repeat; color: #fff; text-align: center; }
+	@media (min-width: 992px) { .im-masthead { min-height: 350px; } }
 	.im-masthead::before { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, .35); }
 	.im-masthead-in { position: relative; }
 	.im-masthead-title { font-size: var(--h2-size); line-height: 1.1; margin: 0 0 24px; color: #fff; }

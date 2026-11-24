@@ -1,0 +1,70 @@
+/* About: the two feature styles only this page uses (acm features style-2 "mission" boxes and style-5 "give" cards) */
+@layer components {
+	/* style-2 */
+	.im-mission { list-style: none; margin: 0; padding: 0 0 32px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+	@media (min-width: 768px) { .im-mission { grid-template-columns: repeat(2, minmax(0, 1fr)); } .im-mission-item.is-wide { grid-column: 1 / -1; } }
+	.im-mission-box { --box: var(--color-info); position: relative; height: 100%; overflow: hidden; border-radius: var(--ds-card-radius, 8px); background: var(--box); color: var(--color-line-soft); }
+	.im-mission-box.is-primary { --box: var(--color-ink); }
+	.im-mission-box.is-success { --box: var(--color-accent); }
+	.im-mission-box.is-warning { --box: var(--color-warn); }
+	.im-mission-box.is-light { --box: var(--color-surface-warm); color: var(--color-fg); }
+	.im-mission-box h3 { margin: 0 0 16px; color: var(--color-on-ink); }
+	.im-mission-box.is-light h3 { color: var(--color-heading); }
+	.im-mission-box p { margin: 0; }
+	.im-mission-box.is-center { text-align: center; }
+	.im-mission-body { padding: 32px; }
+	@media (min-width: 992px) { .im-mission-body { padding: 64px; } }
+	.im-mission-media { position: relative; overflow: hidden; }
+	.im-mission-media img { display: block; width: 100%; height: 100%; max-width: 100%; object-fit: cover; transition: transform 2s ease-in-out; }
+	.im-mission-box:hover .im-mission-media img { transform: scale(1.1); }
+	@media (min-width: 768px) {
+		.im-mission-media::before { content: ""; position: absolute; inset: 0; z-index: 1; --clear: color-mix(in srgb, var(--box) 0%, transparent); }
+		.im-mission-box.has-media { display: flex; align-items: stretch; gap: 16px; }
+		.im-mission-box.has-media.media-left .im-mission-media, .im-mission-box.has-media.media-right .im-mission-media { flex: 0 0 calc(50% - 18px); }
+		.im-mission-box.has-media.media-left .im-mission-body, .im-mission-box.has-media.media-right .im-mission-body { flex: 1 1 0; align-self: center; }
+		.im-mission-box.media-right { flex-direction: row-reverse; }
+		.im-mission-box.media-left .im-mission-media::before { background: linear-gradient(269deg, var(--box) 2.57%, var(--clear) 52.57%); }
+		.im-mission-box.media-right .im-mission-media::before { background: linear-gradient(90deg, var(--box) 2.57%, var(--clear) 52.57%); }
+		.im-mission-box.media-top .im-mission-media::before { background: linear-gradient(360deg, var(--box) 2.57%, var(--clear) 52.57%); }
+		.im-mission-box.media-bottom .im-mission-media::before { background: linear-gradient(180deg, var(--box) 2.57%, var(--clear) 52.57%); }
+	}
+	.im-mission-box.media-top .im-mission-media, .im-mission-box.media-bottom .im-mission-media { height: 240px; }
+	.im-mission-box.media-bottom { display: flex; flex-direction: column-reverse; }
+
+	/* style-5 */
+	.im-give { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+	@media (min-width: 768px) { .im-give { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; } }
+	.im-give-item { display: flex; gap: 16px; height: 100%; padding: 32px; border-radius: var(--ds-card-radius, 8px); background: var(--color-bg); transition: box-shadow .5s ease-in-out; }
+	.im-give-item.is-tinted { background: var(--color-ink); color: var(--color-line-soft); }
+	.im-give-item.is-tinted h3 { color: var(--color-on-ink); }
+	.im-give-item:hover { box-shadow: rgba(50, 50, 93, .15) 0 6px 12px -2px, rgba(0, 0, 0, .15) 0 3px 7px -3px; }
+	@media (min-width: 1200px) { .im-give-item { gap: 32px; } }
+	@media (min-width: 1400px) { .im-give-item { padding: 64px; } }
+	.im-give-count { display: none; flex: 0 0 auto; font-family: var(--font-display); font-size: 72px; line-height: 1.2; font-weight: 500; letter-spacing: -0.02em; color: var(--color-line); }
+	@media (min-width: 992px) { .im-give-count { display: block; } }
+	.im-give-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
+	.im-give-body h3 { margin: 0 0 16px; }
+	.im-give-body p { margin: 0 0 16px; }
+	@media (min-width: 768px) { .im-give-body p { margin-bottom: 32px; } }
+	.im-give-action { margin-top: auto; }
+}
+
+/* the activities block of the About page: the picture is a square half of the row, as in the source */
+@layer components {
+	.im-about-intro .im-intro-main img { aspect-ratio: 1 / 1; object-fit: cover; }
+	@media (min-width: 992px) { .im-about-intro .im-intro { gap: 64px; } .im-about-intro .im-intro-main { flex: 0 0 calc(50% - 16px); } }
+	@media (max-width: 767.98px) { .im-about-intro .im-intro-sub-media img { aspect-ratio: 1107 / 870; object-fit: cover; } }
+}
+@layer components {
+	@media (max-width: 991.98px) {
+		.im-about-intro .im-intro.has-main { flex-direction: column; align-items: stretch; gap: 16px; }
+		.im-about-intro .im-intro-main { flex-basis: auto; width: 100%; }
+	}
+	@media (min-width: 576px) and (max-width: 767.98px) {
+		.im-about-intro .im-intro-sub { flex-direction: row; }
+		.im-about-intro .im-intro-sub-media { flex: 0 0 285px; width: auto; }
+	}
+}
+@layer components {
+	@media (max-width: 991.98px) { .im-about-mission .im-section-head { margin-bottom: 32px; } }
+}

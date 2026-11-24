@@ -1,1 +1,117 @@
-{ "forms": [] }
+{
+  "_note": "Forms plugin definitions: the contact form of the source (Joomla com_contact: first name, email, subject, message, the required privacy checkbox and 'Send a copy to yourself') and the newsletter box of the Home (name and email; AcyMailing in the source). Both are stored by the Forms plugin only; ids are bound by template.config.json forms.bindings. The visible words of the contact page come from the `contact` entry, those of the newsletter from the `chrome` entry; the labels here are the field definitions the plugin validates and prints. The plugin sends no copy to the sender: the checkbox is stored with the submission. The 'Privacy Note' title of the source sits above its checkbox; the plugin prints a checkbox label only, so the title is not drawn.",
+  "forms": [
+    {
+      "name": "Contact form (EN)",
+      "slug": "contact-en",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-en",
+              "type": "text",
+              "label": "First name",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "First name"
+            },
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Email address",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Email address"
+            },
+            {
+              "id": "subject-en",
+              "type": "text",
+              "label": "Your subject",
+              "name": "subject",
+              "required": true,
+              "width": "full",
+              "placeholder": "Your subject"
+            },
+            {
+              "id": "message-en",
+              "type": "textarea",
+              "label": "Message",
+              "name": "message",
+              "required": true,
+              "width": "full",
+              "placeholder": "Message"
+            },
+            {
+              "id": "privacy-en",
+              "type": "checkbox",
+              "label": "By submitting this form you agree to the Privacy Policy of this website and the storing of the submitted information.",
+              "name": "privacy",
+              "required": true,
+              "width": "full",
+              "defaultValue": "true"
+            },
+            {
+              "id": "copy-en",
+              "type": "checkbox",
+              "label": "Send a copy to yourself",
+              "name": "copy",
+              "required": false,
+              "width": "full",
+              "defaultValue": "true"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Thank you for your message.",
+        "notifyEmails": [
+          "helpus24@gmail.com"
+        ],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Send Email",
+        "retentionDays": 0
+      }
+    },
+    {
+      "name": "Newsletter (EN)",
+      "slug": "subscribe-en",
+      "pages": [
+        {
+          "fields": [
+            {
+              "id": "name-en",
+              "type": "text",
+              "label": "Name",
+              "name": "name",
+              "required": false,
+              "width": "full",
+              "placeholder": "Name"
+            },
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Email",
+              "name": "email",
+              "required": true,
+              "width": "full",
+              "placeholder": "Email"
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "confirmationMessage": "Thank you for subscribing.",
+        "notifyEmails": [
+          "helpus24@gmail.com"
+        ],
+        "digestEnabled": false,
+        "spamProtection": "honeypot",
+        "submitLabel": "Subscribe",
+        "retentionDays": 0
+      }
+    }
+  ]
+}

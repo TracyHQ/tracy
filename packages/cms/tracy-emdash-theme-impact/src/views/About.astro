@@ -1,14 +1,78 @@
 ---
-/** STUB: this view is built in P5 (STATUS.md). */
-import NotFound from '@/views/NotFound.astro'
+/**
+ * About: masthead · our activities (picture on the right) · what makes us different (boxes) · what we do (cards on a picture, band)
+ * · meet us (stats on the blue band) · give (two numbered cards on the cream band). The sections are entries; their order and spacing are this view.
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Masthead from '@/components/site/Masthead.astro'
+import FeatureIntro from '@/components/blocks/FeatureIntro.astro'
+import FeatureMission from '@/components/blocks/FeatureMission.astro'
+import FeatureCards from '@/components/blocks/FeatureCards.astro'
+import FeatureStats from '@/components/blocks/FeatureStats.astro'
+import FeatureGive from '@/components/blocks/FeatureGive.astro'
+import SectionHead from '@/components/blocks/SectionHead.astro'
 import type { Chrome } from '@/lib/chrome'
 import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
 interface Props {
   chrome: Chrome
   locale: Locale
-  slug?: string
 }
 const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, masthead, activities, mission, whatWeDo, meet, give] = await Promise.all([
+  getEmDashEntry('pages', 'about', { locale }),
+  section('masthead', 'about', locale),
+  section('features', 'about-activities', locale),
+  section('features', 'about-mission', locale),
+  section('features', 'what-we-do', locale),
+  section('features', 'meet-us', locale),
+  section('features', 'about-give', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'about' } : null)
+const stampOf = (e: Record<string, any>) => stampFor(Astro.request, 'features', { id: e.id, slug: e.slug })
+const title = String(page.title ?? masthead?.title ?? '')
 ---
 
-<NotFound chrome={chrome} locale={locale} />
+<Base chrome={chrome} title={title} currentPath="/about" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'about', toPath: () => '/about' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<Masthead chrome={chrome} slug="about" entry={masthead} trail={[{ label: title }]} />
+		{activities && (
+			<section class="im-section top-large bottom-large im-about-intro">
+				<div class="im-container"><FeatureIntro entry={activities} chrome={chrome} /></div>
+			</section>
+		)}
+		{mission && (
+			<section class="im-section im-about-mission">
+				<div class="im-container">
+					<SectionHead label={mission.section_label} title={mission.section_title} stamp={stampOf(mission)} />
+					<FeatureMission entry={mission} chrome={chrome} />
+				</div>
+			</section>
+		)}
+		{whatWeDo && (
+			<section class="im-section top-large bottom-large im-causes" style="--decor: url('/decor/section-causes.jpg')">
+				<div class="im-container">
+					<SectionHead label={whatWeDo.section_label} title={whatWeDo.section_title} stamp={stampOf(whatWeDo)} />
+					<FeatureCards entry={whatWeDo} chrome={chrome} />
+				</div>
+			</section>
+		)}
+		{meet && (
+			<section class="im-section top-large bottom-large is-blue">
+				<div class="im-container"><FeatureStats entry={meet} chrome={chrome} /></div>
+			</section>
+		)}
+		{give && (
+			<section class="im-section top-large bottom-large is-light im-stories" style="--decor: url('/decor/section-stories.png')">
+				<div class="im-container"><FeatureGive entry={give} chrome={chrome} /></div>
+			</section>
+		)}
+	</main>
+	<script src="@/lib/site-client.ts"></script>
+</Base>

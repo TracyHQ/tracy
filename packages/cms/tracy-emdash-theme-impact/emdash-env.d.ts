@@ -277,6 +277,45 @@ export interface Masthead {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
+export interface Contact {
+  id: string;
+  slug: string | null;
+  status: string;
+  title?: string;
+  location_title?: string;
+  map_label?: string;
+  form_title?: string;
+  form_intro?: string;
+  first_name_label?: string;
+  email_field_label?: string;
+  subject_label?: string;
+  message_label?: string;
+  privacy_title?: string;
+  privacy_text?: string;
+  copy_label?: string;
+  submit_label?: string;
+  card_title?: string;
+  email_label?: string;
+  email?: string;
+  address_label?: string;
+  address?: string;
+  phone_label?: string;
+  phone?: string;
+  hours_title?: string;
+  hours_1_time?: string;
+  hours_1_days?: string;
+  hours_2_time?: string;
+  hours_2_days?: string;
+  required_label?: string;
+  form_id?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
 export interface Chrome {
   id: string;
   slug: string | null;
@@ -315,6 +354,17 @@ export interface Chrome {
   join_label?: string;
   donate_cta?: string;
   view_all_label?: string;
+  breadcrumb_home?: string;
+  breadcrumb_label?: string;
+  categories_title?: string;
+  recent_title?: string;
+  pagination_label?: string;
+  page_label?: string;
+  first_label?: string;
+  last_label?: string;
+  blog_name?: string;
+  donations_name?: string;
+  events_name?: string;
   view_all_blog_label?: string;
   stories_label?: string;
   stories_title?: string;
@@ -341,7 +391,14 @@ export interface Chrome {
   slide_label?: string;
   currency_symbol?: string;
   form_id?: string;
-  logo_dark?: string;
+  logo_dark?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  event_date_label?: string;
+  event_time_label?: string;
+  event_place_label?: string;
+  event_fee_label?: string;
+  event_category_label?: string;
+  register_label?: string;
+  not_found_oh?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -363,6 +420,7 @@ declare module "emdash" {
     cta: Cta;
     accordion: Accordion;
     masthead: Masthead;
+    contact: Contact;
     chrome: Chrome;
   }
 }

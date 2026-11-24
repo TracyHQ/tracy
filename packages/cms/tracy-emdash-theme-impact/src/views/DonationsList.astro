@@ -1,14 +1,49 @@
 ---
-/** STUB: this view is built in P5 (STATUS.md). */
-import NotFound from '@/views/NotFound.astro'
+/** Our causes (source: the Donations category blog): masthead · section head · three cards a row, nine to a page · pagination. */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Masthead from '@/components/site/Masthead.astro'
+import Pagination from '@/components/site/Pagination.astro'
+import SectionHead from '@/components/blocks/SectionHead.astro'
+import DonationCard from '@/components/blocks/DonationCard.astro'
 import type { Chrome } from '@/lib/chrome'
-import type { Locale } from '@/lib/i18n'
+import { href, type Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { loadArticles } from '@/lib/articles'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
 interface Props {
   chrome: Chrome
   locale: Locale
-  slug?: string
 }
+const PER_PAGE = 9
 const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, masthead, all] = await Promise.all([
+  getEmDashEntry('pages', 'donations', { locale }),
+  section('masthead', 'donations', locale),
+  loadArticles('donations', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'donations' } : null)
+const pages = Math.max(1, Math.ceil(all.length / PER_PAGE))
+const asked = Number.parseInt(Astro.url.searchParams.get('page') ?? '1', 10)
+const current = Number.isFinite(asked) ? Math.min(Math.max(asked, 1), pages) : 1
+const rows = all.slice((current - 1) * PER_PAGE, current * PER_PAGE)
+const base = href(locale, '/donations')
 ---
 
-<NotFound chrome={chrome} locale={locale} />
+<Base chrome={chrome} title={page.title ?? masthead?.title ?? ''} currentPath="/donations" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'donations', toPath: () => '/donations' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<Masthead chrome={chrome} slug="donations" entry={masthead} trail={[{ label: chrome.site.donations_name }]} />
+		<section class="im-section top-large bottom-large im-list-page">
+			<div class="im-container">
+				<SectionHead label={chrome.site.stories_label} title={chrome.site.stories_title} stamp={stampFor(Astro.request, 'chrome', chrome.entry)} labelPath="stories_label" titlePath="stories_title" />
+			</div>
+			{rows.length > 0 && <ul class="im-donation-grid">{rows.map((d) => <li><DonationCard entry={d} chrome={chrome} /></li>)}</ul>}
+			<div class="im-container"><Pagination chrome={chrome} base={base} page={current} pages={pages} /></div>
+		</section>
+	</main>
+	<script src="@/lib/site-client.ts"></script>
+</Base>

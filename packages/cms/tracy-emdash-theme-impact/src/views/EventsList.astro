@@ -1,14 +1,50 @@
 ---
-/** STUB: this view is built in P5 (STATUS.md). */
-import NotFound from '@/views/NotFound.astro'
+/** Our Events (source: the Events category blog): masthead · section head · the event cards two to a row, five to a page · pagination. */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Masthead from '@/components/site/Masthead.astro'
+import Pagination from '@/components/site/Pagination.astro'
+import SectionHead from '@/components/blocks/SectionHead.astro'
+import EventsHome from '@/components/blocks/EventsHome.astro'
 import type { Chrome } from '@/lib/chrome'
-import type { Locale } from '@/lib/i18n'
+import { href, type Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { loadArticles } from '@/lib/articles'
+import { stampFor } from '@/lib/stamps'
+import { getEmDashEntry } from 'emdash'
+
 interface Props {
   chrome: Chrome
   locale: Locale
-  slug?: string
 }
+const PER_PAGE = 5
 const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, masthead, every] = await Promise.all([
+  getEmDashEntry('pages', 'events', { locale }),
+  section('masthead', 'events', locale),
+  loadArticles('events', locale)
+])
+// the Events list leaves out the events marked featured (they are the Home's; the source's list does the same)
+const all = every.filter((e) => !e.featured)
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'events' } : null)
+const pages = Math.max(1, Math.ceil(all.length / PER_PAGE))
+const asked = Number.parseInt(Astro.url.searchParams.get('page') ?? '1', 10)
+const current = Number.isFinite(asked) ? Math.min(Math.max(asked, 1), pages) : 1
+const rows = all.slice((current - 1) * PER_PAGE, current * PER_PAGE)
 ---
 
-<NotFound chrome={chrome} locale={locale} />
+<Base chrome={chrome} title={page.title ?? masthead?.title ?? ''} currentPath="/events" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'events', toPath: () => '/events' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<Masthead chrome={chrome} slug="events" entry={masthead} trail={[{ label: chrome.site.events_name }]} />
+		<section class="im-section top-large bottom-large im-list-page">
+			<div class="im-container">
+				<SectionHead label={chrome.site.events_label} title={chrome.site.events_title} stamp={stampFor(Astro.request, 'chrome', chrome.entry)} labelPath="events_label" titlePath="events_title" />
+				{rows.length > 0 && <EventsHome entries={rows} chrome={chrome} />}
+				<Pagination chrome={chrome} base={href(locale, '/events')} page={current} pages={pages} />
+			</div>
+		</section>
+	</main>
+	<script src="@/lib/site-client.ts"></script>
+</Base>

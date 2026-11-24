@@ -1,14 +1,58 @@
 ---
-/** STUB: this view is built in P5 (STATUS.md). */
-import NotFound from '@/views/NotFound.astro'
+/**
+ * A blog post (source: the Joomla article under the Blog category): the grey breadcrumb bar (Home › Blog › title), then the article
+ * (banner picture, date and byline, title, body) beside the sidebar. Route: /blog/<slug>.
+ */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import ArticleBody from '@/components/site/ArticleBody.astro'
+import Sidebar from '@/components/site/Sidebar.astro'
 import type { Chrome } from '@/lib/chrome'
-import type { Locale } from '@/lib/i18n'
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { uiTag } from '@/lib/ui'
+import { uiDate } from '@/lib/ui-words'
+import { getEmDashEntry } from 'emdash'
+
 interface Props {
   chrome: Chrome
   locale: Locale
   slug?: string
 }
-const { chrome, locale } = Astro.props
+const { chrome, locale, slug = '' } = Astro.props
+const { entry } = await getEmDashEntry('posts', slug, { locale })
+if (!entry || (entry.data as any).status === 'draft') {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const a = entry.data as Record<string, any>
+const picture = mediaUrl(a.banner) ?? mediaUrl(a.cover)
+const $p = stampFor(Astro.request, 'posts', { id: a.id, slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const tag = uiTag(locale)
+// the source prints the short publish date (`Aug 27, 2023`)
+const published = uiDate(tag, new Date(`${String(a.date ?? '').replace(' ', 'T')}${/[zZ]|[+-]\d\d:?\d\d$/.test(String(a.date)) ? '' : 'Z'}`), { month: 'short', day: '2-digit', year: 'numeric' })
 ---
 
-<NotFound chrome={chrome} locale={locale} />
+<Base chrome={chrome} title={a.title} image={picture} currentPath="/blog" type="article" content={{ collection: 'posts', id: a.id, slug, toPath: () => `/blog/${slug}` }}>
+	<main id="main">
+		<PageOwner stamp={$p} />
+		<div class="im-crumb-bar"><div class="im-container"><Breadcrumbs chrome={chrome} trail={[{ label: chrome.site.blog_name, url: '/blog' }, { label: a.title }]} /></div></div>
+		<div class="im-page">
+			<div class="im-container">
+				<div class="im-page-cols is-article">
+					<article class="im-page-main im-article">
+						{picture && <figure class="im-article-image"><img src={picture} alt="" decoding="async" fetchpriority="high" /></figure>}
+						<p class="im-article-meta"><span {...$p('date')}>{published}</span>{a.author && <> <span class="im-dash">—</span> <span {...$c('by_label')}>{chrome.site.by_label}</span> <span class="im-post-author" {...$p('author')}>{a.author}</span></>}</p>
+						<h1 class="im-article-title" {...$p('title')}>{a.title}</h1>
+						<ArticleBody value={a.body} stamp={$p} locale={locale} />
+					</article>
+					<div class="im-page-side"><Sidebar chrome={chrome} /></div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<script src="@/lib/site-client.ts"></script>
+</Base>

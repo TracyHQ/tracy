@@ -1,0 +1,64 @@
+/* Our causes and Our Events: the lists and their detail pages (donation: picture with progress; event: information panel and side card) */
+@layer components {
+	/* lists: the cards sit on the full width of the page, 32px of air either side of each (the source's masonry-3 on a fluid container) */
+	.im-list-page .im-section-head { margin-bottom: 64px; }
+	.im-donation-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; row-gap: 32px; }
+	.im-donation-grid > li { padding-inline: 16px; min-width: 0; }
+	@media (min-width: 768px) { .im-donation-grid { grid-template-columns: repeat(2, 1fr); } }
+	@media (min-width: 1200px) { .im-donation-grid { grid-template-columns: repeat(3, 1fr); } .im-donation-grid > li { padding-inline: 32px; } }
+	@media (max-width: 1199.98px) {
+		.im-donation-grid .im-donation { min-height: 440px; }
+		.im-donation-grid .im-donation-title { font-size: 24px; }
+		.im-donation-grid .im-donation-intro { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+		.im-donation-grid .im-progress-pct { font-size: 16px; }
+		.im-donation-grid .im-donation-money strong { font-size: 18px; }
+	}
+	@media (min-width: 768px) and (max-width: 991.98px) { .im-list-page .im-events { grid-template-columns: 1fr 1fr; } }
+	@media (max-width: 991.98px) {
+		.im-list-page .im-event { min-height: 0; }
+		.im-list-page .im-event-content { flex-direction: column; align-items: center; text-align: center; padding: 24px; gap: 16px; }
+		.im-list-page .im-event-content { padding-inline: 40px; }
+		.im-list-page .im-event h3 { font-size: 24px; }
+		.im-list-page .im-event-location { display: block; }
+		.im-list-page .im-event.is-highlight .im-event-image { display: none; }
+	}
+	@media (max-width: 575.98px) { .im-list-page .im-event-content { padding-inline: 24px; } }
+	.im-list-page .im-pagination { margin-top: 64px; }
+
+	/* a picture in an article keeps its own size up to the column (the source's img-fluid): small icons stay small */
+	.im-prose-full img { width: auto; max-width: 100%; }
+
+	/* detail pages */
+	.im-detail .im-prose p { margin-bottom: 16px; }
+	.im-detail .im-prose h3 { margin: 0 0 32px; }
+	.im-crumb-bar .im-crumbs ol { font-size: 16px; }
+	@media (min-width: 992px) { .im-detail { padding-right: 32px; } }
+	.im-detail-meta { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 16px; font-size: 16px; line-height: 26px; }
+	.im-detail-place { color: var(--color-accent-text); } .im-detail-place .im-fa { font-size: 13px; margin-right: 8px; }
+	.im-detail .im-donation-tag { color: var(--color-warn); } .im-detail .im-donation-tag .im-fa { font-size: 13px; margin-right: 8px; }
+	.im-detail-title { font-size: var(--h2-size); line-height: 1.2; margin: 0 0 32px; }
+	.im-detail-picture { position: relative; margin: 0 0 48px; border-radius: var(--ds-card-radius, 8px); overflow: hidden; background: var(--color-ink); color: #fff; }
+	.im-detail-picture img { display: block; width: 100%; height: auto; }
+	.im-detail-progress { padding: 0 64px 64px; }
+	.im-detail-picture.has-image .im-detail-progress { position: absolute; inset: auto 0 0 0; padding-top: 96px; background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .6)); }
+	.im-detail-picture:not(.has-image) { padding-top: 64px; }
+	.im-detail-progress .im-progress-pct { font-size: 18px; }
+	.im-detail-action { margin: 64px 0 0; }
+	@media (max-width: 767.98px) { .im-detail-progress { padding: 0 24px 24px; } .im-detail-picture.has-image .im-detail-progress { padding-top: 48px; } .im-detail-title { font-size: var(--h3-size); } }
+
+	/* event detail */
+	.im-event-banner { margin: 0 0 48px; } .im-event-banner img { display: block; width: 100%; height: auto; border-radius: var(--ds-card-radius, 8px); }
+	.im-event-side { display: flex; flex-direction: column; gap: 32px; }
+	.im-event-info { margin: 0; padding: 32px; border-radius: var(--ds-card-radius, 8px); background: var(--color-ink); color: var(--color-on-ink); display: grid; gap: 32px; }
+	.im-event-info-row { display: flex; gap: 16px; align-items: flex-start; }
+	.im-event-info-row > .im-fa { flex: 0 0 40px; font-size: 35px; line-height: 35px; color: var(--color-accent); }
+	.im-event-info-row > div { margin-right: -4px; }
+	.im-event-info dt { margin: 0 0 8px; color: #ced4da; }
+	.im-event-info dd { margin: 0; font-size: 18px; font-weight: 500; line-height: 1.5; color: #fff; }
+
+	.im-cta-card { border-radius: var(--ds-card-radius, 8px); overflow: hidden; background: var(--color-ink) center / cover no-repeat; color: #fff; }
+	.im-cta-card.has-image .im-cta-card-body { background: rgba(0, 0, 0, .6); }
+	.im-cta-card-body { padding: 64px 32px; }
+	.im-cta-card-title { font-size: var(--h3-size); line-height: 1.2; margin: 0 0 16px; color: #fff; }
+	.im-cta-card-desc { margin: 0 0 40px; color: #ced4da; }
+}

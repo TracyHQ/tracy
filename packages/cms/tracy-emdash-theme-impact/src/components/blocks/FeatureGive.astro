@@ -1,0 +1,40 @@
+---
+/** acm features style-5: numbered white cards (number, tag, title, text and a button pinned to the foot). */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref } from '@/lib/data-links'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry, chrome } = Astro.props
+const $s = stampFor(Astro.request, 'features', { id: entry.id, slug: entry.slug })
+const items: any[] = entry.items ?? []
+const live = await liveLinks(Astro.request, chrome.locale, items.map((i) => i.btn_link))
+const BTN: Record<string, string> = { primary: 'is-primary', warning: 'is-warning', white: 'is-white', dark: 'is-dark' }
+const lines = (v: unknown) => String(v ?? '').split('\n')
+---
+
+<ul class="im-give">
+	{items.map((it, i) => (
+		<li class:list={['im-give-item', it.bg_content === 'white' ? 'is-white' : 'is-tinted']}>
+			{it.number && <span class="im-give-count" aria-hidden="true" {...$s(`items[${i}].number`)}>{it.number}</span>}
+			<div class="im-give-col">
+			<div class="im-give-body">
+				{it.feature_tag && <span class="im-eyebrow" {...$s(`items[${i}].feature_tag`)}>{it.feature_tag}</span>}
+				<h3 {...$s(`items[${i}].feature_title`)}>{lines(it.feature_title).map((l, n) => <>{n > 0 && <br />}{l}</>)}</h3>
+				<p {...$s(`items[${i}].feature_desc`)}>{it.feature_desc}</p>
+			</div>
+			{it.btn_label && live(it.btn_link) && (
+				<div class="im-give-action">
+					<a class:list={['im-btn', BTN[it.btn_bg_content]]} href={dataHref(it.btn_link, (p) => href(chrome.locale, p))!} {...$s(`items[${i}].btn_label`)}>{it.btn_label}<Icon name="fa-solid fa-arrow-right-long" /></a>
+				</div>
+			)}
+			</div>
+		</li>
+	))}
+</ul>

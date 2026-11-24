@@ -1,0 +1,76 @@
+/* the blog list, the post page, the search and the error page */
+@layer components {
+	.im-list { padding-block: var(--gutter-large); }
+	.im-list .im-section-head { margin-bottom: 64px; }
+	.im-list .im-pagination { margin-top: 32px; }
+	.im-list .im-pagination ul { gap: 16px; }
+	.im-list .im-pagination a, .im-list .im-pagination span { min-width: 48px; height: 48px; }
+}
+
+/* the list: one, two or three columns by width (the cards flow row by row, so each width is its own set; the others are display:none) */
+@layer components {
+	.im-list .im-blog-1, .im-list .im-blog-2, .im-list .im-blog-3 { display: none; }
+	.im-list .im-blog-1 { display: grid; grid-template-columns: 1fr; }
+	@media (min-width: 576px) { .im-list .im-blog-1 { display: none; } .im-list .im-blog-2 { display: grid; grid-template-columns: repeat(2, 1fr); } }
+	@media (min-width: 992px) { .im-list .im-blog-2 { display: none; } .im-list .im-blog-3 { display: grid; grid-template-columns: repeat(3, 1fr); } }
+	.im-list .im-post-image img { height: auto; aspect-ratio: 4 / 3; }
+	.im-list .im-post.is-plain { background: var(--color-surface); }
+	.im-list .im-post.is-plain h3 a, .im-list .im-post.is-plain .im-post-meta { color: var(--color-heading); }
+	.im-list .im-post.is-plain .im-post-meta { color: var(--color-fg); }
+	.im-list .im-post.is-plain .im-post-author { color: var(--color-accent-text); }
+}
+@layer components { @media (max-width: 991px) { .im-list .im-post-body { padding: 16px; } .im-list .im-post-meta { margin-bottom: 8px; } } }
+
+/* the post page */
+@layer components {
+	.im-article-image { margin: 0 0 48px; }
+	.im-article-image img { display: block; width: 100%; aspect-ratio: 875 / 568; object-fit: cover; border-radius: var(--ds-card-radius, 8px); }
+	.im-article-meta { margin: 0 0 8px; font-size: 14px; line-height: 22px; color: var(--color-fg); }
+	.im-article-meta .im-dash { margin-inline: 4px; }
+	.im-article-title { font-size: var(--h2-size); line-height: 1.2; margin: 0 0 32px; }
+}
+@layer components { @media (min-width: 992px) { .im-page-cols.is-article { gap: 64px; } } }
+@layer components {
+	.im-article-image img { aspect-ratio: 4 / 3; }
+	@media (min-width: 1200px) { .im-article-image img { aspect-ratio: auto; height: 568px; } }
+}
+
+/* search */
+@layer components {
+	.im-search-form label { display: block; margin-bottom: 8px; font-size: 14px; color: var(--color-heading); }
+	.im-search-row { display: flex; gap: 8px; }
+	.im-search-row input { flex: 1; min-width: 0; height: 56px; padding: 0 16px; border: 1px solid var(--color-line-soft); border-radius: var(--ds-btn-radius, 8px); background: var(--color-bg); color: var(--color-fg); font: inherit; }
+	.im-search-row input:focus { outline: 1px solid var(--color-accent); outline-offset: 0; border-color: var(--color-accent); }
+	.im-search-results { margin-top: 48px; }
+	.im-search-results ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 32px; }
+	.im-search-results li { padding-bottom: 32px; border-bottom: 1px solid var(--color-line-soft); }
+	.im-search-kind { margin: 0 0 8px; font-size: 14px; color: var(--color-accent-text); }
+	.im-search-results h2 { font-size: var(--h4-size); margin: 0 0 8px; } .im-search-results h2 a { color: var(--color-heading); }
+	.im-search-results h2 a:hover { color: var(--color-accent-text-hover); }
+	.im-search-intro { margin: 0; }
+	.im-search-empty { margin: 0; }
+}
+
+/* the error page (the source's jpages.css `body.error-page`) */
+@layer components {
+	.im-error { padding-block: 64px; text-align: center; }
+	.im-error-wrap { max-width: 1000px; margin-inline: auto; padding-inline: 16px; }
+	.im-error-code { position: relative; display: inline-block; color: var(--color-heading); font-size: 10rem; line-height: 1; }
+	@media (min-width: 768px) { .im-error-code { font-size: 20rem; } }
+	.im-digit { display: inline-block; }
+	.im-digit.is-0 { animation: im-swing .5s ease-in-out infinite alternate; }
+	.im-digit.is-1 { animation: im-swing-2 2s ease-in-out infinite alternate; }
+	.im-digit.is-2 { animation: im-swing-3 .5s ease-in-out infinite alternate; }
+	@keyframes im-swing { from { transform: rotate(3deg); } to { transform: rotate(-3deg); } }
+	@keyframes im-swing-2 { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+	@keyframes im-swing-3 { from { transform: rotate(-3deg); } to { transform: rotate(8deg); } }
+	@media (prefers-reduced-motion: reduce) { .im-digit { animation: none; } }
+	.im-error-bubble { display: none; position: absolute; top: 10%; left: -10%; width: 80px; height: 80px; line-height: 80px; border-radius: 50%; background: var(--color-ink); color: var(--color-on-ink); font-size: 32px; font-style: italic; }
+	.im-error-bubble::after { content: ""; position: absolute; top: 70%; right: 0; border-left: 20px solid var(--color-ink); border-top: 15px solid transparent; border-bottom: 15px solid transparent; transform: rotate(45deg); }
+	@media (min-width: 768px) { .im-error-bubble { display: block; } }
+	.im-error h1 { margin: 56px 0 8px; font-size: 2.25rem; letter-spacing: -.8px; }
+	@media (max-width: 575px) { .im-error h1 { margin-top: 16px; font-size: 1.5rem; } }
+	.im-error p { margin: 0; font-weight: 500; }
+	.im-error-back { margin-top: 32px; text-transform: uppercase; padding: 17px 32px; }
+}
+@layer components { @media (max-width: 991px) { .im-crumb-bar { padding-block: 16px; } } }

@@ -1,14 +1,78 @@
 ---
-/** STUB: this view is built in P5 (STATUS.md). */
-import NotFound from '@/views/NotFound.astro'
+/** A donation (source: a Donations article): the grey trail bar · tag and place, title, the picture with the progress and the two amounts on its lower edge, the body · the sidebar. */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import ArticleBody from '@/components/site/ArticleBody.astro'
+import Sidebar from '@/components/site/Sidebar.astro'
+import Icon from '@/components/site/Icon.astro'
 import type { Chrome } from '@/lib/chrome'
-import type { Locale } from '@/lib/i18n'
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { percent } from '@/lib/articles'
+import { getEmDashEntry } from 'emdash'
+
 interface Props {
   chrome: Chrome
   locale: Locale
-  slug?: string
+  slug: string
 }
-const { chrome, locale } = Astro.props
+const { chrome, locale, slug } = Astro.props
+const { entry } = await getEmDashEntry('donations', slug, { locale })
+if (!entry || (entry.data as any).status === 'draft') {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const a = entry.data as Record<string, any>
+const site = chrome.site
+const $d = stampFor(Astro.request, 'donations', { id: a.id, slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const banner = mediaUrl(a.banner)
+const pct = percent(a.raise, a.goal)
+const tag = String(a.tags ?? '').split('\n')[0].trim()
+const money = (v: unknown) => `${site.currency_symbol ?? ''}${v}`
+const hasAmounts = String(a.raise ?? '') !== '' || String(a.goal ?? '') !== ''
 ---
 
-<NotFound chrome={chrome} locale={locale} />
+<Base chrome={chrome} title={a.title} image={mediaUrl(a.cover) ?? banner} currentPath="/donations" type="article" content={{ collection: 'donations', id: a.id, slug, toPath: () => `/donations/${slug}` }}>
+	<main id="main">
+		<PageOwner stamp={$d} />
+		<div class="im-crumb-bar"><div class="im-container"><Breadcrumbs chrome={chrome} trail={[{ label: site.donations_name, url: '/donations' }, { label: a.title }]} /></div></div>
+		<div class="im-page">
+			<div class="im-container">
+				<div class="im-page-cols">
+					<article class="im-page-main im-detail">
+						{(tag || a.location) && (
+							<div class="im-detail-meta">
+								{tag && <span class="im-donation-tag" {...$d('tags')}><Icon name="fa-solid fa-bookmark" />{tag}</span>}
+								{a.location && <span class="im-detail-place" {...$d('location')}><Icon name="fa-solid fa-location-dot" />{a.location}</span>}
+							</div>
+						)}
+						<h1 class="im-detail-title" {...$d('title')}>{a.title}</h1>
+						{(banner || hasAmounts) && (
+							<div class:list={['im-detail-picture', banner && 'has-image']}>
+								{banner && <img src={banner} alt="" decoding="async" {...$d('banner')} />}
+								{hasAmounts && (
+									<div class="im-detail-progress">
+										<div class="im-progress-wrap">
+											<span class="im-progress-pct" style={`left:${pct}%`}>{pct}%</span>
+											<div class="im-progress" role="progressbar" aria-label={site.raise_label} aria-valuenow={pct} aria-valuemin="0" aria-valuemax="100"><div style={`width:${pct}%`}></div></div>
+										</div>
+										<div class="im-donation-money">
+											<span><strong {...$d('raise')}>{money(a.raise)}</strong> <span {...$c('raise_label')}>{site.raise_label}</span></span>
+											<span><strong {...$d('goal')}>{money(a.goal)}</strong> <span {...$c('goal_label')}>{site.goal_label}</span></span>
+										</div>
+									</div>
+								)}
+							</div>
+						)}
+						<ArticleBody value={a.body} stamp={$d} locale={locale} />
+					</article>
+					<div class="im-page-side"><Sidebar chrome={chrome} /></div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<script src="@/lib/site-client.ts"></script>
+</Base>

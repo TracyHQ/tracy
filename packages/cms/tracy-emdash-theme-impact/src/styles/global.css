@@ -16,6 +16,9 @@
 @import "./blocks/chrome.css";
 @import "./blocks/home.css";
 @import "./pages/common.css";
+@import "./pages/inner-a.css";
+@import "./pages/lists.css";
+@import "./pages/blog.css";
 
 @font-face { font-family: "FA Solid"; src: url("../fonts/fa-solid-900.woff2") format("woff2"); font-weight: 900; font-display: swap; }
 @font-face { font-family: "FA Brands"; src: url("../fonts/fa-brands-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }

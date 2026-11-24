@@ -1,0 +1,31 @@
+---
+/** acm cta style-2 (the side card of an event): the picture behind a dark wash, a title, a line and a button. */
+import type { Chrome } from '@/lib/chrome'
+import { href } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref, isScriptUrl } from '@/lib/data-links'
+import Icon from '@/components/site/Icon.astro'
+
+interface Props {
+  entry: Record<string, any>
+  chrome: Chrome
+}
+const { entry, chrome } = Astro.props
+const $s = stampFor(Astro.request, 'cta', { id: entry.id, slug: entry.slug })
+const live = await liveLinks(Astro.request, chrome.locale, [entry.cta_link])
+const media = mediaUrl(entry.cta_media)
+const BTN: Record<string, string> = { primary: 'is-primary', warning: 'is-warning', white: 'is-white', dark: 'is-dark' }
+const title = entry.cta_title || entry.title
+---
+
+<div class:list={['im-cta-card', media && 'has-image']} style={media ? `background-image:url('${media}')` : undefined}>
+	<div class="im-cta-card-body">
+		{title && <h3 class="im-cta-card-title" {...$s(entry.cta_title ? 'cta_title' : 'title')}>{title}</h3>}
+		{entry.cta_desc && <p class="im-cta-card-desc" {...$s('cta_desc')}>{entry.cta_desc}</p>}
+		{entry.cta_link_title && live(entry.cta_link) && !isScriptUrl(entry.cta_link) && (
+			<a class:list={['im-btn', BTN[entry.cta_link_type]]} href={dataHref(entry.cta_link, (p) => href(chrome.locale, p))!} {...$s('cta_link_title')}>{entry.cta_link_title}<Icon name="fa-solid fa-arrow-right-long" /></a>
+		)}
+	</div>
+</div>

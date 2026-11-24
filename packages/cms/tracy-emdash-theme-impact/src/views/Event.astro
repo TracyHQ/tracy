@@ -1,14 +1,85 @@
 ---
-/** STUB: this view is built in P5 (STATUS.md). */
-import NotFound from '@/views/NotFound.astro'
+/** An event (source: an Events article): the grey trail bar · the big picture · title and body with the Register button · the side: the information panel and the "join together" card. */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
+import ArticleBody from '@/components/site/ArticleBody.astro'
+import CtaCard from '@/components/blocks/CtaCard.astro'
+import Icon from '@/components/site/Icon.astro'
 import type { Chrome } from '@/lib/chrome'
-import type { Locale } from '@/lib/i18n'
+import { href, type Locale } from '@/lib/i18n'
+import { mediaUrl } from '@/lib/media'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { dataHref, isScriptUrl, schemeOf } from '@/lib/data-links'
+import { getEmDashEntry } from 'emdash'
+
 interface Props {
   chrome: Chrome
   locale: Locale
-  slug?: string
+  slug: string
 }
-const { chrome, locale } = Astro.props
+const { chrome, locale, slug } = Astro.props
+const { entry } = await getEmDashEntry('events', slug, { locale })
+if (!entry || (entry.data as any).status === 'draft') {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const a = entry.data as Record<string, any>
+const site = chrome.site
+const $e = stampFor(Astro.request, 'events', { id: a.id, slug })
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const banner = mediaUrl(a.banner)
+const tags = String(a.tags ?? '').split('\n').map((t) => t.trim()).filter(Boolean)
+const cta = await section('cta', 'join-together', locale)
+const live = await liveLinks(Astro.request, locale, [a.button_link])
+// the Joomla registration form (`index.php/…`) is not a page of this site: with no page to land on the button is not drawn
+const registerOk = Boolean(a.button_link) && !String(a.button_link).startsWith('index.php') && !isScriptUrl(a.button_link) && (schemeOf(a.button_link) !== null || live(a.button_link))
+const rows = [
+  { icon: 'calendar', label: 'event_date_label', field: 'start_date', value: a.start_date },
+  { icon: 'clock', label: 'event_time_label', field: 'event_time', value: a.event_time },
+  { icon: 'pin', label: 'event_place_label', field: 'event_location', value: a.event_location },
+  { icon: 'dollar', label: 'event_fee_label', field: 'event_fee', value: a.event_fee }
+].filter((r) => r.value)
+const BTN: Record<string, string> = { primary: 'is-primary', warning: 'is-warning', white: 'is-white', dark: 'is-dark' }
 ---
 
-<NotFound chrome={chrome} locale={locale} />
+<Base chrome={chrome} title={a.title} image={banner ?? mediaUrl(a.cover)} currentPath="/events" type="article" content={{ collection: 'events', id: a.id, slug, toPath: () => `/events/${slug}` }}>
+	<main id="main">
+		<PageOwner stamp={$e} />
+		<div class="im-crumb-bar"><div class="im-container"><Breadcrumbs chrome={chrome} trail={[{ label: site.events_name, url: '/events' }, { label: a.title }]} /></div></div>
+		<div class="im-page">
+			<div class="im-container">
+				{banner && <div class="im-event-banner"><img src={banner} alt="" decoding="async" {...$e('banner')} /></div>}
+				<div class="im-page-cols">
+					<article class="im-page-main im-detail">
+						<h1 class="im-detail-title" {...$e('title')}>{a.title}</h1>
+						<ArticleBody value={a.body} stamp={$e} locale={locale} />
+						{registerOk && <p class="im-detail-action"><a class:list={['im-btn', BTN[a.button_type]]} href={dataHref(a.button_link, (p) => href(locale, p))!} {...$c('register_label')}>{site.register_label}<Icon name="fa-solid fa-arrow-right-long" /></a></p>}
+					</article>
+					<div class="im-page-side im-event-side">
+						{(rows.length > 0 || tags.length > 0) && (
+							<dl class="im-event-info">
+								{rows.map((r) => (
+									<div class="im-event-info-row">
+										<span class="im-fa" data-icon={r.icon} aria-hidden="true"></span>
+										<div><dt {...$c(r.label)}>{site[r.label]}</dt><dd {...$e(r.field)}>{r.value}</dd></div>
+									</div>
+								))}
+								{tags.length > 0 && (
+									<div class="im-event-info-row">
+										<span class="im-fa" data-icon="tag" aria-hidden="true"></span>
+										<div><dt {...$c('event_category_label')}>{site.event_category_label}</dt><dd {...$e('tags')}>{tags.join(' , ')}</dd></div>
+									</div>
+								)}
+							</dl>
+						)}
+						{cta && <CtaCard entry={cta} chrome={chrome} />}
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<script src="@/lib/site-client.ts"></script>
+</Base>

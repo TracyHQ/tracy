@@ -1,7 +1,7 @@
 ---
 /**
- * The error page (source: templates/ja_fresco/error.php): a centred panel (the site header and footer stay: an unknown address answers 404 with the chrome, DECISIONS D16) with the huge code, the title,
- * one line and a button home. Every word is the site entry's.
+ * The error page (source: the template's error.php): the huge code with a speech bubble, the title, one line and a button home. The site
+ * header and footer stay: an unknown address answers 404 with the chrome (DECISIONS D16). Every word is the site entry's.
  */
 import Base from '@/layouts/Base.astro'
 import type { Chrome } from '@/lib/chrome'
@@ -15,20 +15,20 @@ interface Props {
 const { chrome, locale } = Astro.props
 const { site } = chrome
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const digits = Array.from(String(site.not_found_code ?? ''))
 Astro.response.status = 404
 ---
 
-<Base chrome={chrome} title={site.not_found_title ?? site.not_found_code ?? ''} currentPath="/404" robots="noindex, nofollow" bodyClass="im-error-body">
+<Base chrome={chrome} title={site.not_found_title ?? site.not_found_code ?? ''} currentPath="/404" robots="noindex, nofollow">
 	<main id="main" class="im-error">
 		<div class="im-error-wrap">
-			<div class="im-error-info">
-				<span class="im-error-code" {...$c('not_found_code')}>{site.not_found_code}</span>
-				<h1 {...$c('not_found_title')}>{site.not_found_title}</h1>
+			<div class="im-error-code" {...$c('not_found_code')}>
+				<span class="im-error-digits" aria-label={site.not_found_code}>{digits.map((d, i) => <span class:list={['im-digit', `is-${i % 3}`]} aria-hidden="true">{d}</span>)}</span>
+				{site.not_found_oh && <span class="im-error-bubble" aria-hidden="true" {...$c('not_found_oh')}>{site.not_found_oh}</span>}
 			</div>
-			<div class="im-error-other">
-				<p {...$c('not_found_text')}>{site.not_found_text}</p>
-				<div class="im-error-redirect"><a href={href(locale, '/')} {...$c('not_found_back_label')}>{site.not_found_back_label}</a></div>
-			</div>
+			<h1 {...$c('not_found_title')}>{site.not_found_title}</h1>
+			<p {...$c('not_found_text')}>{site.not_found_text}</p>
+			<a class="im-btn is-primary im-error-back" href={href(locale, '/')} {...$c('not_found_back_label')}>{site.not_found_back_label}</a>
 		</div>
 	</main>
 </Base>
