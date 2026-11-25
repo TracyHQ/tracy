@@ -8,7 +8,9 @@
 // (main-menu.js) into `extras.mainMenu.hide` for step 9, which the write door does not take today.
 //
 // The kit's platform chooses the door: `platform: 'wordpress'` maps to the WordPress content contract door
-// (contract-mapping-wordpress.js), with the same extras; any other platform keeps the Joomla mapping above.
+// (contract-mapping-wordpress.js), with the same extras; any other platform keeps the mapping above, keyed by content
+// map key. On EmDash that mapping leaves out the main menu labels, which are no content map slot (main-menu-emdash.js)
+// and go to step 9 with the menu, as on WordPress.
 import { readCopy } from '../site-copy-view.js'
 import { mainMenuOf } from './main-menu.js'
 import { contentMapKey } from '../content-map-key.js'
@@ -110,7 +112,7 @@ export function mainMenuExport({ plan, kit, contentMap, copy }) {
  * @param {{ copy: object, contract: string, revision: string, kit?: object, brief?: { facts?: {id:string,value:string}[] },
  *   plan?: object, contentMap?: object | null, platform?: string }} input with `plan` and `contentMap`,
  *   `extras.mainMenu` carries the main menu labels and the items to hide (mainMenuExport); `platform` is the kit's
- *   (openKit), "wordpress" for the WordPress door, else the Joomla one
+ *   (openKit), "wordpress" for the WordPress door, else the content map keyed one (Joomla, EmDash)
  * @returns {{ mapping: object, extras: { alts: Record<string,string>, pageMeta: Record<string,{title:string,description:string}>, pages: Record<string,{title:string,body:string[]}>, mainMenu?: object }, problems: object[] }}
  */
 export function exportContractMapping({ copy, contract, revision, kit, brief, plan, contentMap, platform }) {
@@ -155,9 +157,12 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
   const kitSlots = kitSlotIndex(kit)
   const samples = new Map((contentMap?.slots ?? []).map((c) => [c?.key, c?.sample]))
   const facts = new Map((brief?.facts ?? []).map((f) => [f.id, f.value]))
+  const mainMenu = plan && contentMap ? mainMenuExport({ plan, kit, contentMap, copy }) : null
+  const menuOnly = new Set(platform === 'emdash' ? (mainMenu?.items ?? []).map((i) => i.slot) : [])
   const changes = {}
   const evidence = {}
   for (const s of view.slots) {
+    if (menuOnly.has(s.slot)) continue
     const key = contentMapKey(s.slot)
     // The writer's emphasis is wrapped in the demo's span; a slot whose demo marks no span ignores it (ADR 0042 section 11).
     const kitSlot = kitSlots.get(s.slot)
@@ -167,7 +172,6 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
       evidence[key] = `Brief facts: ${cited.join('; ')}`
     }
   }
-  const mainMenu = plan && contentMap ? mainMenuExport({ plan, kit, contentMap, copy }) : null
   return {
     mapping: { contract, revision, changes, evidence, pending: [], emptyLinks: [] },
     extras: extrasOf({ view, plan, kit, mainMenu }),

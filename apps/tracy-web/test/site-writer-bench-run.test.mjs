@@ -46,9 +46,9 @@ const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_
 const kits = kitIndex()
 after(kits.done)
 
-test('the writer prompt opens with the CMS line of the kit, WordPress or Joomla', opts, async () => {
+test('the writer prompt opens with the CMS line of the kit, WordPress, Joomla or EmDash', opts, async () => {
   const { pool } = db
-  for (const platform of ['wordpress', 'joomla']) {
+  for (const platform of ['wordpress', 'joomla', 'emdash']) {
     await db.reset()
     const own = kitIndex({ platform })
     try {
