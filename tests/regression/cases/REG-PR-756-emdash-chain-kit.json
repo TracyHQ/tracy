@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-756-emdash-chain-kit",
+  "kind": "fix",
+  "title": "A chain build on an EmDash release takes its template kit from the kit index at the site's release and version",
+  "pr": 756,
+  "area": "website-opportunities/step-chain",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The kit step of a run with no sealing profile reads the site row once and answers the kit tracy-diner/emdash-0.x/0.1.4 with platform emdash and its content map; a run with a profile keeps that kit without reading the site; a release the kit index does not know still stops with \"no readable template kit for <release>\"."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-kit.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "an EmDash run with no sealing profile takes the kit and content map of the site release",
+      "a run that carries its profile keeps that kit and never reads the site; an unknown release still stops"
+    ]
+  }
+}
