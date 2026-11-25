@@ -42,10 +42,11 @@
 	display: flex;
 	align-items: center;
 	min-height: 56px;
-	background: var(--color-bg);
+	background: transparent;
 }
 @media (min-width: 768px) { .nv-header { min-height: 120px; } }
 html[data-theme="dark"] .nv-header {
+	background: var(--color-bg);
 	--nv-nav: var(--color-fg);
 	--nv-nav-active: var(--color-accent-text);
 }
@@ -131,6 +132,13 @@ html[data-theme="dark"] .nv-sub { box-shadow: 0 0 0 1px var(--color-line), 0 8px
 	visibility: visible;
 	transform: none;
 	transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s;
+}
+/* Escape closes the drop-down although the pointer or focus is still on it */
+.nv-nav li.is-dismissed > .nv-sub {
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-8px);
+	transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s;
 }
 .nv-sub ul { display: block; }
 .nv-sub li > a {
@@ -326,8 +334,8 @@ html[data-theme="dark"] .nv-oc-close { color: var(--color-bg); }
 
 /* ---------- footer ---------- */
 .nv-footer {
-	--nv-foot-text: color-mix(in srgb, var(--color-on-ink) 70%, transparent);
-	--nv-foot-link: color-mix(in srgb, var(--color-on-ink) 75.5%, transparent);
+	--nv-foot-text: var(--ds-c-on-ink, rgba(255, 255, 255, 0.7));
+	--nv-foot-link: var(--ds-c-on-ink, rgba(255, 255, 255, 0.755));
 	--nv-foot-line: color-mix(in srgb, var(--color-on-ink) 10%, transparent);
 	--nv-logo-ink: var(--color-on-ink);
 	padding: 32px 0;
@@ -337,7 +345,7 @@ html[data-theme="dark"] .nv-oc-close { color: var(--color-bg); }
 	font-size: 0.875rem;
 	line-height: 1.5;
 }
-html[data-theme="dark"] .nv-footer { border-top-color: var(--color-line); }
+html[data-theme="dark"] .nv-footer { border-top-color: var(--color-line); background: transparent; }
 @media (min-width: 768px) { .nv-footer { padding-top: 64px; } }
 @media (min-width: 992px) { .nv-footer { padding-top: 128px; } }
 .nv-footer a { color: var(--nv-foot-link); }

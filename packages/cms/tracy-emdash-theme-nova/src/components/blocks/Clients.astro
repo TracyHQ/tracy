@@ -42,7 +42,7 @@ const url = (l?: string) =>
         {items.map((it) => {
           const src = mediaUrl(it.logo)
           const to = url(it.link)
-          const img = <img src={src ?? ''} alt={it.title ?? ''} width={Number(it.logo?.width) || undefined} height={Number(it.logo?.height) || undefined} loading="lazy" decoding="async" {...$s('items.logo')} />
+          const img = <img src={src ?? ''} alt={it.title ?? ''} width={Number(it.logo?.width) || undefined} height={Number(it.logo?.height) || undefined} loading="eager" decoding="async" {...$s('items.logo')} />
           return (
             <div class="nv-car-item nv-clients-item" {...$s.block('items')}>
               <div class="nv-clients-logo">{to ? <a href={to} title={it.title || undefined}>{img}</a> : img}</div>

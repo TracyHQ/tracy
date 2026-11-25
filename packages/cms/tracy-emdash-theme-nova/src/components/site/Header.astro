@@ -172,6 +172,33 @@ const email = String(site.header_email ?? '').trim()
 		document.addEventListener('click', function (e) {
 			if (!e.target.closest('.nv-nav')) document.querySelectorAll('.nv-nav li.is-open').forEach(function (o) { o.classList.remove('is-open'); });
 		});
+		// Escape closes an open drop-down and puts focus back on the trigger the visitor opened first (a pointer crossing the menu bar
+		// opens its neighbours on the way); it opens again on the next pointer move or focus change
+		var shown = function (li) { return function () { li.__nvShownAt = Date.now(); }; };
+		document.querySelectorAll('.nv-nav li.has-sub').forEach(function (li) {
+			var reopen = function () { li.classList.remove('is-dismissed'); };
+			li.addEventListener('mouseenter', shown(li));
+			li.addEventListener('focusin', shown(li));
+			li.addEventListener('mousemove', reopen);
+			li.addEventListener('mouseleave', reopen);
+			li.addEventListener('focusout', reopen);
+		});
+		document.addEventListener('keydown', function (e) {
+			if (e.key !== 'Escape') return;
+			var now = Date.now(), open = [];
+			document.querySelectorAll('.nv-nav li.has-sub').forEach(function (li) {
+				var sub = li.querySelector(':scope > .nv-sub');
+				var drawn = sub && getComputedStyle(sub).visibility !== 'hidden' && parseFloat(getComputedStyle(sub).opacity) > 0.01;
+				var recent = li.__nvShownAt && now - li.__nvShownAt < 3000;
+				if (drawn || recent || li.classList.contains('is-open') || li.matches(':focus-within')) open.push(li);
+			});
+			if (!open.length) return;
+			open.sort(function (a, b) { return (a.__nvShownAt || now) - (b.__nvShownAt || now); });
+			open.forEach(function (li) { li.classList.remove('is-open'); li.classList.add('is-dismissed'); });
+			var a = open[0].querySelector(':scope > a, :scope > .nv-nav-link');
+			if (a && a.focus) a.focus();
+			open[0].classList.add('is-dismissed');
+		});
 		// the light/dark switch: the choice is kept under the same key Base.astro reads
 		function pressed() {
 			var dark = root.getAttribute('data-theme') === 'dark';

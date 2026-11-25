@@ -42,7 +42,7 @@ const dim = (m: any, d: number) => ({ w: Number(m?.width) || d, h: Number(m?.hei
               <li class="nv-ts-item" {...(c === 0 ? $s.block('items') : {})}>
                 {src && (
                   <span class="nv-ts-logo">
-                    <img src={src} alt="" width={d.w} height={d.h} loading="lazy" decoding="async" {...(c === 0 ? $s("items.logo") : {})} />
+                    <img src={src} alt="" width={d.w} height={d.h} loading="eager" decoding="async" {...(c === 0 ? $s("items.logo") : {})} />
                   </span>
                 )}
                 {it.title && <span class="nv-ts-title" {...(c === 0 ? $s("items.title") : {})}>{it.title}</span>}

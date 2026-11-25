@@ -165,6 +165,15 @@ function initAccordion(group: HTMLElement): void {
       if (open) for (const o of btns) if (o !== b && o.getAttribute('aria-expanded') === 'true') set(o, false)
       set(b, open)
     })
+  // Escape closes the open panel the focus is in (or on) and returns focus to its trigger
+  group.addEventListener('keydown', (e) => {
+    if ((e as KeyboardEvent).key !== 'Escape') return
+    const at = document.activeElement
+    const b = btns.find((x) => x === at || panel(x)?.contains(at) === true) ?? btns.find((x) => x.getAttribute('aria-expanded') === 'true')
+    if (!b || b.getAttribute('aria-expanded') !== 'true') return
+    set(b, false)
+    b.focus()
+  })
 }
 
 function initTabs(group: HTMLElement): void {
@@ -185,6 +194,11 @@ function initTabs(group: HTMLElement): void {
   }
   tabs.forEach((t, i) => {
     t.addEventListener('click', () => show(t, false))
+    // Escape leaves the chosen tab for the first one; focus stays on the tab that has it
+    t.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key !== 'Escape' || t === tabs[0]) return
+      show(tabs[0], false)
+    })
     t.addEventListener('keydown', (e) => {
       const k = (e as KeyboardEvent).key
       const to =

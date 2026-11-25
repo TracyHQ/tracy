@@ -67,7 +67,7 @@ const arrows = [
             const to = url(it.link)
             const pic = src && (
               <div class="nv-teams-img">
-                <img src={src} alt="" width={Number(it.img?.width) || 400} height={Number(it.img?.height) || 400} loading="lazy" decoding="async" {...$s('items.img')} />
+                <img src={src} alt="" width={Number(it.img?.width) || 400} height={Number(it.img?.height) || 400} loading="eager" decoding="async" {...$s('items.img')} />
               </div>
             )
             return (

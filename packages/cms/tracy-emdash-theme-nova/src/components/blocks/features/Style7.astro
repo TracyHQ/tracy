@@ -95,5 +95,17 @@ const uid = `nv-pos-${String(row.slug).replace(/[^a-z0-9-]/gi, '')}`
 			b.setAttribute('aria-expanded', open ? 'true' : 'false')
 			b.classList.toggle('nv-collapsed', !open)
 		})
+		document.addEventListener('keydown', function (e) {
+			if (e.key !== 'Escape') return
+			document.querySelectorAll('[data-collapse-toggle]').forEach(function (b) {
+				var p = document.getElementById(b.getAttribute('data-collapse-toggle'))
+				if (!p || p.hasAttribute('hidden')) return
+				if (!(p.contains(document.activeElement) || b === document.activeElement || b.contains(document.activeElement))) return
+				p.setAttribute('hidden', '')
+				b.setAttribute('aria-expanded', 'false')
+				b.classList.add('nv-collapsed')
+				b.focus()
+			})
+		})
 	})()
 </script>

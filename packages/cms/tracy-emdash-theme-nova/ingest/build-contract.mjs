@@ -213,7 +213,7 @@ contract.fonts = {
   selectors: ['h1', 'h2', 'h3', 'p', 'a', 'button', 'span', 'li'],
   platform:
     'Chromium (Playwright). Local files served by Astro (src/fonts.json): Golos Text 400, 500 and 700.',
-  allowed: { en: ['Golos Text'] }
+  allowed: { en: ['Golos Text', 'Golos Text Medium', 'Golos Text Bold'] }
 }
 contract.capabilities = ['audit-log', 'seo', 'media', 'forms']
 contract.reviews.forms = { mode: 'required' }
@@ -320,7 +320,7 @@ contract.distribution = {
     'emdash-env.d.ts',
     'Dockerfile',
     'public',
-    'public/nova/**',
+    'public/nova',
     'seed',
     'src',
     'tools',

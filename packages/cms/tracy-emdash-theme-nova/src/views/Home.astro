@@ -11,13 +11,16 @@ const { chrome, locale, path } = Astro.props
 const page = await section('pages', 'home', locale)
 const $p = stampFor(Astro.request, 'pages', page)
 const title = page?.title || chrome.site.brand_name
+// the hero carries the page's one h1; the page title is a hidden h1 only when the hero draws none
+const hero = await section('hero', 'home-hero', locale)
+const heroHasH1 = Boolean(hero?.title)
 ---
 
 {!page ? <NotFound chrome={chrome} locale={locale} path={path} /> : (
 	<Base chrome={chrome} title={title} description={page.summary || null} currentPath="/" content={{ collection: 'pages', id: page.id, slug: 'home', toPath: () => '/' }}>
 		<main id="main" class="nv-pg nv-pg--home">
 			<PageOwner stamp={$p} />
-			<h1 class="sr-only" {...$p('title')}>{title}</h1>
+			{!heroHasH1 && <h1 class="sr-only" {...$p('title')}>{title}</h1>}
 			<Sections chrome={chrome} path="/" />
 		</main>
 	</Base>

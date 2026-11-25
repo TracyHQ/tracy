@@ -12,7 +12,7 @@
     ["header", ".nv-header", "header.header-block", ["background-color", "color"]],
     [
       "nav-link",
-      ".nv-nav > ul > li:not(.is-active) > a:not(:hover)",
+      ".nv-nav > ul > li:not(.is-active):not(.has-sub) > a:not(:hover)",
       ".t4-megamenu .navbar-nav > li.nav-item:not(.active):not(.current) > a.nav-link:not(:hover)",
       ["font-size", "font-weight", "letter-spacing", "text-transform", "color"],
       true
