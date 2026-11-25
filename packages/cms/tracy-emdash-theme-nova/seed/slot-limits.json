@@ -100,6 +100,81 @@
       "slot": "chrome.chrome.share_reddit_label",
       "nonVisual": true,
       "from": "the label is only the accessible name (`aria-label` of a share icon link (ShareRow.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "contact.contact-layout.name_label",
+      "from": "the word is the placeholder of a one-line field (the visible label is hidden for the eye and kept for readers): 248 px of text at 1440 px and 294 px at 390 px, 16 px Golos Text, running Latin text fills 32 characters of the narrowest box; measured on a clean install of this theme (Playwright, Chromium, the running site) with every pane or panel shown",
+      "maxCharacters": 32
+    },
+    {
+      "slot": "contact.contact-layout.email_field_label",
+      "from": "the word is the placeholder of a one-line field (the visible label is hidden for the eye and kept for readers): 248 px of text at 1440 px and 294 px at 390 px, 16 px Golos Text, running Latin text fills 32 characters of the narrowest box; measured on a clean install of this theme (Playwright, Chromium, the running site) with every pane or panel shown",
+      "maxCharacters": 32
+    },
+    {
+      "slot": "contact.contact-layout.phone_field_label",
+      "from": "the word is the placeholder of a one-line field (the visible label is hidden for the eye and kept for readers): 248 px of text at 1440 px and 294 px at 390 px, 16 px Golos Text, running Latin text fills 32 characters of the narrowest box; measured on a clean install of this theme (Playwright, Chromium, the running site) with every pane or panel shown",
+      "maxCharacters": 32
+    },
+    {
+      "slot": "contact.contact-layout.subject_label",
+      "from": "the word is the placeholder of a one-line field (the visible label is hidden for the eye and kept for readers): 248 px of text at 1440 px and 294 px at 390 px, 16 px Golos Text, running Latin text fills 32 characters of the narrowest box; measured on a clean install of this theme (Playwright, Chromium, the running site) with every pane or panel shown",
+      "maxCharacters": 32
+    },
+    {
+      "slot": "contact.contact-layout.message_label",
+      "from": "the word is the placeholder of the message field: 592 px of text at 1440 px (77 characters) and 294 px at 390 px (38 characters), one row; measured on a clean install of this theme (Playwright, Chromium, the running site) with every pane or panel shown",
+      "maxCharacters": 38
+    },
+    {
+      "slot": "chrome.chrome.search_placeholder",
+      "from": "the placeholder of the search field: 783 px of text at 1440 px (101 characters) and 294 px at 390 px (38 characters), one row; measured on a clean install of this theme (Playwright, Chromium, the running site) with every pane or panel shown",
+      "maxCharacters": 38
+    },
+    {
+      "slot": "chrome.chrome.prev_article_label",
+      "from": "the words are only the accessible name of the previous-article link (a visually hidden span before the article title in PostNav.astro); the link draws the step word chrome.prev_label instead: no page draws it, so it has no limit",
+      "nonVisual": true
+    },
+    {
+      "slot": "chrome.chrome.next_article_label",
+      "from": "the words are only the accessible name of the next-article link (a visually hidden span before the article title in PostNav.astro); the link draws the step word chrome.next_label instead: no page draws it, so it has no limit",
+      "nonVisual": true
+    },
+    {
+      "slot": "pricing.pricing.items[*].desc",
+      "from": "the plan line sits under the price in the panel: 472 px of 24 px bold text at 1440 px (40 characters on one row) and 326 px at 390 px (36 characters a row, a second row allowed); the demo plans hold up to 38; measured on a clean install of this theme (Playwright, Chromium, the running site) with every pane or panel shown",
+      "maxCharacters": 38
+    },
+    {
+      "slot": "pricing.pricing.items[*].price",
+      "from": "the price is one row of 32 px bold text; the first plan's measured box holds 19 characters at 1440 px and at 390 px; measured on a clean install of this theme (Playwright, Chromium, the running site) with every pane or panel shown",
+      "maxCharacters": 19
+    },
+    {
+      "slot": "pricing.pricing.items[*].btn_title",
+      "from": "the plan button grows with its words: a second row appears at 34 characters at 390 px (50 at 1440 px), filled with running Latin text until the button gains a row beyond today's; measured on a clean install of this theme (Playwright, Chromium, the running site) with every pane or panel shown",
+      "maxCharacters": 34
+    },
+    {
+      "slot": "pricing.pricing.items[*].plan_list",
+      "from": "the feature list of a plan grows the panel downwards, so no box caps it; the limit counts the field's HTML (tags included) and is the longest demo list (287 characters) plus a margin of three; filled with running Latin text over the same six rows the panel gained its first extra row at 287 text characters at 1440 px (Playwright, Chromium, the running site, every panel shown)",
+      "maxCharacters": 290
+    },
+    {
+      "slot": "features_intro.about-expertise.items[*].list_features",
+      "from": "the bullet list under a tile text grows the tile downwards, so no box caps it; the limit counts the field's HTML (tags included) and is the longest demo list (100 characters); filled with running Latin text over the same three rows the tile gained its first extra row at 63 text characters at 1440 px and 99 at 390 px (Playwright, Chromium, the running site)",
+      "maxCharacters": 100
+    },
+    {
+      "slot": "accordion.faq.items[*].accordion_desc",
+      "from": "the answer of a question grows the open panel downwards; filled with running Latin text until the panel gains a row beyond today's: 190 characters at 390 px and 218 at 1440 px; the demo answers have 182, the limit is that number; measured on a clean install of this theme (Playwright, Chromium, the running site) with every pane or panel shown",
+      "maxCharacters": 182
+    },
+    {
+      "slot": "posts.brochure-flyer-design.project_budget",
+      "from": "the project budget is one row in the project facts list; this project shows none, its sibling projects hold 31 characters at 1440 px and 20 at 390 px in the same box (landing-page-design, measured by the audit), so the smaller number applies",
+      "maxCharacters": 20
     }
   ]
 }

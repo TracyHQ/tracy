@@ -18,13 +18,13 @@ const w = chrome.site
 	<nav class="nv-postnav" aria-label={w.article_nav_label} {...$c('article_nav_label')}>
 		{prev && (
 			<a class="nv-pn-btn is-prev" href={prev.url} rel="prev">
-				<span class="sr-only">{w.prev_article_label} {prev.title}</span>
+				<span class="sr-only"><span {...$c('prev_article_label')}>{w.prev_article_label}</span> {prev.title}</span>
 				<Icon name="prev" size={12} weight="bold" /> <span aria-hidden="true" {...$c('prev_label')}>{w.prev_label}</span>
 			</a>
 		)}
 		{next && (
 			<a class="nv-pn-btn is-next" href={next.url} rel="next">
-				<span class="sr-only">{w.next_article_label} {next.title}</span>
+				<span class="sr-only"><span {...$c('next_article_label')}>{w.next_article_label}</span> {next.title}</span>
 				<span aria-hidden="true" {...$c('next_label')}>{w.next_label}</span> <Icon name="next" size={12} weight="bold" />
 			</a>
 		)}

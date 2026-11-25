@@ -1,0 +1,2995 @@
+{
+  "schemaVersion": "tracy-content-coverage/v1",
+  "tool": {
+    "name": "@tracy/quickstart-tools content-coverage (emdash)",
+    "version": "1.8.0"
+  },
+  "platform": "emdash",
+  "contract": {
+    "id": "tracy-nova/emdash-0.x/0.1.0",
+    "contentMapSha256": "5d9e6cbaa94c798177ff7f1889ef460b169d777fd99b6a63635e8936420048dd",
+    "presentationLockSha256": null
+  },
+  "measuredAt": "2026-11-25T05:02:43.148Z",
+  "viewports": [
+    "desktop",
+    "phone"
+  ],
+  "bound": {
+    "stamp": 2727,
+    "entry": 432,
+    "menu": 1103,
+    "words": 506,
+    "excerpt": 130,
+    "media": 408,
+    "route": 481,
+    "clone": 108
+  },
+  "lockedFiles": [
+    "/nova/icon-decor/bg-1.png"
+  ],
+  "pages": {
+    "audited": 75,
+    "inMap": 59,
+    "notInMap": 16,
+    "failed": 0,
+    "failures": [],
+    "capReached": false
+  },
+  "counts": {
+    "text": {
+      "total": 1358,
+      "matched": 1252,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 4,
+      "unknown": 102,
+      "catalogue": 0,
+      "ignored": 5
+    },
+    "images": {
+      "total": 163,
+      "matched": 160,
+      "locked": 1,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 2,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 0
+    },
+    "links": {
+      "total": 413,
+      "matched": 218,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 0,
+      "unknown": 195,
+      "catalogue": 0,
+      "ignored": 1
+    }
+  },
+  "coverage": {
+    "text": 92.5,
+    "images": 100,
+    "links": 52.8
+  },
+  "holes": [
+    {
+      "kind": "link",
+      "value": "/blog?start=18",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.nv-pager > ul > li > a",
+      "pages": 5,
+      "firstPage": "/blog"
+    },
+    {
+      "kind": "link",
+      "value": "/blog?start=9",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.nv-pager > ul > li > a",
+      "pages": 4,
+      "firstPage": "/blog"
+    },
+    {
+      "kind": "link",
+      "value": "/project?category=branding",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "section.nv-tabs > div.nv-ct > nav.nv-tabs-nav > a",
+      "pages": 14,
+      "firstPage": "/project"
+    },
+    {
+      "kind": "link",
+      "value": "/project?category=branding&start=4",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.nv-pager > ul > li > a",
+      "pages": 3,
+      "firstPage": "/project?category=branding"
+    },
+    {
+      "kind": "link",
+      "value": "/project?category=illustration",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "section.nv-tabs > div.nv-ct > nav.nv-tabs-nav > a",
+      "pages": 14,
+      "firstPage": "/project"
+    },
+    {
+      "kind": "link",
+      "value": "/project?category=illustration&start=4",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.nv-pager > ul > li > a",
+      "pages": 3,
+      "firstPage": "/project?category=illustration"
+    },
+    {
+      "kind": "link",
+      "value": "/project?category=ui-ux-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "section.nv-tabs > div.nv-ct > nav.nv-tabs-nav > a",
+      "pages": 14,
+      "firstPage": "/project"
+    },
+    {
+      "kind": "link",
+      "value": "/project?category=ui-ux-design&start=4",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.nv-pager > ul > li > a",
+      "pages": 3,
+      "firstPage": "/project?category=ui-ux-design"
+    },
+    {
+      "kind": "link",
+      "value": "/project?start=12",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.nv-pager > ul > li > a",
+      "pages": 6,
+      "firstPage": "/project"
+    },
+    {
+      "kind": "link",
+      "value": "/project?start=16",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.nv-pager > ul > li > a",
+      "pages": 9,
+      "firstPage": "/project"
+    },
+    {
+      "kind": "link",
+      "value": "/project?start=4",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.nv-pager > ul > li > a",
+      "pages": 6,
+      "firstPage": "/project"
+    },
+    {
+      "kind": "link",
+      "value": "/project?start=8",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "nav.nv-pager > ul > li > a",
+      "pages": 6,
+      "firstPage": "/project"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fbeyond-the-funeral-navigating-grief-in-the-age-of-business-technology&text=Beyond%20the%20Funeral%3A%20Navigating%20Grief...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fdigital-tributes-examining-the-changing-face-of-mourning-with-business-technology&text=Digital%20Tributes%3A%20Examining%...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fembracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning&text=Embracing%20the%20Virtual%20Goodbye...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fexamining-the-role-of-business-technology-in-the-mourning-process&text=Examining%20the%20Role%20of%20Business%20Technolog...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/examining-the-role-of-business-technology-in-the-mourning-process"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ffrom-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance&text=From%20Legacy%20Planning%20to%20Dig...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ffrom-offline-to-online-how-business-technology-is-transforming-the-mourning-journey&text=From%20Offline%20to%20Online%3A%...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fhow-business-technology-changed-how-we-think-about-death&text=How%20business%20technology%20changed%20how%20we%20think%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/how-business-technology-changed-how-we-think-about-death"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fhow-business-technology-is-shaping-the-way-we-remember-2023&text=How%20Business%20Technology%20is%20Shaping%20the%20Way%2...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/how-business-technology-is-shaping-the-way-we-remember-2023"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fhow-to-create-an-awesome-software-video-about-success-busines&text=How%20to%20create%20an%20awesome%20software%20video%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/how-to-create-an-awesome-software-video-about-success-busines"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fmourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones&text=Mourning%20in%20the%20Cloud%3A%20The...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fmourning-in-the-digital-age-unpacking-the-influence-of-business-technology&text=Mourning%20in%20the%20Digital%20Age%3A%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fmourning-in-the-digital-world-examining-the-impact-of-business-technology&text=Mourning%20in%20the%20Digital%20World%3A%2...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fremembering-beyond-borders-the-global-impact-of-business-technology-on-mourning&text=Remembering%20Beyond%20Borders%3A%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fremembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief&text=Remembering%20in%20the%20Digital%2...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Frevolutionizing-death-care-the-business-tech-disruption-in-funeral-services&text=Revolutionizing%20Death%20Care%3A%20The%...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ftech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye&text=Tech-Enabled%20Funeral%20Industry%3A%20Changin...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-digital-age-of-death-how-business-technology-is-transforming-end-of-life&text=The%20Digital%20Age%20of%20Death%3A%20H...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-digital-mourning-ritual-examining-the-influence-of-business-technology&text=The%20Digital%20Mourning%20Ritual%3A%20Ex...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-digital-remembrance-investigating-the-role-of-business-technology-in-grief&text=The%20Digital%20Remembrance%3A%20Inve...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era&text=The%20Evolving%20Landscape%20of%20M...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-influence-of-business-technology-on-mourning-practices-2023&text=The%20Influence%20of%20Business%20Technology%20on%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/the-influence-of-business-technology-on-mourning-practices-2023"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-rise-of-online-funeral-services-business-technology-s-role&text=The%20Rise%20of%20Online%20Funeral%20Services%3A%20Bu...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/the-rise-of-online-funeral-services-business-technology-s-role"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process&text=The%20Virtual%20Funeral%3A%20How%20Bus...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ftransforming-grief-exploring-the-impact-of-business-technology-on-memorialization&text=Transforming%20Grief%3A%20Explorin...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fvirtual-connections-exploring-how-business-technology-is-redefining-mourning&text=Virtual%20Connections%3A%20Exploring%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fvirtual-memorials-exploring-the-impact-of-business-technology-on-mourning&text=Virtual%20Memorials%3A%20Exploring%20the%2...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fwhy-the-biggest-myths-about-business-may-actually-be-right&text=Why%20the%20biggest%20myths%20about%20business%20may%20ac...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/blog/why-the-biggest-myths-about-business-may-actually-be-right"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fcloud-solutions&text=Cloud%20solutions",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/cloud-solutions"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fcybersecurity&text=Cybersecurity",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/cybersecurity"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fdevelopment&text=Development",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/development"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fillustration&text=Illustration",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/illustration"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fit-infrastructure&text=IT%20infrastructure",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/it-infrastructure"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fmobile-application&text=Mobile%20Application",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/mobile-application"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fdesign-system-ul-kit&text=Design%20system%20%26%20Ul%20kit",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/branding/design-system-ul-kit"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Flanding-page-design&text=Landing%20page%20design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/branding/landing-page-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fmobile-app-design&text=Mobile%20app%20design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/branding/mobile-app-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fmuckup-design&text=Muckup%20design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/branding/muckup-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Frealistic-scenarios&text=Realistic%20scenarios",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/branding/realistic-scenarios"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fweb-application-design&text=Web%20Application%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/branding/web-application-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fbrochure-flyer-design&text=Brochure%20%26%20Flyer%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/brochure-flyer-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Femail-newsletter-design&text=Email%20Newsletter%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/email-newsletter-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fevent-invitation-design&text=Event%20Invitation%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/event-invitation-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fpackaging-design&text=Packaging%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/packaging-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fposter-banner-design&text=Poster%20%26%20Banner%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/poster-banner-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fpresentation-design&text=Presentation%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/presentation-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fblog-design-layout&text=Blog%20Design%20%26%20Layout",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/blog-design-layout"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fbrand-identity-design&text=Brand%20Identity%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/brand-identity-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fcorporate-website-design&text=Corporate%20Website%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/corporate-website-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Finfographic-design&text=Infographic%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/infographic-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Flogo-design-branding&text=Logo%20Design%20%26%20Branding",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/logo-design-branding"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fsocial-media-graphics&text=Social%20Media%20Graphics",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/social-media-graphics"
+    },
+    {
+      "kind": "link",
+      "value": "https://twitter.com/intent/tweet?url=http%3A%2F%2F127.0.0.1%3A4361%2Fvirtualization&text=Virtualization",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-twitter > a",
+      "pages": 1,
+      "firstPage": "/virtualization"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fbeyond-the-funeral-navigating-grief-in-the-age-of-business-technology",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fdigital-tributes-examining-the-changing-face-of-mourning-with-business-technology",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fembracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fexamining-the-role-of-business-technology-in-the-mourning-process",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/examining-the-role-of-business-technology-in-the-mourning-process"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ffrom-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ffrom-offline-to-online-how-business-technology-is-transforming-the-mourning-journey",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fhow-business-technology-changed-how-we-think-about-death",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/how-business-technology-changed-how-we-think-about-death"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fhow-business-technology-is-shaping-the-way-we-remember-2023",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/how-business-technology-is-shaping-the-way-we-remember-2023"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fhow-to-create-an-awesome-software-video-about-success-busines",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/how-to-create-an-awesome-software-video-about-success-busines"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fmourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fmourning-in-the-digital-age-unpacking-the-influence-of-business-technology",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fmourning-in-the-digital-world-examining-the-impact-of-business-technology",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fremembering-beyond-borders-the-global-impact-of-business-technology-on-mourning",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fremembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Frevolutionizing-death-care-the-business-tech-disruption-in-funeral-services",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ftech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-digital-age-of-death-how-business-technology-is-transforming-end-of-life",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-digital-mourning-ritual-examining-the-influence-of-business-technology",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-digital-remembrance-investigating-the-role-of-business-technology-in-grief",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-influence-of-business-technology-on-mourning-practices-2023",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/the-influence-of-business-technology-on-mourning-practices-2023"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-rise-of-online-funeral-services-business-technology-s-role",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/the-rise-of-online-funeral-services-business-technology-s-role"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ftransforming-grief-exploring-the-impact-of-business-technology-on-memorialization",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fvirtual-connections-exploring-how-business-technology-is-redefining-mourning",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fvirtual-memorials-exploring-the-impact-of-business-technology-on-mourning",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fwhy-the-biggest-myths-about-business-may-actually-be-right",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/blog/why-the-biggest-myths-about-business-may-actually-be-right"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fcloud-solutions",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/cloud-solutions"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fcybersecurity",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/cybersecurity"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fdevelopment",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/development"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fillustration",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/illustration"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fit-infrastructure",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/it-infrastructure"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fmobile-application",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/mobile-application"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fdesign-system-ul-kit",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/branding/design-system-ul-kit"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Flanding-page-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/branding/landing-page-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fmobile-app-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/branding/mobile-app-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fmuckup-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/branding/muckup-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Frealistic-scenarios",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/branding/realistic-scenarios"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fweb-application-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/branding/web-application-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fbrochure-flyer-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/brochure-flyer-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Femail-newsletter-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/email-newsletter-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fevent-invitation-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/event-invitation-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fpackaging-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/packaging-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fposter-banner-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/poster-banner-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fpresentation-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/presentation-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fblog-design-layout",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/blog-design-layout"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fbrand-identity-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/brand-identity-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fcorporate-website-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/corporate-website-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Finfographic-design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/infographic-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Flogo-design-branding",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/logo-design-branding"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fsocial-media-graphics",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/social-media-graphics"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A4361%2Fvirtualization",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-facebook > a",
+      "pages": 1,
+      "firstPage": "/virtualization"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fbeyond-the-funeral-navigating-grief-in-the-age-of-business-technology&title=Beyond%20the%20Funeral%3A%20Navigating%20Grief%2...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fdigital-tributes-examining-the-changing-face-of-mourning-with-business-technology&title=Digital%20Tributes%3A%20Examining%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fembracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning&title=Embracing%20the%20Virtual%20Goodbye%3...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fexamining-the-role-of-business-technology-in-the-mourning-process&title=Examining%20the%20Role%20of%20Business%20Technology%...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/examining-the-role-of-business-technology-in-the-mourning-process"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ffrom-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance&title=From%20Legacy%20Planning%20to%20Digit...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ffrom-offline-to-online-how-business-technology-is-transforming-the-mourning-journey&title=From%20Offline%20to%20Online%3A%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fhow-business-technology-changed-how-we-think-about-death&title=How%20business%20technology%20changed%20how%20we%20think%20ab...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/how-business-technology-changed-how-we-think-about-death"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fhow-business-technology-is-shaping-the-way-we-remember-2023&title=How%20Business%20Technology%20is%20Shaping%20the%20Way%20W...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/how-business-technology-is-shaping-the-way-we-remember-2023"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fhow-to-create-an-awesome-software-video-about-success-busines&title=How%20to%20create%20an%20awesome%20software%20video%20ab...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/how-to-create-an-awesome-software-video-about-success-busines"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fmourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones&title=Mourning%20in%20the%20Cloud%3A%20The%2...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fmourning-in-the-digital-age-unpacking-the-influence-of-business-technology&title=Mourning%20in%20the%20Digital%20Age%3A%20Un...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fmourning-in-the-digital-world-examining-the-impact-of-business-technology&title=Mourning%20in%20the%20Digital%20World%3A%20E...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fremembering-beyond-borders-the-global-impact-of-business-technology-on-mourning&title=Remembering%20Beyond%20Borders%3A%20Th...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fremembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief&title=Remembering%20in%20the%20Digital%20E...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Frevolutionizing-death-care-the-business-tech-disruption-in-funeral-services&title=Revolutionizing%20Death%20Care%3A%20The%20...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ftech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye&title=Tech-Enabled%20Funeral%20Industry%3A%20Changing%...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-digital-age-of-death-how-business-technology-is-transforming-end-of-life&title=The%20Digital%20Age%20of%20Death%3A%20How...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-digital-mourning-ritual-examining-the-influence-of-business-technology&title=The%20Digital%20Mourning%20Ritual%3A%20Exam...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-digital-remembrance-investigating-the-role-of-business-technology-in-grief&title=The%20Digital%20Remembrance%3A%20Invest...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era&title=The%20Evolving%20Landscape%20of%20Mou...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-influence-of-business-technology-on-mourning-practices-2023&title=The%20Influence%20of%20Business%20Technology%20on%20Mo...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/the-influence-of-business-technology-on-mourning-practices-2023"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-rise-of-online-funeral-services-business-technology-s-role&title=The%20Rise%20of%20Online%20Funeral%20Services%3A%20Busi...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/the-rise-of-online-funeral-services-business-technology-s-role"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fthe-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process&title=The%20Virtual%20Funeral%3A%20How%20Busin...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Ftransforming-grief-exploring-the-impact-of-business-technology-on-memorialization&title=Transforming%20Grief%3A%20Exploring%...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fvirtual-connections-exploring-how-business-technology-is-redefining-mourning&title=Virtual%20Connections%3A%20Exploring%20Ho...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fvirtual-memorials-exploring-the-impact-of-business-technology-on-mourning&title=Virtual%20Memorials%3A%20Exploring%20the%20I...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fblog%2Fwhy-the-biggest-myths-about-business-may-actually-be-right&title=Why%20the%20biggest%20myths%20about%20business%20may%20actu...",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/blog/why-the-biggest-myths-about-business-may-actually-be-right"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fcloud-solutions&title=Cloud%20solutions",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/cloud-solutions"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fcybersecurity&title=Cybersecurity",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/cybersecurity"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fdevelopment&title=Development",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/development"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fillustration&title=Illustration",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/illustration"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fit-infrastructure&title=IT%20infrastructure",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/it-infrastructure"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fmobile-application&title=Mobile%20Application",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/mobile-application"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fdesign-system-ul-kit&title=Design%20system%20%26%20Ul%20kit",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/branding/design-system-ul-kit"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Flanding-page-design&title=Landing%20page%20design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/branding/landing-page-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fmobile-app-design&title=Mobile%20app%20design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/branding/mobile-app-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fmuckup-design&title=Muckup%20design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/branding/muckup-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Frealistic-scenarios&title=Realistic%20scenarios",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/branding/realistic-scenarios"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fbranding%2Fweb-application-design&title=Web%20Application%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/branding/web-application-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fbrochure-flyer-design&title=Brochure%20%26%20Flyer%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/brochure-flyer-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Femail-newsletter-design&title=Email%20Newsletter%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/email-newsletter-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fevent-invitation-design&title=Event%20Invitation%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/event-invitation-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fpackaging-design&title=Packaging%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/packaging-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fposter-banner-design&title=Poster%20%26%20Banner%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/poster-banner-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fillustration%2Fpresentation-design&title=Presentation%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/illustration/presentation-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fblog-design-layout&title=Blog%20Design%20%26%20Layout",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/blog-design-layout"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fbrand-identity-design&title=Brand%20Identity%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/brand-identity-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fcorporate-website-design&title=Corporate%20Website%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/corporate-website-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Finfographic-design&title=Infographic%20Design",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/infographic-design"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Flogo-design-branding&title=Logo%20Design%20%26%20Branding",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/logo-design-branding"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fproject%2Fui-ux-design%2Fsocial-media-graphics&title=Social%20Media%20Graphics",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/social-media-graphics"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.reddit.com/submit?url=http%3A%2F%2F127.0.0.1%3A4361%2Fvirtualization&title=Virtualization",
+      "class": "unknown",
+      "cause": "an address no link slot, menu, page, term or source holds",
+      "evidence": "div.nv-share > ul > li.is-reddit > a",
+      "pages": 1,
+      "firstPage": "/virtualization"
+    },
+    {
+      "kind": "text",
+      "value": "Leave blank",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds",
+      "evidence": "div.nv-contact-right > div.nv-contact-form > form.ec-form > div.ec-form-field",
+      "pages": 1,
+      "firstPage": "/contact"
+    },
+    {
+      "kind": "text",
+      "value": "By Admin",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field by_label: no slot holds these words)",
+      "evidence": "article.nv-news-item > div.nv-news-text > p.nv-news-meta > span",
+      "pages": 1,
+      "firstPage": "/"
+    },
+    {
+      "kind": "text",
+      "value": "By Hubert Santos",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field by_label: no slot holds these words)",
+      "evidence": "article.nv-news-item > div.nv-news-text > p.nv-news-meta > span",
+      "pages": 1,
+      "firstPage": "/"
+    },
+    {
+      "kind": "text",
+      "value": "By Lucy Reid",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field by_label: no slot holds these words)",
+      "evidence": "article.nv-news-item > div.nv-news-text > p.nv-news-meta > span",
+      "pages": 1,
+      "firstPage": "/"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Beyond the Funeral: Navigating Grief in the Age of Business Technology",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Blog Design & Layout",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/corporate-website-design"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Brand Identity Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/social-media-graphics"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Brochure & Flyer Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/illustration/presentation-design"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Cloud solutions",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/it-infrastructure"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Cybersecurity",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/virtualization"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Design system & Ul kit",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/branding/landing-page-design"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Development",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/mobile-application"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Digital Tributes: Examining the Changing Face of Mourning with Business Technology",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-influence-of-business-technology-on-mourning-practices-2023"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Embracing the Virtual Goodbye: The Role of Business Technology in Modern Mourning",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Event Invitation Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/illustration/poster-banner-design"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Examining the Role of Business Technology in the Mourning Process",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/how-business-technology-is-shaping-the-way-we-remember-2023"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: From Legacy Planning to Digital Estates: Business Tech's Influence on Inheritance",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: From Offline to Online: How Business Technology is Transforming the Mourning Journey",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: How Business Technology is Shaping the Way We Remember 2023",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: How to create an awesome software video about success business",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/why-the-biggest-myths-about-business-may-actually-be-right"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Illustration",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/development"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Infographic Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/logo-design-branding"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: IT infrastructure",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/cybersecurity"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Logo Design & Branding",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/brand-identity-design"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Mobile app design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/branding/realistic-scenarios"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Mobile Application",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/cloud-solutions"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Mourning in the Cloud: The Role of Business Technology in Remembering Loved Ones",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Mourning in the Digital Age: Unpacking the Influence of Business Technology",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/examining-the-role-of-business-technology-in-the-mourning-process"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Mourning in the Digital World: Examining the Impact of Business Technology",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Muckup design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/branding/mobile-app-design"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Packaging Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/illustration/brochure-flyer-design"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Poster & Banner Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/illustration/packaging-design"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Presentation Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/illustration/email-newsletter-design"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Realistic scenarios",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/branding/design-system-ul-kit"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Remembering Beyond Borders: The Global Impact of Business Technology on Mourning",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Remembering in the Digital Era: Unpacking the Role of Business Technology in Grief",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Revolutionizing Death Care: The Business Tech Disruption in Funeral Services",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Social Media Graphics",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/blog-design-layout"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Tech-Enabled Funeral Industry: Changing the Paradigm of Saying Goodbye",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-rise-of-online-funeral-services-business-technology-s-role"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: The Digital Age of Death: How Business Technology is Transforming End-of-Life",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/how-to-create-an-awesome-software-video-about-success-busines"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: The Digital Mourning Ritual: Examining the Influence of Business Technology",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: The Digital Remembrance: Investigating the Role of Business Technology in Grief",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: The Evolving Landscape of Mourning: Business Technology's Role in the Digital Era",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: The Influence of Business Technology on Mourning Practices 2023",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: The Rise of Online Funeral Services: Business Technology's Role",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: The Virtual Funeral: How Business Technology is Reshaping the Mourning Process",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Transforming Grief: Exploring the Impact of Business Technology on Memorialization",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Virtual Connections: Exploring How Business Technology is Redefining Mourning",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Virtual Memorials: Exploring the Impact of Business Technology on Mourning",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Web Application Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/branding/muckup-design"
+    },
+    {
+      "kind": "text",
+      "value": "Next article: Why the biggest myths about business may actually be right",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field next_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/how-business-technology-changed-how-we-think-about-death"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Beyond the Funeral: Navigating Grief in the Age of Business Technology",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Blog Design & Layout",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/social-media-graphics"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Brand Identity Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/logo-design-branding"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Brochure & Flyer Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/illustration/packaging-design"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Cloud solutions",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/mobile-application"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Corporate Website Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/blog-design-layout"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Cybersecurity",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/it-infrastructure"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Design system & Ul kit",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/branding/realistic-scenarios"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Development",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/illustration"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Digital Tributes: Examining the Changing Face of Mourning with Business Technology",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Email Newsletter Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/illustration/presentation-design"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Embracing the Virtual Goodbye: The Role of Business Technology in Modern Mourning",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Examining the Role of Business Technology in the Mourning Process",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: From Legacy Planning to Digital Estates: Business Tech's Influence on Inheritance",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-rise-of-online-funeral-services-business-technology-s-role"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: From Offline to Online: How Business Technology is Transforming the Mourning Journey",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: How business technology changed how we think about death",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/why-the-biggest-myths-about-business-may-actually-be-right"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: How Business Technology is Shaping the Way We Remember 2023",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/examining-the-role-of-business-technology-in-the-mourning-process"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: How to create an awesome software video about success business",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: IT infrastructure",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/cloud-solutions"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Landing page design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/branding/design-system-ul-kit"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Logo Design & Branding",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/infographic-design"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Mobile app design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/branding/muckup-design"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Mobile Application",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/development"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Mourning in the Cloud: The Role of Business Technology in Remembering Loved Ones",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Mourning in the Digital Age: Unpacking the Influence of Business Technology",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Mourning in the Digital World: Examining the Impact of Business Technology",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Muckup design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/branding/web-application-design"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Packaging Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/illustration/poster-banner-design"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Poster & Banner Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/illustration/event-invitation-design"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Presentation Design",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/illustration/brochure-flyer-design"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Realistic scenarios",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/branding/mobile-app-design"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Remembering Beyond Borders: The Global Impact of Business Technology on Mourning",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Remembering in the Digital Era: Unpacking the Role of Business Technology in Grief",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Revolutionizing Death Care: The Business Tech Disruption in Funeral Services",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/how-business-technology-is-shaping-the-way-we-remember-2023"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Social Media Graphics",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/project/ui-ux-design/brand-identity-design"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Tech-Enabled Funeral Industry: Changing the Paradigm of Saying Goodbye",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: The Digital Age of Death: How Business Technology is Transforming End-of-Life",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: The Digital Mourning Ritual: Examining the Influence of Business Technology",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: The Digital Remembrance: Investigating the Role of Business Technology in Grief",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: The Evolving Landscape of Mourning: Business Technology's Role in the Digital Era",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: The Influence of Business Technology on Mourning Practices 2023",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: The Rise of Online Funeral Services: Business Technology's Role",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Transforming Grief: Exploring the Impact of Business Technology on Memorialization",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/the-influence-of-business-technology-on-mourning-practices-2023"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Virtual Connections: Exploring How Business Technology is Redefining Mourning",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Virtual Memorials: Exploring the Impact of Business Technology on Mourning",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Virtualization",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/cybersecurity"
+    },
+    {
+      "kind": "text",
+      "value": "Previous article: Why the biggest myths about business may actually be right",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped chrome.chrome field prev_article_label: no slot holds these words)",
+      "evidence": "div.nv-article-right > nav.nv-postnav > a.nv-pn-btn > span.sr-only",
+      "pages": 1,
+      "firstPage": "/blog/how-to-create-an-awesome-software-video-about-success-busines"
+    },
+    {
+      "kind": "text",
+      "value": "01",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped features_intro.about-intro field items: no slot holds these words)",
+      "evidence": "div.nv-frow > div.nv-fcol > div.nv-features-inner > div.nv-text-number",
+      "pages": 1,
+      "firstPage": "/about"
+    },
+    {
+      "kind": "text",
+      "value": "02",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped features_intro.about-intro field items: no slot holds these words)",
+      "evidence": "div.nv-frow > div.nv-fcol > div.nv-features-inner > div.nv-text-number",
+      "pages": 1,
+      "firstPage": "/about"
+    },
+    {
+      "kind": "text",
+      "value": "03",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped features_intro.about-intro field items: no slot holds these words)",
+      "evidence": "div.nv-frow > div.nv-fcol > div.nv-features-inner > div.nv-text-number",
+      "pages": 1,
+      "firstPage": "/about"
+    },
+    {
+      "kind": "text",
+      "value": "04",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds (stamped features_intro.about-intro field items: no slot holds these words)",
+      "evidence": "div.nv-frow > div.nv-fcol > div.nv-features-inner > div.nv-text-number",
+      "pages": 1,
+      "firstPage": "/about"
+    }
+  ],
+  "hygiene": [],
+  "sitePages": [
+    {
+      "entity": "pages.home",
+      "title": "Home",
+      "route": "/",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.contact",
+      "title": "Contact",
+      "route": "/contact",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.project",
+      "title": "Project",
+      "route": "/project",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.about",
+      "title": "About Us",
+      "route": "/about",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.services",
+      "title": "Services",
+      "route": "/services",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.career",
+      "title": "Career",
+      "route": "/career",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.illustration",
+      "title": "Illustration",
+      "route": "/project/illustration",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.development",
+      "title": "Development",
+      "route": "/development",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.mobile-application",
+      "title": "Mobile Application",
+      "route": "/mobile-application",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.cloud-solutions",
+      "title": "Cloud solutions",
+      "route": "/cloud-solutions",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.it-infrastructure",
+      "title": "IT infrastructure",
+      "route": "/it-infrastructure",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.cybersecurity",
+      "title": "Cybersecurity",
+      "route": "/cybersecurity",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.virtualization",
+      "title": "Virtualization",
+      "route": "/virtualization",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.blog",
+      "title": "Blog",
+      "route": "/blog",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.landing-page-design",
+      "title": "Landing page design",
+      "route": "/project/branding/landing-page-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.corporate-website-design",
+      "title": "Corporate Website Design",
+      "route": "/project/ui-ux-design/corporate-website-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.email-newsletter-design",
+      "title": "Email Newsletter Design",
+      "route": "/project/illustration/email-newsletter-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.design-system-ul-kit",
+      "title": "Design system & Ul kit",
+      "route": "/project/branding/design-system-ul-kit",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.blog-design-layout",
+      "title": "Blog Design & Layout",
+      "route": "/project/ui-ux-design/blog-design-layout",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.presentation-design",
+      "title": "Presentation Design",
+      "route": "/project/illustration/presentation-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.realistic-scenarios",
+      "title": "Realistic scenarios",
+      "route": "/project/branding/realistic-scenarios",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.social-media-graphics",
+      "title": "Social Media Graphics",
+      "route": "/project/ui-ux-design/social-media-graphics",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.brochure-flyer-design",
+      "title": "Brochure & Flyer Design",
+      "route": "/project/illustration/brochure-flyer-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mobile-app-design",
+      "title": "Mobile app design",
+      "route": "/project/branding/mobile-app-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.brand-identity-design",
+      "title": "Brand Identity Design",
+      "route": "/project/ui-ux-design/brand-identity-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.packaging-design",
+      "title": "Packaging Design",
+      "route": "/project/illustration/packaging-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.muckup-design",
+      "title": "Muckup design",
+      "route": "/project/branding/muckup-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.logo-design-branding",
+      "title": "Logo Design & Branding",
+      "route": "/project/ui-ux-design/logo-design-branding",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.poster-banner-design",
+      "title": "Poster & Banner Design",
+      "route": "/project/illustration/poster-banner-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.web-application-design",
+      "title": "Web Application Design",
+      "route": "/project/branding/web-application-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.infographic-design",
+      "title": "Infographic Design",
+      "route": "/project/ui-ux-design/infographic-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.event-invitation-design",
+      "title": "Event Invitation Design",
+      "route": "/project/illustration/event-invitation-design",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.how-business-technology-changed-how-we-think-about-death",
+      "title": "How business technology changed how we think about death",
+      "route": "/blog/how-business-technology-changed-how-we-think-about-death",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.why-the-biggest-myths-about-business-may-actually-be-right",
+      "title": "Why the biggest myths about business may actually be right",
+      "route": "/blog/why-the-biggest-myths-about-business-may-actually-be-right",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.how-to-create-an-awesome-software-video-about-success-busines",
+      "title": "How to create an awesome software video about success business",
+      "route": "/blog/how-to-create-an-awesome-software-video-about-success-busines",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.the-digital-age-of-death-how-business-technology-is-transforming-end-of-life",
+      "title": "The Digital Age of Death: How Business Technology is Transforming End-of-Life",
+      "route": "/blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.virtual-memorials-exploring-the-impact-of-business-technology-on-mourning",
+      "title": "Virtual Memorials: Exploring the Impact of Business Technology on Mourning",
+      "route": "/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance",
+      "title": "From Legacy Planning to Digital Estates: Business Tech's Influence on Inheritance",
+      "route": "/blog/from-legacy-planning-to-digital-estates-business-tech-s-influence-on-inheritance",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.the-rise-of-online-funeral-services-business-technology-s-role",
+      "title": "The Rise of Online Funeral Services: Business Technology's Role",
+      "route": "/blog/the-rise-of-online-funeral-services-business-technology-s-role",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye",
+      "title": "Tech-Enabled Funeral Industry: Changing the Paradigm of Saying Goodbye",
+      "route": "/blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.revolutionizing-death-care-the-business-tech-disruption-in-funeral-services",
+      "title": "Revolutionizing Death Care: The Business Tech Disruption in Funeral Services",
+      "route": "/blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.how-business-technology-is-shaping-the-way-we-remember-2023",
+      "title": "How Business Technology is Shaping the Way We Remember 2023",
+      "route": "/blog/how-business-technology-is-shaping-the-way-we-remember-2023",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.examining-the-role-of-business-technology-in-the-mourning-process",
+      "title": "Examining the Role of Business Technology in the Mourning Process",
+      "route": "/blog/examining-the-role-of-business-technology-in-the-mourning-process",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mourning-in-the-digital-age-unpacking-the-influence-of-business-technology",
+      "title": "Mourning in the Digital Age: Unpacking the Influence of Business Technology",
+      "route": "/blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era",
+      "title": "The Evolving Landscape of Mourning: Business Technology's Role in the Digital Era",
+      "route": "/blog/the-evolving-landscape-of-mourning-business-technology-s-role-in-the-digital-era",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.transforming-grief-exploring-the-impact-of-business-technology-on-memorialization",
+      "title": "Transforming Grief: Exploring the Impact of Business Technology on Memorialization",
+      "route": "/blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.the-influence-of-business-technology-on-mourning-practices-2023",
+      "title": "The Influence of Business Technology on Mourning Practices 2023",
+      "route": "/blog/the-influence-of-business-technology-on-mourning-practices-2023",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.digital-tributes-examining-the-changing-face-of-mourning-with-business-technology",
+      "title": "Digital Tributes: Examining the Changing Face of Mourning with Business Technology",
+      "route": "/blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning",
+      "title": "Remembering Beyond Borders: The Global Impact of Business Technology on Mourning",
+      "route": "/blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.the-digital-remembrance-investigating-the-role-of-business-technology-in-grief",
+      "title": "The Digital Remembrance: Investigating the Role of Business Technology in Grief",
+      "route": "/blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mourning-in-the-digital-world-examining-the-impact-of-business-technology",
+      "title": "Mourning in the Digital World: Examining the Impact of Business Technology",
+      "route": "/blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey",
+      "title": "From Offline to Online: How Business Technology is Transforming the Mourning Journey",
+      "route": "/blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning",
+      "title": "Embracing the Virtual Goodbye: The Role of Business Technology in Modern Mourning",
+      "route": "/blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.beyond-the-funeral-navigating-grief-in-the-age-of-business-technology",
+      "title": "Beyond the Funeral: Navigating Grief in the Age of Business Technology",
+      "route": "/blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.the-digital-mourning-ritual-examining-the-influence-of-business-technology",
+      "title": "The Digital Mourning Ritual: Examining the Influence of Business Technology",
+      "route": "/blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones",
+      "title": "Mourning in the Cloud: The Role of Business Technology in Remembering Loved Ones",
+      "route": "/blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.virtual-connections-exploring-how-business-technology-is-redefining-mourning",
+      "title": "Virtual Connections: Exploring How Business Technology is Redefining Mourning",
+      "route": "/blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief",
+      "title": "Remembering in the Digital Era: Unpacking the Role of Business Technology in Grief",
+      "route": "/blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process",
+      "title": "The Virtual Funeral: How Business Technology is Reshaping the Mourning Process",
+      "route": "/blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process",
+      "opens": "live",
+      "status": 200
+    }
+  ],
+  "labelRules": {
+    "version": "label-rules/1",
+    "roleVocabularyVersion": "place-content-roles/3",
+    "applies": true,
+    "r1": {
+      "facts": 182,
+      "slots": 1797,
+      "percent": 10.1
+    },
+    "rules": {
+      "R2": {
+        "title": "fact-like sample without a contact or price role",
+        "count": 0,
+        "keys": []
+      },
+      "R3": {
+        "title": "URL slot without a role",
+        "count": 0,
+        "keys": []
+      },
+      "R4": {
+        "title": "repeat or CTA not grouped",
+        "count": 0,
+        "keys": []
+      },
+      "R5": {
+        "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
+        "count": 0,
+        "keys": []
+      },
+      "R6": {
+        "title": "link or list item inside a fact slot",
+        "count": 0,
+        "keys": []
+      },
+      "R7": {
+        "title": "siblings with different roles",
+        "count": 0,
+        "keys": []
+      },
+      "R8": {
+        "title": "adjacent short slots on one line (a cut heading)",
+        "count": 20,
+        "keys": [
+          "chrome.chrome.project_title + chrome.chrome.services_label",
+          "chrome.chrome.client_name_label + chrome.chrome.budget_label",
+          "posts.landing-page-design.project_client_name + posts.landing-page-design.project_budget",
+          "posts.realistic-scenarios.project_client_name + posts.realistic-scenarios.project_budget",
+          "posts.design-system-ul-kit.project_client_name + posts.design-system-ul-kit.project_budget",
+          "posts.mobile-app-design.project_client_name + posts.mobile-app-design.project_budget",
+          "posts.email-newsletter-design.project_client_name + posts.email-newsletter-design.project_budget",
+          "posts.poster-banner-design.project_client_name + posts.poster-banner-design.project_budget",
+          "posts.presentation-design.project_client_name + posts.presentation-design.project_budget",
+          "posts.packaging-design.project_client_name + posts.packaging-design.project_budget",
+          "posts.event-invitation-design.project_client_name + posts.event-invitation-design.project_budget",
+          "posts.blog-design-layout.project_client_name + posts.blog-design-layout.project_budget"
+        ]
+      },
+      "R9": {
+        "title": "fact-like hole",
+        "count": 0,
+        "keys": []
+      }
+    }
+  }
+}
