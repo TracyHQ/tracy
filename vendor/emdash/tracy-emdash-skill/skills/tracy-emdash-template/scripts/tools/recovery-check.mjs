@@ -86,7 +86,9 @@ async function stopServer() {
 }
 async function startServer() {
   const child = spawn(process.execPath, [serverEntry], {
-    env: { ...process.env, HOST: '127.0.0.1', PORT: String(port) },
+    // EMDASH_SITE_URL is the site's own canonical origin: without it the restarted server answers with its default (http://localhost:<port>)
+    // on every origin, and a measurement after the restart runs against a different site than the one before it.
+    env: { ...process.env, HOST: '127.0.0.1', PORT: String(port), EMDASH_SITE_URL: new URL(site).origin },
     detached: true,
     stdio: 'ignore'
   })
