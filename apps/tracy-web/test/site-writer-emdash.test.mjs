@@ -66,7 +66,7 @@ test('a plan page no menu item opens is a problem, never a guessed slot', () => 
   assert.match(menu.problems[0].detail, /page-nowhere: the kit has no such page/)
 })
 
-test('the EmDash export keys words by content map key and leaves the menu labels to step 9', () => {
+test('the EmDash export keys words by content map key, the main menu labels with them', () => {
   const { kit, contentMap } = contract('diner', '0.1.4')
   const plan = { mainMenu: [{ page: 'page-home' }, { page: 'page-about-us' }] }
   const copy = {
@@ -89,7 +89,8 @@ test('the EmDash export keys words by content map key and leaves the menu labels
     platform: 'emdash'
   })
   assert.equal(mapping.contract, 'tracy-diner/emdash-0.x/0.1.4')
-  assert.deepEqual(Object.keys(mapping.changes), ['pages.about-us.title'])
+  assert.deepEqual(Object.keys(mapping.changes), ['pages.about-us.title', 'menu.primary.2.label'])
+  assert.equal(mapping.changes['menu.primary.2.label'], 'Our story')
   assert.equal(mapping.changes['pages.about-us.title'], 'About Harbour Kitchen')
   assert.match(mapping.evidence['pages.about-us.title'], /Harbour Kitchen/)
   assert.ok(extras.mainMenu.items.some((i) => i.slot === 'menu.primary.2.label'))

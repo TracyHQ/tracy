@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-754-emdash-write-door",
+  "kind": "feat",
+  "title": "The write step writes an EmDash site through the Apply door: its content contract, menus, dropped pages and brand settings, over the site's own content tools run by its host",
+  "pr": 754,
+  "area": "website-opportunities/write-step",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "content.contract inspect on an EmDash site answers the release content map's slots with what each holds, its pages and a revision of every mapped entry's _rev; apply refuses a moved revision, refuses by slot and writes nothing when one slot is refused, otherwise writes one content_update per entry (published entries published, drafts kept drafts), settings and term labels; a picture is written by the path media.upload placed it under; the host runs only the fixed content tools in one docker exec in <label>-web-1; a write step run on the JA Diner EmDash kit ends done with its words in the entries and sends nothing EmDash has no door for. The main menu labels are contract slots: a changed label is written and an emptied one takes its item off the menu (menu_set_items), and an EmDash menu item the plan does not keep leaves without holding its page; a page the plan drops becomes a draft (pages.unpublish) and reads back as one; emdash.settings sets the logo and favicon as media references and emdash.entryField a template entry's picture field."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/emdash-contract.test.mjs",
+      "apps/tracy-web/test/write-step-emdash.test.mjs",
+      "apps/tracy-web/test/write-step-site-doors.test.mjs",
+      "apps/tracy-host/test/emdash-content.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "inspect: the slots the site holds, with what each holds now, its pages, and a revision that stays put",
+      "apply: words, a repeater row, rich text, a date, a term, a setting and emptied slots land, each entry published once",
+      "🔒 all or nothing: a refused slot is named with its code, and nothing is written",
+      "🔒 the revision: a change between inspect and apply refuses the apply, as the plugin does",
+      "pictures: the path the run uploaded becomes the library item, found by its upload or by its file name",
+      "an EmDash Diner run writes its words into the entries and empties the hidden slot, through the contract alone",
+      "🔒 on EmDash a call the Apply door has no door for is answered by name and never sent; on Joomla every call is sent",
+      "the calls go in one exec in <label>-web-1, in order, each answered on its own",
+      "the menus are slots too: a label is changed and an emptied item leaves the menu, the rest kept in order",
+      "the brand's logo and favicon go into the core settings; the dark logo into the chrome entry's picture field"
+    ]
+  }
+}

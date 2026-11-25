@@ -3,19 +3,21 @@
 // `siteDoorFor` for that platform's door. A platform with no door stops the run before anything is read or written, in
 // words: one CMS's calls are never sent to a site of another.
 //
-// A door that writes:   { platform, writes: true, refusal(answer) -> words, applyContract({ apply, siteKey, mapping, dry? }) }
+// A door that writes:   { platform, writes: true, refusal(answer) -> words, applyContract({ apply, siteKey, mapping, dry? }),
+//                         takes?(call) -> boolean, notTaken?(call) -> answer }
 // A door not built yet: { platform, writes: false, missing: <what the write step still lacks there, in a reader's words> }
 //
-// Only the contract read and the contract write go through the door so far; the stages that call other plugin actions
-// (hides, page creation, menus, brand settings) still send them as the Claude Cowork for Joomla takes them, which is why
-// WordPress and EmDash have no door that writes yet. Each of those gets its door when its write stages exist.
+// The contract read and write go through the door on each CMS. The stages that call other plugin actions (hides of pages,
+// page creation, menus, page settings) send them as the Claude Cowork for Joomla takes them; a door that takes only some
+// actions (EmDash: `takes`) answers the others itself (`onPlatform`), so those stages say what was not done there. WordPress
+// has no door that writes yet.
+import { emdashSiteDoor } from './emdash.js'
 import { joomlaSiteDoor } from './joomla.js'
 
 /** What the write step still lacks on each CMS it has no door for. */
 const NOT_YET = Object.freeze({
   wordpress:
-    'WordPress write doors (the Claude Cowork for WordPress empties no slot, hides no block, removes no row, creates no page and renames no menu item yet)',
-  emdash: "EmDash write door (entries, settings, menus and media through the site's own API)"
+    'WordPress write doors (the Claude Cowork for WordPress empties no slot, hides no block, removes no row, creates no page and renames no menu item yet)'
 })
 
 /** The name of each platform as a reader knows it. */
@@ -24,6 +26,7 @@ export const PLATFORM_NAMES = Object.freeze({ joomla: 'Joomla', wordpress: 'Word
 /** The door of a platform ("joomla", "wordpress", "emdash"), or null for one the write step does not know. */
 export function siteDoorFor(platform) {
   if (platform === 'joomla') return joomlaSiteDoor
+  if (platform === 'emdash') return emdashSiteDoor
   if (typeof platform === 'string' && Object.hasOwn(NOT_YET, platform))
     return Object.freeze({ platform, writes: false, missing: NOT_YET[platform] })
   return null
@@ -48,4 +51,16 @@ export function platformStop(kit) {
       reason: `The write step cannot write a ${PLATFORM_NAMES[door.platform]} site yet: it has no ${door.missing}. Nothing was read or written.`
     }
   return null
+}
+
+/**
+ * The door a run's stages call on this platform: the run's own door, except that a call the platform's site door does not
+ * take is answered by that site door and never sent.
+ * @param {{ apply: Function }} door
+ * @param {string | undefined} platform
+ */
+export function onPlatform(door, platform) {
+  const site = siteDoorFor(platform)
+  if (!site?.writes || typeof site.takes !== 'function') return door
+  return { ...door, apply: async (call) => (site.takes(call) ? door.apply(call) : site.notTaken(call)) }
 }

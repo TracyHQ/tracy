@@ -65,7 +65,7 @@ import { runPrintedStage } from './printed-stage.js'
 import { writeRecordAlts } from './record-alt-stage.js'
 import { followRenamedLinks, rewriteRenamedLinks } from './renamed-link-stage.js'
 import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
-import { platformStop, siteDoorFor } from './site-doors/index.js'
+import { onPlatform, platformStop, siteDoorFor } from './site-doors/index.js'
 import { doorCall } from './settings-door.js'
 import { runShareStage } from './share-stage.js'
 import { correctionsReader, galleryAlts, pictureAltsOf } from './slot-corrections.js'
@@ -143,9 +143,10 @@ const IMAGE_PATH = /^\/?images\/\S+$/i
 
 export async function runWriteStep(input) {
   const { siteKey, kit, contentMap = null, files } = input
-  // Every write of the run goes through this door (look-guard.js), and what it refuses is never sent.
+  // Every write of the run goes through this door (look-guard.js), and what it refuses is never sent; nor is a call the
+  // site's CMS has no door for (site-doors/index.js `onPlatform`).
   const guard = lookGuard({ kit: kit.doc, contentMap })
-  const door = guard.door(input.door)
+  const door = guard.door(onPlatform(input.door, kit.platform))
   const {
     isCancelled = async () => false,
     onPhase = async () => {},
@@ -808,6 +809,8 @@ export async function runWriteStep(input) {
       heldWords,
       linked: links?.overHides ?? new Set(),
       doorOf: links?.doorOf ?? null,
+      menuOwnsPage: !siteDoor.menuInContract,
+      ...(siteDoor.dropPages ? { dropPages: (args) => siteDoor.dropPages({ ...args, contentMap }) } : {}),
       onNoWayOut: async (named) => {
         report.noWayOut = named
         await onNoWayOut(named)
@@ -817,6 +820,18 @@ export async function runWriteStep(input) {
   if (hiding.stop) return stopped(hiding.stop)
   hide = hiding
   mapping.emptySlots = [...new Set([...hide.emptySlots, ...(links?.emptySlots ?? [])])]
+  // Where the menus are slots of the contract (EmDash, site-doors/emdash.js `menuInContract`), a main menu item the plan does
+  // not keep leaves with its label slot in the one contract call, instead of being unpublished as a Joomla menu item.
+  const menuGone = siteDoor.menuInContract
+    ? (hide.settingsExtras?.mainMenu?.hide ?? []).filter((h) =>
+        (inspected.reading.slots ?? []).some((s) => s?.key === h.slot)
+      )
+    : []
+  if (siteDoor.menuInContract && hide.settingsExtras?.mainMenu) {
+    for (const h of menuGone) delete mapping.changes[h.slot]
+    mapping.emptySlots = [...new Set([...mapping.emptySlots, ...menuGone.map((h) => h.slot)])]
+    hide.settingsExtras = { ...hide.settingsExtras, mainMenu: { ...hide.settingsExtras.mainMenu, hide: [] } }
+  }
   for (const [key, value] of Object.entries(hide.restored ?? {})) {
     mapping.changes[key] = value
     ordered[key] = value
@@ -975,7 +990,19 @@ export async function runWriteStep(input) {
     })
   )
   settingLines = settings.lines ?? []
-  settled = new Map([...recordAlts, ...settings.results, ...hide.held, ...created.results, ...strandedLabels])
+  settled = new Map([
+    ...recordAlts,
+    ...settings.results,
+    ...hide.held,
+    ...created.results,
+    ...strandedLabels,
+    ...menuGone.map((h) => [
+      h.item,
+      emptied.includes(h.slot)
+        ? { status: 'written', ordered: '', reason: `${h.why}: the item was taken off the menu` }
+        : { status: 'failed', reason: `${h.why}, but the item could not be taken off the menu` }
+    ])
+  ])
   if (settings.cancelled) return finish('cancelled', null, written, wrote.refused)
   // Then the share pictures, from what the picture and brand stages say they wrote (share-stage.js).
   // It has no phase of its own: it makes a few calls, and the phase list is what callers already know.

@@ -49,6 +49,9 @@ export async function runHideStage(input) {
     heldWords = new Map(),
     linked = new Set(),
     doorOf = null,
+    menuOwnsPage = true,
+    // The CMS's own way to take a dropped page off (site-doors/), else the Claude Cowork for Joomla's.
+    dropPages: dropPagesOf = dropPages,
     onNoWayOut = async () => {}
   } = input
   const asksToHide = [...owners.values()].some((c) => c.kind === 'hide')
@@ -66,7 +69,8 @@ export async function runHideStage(input) {
     last,
     heldWords,
     linked,
-    doorOf
+    doorOf,
+    menuOwnsPage
   })
   await onNoWayOut(order.noWayOut)
   const total = Object.keys(changes).length + order.emptySlots.length
@@ -95,7 +99,7 @@ export async function runHideStage(input) {
     pages.set(entry.page.id, { status, reason, ordered, readFrom })
   }
   const toDrop = order.pages.filter((entry) => !gonePage(entry))
-  let wrote = await dropPages({ door, siteKey, pages: toDrop, results: pages, kit, plan })
+  let wrote = await dropPagesOf({ door, siteKey, pages: toDrop, results: pages, kit, plan })
   let words = { refusedAll: null, refused: new Map() }
   if (Object.keys(order.strings).length) {
     const template = kit?.template?.name

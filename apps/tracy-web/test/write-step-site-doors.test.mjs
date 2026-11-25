@@ -1,10 +1,11 @@
-// The site door of each CMS the write step writes (src/write-step/site-doors/index.js): the Joomla door sends exactly the
-// calls the seeder's own contract caller sends, and a run on a CMS with no door that writes stops before any call.
+// The site door of each CMS the write step writes (src/write-step/site-doors/index.js): the Joomla and EmDash doors send
+// exactly the calls the seeder's own contract caller sends, the EmDash door answers itself what EmDash has no door for, and a
+// run on a CMS with no door that writes stops before any call.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import { seeder } from '../src/lib/seeder.js'
-import { platformStop, siteDoorFor } from '../src/write-step/site-doors/index.js'
+import { onPlatform, platformStop, siteDoorFor } from '../src/write-step/site-doors/index.js'
 import { runWriteStep } from '../src/write-step/write-step.js'
 
 const CONTRACT = 'harbour-test/j6/0.0.1'
@@ -63,26 +64,58 @@ test("the Joomla door words a refusal in the plugin's own words, as the seeder d
   assert.equal(await siteDoorFor('joomla').refusal(refused), doorRefusal(refused))
 })
 
-test('WordPress and EmDash have no door that writes yet, and an unknown platform has none at all', () => {
-  for (const platform of ['wordpress', 'emdash']) {
-    const door = siteDoorFor(platform)
-    assert.equal(door.platform, platform)
-    assert.equal(door.writes, false)
-    assert.match(door.missing, /\w/)
-  }
+test('the EmDash door writes the contract with the calls the seeder caller sends, in the same protocol', async () => {
+  const door = siteDoorFor('emdash')
+  assert.equal(door.platform, 'emdash')
+  assert.equal(door.writes, true)
+  const through = recordingSite()
+  await door.applyContract({ apply: through.apply, siteKey: 'harbour', mapping: MAPPING })
+  const direct = recordingSite()
+  const { applyJoomlaContract } = await seeder('apply-joomla-contract')
+  await applyJoomlaContract({ apply: direct.apply, siteKey: 'harbour', mapping: MAPPING })
+  assert.deepEqual(through.calls, direct.calls)
+})
+
+test('🔒 on EmDash a call the Apply door has no door for is answered by name and never sent; on Joomla every call is sent', async () => {
+  const site = recordingSite()
+  const emdash = onPlatform({ apply: site.apply, other: 1 }, 'emdash')
+  assert.equal(emdash.other, 1, 'the run door keeps its other doors')
+  const answer = await emdash.apply({
+    siteKey: 'harbour',
+    action: 'content.update',
+    params: { kind: 'menuItem', id: 3 }
+  })
+  assert.equal(answer.ok, false)
+  assert.equal(answer.error, 'not_on_emdash')
+  assert.match(answer.message, /EmDash has no door for content\.update menuItem yet/)
+  await emdash.apply({ siteKey: 'harbour', action: 'template.siteSettings', params: { operation: 'set' } })
+  assert.deepEqual(site.calls, [])
+  await emdash.apply({ siteKey: 'harbour', action: 'content.contract', params: { operation: 'inspect' } })
+  await emdash.apply({ siteKey: 'harbour', action: 'media.upload', params: {} })
+  assert.deepEqual(
+    site.calls.map((c) => c.action),
+    ['content.contract', 'media.upload']
+  )
+  const joomla = { apply: site.apply }
+  assert.equal(onPlatform(joomla, 'joomla'), joomla)
+})
+
+test('WordPress has no door that writes yet, and an unknown platform has none at all', () => {
+  const door = siteDoorFor('wordpress')
+  assert.equal(door.platform, 'wordpress')
+  assert.equal(door.writes, false)
+  assert.match(door.missing, /\w/)
   assert.equal(siteDoorFor('drupal'), null)
   assert.equal(siteDoorFor(undefined), null)
 })
 
-test('a kit stops the write by its platform: none for Joomla, a code for the others and for none', () => {
+test('a kit stops the write by its platform: none for Joomla and EmDash, a code for WordPress and for none', () => {
   assert.equal(platformStop({ ref: CONTRACT, platform: 'joomla' }), null)
+  assert.equal(platformStop({ ref: 'tracy-diner/emdash-0.x/0.1.4', platform: 'emdash' }), null)
   const wp = platformStop({ ref: 'ja-diner/wp7/1.0.4', platform: 'wordpress' })
   assert.equal(wp.code, 'WRITE_STEP_NOT_ON_PLATFORM')
   assert.match(wp.reason, /WordPress site/)
   assert.match(wp.reason, /Nothing was read or written/)
-  const em = platformStop({ ref: 'tracy-diner/emdash-0.x/0.1.4', platform: 'emdash' })
-  assert.equal(em.code, 'WRITE_STEP_NOT_ON_PLATFORM')
-  assert.match(em.reason, /EmDash site/)
   // A kit that names no platform is an error, never taken for Joomla.
   const none = platformStop({ ref: 'test-kit' })
   assert.equal(none.code, 'WRITE_STEP_KIT_PLATFORM')
@@ -91,7 +124,6 @@ test('a kit stops the write by its platform: none for Joomla, a code for the oth
 
 for (const [platform, code] of [
   ['wordpress', 'WRITE_STEP_NOT_ON_PLATFORM'],
-  ['emdash', 'WRITE_STEP_NOT_ON_PLATFORM'],
   [undefined, 'WRITE_STEP_KIT_PLATFORM']
 ]) {
   test(`a write step run on a ${platform ?? 'platform-less'} kit stops with ${code} before any call or file read`, async () => {

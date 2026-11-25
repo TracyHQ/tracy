@@ -19,9 +19,9 @@ import path from 'node:path'
 import { siteShape } from './webroot.js'
 
 /** Where the site's agent token is mounted, root-owned and read-only (`exec.mjs` `AGENT_TOKEN_PATH`). */
-const AGENT_TOKEN_PATH = '/run/tracy-agent.token'
+export const AGENT_TOKEN_PATH = '/run/tracy-agent.token'
 /** The EmDash MCP endpoint, on loopback inside the container (`exec.mjs` `EMDASH_MCP_LOOPBACK`). */
-const EMDASH_MCP_LOOPBACK = 'http://127.0.0.1:4321/_emdash/api/mcp'
+export const EMDASH_MCP_LOOPBACK = 'http://127.0.0.1:4321/_emdash/api/mcp'
 /** The in-container fetch aborts itself first (`exec.mjs` `MCP_FETCH_ABORT_MS`). */
 const MCP_FETCH_ABORT_MS = 110_000
 /** The docker client's own bound: the script's plus room to answer. */
@@ -31,7 +31,7 @@ const MCP_EXEC_TIMEOUT_MS = 120_000
 export const EMDASH_MEDIA_MAX_BYTES = 8_388_608
 
 /** A copy of `exec.mjs` `MCP_TOKEN_PRELUDE` — see the module comment. */
-const MCP_TOKEN_PRELUDE =
+export const MCP_TOKEN_PRELUDE =
   'const fs=require("fs");let t="";' +
   `try{t=fs.readFileSync(${JSON.stringify(AGENT_TOKEN_PATH)},"utf8").trim()}` +
   'catch{process.stdout.write("TRACY_MCP_ERR NO_TOKEN the agent token file is not present");process.exit(0)}' +
@@ -70,7 +70,7 @@ const BASE64 = /^[A-Za-z0-9+/]*={0,2}$/
 const refuse = (code, detail) => ({ ok: false, code, ...(detail ? { detail } : {}) })
 
 /** The JSON-RPC reply in a body that may be an event stream (`emdash.mjs` `parseMcpBody`: the last `data:` line). */
-function replyOf(body) {
+export function replyOf(body) {
   const text = String(body ?? '').trim()
   const data = text
     .split(/\r?\n/)
@@ -85,7 +85,7 @@ function replyOf(body) {
 }
 
 /** What the tool answered: its structured content, else the JSON in its text parts. */
-function dataOf(result) {
+export function dataOf(result) {
   if (result?.structuredContent && typeof result.structuredContent === 'object')
     return result.structuredContent
   const text = (Array.isArray(result?.content) ? result.content : [])

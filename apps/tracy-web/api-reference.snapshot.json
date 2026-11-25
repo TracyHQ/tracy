@@ -1,5 +1,5 @@
 {
-  "recorded": "2026-11-12",
+  "recorded": "2026-11-25",
   "public": {
     "components": {
       "schemas": {
@@ -5639,6 +5639,98 @@
                     {
                       "properties": {
                         "action": {
+                          "const": "emdash.settings"
+                        },
+                        "params": {
+                          "properties": {
+                            "apply_id": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "fields": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "favicon": {
+                                  "properties": {
+                                    "alt": {
+                                      "type": "string"
+                                    },
+                                    "mediaId": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["mediaId"],
+                                  "type": ["object", "null"]
+                                },
+                                "logo": {
+                                  "properties": {
+                                    "alt": {
+                                      "type": "string"
+                                    },
+                                    "mediaId": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["mediaId"],
+                                  "type": ["object", "null"]
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "operation": {
+                              "enum": ["read", "set"],
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        }
+                      },
+                      "required": ["action"],
+                      "title": "emdash.settings",
+                      "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "action": {
+                          "const": "emdash.entryField"
+                        },
+                        "params": {
+                          "properties": {
+                            "apply_id": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "collection": {
+                              "type": "string"
+                            },
+                            "field": {
+                              "type": "string"
+                            },
+                            "label": {
+                              "type": "string"
+                            },
+                            "media": {
+                              "type": "string"
+                            },
+                            "operation": {
+                              "enum": ["read", "set"],
+                              "type": "string"
+                            },
+                            "slug": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["collection", "slug", "field"],
+                          "type": "object"
+                        }
+                      },
+                      "required": ["action"],
+                      "title": "emdash.entryField",
+                      "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "action": {
                           "const": "template.languageOverrides"
                         },
                         "params": {
@@ -11206,6 +11298,520 @@
                     }
                   },
                   "required": ["operation"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": false
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/envelope"
+                      },
+                      {
+                        "$ref": "#/components/schemas/describe"
+                      },
+                      {
+                        "$ref": "#/components/schemas/pages"
+                      },
+                      {
+                        "$ref": "#/components/schemas/changes"
+                      },
+                      {
+                        "$ref": "#/components/schemas/notModified"
+                      },
+                      {
+                        "$ref": "#/components/schemas/PluginAnswer"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "400": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "401": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "403": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "409": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "413": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "429": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "501": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "502": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "503": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Apply · Software"]
+        }
+      },
+      "/api/sites/{key}/apply/emdash.entryField": {
+        "post": {
+          "operationId": "apply_emdash_entryField",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "key",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "apply_id": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "collection": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "media": {
+                      "type": "string"
+                    },
+                    "operation": {
+                      "enum": ["read", "set"],
+                      "type": "string"
+                    },
+                    "slug": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["collection", "slug", "field"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": false
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/envelope"
+                      },
+                      {
+                        "$ref": "#/components/schemas/describe"
+                      },
+                      {
+                        "$ref": "#/components/schemas/pages"
+                      },
+                      {
+                        "$ref": "#/components/schemas/changes"
+                      },
+                      {
+                        "$ref": "#/components/schemas/notModified"
+                      },
+                      {
+                        "$ref": "#/components/schemas/PluginAnswer"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "400": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "401": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "403": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "409": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "413": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "429": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "501": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "502": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "503": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Apply · Software"]
+        }
+      },
+      "/api/sites/{key}/apply/emdash.settings": {
+        "post": {
+          "operationId": "apply_emdash_settings",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "key",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "apply_id": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "fields": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "favicon": {
+                          "properties": {
+                            "alt": {
+                              "type": "string"
+                            },
+                            "mediaId": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["mediaId"],
+                          "type": ["object", "null"]
+                        },
+                        "logo": {
+                          "properties": {
+                            "alt": {
+                              "type": "string"
+                            },
+                            "mediaId": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["mediaId"],
+                          "type": ["object", "null"]
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "operation": {
+                      "enum": ["read", "set"],
+                      "type": "string"
+                    }
+                  },
                   "type": "object"
                 }
               }
@@ -36161,6 +36767,98 @@
                     {
                       "properties": {
                         "action": {
+                          "const": "emdash.settings"
+                        },
+                        "params": {
+                          "properties": {
+                            "apply_id": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "fields": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "favicon": {
+                                  "properties": {
+                                    "alt": {
+                                      "type": "string"
+                                    },
+                                    "mediaId": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["mediaId"],
+                                  "type": ["object", "null"]
+                                },
+                                "logo": {
+                                  "properties": {
+                                    "alt": {
+                                      "type": "string"
+                                    },
+                                    "mediaId": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": ["mediaId"],
+                                  "type": ["object", "null"]
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "operation": {
+                              "enum": ["read", "set"],
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        }
+                      },
+                      "required": ["action"],
+                      "title": "emdash.settings",
+                      "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "action": {
+                          "const": "emdash.entryField"
+                        },
+                        "params": {
+                          "properties": {
+                            "apply_id": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "collection": {
+                              "type": "string"
+                            },
+                            "field": {
+                              "type": "string"
+                            },
+                            "label": {
+                              "type": "string"
+                            },
+                            "media": {
+                              "type": "string"
+                            },
+                            "operation": {
+                              "enum": ["read", "set"],
+                              "type": "string"
+                            },
+                            "slug": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["collection", "slug", "field"],
+                          "type": "object"
+                        }
+                      },
+                      "required": ["action"],
+                      "title": "emdash.entryField",
+                      "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "action": {
                           "const": "template.languageOverrides"
                         },
                         "params": {
@@ -41728,6 +42426,520 @@
                     }
                   },
                   "required": ["operation"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": false
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/envelope"
+                      },
+                      {
+                        "$ref": "#/components/schemas/describe"
+                      },
+                      {
+                        "$ref": "#/components/schemas/pages"
+                      },
+                      {
+                        "$ref": "#/components/schemas/changes"
+                      },
+                      {
+                        "$ref": "#/components/schemas/notModified"
+                      },
+                      {
+                        "$ref": "#/components/schemas/PluginAnswer"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "400": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "401": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "403": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "409": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "413": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "429": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "501": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "502": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "503": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Apply · Software"]
+        }
+      },
+      "/api/sites/{key}/apply/emdash.entryField": {
+        "post": {
+          "operationId": "apply_emdash_entryField",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "key",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "apply_id": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "collection": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "media": {
+                      "type": "string"
+                    },
+                    "operation": {
+                      "enum": ["read", "set"],
+                      "type": "string"
+                    },
+                    "slug": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["collection", "slug", "field"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": false
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/envelope"
+                      },
+                      {
+                        "$ref": "#/components/schemas/describe"
+                      },
+                      {
+                        "$ref": "#/components/schemas/pages"
+                      },
+                      {
+                        "$ref": "#/components/schemas/changes"
+                      },
+                      {
+                        "$ref": "#/components/schemas/notModified"
+                      },
+                      {
+                        "$ref": "#/components/schemas/PluginAnswer"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "400": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "401": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "403": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "404": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "409": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "413": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "429": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "501": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "502": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "503": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DoorRefusal"
+                      },
+                      {
+                        "$ref": "#/components/schemas/error"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Apply · Software"]
+        }
+      },
+      "/api/sites/{key}/apply/emdash.settings": {
+        "post": {
+          "operationId": "apply_emdash_settings",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "key",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "apply_id": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "fields": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "favicon": {
+                          "properties": {
+                            "alt": {
+                              "type": "string"
+                            },
+                            "mediaId": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["mediaId"],
+                          "type": ["object", "null"]
+                        },
+                        "logo": {
+                          "properties": {
+                            "alt": {
+                              "type": "string"
+                            },
+                            "mediaId": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["mediaId"],
+                          "type": ["object", "null"]
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "operation": {
+                      "enum": ["read", "set"],
+                      "type": "string"
+                    }
+                  },
                   "type": "object"
                 }
               }
