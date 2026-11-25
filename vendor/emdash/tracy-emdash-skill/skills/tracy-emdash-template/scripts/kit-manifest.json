@@ -128,9 +128,16 @@
         "sitePagesModule",
         "stmt:913570538c",
         "?",
-        "sitePagesFor"
+        "sitePagesFor",
+        "UTILITY_WORDS",
+        "VARIANT_LABEL",
+        "KIT_LABEL",
+        "KIT_HEADING",
+        "GENERIC_LABEL",
+        "cleanLabel",
+        "pagesFromMenu"
       ],
-      "why": "The base entry, for Tracy Restaurant, with one difference: the list of pages a customer may keep or hide (tracy_site_pages.json) is the one Tracy's readiness check holds the file to (REL-2), so sitePagesFor asks the rule itself. The kit's sitePagesFor reads level 1 of the primary menu only, and a theme whose menu has submenus (JA Restaurant: Menu > three styles, Reservation > Phone Reservation, Contact Us) lists 6 pages of 13. The rule is read at run time from the checkout TRACY_CHECKOUT names (apps/tracy-web/src/lib/template-customization-question-readiness/site-pages/emdash-menu.js, which ports tracy-dev's site-pages), or from the checkout the template sits in (import node:url, TRACY_CHECKOUT, stmt:e58717643b = the refusal when neither gives a checkout, sitePagesModule, stmt:913570538c = the refusal when the module is missing, and the destructured await keyed ?). NAMED, not whole-file: every other statement of this file must still match the kit. The kit should take this version for every theme (perf/skill-findings.md SF-51 of the restaurant template)."
+      "why": "The base entry, for Tracy Restaurant, with one difference: the list of pages a customer may keep or hide (tracy_site_pages.json) is the one Tracy's readiness check holds the file to (REL-2), so sitePagesFor asks the rule itself. The kit's sitePagesFor reads level 1 of the primary menu only, and a theme whose menu has submenus (JA Restaurant: Menu > three styles, Reservation > Phone Reservation, Contact Us) lists 6 pages of 13. The rule is read at run time from the checkout TRACY_CHECKOUT names (apps/tracy-web/src/lib/template-customization-question-readiness/site-pages/emdash-menu.js, which ports tracy-dev's site-pages), or from the checkout the template sits in (import node:url, TRACY_CHECKOUT, stmt:e58717643b = the refusal when neither gives a checkout, sitePagesModule, stmt:913570538c = the refusal when the module is missing, and the destructured await keyed ?). NAMED, not whole-file: every other statement of this file must still match the kit. The kit should take this version for every theme (perf/skill-findings.md SF-51 of the restaurant template). Since 25/11/2026 the kit sitePagesFor carries its own port of that rule (UTILITY_WORDS, VARIANT_LABEL, KIT_LABEL, KIT_HEADING, GENERIC_LABEL, cleanLabel, pagesFromMenu); this template keeps calling Tracy readiness module instead, so those names are declared here as kit-only."
     },
     {
       "file": "tools/release.mjs",
@@ -172,9 +179,16 @@
         "stmt:2f44d24bcd",
         "stateDb",
         "stmt:10fc1d08d0",
-        "stmt:15502c5908"
+        "stmt:15502c5908",
+        "UTILITY_WORDS",
+        "VARIANT_LABEL",
+        "KIT_LABEL",
+        "KIT_HEADING",
+        "GENERIC_LABEL",
+        "cleanLabel",
+        "pagesFromMenu"
       ],
-      "why": "Same exception as tracy-emdash-theme-restaurant, for Tracy Diner: tracy_site_pages.json comes from Tracy readiness page rule (REL-2) so pages under a submenu heading are listed; the kit sitePagesFor reads level 1 of the primary menu only. Same named declarations; every other statement must still match the kit. `notes` (the release README, JA Diner 0.1.2, gap G3 of its 0.1.1 independent handover): the Docker install names the container and runs tools/bootstrap-site.sh inside it with docker exec, because the unzipped folder on the host has no node_modules and tools/mint-admin.cjs cannot load better-sqlite3 there. The kit should take the same README for every theme. The state archive (JA Diner 0.1.2, independent review of 16/11/2026, which found the forms, mail and recovery checks' leftovers in it: 2 form submissions, 4 mail log rows, the build machine's SMTP host as the site's mail settings, 3 QA revisions that made two posts read as editor-changed): `freshSeed` seeds the built site again in a new temp folder (its server started there, the site's own tools/bootstrap-site.sh), and `seeded` replaces the gated site as the source of data/data.db, data/seed-receipts.json and uploads/ (`dbSrc`, `uploads`, `guardArchiveText`, the copy statements); the scrub also removes form submissions, the mail log and the emdash-smtp options and lists them (the `stmt:` entries); `residue` runs tools/state-residue.mjs and stops the release on any leftover; `manifest` says the state is a fresh seed; imports node:net, spawn, mkdtempSync and ./state-residue.mjs. The kit should take the same state source for every theme. The state database (JA Diner 0.1.3, gap G5 of the 0.1.2 cut): the copy and every scrub query go through better-sqlite3, a dependency of the template, instead of the host's sqlite3 CLI, which a machine may not have (`import better-sqlite3`, the backup block stmt:2f44d24bcd, `stateDb`, `sql` = sqlText of tools/state-residue.mjs, the close statement); the answers are the CLI's list mode, so every other statement is unchanged. The kit should take the same for every theme."
+      "why": "Same exception as tracy-emdash-theme-restaurant, for Tracy Diner: tracy_site_pages.json comes from Tracy readiness page rule (REL-2) so pages under a submenu heading are listed; the kit sitePagesFor reads level 1 of the primary menu only. Same named declarations; every other statement must still match the kit. `notes` (the release README, JA Diner 0.1.2, gap G3 of its 0.1.1 independent handover): the Docker install names the container and runs tools/bootstrap-site.sh inside it with docker exec, because the unzipped folder on the host has no node_modules and tools/mint-admin.cjs cannot load better-sqlite3 there. The kit should take the same README for every theme. The state archive (JA Diner 0.1.2, independent review of 16/11/2026, which found the forms, mail and recovery checks' leftovers in it: 2 form submissions, 4 mail log rows, the build machine's SMTP host as the site's mail settings, 3 QA revisions that made two posts read as editor-changed): `freshSeed` seeds the built site again in a new temp folder (its server started there, the site's own tools/bootstrap-site.sh), and `seeded` replaces the gated site as the source of data/data.db, data/seed-receipts.json and uploads/ (`dbSrc`, `uploads`, `guardArchiveText`, the copy statements); the scrub also removes form submissions, the mail log and the emdash-smtp options and lists them (the `stmt:` entries); `residue` runs tools/state-residue.mjs and stops the release on any leftover; `manifest` says the state is a fresh seed; imports node:net, spawn, mkdtempSync and ./state-residue.mjs. The kit should take the same state source for every theme. The state database (JA Diner 0.1.3, gap G5 of the 0.1.2 cut): the copy and every scrub query go through better-sqlite3, a dependency of the template, instead of the host's sqlite3 CLI, which a machine may not have (`import better-sqlite3`, the backup block stmt:2f44d24bcd, `stateDb`, `sql` = sqlText of tools/state-residue.mjs, the close statement); the answers are the CLI's list mode, so every other statement is unchanged. The kit should take the same for every theme. Since 25/11/2026 the kit sitePagesFor carries its own port of that rule (UTILITY_WORDS, VARIANT_LABEL, KIT_LABEL, KIT_HEADING, GENERIC_LABEL, cleanLabel, pagesFromMenu); this template keeps calling Tracy readiness module instead, so those names are declared here as kit-only."
     },
     {
       "file": "tools/release.mjs",
@@ -216,9 +230,16 @@
         "stmt:2f44d24bcd",
         "stateDb",
         "stmt:10fc1d08d0",
-        "stmt:15502c5908"
+        "stmt:15502c5908",
+        "UTILITY_WORDS",
+        "VARIANT_LABEL",
+        "KIT_LABEL",
+        "KIT_HEADING",
+        "GENERIC_LABEL",
+        "cleanLabel",
+        "pagesFromMenu"
       ],
-      "why": "Same exception as tracy-emdash-theme-diner, for Tracy Essence: the Diner release.mjs and tools/state-residue.mjs copied unchanged (tracy_site_pages.json from Tracy's readiness page rule; the state archive is a fresh seed). Same named declarations; every other statement must still match the kit."
+      "why": "Same exception as tracy-emdash-theme-diner, for Tracy Essence: the Diner release.mjs and tools/state-residue.mjs copied unchanged (tracy_site_pages.json from Tracy's readiness page rule; the state archive is a fresh seed). Same named declarations; every other statement must still match the kit. Since 25/11/2026 the kit sitePagesFor carries its own port of that rule (UTILITY_WORDS, VARIANT_LABEL, KIT_LABEL, KIT_HEADING, GENERIC_LABEL, cleanLabel, pagesFromMenu); this template keeps calling Tracy readiness module instead, so those names are declared here as kit-only."
     },
     {
       "file": "tools/visual-qa.mjs",

@@ -55,6 +55,63 @@ const fail = (m) => {
 // exactly one page record stops the release here, by name. Same rules as tracy-dev's
 // lib/site-pages.mjs, which writes this file for WordPress, Joomla and releases already published.
 const sitePagesName = 'tracy_site_pages.json'
+const UTILITY_WORDS =
+  /(^|[^a-z0-9])(log-?in|log-?out|sign-?in|sign-?up|register|registration|reset|remind|reminder|forgot|password|passwords|profile|2fa|error|404|offline|typography|search|smart-search|tags?|tagged|authors?|writers?|archives?)([^a-z0-9]|$)/i
+const VARIANT_LABEL = /^home\b|\bcolou?rs?$/i
+const KIT_LABEL = /^(newsletter|e-?mail|form|slides?|style ?guide)\b/i
+const KIT_HEADING = /\b(resources?|kit)\b/i
+const GENERIC_LABEL = /^(layout|style|detail|default|list view|grid view|video|gallery)\b/i
+const cleanLabel = (s) => String(s ?? '').replace(/^#+/, '').replace(/\s+/g, ' ').trim()
+/** A main menu read as a tree -> the pages a customer may keep or hide (the Road's REL-2 rule). */
+function pagesFromMenu(items, home, warn) {
+  const holdsHome = (n) => !!n.home || (n.children ?? []).some(holdsHome)
+  const flat = (n) => [n, ...(n.children ?? []).flatMap(flat)]
+  const branch = items.find(holdsHome) ?? items.find((n) => /^home$/i.test(cleanLabel(n.label)))
+  let homeLabel = branch ? cleanLabel(branch.label) : null
+  const variants = []
+  if (branch) for (const n of flat(branch)) if (n.id && !n.home) variants.push(cleanLabel(n.label))
+  if (!homeLabel) for (const n of items.flatMap(flat)) if (n.home) homeLabel = cleanLabel(n.label)
+  const utilities = []
+  const kit = []
+  const found = []
+  const walk = (n, parent) => {
+    const label = cleanLabel(n.label)
+    if (n.id && !n.home) {
+      if (n.utility) utilities.push(label)
+      else if (KIT_LABEL.test(label) && KIT_HEADING.test(String(parent ?? ''))) kit.push(label)
+      else if (VARIANT_LABEL.test(label)) variants.push(label)
+      else found.push({ id: n.id, label, parent })
+    }
+    for (const c of n.children ?? []) walk(c, label || parent)
+  }
+  for (const n of items) if (n !== branch) walk(n, null)
+  if (variants.length) warn(`skipped as other demos of the home page: ${variants.join(', ')}`)
+  if (utilities.length) warn(`skipped as system pages: ${utilities.join(', ')}`)
+  if (kit.length) warn(`skipped as kit sample pages: ${kit.join(', ')}`)
+  const chosen = new Map()
+  for (const p of found) {
+    if (chosen.has(p.id)) warn(`"${p.label}" links the page of "${chosen.get(p.id).label}" again: kept one entry`)
+    else chosen.set(p.id, p)
+  }
+  const pages = []
+  const seenIds = new Set([home.homeId])
+  for (const p of chosen.values()) {
+    if (seenIds.has(p.id)) continue
+    seenIds.add(p.id)
+    pages.push(p)
+  }
+  const count = new Map()
+  for (const p of pages) count.set(p.label.toLowerCase(), (count.get(p.label.toLowerCase()) ?? 0) + 1)
+  const labelOf = (p) => {
+    const shared = count.get(p.label.toLowerCase()) > 1
+    const generic = GENERIC_LABEL.test(p.label) && !p.label.toLowerCase().includes(String(p.parent).toLowerCase())
+    return p.parent && (shared || generic) ? `${p.parent} \u203a ${p.label}` : p.label
+  }
+  return [
+    { id: home.homeId, label: homeLabel || home.homeTitle() || 'Home', home: true },
+    ...pages.map((p) => ({ id: p.id, label: labelOf(p) }))
+  ]
+}
 /**
  * @param {string} root a packed artifact or a template checkout
  * @returns {{ pages: { id: string, label: string, home?: true }[], warnings: string[] }}
@@ -80,7 +137,6 @@ function sitePagesFor(root) {
   if (!menu) fail(`${sitePagesName}: seed/site-model.json has no menu`)
   const warnings = menu.name === 'primary' ? [] : [`no "primary" menu: used "${menu.name}"`]
   const labelOf = (item) => item.label?.[locale] ?? Object.values(item.label ?? {})[0] ?? ''
-  const leaves = (item) => (item.children ?? []).flatMap((c) => (c.children?.length ? leaves(c) : [c]))
   const recordsAt = (p) => {
     if (p === '/') return [home]
     const seg = p
@@ -99,33 +155,33 @@ function sitePagesFor(root) {
     }
     return []
   }
-  const pages = []
-  let homeLabel = null
-  for (const item of menu.items ?? []) {
+  // The rule Road REL-2 counts with (apps/tracy-web `site-pages/page-rule.js`, ported line for line from tracy-dev's writer): every content
+  // page of the main menu at ANY depth, the children of a submenu heading included; never a system page, another demo of the home page or
+  // a kit sample page; a label that only means something under its heading carries the heading in front.
+  const menuWarn = (m) => warnings.push(m)
+  const node = (item) => {
     const label = labelOf(item)
-    if (!item.path) {
-      if (leaves(item).some((c) => c.path === '/')) homeLabel ??= label
-      const kids = leaves(item).map(labelOf).join(', ') || 'none'
-      warnings.push(`level-1 "${label}" is a heading, not a page (children: ${kids}): skipped`)
-      continue
-    }
+    const children = (item.children ?? []).map(node)
+    if (!item.path) return { label, id: null, children }
     const hits = recordsAt(item.path)
     if (hits.length !== 1) {
-      warnings.push(`level-1 "${label}" (${item.path}) matches ${hits.length} page records: skipped`)
-      continue
+      warnings.push(`"${label}" (${item.path}) matches ${hits.length} page records: skipped`)
+      return { label, id: null, children }
     }
-    if (pages.some((p) => p.id === hits[0].slug)) {
-      warnings.push(`"${label}" links "${hits[0].slug}" again: kept the first`)
-      continue
+    const slug = hits[0].slug
+    return {
+      label,
+      id: slug,
+      home: slug === home.slug || undefined,
+      utility: [label, slug, item.path].map((n) => String(n ?? '')).find((n) => n && UTILITY_WORDS.test(n)) ?? null,
+      children
     }
-    pages.push({ id: hits[0].slug, label })
   }
-  const listed = pages.find((p) => p.id === home.slug)
-  if (listed) listed.home = true
-  else {
-    warnings.push(`the menu does not link the front page "${home.slug}": added it first`)
-    pages.unshift({ id: home.slug, label: homeLabel ?? home.values?.title ?? 'Home', home: true })
-  }
+  const pages = pagesFromMenu(
+    (menu.items ?? []).map(node),
+    { homeId: home.slug, homeTitle: () => home.values?.title ?? 'Home' },
+    menuWarn
+  )
   // what Tracy holds the file to: one home, unique ids, a label each, every id one page record
   const problems = []
   const seen = new Set()

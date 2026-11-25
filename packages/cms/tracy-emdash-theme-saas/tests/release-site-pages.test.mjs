@@ -1,5 +1,5 @@
 // tools/release.mjs writes tracy_site_pages.json (Tracy's "Pages" question) from seed/site-model.json:
-// the primary menu's level 1, each path resolved to its page record slug, the front page marked home.
+// the primary menu at every depth (the rule Road REL-2 counts with), each path resolved to its page record slug, the front page marked home.
 // `release.mjs --site-pages <dir>` prints that file without cutting a release.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
@@ -85,7 +85,8 @@ test('a heading at level 1 is skipped and said; its child at "/" names Home', ()
     { id: 'home', label: 'Home', home: true },
     { id: 'about', label: 'About' }
   ])
-  assert.match(stderr, /"Home" is a heading, not a page \(children: Terminal\)/)
+  // the branch that holds the front page is the Home entry; the writer says nothing about a heading it does not offer
+  assert.doesNotMatch(stderr, /is a heading, not a page/)
 })
 
 test('a path two page records answer is not guessed: skipped and said', () => {
@@ -111,4 +112,62 @@ test('no seed/site-model.json stops the release', () => {
   const r = spawnSync(process.execPath, [RELEASE, '--site-pages', dir], { encoding: 'utf8' })
   assert.equal(r.status, 1)
   assert.match(r.stderr, /tracy_site_pages\.json: .*site-model\.json is missing/)
+})
+
+test('a submenu page is listed, as Road REL-2 counts it (a writer that read level 1 only missed it)', () => {
+  const { doc } = pagesOf({
+    ...base,
+    records: [...base.records, rec('pages', 'team'), rec('pages', 'login')],
+    menus: [
+      {
+        name: 'primary',
+        items: [
+          { label: { en: 'Home' }, path: '/' },
+          {
+            label: { en: 'About' },
+            path: '/about',
+            children: [
+              { label: { en: 'Team' }, path: '/about/team' },
+              { label: { en: 'Log in' }, path: '/login' }
+            ]
+          },
+          { label: { en: 'Contact' }, path: '/contact' }
+        ]
+      }
+    ]
+  })
+  assert.deepEqual(doc.pages, [
+    { id: 'home', label: 'Home', home: true },
+    { id: 'about', label: 'About' },
+    { id: 'team', label: 'Team' },
+    { id: 'contact', label: 'Contact' }
+  ])
+})
+
+test('a submenu under a heading is offered, and a label shared by two pages carries its heading', () => {
+  const { doc } = pagesOf({
+    ...base,
+    records: [...base.records, rec('pages', 'design'), rec('pages', 'build')],
+    menus: [
+      {
+        name: 'primary',
+        items: [
+          { label: { en: 'Home' }, path: '/' },
+          {
+            label: { en: 'Work' },
+            path: '',
+            children: [
+              { label: { en: 'Layout' }, path: '/design' },
+              { label: { en: 'Layout' }, path: '/build' }
+            ]
+          }
+        ]
+      }
+    ]
+  })
+  assert.deepEqual(doc.pages, [
+    { id: 'home', label: 'Home', home: true },
+    { id: 'design', label: 'Work \u203a Layout' },
+    { id: 'build', label: 'Work \u203a Layout' }
+  ])
 })
