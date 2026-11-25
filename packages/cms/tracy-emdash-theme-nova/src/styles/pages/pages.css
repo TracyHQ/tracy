@@ -102,7 +102,8 @@ html[data-theme="dark"] .nv-menu-box a:hover, html[data-theme="dark"] .nv-menu-b
 .nv-contact-card.is-address .nv-contact-icon::before { background-image: url("/nova/contact/ic_location.png"); }
 .nv-contact-card.is-phone .nv-contact-icon::before { background-image: url("/nova/contact/ic_phone.png"); }
 .nv-contact-card.is-email .nv-contact-icon::before { background-image: url("/nova/contact/ic_email.png"); }
-html[data-theme="dark"] .nv-contact-icon { background: var(--ds-c-icon-chip, #ffffff); } /* the icon art is dark-stroke: the circle stays light */
+/* the icon art is dark-stroke: in dark it is lifted by a filter on the dark circle, as the pill icons are */
+html[data-theme="dark"] .nv-contact-icon::before { filter: invert(1) hue-rotate(180deg); }
 @media (max-width: 1199.98px) { .nv-contact-icon { margin: 0 auto 1rem; } }
 .nv-contact-info { flex: 1; line-height: 1.5; }
 @media (max-width: 1199.98px) { .nv-contact-info { flex: none; width: 100%; text-align: center; } }
