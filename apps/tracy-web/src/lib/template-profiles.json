@@ -3827,6 +3827,14 @@
         "note": "As 0.1.2: no file under src/ or public/ changed (the 0.1.4 pack, read 2026-11-17 as 0.1.3, renumbered); 0.1.4 changes the content map (role vocabulary v3), Personalize, and the release tool's SQLite access, so the header logo spot, settings.logo, the chrome entry's logo_dark and the favicon are untouched."
       }
     },
+    "tracy-nova/emdash-0.x": {
+      "0.1.0": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "Read off the 0.1.0 source: three logo spots, the header and the off-canvas panel (BrandLogo with logoSpots('themed'): settings.logo in the light spot and the chrome entry's logo_dark in the dark one, both switched by the appearance toggle; the template's text lockup \"JA Nova\" while no logo is given) and the footer (BrandLogo with logoSpots('dark'): the footer is a dark band in both states); the template icon (public/favicon.svg) only while settings.favicon is empty. BrandLogo.astro and lib/brand.ts are the Tracy Base ones."
+      }
+    },
     "tracy-essence/emdash-0.x": {
       "0.1.0": {
         "logos": "pair",
