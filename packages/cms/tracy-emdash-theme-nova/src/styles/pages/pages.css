@@ -55,9 +55,9 @@ html[data-theme="dark"] .nv-pg, html[data-theme="dark"] .nv-err {
 @media (max-width: 1199px) { .nv-sec-h { font-size: 32px; } }
 @media (max-width: 767px) { .nv-sec-h { font-size: 28px; } }
 @media (max-width: 575px) { .nv-sec-h { font-size: 24px; } }
-.nv-green .nv-sec-h { color: var(--ds-c-bg, #fff); }
+.nv-green .nv-sec-h { color: color-mix(in srgb, var(--ds-c-bg, #fff) 92%, var(--ds-c-fg, #fff)); }
 /* a status colour is tuned to read as words on the page, so words ON a status fill are the page's own ground colour (a worn dark side makes the success green light) */
-.nv-green .nv-sec-title { color: var(--ds-c-bg, rgba(255, 255, 255, .75)); }
+.nv-green .nv-sec-title { color: color-mix(in srgb, var(--ds-c-bg, rgba(255, 255, 255, .75)) 92%, var(--ds-c-fg, rgba(255, 255, 255, .75))); }
 .nv-bottom-actions { text-align: center; margin-top: 4rem; }
 @media (max-width: 1199.98px) { .nv-bottom-actions { margin-top: 2rem; } }
 @media (max-width: 991.98px) { .nv-bottom-actions { margin-top: 1rem; } }
@@ -97,8 +97,8 @@ html[data-theme="dark"] .nv-menu-box a:hover, html[data-theme="dark"] .nv-menu-b
 @media (max-width: 991.98px) { .nv-contact-cards { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 992px) { .nv-contact-cards { margin-bottom: 3rem; } }
 @media (max-width: 575.98px) { .nv-contact-cards { display: flex; flex-wrap: wrap; } }
-.nv-contact-card { display: flex; background: var(--pg-gray); padding: 2rem; border-radius: 2rem; position: relative; }
-@media (max-width: 1199.98px) { .nv-contact-card { padding: 1.5rem; border-radius: 1rem; flex-wrap: wrap; flex-direction: column; } }
+.nv-contact-card { display: flex; background: var(--pg-gray); padding: 2rem; border-radius: var(--ds-card-radius, 2rem); position: relative; }
+@media (max-width: 1199.98px) { .nv-contact-card { padding: 1.5rem; border-radius: var(--ds-card-radius, 1rem); flex-wrap: wrap; flex-direction: column; } }
 @media (max-width: 991.98px) { .nv-contact-card { width: 100%; } }
 .nv-contact-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 50%; background: var(--pg-card); color: var(--color-accent); margin-right: 2rem; }
 .nv-contact-icon::before { content: ""; display: inline-block; width: 48px; height: 48px; background: center / contain no-repeat; }
@@ -127,7 +127,7 @@ html[data-theme="dark"] .nv-contact-card .nv-contact-label { color: var(--ds-c-a
 .nv-contact-title { margin: 0 0 2rem; font-size: 2rem; }
 @media (max-width: 1199px) { .nv-contact-title { font-size: 40px; } }
 @media (max-width: 575px) { .nv-contact-title { font-size: 32px; } }
-.nv-contact-hl { display: block; position: relative; color: var(--ds-c-success, #04ad68); }
+.nv-contact-hl { display: block; position: relative; color: var(--ds-c-success-text, #04ad68); }
 .nv-contact-hl::after { content: ""; position: absolute; top: 0; display: inline-block; width: 80px; height: 80px; margin-left: 12px; background: url("/nova/contact/ic_speaker.png") center / contain no-repeat; }
 @media (max-width: 1199.98px) { .nv-contact-hl::after { width: 60px; height: 60px; } }
 .nv-contact-intro { padding-bottom: 4rem; margin-bottom: 4rem; border-bottom: 1px solid var(--pg-line); color: var(--color-fg); }
@@ -164,9 +164,9 @@ html[data-theme="dark"] .nv-contact-card .nv-contact-label { color: var(--ds-c-a
 .nv-finder { max-width: 1000px; margin: auto; }
 .nv-finder-form label { display: block; margin-bottom: 1rem; font-family: var(--font-display); font-size: 1.75rem; letter-spacing: -.01em; color: var(--color-heading); }
 .nv-finder-group { display: flex; gap: .5rem; }
-.nv-finder-group input { flex: 1 1 auto; min-width: 0; padding: 18px 2rem; font: inherit; line-height: 1.63; color: var(--color-fg); background: var(--pg-card); border: 1px solid var(--pg-line); border-radius: 1rem; }
+.nv-finder-group input { flex: 1 1 auto; min-width: 0; padding: 18px 2rem; font: inherit; line-height: 1.63; color: var(--color-fg); background: var(--pg-card); border: 1px solid var(--pg-line); border-radius: var(--ds-input-radius, 1rem); }
 .nv-finder-group input:focus { outline: 1px solid var(--color-accent); outline-offset: 0; border-color: var(--color-accent); }
-.nv-finder-group .nv-btn { padding: 18px 2rem; line-height: 1.63; border-radius: 1rem; }
+.nv-finder-group .nv-btn { padding: 18px 2rem; line-height: 1.63; border-radius: var(--ds-btn-radius, 1rem); }
 @media (max-width: 576px) { .nv-finder-group { flex-direction: column; align-items: flex-start; gap: 12px; } .nv-finder-group input { align-self: stretch; } .nv-finder-group .nv-btn { padding: 16px; } .nv-finder-form label { font-size: 22px; } }
 .nv-finder-results { margin-top: 2rem; border-top: 1px solid var(--pg-line); padding-top: 1rem; }
 .nv-finder-count { color: var(--pg-muted); font-size: .875rem; }
@@ -177,7 +177,7 @@ html[data-theme="dark"] .nv-contact-card .nv-contact-label { color: var(--ds-c-a
 .nv-finder-list h2 a:hover { color: var(--color-accent-text-hover); }
 .nv-finder-list p { margin: 0 0 .25rem; }
 .nv-finder-list time { color: var(--pg-muted); font-size: .875rem; }
-.nv-finder-empty { background: var(--pg-gray); border-radius: 1rem; padding: 1rem; text-align: center; }
+.nv-finder-empty { background: var(--pg-gray); border-radius: var(--ds-card-radius, 1rem); padding: 1rem; text-align: center; }
 .nv-finder-empty p { margin: 0; color: var(--pg-muted); }
 
 /* ---- 404: a page of its own, no header or footer ---- */

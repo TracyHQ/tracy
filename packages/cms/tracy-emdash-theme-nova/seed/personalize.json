@@ -69,11 +69,44 @@
       "field": "email",
       "value": "{email}",
       "unanswered": "keep-demo"
+    },
+    {
+      "collection": "pages",
+      "slug": "home",
+      "field": "title",
+      "value": "{name}",
+      "unanswered": "keep-demo"
+    },
+    {
+      "collection": "social",
+      "slug": "social",
+      "field": "items",
+      "value": [],
+      "from": "social",
+      "item": {
+        "title": "{name}",
+        "link": "{url}"
+      }
+    },
+    {
+      "collection": "social",
+      "slug": "social-page",
+      "field": "items",
+      "value": [],
+      "from": "social",
+      "item": {
+        "title": "{name}",
+        "link": "{url}"
+      }
     }
   ],
   "replace": [
     {
       "find": "JA Nova",
+      "with": "{name}"
+    },
+    {
+      "find": "Microsoft App Holing Ltd",
       "with": "{name}"
     },
     {
@@ -268,6 +301,153 @@
       "field": "intro",
       "brief": "one or two sentences inviting visitors to contact this business (an IT, software and design company), with no number",
       "maxWords": 30
+    },
+    {
+      "collection": "pages",
+      "slug": "contact",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "project",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "about",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "services",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "career",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "illustration",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "development",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "mobile-application",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "cloud-solutions",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "it-infrastructure",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "cybersecurity",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "virtualization",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "pages",
+      "slug": "blog",
+      "field": "title",
+      "brief": "the name of this page in the main menu, one or two words, as this business (an IT, software and design company) would call it; keep the demo's name when it already fits",
+      "maxWords": 3
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-1",
+      "field": "title",
+      "brief": "the plain-text twin of that heading (the same words without any markup), kept for the page's accessible name",
+      "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-2",
+      "field": "title",
+      "brief": "the plain-text twin of that heading (the same words without any markup), kept for the page's accessible name",
+      "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-intro-2",
+      "field": "title",
+      "brief": "the plain-text twin of that heading (the same words without any markup), kept for the page's accessible name",
+      "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "services-intro",
+      "field": "title",
+      "brief": "the plain-text twin of that heading (the same words without any markup), kept for the page's accessible name",
+      "maxWords": 12
+    },
+    {
+      "collection": "features_intro",
+      "slug": "about-expertise",
+      "field": "subtitle",
+      "brief": "a short label above the list of fields of expertise of this business (an IT, software and design company), two or three words",
+      "maxWords": 4
+    },
+    {
+      "collection": "cta",
+      "slug": "cta-contact",
+      "field": "cta_desc",
+      "brief": "one short invitation to get in touch with this business (an IT, software and design company)",
+      "maxWords": 12
+    },
+    {
+      "collection": "accordion",
+      "slug": "faq",
+      "field": "title",
+      "brief": "the plain-text name of the block of questions asked of this business, in the words of the heading beside it",
+      "maxWords": 6
+    },
+    {
+      "collection": "features_intro",
+      "slug": "home-intro-3",
+      "field": "title",
+      "brief": "the plain-text twin of that heading (the same words without any markup), kept for the page's accessible name",
+      "maxWords": 12
     }
   ],
   "rewrite": [
@@ -349,6 +529,25 @@
       "decides": [
         "title"
       ]
+    },
+    {
+      "collection": "pages",
+      "slugs": [
+        "illustration",
+        "development",
+        "mobile-application",
+        "cloud-solutions",
+        "it-infrastructure",
+        "cybersecurity",
+        "virtualization"
+      ],
+      "brief": "one service page of this business (an IT, software and design company): what the service is and how this business delivers it, with no client name, no number and no link (tags: three short topic words, one per line)",
+      "fields": [
+        "body",
+        "tags"
+      ],
+      "body": "body",
+      "bodyWords": 140
     }
   ],
   "blocks": [
@@ -689,9 +888,25 @@
         "title",
         "items"
       ]
+    },
+    {
+      "collection": "text_slider",
+      "fields": [
+        "main_title",
+        "bottom_btn_title"
+      ]
+    },
+    {
+      "collection": "clients",
+      "fields": [
+        "main_title",
+        "bottom_btn_title"
+      ]
     }
   ],
-  "keptText": [],
+  "keptText": [
+    "chrome/chrome.not_found_text"
+  ],
   "forms": [
     {
       "slug": "contact",

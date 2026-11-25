@@ -36,7 +36,7 @@
 	--nv-nav: var(--color-heading);
 	--nv-nav-hover: var(--color-accent-text);
 	--nv-nav-active: var(--ds-c-accent-text-hover, #371bd3);
-	--nv-shade: var(--ds-c-shadow, #000);
+	--nv-shade: #000; /* ds-keep: neutral black shadow, not a design role */
 	position: relative;
 	z-index: 50;
 	display: flex;
@@ -206,7 +206,7 @@ html[data-theme="dark"] .nv-theme-sun { display: block; }
 		position: fixed;
 		inset: 0;
 		z-index: 1079;
-		background: var(--ds-c-scrim, rgba(0, 0, 0, 0.68));
+		background: rgba(0, 0, 0, 0.68); /* ds-keep: neutral scrim over the page behind the open menu, the same under every system */
 		opacity: 0;
 		visibility: hidden;
 		transition: opacity 0.35s ease, visibility 0s linear 0.35s;

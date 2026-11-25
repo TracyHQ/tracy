@@ -99,6 +99,6 @@ html[data-theme="dark"] .nv-clients-item { border-left-color: var(--ds-c-border,
 .nv-teams-name a:hover, .nv-teams-name a:focus-visible { color: var(--color-accent); }
 .nv-teams-text span { color: var(--color-meta); }
 
-/* dark: the demo logo strip and the pill icons are dark art on a dark ground; lift them as the source's darkmode.css section 14 does for its dark icons */
-html[data-theme="dark"] .nv-clients-logo img { filter: invert(1) brightness(1.6); }
-html[data-theme="dark"] .nv-ts-logo img { filter: invert(1) hue-rotate(180deg); }
+/* dark: the demo logo strip and the pill icons are dark art on a dark ground; lift them as the source's darkmode.css section 14 does for its dark icons. Only the demo files carry `data-nv-art` (set from the media file name in Clients.astro and TextSlider.astro), so a logo the customer uploads is never recoloured */
+html[data-theme="dark"] .nv-clients-item img[data-nv-art] { filter: invert(1) brightness(1.6); }
+html[data-theme="dark"] .nv-ts-item img[data-nv-art] { filter: invert(1) hue-rotate(180deg); }

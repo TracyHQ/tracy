@@ -57,7 +57,7 @@ html[data-theme="dark"] .nv-blk-btn.is-light:hover, html[data-theme="dark"] .nv-
 /* ---------- pricing ---------- */
 .nv-pricing { --nv-soft: var(--ds-c-surface-warm, #f7f7f7); }
 html[data-theme="dark"] .nv-pricing { --nv-soft: var(--color-band); --nv-soft-2: var(--ds-c-surface-warm, #262c36); }
-.nv-pricing-wrap { height: 100%; min-height: 100%; padding: 32px 16px; border-radius: 32px; background: var(--nv-soft); }
+.nv-pricing-wrap { height: 100%; min-height: 100%; padding: 32px 16px; border-radius: var(--ds-card-radius, 32px); background: var(--nv-soft); }
 @media (min-width: 576px) { .nv-pricing-wrap { padding: 32px; } }
 .nv-pricing-wrap.is-title { padding: 0; min-height: 0; background: transparent; }
 @media (min-width: 1200px) { .nv-pricing-wrap.is-title { padding: 32px; min-height: 100%; background: var(--nv-soft); } }
@@ -114,7 +114,7 @@ html[data-theme="dark"] .nv-accordion { --nv-soft: var(--color-surface); }
 .nv-acc-desc { margin-bottom: 16px; font-size: 18px; font-weight: 600; line-height: 1.5; }
 @media (min-width: 576px) { .nv-acc-desc { font-size: 24px; } }
 @media (min-width: 576px) { .nv-acc-desc { margin-bottom: 32px; } }
-.nv-acc-card { margin-bottom: 16px; padding: 16px; border-radius: 8px; background: var(--nv-soft); }
+.nv-acc-card { margin-bottom: 16px; padding: 16px; border-radius: var(--ds-card-radius, 8px); background: var(--nv-soft); }
 @media (min-width: 768px) { .nv-acc-card { padding: 32px; } }
 .nv-acc-head { margin: 0; font-size: inherit; line-height: inherit; }
 .nv-acc-btn {
@@ -125,7 +125,7 @@ html[data-theme="dark"] .nv-accordion { --nv-soft: var(--color-surface); }
 .nv-acc-q { padding-right: 16px; font-family: var(--font-display); font-size: 16px; font-weight: var(--ds-weight-heading, 700); line-height: 1.2; }
 @media (min-width: 576px) { .nv-acc-q { font-size: 18px; } }
 .nv-acc-marker { position: relative; flex: none; width: 11px; height: 12px; }
-.nv-acc-marker::before, .nv-acc-plus::before { content: ""; position: absolute; left: 0; top: 4.75px; width: 11px; height: 2.5px; border-radius: 1.25px; background: currentColor; }
+.nv-acc-marker::before, .nv-acc-plus::before { content: ""; position: absolute; left: 0; top: 4.75px; width: 11px; height: 2.5px; border-radius: 1.25px; background: currentColor; } /* ds-keep: 1.25px rounding of the 2.5px marker bar: geometry, not a corner role */
 .nv-acc-plus::before { top: .5px; left: 4.25px; width: 2.5px; height: 11px; transition: transform .2s, opacity .2s; }
 .nv-acc-plus { position: absolute; inset: 0; }
 .nv-acc-btn.is-open .nv-acc-plus::before { opacity: 0; transform: rotate(90deg); }

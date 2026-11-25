@@ -134,7 +134,7 @@ html .nv-mod.nv-bg-color.nv-bg-purple { color: var(--ds-c-accent-on, color-mix(i
 .nv-features.nv-bg-purple .nv-hl-red { color: var(--ds-c-accent-on, var(--color-red)); }
 .nv-features.nv-bg-purple .nv-hl-yellow { color: var(--ds-c-accent-on, var(--color-yellow)); }
 .nv-features.nv-bg-purple .nv-hl-orange { color: var(--ds-c-accent-on, var(--nv-orange)); }
-.nv-features.nv-bg-yellow .nv-hl-black, .nv-teams.nv-bg-yellow .nv-hl-black { color: var(--ds-c-bg, #000); } /* dark words on the yellow band: a status colour is tuned to read as words on the page, so the words on that fill are the page's own ground colour (on a light page the warn fill is dark, on a dark page light) */
+.nv-features.nv-bg-yellow .nv-hl-black, .nv-teams.nv-bg-yellow .nv-hl-black { color: color-mix(in srgb, var(--ds-c-bg, #000) 92%, var(--ds-c-fg, #000)); } /* dark words on the yellow band: a status colour is tuned to read as words on the page, so the words on that fill are the page's own ground colour (on a light page the warn fill is dark, on a dark page light) */
 .nv-features.nv-bg-purple .nv-hl-black { color: var(--ds-c-accent-on, var(--ds-c-heading, #000)); }
 
 /* ---- 3. coloured words of a heading (heading-html.ts) -------------------------------------------------------------------- */
@@ -222,10 +222,10 @@ html[data-theme="dark"] .nv-features-6 .nv-features-item { background-color: var
 	.nv-features-2 .nv-cols-3 > .nv-item-highlight { width: 66.66666667%; }
 	.nv-features-2 .nv-cols-4 > .nv-item-highlight { width: 50%; }
 }
-.nv-features-2 .nv-features-item { background: var(--nv-card); border-radius: 1rem; padding: 4rem; height: 100%; position: relative; }
+.nv-features-2 .nv-features-item { background: var(--nv-card); border-radius: var(--ds-card-radius, 1rem); padding: 4rem; height: 100%; position: relative; }
 @media (max-width: 1199.98px) { .nv-features-2 .nv-features-item { padding: 2rem; } }
 @media (max-width: 575.98px) { .nv-features-2 .nv-features-item { padding: 2rem 1.5rem; } }
-.nv-features-2 .nv-link-mask { border-radius: 1rem; position: absolute; top: 0; left: 0; height: 100%; width: 100%; transition: 500ms all; }
+.nv-features-2 .nv-link-mask { border-radius: var(--ds-card-radius, 1rem); position: absolute; top: 0; left: 0; height: 100%; width: 100%; transition: 500ms all; }
 .nv-features-2 .nv-link-mask:hover { box-shadow: 0 0 10px rgba(0, 0, 0, 0.14); } /* ds-keep: neutral black shadow */
 .nv-features-2 .nv-img-icon { margin-bottom: 2rem; }
 @media (max-width: 767.98px) { .nv-features-2 .nv-img-icon { margin-bottom: 1rem; } .nv-features-2 .nv-img-icon img { max-height: 80px; width: auto; } }
@@ -250,7 +250,7 @@ html[data-theme="dark"] .nv-features-2 .nv-item-highlight .nv-features-item h4 {
 	.nv-features-3 .nv-cols-2 > .nv-stat-col, .nv-features-4 .nv-cols-2 > .nv-stat-col { width: 50%; }
 	.nv-features-3 .nv-cols-1 > .nv-stat-col, .nv-features-4 .nv-cols-1 > .nv-stat-col { width: 100%; }
 }
-.nv-features-3 .nv-features-inner { background: var(--nv-card); border-radius: 2rem; padding: 4rem; height: 100%; }
+.nv-features-3 .nv-features-inner { background: var(--nv-card); border-radius: var(--ds-card-radius, 2rem); padding: 4rem; height: 100%; }
 @media (max-width: 991.98px) { .nv-features-3 .nv-features-inner { padding: 2rem; } }
 .nv-features-3 .nv-title { margin-bottom: 1rem; }
 @media (max-width: 991.98px) { .nv-features-3 .nv-title { margin-bottom: .5rem; } }
@@ -269,7 +269,7 @@ html[data-theme="dark"] .nv-features-2 .nv-item-highlight .nv-features-item h4 {
 
 /* ---- 4e. style 5: video intro ------------------------------------------------------------------------------------------------- */
 .nv-features-5 .nv-video-intro { position: relative; }
-.nv-features-5 .nv-video-intro img { border-radius: 2rem; }
+.nv-features-5 .nv-video-intro img { border-radius: var(--ds-card-radius, 2rem); }
 .nv-features-5 .nv-ic-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 30px; }
 .nv-features-5 .nv-play-btn { display: block; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
 .nv-features-5 .nv-play-btn .nv-icon {
@@ -291,7 +291,7 @@ html[data-theme="dark"] .nv-features-2 .nv-item-highlight .nv-features-item h4 {
 .nv-features-5 .nv-video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
 /* ---- 4f. style 6: expertise cards --------------------------------------------------------------------------------------------- */
-.nv-features-6 .nv-features-item { background: var(--nv-card-strong); border-radius: 2rem; padding: 4rem; height: 100%; }
+.nv-features-6 .nv-features-item { background: var(--nv-card-strong); border-radius: var(--ds-card-radius, 2rem); padding: 4rem; height: 100%; }
 @media (max-width: 1199.98px) { .nv-features-6 .nv-features-item { padding: 2rem; } }
 @media (max-width: 575.98px) { .nv-features-6 .nv-features-item { padding: 2rem 1.5rem; } }
 .nv-features-6 .nv-dot-decor { position: relative; margin-bottom: 2rem; height: 24px; width: 24px; }
@@ -317,7 +317,7 @@ html[data-theme="dark"] .nv-features-6 .nv-list-features li:not(:has(> a)), html
 .nv-features-6 .nv-list-features a:hover { background: var(--color-accent); color: var(--color-accent-on); }
 
 /* ---- 4g. style 7: open positions ---------------------------------------------------------------------------------------------- */
-.nv-features-7 .nv-features-inner { align-items: center; background: var(--nv-card); border-radius: 1rem; padding: 2rem; margin-bottom: 2rem; }
+.nv-features-7 .nv-features-inner { align-items: center; background: var(--nv-card); border-radius: var(--ds-card-radius, 1rem); padding: 2rem; margin-bottom: 2rem; }
 @media (max-width: 767.98px) { .nv-features-7 .nv-features-inner { padding: 2rem 1rem; } }
 .nv-features-7 .nv-job-info { display: flex; }
 .nv-features-7 .nv-job-info > div { margin-right: 2rem; }
@@ -369,7 +369,7 @@ html[data-theme="dark"] .nv-features-6 .nv-list-features li:not(:has(> a)), html
 html[data-theme="dark"] .nv-features-3 .nv-stat-col .nv-features-inner { background: var(--color-surface); border: 1px solid var(--color-line); }
 /* dark: the "Verified Teacher" card is a translucent part of the picture; a white backing makes it match its white siblings */
 html[data-theme="dark"] .nv-features-home-intro-2 .nv-intro-img { position: relative; }
-html[data-theme="dark"] .nv-features-home-intro-2 .nv-intro-img::before { content: ""; position: absolute; left: 68%; top: 14.7%; width: 32%; height: 39%; border-radius: 16px; background: var(--ds-c-fg, #ffffff); }
+html[data-theme="dark"] .nv-features-home-intro-2 .nv-intro-img::before { content: ""; position: absolute; left: 68%; top: 14.7%; width: 32%; height: 39%; border-radius: var(--ds-card-radius, 16px); background: var(--ds-c-fg, #ffffff); }
 html[data-theme="dark"] .nv-features-home-intro-2 .nv-intro-img img { position: relative; }
 
 /* coloured pictures drawn in the template's own hues (icons, the hero decoration): under a system they are drawn in grey, so no second palette sits beside the system's */

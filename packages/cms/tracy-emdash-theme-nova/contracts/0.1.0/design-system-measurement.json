@@ -4,10 +4,10 @@
   "cms": "emdash",
   "tag": "tracy-nova/emdash-0.x",
   "version": "0.1.0",
-  "measuredAt": "2026-11-25T09:36:43.285Z",
+  "measuredAt": "2026-11-25T11:57:52.474Z",
   "machine": "linux-arm64",
   "measuredBy": "tdsr flow.mjs --cms emdash --template emdash-tracy-nova",
-  "flowVersion": "e617bb85a",
+  "flowVersion": "09d5a21fb",
   "modes": [
     "native",
     "derived"
@@ -46,7 +46,7 @@
         "page": 0.001
       },
       "lowContrast": 0,
-      "lowestContrast": 5.75,
+      "lowestContrast": 5.09,
       "misses": [],
       "fontsLoaded": 5,
       "fontsDeclared": 2,
@@ -72,7 +72,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 5.75,
+      "lowestContrast": 5.09,
       "misses": [],
       "fontsLoaded": 5,
       "fontsDeclared": 2,
@@ -150,7 +150,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.46,
+      "lowestContrast": 5.52,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -176,7 +176,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.46,
+      "lowestContrast": 5.52,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -202,7 +202,7 @@
         "page": 0.001
       },
       "lowContrast": 0,
-      "lowestContrast": 6.54,
+      "lowestContrast": 5.45,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -228,7 +228,7 @@
         "page": 0.048
       },
       "lowContrast": 0,
-      "lowestContrast": 6.54,
+      "lowestContrast": 5.45,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -254,7 +254,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 4.85,
+      "lowestContrast": 4.65,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": 1,
@@ -280,7 +280,7 @@
         "page": 0.007
       },
       "lowContrast": 0,
-      "lowestContrast": 4.85,
+      "lowestContrast": 4.65,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": 1,
@@ -410,7 +410,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.99,
+      "lowestContrast": 5.86,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -436,7 +436,7 @@
         "page": 0.006
       },
       "lowContrast": 0,
-      "lowestContrast": 6.99,
+      "lowestContrast": 5.86,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -566,7 +566,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 5.99,
+      "lowestContrast": 5.26,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -592,7 +592,7 @@
         "page": 0.015
       },
       "lowContrast": 0,
-      "lowestContrast": 5.99,
+      "lowestContrast": 5.26,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": 1,
@@ -670,7 +670,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 6.19,
+      "lowestContrast": 5.68,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -696,7 +696,7 @@
         "page": 0.004
       },
       "lowContrast": 0,
-      "lowestContrast": 6.19,
+      "lowestContrast": 5.68,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": 1,
@@ -774,7 +774,7 @@
         "page": 0
       },
       "lowContrast": 0,
-      "lowestContrast": 5.69,
+      "lowestContrast": 4.82,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": 1,
@@ -800,7 +800,7 @@
         "page": 0.016
       },
       "lowContrast": 0,
-      "lowestContrast": 5.69,
+      "lowestContrast": 4.82,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": 1,
@@ -878,7 +878,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.12,
+      "lowestContrast": 4.21,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -904,7 +904,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.12,
+      "lowestContrast": 4.21,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -930,7 +930,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.63,
+      "lowestContrast": 3.73,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -956,7 +956,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.63,
+      "lowestContrast": 3.73,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -982,7 +982,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.12,
+      "lowestContrast": 4.21,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1008,7 +1008,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.12,
+      "lowestContrast": 4.21,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1034,7 +1034,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.14,
+      "lowestContrast": 4.26,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1060,7 +1060,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.14,
+      "lowestContrast": 4.26,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1086,7 +1086,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.2,
+      "lowestContrast": 4.26,
       "misses": [],
       "fontsLoaded": 5,
       "fontsDeclared": null,
@@ -1112,7 +1112,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.2,
+      "lowestContrast": 4.26,
       "misses": [],
       "fontsLoaded": 5,
       "fontsDeclared": null,
@@ -1138,7 +1138,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.92,
+      "lowestContrast": 4.05,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1164,7 +1164,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.92,
+      "lowestContrast": 4.05,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1190,7 +1190,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.19,
+      "lowestContrast": 4.21,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1216,7 +1216,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.19,
+      "lowestContrast": 4.21,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1242,7 +1242,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.06,
+      "lowestContrast": 4.15,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1268,7 +1268,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 5.06,
+      "lowestContrast": 4.15,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1294,7 +1294,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.55,
+      "lowestContrast": 3.66,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1320,7 +1320,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.55,
+      "lowestContrast": 3.66,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1398,7 +1398,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.53,
+      "lowestContrast": 3.59,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1424,7 +1424,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.53,
+      "lowestContrast": 3.59,
       "misses": [],
       "fontsLoaded": 3,
       "fontsDeclared": null,
@@ -1450,7 +1450,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.76,
+      "lowestContrast": 3.9,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1476,7 +1476,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.76,
+      "lowestContrast": 3.9,
       "misses": [],
       "fontsLoaded": 2,
       "fontsDeclared": null,
@@ -1502,7 +1502,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.68,
+      "lowestContrast": 3.77,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -1528,7 +1528,7 @@
         "page": null
       },
       "lowContrast": 0,
-      "lowestContrast": 4.68,
+      "lowestContrast": 3.77,
       "misses": [],
       "fontsLoaded": 4,
       "fontsDeclared": null,
@@ -33901,7 +33901,7 @@
       }
     }
   ],
-  "previewMeasuredAt": "2026-11-25T09:41:37.417Z",
+  "previewMeasuredAt": "2026-11-25T12:05:02.886Z",
   "previewPages": [
     "/",
     "/about",

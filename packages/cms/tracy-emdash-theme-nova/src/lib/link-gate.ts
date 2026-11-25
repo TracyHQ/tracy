@@ -25,7 +25,11 @@ const RECORDS: RecordTable = {
   career: page('career'),
   contact: page('contact'),
   services: page('services'),
-  project: page('project')
+  project: page('project'),
+  // the Pages question lists `Illustration` once (Road REL-2 reads the Project menu's Illustration item as the page record `illustration`):
+  // unticking it takes down the service page and the Project category of the same name, as one page
+  illustration: page('illustration'),
+  'project/illustration': page('illustration')
 }
 
 /** One checker per request and locale, so each record is read once however many components ask. */

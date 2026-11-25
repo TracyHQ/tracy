@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Nova",
-	"generatedAt": "2026-11-25T11:36:07.758Z",
+	"generatedAt": "2026-11-25T12:13:58.034Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -73,9 +73,9 @@
 		"docs/checks-and-recovery.md": "sha256:9c80004da6064e0aeb81643b0e2b928b189d02a0ad2e82e3faaeb5bb12834ebe",
 		"docs/content-api.md": "sha256:e47148a0ae91b9855f9cbf6f9e6ba234ca41434099e2e9eecd016cc806da1f98",
 		"docs/content-model.md": "sha256:03a8e3f4bdf9c5805f01333415b319274aca0e8fc9ee94304d93bf2b404f0aed",
-		"docs/content-rules.md": "sha256:1c70025e321b4789810c79aaaf6d23f19fbd075f192b191969b9421447512d61",
+		"docs/content-rules.md": "sha256:bbae534c54c2247bd651dfee716e743190671886a48e64c47d89c9a1d78a2089",
 		"docs/design-system.md": "sha256:c5c76bcd535c88a7d699960e60295cda2d8d00d0098f14f93cb1acc3e000724b",
-		"docs/generated/inventory.json": "sha256:d83212c011ec4f6e01a56055dcd32394f4269a01a155a26735eb01a324c5996e",
+		"docs/generated/inventory.json": "sha256:a35a06affe229be1ff42b187771ddb32423aab8d336d41ac731121918b6fa9ea",
 		"docs/generated/inventory.md": "sha256:fea1374efa2ce348f6f7134d7c2d95d00c074ebbe55aacf7cd9257480c814167",
 		"docs/install.md": "sha256:4f1cd976f5fc9ea55ce24f2e517cecebc630dee1d340e409705dec93557ab0f7",
 		"docs/languages.md": "sha256:e9efa59f8f05521e153c9711bd507d712f30c742afa546b3f1c618acab24a900",

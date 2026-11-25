@@ -27,6 +27,14 @@ const cols = `--nv-c-lg:${num(row.col_lg, 6)};--nv-c-md:${num(row.col_md, 4)};--
 const auto = String(row.autoplay) !== 'false'
 const url = (l?: string) =>
   l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : ''
+// the demo logo files are dark art (`item-N.png`): only they are lifted in dark mode, never a logo the customer uploaded
+const DEMO_ART = /^(item|icon)-\d+(-\d+)?\.png$/
+const cells = items.map((it) => ({
+  it,
+  to: url(it.link),
+  src: mediaUrl(it.logo) ?? '',
+  art: DEMO_ART.test(String(it.logo?.filename ?? '')) ? '' : undefined
+}))
 ---
 
 <section class:list={[sectionWrap(row.slug, info), 'nv-clients']} {...$s()}>
@@ -39,16 +47,15 @@ const url = (l?: string) =>
   >
     <div class="nv-car-view">
       <div class="nv-car-track">
-        {items.map((it) => {
-          const src = mediaUrl(it.logo)
-          const to = url(it.link)
-          const img = <img src={src ?? ''} alt={it.title ?? ''} width={Number(it.logo?.width) || undefined} height={Number(it.logo?.height) || undefined} loading="eager" decoding="async" {...$s('items.logo')} />
-          return (
-            <div class="nv-car-item nv-clients-item" {...$s.block('items')}>
-              <div class="nv-clients-logo">{to ? <a href={to} title={it.title || undefined}>{img}</a> : img}</div>
+        {cells.map(({ it, to, src, art }) => (
+          <div class="nv-car-item nv-clients-item" {...$s.block('items')}>
+            <div class="nv-clients-logo">
+              {to
+                ? <a href={to} title={it.title || undefined}><img src={src} alt={it.title ?? ''} width={Number(it.logo?.width) || undefined} height={Number(it.logo?.height) || undefined} loading="eager" decoding="async" data-nv-art={art} {...$s('items.logo')} /></a>
+                : <img src={src} alt={it.title ?? ''} width={Number(it.logo?.width) || undefined} height={Number(it.logo?.height) || undefined} loading="eager" decoding="async" data-nv-art={art} {...$s('items.logo')} />}
             </div>
-          )
-        })}
+          </div>
+        ))}
       </div>
     </div>
   </div>

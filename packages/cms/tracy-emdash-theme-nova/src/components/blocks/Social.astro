@@ -23,26 +23,26 @@ const items: { font_icon?: string; title?: string; link?: string }[] = Array.isA
   : []
 if (items.length === 0) return
 const look = String(row.social_style) === '1' ? '1' : '2'
+const cells = items.map((it) => ({
+  it,
+  net: networkOf(it.font_icon, it.title),
+  to: it.link && it.link.trim() && it.link.trim() !== '#' ? it.link.trim() : ''
+}))
 ---
 
 <section class:list={[sectionWrap(row.slug, info), 'nv-social-block']} {...$s()}>
   <div class="nv-container">
     <div class:list={['nv-sb-follow', `is-style-${look}`]}>
       {chrome.site.follow_label && <span class="nv-sb-label" {...$c('follow_label')}>{chrome.site.follow_label}</span>}
-      {items.map((it) => {
-        const net = networkOf(it.font_icon, it.title)
-        const to = it.link && it.link.trim() && it.link.trim() !== '#' ? it.link.trim() : ''
-        const icon = <SocialIcon name={net} size={look === '1' ? 20 : 16} />
-        return (
-          <div class="nv-sb-item" {...$s.block('items')}>
-            {to ? (
-              <a href={to} title={it.title || undefined} aria-label={it.title || undefined} class:list={['nv-sb-link', `is-${net}`]} rel="noopener">{icon}</a>
-            ) : (
-              <span class:list={['nv-sb-link', 'is-off', `is-${net}`]} title={it.title || undefined}>{icon}</span>
-            )}
-          </div>
-        )
-      })}
+      {cells.map(({ it, net, to }) => (
+        <div class="nv-sb-item" {...$s.block('items')}>
+          {to ? (
+            <a href={to} title={it.title || undefined} aria-label={it.title || undefined} class:list={['nv-sb-link', `is-${net}`]} rel="noopener"><SocialIcon name={net} size={look === '1' ? 20 : 16} /></a>
+          ) : (
+            <span class:list={['nv-sb-link', 'is-off', `is-${net}`]} title={it.title || undefined}><SocialIcon name={net} size={look === '1' ? 20 : 16} /></span>
+          )}
+        </div>
+      ))}
     </div>
   </div>
 </section>

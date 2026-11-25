@@ -14,6 +14,7 @@ const title = page?.title || chrome.site.brand_name
 // the hero carries the page's one h1; the page title is a hidden h1 only when the hero draws none
 const hero = await section('hero', 'home-hero', locale)
 const heroHasH1 = Boolean(hero?.title)
+const $hero = stampFor(Astro.request, 'hero', hero)
 ---
 
 {!page ? <NotFound chrome={chrome} locale={locale} path={path} /> : (
@@ -21,6 +22,7 @@ const heroHasH1 = Boolean(hero?.title)
 		<main id="main" class="nv-pg nv-pg--home">
 			<PageOwner stamp={$p} />
 			{!heroHasH1 && <h1 class="sr-only" {...$p('title')}>{title}</h1>}
+			{!heroHasH1 && <p class="sr-only" {...$hero('desc')}>{hero?.desc}</p>}
 			<Sections chrome={chrome} path="/" />
 		</main>
 	</Base>

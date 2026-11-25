@@ -36,6 +36,7 @@ const joinType = /light/.test(row.bottom_btn_type ?? '')
     ? 'is-secondary'
     : 'is-primary'
 const carId = `nv-team-${row.slug}`
+const cards = items.map((it) => ({ it, to: url(it.link), src: mediaUrl(it.img) }))
 const desc = row.team_desc ? headingHtml(row.team_desc) : ''
 
 const arrows = [
@@ -62,28 +63,21 @@ const arrows = [
     <div class="nv-teams-car nv-car" data-nv-car data-nv-car-id={carId} style={`--nv-cols:${columns}`}>
       <div class="nv-car-view">
         <div class="nv-car-track">
-          {items.map((it) => {
-            const src = mediaUrl(it.img)
-            const to = url(it.link)
-            const pic = src && (
-              <div class="nv-teams-img">
-                <img src={src} alt="" width={Number(it.img?.width) || 400} height={Number(it.img?.height) || 400} loading="eager" decoding="async" {...$s('items.img')} />
+          {cards.map(({ it, to, src }) => (
+            <div class="nv-car-item nv-teams-item" {...$s.block('items')}>
+              <div class="nv-teams-card">
+                {src && (to
+                  ? <a href={to}><div class="nv-teams-img"><img src={src} alt="" width={Number(it.img?.width) || 400} height={Number(it.img?.height) || 400} loading="eager" decoding="async" {...$s('items.img')} /></div></a>
+                  : <div class="nv-teams-img"><img src={src} alt="" width={Number(it.img?.width) || 400} height={Number(it.img?.height) || 400} loading="eager" decoding="async" {...$s('items.img')} /></div>)}
+                {(it.title || it.team_position) && (
+                  <div class="nv-teams-text">
+                    {it.title && <h4 class="nv-teams-name" {...$s('items.title')}>{to ? <a href={to}>{it.title}</a> : it.title}</h4>}
+                    {it.team_position && <span {...$s('items.team_position')}>{it.team_position}</span>}
+                  </div>
+                )}
               </div>
-            )
-            return (
-              <div class="nv-car-item nv-teams-item" {...$s.block('items')}>
-                <div class="nv-teams-card">
-                  {pic && (to ? <a href={to}>{pic}</a> : pic)}
-                  {(it.title || it.team_position) && (
-                    <div class="nv-teams-text">
-                      {it.title && <h4 class="nv-teams-name" {...$s('items.title')}>{to ? <a href={to}>{it.title}</a> : it.title}</h4>}
-                      {it.team_position && <span {...$s('items.team_position')}>{it.team_position}</span>}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )
-          })}
+            </div>
+          ))}
         </div>
       </div>
     </div>

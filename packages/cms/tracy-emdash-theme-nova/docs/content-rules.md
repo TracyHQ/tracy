@@ -18,6 +18,6 @@ Which rule owns which demo words (LANG-2: every word a component prints reaches 
 - **forms**: the contact form of `tools/forms.json` (`contact-en`): labels and placeholders from the rule, the notification address from the `email` answer (`notifyEmails`).
 - **terms**: the blog categories.
 
-`keptText` is empty: no printed demo word is left on purpose. A kept word would be listed there as `collection/slug.field` and its reason written in this file; `tests/lang2-printed-words.test.mjs` checks both.
+`keptText` holds one entry, `chrome/chrome.not_found_text`: the neutral "request failed" message of the error page, which says nothing about a company and is translated by `labels`. A kept word is listed there as `collection/slug.field` and its reason written in this file (and in `DECISIONS.md` D21); `tests/lang2-printed-words.test.mjs` checks both.
 
 Known and left: the Forms plugin's own words are translated by `FormWords.astro`, not by the map; a post's cover and body pictures stay the demo's until the customer replaces them; the network names of the social rows ("Facebook") are translated as labels.

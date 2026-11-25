@@ -30,7 +30,7 @@
 /* ---- category tabs (Project page) ---- */
 .nv-tabs-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 4rem; }
 @media (max-width: 991.98px) { .nv-tabs-nav { margin-bottom: 2rem; } }
-.nv-tabs-nav a { display: inline-flex; align-items: center; height: 64px; padding: .75rem 2rem; font-size: .9375rem; font-weight: 500; color: var(--color-heading); background: var(--pg-gray); border-radius: 1rem; transition: all .15s; }
+.nv-tabs-nav a { display: inline-flex; align-items: center; height: 64px; padding: .75rem 2rem; font-size: .9375rem; font-weight: 500; color: var(--color-heading); background: var(--pg-gray); border-radius: var(--ds-btn-radius, 1rem); transition: all .15s; }
 @media (max-width: 991.98px) { .nv-tabs-nav a { height: 50px; } }
 @media (max-width: 767.98px) { .nv-tabs-nav a { width: calc(50% - 1rem); padding: 1rem; justify-content: center; } }
 .nv-tabs-nav a:hover, .nv-tabs-nav a.is-on { background: var(--color-accent); color: var(--color-accent-on); }
@@ -38,8 +38,8 @@ html[data-theme="dark"] .nv-tabs-nav a { background: var(--ds-c-surface, #1e232b
 html[data-theme="dark"] .nv-tabs-nav a:hover, html[data-theme="dark"] .nv-tabs-nav a.is-on { background: var(--color-accent); color: var(--color-accent-on); }
 .nv-tabs-grid { display: grid; grid-template-columns: 1fr; column-gap: 2rem; }
 @media (min-width: 992px) { .nv-tabs-grid { grid-template-columns: repeat(2, 1fr); } }
-.nv-card--tab { margin-bottom: 2rem; padding: 2rem; border-radius: 2rem; }
-@media (max-width: 575.98px) { .nv-card--tab { padding: 1rem; border-radius: 1rem; } }
+.nv-card--tab { margin-bottom: 2rem; padding: 2rem; border-radius: var(--ds-card-radius, 2rem); }
+@media (max-width: 575.98px) { .nv-card--tab { padding: 1rem; border-radius: var(--ds-card-radius, 1rem); } }
 .nv-card--tab .nv-card-pic { margin-bottom: 2rem; }
 @media (max-width: 991.98px) { .nv-card--tab .nv-card-pic { margin-bottom: 1.5rem; } }
 .nv-card--tab .nv-card-title { margin: 0 0 1rem; font-size: 1.75rem; }
@@ -49,12 +49,12 @@ html[data-theme="dark"] .nv-card--project { background: var(--ds-c-surface-warm,
 /* ---- recent work (under a project) ---- */
 .nv-recent-grid { display: grid; grid-template-columns: 1fr; gap: 0 2rem; margin-bottom: -2rem; }
 @media (min-width: 992px) { .nv-recent-grid { grid-template-columns: repeat(2, 1fr); } }
-.nv-recent-item { margin-bottom: 2rem; padding: 2rem; background: var(--pg-card); border-radius: 1rem; transition: all .5s; }
+.nv-recent-item { margin-bottom: 2rem; padding: 2rem; background: var(--pg-card); border-radius: var(--ds-card-radius, 1rem); transition: all .5s; }
 @media (max-width: 767.98px) { .nv-recent-item { padding: 1rem; } }
 .nv-recent-item:hover { box-shadow: rgba(0, 0, 0, .07) 0 1px 1px, rgba(0, 0, 0, .07) 0 2px 2px, rgba(0, 0, 0, .07) 0 4px 4px, rgba(0, 0, 0, .07) 0 8px 8px, rgba(0, 0, 0, .07) 0 16px 16px; } /* ds-keep: neutral black shadow */
 .nv-recent-pic { display: block; margin-bottom: 2rem; overflow: hidden; border-radius: 1rem; }
 @media (max-width: 767.98px) { .nv-recent-pic { margin-bottom: 1rem; } }
-.nv-recent-pic img { display: block; width: 100%; height: auto; border-radius: 1rem; transition: all .8s; }
+.nv-recent-pic img { display: block; width: 100%; height: auto; border-radius: var(--ds-card-radius, 1rem); transition: all .8s; }
 .nv-recent-item:hover .nv-recent-pic img { transform: scale(1.02); }
 .nv-recent-title { margin: 0 0 1rem; font-size: 1.75rem; font-weight: 600; }
 @media (max-width: 576px) { .nv-recent-title { font-size: 22px; } }

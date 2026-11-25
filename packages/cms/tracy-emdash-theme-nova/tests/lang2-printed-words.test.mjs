@@ -199,16 +199,16 @@ test('LANG-2: the derivation notices a rule that stops covering a printed field'
       m.startsWith('hero/home-hero.title')
     )
   )
-  const withLabelFields = map.labels.find((l) => Array.isArray(l.fields) && l.fields.length > 0)
-  if (withLabelFields) {
-    const field = withLabelFields.fields.find(
-      (f) => !map.copy.some((c) => c.collection === withLabelFields.collection && c.field === f)
-    )
+  // a labelled field no copy rule writes (the page titles and the section heading twins are all copy now)
+  const labelled = map.labels
+    .filter((l) => Array.isArray(l.fields))
+    .flatMap((l) => l.fields.map((f) => [l.collection, f]))
+    .find(([c, f]) => !map.copy.some((r) => r.collection === c && r.field === f))
+  if (labelled) {
+    const [collection, field] = labelled
     assert.ok(
-      uncoveredPrintedFields(dropLabel(withLabelFields.collection, field)).some((m) =>
-        m.includes(`.${field}`)
-      ),
-      `${withLabelFields.collection}.${field} out of its rule is not found`
+      uncoveredPrintedFields(dropLabel(collection, field)).some((m) => m.includes(`.${field}`)),
+      `${collection}.${field} out of its rule is not found`
     )
   }
 })

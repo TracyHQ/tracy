@@ -5,6 +5,8 @@
  * Class prefix `nv-` = JA Nova component.
  * Design-system roles: the stylesheet reads each role as `var(--ds-…, <the template's own value>)`.
  */
+/* ds-not-used: --ds-c-disabled-bg, --ds-c-disabled-fg — a disabled button or field is drawn at reduced opacity, it has no ground or text colour of its own */
+/* ds-not-used: --ds-c-warn-text, --ds-c-danger-text, --ds-c-info-text — the site draws no warning, danger or info words: a status colour only fills a band or a badge, and the words on it are the page colour */
 @import "tailwindcss";
 @import "./tokens.css";
 @import "./blocks/chrome.css";
