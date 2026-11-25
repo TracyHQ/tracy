@@ -51,8 +51,9 @@
 .nv-more ol { list-style: none; margin: 0; padding: 0; }
 .nv-more li { padding: 2px 0; }
 .nv-more li + li { margin-top: 10px; }
-.nv-more a { display: inline-flex; align-items: center; color: var(--color-heading); }
-.nv-more a svg { flex: none; margin-right: 5px; }
+.nv-more a { display: block; color: var(--color-heading); }
+/* inline glyph: a wrapped second line returns under the glyph, as in the source */
+.nv-more a svg { display: inline; width: 12px; height: 16px; vertical-align: -.2em; margin-right: 5px; }
 .nv-more a:hover { color: var(--color-accent-text-hover); }
 
 /* the pager */
@@ -115,6 +116,9 @@ html[data-theme="dark"] .nv-popular li span { background: var(--ds-c-surface, #1
 .nv-article-tags { list-style: none; margin: 0 0 4rem; padding: 0 0 4rem; display: flex; flex-wrap: wrap; justify-content: center; border-bottom: 1px solid var(--pg-line); }
 .nv-article-tags li { margin: 0 .5rem .5rem 0; }
 @media (max-width: 991.98px) { .nv-article-tags { margin-bottom: 2rem; padding-bottom: 2rem; } }
+/* the empty list is only the rule under a blog title: 4rem below the title (2rem at <992) as in the source */
+.nv-article-tags:empty { padding-bottom: 2rem; }
+@media (max-width: 991.98px) { .nv-article-tags:empty { padding-bottom: 0; } }
 .nv-article-tags span { display: inline-block; padding: .75rem 1rem; font-size: .875rem; line-height: 1.64; color: var(--pg-muted); background: var(--pg-pill); border-radius: 1rem; }
 .nv-article-intro { max-width: 800px; margin: 0 auto 2rem; text-align: center; }
 .nv-article-intro p { margin: 0; }

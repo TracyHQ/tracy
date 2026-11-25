@@ -63,11 +63,13 @@ if (post && isProject && intro && paragraphs(body)[0] === intro) {
 const stamped = post ? stampBlocks($p, 'body', body as any[]) : []
 const tags = post ? tagsOf(post) : []
 const catLabel = post?.category?.label ?? ''
+// the crumb label is the label of the `primary` menu item with the same address (a menu-item label slot for the kit); the term label is the fallback
+const menuLabelOf = (url: string): string | undefined => chrome.primary.flatMap((i: any) => [i, ...(i.children ?? [])]).find((i: any) => i.url === url)?.label
 const trail = post
   ? isProject
     ? [
         { label: w.project_title, url: '/project' },
-        { label: catLabel, url: `/project/${post.category?.slug}` },
+        { label: menuLabelOf(`/project/${post.category?.slug}`) ?? catLabel, url: `/project/${post.category?.slug}` },
         { label: post.title, url: '' }
       ]
     : [
@@ -82,7 +84,7 @@ const trail = post
 		<main id="main" class:list={['nv-pg', isProject ? 'nv-pg--project' : 'nv-pg--post']}>
 			<PageOwner stamp={$p} />
 			<Breadcrumbs chrome={chrome} currentPath={own} trail={trail} />
-			<div class="nv-body">
+			<div class:list={['nv-body', !isProject && 'nv-body--tight']}>
 				<div class="nv-ct">
 					<article class:list={['nv-article', isProject && 'is-project']} itemscope itemtype="https://schema.org/Article">
 						{!isProject && post.date && (
