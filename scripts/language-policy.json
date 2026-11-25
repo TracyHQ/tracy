@@ -32869,6 +32869,16 @@
       "path": "packages/cms/tracy-emdash-theme-essence/seed/media/images/joomlart/category/item-5.jpg",
       "oid": "507ff3bad7499ffc5da99ee70a423b0ead7896f1",
       "reason": "A PNG picture the JoomlArt Essence demo ships under a .jpg name (checked with file(1): PNG image data 683 x 682); reviewed picture, not text."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "94d274afde3f03a99e98751175a405268ed5be5e",
+      "reason": "Exact generated interface translation bundle of PR #751 at commit 93e07edcf: the trial version note of a demo built past its brief's block (demo.trial) and the brief refusal reason (demo.reason.briefNotReady) in de, es, fr, it, nl and zh; reviewed build output."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "1898e5219568da32191862acd987916a16d59f1e",
+      "reason": "Exact generated Vietnamese interface bundle of PR #751 at commit 93e07edcf: the same trial version note and brief refusal reason in Vietnamese; reviewed build output."
     }
   ]
 }
