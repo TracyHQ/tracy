@@ -361,3 +361,31 @@ test('the final check keeps up to sixty faults taken in turn by group, each with
   assert.equal(kept[0].reason, 'The text of block-0.1 fills 41% of its box, under the 60% floor: "…"')
   assert.equal(JSON.stringify(d).includes('pastries'), false)
 })
+
+test("a refused read keeps what the plugin's words say as a code and the contract key they name, never the words", () => {
+  assert.deepEqual(
+    refusalOf('content.contract inspect was refused (contract_failed): Missing protected field images'),
+    {
+      action: 'content.contract',
+      operation: 'inspect',
+      code: 'contract_failed',
+      said: { kind: 'protected-field', field: 'images' }
+    }
+  )
+  assert.deepEqual(
+    refusalOf(
+      'content.contract inspect was refused (contract_failed): Presentation drift: tag-3 — published [want "1" got "0"]'
+    ).said,
+    { kind: 'drift', key: 'tag-3' }
+  )
+  assert.deepEqual(
+    refusalOf('content.contract inspect was refused (contract_failed): Content slot is missing or ambiguous')
+      .said,
+    { kind: 'slot-unreadable' }
+  )
+  const other = refusalOf(
+    'content.contract inspect was refused (contract_failed): site private-site said Bearer x'
+  )
+  assert.equal(other.said, undefined)
+  assert.equal(JSON.stringify(other).includes('private'), false)
+})

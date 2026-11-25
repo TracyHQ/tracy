@@ -4,10 +4,11 @@
 // every CMS. A kit with no known platform is an error, never a guess.
 const LINES = Object.freeze({
   joomla: 'This site runs on Joomla.',
-  wordpress: 'This site runs on WordPress (block editor).'
+  wordpress: 'This site runs on WordPress (block editor).',
+  emdash: 'This site runs on EmDash (an Astro CMS: pages and posts are content entries with named fields).'
 })
 
-/** The CMS line for a kit platform ("joomla", "wordpress"); throws for anything else. */
+/** The CMS line for a kit platform ("joomla", "wordpress", "emdash"); throws for anything else. */
 export function cmsLine(platform) {
   const line = typeof platform === 'string' && Object.hasOwn(LINES, platform) ? LINES[platform] : null
   if (!line)

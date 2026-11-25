@@ -10,9 +10,11 @@
 // never guessed.
 //
 // A WordPress content map has no menu item: its main menu is the theme's header navigation (main-menu-wordpress.js),
-// read when the content map carries `navigationSource` (content-map-source.js).
+// read when the content map carries `navigationSource` (content-map-source.js). Nor has an EmDash one: its main menu is
+// the `primary` of the content map's `menus` (main-menu-emdash.js).
 
 import { mainMenuFromPages } from './main-menu-from-pages.js'
+import { emdashMainMenuOf } from './main-menu-emdash.js'
 import { wordpressMainMenuOf } from './main-menu-wordpress.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
@@ -72,6 +74,7 @@ const empty = (problems = []) => ({ menutype: null, items: [], slots: [], hidden
 export function mainMenuOf({ plan, kit, contentMap }) {
   if (isObject(contentMap?.navigationSource))
     return wordpressMainMenuOf({ plan, kit, navigationSource: contentMap.navigationSource })
+  if (arr(contentMap?.menus).length) return emdashMainMenuOf({ plan, kit, menus: contentMap.menus })
   const withChildren = arr(plan?.mainMenu).filter((m) => isObject(m) && arr(m.children).length)
   if (!isObject(contentMap))
     return empty(

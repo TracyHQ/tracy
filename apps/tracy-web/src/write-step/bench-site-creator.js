@@ -40,7 +40,8 @@ const sleepFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 /**
  * @param {{ spec: {quickstart: string, contract: string}, door: object, store: object, label?: string,
  *   now?: () => number, sleep?: (ms: number) => Promise<void>, pollMs?: number, timeoutMs?: number,
- *   startedBy?: string }} input
+ *   startedBy?: string, keepOthers?: boolean }} input `keepOthers`: remove only the previous sites started under the same
+ *   `startedBy`, so a bench line of its own (a chain build replay) never deletes another's trial site
  * @returns {Promise<
  *   | { ok: true, siteKey: string, contract: string, createMs: number, totalMs: number, removed: string[],
  *       notRemoved: {siteKey: string, reason: string}[] }
@@ -128,7 +129,12 @@ export async function createBenchSite(input) {
     siteKey,
     answeredContract: read.contract
   })
-  const { removed, notRemoved } = await removePrevious(door, store, record.id)
+  const { removed, notRemoved } = await removePrevious(
+    door,
+    store,
+    record.id,
+    input.keepOthers ? { startedBy: input.startedBy ?? 'cli' } : {}
+  )
   return { ok: true, siteKey, contract: read.contract, createMs, totalMs: now() - began, removed, notRemoved }
 }
 
@@ -139,10 +145,10 @@ async function removeOwn(door, record) {
   return (await door.remove(record.siteKey)) ?? { ok: false, reason: 'no answer from the host' }
 }
 
-async function removePrevious(door, store, currentId) {
+async function removePrevious(door, store, currentId, scope = {}) {
   const removed = []
   const notRemoved = []
-  for (const old of await store.others(currentId)) {
+  for (const old of await store.others(currentId, scope)) {
     if (!old.siteKey) continue // a create that was refused: there is no site
     const gone = await removeOwn(door, old)
     if (gone.ok) {

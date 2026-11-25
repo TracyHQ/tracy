@@ -1,0 +1,2 @@
+- **The language policy lists the two interface bundles rebuilt by #751 (the trial version note and the brief refusal reason)** — David (WO) · #752 · `chore/language-policy-trial-build` · 2026-11-25
+  **Affects:** nobody else. The `language-policy` gate of #751 reads the policy from its base branch, so these two rows must reach `develop` first. They are `objects` rows for `packages/locale/tracy-locales/lib/client.js` (`94d274af`) and `packages/locale/tracy-locale-vi/lib/client.js` (`1898e521`), the exact blobs of #751's head; a rebuild of either bundle needs new rows.

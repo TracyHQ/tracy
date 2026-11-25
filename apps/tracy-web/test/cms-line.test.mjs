@@ -4,9 +4,13 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { cmsLine, withCmsLine } from '../src/lib/cms-line.js'
 
-test('a WordPress kit gets the WordPress line, a Joomla kit the Joomla line', () => {
+test('a WordPress kit gets the WordPress line, a Joomla kit the Joomla line, an EmDash kit the EmDash line', () => {
   assert.equal(cmsLine('wordpress'), 'This site runs on WordPress (block editor).')
   assert.equal(cmsLine('joomla'), 'This site runs on Joomla.')
+  assert.equal(
+    cmsLine('emdash'),
+    'This site runs on EmDash (an Astro CMS: pages and posts are content entries with named fields).'
+  )
 })
 
 test('the line goes first and the locked prompt follows byte for byte', () => {

@@ -487,7 +487,10 @@ export function hideOrders({
       // slot, no menu item, no words around it): nothing can take it off, and no contract slot is missing for the plan's words. It stays as the template prints it, and the link checks (dead-links, demo-links,
       // plan-links) judge it on the page. Before (dev lat31b, 23/11/2026) JA Boxing's footer credits and the cards of a
       // class whose article the write step unpublishes were seven "the contract has no slot" blocks.
-      else if (!held && isAddressLink(kitLinks.get(slot)) && doorOf(slot)?.via === 'none')
+      // So is one whose address several rows' slots hold as one (`shared`: a card's picture and name both opening the one
+      // demo page), when the plan hides none of those slots: emptying them would leave every card an empty link. Before (dev
+      // lat33, 24/11/2026) JA Boxing's trainer cards, whose photo and name links the plan hid, were twelve "no slot" blocks.
+      else if (!held && isAddressLink(kitLinks.get(slot)) && ['none', 'shared'].includes(doorOf(slot)?.via))
         orders.set(slot, { via: 'unremovable-link', key })
       else failedAs(notEmptiable(key, held))
     }

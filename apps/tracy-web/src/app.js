@@ -246,6 +246,8 @@ import { readBrandFile } from './sites/brand-files.js'
 import { createBriefBuilds } from './sites/brief-build.js'
 import { createStepChainEngine } from './sites/brief-engines/step-chain.js'
 import { createStepChainSteps } from './step-chain-steps.js'
+import { createChainReplays } from './step-chain-replay.js'
+import { writeStepBenchDeps } from './write-step-bench-deps.js'
 import { researchBusinessName } from './lib/research-revision.js'
 import { STEP_CHAIN_WORKFLOW } from './lib/step-chain-switch.js'
 import { createSiteBrand, setSiteBrand } from './sites/brief-engines/brand.js'
@@ -1874,7 +1876,37 @@ export function buildApp(deps) {
   // `tracy-host`) and the seat-book functions it needs to check authorization are siblings, not
   // shared ones — the composition root hands both through rather than either domain reaching
   // into the other directly.
+  // The replay of a finished chain build's write that staff start in /ops/wo (step-chain-replay.js, bench only): made
+  // with the chain's own steps below, and absent (its doors answer 503) on a server without a database or a host.
+  let chainReplays = null
   if (deps.config && deps.pool && deps.host) {
+    // The real steps of the step chain (step-chain-steps.js), one set for the chain's builds and for the replay of a
+    // finished build's write that staff start in /ops/wo (step-chain-replay.js).
+    const chainSteps = createStepChainSteps({
+      pool: deps.pool,
+      config: deps.config,
+      secret: deps.config.sessionSecret,
+      kitImages: kitImagesFor({
+        pool: deps.pool,
+        config: deps.config,
+        fetchImpl: deps.fetchImpl ?? fetch
+      }),
+      brandWiring: productionWiring(deps.config, {
+        objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch)
+      }),
+      picturesStoreDir: defaultStoreDir(),
+      fetchImpl: deps.fetchImpl ?? fetch,
+      keepFiles: process.env.STEP_CHAIN_KEEP_FILES === '1',
+      log: deps.log ?? console
+    })
+    chainReplays = createChainReplays({
+      pool: deps.pool,
+      steps: chainSteps,
+      // Read when the first replay starts: the write step bench signs in with this server's own SESSION_SECRET.
+      benchDeps: () => writeStepBenchDeps({ pool: deps.pool }),
+      keepFiles: process.env.STEP_CHAIN_KEEP_FILES === '1',
+      log: deps.log ?? console
+    })
     // Whether the request is on the API host (`lib/api-host.js`, S2): S1 reads this to accept a
     // Bearer key principal there and nowhere else, S3 to answer `/v1` there and nowhere else. A
     // test states which host it is on instead.
@@ -2229,26 +2261,7 @@ export function buildApp(deps) {
           ),
           // The step chain (#483): picked by the frame for a chain build of an allow-listed template
           // (`lib/step-chain-switch.js`). Its model steps run on the bench queues this server already works.
-          [STEP_CHAIN_WORKFLOW]: createStepChainEngine({
-            applyFor,
-            steps: createStepChainSteps({
-              pool: deps.pool,
-              config: deps.config,
-              secret: deps.config.sessionSecret,
-              kitImages: kitImagesFor({
-                pool: deps.pool,
-                config: deps.config,
-                fetchImpl: deps.fetchImpl ?? fetch
-              }),
-              brandWiring: productionWiring(deps.config, {
-                objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch)
-              }),
-              picturesStoreDir: defaultStoreDir(),
-              fetchImpl: deps.fetchImpl ?? fetch,
-              keepFiles: process.env.STEP_CHAIN_KEEP_FILES === '1',
-              log: deps.log ?? console
-            })
-          })
+          [STEP_CHAIN_WORKFLOW]: createStepChainEngine({ applyFor, steps: chainSteps })
         },
         normalize: async (input) => {
           // A step chain build names its site by the research it builds from; no model reads a brief it does not have.
@@ -2673,6 +2686,7 @@ export function buildApp(deps) {
       '/',
       opsRoutes({
         prefetch: app.dubaiPrefetch ?? null,
+        chainReplays,
         // The place pictures of a brief revision are read through the same objects Website Opportunities uses.
         objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
         pool: deps.pool,

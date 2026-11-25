@@ -2617,7 +2617,7 @@ look-call metadata. It never transfers a passing verdict, another question's alt
 A trial bench for step 9 of the new build flow, run only from `apps/tracy-web/scripts/write-step-bench.mjs` inside the
 tracy-web container; no customer flow reaches it. `create-site` makes a trial site by the customer's doors and records it.
 `run` takes frozen files and one of those sites and writes them through the Apply door as the bench account, in the
-command's own process: no worker and no server route of its own. It checks the files and builds the owner table first, so
+command's own process: no worker, and no server route of its own except the chain build replay below. It checks the files and builds the owner table first, so
 a bad file or a dispute writes nothing, then sends one `content.contract` apply. Slots the plugin refuses are dropped and
 the rest sent again, since that door is all or nothing; a refusal that names no slot stops the run. This slice writes the
 site copy's mapping only: hide decisions, link targets and the export's extras are reported as `skipped`. The result is the
@@ -2625,6 +2625,19 @@ write report `site-write-report/1`, kept on the run row. `cancel` sets a flag on
 row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tracy-web/src/write-step/`, its command line
 `apps/tracy-web/src/write-step-bench-cli.js`; what it shares with the other steps is in `apps/tracy-web/src/lib/`
 (`site-copy/`, `brand-accent/`, `picture-paint/`).
+
+**Chain build replay** (25/11/2026). An owner or admin of the staff workspace starts
+`POST /api/ops/wo/chain-builds/:siteKey/replay` (same Origin). tracy-web then runs this bench in its own process
+(`apps/tracy-web/src/step-chain-replay.js`; the wiring is shared with the command line in `write-step-bench-deps.js`).
+- **Inputs:** the last chain build of the site, read from its own bench runs: the planner's last plan, `get` of the
+  brand, copy and picture runs, and the research revision. A step that made nothing gets the chain's stand-in.
+- **Steps:** `create-site --by chain-replay --keep-others` (removes only the earlier replay site, never another bench
+  line's trial site), then `run`, then `check`.
+- **Result:** the write and its site check, summed up as the chain builds door sums up a build. It is kept in memory
+  only (`GET /api/ops/wo/chain-replays[/:id]`, last 20) and is gone after a restart.
+
+One replay runs at a time, with no model call and no 9b pass: the same inputs give the same write, so a write step or
+site check change is measured on inputs that do not move.
 
 Dropped Joomla article pages are also unpublished through the existing `content.update` door, using the exact native
 article owner declared by the kit body. Removing a menu item alone does not remove an article from category lists or
