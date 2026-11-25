@@ -2657,7 +2657,10 @@ row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tr
   only (`GET /api/ops/wo/chain-replays[/:id]`, last 20) and is gone after a restart.
 
 One replay runs at a time, with no model call and no 9b pass: the same inputs give the same write, so a write step or
-site check change is measured on inputs that do not move.
+site check change is measured on inputs that do not move. A bench run's pictures (the brand's spots, the picture files)
+live in tracy-web's own folders, which a redeploy empties while `TRACY_READINESS_DIR` and `TRACY_PICTURE_BENCH_DIR` are
+unset. A build older than the last deploy therefore replays with the chain's stand-ins for those two steps, and the
+replay names them (`inputs.gone`).
 
 Dropped Joomla article pages are also unpublished through the existing `content.update` door, using the exact native
 article owner declared by the kit body. Removing a menu item alone does not remove an article from category lists or

@@ -35,17 +35,37 @@ const BRIEF_CHECKS = new Set([
   'business-content'
 ])
 
-/** The failed build's exact checks, in the interface language, rather than a paid Retry. */
-function BriefBlockers({ t, row }: { t: Translate; row: OpportunityListRow }): JSX.Element | null {
-  if (row.demoAction?.error !== 'BRIEF_NOT_READY') return null
-  const checks = [...new Set(row.demoAction.readiness?.checks ?? [])].filter((id) => BRIEF_CHECKS.has(id))
+/** The brief checks as one list, in the interface language: what a refused or a trial build still needs. */
+function CheckList({ t, ids, mark }: { t: Translate; ids: string[]; mark: string }): JSX.Element | null {
+  const checks = [...new Set(ids)].filter((id) => BRIEF_CHECKS.has(id))
   if (!checks.length) return null
   return (
-    <ul className="tracy-wo-small" data-brief-blockers>
+    <ul className="tracy-wo-small" {...{ [mark]: '' }}>
       {checks.map((id) => (
         <li key={id}>{t(`brief.check.${id}`)}</li>
       ))}
     </ul>
+  )
+}
+
+/** The failed build's exact checks, in the interface language, rather than a paid Retry. */
+function BriefBlockers({ t, row }: { t: Translate; row: OpportunityListRow }): JSX.Element | null {
+  if (row.demoAction?.error !== 'BRIEF_NOT_READY') return null
+  return <CheckList t={t} ids={row.demoAction.readiness?.checks ?? []} mark="data-brief-blockers" />
+}
+
+/**
+ * A site built past its brief's block as a trial version (David, 25/11/2026): it opens like any demo, and this note says
+ * it is a trial and what a full version still needs.
+ */
+export function TrialNote({ t, row }: { t: Translate; row: OpportunityListRow }): JSX.Element | null {
+  const trial = row.demoAction?.trial
+  if (!trial || row.demoAction?.state === 'failed') return null
+  return (
+    <div className="tracy-wo-small" role="note" data-trial-note>
+      <span>{t('demo.trial')}</span>
+      <CheckList t={t} ids={trial.checks} mark="data-trial-checks" />
+    </div>
   )
 }
 
@@ -88,10 +108,17 @@ export function DemoProgress({
         </div>
       )
     }
-    if (action?.state !== 'queued') return null
+    // A build with no chain progress shows one sentence while it builds; a trial site keeps its note once built.
+    if (action?.state !== 'queued')
+      return action?.trial ? (
+        <div className="tracy-wo-progress" role="status">
+          <TrialNote t={t} row={row} />
+        </div>
+      ) : null
     return (
       <div className="tracy-wo-progress" role="status">
         <span className="tracy-wo-progress-now">{t('progress.building')}</span>
+        <TrialNote t={t} row={row} />
       </div>
     )
   }
@@ -133,6 +160,7 @@ export function DemoProgress({
         <span className={`${review ? 'tracy-wo-warn' : 'tracy-wo-error'} tracy-wo-small`}>{t(why)}</span>
       ) : null}
       {failed ? <BriefBlockers t={t} row={row} /> : null}
+      <TrialNote t={t} row={row} />
       {open ? (
         <BuildColumns t={t} columns={buildColumns(t, run, action?.state, locale)} />
       ) : (

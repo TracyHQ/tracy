@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-751-brief-trial-build",
+  "kind": "fix",
+  "title": "A brief short only of photos builds as a trial site with a note, and a refused brief reads as the brief refusal, not an unexpected error",
+  "pr": 751,
+  "area": "website-opportunities/build",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A brief blocked only on own photos, photo labels, an opening photo or a template card kind builds as a trial (a measured cafe-like brief with no photo of its own included); a picture with no known source or credit, an empty business reading or an unknown block still blocks; the Build card shows the trial version note with what a full version needs while building and once built; BRIEF_NOT_READY reads as the brief refusal, never as the unexpected error."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-brief-trial-gate.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-demo-progress.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-detail.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a pass or a warn builds; a block on trial checks only builds as a trial",
+      "a picture with no known source, an empty business reading or a check the gate does not know still blocks",
+      "the stored note reads the same gate: a hard check named in it means it blocked",
+      "a brief with no photo of its own but something of the business builds as a trial (the tester's cafe, 25/11/2026)",
+      "a trial site says it is a trial version and what a full version needs, while it builds and once built",
+      "a build failure reason that is a code reads as its plain sentence; a sentence is shown as is"
+    ]
+  }
+}

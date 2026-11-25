@@ -351,17 +351,15 @@ export function createStepChainSteps(deps) {
   return {
     /**
      * A finished bench run's files, taken out the way the chain takes them (`get`). The chain build replay
-     * (step-chain-replay.js) reads a past build's inputs so, and writes exactly what that build wrote.
+     * (step-chain-replay.js) reads a past build's inputs so, and writes exactly what that build wrote. Like the chain,
+     * it reads the files `get` wrote whatever its exit code: a run whose mapping has problems still writes it (the
+     * picture bench says them and ends 3), and the caller looks for the files it needs.
      * @param {'brand' | 'plan' | 'copy' | 'pictures'} name @param {string} runId @param {string} dir
+     * @returns {Promise<{ code: number, out: string[], err: string[] }>}
      */
     async filesOf(name, runId, dir) {
       await mkdir(dir, { recursive: true })
-      const got = await command(name, ['get', runId, '--out', dir])
-      if (got.code !== 0)
-        throw stepError(
-          `the ${name} run ${runId} gave no files: ${got.err.join(' ').slice(0, 240) || `get ended ${got.code}`}`
-        )
-      return got
+      return command(name, ['get', runId, '--out', dir])
     },
     async validateBase(ctx) {
       const site = await siteByKey(pool, ctx.siteKey)

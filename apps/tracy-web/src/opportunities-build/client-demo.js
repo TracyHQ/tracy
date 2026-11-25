@@ -21,6 +21,7 @@ import {
 import { liveReadinessOf } from './live-readiness.js'
 import {
   deterministicBuildId,
+  buildGateOf,
   readinessOfBuild,
   readinessNote,
   suggestedLabel,
@@ -433,10 +434,23 @@ export function createClientDemoService(deps) {
         if (made.error) throw error(made.error)
         state.revision = made.revision
       }
-      // A blocked brief claims no site and no chat (#50): the same verdict `startBuild` honours.
+      // A blocked brief claims no site and no chat (#50): the same gate `startBuild` honours. A brief blocked on trial
+      // checks only builds as a trial site (`buildGateOf`), and the action says so, for the owner to read.
       const readiness = !state.build ? readinessOfBuild(state.revision, domain) : null
-      if (readiness?.verdict === 'block')
+      const gate = buildGateOf(readiness)
+      if (gate === 'block')
         throw Object.assign(error('BRIEF_NOT_READY'), { readiness: readinessNote(readiness) })
+      if (gate === 'trial' && !state.action.selection?.trial) {
+        const trial = readinessNote(readiness)
+        await pool.query(
+          `update wo_demo_action
+              set selection = (case when jsonb_typeof(selection) = 'object' then selection else '{}'::jsonb end) || $2::jsonb,
+                  updated_at = $3
+            where id = $1`,
+          [state.action.id, JSON.stringify({ trial }), new Date(now())]
+        )
+        state.action.selection = { ...state.action.selection, trial }
+      }
       if (!state.build)
         state.build = (
           await insertBuild(pool, {

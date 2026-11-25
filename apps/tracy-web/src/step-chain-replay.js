@@ -46,6 +46,26 @@ const exists = (file) =>
 const replayError = (code, reason) => Object.assign(new Error(reason), { code })
 
 /**
+ * The local files a brand file or a picture mapping names under a `file` key (`spots[].file`, `uploads[].file`) that are
+ * not beside it. A bench run's pictures live in tracy-web's own folders, which a redeploy empties (TRACY_READINESS_DIR,
+ * TRACY_PICTURE_BENCH_DIR unset), so a build older than the last deploy has its documents but not its pictures.
+ */
+async function missingFilesOf(doc, base) {
+  const named = new Set()
+  const walk = (v) => {
+    if (Array.isArray(v)) v.forEach(walk)
+    else if (v && typeof v === 'object')
+      for (const [k, x] of Object.entries(v))
+        if (k === 'file' && typeof x === 'string' && x && !/^([a-z]+:|\/)/i.test(x)) named.add(x)
+        else walk(x)
+  }
+  walk(doc)
+  const missing = []
+  for (const file of named) if (!(await exists(path.join(base, file)))) missing.push(file)
+  return missing
+}
+
+/**
  * @param {{ pool: import('pg').Pool, steps: { filesOf: (name: string, runId: string, dir: string) => Promise<unknown> },
  *   benchDeps: object | (() => object), runBench?: (argv: string[], deps: object) => Promise<number>, now?: () => number,
  *   log?: { warn?: Function, info?: Function }, keepFiles?: boolean, tmp?: string }} deps
@@ -139,6 +159,7 @@ export function createChainReplays(deps) {
     const files = { brief: path.join(dir, 'brief.json') }
     await writeFile(files.brief, briefText)
     const made = {}
+    const gone = {}
 
     const { rows: rounds } = await pool.query(
       'select plan from site_planner_round where run_id = $1 and plan is not null order by round desc limit 1',
@@ -153,13 +174,26 @@ export function createChainReplays(deps) {
       if (!runIds[name]) return null
       const out = path.join(dir, name)
       try {
-        await steps.filesOf(name, runIds[name], out)
+        const got = await steps.filesOf(name, runIds[name], out)
+        if (got?.code)
+          r.lines.push(`${name}: get ended ${got.code}: ${(got.err ?? []).join(' ').slice(0, 300)}`)
       } catch (error) {
         r.lines.push(`${name}: ${String(error?.message ?? error)}`)
         return null
       }
       const at = path.join(out, file)
-      return (await exists(at)) ? at : null
+      if (!(await exists(at))) return null
+      // A document whose pictures are gone is not what the build wrote: it is set aside, never written half.
+      const missing =
+        name === 'copy' ? [] : await missingFilesOf(JSON.parse(await readFile(at, 'utf8')), path.dirname(at))
+      if (missing.length) {
+        gone[name] = missing.length
+        r.lines.push(
+          `${name}: ${missing.length} of its pictures are gone (${missing.slice(0, 3).join(', ')}): the run is older than tracy-web's last deploy`
+        )
+        return null
+      }
+      return at
     }
     files.copy = await taken('copy', 'site-copy.json')
     made.copy = Boolean(files.copy)
@@ -178,7 +212,7 @@ export function createChainReplays(deps) {
     made.pictures = Boolean(files.pictures)
     const manifest = files.pictures ? path.join(path.dirname(files.pictures), 'site-pictures.json') : null
     files.manifest = manifest && (await exists(manifest)) ? manifest : null
-    return { kitRef, revisionId, runIds, made, files }
+    return { kitRef, revisionId, runIds, made, gone, files }
   }
 
   /** The replay itself: inputs, trial site, write, check, each phase timed. */
@@ -201,7 +235,8 @@ export function createChainReplays(deps) {
         kit: inputs.kitRef,
         revisionId: inputs.revisionId,
         runIds: inputs.runIds,
-        made: inputs.made
+        made: inputs.made,
+        ...(Object.keys(inputs.gone).length ? { gone: inputs.gone } : {})
       }
       const site = await timed('site', () =>
         bench(r, [

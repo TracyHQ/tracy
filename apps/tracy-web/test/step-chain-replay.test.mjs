@@ -35,7 +35,7 @@ function fakePool({ chain = CHAIN, plan = { pages: [{ id: 'page-home' }] } } = {
 }
 
 /** The bench runs' `get`: the files each run keeps, or a refusal for the names in `gone`. */
-function fakeSteps({ gone = [] } = {}) {
+function fakeSteps({ gone = [], stale = false } = {}) {
   const asked = []
   return {
     asked,
@@ -45,11 +45,32 @@ function fakeSteps({ gone = [] } = {}) {
       await mkdir(dir, { recursive: true })
       const files = {
         copy: { 'site-copy.json': { version: 'site-copy/1', slots: [] } },
-        brand: { 'brand-file.json': { version: 'brand-file/1' } },
-        pictures: { 'mapping.json': { mapping: { changes: {} } }, 'site-pictures.json': { frames: [] } }
+        brand: {
+          'brand-file.json': { version: 'brand-file/1', spots: [{ file: 'spots/logo-header-1.v3.png' }] }
+        },
+        pictures: {
+          'mapping.json': {
+            mapping: { changes: { 'module-1.2': 'images/tracy-content/a.jpg' } },
+            uploads: [{ file: 'files/a.jpg' }]
+          },
+          'site-pictures.json': { frames: [] }
+        }
       }[name]
       for (const [file, doc] of Object.entries(files))
         await writeFile(path.join(dir, file), JSON.stringify(doc))
+      // The pictures beside the documents, unless the run is older than the last deploy (`stale`).
+      if (!stale && name === 'brand') {
+        await mkdir(path.join(dir, 'spots'), { recursive: true })
+        await writeFile(path.join(dir, 'spots', 'logo-header-1.v3.png'), 'png')
+      }
+      if (!stale && name === 'pictures') {
+        await mkdir(path.join(dir, 'files'), { recursive: true })
+        await writeFile(path.join(dir, 'files', 'a.jpg'), 'jpg')
+      }
+      // The picture bench says its mapping's problems and ends 3, its files written all the same.
+      return name === 'pictures'
+        ? { code: 3, out: [], err: ['mapping problem article-2.14: drawn'] }
+        : { code: 0, out: [], err: [] }
     }
   }
 }
@@ -237,4 +258,35 @@ test('a replay whose files cannot be laid out fails in words, and the next one c
   const again = await replays.start({ siteKey: SITE, account: 'staff@tracy.test' })
   assert.equal(again.ok, true)
   await finished(replays, again.replay.id)
+})
+
+test('a run older than the last deploy has its documents but not its pictures: they are set aside and the replay says so', async () => {
+  const { replays, bench } = replaysWith({ steps: fakeSteps({ stale: true }) })
+  const started = await replays.start({ siteKey: SITE, account: 'staff@tracy.test' })
+  const r = await finished(replays, started.replay.id)
+  assert.equal(r.state, 'done', JSON.stringify(r.error))
+  assert.deepEqual(r.inputs.made, { plan: true, copy: true, brand: false, pictures: false })
+  assert.deepEqual(r.inputs.gone, { brand: 1, pictures: 1 })
+  const run = bench.calls.find((a) => a[0] === 'run')
+  assert.match(option(run, '--brand-file'), /brand-stand-in\.json$/)
+  assert.equal(run.includes('--pictures-file'), false)
+  assert.ok(
+    r.lines.some((l) => /brand: 1 of its pictures are gone \(spots\/logo-header-1\.v3\.png\)/.test(l))
+  )
+})
+
+test('a picture run whose get ends 3 on mapping problems is still used, as the chain uses it', async () => {
+  const { replays, bench } = replaysWith()
+  const started = await replays.start({ siteKey: SITE, account: 'staff@tracy.test' })
+  const r = await finished(replays, started.replay.id)
+  assert.equal(r.inputs.made.pictures, true)
+  assert.equal(r.inputs.gone, undefined)
+  assert.match(
+    option(
+      bench.calls.find((a) => a[0] === 'run'),
+      '--pictures-file'
+    ),
+    /pictures\/mapping\.json$/
+  )
+  assert.ok(r.lines.some((l) => /pictures: get ended 3: mapping problem/.test(l)))
 })

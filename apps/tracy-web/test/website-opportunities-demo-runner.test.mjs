@@ -50,6 +50,38 @@ beforeEach(db.reset)
 after(db.close)
 
 const READY = { version: 'brief-readiness/1', verdict: 'pass', next: 'build', checks: [], ownerQuestions: [] }
+const PHOTOS = { id: 'owner.photos', field: 'photos', question: 'Can you send more photos of your business?' }
+/** A brief blocked on trial checks only: it builds as a trial site (builds.js `buildGateOf`, 25/11/2026). */
+const TRIAL_BLOCK = {
+  version: 'brief-readiness/1',
+  verdict: 'block',
+  next: 'ask-owner',
+  checks: [
+    {
+      id: 'own-usable-photos',
+      verdict: 'block',
+      measured: { count: 0 },
+      remedy: 'owner',
+      questions: [PHOTOS]
+    },
+    { id: 'hero-candidates', verdict: 'block', measured: { count: 0 }, remedy: 'owner', questions: [] }
+  ],
+  ownerQuestions: [PHOTOS]
+}
+/** A brief blocked also on a picture with no known source: it starts no build. */
+const HARD_BLOCK = {
+  ...TRIAL_BLOCK,
+  next: 'research-again',
+  checks: [
+    ...TRIAL_BLOCK.checks,
+    {
+      id: 'source-and-credit',
+      verdict: 'block',
+      measured: { assets: 1, unsourced: ['a1'], uncredited: [] },
+      remedy: 'research'
+    }
+  ]
+}
 
 /** The domain with every brief's readiness decreed (`READY` unless a test names another). */
 function readyByDecree(domain, readiness = READY) {
@@ -3577,8 +3609,8 @@ test(
   'a blocked brief starts no build: the action stops BRIEF_NOT_READY and the revision keeps its owner questions',
   opts,
   async () => {
-    // The fictional restaurant of these worlds has no photo at all: measured, its brief blocks.
-    const w = await world({ readiness: 'measured' })
+    // No photo of its own and one picture of no known source: a trial checks block alone would build (next test).
+    const w = await world({ readiness: HARD_BLOCK })
     await w.accept()
     const charged = 'select used from wo_demo_usage where account_id=$1'
     assert.equal((await w.pool.query(charged, [w.account])).rows[0].used, 1, 'the press reserves its build')
@@ -3601,6 +3633,24 @@ test(
 )
 
 test(
+  'a brief blocked on trial checks only builds as a trial site, and its action says what a full version needs',
+  opts,
+  async () => {
+    const w = await world({ readiness: TRIAL_BLOCK })
+    await w.accept()
+    await w.runner().drain()
+    assert.equal((await w.pool.query('select id from wo_build')).rowCount, 1, 'the build started')
+    assert.ok(w.creates() >= 1, 'the create door was asked')
+    const action = (await w.pool.query('select id, error, selection from wo_demo_action')).rows[0]
+    assert.notEqual(action.error, 'BRIEF_NOT_READY')
+    assert.equal(action.selection.trial.trial, true)
+    assert.ok(action.selection.trial.checks.includes('own-usable-photos'))
+    const shown = await demoActionOf(w.pool, w.account, action.id)
+    assert.deepEqual(shown.trial.checks.sort(), ['hero-candidates', 'own-usable-photos'])
+  }
+)
+
+test(
   'a blocked client-send brief fails promptly with its readiness cause and leaves the frozen revision unchanged',
   opts,
   async () => {
@@ -3608,7 +3658,7 @@ test(
       historical: false,
       agentWorkflow: true,
       chatMode: 'client-send/1',
-      readiness: 'measured'
+      readiness: HARD_BLOCK
     })
     const actionId = (await w.accept()).body.actions[0].id
     await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), {
