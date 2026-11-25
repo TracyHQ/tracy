@@ -38,7 +38,9 @@ for (const pg of UI_PAGES)
       if (!m) continue
       const have = ((styles[id] ??= {})[v] ??= m.styles)
       if (JSON.stringify(have) !== JSON.stringify(m.styles))
-        console.warn(`warning: role ${id} differs on the source between pages (${pg.id}, ${v}); the first page wins`)
+        console.warn(
+          `warning: role ${id} differs on the source between pages (${pg.id}, ${v}); the first page wins`
+        )
     }
 const used = new Set(UI_PAGES.flatMap(pageRoles))
 contract.design.rules = [...used].map((id) => {
@@ -63,7 +65,15 @@ for (const rule of contract.design.rules) {
 const F = (pgId, [id, selector, , owner, binding, attribute = 'text']) => {
   const expected = measures.content[pgId]?.[id]
   if (typeof expected !== 'string') throw new Error(`no source string for ${pgId}/${id}`)
-  return { id, selector: `${selector} >> nth=0`, source: srcFile(UI_PAGES.find((p) => p.id === pgId).src), owner, binding, attribute, expected }
+  return {
+    id,
+    selector: `${selector} >> nth=0`,
+    source: srcFile(UI_PAGES.find((p) => p.id === pgId).src),
+    owner,
+    binding,
+    attribute,
+    expected
+  }
 }
 const q = (s) => `"${s.replaceAll('"', '\\"')}"`
 
@@ -103,7 +113,8 @@ contract.interactions = {
 }
 
 // ── pages ──────────────────────────────────────────────────────────────────────────────────────────────────
-const PARITY = (pg) => (pg.bare ? ['ground'] : ['nav', 'footerTitle', 'ground', ...(pg.id === 'home' ? ['heroTitle'] : [])])
+const PARITY = (pg) =>
+  pg.bare ? ['ground'] : ['nav', 'footerTitle', 'ground', ...(pg.id === 'home' ? ['heroTitle'] : [])]
 const common = { locale: 'en', states: ['default'] }
 const mk = (pg, over = {}) => ({
   id: `en-${pg.id}`,
@@ -152,10 +163,30 @@ const layout = (id, view, rep, pages, family, states = ['default']) => ({
 })
 const stateOf = (suffix) => contract.pages.find((p) => p.id.endsWith(`-${suffix}`)).states
 contract.layouts = [
-  layout('Home', 'src/views/Home.astro', 'en-home', ['en-home', 'en-home-offcanvas', 'en-home-dropdown', 'en-home-accordion', 'en-home-pricing'], undefined, ['default', 'offcanvas', 'dropdown', 'accordion', 'pricing-tabs']),
-  layout('Page', 'src/views/Page.astro', 'en-about', ['en-about', 'en-career', 'en-career-show-more', 'en-services', 'en-project'], undefined, ['default', 'show-more']),
+  layout(
+    'Home',
+    'src/views/Home.astro',
+    'en-home',
+    ['en-home', 'en-home-offcanvas', 'en-home-dropdown', 'en-home-accordion', 'en-home-pricing'],
+    undefined,
+    ['default', 'offcanvas', 'dropdown', 'accordion', 'pricing-tabs']
+  ),
+  layout(
+    'Page',
+    'src/views/Page.astro',
+    'en-about',
+    ['en-about', 'en-career', 'en-career-show-more', 'en-services', 'en-project'],
+    undefined,
+    ['default', 'show-more']
+  ),
   layout('Service', 'src/views/Service.astro', 'en-svc-illustration', ids(/^en-svc-/), 'detail'),
-  layout('BlogList', 'src/views/BlogList.astro', 'en-blog', ['en-blog', 'en-project-illustration', 'en-project-branding', 'en-project-ui-ux-design'], 'list'),
+  layout(
+    'BlogList',
+    'src/views/BlogList.astro',
+    'en-blog',
+    ['en-blog', 'en-project-illustration', 'en-project-branding', 'en-project-ui-ux-design'],
+    'list'
+  ),
   layout('Post', 'src/views/Post.astro', 'en-post', ['en-post', 'en-project-detail'], 'detail'),
   layout('Contact', 'src/views/Contact.astro', 'en-contact', ['en-contact'], 'form'),
   layout('Search', 'src/views/Search.astro', 'en-search', ['en-search'], 'form'),
@@ -180,7 +211,8 @@ contract.design.exceptions = []
 delete contract.design.coverage
 contract.fonts = {
   selectors: ['h1', 'h2', 'h3', 'p', 'a', 'button', 'span', 'li'],
-  platform: 'Chromium (Playwright). Local files served by Astro (src/fonts.json): Golos Text 400, 500 and 700.',
+  platform:
+    'Chromium (Playwright). Local files served by Astro (src/fonts.json): Golos Text 400, 500 and 700.',
   allowed: { en: ['Golos Text'] }
 }
 contract.capabilities = ['audit-log', 'seo', 'media', 'forms']
@@ -193,15 +225,34 @@ contract.visual = {
     { id: 'dark-responsive', variants: ['390-dark'] }
   ],
   shots: [
-    { stages: ['light-desktop'], side: 'site', locales: ['en'], consumers: ['layout', 'typography', 'color', 'images', 'interaction'] },
-    { stages: ['light-responsive'], side: 'site', locales: ['en'], consumers: ['layout', 'typography', 'images'] },
+    {
+      stages: ['light-desktop'],
+      side: 'site',
+      locales: ['en'],
+      consumers: ['layout', 'typography', 'color', 'images', 'interaction']
+    },
+    {
+      stages: ['light-responsive'],
+      side: 'site',
+      locales: ['en'],
+      consumers: ['layout', 'typography', 'images']
+    },
     { stages: ['dark-desktop'], side: 'site', locales: ['en'], consumers: ['color', 'layout'] },
     { stages: ['dark-responsive'], side: 'site', locales: ['en'], consumers: ['layout', 'color'] },
-    { stages: ['light-desktop', 'light-responsive'], side: 'source', locales: ['en'], consumers: ['layout', 'typography', 'images'], ownSourceOnly: true }
+    {
+      stages: ['light-desktop', 'light-responsive'],
+      side: 'source',
+      locales: ['en'],
+      consumers: ['layout', 'typography', 'images'],
+      ownSourceOnly: true
+    }
   ],
   fastGate: {
     add: [
-      { page: 'en-contact', reason: 'Contact draws the form box (own components, not shared with the other pages)' },
+      {
+        page: 'en-contact',
+        reason: 'Contact draws the form box (own components, not shared with the other pages)'
+      },
       { page: 'en-search', reason: 'Search draws its own result list (own components)' },
       { page: 'en-career', reason: 'Career draws the collapsible position cards (own component)' }
     ]
@@ -221,12 +272,27 @@ contract.visual = {
 // ── source files: converted when a page reads them, otherwise excluded with the reason ───────────────────
 const mapped = new Set(contract.pages.flatMap((p) => p.source))
 const REASONS = [
-  [/(^|\/)(login-form|registration-form)\//, 'visitor accounts are not ported: a customer site has no front-end sign-in'],
-  [/^(error-page|offline-pages|typography|featured-articles)\//, 'demo page of the source (error and offline pages, typography, featured list): not ported'],
-  [/^(author-listting|tags)\//, 'author and tag listings of the source blog: the port lists posts under the blog and the project categories only'],
-  [/^category-blog\/[^/]+\//, 'one more article of the blog: one detail view serves them all, the representative is the first article'],
+  [
+    /(^|\/)(login-form|registration-form)\//,
+    'visitor accounts are not ported: a customer site has no front-end sign-in'
+  ],
+  [
+    /^(error-page|offline-pages|typography|featured-articles)\//,
+    'demo page of the source (error and offline pages, typography, featured list): not ported'
+  ],
+  [
+    /^(author-listting|tags)\//,
+    'author and tag listings of the source blog: the port lists posts under the blog and the project categories only'
+  ],
+  [
+    /^category-blog\/[^/]+\//,
+    'one more article of the blog: one detail view serves them all, the representative is the first article'
+  ],
   [/^category-blog\/index~/, 'a further page of the blog list: the same view as the first page'],
-  [/^project\/(branding|illustration|ui-ux-design)\/[^/]+\//, 'one more project of a category: one detail view serves them all, the representative is Packaging Design'],
+  [
+    /^project\/(branding|illustration|ui-ux-design)\/[^/]+\//,
+    'one more project of a category: one detail view serves them all, the representative is Packaging Design'
+  ],
   [/^index\.php\//, 'the same page as its SEF twin'],
   [/.*/, 'no built page reads this file']
 ]
@@ -289,4 +355,6 @@ contract.distribution = {
   ].filter((p) => existsSync(p) || p === 'public/favicon.svg')
 }
 writeFileSync(OUT, JSON.stringify(contract, null, 2) + '\n')
-console.log(`build-contract: ${contract.pages.length} pages, ${contract.design.rules.length} rules x ${ALL.length} variants, revision ${contract.revision}`)
+console.log(
+  `build-contract: ${contract.pages.length} pages, ${contract.design.rules.length} rules x ${ALL.length} variants, revision ${contract.revision}`
+)

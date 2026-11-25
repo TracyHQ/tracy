@@ -13,8 +13,12 @@ interface Props {
 const { chrome } = Astro.props
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const count = new Map<string, number>()
-for (const p of await loadPostsInOrder(chrome.locale)) for (const t of tagsOf(p)) count.set(t, (count.get(t) ?? 0) + 1)
-const tags = [...count.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 10).map(([t]) => t)
+for (const p of await loadPostsInOrder(chrome.locale))
+  for (const t of tagsOf(p)) count.set(t, (count.get(t) ?? 0) + 1)
+const tags = [...count.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .slice(0, 10)
+  .map(([t]) => t)
 ---
 
 {tags.length > 0 && (

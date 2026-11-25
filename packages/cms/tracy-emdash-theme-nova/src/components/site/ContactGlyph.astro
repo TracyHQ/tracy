@@ -8,7 +8,12 @@ interface Props {
   size?: number
 }
 const { name, size = 48 } = Astro.props
-const BY: Record<string, string> = { address: 'MapPin', phone: 'Phone', email: 'EnvelopeSimple', speaker: 'Megaphone' }
+const BY: Record<string, string> = {
+  address: 'MapPin',
+  phone: 'Phone',
+  email: 'EnvelopeSimple',
+  speaker: 'Megaphone'
+}
 const Glyph = (Phosphor as unknown as Record<string, any>)[BY[name]]
 ---
 

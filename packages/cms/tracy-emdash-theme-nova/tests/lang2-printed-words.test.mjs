@@ -48,19 +48,22 @@ export function printedFields() {
     const key = `${collection}.${field}${prop ? `[].${prop}` : ''}`
     if (!found.has(key)) found.set(key, { collection, field, prop, file })
   }
-  const seedFields = (collection) => new Set(entries.filter((e) => e.collection === collection).flatMap((e) => Object.keys(e.data)))
+  const seedFields = (collection) =>
+    new Set(entries.filter((e) => e.collection === collection).flatMap((e) => Object.keys(e.data)))
   const listProps = (collection) => {
     const props = new Map()
     for (const e of entries.filter((x) => x.collection === collection))
       for (const [field, v] of Object.entries(e.data))
         if (Array.isArray(v))
           for (const row of v)
-            if (row && typeof row === 'object') for (const p of Object.keys(row)) props.set(p, [...(props.get(p) ?? []), field])
+            if (row && typeof row === 'object')
+              for (const p of Object.keys(row)) props.set(p, [...(props.get(p) ?? []), field])
     return props
   }
   for (const [file, text] of sourceFiles()) {
     const vars = new Map()
-    for (const m of text.matchAll(/(\$\w+)\s*=\s*(?:\w+\s*\?\s*)?stampFor\([^,]+,\s*'([a-z_]+)'/g)) vars.set(m[1], m[2])
+    for (const m of text.matchAll(/(\$\w+)\s*=\s*(?:\w+\s*\?\s*)?stampFor\([^,]+,\s*'([a-z_]+)'/g))
+      vars.set(m[1], m[2])
     const stamped = [...new Set([...vars.values()])]
     const own = stamped.filter((s) => s !== 'chrome')
     // $x('field') and $x('items.prop') and $x.block('items')
@@ -74,7 +77,8 @@ export function printedFields() {
       if (seedFields('chrome').has(m[1])) add('chrome', m[1], undefined, file)
     // row.<field>, c.<field>, post.<field>, p.<field>, page.<field>: attribute to each collection the file stamps, where it exists
     for (const m of text.matchAll(/\b(?:row|entry|c|post|p|page|a)\.([a-z_][a-z0-9_]*)\b/g))
-      for (const collection of own) if (seedFields(collection).has(m[1])) add(collection, m[1], undefined, file)
+      for (const collection of own)
+        if (seedFields(collection).has(m[1])) add(collection, m[1], undefined, file)
     // list row props: it.<prop>, b.<prop>, item.<prop>, i.<prop>
     for (const m of text.matchAll(/\b(?:it|b|item|i|s|t|tab|slide)\.([a-z_][a-z0-9_]*)\b/g))
       for (const collection of own) {
@@ -91,9 +95,20 @@ const rowsOf = (e, field) => (Array.isArray(e.data[field]) ? e.data[field] : [])
 export function coveredBy(rules, e, field, prop, offered) {
   const slugOk = (r) => r.slug === undefined || r.slug === e.slug
   const listed = (r) => r.collection === e.collection && slugOk(r)
-  if ([...(rules.identity ?? []), ...(rules.facts ?? [])].some((r) => listed(r) && r.field === field)) return true
-  if ((rules.copy ?? []).some((r) => listed(r) && r.field === field && (!prop || (r.itemFields ?? []).includes(prop)))) return true
-  if ((rules.blocks ?? []).some((r) => listed(r) && r.field === field && (!prop || (r.itemFields ?? []).includes(prop)))) return true
+  if ([...(rules.identity ?? []), ...(rules.facts ?? [])].some((r) => listed(r) && r.field === field))
+    return true
+  if (
+    (rules.copy ?? []).some(
+      (r) => listed(r) && r.field === field && (!prop || (r.itemFields ?? []).includes(prop))
+    )
+  )
+    return true
+  if (
+    (rules.blocks ?? []).some(
+      (r) => listed(r) && r.field === field && (!prop || (r.itemFields ?? []).includes(prop))
+    )
+  )
+    return true
   if (
     (rules.rewrite ?? []).some(
       (r) =>
@@ -104,7 +119,9 @@ export function coveredBy(rules, e, field, prop, offered) {
   )
     return true
   const kept = (rules.keptText ?? []).some(
-    (id) => id === `${e.collection}/${e.slug}.${field}${prop ? `[].${prop}` : ''}` || id === `${e.collection}/*.${field}${prop ? `[].${prop}` : ''}`
+    (id) =>
+      id === `${e.collection}/${e.slug}.${field}${prop ? `[].${prop}` : ''}` ||
+      id === `${e.collection}/*.${field}${prop ? `[].${prop}` : ''}`
   )
   if (kept) return true
   if (!prop) return offered.has(`${e.collection}/${e.slug}.${field}`)
@@ -122,14 +139,15 @@ export function uncoveredPrintedFields(rules) {
     if (NOT_WORDS.test(prop ?? field)) continue
     for (const e of entries.filter((x) => x.collection === collection)) {
       const value = e.data[field]
-      const texts = prop
-        ? Array.isArray(value)
-          ? value.map((row) => row?.[prop])
-          : []
-        : [value]
+      const texts = prop ? (Array.isArray(value) ? value.map((row) => row?.[prop]) : []) : [value]
       // `features_intro.title` is printed only as the heading of the sections in SECTION_HAS_MAIN_TITLE that have no `main_title`
       // (src/components/blocks/FeaturesIntro.astro); elsewhere it is the entry's name in the admin.
-      if (collection === 'features_intro' && field === 'title' && !(SECTION_HAS_MAIN_TITLE.has(e.slug) && !e.data.main_title)) continue
+      if (
+        collection === 'features_intro' &&
+        field === 'title' &&
+        !(SECTION_HAS_MAIN_TITLE.has(e.slug) && !e.data.main_title)
+      )
+        continue
       const words = texts.some((t) => typeof t === 'string' && isLabelText(t) && !isAsset(t.trim()))
       if (!words) continue
       if (!coveredBy(rules, e, field, prop, offered))
@@ -141,7 +159,13 @@ export function uncoveredPrintedFields(rules) {
 
 test('LANG-2: the derivation finds the fields the components print', () => {
   const found = [...printedFields().keys()]
-  for (const key of ['chrome.search_button', 'chrome.close_label', 'contact.title', 'hero.button', 'posts.title'])
+  for (const key of [
+    'chrome.search_button',
+    'chrome.close_label',
+    'contact.title',
+    'hero.button',
+    'posts.title'
+  ])
     assert.ok(found.includes(key), `${key} not derived from the components`)
   assert.ok(found.length > 60, `only ${String(found.length)} printed fields derived`)
 })
@@ -165,10 +189,16 @@ test('LANG-2: the derivation notices a rule that stops covering a printed field'
   const noChrome = { ...map, labels: map.labels.filter((l) => l.collection !== 'chrome') }
   assert.ok(uncoveredPrintedFields(noChrome).some((m) => m.startsWith('chrome/chrome.search_button')))
   const noContact = { ...map, labels: map.labels.filter((l) => l.collection !== 'contact') }
-  assert.ok(uncoveredPrintedFields(noContact).some((m) => m.startsWith('contact/contact-layout.address_label')))
+  assert.ok(
+    uncoveredPrintedFields(noContact).some((m) => m.startsWith('contact/contact-layout.address_label'))
+  )
   const noRewrite = { ...map, rewrite: [] }
   assert.ok(uncoveredPrintedFields(noRewrite).some((m) => m.startsWith('posts/') && m.includes('.tags')))
-  assert.ok(uncoveredPrintedFields(dropRule('copy', 'hero', 'title')).some((m) => m.startsWith('hero/home-hero.title')))
+  assert.ok(
+    uncoveredPrintedFields(dropRule('copy', 'hero', 'title')).some((m) =>
+      m.startsWith('hero/home-hero.title')
+    )
+  )
   const withLabelFields = map.labels.find((l) => Array.isArray(l.fields) && l.fields.length > 0)
   if (withLabelFields) {
     const field = withLabelFields.fields.find(
@@ -186,7 +216,9 @@ test('LANG-2: the derivation notices a rule that stops covering a printed field'
 test('LANG-2: every post of the seed is rewritten by a rule that names it', () => {
   const posts = entries.filter((e) => e.collection === 'posts').map((e) => e.slug)
   const named = new Set(
-    map.rewrite.filter((r) => r.collection === 'posts').flatMap((r) => (Array.isArray(r.slugs) ? r.slugs : []))
+    map.rewrite
+      .filter((r) => r.collection === 'posts')
+      .flatMap((r) => (Array.isArray(r.slugs) ? r.slugs : []))
   )
   assert.deepEqual(
     posts.filter((s) => !named.has(s)),
@@ -210,7 +242,9 @@ test('LANG-2: every form of tools/forms.json has a `forms` rule naming every fie
   }
   for (const tax of seed.taxonomies ?? []) {
     assert.ok(
-      (map.terms ?? []).some((r) => r.taxonomy === tax.name && r.collections.some((c) => tax.collections.includes(c))),
+      (map.terms ?? []).some(
+        (r) => r.taxonomy === tax.name && r.collections.some((c) => tax.collections.includes(c))
+      ),
       `taxonomy ${tax.name} has no terms rule`
     )
   }
@@ -223,7 +257,10 @@ test('LANG-2: the contact form address of the demo is not what a customer receiv
   assert.ok(forms.every((f) => (map.forms ?? []).some((r) => f.slug.startsWith(`${r.slug}-`))))
   // the tool writes `notifyEmails: [answers.email]` for every form with a rule: the demo's address stays only without an answer
   const demo = forms.flatMap((f) => f.settings?.notifyEmails ?? [])
-  assert.ok(demo.every((a) => /\.(example|invalid)$/.test(a)), 'the demo notification address must be a reserved name')
+  assert.ok(
+    demo.every((a) => /\.(example|invalid)$/.test(a)),
+    'the demo notification address must be a reserved name'
+  )
 })
 
 test('LANG-2: demo brand words and demo contact data are rewritten or removed wherever they appear in the seed', () => {
@@ -234,10 +271,16 @@ test('LANG-2: demo brand words and demo contact data are rewritten or removed wh
   const walk = (value, e, field) => {
     if (typeof value === 'string') {
       const lower = value.toLowerCase()
-      if (!brand.some((w) => new RegExp(`(?<![a-z0-9])${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![a-z0-9])`, 'i').test(lower))) return
+      if (
+        !brand.some((w) =>
+          new RegExp(`(?<![a-z0-9])${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![a-z0-9])`, 'i').test(lower)
+        )
+      )
+        return
       // a plain-substring or whole-word replace rule takes the name out of any field
       if (finds.some((f) => lower.includes(f.toLowerCase()))) return
-      if (!coveredBy(map, e, field, undefined, new Set())) hits.push(`${e.collection}/${e.slug}.${field}: ${value.slice(0, 50)}`)
+      if (!coveredBy(map, e, field, undefined, new Set()))
+        hits.push(`${e.collection}/${e.slug}.${field}: ${value.slice(0, 50)}`)
     } else if (Array.isArray(value)) for (const v of value) walk(v, e, field)
     else if (value && typeof value === 'object') for (const v of Object.values(value)) walk(v, e, field)
   }
@@ -247,7 +290,9 @@ test('LANG-2: demo brand words and demo contact data are rewritten or removed wh
 
 test('LANG-2: the demo contact data (address, phone, e-mail) of the chrome and the contact entry is written from the answers', () => {
   const answered = (collection, slug, field, token) =>
-    (map.identity ?? []).some((r) => r.collection === collection && r.slug === slug && r.field === field && r.value === token)
+    (map.identity ?? []).some(
+      (r) => r.collection === collection && r.slug === slug && r.field === field && r.value === token
+    )
   const chrome = entries.find((e) => e.collection === 'chrome')
   const contact = entries.find((e) => e.collection === 'contact')
   for (const [e, field, token] of [
@@ -257,7 +302,11 @@ test('LANG-2: the demo contact data (address, phone, e-mail) of the chrome and t
     [contact, 'phone', '{phone}'],
     [contact, 'email', '{email}']
   ])
-    if (e.data[field]) assert.ok(answered(e.collection, e.slug, field, token), `${e.collection}.${field} is not written from ${token}`)
+    if (e.data[field])
+      assert.ok(
+        answered(e.collection, e.slug, field, token),
+        `${e.collection}.${field} is not written from ${token}`
+      )
 })
 
 test('PAGE-5: no link of the seed or the site model is a bare #', () => {
@@ -279,7 +328,10 @@ test('every keptText id names a demo field that exists and docs/content-rules.md
     const m = /^([a-z_]+)\/([a-z0-9_*-]+)\.([a-z_]+)(?:\[\]\.([a-z_]+))?$/.exec(id)
     assert.ok(m, `${id} is collection/slug.field[][.prop]`)
     const rows = entries.filter((e) => e.collection === m[1] && (m[2] === '*' || e.slug === m[2]))
-    assert.ok(rows.some((e) => m[3] in e.data), `${id} names no field of the seed`)
+    assert.ok(
+      rows.some((e) => m[3] in e.data),
+      `${id} names no field of the seed`
+    )
     assert.ok(rules.includes(id), `${id} has no reason in docs/content-rules.md`)
   }
 })

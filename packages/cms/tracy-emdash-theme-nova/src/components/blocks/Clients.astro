@@ -18,12 +18,15 @@ interface Props {
 }
 const { chrome, row, info } = Astro.props
 const $s = stampFor(Astro.request, 'clients', { id: row.id, slug: row.slug })
-const items: { logo?: any; title?: string; link?: string }[] = Array.isArray(row.items) ? row.items.filter((i: any) => i && i.logo) : []
+const items: { logo?: any; title?: string; link?: string }[] = Array.isArray(row.items)
+  ? row.items.filter((i: any) => i && i.logo)
+  : []
 if (items.length === 0) return
 const num = (v: unknown, d: number) => Math.max(1, Number(v) || d)
 const cols = `--nv-c-lg:${num(row.col_lg, 6)};--nv-c-md:${num(row.col_md, 4)};--nv-c-xs:${num(row.col_xs, 2)}`
 const auto = String(row.autoplay) !== 'false'
-const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
+const url = (l?: string) =>
+  l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : ''
 ---
 
 <section class:list={[sectionWrap(row.slug, info), 'nv-clients']} {...$s()}>

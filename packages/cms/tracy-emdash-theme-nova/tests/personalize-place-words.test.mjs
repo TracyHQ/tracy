@@ -32,6 +32,11 @@ for (const dir of seedDirs) {
   })
 }
 
-test('the template-level place-word check has a seed to read', { skip: seedDirs.length > 0 ? false : 'no seed with a content map here (the kit has its own fixture case in personalize-demo-street.test.mjs)' }, () => {
+test('the template-level place-word check has a seed to read', {
+  skip:
+    seedDirs.length > 0
+      ? false
+      : 'no seed with a content map here (the kit has its own fixture case in personalize-demo-street.test.mjs)'
+}, () => {
   assert.ok(seedDirs.length > 0)
 })

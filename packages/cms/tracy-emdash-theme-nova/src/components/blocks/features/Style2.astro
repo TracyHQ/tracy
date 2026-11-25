@@ -12,8 +12,14 @@ interface Props {
 }
 const { chrome, row } = Astro.props
 const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
-const items: Record<string, any>[] = (Array.isArray(row.items) ? row.items : []).filter((i: any) => i.title || i.description)
-const linkOf = await blockLinks(Astro.request, chrome.locale, items.map((i) => i.link))
+const items: Record<string, any>[] = (Array.isArray(row.items) ? row.items : []).filter(
+  (i: any) => i.title || i.description
+)
+const linkOf = await blockLinks(
+  Astro.request,
+  chrome.locale,
+  items.map((i) => i.link)
+)
 const cols = columnsOf(row.columns, 3)
 const align = row.align === 'center' || row.align === 'right' ? row.align : 'left'
 const imageType = String(row.image_type || 'normal').replace(/[^a-z-]/g, '')

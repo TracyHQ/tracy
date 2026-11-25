@@ -69,7 +69,12 @@ const readOpened = (text) => {
   const lines = text.slice(i).split('\n').slice(1)
   const end = lines.findIndex((l) => l.startsWith('## '))
   return (end < 0 ? lines : lines.slice(0, end))
-    .map((l) => l.trim().replace(/^[-*]\s+/, '').replace(/^`|`$/g, ''))
+    .map((l) =>
+      l
+        .trim()
+        .replace(/^[-*]\s+/, '')
+        .replace(/^`|`$/g, '')
+    )
     .filter((l) => /\.(png|jpe?g|webp)$/i.test(l))
 }
 /** `notes/<lens>.md` and `notes/<lens>-<suffix>.md` (one per stage or per agent); `-close` files are verdicts, not notes. */
@@ -269,9 +274,11 @@ export function main(argv = process.argv.slice(2)) {
   )
   if (coverage.missing.length)
     console.error(
-      `${coverage.missing.length} picture(s) with a consumer not opened. Lens files read: ${
-        LENSES.map((l) => `${l}=[${lensFiles(notesDir, l).join(', ')}] ${(opened[l] ?? []).length} opened`).join('; ')
-      }. A lens file lists them under "## Opened" as "- <path>" or one bare path per line, ending in .png/.jpg/.webp.`
+      `${coverage.missing.length} picture(s) with a consumer not opened. Lens files read: ${LENSES.map(
+        (l) => `${l}=[${lensFiles(notesDir, l).join(', ')}] ${(opened[l] ?? []).length} opened`
+      ).join(
+        '; '
+      )}. A lens file lists them under "## Opened" as "- <path>" or one bare path per line, ending in .png/.jpg/.webp.`
     )
   process.exit(coverage.missing.length ? 1 : 0)
 }

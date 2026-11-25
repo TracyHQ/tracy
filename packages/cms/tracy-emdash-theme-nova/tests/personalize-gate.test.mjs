@@ -47,7 +47,7 @@ test('a package with all three files and a filled map passes', () => {
 })
 
 test('the tracy-saas shape — no tool, no questionnaire, no map — is refused by name', () => {
-  const dir = artifact({ 'Dockerfile': 'FROM node:24-slim\n', 'tools/qa.mjs': '// …\n' })
+  const dir = artifact({ Dockerfile: 'FROM node:24-slim\n', 'tools/qa.mjs': '// …\n' })
   try {
     const problems = personalizeProblems(dir)
     assert.equal(problems.length, 1)
@@ -90,12 +90,16 @@ test('a map that writes nothing is a demo site with the paperwork in order', () 
 test('a questionnaire is refused for the three things that break a form quietly', () => {
   assert.deepEqual(questionProblems(JSON.stringify(questions())), [])
   assert.match(
-    questionProblems(JSON.stringify(questions({ questions: [{ id: 'sector', label: { en: 'Sector', vi: 'Ngành' } }] }))).join(' '),
+    questionProblems(
+      JSON.stringify(questions({ questions: [{ id: 'sector', label: { en: 'Sector', vi: 'Ngành' } }] }))
+    ).join(' '),
     /does not ask the customer's name/
   )
   // A label short of one language is what puts an English line inside a Vietnamese form.
   assert.match(
-    questionProblems(JSON.stringify(questions({ questions: [{ id: 'name', label: { en: 'Business name' } }] }))).join(' '),
+    questionProblems(
+      JSON.stringify(questions({ questions: [{ id: 'name', label: { en: 'Business name' } }] }))
+    ).join(' '),
     /has no vi label/
   )
   assert.match(questionProblems('{oops').join(' '), /not readable JSON/)

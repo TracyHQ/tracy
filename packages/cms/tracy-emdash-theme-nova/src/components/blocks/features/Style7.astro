@@ -14,7 +14,11 @@ const { chrome, row } = Astro.props
 const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const items: Record<string, any>[] = (Array.isArray(row.items) ? row.items : []).filter((i: any) => i.title)
-const linkOf = await blockLinks(Astro.request, chrome.locale, items.map((i) => i.btn_link))
+const linkOf = await blockLinks(
+  Astro.request,
+  chrome.locale,
+  items.map((i) => i.btn_link)
+)
 const type = (t: unknown) => String(t || 'primary').replace(/[^a-z-]/g, '')
 const more = chrome.site.show_more_label
 const less = chrome.site.show_less_label

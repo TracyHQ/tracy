@@ -37,10 +37,13 @@ interface Props {
   postSlug?: string
 }
 const { chrome, path, skip = [], only, category, postSlug } = Astro.props
-const sectionInfo = layout.sections as Record<string, { type: string; style: string; module: string; position: string }>
-const plan = ((layout.pages as Record<string, ({ section: string } | { dynamic: string })[]>)[path] ?? []).filter((p) =>
-  'section' in p ? !skip.includes(p.section) : !only || only.includes(p.dynamic)
-)
+const sectionInfo = layout.sections as Record<
+  string,
+  { type: string; style: string; module: string; position: string }
+>
+const plan = (
+  (layout.pages as Record<string, ({ section: string } | { dynamic: string })[]>)[path] ?? []
+).filter((p) => ('section' in p ? !skip.includes(p.section) : !only || only.includes(p.dynamic)))
 const rows = await Promise.all(
   plan.map(async (p) => {
     if (!('section' in p)) return { ...p, info: null, row: null }

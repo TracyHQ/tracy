@@ -317,7 +317,8 @@ export function validateContract(c, sourceRoot) {
     }
     if (par?.sourceThemes !== undefined)
       check(
-        Array.isArray(par.sourceThemes) && par.sourceThemes.every((t) => variants.some((v) => v?.theme === t)),
+        Array.isArray(par.sourceThemes) &&
+          par.sourceThemes.every((t) => variants.some((v) => v?.theme === t)),
         'design.parity.sourceThemes must list themes some variant has'
       )
     for (const t of ['hexTolerance', 'pxTolerance'])

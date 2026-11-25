@@ -6,10 +6,20 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { decodeWith, stripTags } from './text.mjs'
 
-const decode = decodeWith({ '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#039;': "'", '&#39;': "'", '&nbsp;': ' ' })
+const decode = decodeWith({
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&#039;': "'",
+  '&#39;': "'",
+  '&nbsp;': ' '
+})
 const [file, inventoryFile, sectionsFile, pageMapFile, contentFile] = process.argv.slice(2)
 if (!file || !inventoryFile || !sectionsFile || !pageMapFile || !contentFile) {
-  console.error('usage: shape-model.mjs <site-model.json> <inventory.json> <sections.json> <page-map.json> <content.json>')
+  console.error(
+    'usage: shape-model.mjs <site-model.json> <inventory.json> <sections.json> <page-map.json> <content.json>'
+  )
   process.exit(2)
 }
 const model = JSON.parse(readFileSync(file, 'utf8'))
@@ -56,7 +66,13 @@ for (const [type, mods] of Object.entries(byType)) {
     const id = String(mods[i].id)
     if (!NAME[id]) throw new Error(`module ${id} (${type}) has no name`)
     rec.slug = NAME[id]
-    sectionInfo[NAME[id]] = { type, style: mods[i].style, module: id, spacing: mods[i].spacing, position: mods[i].position }
+    sectionInfo[NAME[id]] = {
+      type,
+      style: mods[i].style,
+      module: id,
+      spacing: mods[i].spacing,
+      position: mods[i].position
+    }
   })
 }
 // the model keeps a picture as a bare basename (`item-1.jpg`), which several folders share; the module's own parameters carry the
@@ -67,10 +83,12 @@ for (const [slug, info] of Object.entries(sectionInfo)) {
   const rec = model.records.find((r) => r.type === info.type && r.slug === slug)
   const mod = sections.acm.find((m) => String(m.id) === info.module)
   const norm = (k) => k.replace(/-/g, '_')
-  for (const [k, v] of Object.entries(mod.fields ?? {})) if (isImg(v) && norm(k) in rec.values) rec.values[norm(k)] = fullPath(v)
+  for (const [k, v] of Object.entries(mod.fields ?? {}))
+    if (isImg(v) && norm(k) in rec.values) rec.values[norm(k)] = fullPath(v)
   ;(mod.items ?? []).forEach((it, i) => {
     for (const [k, v] of Object.entries(it))
-      if (isImg(v) && rec.values.items?.[i] && norm(k) in rec.values.items[i]) rec.values.items[i][norm(k)] = fullPath(v)
+      if (isImg(v) && rec.values.items?.[i] && norm(k) in rec.values.items[i])
+        rec.values.items[i][norm(k)] = fullPath(v)
   })
 }
 
@@ -81,7 +99,9 @@ for (const [slug, info] of Object.entries(sectionInfo)) {
     const row = inventory.menu.find((m) => m.id === id)
     if (!row) return ''
     const p = `/${row.path}`
-    return { '/about-us-2': '/about', '/about-us-2/contact': '/contact', '/about-us-2/career': '/career' }[p] ?? p
+    return (
+      { '/about-us-2': '/about', '/about-us-2/contact': '/contact', '/about-us-2/career': '/career' }[p] ?? p
+    )
   }
   for (const [slug, info] of Object.entries(sectionInfo)) {
     if (info.type === 'hero') continue
@@ -94,7 +114,8 @@ for (const [slug, info] of Object.entries(sectionInfo)) {
       bottom_btn_type: p['title-btn'] ? String(p['type-btn'] ?? 'primary') : ''
     }
     const type = model.types.find((t) => t.name === info.type)
-    for (const name of Object.keys(vals)) if (!type.fields.some((f) => f.name === name)) type.fields.push({ name, type: 'text' })
+    for (const name of Object.keys(vals))
+      if (!type.fields.some((f) => f.name === name)) type.fields.push({ name, type: 'text' })
     Object.assign(model.records.find((r) => r.type === info.type && r.slug === slug).values, vals)
   }
 }
@@ -120,43 +141,94 @@ for (const pg of pageMap.pages) {
       if (NAME[id]) list.push({ section: NAME[id] })
       else if (DYN[id]) list.push({ dynamic: DYN[id] })
     }
-  const RENAME = { '/about-us-2': '/about', '/about-us-2/contact': '/contact', '/about-us-2/career': '/career', '/category-blog': '/blog' }
+  const RENAME = {
+    '/about-us-2': '/about',
+    '/about-us-2/contact': '/contact',
+    '/about-us-2/career': '/career',
+    '/category-blog': '/blog'
+  }
   pages[RENAME[pg.path] ?? pg.path] = list
 }
-writeFileSync(new URL('../src/lib/page-layout.json', import.meta.url), JSON.stringify({ sections: sectionInfo, pages }, null, 2) + '\n')
+writeFileSync(
+  new URL('../src/lib/page-layout.json', import.meta.url),
+  JSON.stringify({ sections: sectionInfo, pages }, null, 2) + '\n'
+)
 
 // ---- pages kept (DECISIONS D8): the ported set
-const SERVICE_SLUGS = ['illustration', 'development', 'mobile-application', 'cloud-solutions', 'it-infrastructure', 'cybersecurity', 'virtualization']
+const SERVICE_SLUGS = [
+  'illustration',
+  'development',
+  'mobile-application',
+  'cloud-solutions',
+  'it-infrastructure',
+  'cybersecurity',
+  'virtualization'
+]
 const KEEP = new Set(['home', 'about-us-2', 'contact', 'career', 'project', 'services', ...SERVICE_SLUGS])
 model.records = model.records.filter((r) => r.type !== 'pages' || KEEP.has(r.slug))
 for (const r of model.records.filter((x) => x.type === 'pages')) {
   if (r.slug === 'about-us-2') r.slug = 'about'
-  r.values.view = r.slug === 'home' ? 'home' : SERVICE_SLUGS.includes(r.slug) ? 'service' : (r.slug === 'about' || r.slug === 'project' || r.slug === 'services' || r.slug === 'career' || r.slug === 'contact') ? r.slug : 'page'
+  r.values.view =
+    r.slug === 'home'
+      ? 'home'
+      : SERVICE_SLUGS.includes(r.slug)
+        ? 'service'
+        : r.slug === 'about' ||
+            r.slug === 'project' ||
+            r.slug === 'services' ||
+            r.slug === 'career' ||
+            r.slug === 'contact'
+          ? r.slug
+          : 'page'
 }
 // the article behind each service menu item is the page's text and banner picture
 const rowOf = (alias) => inventory.content.find((c) => c.alias === alias)
 const imgOf = (row, key) => String(JSON.parse(row.images || '{}')[key] ?? '').split('#')[0]
 const pageType = model.types.find((t) => t.name === 'pages')
-for (const f of ['banner', 'summary', 'sub_title']) if (!pageType.fields.some((x) => x.name === f)) pageType.fields.push({ name: f, type: f === 'banner' ? 'image' : 'text' })
+for (const f of ['banner', 'summary', 'sub_title'])
+  if (!pageType.fields.some((x) => x.name === f))
+    pageType.fields.push({ name: f, type: f === 'banner' ? 'image' : 'text' })
 for (const slug of SERVICE_SLUGS) {
   const rec = model.records.find((r) => r.type === 'pages' && r.slug === slug)
   const row = rowOf(slug)
-  Object.assign(rec.values, { body: `${row.introtext}\n${row.fulltext}`, banner: imgOf(row, 'image_fulltext') || imgOf(row, 'image_intro') })
+  Object.assign(rec.values, {
+    body: `${row.introtext}\n${row.fulltext}`,
+    banner: imgOf(row, 'image_fulltext') || imgOf(row, 'image_intro')
+  })
 }
 // the blog gets a page record of its own, so a customer can hide it from the header
-model.records.push({ type: 'pages', slug: 'blog', locale: 'en', status: 'published', values: { title: 'Blog', body: '', view: 'blog' } })
+model.records.push({
+  type: 'pages',
+  slug: 'blog',
+  locale: 'en',
+  status: 'published',
+  values: { title: 'Blog', body: '', view: 'blog' }
+})
 
 // ---- posts: the two articles that are menu items (5 = blog detail demo, 42 = project detail demo) are posts too
 const postType = model.types.find((t) => t.name === 'posts')
 for (const f of postType.fields) if (['title', 'excerpt', 'body'].includes(f.name)) f.searchable = true
 const extra = [
-  ['created', 'date'], ['author', 'text'], ['author_avatar', 'image'], ['tags', 'text'], ['hits', 'text'], ['kind', 'text'],
-  ['banner', 'image'], ['project_client', 'text'], ['project_budget', 'text'], ['project_client_name', 'text'], ['project_services', 'text'],
-  ['project_date', 'text'], ['project_link', 'text'], ['sort', 'text']
+  ['created', 'date'],
+  ['author', 'text'],
+  ['author_avatar', 'image'],
+  ['tags', 'text'],
+  ['hits', 'text'],
+  ['kind', 'text'],
+  ['banner', 'image'],
+  ['project_client', 'text'],
+  ['project_budget', 'text'],
+  ['project_client_name', 'text'],
+  ['project_services', 'text'],
+  ['project_date', 'text'],
+  ['project_link', 'text'],
+  ['sort', 'text']
 ]
-for (const [name, type] of extra) if (!postType.fields.some((f) => f.name === name)) postType.fields.push({ name, type })
+for (const [name, type] of extra)
+  if (!postType.fields.some((f) => f.name === name)) postType.fields.push({ name, type })
 const slugOfModel = (alias) => alias.replace(/[^a-z0-9]+/g, '-')
-const post = (alias) => model.records.find((r) => r.type === 'posts' && (r.slug === alias || r.slug === slugOfModel(alias)))
+const post = (alias) =>
+  model.records.find((r) => r.type === 'posts' && (r.slug === alias || r.slug === slugOfModel(alias)))
 const catAlias = { 8: 'blog', 10: 'branding', 11: 'ui-ux-design', 12: 'illustration' }
 for (const id of ['5', '42']) {
   const row = inventory.content.find((c) => c.id === id)
@@ -172,7 +244,9 @@ for (const id of ['5', '42']) {
 }
 const byId = Object.fromEntries(inventory.users.map((u) => [u.id, u]))
 const avatar = (uid) => {
-  const row = inventory.user_profiles.find((p) => p.user_id === uid && p.profile_key === 'profile.user_avatar')
+  const row = inventory.user_profiles.find(
+    (p) => p.user_id === uid && p.profile_key === 'profile.user_avatar'
+  )
   return row ? String(JSON.parse(row.profile_value)).split('#')[0] : ''
 }
 const tagsOf = (cid) =>
@@ -212,15 +286,33 @@ for (const r of model.records.filter((x) => x.type === 'posts')) {
   })
 }
 {
-  const posts = model.records.filter((r) => r.type === 'posts').sort((a, b) => String(b.values.date).localeCompare(String(a.values.date)))
+  const posts = model.records
+    .filter((r) => r.type === 'posts')
+    .sort((a, b) => String(b.values.date).localeCompare(String(a.values.date)))
   model.records = [...model.records.filter((r) => r.type !== 'posts'), ...posts]
 }
 // routes: the pages, the blog at /blog, the project lists, every post under its list (D8 drops the Joomla system pages)
-const KEEP_PATHS = new Set(['/', '/about-us-2', '/about-us-2/contact', '/about-us-2/career', '/project', '/services', ...SERVICE_SLUGS.map((s) => `/${s}`)])
+const KEEP_PATHS = new Set([
+  '/',
+  '/about-us-2',
+  '/about-us-2/contact',
+  '/about-us-2/career',
+  '/project',
+  '/services',
+  ...SERVICE_SLUGS.map((s) => `/${s}`)
+])
 model.routes = [
   ...model.routes
     .filter((r) => r.kind === 'page' && KEEP_PATHS.has(r.path))
-    .map((r) => (r.path === '/about-us-2' ? { ...r, path: '/about' } : r.path === '/about-us-2/contact' ? { ...r, path: '/contact' } : r.path === '/about-us-2/career' ? { ...r, path: '/career' } : r)),
+    .map((r) =>
+      r.path === '/about-us-2'
+        ? { ...r, path: '/about' }
+        : r.path === '/about-us-2/contact'
+          ? { ...r, path: '/contact' }
+          : r.path === '/about-us-2/career'
+            ? { ...r, path: '/career' }
+            : r
+    ),
   { path: '/blog', kind: 'list', type: 'posts' },
   { path: '/project/branding', kind: 'list', type: 'posts' },
   { path: '/project/ui-ux-design', kind: 'list', type: 'posts' },
@@ -235,7 +327,11 @@ for (const r of model.records.filter((x) => x.type === 'posts')) {
 // ---- menus: the header menu is `primary`; the services menu is the side menu of the service pages; the three demo footer
 // menus (Users, J!Pages, J! Content) link Joomla system pages that are not ported, so the footer columns are rebuilt (D11).
 const ren = { '/about-us-2': '/about', '/about-us-2/contact': '/contact', '/about-us-2/career': '/career' }
-const fixItem = ({ children, ...it }) => ({ ...it, path: ren[it.path] ?? it.path, ...(children ? { children: children.map(fixItem) } : {}) })
+const fixItem = ({ children, ...it }) => ({
+  ...it,
+  path: ren[it.path] ?? it.path,
+  ...(children ? { children: children.map(fixItem) } : {})
+})
 const main = model.menus.find((m) => m.name === 'mainmenu')
 const services = model.menus.find((m) => m.name === 'services')
 const mk = (name, label, items) => ({ name, label: { en: label }, items })
@@ -243,8 +339,17 @@ const leaf = (label, path) => ({ label: { en: label }, path })
 model.menus = [
   { ...main, name: 'primary', label: { en: 'Primary' }, items: main.items.map(fixItem) },
   { ...services, name: 'services', label: { en: 'Services' }, items: services.items.map(fixItem) },
-  mk('footer-company', 'Company', [leaf('About Us', '/about'), leaf('Career', '/career'), leaf('Contact', '/contact')]),
-  mk('footer-work', 'Work', [leaf('Blog', '/blog'), leaf('Branding', '/project/branding'), leaf('UI/UX design', '/project/ui-ux-design'), leaf('Illustration', '/project/illustration')])
+  mk('footer-company', 'Company', [
+    leaf('About Us', '/about'),
+    leaf('Career', '/career'),
+    leaf('Contact', '/contact')
+  ]),
+  mk('footer-work', 'Work', [
+    leaf('Blog', '/blog'),
+    leaf('Branding', '/project/branding'),
+    leaf('UI/UX design', '/project/ui-ux-design'),
+    leaf('Illustration', '/project/illustration')
+  ])
 ]
 // the project detail menu item points at a project post
 const pd = main.items.flatMap((i) => i.children ?? []).find((c) => c.path === '/project/project-detail')
@@ -270,16 +375,56 @@ model.types.push({
   mode: 'single',
   label: { en: 'Site chrome' },
   fields: [
-    'title', 'brand_name', 'header_phone', 'header_email', 'footer_about', 'footer_company_title', 'footer_work_title',
-    'footer_services_title', 'copyright', 'skip_label', 'menu_label', 'close_label', 'prev_label', 'next_label', 'more_label',
-    'read_more', 'by_label', 'tags_label', 'share_label', 'not_found_code', 'not_found_title', 'not_found_text', 'not_found_back_label',
-    'search_label', 'search_placeholder', 'search_button', 'no_results', 'theme_toggle_label', 'breadcrumb_home',
-    'categories_all_label', 'client_label', 'services_label', 'date_label', 'completed_label', 'see_live_label', 'budget_label',
-    'client_name_label', 'recent_work_title', 'related_title', 'latest_news_title', 'popular_tags_title', 'service_menu_title',
-    'follow_label', 'subscribe_label'
+    'title',
+    'brand_name',
+    'header_phone',
+    'header_email',
+    'footer_about',
+    'footer_company_title',
+    'footer_work_title',
+    'footer_services_title',
+    'copyright',
+    'skip_label',
+    'menu_label',
+    'close_label',
+    'prev_label',
+    'next_label',
+    'more_label',
+    'read_more',
+    'by_label',
+    'tags_label',
+    'share_label',
+    'not_found_code',
+    'not_found_title',
+    'not_found_text',
+    'not_found_back_label',
+    'search_label',
+    'search_placeholder',
+    'search_button',
+    'no_results',
+    'theme_toggle_label',
+    'breadcrumb_home',
+    'categories_all_label',
+    'client_label',
+    'services_label',
+    'date_label',
+    'completed_label',
+    'see_live_label',
+    'budget_label',
+    'client_name_label',
+    'recent_work_title',
+    'related_title',
+    'latest_news_title',
+    'popular_tags_title',
+    'service_menu_title',
+    'follow_label',
+    'subscribe_label'
   ]
     .map((name) => ({ name, ...text }))
-    .concat([{ name: 'logo_dark', type: 'image' }, { name: 'social_items', type: 'text' }])
+    .concat([
+      { name: 'logo_dark', type: 'image' },
+      { name: 'social_items', type: 'text' }
+    ])
 })
 model.records.push({
   type: 'chrome',
@@ -336,8 +481,12 @@ model.records.push({
 {
   const chromeType = model.types.find((t) => t.name === 'chrome')
   const chromeRec = model.records.find((r) => r.type === 'chrome')
-  for (const f of readdirSync(new URL('./words/', import.meta.url)).filter((n) => n.endsWith('.json')).sort())
-    for (const [name, value] of Object.entries(JSON.parse(readFileSync(new URL(`./words/${f}`, import.meta.url), 'utf8')))) {
+  for (const f of readdirSync(new URL('./words/', import.meta.url))
+    .filter((n) => n.endsWith('.json'))
+    .sort())
+    for (const [name, value] of Object.entries(
+      JSON.parse(readFileSync(new URL(`./words/${f}`, import.meta.url), 'utf8'))
+    )) {
       if (!chromeType.fields.some((x) => x.name === name)) chromeType.fields.push({ name, ...text })
       chromeRec.values[name] = value
     }
@@ -353,9 +502,28 @@ model.types = model.types.filter((t) => t.name !== 'modules')
     mode: 'single',
     label: { en: 'Contact' },
     fields: [
-      'title', 'address_label', 'address', 'phone_label', 'phone', 'email_label', 'email', 'heading', 'intro', 'follow_label',
-      'name_label', 'email_field_label', 'phone_field_label', 'subject_label', 'message_label', 'submit_label', 'banner', 'socials', 'form_id'
-    ].map((name) => ({ name, ...text })).map((f) => (f.name === 'banner' ? { name: 'banner', type: 'image' } : f))
+      'title',
+      'address_label',
+      'address',
+      'phone_label',
+      'phone',
+      'email_label',
+      'email',
+      'heading',
+      'intro',
+      'follow_label',
+      'name_label',
+      'email_field_label',
+      'phone_field_label',
+      'subject_label',
+      'message_label',
+      'submit_label',
+      'banner',
+      'socials',
+      'form_id'
+    ]
+      .map((name) => ({ name, ...text }))
+      .map((f) => (f.name === 'banner' ? { name: 'banner', type: 'image' } : f))
   })
   model.records.push({
     type: 'contact',
@@ -390,7 +558,12 @@ model.site = { ...model.site, title: { en: 'JA Nova' }, tagline: { en: '' } }
 
 // ---- links the model keeps at the Joomla paths of the ported pages
 {
-  const MOVED = { '/about-us-2/contact': '/contact', '/about-us-2/career': '/career', '/about-us-2': '/about', '/category-blog': '/blog' }
+  const MOVED = {
+    '/about-us-2/contact': '/contact',
+    '/about-us-2/career': '/career',
+    '/about-us-2': '/about',
+    '/category-blog': '/blog'
+  }
   const walk = (v, set) => {
     if (typeof v === 'string') return MOVED[v] ?? v
     if (Array.isArray(v)) return v.map((x) => walk(x))
@@ -403,8 +576,18 @@ model.site = { ...model.site, title: { en: 'JA Nova' }, tagline: { en: '' } }
 // ---- the social row of the blog list and the contact page (module 119, custom HTML) is a second social entry; its demo links point at the vendor's site, so they are left empty
 {
   const html = inventory.modules.find((m) => String(m.id) === '119').content
-  const items = [...html.matchAll(/<li class="(\w+)">[\s\S]*?fa-(\w+)/g)].map((m) => ({ font_icon: `fa-brands fa-${m[2]}`, title: m[1][0].toUpperCase() + m[1].slice(1), link: '' }))
-  model.records.push({ type: 'social', slug: 'social-page', locale: 'en', status: 'published', values: { social_style: '1', title: 'Social page', items } })
+  const items = [...html.matchAll(/<li class="(\w+)">[\s\S]*?fa-(\w+)/g)].map((m) => ({
+    font_icon: `fa-brands fa-${m[2]}`,
+    title: m[1][0].toUpperCase() + m[1].slice(1),
+    link: ''
+  }))
+  model.records.push({
+    type: 'social',
+    slug: 'social-page',
+    locale: 'en',
+    status: 'published',
+    values: { social_style: '1', title: 'Social page', items }
+  })
 }
 // the services page shows its cards without the "View all services" button of the Home copy
 {
@@ -415,7 +598,11 @@ model.site = { ...model.site, title: { en: 'JA Nova' }, tagline: { en: '' } }
 // ---- a scalar field that arrives as a list holds the first non-empty value
 for (const r of model.records) {
   const type = model.types.find((t) => t.name === r.type)
-  for (const f of type.fields) if (f.type !== 'group' && Array.isArray(r.values[f.name])) r.values[f.name] = r.values[f.name].find((v) => v) ?? ''
+  for (const f of type.fields)
+    if (f.type !== 'group' && Array.isArray(r.values[f.name]))
+      r.values[f.name] = r.values[f.name].find((v) => v) ?? ''
 }
-console.log(`shape-model: ${before} -> ${model.records.length} records, menus: ${model.menus.map((m) => m.name)}`)
+console.log(
+  `shape-model: ${before} -> ${model.records.length} records, menus: ${model.menus.map((m) => m.name)}`
+)
 writeFileSync(file, JSON.stringify(model, null, 2) + '\n')

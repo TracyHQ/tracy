@@ -18,9 +18,13 @@ interface Props {
 }
 const { chrome, row, style = 'style-1', info } = Astro.props
 const $s = stampFor(Astro.request, 'cta', { id: row.id, slug: row.slug })
-const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
-const btnClass = (t?: string) => (/light/.test(t ?? '') ? 'is-light' : /secondary|dark/.test(t ?? '') ? 'is-secondary' : 'is-primary')
-const buttons: { btn_title?: string; btn_link?: string; btn_type?: string }[] = Array.isArray(row.items) ? row.items.filter((b: any) => b && b.btn_title && url(b.btn_link)) : []
+const url = (l?: string) =>
+  l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : ''
+const btnClass = (t?: string) =>
+  /light/.test(t ?? '') ? 'is-light' : /secondary|dark/.test(t ?? '') ? 'is-secondary' : 'is-primary'
+const buttons: { btn_title?: string; btn_link?: string; btn_type?: string }[] = Array.isArray(row.items)
+  ? row.items.filter((b: any) => b && b.btn_title && url(b.btn_link))
+  : []
 const second = style === 'style-2'
 // style-2 may be drawn by a view with no page-layout entry: it falls back to the medium spacing of the source
 const spacing = info ?? (second ? { spacing: { top: 'medium', bottom: 'medium' } } : null)

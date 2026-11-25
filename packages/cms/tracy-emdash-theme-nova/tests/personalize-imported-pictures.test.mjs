@@ -11,7 +11,12 @@ import { test } from 'node:test'
 import { keepImportedPictures, keepSiteRowKeys, uploadPicture, uploadRequest } from '../tools/personalize.mjs'
 
 // The value the importer writes at a spot (`seed-apply.mjs` `media()`): the item's file name rides along.
-const pic = (id, filename) => ({ provider: 'local', id, src: `/_emdash/api/media/file/${id}.jpg`, ...(filename ? { filename } : {}) })
+const pic = (id, filename) => ({
+  provider: 'local',
+  id,
+  src: `/_emdash/api/media/file/${id}.jpg`,
+  ...(filename ? { filename } : {})
+})
 const seedData = {
   items: [
     { title: 'Slide one', image: 'images/joomlart/slideshow/slide-1.jpg' },
@@ -86,68 +91,170 @@ test('nothing to put back: no spot, no seed data, or a site that still holds the
   assert.equal(keepImportedPictures(fields, live, undefined, targets), fields)
   assert.equal(keepImportedPictures(fields, seedData, seedData, targets), fields)
   // A path at a field the spot names, top level: outside a list the spot cannot move, a value without a name is paired.
-  const top = keepImportedPictures({ hero: 'images/joomlart/hero.jpg' }, { hero: pic('h') }, { hero: 'images/joomlart/hero.jpg' }, ['hero'])
+  const top = keepImportedPictures(
+    { hero: 'images/joomlart/hero.jpg' },
+    { hero: pic('h') },
+    { hero: 'images/joomlart/hero.jpg' },
+    ['hero']
+  )
   assert.deepEqual(top.hero, pic('h'))
 })
 
 test('two Applies that move rows: each path keeps its own picture on the second run too (review of #572)', () => {
   const A = 'images/joomlart/slideshow/slide-1.jpg'
   const B = 'images/joomlart/slideshow/slide-2.jpg'
-  const seed = { items: [{ title: 'A', image: A }, { title: 'B', image: B }] }
-  const imported = { items: [{ title: 'A', image: pic('media-a', 'slide-1.jpg') }, { title: 'B', image: pic('media-b', 'slide-2.jpg') }] }
-  const moved = { items: [{ title: 'B', image: B }, { title: 'A', image: A }] }
+  const seed = {
+    items: [
+      { title: 'A', image: A },
+      { title: 'B', image: B }
+    ]
+  }
+  const imported = {
+    items: [
+      { title: 'A', image: pic('media-a', 'slide-1.jpg') },
+      { title: 'B', image: pic('media-b', 'slide-2.jpg') }
+    ]
+  }
+  const moved = {
+    items: [
+      { title: 'B', image: B },
+      { title: 'A', image: A }
+    ]
+  }
   const run1 = keepImportedPictures(moved, imported, seed, targets)
-  assert.deepEqual(run1.items.map((r) => r.image.id), ['media-b', 'media-a'])
+  assert.deepEqual(
+    run1.items.map((r) => r.image.id),
+    ['media-b', 'media-a']
+  )
   // The site now holds run 1's rows; run 2 writes the same order from the seed again, and then the seed's own order.
   const site = { items: run1.items.map((r, i) => keepSiteRowKeys([r], [imported.items[i]])[0]) }
   const run2 = keepImportedPictures(moved, site, seed, targets)
-  assert.deepEqual(run2.items.map((r) => r.image.id), ['media-b', 'media-a'])
+  assert.deepEqual(
+    run2.items.map((r) => r.image.id),
+    ['media-b', 'media-a']
+  )
   const back = keepImportedPictures(seed, site, seed, targets)
-  assert.deepEqual(back.items.map((r) => r.image.id), ['media-a', 'media-b'])
+  assert.deepEqual(
+    back.items.map((r) => r.image.id),
+    ['media-a', 'media-b']
+  )
 })
 
 test('a picture without the file name is never paired inside a list: the path is left, moved or not', () => {
   const A = 'images/joomlart/slideshow/slide-1.jpg'
   const B = 'images/joomlart/slideshow/slide-2.jpg'
-  const seed = { items: [{ title: 'A', image: A }, { title: 'B', image: B }] }
-  const moved = { items: [{ title: 'B', image: B }, { title: 'A', image: A }] }
+  const seed = {
+    items: [
+      { title: 'A', image: A },
+      { title: 'B', image: B }
+    ]
+  }
+  const moved = {
+    items: [
+      { title: 'B', image: B },
+      { title: 'A', image: A }
+    ]
+  }
   // Even the first Apply after import, rows in seed order: a list's row can have moved, so no position is trusted.
-  const fresh = { items: [{ title: 'A', image: pic('media-a') }, { title: 'B', image: pic('media-b') }] }
-  assert.deepEqual(keepImportedPictures(moved, fresh, seed, targets).items.map((r) => r.image), [B, A])
+  const fresh = {
+    items: [
+      { title: 'A', image: pic('media-a') },
+      { title: 'B', image: pic('media-b') }
+    ]
+  }
+  assert.deepEqual(
+    keepImportedPictures(moved, fresh, seed, targets).items.map((r) => r.image),
+    [B, A]
+  )
   // After an Apply moved the rows: the path is left rather than a picture swapped.
-  const after = { items: [{ title: 'B', image: pic('media-b') }, { title: 'A', image: pic('media-a') }] }
-  assert.deepEqual(keepImportedPictures(moved, after, seed, targets).items.map((r) => r.image), [B, A])
+  const after = {
+    items: [
+      { title: 'B', image: pic('media-b') },
+      { title: 'A', image: pic('media-a') }
+    ]
+  }
+  assert.deepEqual(
+    keepImportedPictures(moved, after, seed, targets).items.map((r) => r.image),
+    [B, A]
+  )
   // A row with no key but the picture proves nothing either.
-  const bare = keepImportedPictures({ g: [{ image: B }] }, { g: [{ image: pic('x') }] }, { g: [{ image: A }] }, ['g[0].image'])
+  const bare = keepImportedPictures(
+    { g: [{ image: B }] },
+    { g: [{ image: pic('x') }] },
+    { g: [{ image: A }] },
+    ['g[0].image']
+  )
   assert.deepEqual(bare.g, [{ image: B }])
   // Two pictures with the item's name (a server that renamed one): not one picture, so not chosen by name.
-  const twice = { items: [{ title: 'Z', image: pic('m1', 'slide-1.jpg') }, { title: 'Y', image: pic('m3', 'slide-1.jpg') }] }
-  assert.deepEqual(keepImportedPictures(moved, twice, seed, targets).items.map((r) => r.image), [B, A])
+  const twice = {
+    items: [
+      { title: 'Z', image: pic('m1', 'slide-1.jpg') },
+      { title: 'Y', image: pic('m3', 'slide-1.jpg') }
+    ]
+  }
+  assert.deepEqual(
+    keepImportedPictures(moved, twice, seed, targets).items.map((r) => r.image),
+    [B, A]
+  )
 })
 
 test('one picture goes to one seed path: a name two source files share names neither (review of #572, round 2)', () => {
   const A = 'images/joomlart/a/cover.jpg'
   const B = 'images/joomlart/b/cover.jpg'
-  const seed = { items: [{ title: 'A', image: A }, { title: 'B', image: B }] }
+  const seed = {
+    items: [
+      { title: 'A', image: A },
+      { title: 'B', image: B }
+    ]
+  }
   const spots = [
     { path: 'items[0].image', file: 'a/cover.jpg' },
     { path: 'items[1].image', file: 'b/cover.jpg' }
   ]
   // The library kept the second upload as cover-2.jpg (`ensureUniqueFilename`): `cover.jpg` finds media-a only.
-  const fresh = { items: [{ title: 'A', image: pic('media-a', 'cover.jpg') }, { title: 'B', image: pic('media-b', 'cover-2.jpg') }] }
+  const fresh = {
+    items: [
+      { title: 'A', image: pic('media-a', 'cover.jpg') },
+      { title: 'B', image: pic('media-b', 'cover-2.jpg') }
+    ]
+  }
   // The name says neither, and a spot in a list is not paired by position: both keep their source path, never media-a twice.
-  assert.deepEqual(keepImportedPictures(seed, fresh, seed, spots).items.map((r) => r.image), [A, B])
+  assert.deepEqual(
+    keepImportedPictures(seed, fresh, seed, spots).items.map((r) => r.image),
+    [A, B]
+  )
   // Rows moved since: the same.
-  const after = { items: [{ title: 'B', image: pic('media-b', 'cover-2.jpg') }, { title: 'A', image: pic('media-a', 'cover.jpg') }] }
-  const moved = { items: [{ title: 'B', image: B }, { title: 'A', image: A }] }
-  assert.deepEqual(keepImportedPictures(moved, after, seed, spots).items.map((r) => r.image), [B, A])
+  const after = {
+    items: [
+      { title: 'B', image: pic('media-b', 'cover-2.jpg') },
+      { title: 'A', image: pic('media-a', 'cover.jpg') }
+    ]
+  }
+  const moved = {
+    items: [
+      { title: 'B', image: B },
+      { title: 'A', image: A }
+    ]
+  }
+  assert.deepEqual(
+    keepImportedPictures(moved, after, seed, spots).items.map((r) => r.image),
+    [B, A]
+  )
   // One file at two spots whose seed paths differ: its picture is given by name to neither, and in a list not by position.
   const one = [
     { path: 'items[0].image', file: 'x/cover.jpg' },
     { path: 'items[1].image', file: 'x/cover.jpg' }
   ]
-  const same = { items: [{ title: 'A', image: pic('media-x', 'cover.jpg') }, { title: 'Q', image: pic('media-x', 'cover.jpg') }] }
-  assert.deepEqual(keepImportedPictures(seed, same, seed, one).items.map((r) => r.image), [A, B])
+  const same = {
+    items: [
+      { title: 'A', image: pic('media-x', 'cover.jpg') },
+      { title: 'Q', image: pic('media-x', 'cover.jpg') }
+    ]
+  }
+  assert.deepEqual(
+    keepImportedPictures(seed, same, seed, one).items.map((r) => r.image),
+    [A, B]
+  )
   // Outside a list a spot cannot move, but a picture is still one seed path's at most.
   const top = keepImportedPictures(
     { hero: 'images/joomlart/a/cover.jpg', side: 'images/joomlart/b/cover.jpg' },
@@ -161,18 +268,39 @@ test('one picture goes to one seed path: a name two source files share names nei
 test('rows alike in every other value, swapped, never swap pictures (review of #572, round 3)', () => {
   const A = 'images/joomlart/a/cover.jpg'
   const B = 'images/joomlart/b/cover.jpg'
-  const seed = { items: [{ title: 'Dish', image: A }, { title: 'Dish', image: B }] }
+  const seed = {
+    items: [
+      { title: 'Dish', image: A },
+      { title: 'Dish', image: B }
+    ]
+  }
   const spots = [
     { path: 'items[0].image', file: 'a/cover.jpg' },
     { path: 'items[1].image', file: 'b/cover.jpg' }
   ]
   // The site's rows were swapped; both still read "Dish", as the seed's rows do.
-  const swapped = { items: [{ title: 'Dish', image: pic('media-b', 'cover-2.jpg') }, { title: 'Dish', image: pic('media-a', 'cover.jpg') }] }
+  const swapped = {
+    items: [
+      { title: 'Dish', image: pic('media-b', 'cover-2.jpg') },
+      { title: 'Dish', image: pic('media-a', 'cover.jpg') }
+    ]
+  }
   const out = keepImportedPictures(seed, swapped, seed, spots)
-  assert.deepEqual(out.items.map((r) => r.image), [A, B])
+  assert.deepEqual(
+    out.items.map((r) => r.image),
+    [A, B]
+  )
   // Without names, the same: no picture is taken from a position in a list.
-  const unnamed = { items: [{ title: 'Dish', image: pic('media-b') }, { title: 'Dish', image: pic('media-a') }] }
-  assert.deepEqual(keepImportedPictures(seed, unnamed, seed, targets).items.map((r) => r.image), [A, B])
+  const unnamed = {
+    items: [
+      { title: 'Dish', image: pic('media-b') },
+      { title: 'Dish', image: pic('media-a') }
+    ]
+  }
+  assert.deepEqual(
+    keepImportedPictures(seed, unnamed, seed, targets).items.map((r) => r.image),
+    [A, B]
+  )
 })
 
 // EmDash 1.1.0 `MediaRepository.findAvailableFilename` (src/database/repositories/media.ts:438), which the importer's
@@ -195,7 +323,12 @@ const libraryName = (/** @type {Set<string>} */ names, /** @type {string} */ fil
 // #36): Restaurant gallery/ and features-intro/ intro-1..5,8.jpg; Diner blog/, slideshow/ and features/ item-1..4.jpg.
 // A seed and a media map of the templates' shape, holding only those spots.
 const listEntry = (collection, slug, field, dir, names) => ({
-  entry: { slug, data: { [field]: names.map((n, i) => ({ title: `${slug} ${i + 1}`, image: `images/joomlart/${dir}/${n}` })) } },
+  entry: {
+    slug,
+    data: {
+      [field]: names.map((n, i) => ({ title: `${slug} ${i + 1}`, image: `images/joomlart/${dir}/${n}` }))
+    }
+  },
   collection,
   items: names.map((n, i) => ({
     key: `${dir}-${n}`,
@@ -223,7 +356,14 @@ const diner = template([
   ...item.map((n, i) => ({
     entry: { slug: `post-${i + 1}`, data: { title: `Post ${i + 1}`, image: `images/joomlart/blog/${n}` } },
     collection: 'posts',
-    items: [{ key: `blog-${n}`, file: `blog/${n}`, mime: 'image/jpeg', targets: [{ collection: 'posts', slug: `post-${i + 1}`, path: 'image' }] }]
+    items: [
+      {
+        key: `blog-${n}`,
+        file: `blog/${n}`,
+        mime: 'image/jpeg',
+        targets: [{ collection: 'posts', slug: `post-${i + 1}`, path: 'image' }]
+      }
+    ]
   })),
   listEntry('pages', 'home', 'slides', 'slideshow', item),
   listEntry('pages', 'about', 'features', 'features', item)
@@ -246,12 +386,17 @@ test('a picture the library renamed (`intro-4-2.jpg`) is still found by its sour
       }
     }
     // The library did rename: the case is the one reported, not a lucky order.
-    assert.ok([...names].some((n) => /-\d+\.jpg$/.test(n) && !/^(intro|item)-\d+\.jpg$/.test(n)), name)
+    assert.ok(
+      [...names].some((n) => /-\d+\.jpg$/.test(n) && !/^(intro|item)-\d+\.jpg$/.test(n)),
+      name
+    )
     // Apply writes every entry back from the seed, as personalize groups the spots (`pictureSpotsOf`).
     for (const [collection, entries] of Object.entries(seed.content))
       for (const e of entries) {
         const spots = mediaMap.items.flatMap((m) =>
-          m.targets.filter((t) => t.collection === collection && t.slug === e.slug).map((t) => ({ path: t.path, file: m.file, key: m.key }))
+          m.targets
+            .filter((t) => t.collection === collection && t.slug === e.slug)
+            .map((t) => ({ path: t.path, file: m.file, key: m.key }))
         )
         const liveData = live[collection].find((x) => x.slug === e.slug).data
         const out = keepImportedPictures(e.data, liveData, e.data, spots)
@@ -272,10 +417,10 @@ test('a name that fits two source files of the entry, as itself and as the libra
   ]
   // `item-2.jpg` is b's own name and the library's second `item.jpg`: it says neither, and a keeps its path.
   const live = { items: [{ image: pic('m-x', 'item-2.jpg') }, { image: pic('m-y', 'item-2-2.jpg') }] }
-  assert.deepEqual(keepImportedPictures(seed, live, seed, spots).items.map((r) => r.image), [
-    'images/joomlart/a/item.jpg',
-    pic('m-y', 'item-2-2.jpg')
-  ])
+  assert.deepEqual(
+    keepImportedPictures(seed, live, seed, spots).items.map((r) => r.image),
+    ['images/joomlart/a/item.jpg', pic('m-y', 'item-2-2.jpg')]
+  )
   // Only the ambiguous name on the site: both keep their path.
   const only = { items: [{ image: pic('m-x', 'item-2.jpg') }, { image: pic('m-z') }] }
   assert.deepEqual(
@@ -331,7 +476,10 @@ test('the upload to the site’s own route carries the bearer; a signed URL on a
   assert.equal(signed.init.redirect, 'error')
 
   // An absolute URL on the site's own origin is the site's door too.
-  const absolute = uploadRequest({ uploadUrl: `${site}/_emdash/api/media/m2/upload` }, { site, token: 'T', mime: 'image/jpeg' })
+  const absolute = uploadRequest(
+    { uploadUrl: `${site}/_emdash/api/media/m2/upload` },
+    { site, token: 'T', mime: 'image/jpeg' }
+  )
   assert.equal(absolute.init.headers.get('authorization'), 'Bearer T')
 })
 
@@ -340,7 +488,11 @@ test('uploadPicture sends the bytes where uploadRequest says, then confirms', as
   const api = async (method, route, body) => {
     calls.push([method, route, body])
     if (route === '/_emdash/api/media/upload-url')
-      return { mediaId: 'm9', uploadUrl: 'https://bucket.example.com/m9?sig=1', headers: { 'x-amz-acl': 'private' } }
+      return {
+        mediaId: 'm9',
+        uploadUrl: 'https://bucket.example.com/m9?sig=1',
+        headers: { 'x-amz-acl': 'private' }
+      }
     return {}
   }
   const puts = []
@@ -349,10 +501,15 @@ test('uploadPicture sends the bytes where uploadRequest says, then confirms', as
     return { ok: true, status: 200 }
   }
   const bytes = Buffer.from('picture')
-  await uploadPicture(api, 'T', { bytes, mime: 'image/jpeg', filename: 'p.jpg', alt: 'A picture' }, {
-    fetchImpl,
-    site: 'http://127.0.0.1:4321'
-  })
+  await uploadPicture(
+    api,
+    'T',
+    { bytes, mime: 'image/jpeg', filename: 'p.jpg', alt: 'A picture' },
+    {
+      fetchImpl,
+      site: 'http://127.0.0.1:4321'
+    }
+  )
   assert.equal(puts.length, 1)
   assert.equal(puts[0].url, 'https://bucket.example.com/m9?sig=1')
   assert.equal(puts[0].init.headers.get('authorization'), null)
@@ -360,10 +517,15 @@ test('uploadPicture sends the bytes where uploadRequest says, then confirms', as
   assert.ok(calls.some(([m, r]) => m === 'POST' && r === '/_emdash/api/media/m9/confirm'))
 
   await assert.rejects(
-    uploadPicture(api, 'T', { bytes, mime: 'image/jpeg', filename: 'p.jpg', alt: '' }, {
-      fetchImpl: async () => ({ ok: false, status: 403 }),
-      site: 'http://127.0.0.1:4321'
-    }),
+    uploadPicture(
+      api,
+      'T',
+      { bytes, mime: 'image/jpeg', filename: 'p.jpg', alt: '' },
+      {
+        fetchImpl: async () => ({ ok: false, status: 403 }),
+        site: 'http://127.0.0.1:4321'
+      }
+    ),
     /upload p\.jpg → HTTP 403/
   )
 })

@@ -25,7 +25,11 @@ test('root-relative, own-origin and stylesheet references of a mirrored site are
        <body><img src="http://127.0.0.1:8080/images/a.png"><div style="background-image:url(&quot;/images/b.jpg&quot;)"></div>
        <a href="/about">About</a></body></html>`
     )
-    put(root, 'templates/t/css/a.css', '@font-face{src:url(../fonts/f.woff2)} .x{background:url("/images/c.png")}')
+    put(
+      root,
+      'templates/t/css/a.css',
+      '@font-face{src:url(../fonts/f.woff2)} .x{background:url("/images/c.png")}'
+    )
     put(root, 'templates/t/fonts/f.woff2', 'f')
     for (const f of ['a.png', 'b.jpg', 'c.png', 'unused.png']) put(root, `images/${f}`, f)
     const out = path.join(root, 'out')

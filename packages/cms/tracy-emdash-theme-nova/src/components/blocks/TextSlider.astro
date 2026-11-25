@@ -18,7 +18,9 @@ interface Props {
 }
 const { row, info } = Astro.props
 const $s = stampFor(Astro.request, 'text_slider', { id: row.id, slug: row.slug })
-const items: { logo?: any; title?: string }[] = Array.isArray(row.items) ? row.items.filter((i: any) => i && (i.title || i.logo)) : []
+const items: { logo?: any; title?: string }[] = Array.isArray(row.items)
+  ? row.items.filter((i: any) => i && (i.title || i.logo))
+  : []
 if (items.length === 0) return
 const rtl = String(row.slide_direct) === '1'
 const moves = String(row.autoplay) !== 'false'

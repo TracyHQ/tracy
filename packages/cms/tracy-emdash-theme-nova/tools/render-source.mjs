@@ -31,7 +31,10 @@ const opt = (name, dflt) => {
 }
 const pages = (opt('--pages', '') || '').split(',').filter(Boolean)
 const darkAttr = opt('--dark-attr', 'data-theme')
-const blocked = (opt('--block', '') || '').split(',').map((h) => h.trim().toLowerCase()).filter(Boolean)
+const blocked = (opt('--block', '') || '')
+  .split(',')
+  .map((h) => h.trim().toLowerCase())
+  .filter(Boolean)
 const isBlocked = (url) => {
   try {
     const host = new URL(url).hostname.toLowerCase()
@@ -79,7 +82,10 @@ for (const page of pages) {
           deviceScaleFactor: 1,
           reducedMotion: 'reduce'
         })
-        if (blocked.length) await ctx.route('**/*', (route) => (isBlocked(route.request().url()) ? route.abort() : route.continue()))
+        if (blocked.length)
+          await ctx.route('**/*', (route) =>
+            isBlocked(route.request().url()) ? route.abort() : route.continue()
+          )
         const p = await ctx.newPage()
         const errors = []
         p.on('console', (m) => {
@@ -111,7 +117,9 @@ for (const page of pages) {
           h1: [...document.querySelectorAll('h1')].map((e) => e.textContent.trim()),
           fonts: [
             ...new Set(
-              [...document.querySelectorAll('body *')].slice(0, 3000).map((e) => getComputedStyle(e).fontFamily)
+              [...document.querySelectorAll('body *')]
+                .slice(0, 3000)
+                .map((e) => getComputedStyle(e).fontFamily)
             )
           ].slice(0, 12),
           bodyBg: getComputedStyle(document.body).backgroundColor,
@@ -129,7 +137,12 @@ for (const page of pages) {
           `ok ${slug} ${vpName} ${theme} ${m.scrollWidth}x${m.scrollHeight}${m.overflowX ? ' OVERFLOW' : ''}${errors.length ? ` errors=${errors.length}` : ''}`
         )
       } catch (error) {
-        manifest.failed.push({ page, viewport: vpName, theme, error: String(error.message ?? error).split('\n')[0] })
+        manifest.failed.push({
+          page,
+          viewport: vpName,
+          theme,
+          error: String(error.message ?? error).split('\n')[0]
+        })
         console.log(`FAILED ${page} ${vpName} ${theme}: ${manifest.failed.at(-1).error}`)
       } finally {
         await ctx?.close()
@@ -139,5 +152,7 @@ for (const page of pages) {
 }
 await browser.close()
 writeFileSync(path.join(outDir, 'render-manifest.json'), JSON.stringify(manifest, null, '\t') + '\n')
-console.log(`wrote ${manifest.pages.length} renders to ${outDir}${manifest.failed.length ? `, ${manifest.failed.length} FAILED` : ''}`)
+console.log(
+  `wrote ${manifest.pages.length} renders to ${outDir}${manifest.failed.length ? `, ${manifest.failed.length} FAILED` : ''}`
+)
 process.exitCode = manifest.failed.length ? 1 : 0

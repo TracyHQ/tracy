@@ -529,22 +529,57 @@ describe('F10 — acceptance gate', () => {
       const identity = { contractHash: first.report.contractHash, artifactHash, origin: good.origin }
       const reviews = path.join(base, 'reviews')
       mkdirSync(reviews)
-      for (const g of ['build', 'security', 'visual-review', 'font-review', 'viewing-contexts', 'editability', 'forms', 'recovery', 'clean-install', 'independent'])
+      for (const g of [
+        'build',
+        'security',
+        'visual-review',
+        'font-review',
+        'viewing-contexts',
+        'editability',
+        'forms',
+        'recovery',
+        'clean-install',
+        'independent'
+      ])
         receipt(reviews, g, identity)
       // the mock stands in for the clean install this chain would have recorded at its clean-install step
       const port = new URL(good.origin).port
       mkdirSync(path.join(base, 'chain'))
       writeFileSync(
         path.join(base, 'chain', 'chain.json'),
-        JSON.stringify({ runs: [], qaReport: null, cleanInstall: { target: path.join(base, 'site'), port, origin: good.origin } })
+        JSON.stringify({
+          runs: [],
+          qaReport: null,
+          cleanInstall: { target: path.join(base, 'site'), port, origin: good.origin }
+        })
       )
       let r
       try {
         r = await execFileP(
           process.execPath,
-          [path.resolve(HERE, '../tools/release-chain.mjs'), '--from', 'qa', '--contract', 'chain.contract.json', '--pack', artifact,
-            '--target', path.join(base, 'site'), '--source', SOURCE, '--reviews', reviews, '--port', port,
-            '--out', path.join(base, 'chain'), '--', '--visual', '--visual-scans', 'hover'],
+          [
+            path.resolve(HERE, '../tools/release-chain.mjs'),
+            '--from',
+            'qa',
+            '--contract',
+            'chain.contract.json',
+            '--pack',
+            artifact,
+            '--target',
+            path.join(base, 'site'),
+            '--source',
+            SOURCE,
+            '--reviews',
+            reviews,
+            '--port',
+            port,
+            '--out',
+            path.join(base, 'chain'),
+            '--',
+            '--visual',
+            '--visual-scans',
+            'hover'
+          ],
           { cwd: root, maxBuffer: 16 * 1024 * 1024 }
         )
         assert.fail('content-api must fail on the mini package')
@@ -558,9 +593,18 @@ describe('F10 — acceptance gate', () => {
       assert.match(lines[6], /^release-chain: status=fail at=content-api/)
       assert.equal(lines.length, 7, 'release is not run after a failure')
       const report = JSON.parse(readFileSync(path.join(base, 'chain', 'qa.1', 'report.json'), 'utf8'))
-      assert.equal(report.status, 'pass', JSON.stringify(Object.fromEntries(Object.entries(report.gates).filter(([, g]) => g.status !== 'pass'))))
+      assert.equal(
+        report.status,
+        'pass',
+        JSON.stringify(
+          Object.fromEntries(Object.entries(report.gates).filter(([, g]) => g.status !== 'pass'))
+        )
+      )
       assert.equal(report.artifactHash, artifactHash)
-      assert.equal(JSON.parse(readFileSync(path.join(base, 'chain', 'chain.json'), 'utf8')).qaReport, path.join(base, 'chain', 'qa.1', 'report.json'))
+      assert.equal(
+        JSON.parse(readFileSync(path.join(base, 'chain', 'chain.json'), 'utf8')).qaReport,
+        path.join(base, 'chain', 'qa.1', 'report.json')
+      )
     })
     const defects = [
       ['brokenImage', /image decodes: .*\/logo.png/],

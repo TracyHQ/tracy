@@ -19,14 +19,28 @@ Astro.response.headers.set('cache-control', 'no-store')
 const q = (Astro.url.searchParams.get('q') ?? '').trim().slice(0, 200)
 const [all, found] = await Promise.all([
   loadPostsInOrder(locale),
-  q ? search(q, { collections: ['posts'], locale, status: 'published', limit: 50 }).then((r: any) => r.items ?? r) : Promise.resolve([])
+  q
+    ? search(q, { collections: ['posts'], locale, status: 'published', limit: 50 }).then(
+        (r: any) => r.items ?? r
+      )
+    : Promise.resolve([])
 ])
 const live = await livePosts(Astro.request, locale, all)
-const indexed = (found as any[]).map((r) => live.find((p) => p.slug === r.slug)).filter(Boolean) as typeof live
+const indexed = (found as any[])
+  .map((r) => live.find((p) => p.slug === r.slug))
+  .filter(Boolean) as typeof live
 // the search index is a CMS feature a site may not have switched on: with no index hit, the posts are matched on their own words
 const words = q.toLowerCase().split(/\s+/).filter(Boolean)
-const plain = (v: unknown) => (Array.isArray(v) ? v.map((b: any) => (b?.children ?? []).map((c: any) => c.text ?? '').join('')).join(' ') : '')
-const results = indexed.length > 0 || words.length === 0 ? indexed : live.filter((p) => words.every((x) => `${p.title} ${plain(p.excerpt)} ${plain(p.body)}`.toLowerCase().includes(x)))
+const plain = (v: unknown) =>
+  Array.isArray(v)
+    ? v.map((b: any) => (b?.children ?? []).map((c: any) => c.text ?? '').join('')).join(' ')
+    : ''
+const results =
+  indexed.length > 0 || words.length === 0
+    ? indexed
+    : live.filter((p) =>
+        words.every((x) => `${p.title} ${plain(p.excerpt)} ${plain(p.body)}`.toLowerCase().includes(x))
+      )
 const PER_PAGE = 10
 const start = startOf(Astro.url, PER_PAGE, results.length)
 const shown = results.slice(start, start + PER_PAGE)

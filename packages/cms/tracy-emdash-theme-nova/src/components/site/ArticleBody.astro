@@ -30,7 +30,10 @@ const after = tokenAt < 0 ? [] : blocks.slice(tokenAt + 1).filter(keep)
 const group = (list: any[]): any[] => {
   const rows: any[] = []
   for (let i = 0; i < list.length; i++) {
-    if (list[i]?._type !== 'image') { rows.push(list[i]); continue }
+    if (list[i]?._type !== 'image') {
+      rows.push(list[i])
+      continue
+    }
     const run: any[] = []
     while (list[i]?._type === 'image') run.push(list[i++])
     const head = list[i]
@@ -55,14 +58,21 @@ const group = (list: any[]): any[] => {
   return out
 }
 const stamped = blocks.some((b) => b?.[BLOCK_SRC])
-const components = { ...(stamped ? { block: ProseBlock, listItem: ProseListItem } : {}), type: { nvRow: ArticleImageRow } }
+const components = {
+  ...(stamped ? { block: ProseBlock, listItem: ProseListItem } : {}),
+  type: { nvRow: ArticleImageRow }
+}
 const imageOf = (n: any) => ({
   src: bodyImageUrl(n?.asset),
   alt: n?.alt ?? '',
   w: Number(n?.width ?? n?.asset?.width ?? n?.asset?.meta?.width) || undefined,
   h: Number(n?.height ?? n?.asset?.height ?? n?.asset?.meta?.height) || undefined
 })
-const segments = [...group(before), ...(Astro.slots.has('default') ? [{ kind: 'slot' }] : []), ...group(after)]
+const segments = [
+  ...group(before),
+  ...(Astro.slots.has('default') ? [{ kind: 'slot' }] : []),
+  ...group(after)
+]
 ---
 
 <div class="nv-article-body" itemprop="articleBody">

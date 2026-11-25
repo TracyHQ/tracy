@@ -77,7 +77,11 @@ function sitePagesFor(root) {
   const leaves = (item) => (item.children ?? []).flatMap((c) => (c.children?.length ? leaves(c) : [c]))
   const recordsAt = (p) => {
     if (p === '/') return [home]
-    const seg = p.replace(/[?#].*$/, '').replace(/\/+$/, '').split('/').pop()
+    const seg = p
+      .replace(/[?#].*$/, '')
+      .replace(/\/+$/, '')
+      .split('/')
+      .pop()
     const tests = [
       (r) => r.slug === seg,
       (r) => r.type === seg,
@@ -179,15 +183,9 @@ const pathProblemsOf = (name, text) => {
       doc = JSON.parse(text)
     } catch {}
   }
-  return localPathProblems(
-    doc,
-    guardRoots(),
-    name.endsWith('.json') ? '' : name,
-    undefined,
-    (pointer) => isRouteField(name, pointer)
-  ).map((b) =>
-    b.startsWith(name) ? b : `${name}#${b}`
-  )
+  return localPathProblems(doc, guardRoots(), name.endsWith('.json') ? '' : name, undefined, (pointer) =>
+    isRouteField(name, pointer)
+  ).map((b) => (b.startsWith(name) ? b : `${name}#${b}`))
 }
 const writeRelease = (file, content) => {
   const name = path.basename(file)
@@ -210,10 +208,12 @@ const guardArchiveText = () => {
   if (existsSync(generated)) for (const f of readdirSync(generated)) files.push(`docs/generated/${f}`)
   for (const rel of files) {
     const p = path.join(artifact, rel)
-    if (existsSync(p) && statSync(p).isFile()) bad.push(...pathProblemsOf(`zip:${rel}`, readFileSync(p, 'utf8')))
+    if (existsSync(p) && statSync(p).isFile())
+      bad.push(...pathProblemsOf(`zip:${rel}`, readFileSync(p, 'utf8')))
   }
   const receipts = path.join(site, 'data', 'seed-receipts.json')
-  if (existsSync(receipts)) bad.push(...pathProblemsOf('state:data/seed-receipts.json', readFileSync(receipts, 'utf8')))
+  if (existsSync(receipts))
+    bad.push(...pathProblemsOf('state:data/seed-receipts.json', readFileSync(receipts, 'utf8')))
   if (bad.length > 0) refuseLocalPaths(bad)
 }
 // ── identity: everything comes from the shipped bytes, never from this checkout ─────────────
@@ -336,13 +336,19 @@ const SCRUB = [
 // WHERE id = 1. Deleting it left no row to lease, so every redirect create/update/delete on a restored
 // site answered REDIRECT_BUSY forever — measured 04/10/2026 on the published Base 0.3.0, Business 1.5.1
 // and SaaS 1.2.0 states (EmDash 1.0.1) and again on 1.1.0; the migration never runs again, so nothing puts the row back.
-const KEEP_ROW = new Map([['_emdash_redirect_write_lock', "update _emdash_redirect_write_lock set token = '', expires_at = 0"]])
+const KEEP_ROW = new Map([
+  ['_emdash_redirect_write_lock', "update _emdash_redirect_write_lock set token = '', expires_at = 0"]
+])
 const scrubbed = {}
 for (const [table, why] of SCRUB) {
   const n = Number(sql(`select count(*) from ${table}`))
   if (KEEP_ROW.has(table)) sql(KEEP_ROW.get(table))
   else sql(`delete from ${table}`)
-  scrubbed[table] = { removed: KEEP_ROW.has(table) ? 0 : n, ...(KEEP_ROW.has(table) ? { cleared: n } : {}), why }
+  scrubbed[table] = {
+    removed: KEEP_ROW.has(table) ? 0 : n,
+    ...(KEEP_ROW.has(table) ? { cleared: n } : {}),
+    why
+  }
 }
 const audit = Number(sql(`select count(*) from _plugin_storage where plugin_id='audit-log'`))
 sql(`delete from _plugin_storage where plugin_id='audit-log'`)
@@ -353,8 +359,10 @@ sql(`delete from options where name in ('emdash:site_url','system:scheduler:last
 sql('vacuum')
 for (const [table] of SCRUB) {
   if (KEEP_ROW.has(table)) {
-    if (sql(`select count(*) from ${table} where token <> '' or expires_at <> 0`) !== '0') fail(`scrub failed: ${table} still holds a lease`)
-    if (sql(`select count(*) from ${table} where id = 1`) !== '1') fail(`scrub failed: ${table} lost its singleton row`)
+    if (sql(`select count(*) from ${table} where token <> '' or expires_at <> 0`) !== '0')
+      fail(`scrub failed: ${table} still holds a lease`)
+    if (sql(`select count(*) from ${table} where id = 1`) !== '1')
+      fail(`scrub failed: ${table} lost its singleton row`)
   } else if (sql(`select count(*) from ${table}`) !== '0') fail(`scrub failed: ${table}`)
 }
 if (sql(`select count(*) from options where name='emdash:site_url'`) !== '0') fail('scrub failed: site_url')
@@ -494,7 +502,16 @@ writeRelease(path.join(out, questionsName), questionsRaw)
 
 writeRelease(path.join(out, sitePagesName), `${JSON.stringify({ pages: sitePages.pages }, null, 2)}\n`)
 
-const sums = ['manifest.json', 'VERIFICATION.json', 'README.md', 'LICENSE', zipName, stateName, questionsName, sitePagesName]
+const sums = [
+  'manifest.json',
+  'VERIFICATION.json',
+  'README.md',
+  'LICENSE',
+  zipName,
+  stateName,
+  questionsName,
+  sitePagesName
+]
 writeRelease(
   path.join(out, 'SHA256SUMS'),
   sums.map((f) => `${fileHash(path.join(out, f))}  ${f}`).join('\n') + '\n'

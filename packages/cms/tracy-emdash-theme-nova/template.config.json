@@ -2,9 +2,7 @@
   "id": "tracy-nova",
   "label": "JA Nova",
   "version": "0.1.0",
-  "locales": [
-    "en"
-  ],
+  "locales": ["en"],
   "defaultLocale": "en",
   "site": {
     "title": "JA Nova",
@@ -27,21 +25,11 @@
     "fromName": "JA Nova"
   },
   "audit": {
-    "indexable": [
-      "^/(?!search)(?!404$).*"
-    ],
-    "noindex": [
-      "^/search"
-    ],
-    "notFound": [
-      "^/404$"
-    ],
-    "canonicalQuery": [
-      "page"
-    ],
-    "unknownProbes": [
-      "/blog/nope"
-    ],
+    "indexable": ["^/(?!search)(?!404$).*"],
+    "noindex": ["^/search"],
+    "notFound": ["^/404$"],
+    "canonicalQuery": ["page"],
+    "unknownProbes": ["/blog/nope"],
     "alternates": "all-locales"
   },
   "qa": {

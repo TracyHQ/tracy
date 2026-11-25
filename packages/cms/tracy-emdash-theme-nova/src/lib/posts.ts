@@ -14,7 +14,14 @@ export interface PostRow {
   banner: any
   hits: string
   kind: string
-  project: { client: string; budget: string; clientName: string; services: string; date: string; link: string }
+  project: {
+    client: string
+    budget: string
+    clientName: string
+    services: string
+    date: string
+    link: string
+  }
   author: string
   authorAvatar: any
   tags: string

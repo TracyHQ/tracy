@@ -22,7 +22,10 @@ import { href } from '@/lib/i18n'
 import { lines } from '@/components/site/nova-posts'
 
 const { chrome, locale, path } = Astro.props
-const [c, page] = await Promise.all([section('contact', 'contact-layout', locale), section('pages', 'contact', locale)])
+const [c, page] = await Promise.all([
+  section('contact', 'contact-layout', locale),
+  section('pages', 'contact', locale)
+])
 const $k = stampFor(Astro.request, 'contact', c)
 const $p = stampFor(Astro.request, 'pages', page)
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
@@ -32,9 +35,23 @@ const social = chrome.social['social-page']
 const tel = c ? telHref(c.phone) : null
 const cards = c
   ? [
-      { key: 'address', label: c.address_label, lf: 'address_label', value: c.address, vf: 'address', href: null as string | null },
+      {
+        key: 'address',
+        label: c.address_label,
+        lf: 'address_label',
+        value: c.address,
+        vf: 'address',
+        href: null as string | null
+      },
       { key: 'phone', label: c.phone_label, lf: 'phone_label', value: c.phone, vf: 'phone', href: tel },
-      { key: 'email', label: c.email_label, lf: 'email_label', value: c.email, vf: 'email', href: c.email ? `mailto:${c.email}` : null }
+      {
+        key: 'email',
+        label: c.email_label,
+        lf: 'email_label',
+        value: c.email,
+        vf: 'email',
+        href: c.email ? `mailto:${c.email}` : null
+      }
     ].filter((x) => x.value)
   : []
 if (!c) Astro.response.status = 404

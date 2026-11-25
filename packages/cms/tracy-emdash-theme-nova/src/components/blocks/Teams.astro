@@ -22,12 +22,19 @@ const { chrome, row, info } = Astro.props
 const $s = stampFor(Astro.request, 'teams', { id: row.id, slug: row.slug })
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const site = chrome.site
-const items: { img?: any; title?: string; team_position?: string; link?: string }[] = Array.isArray(row.items) ? row.items.filter((i: any) => i && (i.title || i.img)) : []
+const items: { img?: any; title?: string; team_position?: string; link?: string }[] = Array.isArray(row.items)
+  ? row.items.filter((i: any) => i && (i.title || i.img))
+  : []
 if (items.length === 0) return
 const columns = Math.max(1, Math.min(6, Number(row.columns) || 3))
-const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
+const url = (l?: string) =>
+  l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : ''
 const joinTo = url(row.bottom_btn_link)
-const joinType = /light/.test(row.bottom_btn_type ?? '') ? 'is-light' : /secondary|dark/.test(row.bottom_btn_type ?? '') ? 'is-secondary' : 'is-primary'
+const joinType = /light/.test(row.bottom_btn_type ?? '')
+  ? 'is-light'
+  : /secondary|dark/.test(row.bottom_btn_type ?? '')
+    ? 'is-secondary'
+    : 'is-primary'
 const carId = `nv-team-${row.slug}`
 const desc = row.team_desc ? headingHtml(row.team_desc) : ''
 

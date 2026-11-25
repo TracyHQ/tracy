@@ -86,9 +86,9 @@ function initCarousel(root: HTMLElement): void {
     if (e.target === track) settle()
   })
 
-  document.querySelectorAll<HTMLElement>(`[data-nv-car-go="${id}"]`).forEach((b) =>
-    b.addEventListener('click', () => go(b.dataset.dir === 'prev' ? -1 : 1))
-  )
+  document
+    .querySelectorAll<HTMLElement>(`[data-nv-car-go="${id}"]`)
+    .forEach((b) => b.addEventListener('click', () => go(b.dataset.dir === 'prev' ? -1 : 1)))
 
   const stop = (): void => window.clearInterval(timer)
   const start = (): void => {
@@ -126,7 +126,8 @@ function initCarousel(root: HTMLElement): void {
 
 function initAccordion(group: HTMLElement): void {
   const btns = Array.from(group.querySelectorAll<HTMLButtonElement>('[data-nv-acc-btn]'))
-  const panel = (b: HTMLElement): HTMLElement | null => document.getElementById(b.getAttribute('aria-controls') || '')
+  const panel = (b: HTMLElement): HTMLElement | null =>
+    document.getElementById(b.getAttribute('aria-controls') || '')
   const set = (b: HTMLButtonElement, open: boolean): void => {
     const p = panel(b)
     if (!p) return
@@ -186,7 +187,16 @@ function initTabs(group: HTMLElement): void {
     t.addEventListener('click', () => show(t, false))
     t.addEventListener('keydown', (e) => {
       const k = (e as KeyboardEvent).key
-      const to = k === 'ArrowDown' || k === 'ArrowRight' ? i + 1 : k === 'ArrowUp' || k === 'ArrowLeft' ? i - 1 : k === 'Home' ? 0 : k === 'End' ? tabs.length - 1 : -1
+      const to =
+        k === 'ArrowDown' || k === 'ArrowRight'
+          ? i + 1
+          : k === 'ArrowUp' || k === 'ArrowLeft'
+            ? i - 1
+            : k === 'Home'
+              ? 0
+              : k === 'End'
+                ? tabs.length - 1
+                : -1
       if (to < 0) return
       e.preventDefault()
       show(tabs[(to + tabs.length) % tabs.length], true)

@@ -19,10 +19,14 @@ interface Props {
 }
 const { chrome, row, info } = Astro.props
 const $s = stampFor(Astro.request, 'accordion', { id: row.id, slug: row.slug })
-const items: { accordion_name?: string; accordion_desc?: string }[] = Array.isArray(row.items) ? row.items.filter((i: any) => i && i.accordion_name) : []
-const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
+const items: { accordion_name?: string; accordion_desc?: string }[] = Array.isArray(row.items)
+  ? row.items.filter((i: any) => i && i.accordion_name)
+  : []
+const url = (l?: string) =>
+  l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : ''
 const to = url(row.btn_link)
-const btnClass = (t?: string) => (/light/.test(t ?? '') ? 'is-light' : /secondary|dark/.test(t ?? '') ? 'is-secondary' : 'is-primary')
+const btnClass = (t?: string) =>
+  /light/.test(t ?? '') ? 'is-light' : /secondary|dark/.test(t ?? '') ? 'is-secondary' : 'is-primary'
 const uid = `nv-acc-${row.slug}`
 // the source writes a line break as `</br>`, which a browser reads as `<br>`
 const br = (v: unknown) => String(v ?? '').replace(/<\/br\s*>/gi, '<br>')

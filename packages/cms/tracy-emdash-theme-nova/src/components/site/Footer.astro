@@ -29,15 +29,33 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const settings = await getSiteSettings()
 const logos = brandLogos(settings, site.logo_dark, site.brand_name)
 const copyright = fill(site.copyright, { year: new Date().getUTCFullYear(), name: site.brand_name })
-const live = await liveLinks(Astro.request, locale, [...menuUrls(chrome.footerCompany), ...menuUrls(chrome.footerWork), ...menuUrls(chrome.services)])
+const live = await liveLinks(Astro.request, locale, [
+  ...menuUrls(chrome.footerCompany),
+  ...menuUrls(chrome.footerWork),
+  ...menuUrls(chrome.services)
+])
 const own = (url: string) => (url ? dataHref(url, (p) => href(locale, p)) : '')
 const columns: { title: string; titleField: string; items: ChromeMenuItem[] }[] = [
-  { title: site.footer_company_title, titleField: 'footer_company_title', items: pruneMenu(chrome.footerCompany, live) },
-  { title: site.footer_work_title, titleField: 'footer_work_title', items: pruneMenu(chrome.footerWork, live) },
-  { title: site.footer_services_title, titleField: 'footer_services_title', items: pruneMenu(chrome.services, live) }
+  {
+    title: site.footer_company_title,
+    titleField: 'footer_company_title',
+    items: pruneMenu(chrome.footerCompany, live)
+  },
+  {
+    title: site.footer_work_title,
+    titleField: 'footer_work_title',
+    items: pruneMenu(chrome.footerWork, live)
+  },
+  {
+    title: site.footer_services_title,
+    titleField: 'footer_services_title',
+    items: pruneMenu(chrome.services, live)
+  }
 ]
 const social = chrome.social['social']
-const ctaInfo = (layout.sections as Record<string, { type: string; style: string; module: string; position: string }>)['cta-contact']
+const ctaInfo = (
+  layout.sections as Record<string, { type: string; style: string; module: string; position: string }>
+)['cta-contact']
 const ctaRow = await section('cta', 'cta-contact', locale)
 ---
 

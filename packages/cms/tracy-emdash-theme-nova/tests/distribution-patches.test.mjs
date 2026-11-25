@@ -85,7 +85,10 @@ describe('patch files of pnpm-workspace.yaml', () => {
   it('the packer refuses an allowlist that leaves a named patch file out', () => {
     const root = tree()
     try {
-      assert.throws(() => distributionFiles(root, contract(BASE)), /Patch file omitted: patches\/picomatch@2\.3\.2\.patch/)
+      assert.throws(
+        () => distributionFiles(root, contract(BASE)),
+        /Patch file omitted: patches\/picomatch@2\.3\.2\.patch/
+      )
     } finally {
       rmSync(root, { recursive: true, force: true })
     }

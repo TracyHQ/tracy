@@ -26,7 +26,9 @@ before(async () => {
   site = http.createServer((req, res) => {
     if (req.url === '/broken.html') return req.socket.destroy()
     res.writeHead(200, { 'content-type': 'text/html' })
-    res.end(`<!doctype html><html><head><title>t</title></head><body>${BODY}<script src="http://localhost:${hangPort}/embed.js"></script></body></html>`)
+    res.end(
+      `<!doctype html><html><head><title>t</title></head><body>${BODY}<script src="http://localhost:${hangPort}/embed.js"></script></body></html>`
+    )
   })
   await new Promise((r) => site.listen(0, '127.0.0.1', r))
   siteBase = `http://127.0.0.1:${site.address().port}`
@@ -50,8 +52,15 @@ it('--block aborts the hanging host, and a page that cannot be rendered is recor
     assert.equal(r.code, 1, 'a failed page makes the exit code 1')
     const manifest = JSON.parse(readFileSync(path.join(out, 'render-manifest.json'), 'utf8'))
     assert.deepEqual(manifest.blocked, ['localhost'])
-    assert.equal(manifest.pages.filter((p) => p.page === 'index.html').length, 4, 'every viewport x theme of the good page')
-    assert.ok(manifest.failed.length >= 1 && manifest.failed.every((f) => f.page === 'broken.html'), JSON.stringify(manifest.failed))
+    assert.equal(
+      manifest.pages.filter((p) => p.page === 'index.html').length,
+      4,
+      'every viewport x theme of the good page'
+    )
+    assert.ok(
+      manifest.failed.length >= 1 && manifest.failed.every((f) => f.page === 'broken.html'),
+      JSON.stringify(manifest.failed)
+    )
   } finally {
     rmSync(out, { recursive: true, force: true })
   }

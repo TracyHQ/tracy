@@ -8,7 +8,12 @@ import http from 'node:http'
 import path from 'node:path'
 import { after, before, describe, it } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { SOURCE_FONT_HOSTS, blockedForSource, keepSourceOffline, offSourceOrigin } from '../tools/visual-lib.mjs'
+import {
+  SOURCE_FONT_HOSTS,
+  blockedForSource,
+  keepSourceOffline,
+  offSourceOrigin
+} from '../tools/visual-lib.mjs'
 import { launchBrowser } from '../tools/qa-browser.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
@@ -95,10 +100,11 @@ describe('keepSourceOffline', () => {
     await page.goto(`${origin(source)}/index.html`, { waitUntil: 'networkidle', timeout: 15000 })
     await page.close()
     assert.deepEqual(otherHits, ['/font.css'], 'only the font request reached the other server')
-    assert.deepEqual(
-      [...blocked].sort(),
-      [`${origin(other)}/frame`, `${origin(other)}/remote.png`, `${origin(other)}/widget.js`]
-    )
+    assert.deepEqual([...blocked].sort(), [
+      `${origin(other)}/frame`,
+      `${origin(other)}/remote.png`,
+      `${origin(other)}/widget.js`
+    ])
     assert.ok(loaded.includes('/index.html') && loaded.includes('/dot.svg'), `loaded: ${loaded.join(', ')}`)
   })
 })

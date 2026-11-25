@@ -1,21 +1,46 @@
 # STATUS — tracy-nova
 
-**Phase reached: P1 done (source stand, model, snapshot, source render, inventory). P2 not started.** Nothing is published; no PR.
+**Phase reached: P5 built and compared (every page family has a view, matched against the source by measurement at 1440/992/768/390 for most blocks), P4.5 personalization done, P2 docs done, contract written. NOT done: Fast Gate, the four visual tiers and lenses, kit, release chain, pre-check, content coverage (P7/P8 not started). Nothing is published; no PR.**
 
-| Gate | Result | Evidence |
+| Gate / step | Result | Evidence |
 |---|---|---|
-| P0 `architecture.md`, `DECISIONS.md` (D1–D10) | done | this folder |
-| Source pins | `SHA256SUMS` of `j6/` all OK (webroot, database, manifest, setting, site pages, roles, verification); `wp7/SHA256SUMS` names `wp-ja-nova-1.1.17.zip`, which is not staged (reference only, D5) | `/home/agent/src/nova/` |
-| P1 stand | Joomla 6.1.1 + MariaDB in Docker, `127.0.0.1:18082`, Home 200 | `source/REBUILD.md` |
-| P1 model | `joomla-dump.mjs --capture` + `from-joomla.mjs`: 92 records, 12 types, 73 routes, 6 menus, 56 media → `seed/site-model.json` (spec-pack reported INVALID only for pending design decisions and browser font evidence: not used by this road) | `/home/agent/out/nova/work/` |
-| P1 snapshot | 114 pages, 225 assets; 329 hashes in `source/snapshot-SHA256SUMS`; 16 unresolved refs are admin-widget/watermark images (`inventory/content-gaps.md`) | `/home/agent/out/nova/snapshot` |
-| P1 source render | 68 renders (17 pages × 1440/390 × light/dark), 0 failed, 0 overflow, Golos Text loads | `/home/agent/out/nova/render/render-manifest.json` |
-| Install | `pnpm install --frozen-lockfile` clean (lockfile and workspace overrides from Fresco) | — |
+| Source pins | `j6/SHA256SUMS` all OK; `wp7/SHA256SUMS` names `wp-ja-nova-1.1.17.zip`, not staged (reference only, D5) | `/home/agent/src/nova/` |
+| P1 stand, model, snapshot, source render | done (114 pages, 68 renders, 0 overflow) | `source/REBUILD.md`, `inventory/`, `/home/agent/out/nova/{work,snapshot,render}` |
+| P2 seed | `ingest/rebuild-seed.sh` → 13 collections, 84 entries, 4 menus, 139 images; `validate-seed` valid | `seed/` |
+| P3-P5 views | Home, About, Career, Services + 7 service pages, Project list + 3 categories, Blog, Post (article and project), Contact, Search, 404; header, off-canvas, footer; text slider, clients, teams, pricing, accordion, CTA, social, features styles 1-7, hero | `src/`, per-agent compare scripts in `/home/agent/out/nova/{chrome,r2b,r2c}` |
+| `astro check` | 0 errors, 0 warnings | run 2026-11-25 |
+| Kit tests `node --test tests/*.test.mjs` | 483 of 483 passed after the format pass (`/home/agent/out/nova/tests.log`) | — |
+| `check-emdash-kit-sync` | 9 templates match the kit (Nova: 139 identical, 0 differ) | — |
+| `generate-docs --check` | passed | — |
+| `qa-contract.mjs qa.contract.json --source <snapshot>` | exit 0, 26 pages, 116 cases, 4 variants (1440/390 x light/dark) | `qa.contract.json`, `ingest/contract-spec.json`, `ingest/source-measures.json` |
+| `qa.mjs --browser` | NOT RUN to the end: two runs were cut off (10 min tool limit; the second ran 40+ min without a report) | `/home/agent/out/nova/qa/qa.{1,2}.log` |
+| LANG-2 / personalize | `tests/lang2-printed-words.test.mjs` passes; dry run changes exactly the identity fields | `seed/personalize.json` |
 
-**Next command (P2):** `node scripts/lessons.mjs scan packages/cms/tracy-emdash-theme-nova --phase P2` (from the skill folder), then settle collections from the Home sections (`visual-contract.md`), add `ingest/enrich-nova.mjs` for the project fields (`prj-*`, see `content-gaps.md`), write `seed/compile.config.json`, run `ingest/rebuild-seed.sh`-style chain (copy Essence's), `tools/validate-seed.mjs`.
+## Known differences from the source (from the builders' reports)
+- Header/footer logo is an SVG redraw of the source mark (`NovaLogo.astro`): no logo image exists in the seed; to use the real PNGs import `images/joomlart/logo/item-1.png` / `item-2.png` as `settings.logo` / `chrome.logo_dark` (P4.6).
+- Footer is about 85 px taller: the third link column is "Services" with 7 links (D11), and the source's "Joomla!" credit line is dropped. Owner question.
+- Contact page: the three info-card icons are plain glyphs; the source draws colour illustrations (template images in `templates/ja_nova/images/`, set by CSS). Needs three image assets or fields.
+- Blog detail: the source lays an image beside the following heading and text in some bodies (about 430 px on blog-detail); only the image + h3 + list pattern is rebuilt.
+- Popular tags are derived from the posts' `tags` strings; order differs from Joomla's tag table. Tag pills link nowhere.
+- Home news band = title-ascending first 3 articles (matches Joomla module 128).
+- Header menu button x/size at 768/576/390 and the 8-23 px offsets of the CTA strip were reported by the views agent and are not re-measured after the chrome agent's last pass.
+- The contact form id binds when `seed-apply forms` runs; `ContactForm*` words are only partly from the `contact` entry, the rest rely on the `forms` rule.
 
-**Tools state:** stand containers `nova-db`, `nova-web` and network `nova-net` were removed at the end of the session; rebuild per `source/REBUILD.md` (the build folder `/home/agent/out/nova/stand` keeps the webroot and Dockerfile). Chromium for Playwright is installed in `~/.cache/ms-playwright`.
+## Repo wiring done (commit "repo wiring, docs, journal, licence rows")
+`pnpm-workspace.yaml`, `turbo.json`, `apps/tracy-web/turbo.json`, `scripts/check-emdash-kit-sync.ts`, `scripts/check-tests.ts` (`standalone:nova`), `scripts/ci/plan-ci.mjs` (`tests emdash-nova`), `docs/licensing.md` (JoomlArt grant row), `docs/references/vocabulary.md`, `changes/2026-11-24-emdash-port-nova.md` (PR number `#TBD`).
+**Not done on purpose (they need the release):** Road rows `emdash-tool.js`, `emdash-tool.test.mjs` row, `quickstart-render-map.json`, `template-profiles.json`, the Dockerfile copies of `contracts/`; `docs/README.md` (`pnpm docs:index`); `public-tree.json`; the regression case `tests/regression/cases/REG-PR-<n>-emdash-nova-0-1-0.json`.
+**Language policy:** `scripts/language-policy.json` rows for the package are generated by `/home/agent/out/nova/scripts/lp-rows.mjs` (exact-line rows of the questionnaire and kit-file lines); rerun it after any edit to those files (row hashes are of whole lines). The `language-policy` PR check also reads every intermediate commit: squash the local commits into one before pushing, otherwise the placeholder versions of `seed/questions.json` in the early commits are flagged.
 
-**Owner questions (batched):** none yet. Open: D8 (utility pages not ported) is a default.
+## Next commands (resume here)
+1. Start the stand: `docker start nova-db nova-web` is not possible (containers were removed); rebuild per `source/REBUILD.md` (`/home/agent/out/nova/stand` keeps webroot + Dockerfile). Dev site: `bash /home/agent/out/nova/scripts/site-up.sh 4360` (wipes and reseeds; `reseed.sh` applies seed changes). Snapshot mirror: `cd /home/agent/out/nova/snapshot && python3 -I -m http.server 18218 --bind 127.0.0.1`.
+2. Run `node tools/qa.mjs --contract qa.contract.json --source /home/agent/out/nova/snapshot --site http://127.0.0.1:4360 --out <new dir> --browser` in the background to completion, then `node tools/gates.mjs <run>`; triage contract-vs-site findings (the contract agent expects: missing `public/favicon.svg`, 404 h1 vs h2, Escape-closes check on accordion/tabs, twin pages `/?ui=menu`).
+3. P3 exit: `node tools/fast-gate.mjs plan` then `verdict` (Fast Gate signed), then P7 tiers with `visual-qa.mjs`, lenses by Sonnet readers, one Opus layout lens at the final checkpoint.
+4. Kit: build with `--reread-sections`; write `ingest/kit-sections-check.mjs` as Impact did (not on this branch); footer/nav links as separate label and address slots; `?start=` pagination (already the URL form used).
+5. P4.6: real logo, `logo_dark`, `tracy_site_pages.json`; `flow.mjs` design-system measurement; `scripts/template-design-system-readiness.mjs` 0 FAIL.
+6. P8: `node tools/release-chain.mjs`, content coverage with `emdash-audit.mjs` (map sha equals final map), `road-precheck.mjs --release <dir> --tag tracy-nova/emdash-0.x --stage release` until CLEAR.
 
-**Not started:** P2 to P8 — content model, runtime, every page family, Fast Gate, four-tier visual QA, kit, personalization rules, repo wiring (Road rows, `plan-ci.mjs`, `language-policy.json`, `public-tree.json`, `docs/licensing.md`), journal entry, release chain, pre-check.
+## Owner questions (batched)
+1. D8: Joomla system pages (login, registration, profile, typography, offline, error, smart-search, tagged items, featured, author list) are not ported.
+2. D11: footer link columns Company / Work / Services replace the Users / J!Pages / J! Content demo columns.
+3. Logo: use the real PNG logos (needs the media import) or keep the SVG redraw.
+4. Kit approval is the owner's; not requested yet.

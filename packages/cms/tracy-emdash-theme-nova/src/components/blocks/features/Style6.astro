@@ -11,7 +11,9 @@ interface Props {
 }
 const { row } = Astro.props
 const $s = stampFor(Astro.request, 'features_intro', { id: row.id, slug: row.slug })
-const items: Record<string, any>[] = (Array.isArray(row.items) ? row.items : []).filter((i: any) => i.title || i.description)
+const items: Record<string, any>[] = (Array.isArray(row.items) ? row.items : []).filter(
+  (i: any) => i.title || i.description
+)
 const colour = (c: unknown) => String(c || '').replace(/[^a-z-]/g, '')
 const span = (c: unknown) => {
   const n = Number.parseInt(String(c ?? ''), 10)

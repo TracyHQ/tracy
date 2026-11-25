@@ -25,12 +25,20 @@ const { chrome, locale, path, slug, category } = Astro.props
 const w = chrome.site
 const all = await loadPostsInOrder(locale)
 const wantProject = typeof category === 'string' && category !== ''
-const post = all.find((p) => p.slug === slug && (wantProject ? p.kind === 'project' && p.category?.slug === category : p.kind !== 'project'))
+const post = all.find(
+  (p) =>
+    p.slug === slug &&
+    (wantProject ? p.kind === 'project' && p.category?.slug === category : p.kind !== 'project')
+)
 if (!post) Astro.response.status = 404
 const $p = stampFor(Astro.request, 'posts', post ? { id: post.id, slug: post.slug } : null)
 const isProject = post?.kind === 'project'
 const own = post ? `${postPath(post)}` : path
-const siblings = post ? all.filter((p) => (isProject ? p.kind === 'project' && p.category?.slug === post.category?.slug : p.kind !== 'project')) : []
+const siblings = post
+  ? all.filter((p) =>
+      isProject ? p.kind === 'project' && p.category?.slug === post.category?.slug : p.kind !== 'project'
+    )
+  : []
 const at = post ? siblings.findIndex((p) => p.slug === post.slug) : -1
 const nav = (p?: (typeof all)[number]) => (p ? { url: href(locale, postPath(p)), title: p.title } : null)
 const prev = nav(siblings[at - 1])
@@ -40,7 +48,16 @@ let body = post ? post.body : []
 // a project shows its first paragraph as the summary above the meta row, so the body starts after it
 const intro = post ? introOf(post) : ''
 if (post && isProject && intro && paragraphs(body)[0] === intro) {
-  const i = (body as any[]).findIndex((b) => b?._type === 'block' && !b.listItem && (b.style ?? 'normal') === 'normal' && (b.children ?? []).map((c: any) => c?.text ?? '').join('').trim() === intro)
+  const i = (body as any[]).findIndex(
+    (b) =>
+      b?._type === 'block' &&
+      !b.listItem &&
+      (b.style ?? 'normal') === 'normal' &&
+      (b.children ?? [])
+        .map((c: any) => c?.text ?? '')
+        .join('')
+        .trim() === intro
+  )
   body = (body as any[]).filter((_, j) => j !== i)
 }
 const stamped = post ? stampBlocks($p, 'body', body as any[]) : []
@@ -48,8 +65,15 @@ const tags = post ? tagsOf(post) : []
 const catLabel = post?.category?.label ?? ''
 const trail = post
   ? isProject
-    ? [{ label: w.project_title, url: '/project' }, { label: catLabel, url: `/project/${post.category?.slug}` }, { label: post.title, url: '' }]
-    : [{ label: w.blog_title, url: '/blog' }, { label: post.title, url: '' }]
+    ? [
+        { label: w.project_title, url: '/project' },
+        { label: catLabel, url: `/project/${post.category?.slug}` },
+        { label: post.title, url: '' }
+      ]
+    : [
+        { label: w.blog_title, url: '/blog' },
+        { label: post.title, url: '' }
+      ]
   : undefined
 ---
 

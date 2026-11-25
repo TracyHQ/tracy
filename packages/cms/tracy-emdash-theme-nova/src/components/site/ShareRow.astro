@@ -18,9 +18,24 @@ const w = chrome.site
 const u = encodeURIComponent(url)
 const t = encodeURIComponent(title)
 const links = [
-  { key: 'facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${u}`, label: w.share_facebook_label, field: 'share_facebook_label' },
-  { key: 'twitter', href: `https://twitter.com/intent/tweet?url=${u}&text=${t}`, label: w.share_twitter_label, field: 'share_twitter_label' },
-  { key: 'reddit', href: `https://www.reddit.com/submit?url=${u}&title=${t}`, label: w.share_reddit_label, field: 'share_reddit_label' }
+  {
+    key: 'facebook',
+    href: `https://www.facebook.com/sharer/sharer.php?u=${u}`,
+    label: w.share_facebook_label,
+    field: 'share_facebook_label'
+  },
+  {
+    key: 'twitter',
+    href: `https://twitter.com/intent/tweet?url=${u}&text=${t}`,
+    label: w.share_twitter_label,
+    field: 'share_twitter_label'
+  },
+  {
+    key: 'reddit',
+    href: `https://www.reddit.com/submit?url=${u}&title=${t}`,
+    label: w.share_reddit_label,
+    field: 'share_reddit_label'
+  }
 ]
 ---
 

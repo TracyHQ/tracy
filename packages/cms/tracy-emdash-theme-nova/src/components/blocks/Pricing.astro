@@ -19,10 +19,14 @@ interface Props {
 }
 const { chrome, row, info } = Astro.props
 const $s = stampFor(Astro.request, 'pricing', { id: row.id, slug: row.slug })
-const plans: Record<string, any>[] = Array.isArray(row.items) ? row.items.filter((i: any) => i && i.title) : []
+const plans: Record<string, any>[] = Array.isArray(row.items)
+  ? row.items.filter((i: any) => i && i.title)
+  : []
 if (plans.length === 0) return
-const url = (l?: string) => (l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : '')
-const btnClass = (t?: string) => (/light/.test(t ?? '') ? 'is-light' : /secondary|dark/.test(t ?? '') ? 'is-secondary' : 'is-primary')
+const url = (l?: string) =>
+  l && l.trim() && l.trim() !== '#' ? dataHref(l.trim(), (p) => href(chrome.locale, p)) : ''
+const btnClass = (t?: string) =>
+  /light/.test(t ?? '') ? 'is-light' : /secondary|dark/.test(t ?? '') ? 'is-secondary' : 'is-primary'
 const uid = `nv-pr-${row.slug}`
 ---
 

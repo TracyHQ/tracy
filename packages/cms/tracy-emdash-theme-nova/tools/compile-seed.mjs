@@ -49,17 +49,30 @@ const PASS_THROUGH = ['required', 'validation', 'options', 'searchable', 'indexe
 export function isoUtc(value) {
   if (typeof value !== 'string') return value
   const text = value.trim()
-  const m = text.match(/^(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}:\d{2})(?::(\d{2})(?:\.(\d+))?)?)?\s*(Z|[+-]\d{2}:?\d{2})?$/i)
+  const m = text.match(
+    /^(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}:\d{2})(?::(\d{2})(?:\.(\d+))?)?)?\s*(Z|[+-]\d{2}:?\d{2})?$/i
+  )
   if (!m) return value
   const [, day, hm = '00:00', sec = '00', frac = '', zone] = m
-  const date = new Date(`${day}T${hm}:${sec}.${frac.padEnd(3, '0').slice(0, 3)}${zone ? zone.replace(/^([+-]\d{2})(\d{2})$/, '$1:$2') : 'Z'}`)
+  const date = new Date(
+    `${day}T${hm}:${sec}.${frac.padEnd(3, '0').slice(0, 3)}${zone ? zone.replace(/^([+-]\d{2})(\d{2})$/, '$1:$2') : 'Z'}`
+  )
   return Number.isNaN(date.getTime()) ? value : date.toISOString()
 }
 
 const MIME = {
-  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif', '.webp': 'image/webp',
-  '.avif': 'image/avif', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.pdf': 'application/pdf',
-  '.mp4': 'video/mp4', '.webm': 'video/webm', '.woff2': 'font/woff2'
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.gif': 'image/gif',
+  '.webp': 'image/webp',
+  '.avif': 'image/avif',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+  '.pdf': 'application/pdf',
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
+  '.woff2': 'font/woff2'
 }
 
 const localeText = (value, locale, fallback) => {
@@ -252,7 +265,8 @@ export function compile(model, config = {}) {
     for (const name of dateFields[record.type] ?? []) if (name in data) data[name] = isoUtc(data[name])
     for (const key of Object.keys(htmlProse)) {
       const [typeName, ...rest] = key.split('.')
-      if (typeName === record.type && /<\/?[a-z][^>]*>/i.test(String(data[rest.join('.')] ?? ''))) htmlProse[key] += 1
+      if (typeName === record.type && /<\/?[a-z][^>]*>/i.test(String(data[rest.join('.')] ?? '')))
+        htmlProse[key] += 1
     }
     content[record.type].push({
       id: `${record.type}:${record.slug}:${record.locale}`,
@@ -306,7 +320,10 @@ export function compile(model, config = {}) {
   for (const record of model.records) (localesOf[`${record.type}/${record.slug}`] ??= []).push(record.locale)
   for (const item of model.media ?? []) {
     const reason = unsafeReason(item.file)
-    if (reason) throw new Error(`media file ${JSON.stringify(item.file)} ${reason}; media[].file is a relative path inside the media folder`)
+    if (reason)
+      throw new Error(
+        `media file ${JSON.stringify(item.file)} ${reason}; media[].file is a relative path inside the media folder`
+      )
   }
   const mediaMap = {
     generatedAt: new Date().toISOString(),
@@ -323,7 +340,12 @@ export function compile(model, config = {}) {
       targets: (item.usedBy ?? []).flatMap((use) => {
         const [record, field] = use.split('#')
         const [collection, ...slug] = record.split('/')
-        return (localesOf[record] ?? []).map((locale) => ({ collection, slug: slug.join('/'), locale, path: field }))
+        return (localesOf[record] ?? []).map((locale) => ({
+          collection,
+          slug: slug.join('/'),
+          locale,
+          path: field
+        }))
       })
     }))
   }
@@ -338,7 +360,9 @@ function main(argv) {
   const positional = argv.filter((a, i) => !a.startsWith('--') && !valueOf.has(i))
   const [modelPath, outDir] = positional
   if (!modelPath || !outDir) {
-    console.error('usage: compile-seed.mjs <site-model.json> <seed-dir> [--config compile.config.json] [--media-from <dir>]')
+    console.error(
+      'usage: compile-seed.mjs <site-model.json> <seed-dir> [--config compile.config.json] [--media-from <dir>]'
+    )
     return 2
   }
   let model
@@ -394,7 +418,9 @@ function main(argv) {
       copyFileSync(source, target)
     }
     if (missing.length > 0) {
-      console.error(`${missing.length} media file(s) not found under ${from}: ${missing.slice(0, 5).join(', ')}${missing.length > 5 ? ', …' : ''}`)
+      console.error(
+        `${missing.length} media file(s) not found under ${from}: ${missing.slice(0, 5).join(', ')}${missing.length > 5 ? ', …' : ''}`
+      )
       return 1
     }
   }

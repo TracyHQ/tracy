@@ -106,9 +106,11 @@ function staleReason(state, file, phase) {
   const entry = state.completed[phase]
   if (!entry) return 'not recorded'
   const base = path.dirname(file)
-  for (const e of entry.evidence) if (sha(path.resolve(base, e.path)) !== e.sha256) return `evidence ${e.path} changed`
+  for (const e of entry.evidence)
+    if (sha(path.resolve(base, e.path)) !== e.sha256) return `evidence ${e.path} changed`
   for (const [key, recorded] of Object.entries(entry.inputs ?? {}))
-    if (sha(path.resolve(base, state.inputs[key] ?? DEFAULT_INPUTS[key])) !== recorded) return `input ${key} changed`
+    if (sha(path.resolve(base, state.inputs[key] ?? DEFAULT_INPUTS[key])) !== recorded)
+      return `input ${key} changed`
   return null
 }
 
@@ -126,8 +128,12 @@ export function checkpoint(file, command, args = [], options = {}) {
       throw new Error(`--phases must be an ordered, unique subset of ${PHASES.join(',')}`)
     const inputs = {}
     for (const [key, dflt] of Object.entries(DEFAULT_INPUTS)) {
-      const rel = path.relative(path.dirname(file), path.resolve(options[key] ?? path.join(path.dirname(file), dflt)))
-      if (rel.startsWith('..') || path.isAbsolute(rel)) throw new Error(`--${key} must sit beside the checkpoint`)
+      const rel = path.relative(
+        path.dirname(file),
+        path.resolve(options[key] ?? path.join(path.dirname(file), dflt))
+      )
+      if (rel.startsWith('..') || path.isAbsolute(rel))
+        throw new Error(`--${key} must sit beside the checkpoint`)
       inputs[key] = rel
     }
     write(file, { version: 1, kind: 'emdash-port', phases, inputs, completed: {} })
@@ -145,13 +151,17 @@ export function checkpoint(file, command, args = [], options = {}) {
     const evidence = files.map((p) => {
       const full = path.resolve(p),
         rel = path.relative(path.dirname(file), full)
-      if (rel.startsWith('..') || path.isAbsolute(rel)) throw new Error(`evidence ${p} must sit beside the checkpoint`)
+      if (rel.startsWith('..') || path.isAbsolute(rel))
+        throw new Error(`evidence ${p} must sit beside the checkpoint`)
       const digest = sha(full)
       if (!digest) throw new Error(`evidence ${p} is not a readable file`)
       return { path: rel, sha256: digest }
     })
     const inputs = Object.fromEntries(
-      PHASE_INPUTS[phase].map((key) => [key, sha(path.resolve(path.dirname(file), state.inputs[key] ?? DEFAULT_INPUTS[key]))])
+      PHASE_INPUTS[phase].map((key) => [
+        key,
+        sha(path.resolve(path.dirname(file), state.inputs[key] ?? DEFAULT_INPUTS[key]))
+      ])
     )
     state.completed[phase] = { at: new Date().toISOString(), evidence, inputs }
     write(file, state)
@@ -188,7 +198,8 @@ if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToP
   }
   const [command, file, ...args] = rest
   try {
-    if (!command || !file) throw new Error('usage: checkpoint.mjs init|complete|status <checkpoint.json> … [--json|--verbose]')
+    if (!command || !file)
+      throw new Error('usage: checkpoint.mjs init|complete|status <checkpoint.json> … [--json|--verbose]')
     const result = checkpoint(file, command, args, options)
     if (json) console.log(JSON.stringify(result, null, 2))
     else {

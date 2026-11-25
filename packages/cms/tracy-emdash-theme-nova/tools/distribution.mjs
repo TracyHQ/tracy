@@ -2,7 +2,15 @@
 // Freeze an allowlisted source directory. The output is the actual installable artifact.
 // node tools/distribution.mjs pack <contract> <new-directory>
 // node tools/distribution.mjs verify <artifact-directory>
-import { readFileSync, existsSync, mkdirSync, copyFileSync, writeFileSync, lstatSync, statSync } from 'node:fs'
+import {
+  readFileSync,
+  existsSync,
+  mkdirSync,
+  copyFileSync,
+  writeFileSync,
+  lstatSync,
+  statSync
+} from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { hash, filesUnder, relativeFile, contractHash, validateContract } from './qa-contract.mjs'
@@ -171,10 +179,27 @@ export function shownOrigin(origin) {
 export function shownPath(p, base = process.cwd()) {
   const abs = path.resolve(p)
   const rel = path.relative(base, abs)
-  return rel === '' ? '.' : rel.startsWith('..') || path.isAbsolute(rel) ? path.basename(abs) : rel.split(path.sep).join('/')
+  return rel === ''
+    ? '.'
+    : rel.startsWith('..') || path.isAbsolute(rel)
+      ? path.basename(abs)
+      : rel.split(path.sep).join('/')
 }
 
-const SYSTEM_DIRS = new Set(['etc', 'var', 'mnt', 'root', 'bin', 'sbin', 'proc', 'sys', 'dev', 'Volumes', 'Applications', 'System'])
+const SYSTEM_DIRS = new Set([
+  'etc',
+  'var',
+  'mnt',
+  'root',
+  'bin',
+  'sbin',
+  'proc',
+  'sys',
+  'dev',
+  'Volumes',
+  'Applications',
+  'System'
+])
 
 /**
  * Whether a string names a path of THE BUILDER'S machine. Decided by evidence, not by a prefix alone, so a site route such as
@@ -200,10 +225,19 @@ export function holdsLocalPath(text, roots = [], exists = isDirectory) {
     const raw = m[1].replace(/[?#].*$/, '').replace(/[.:]+$/, '')
     if (/^[A-Za-z]:[\\/]/.test(raw) || raw.startsWith('~/')) return true
     if (dirs.some((r) => raw === r || raw.startsWith(`${r}/`))) return true
-    if (/^\/(?:Users|home)\/[^/]+\/[^/]+/.test(raw) || /^\/(?:private|tmp)\/[^/]+/.test(raw) || raw.startsWith('/var/folders/'))
+    if (
+      /^\/(?:Users|home)\/[^/]+\/[^/]+/.test(raw) ||
+      /^\/(?:private|tmp)\/[^/]+/.test(raw) ||
+      raw.startsWith('/var/folders/')
+    )
       return true
     const segs = raw.split('/').filter(Boolean)
-    if (segs.length >= 2 && (SYSTEM_DIRS.has(segs[0]) || (segs[0] === 'usr' && /^(local|bin|sbin|lib|lib64|share|src|include)$/.test(segs[1])))) return true
+    if (
+      segs.length >= 2 &&
+      (SYSTEM_DIRS.has(segs[0]) ||
+        (segs[0] === 'usr' && /^(local|bin|sbin|lib|lib64|share|src|include)$/.test(segs[1])))
+    )
+      return true
     for (let k = segs.length; k >= 2; k--) if (exists(`/${segs.slice(0, k).join('/')}`)) return true
   }
   return false
@@ -245,7 +279,13 @@ export const isRouteField = (/** @type {string} */ file, /** @type {string} */ p
  * @param {(pointer: string) => boolean} [isRoute]
  * @returns {string[]}
  */
-export function localPathProblems(value, roots = [], pointer = '', exists = isDirectory, isRoute = () => false) {
+export function localPathProblems(
+  value,
+  roots = [],
+  pointer = '',
+  exists = isDirectory,
+  isRoute = () => false
+) {
   if (typeof value === 'string') {
     if (isRoute(pointer)) return []
     if (!pointer.includes('.') || pointer.includes('/'))

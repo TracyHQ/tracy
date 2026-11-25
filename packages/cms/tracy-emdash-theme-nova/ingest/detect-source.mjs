@@ -176,10 +176,20 @@ export function roadFor({ cms, reach = 'remote', t4 = false } = {}) {
 export function detectFromFolder(files = [], exists = () => false) {
   const has = (name) => files.includes(name)
   if (has('configuration.php') && has('administrator')) {
-    return { cms: 'joomla', confidence: 4, evidence: ['configuration.php and administrator/ at the folder root'], t4: ['plugins/system/t4', 'libraries/t4', 'media/t4', 'plugins/system/t4plugin'].some(exists) }
+    return {
+      cms: 'joomla',
+      confidence: 4,
+      evidence: ['configuration.php and administrator/ at the folder root'],
+      t4: ['plugins/system/t4', 'libraries/t4', 'media/t4', 'plugins/system/t4plugin'].some(exists)
+    }
   }
   if (has('wp-config.php') || (has('wp-content') && has('wp-includes'))) {
-    return { cms: 'wordpress', confidence: 4, evidence: ['wp-config.php or wp-content/ at the folder root'], t4: false }
+    return {
+      cms: 'wordpress',
+      confidence: 4,
+      evidence: ['wp-config.php or wp-content/ at the folder root'],
+      t4: false
+    }
   }
   return null
 }
@@ -216,9 +226,14 @@ async function main(argv) {
     const { readFileSync, existsSync, readdirSync } = await import('node:fs')
     const { join } = await import('node:path')
     const index = ['index.html', 'index.htm'].map((f) => join(target, f)).find((f) => existsSync(f))
-    const webroot = index || !existsSync(target) ? null : detectFromFolder(readdirSync(target), (rel) => existsSync(join(target, rel)))
+    const webroot =
+      index || !existsSync(target)
+        ? null
+        : detectFromFolder(readdirSync(target), (rel) => existsSync(join(target, rel)))
     if (!index && !webroot) {
-      console.error(`no index.html in ${target} and no CMS webroot (configuration.php, wp-config.php) — point at a folder of pages, a CMS webroot, or a URL`)
+      console.error(
+        `no index.html in ${target} and no CMS webroot (configuration.php, wp-config.php) — point at a folder of pages, a CMS webroot, or a URL`
+      )
       return 2
     }
     if (index) html = readFileSync(index, 'utf8')
@@ -252,7 +267,9 @@ async function main(argv) {
     console.log(
       `T4/ACM     : ${detected.t4 ? 'yes — page sections are ACM modules with named fields' : 'not seen'}`
     )
-    console.log(`reach      : ${reach}${reach === 'remote' ? ' (HTTP only — the database is out of reach)' : ''}`)
+    console.log(
+      `reach      : ${reach}${reach === 'remote' ? ' (HTTP only — the database is out of reach)' : ''}`
+    )
     console.log(
       names.needsName
         ? `name hint  : CANNOT be inferred — intake must ask one question (the site declares no og:site_name, the title is the page name)`

@@ -9,7 +9,12 @@ export function paragraphs(blocks: unknown): string[] {
   if (!Array.isArray(blocks)) return []
   return blocks
     .filter((b: any) => b && b._type === 'block' && !b.listItem && /^normal$/.test(b.style ?? 'normal'))
-    .map((b: any) => (b.children ?? []).map((c: any) => c?.text ?? '').join('').trim())
+    .map((b: any) =>
+      (b.children ?? [])
+        .map((c: any) => c?.text ?? '')
+        .join('')
+        .trim()
+    )
     .filter(Boolean)
 }
 
@@ -94,8 +99,12 @@ export async function loadPostsInOrder(locale: Locale): Promise<PostRow[]> {
     const y = sortOf.get(b.slug) ?? ''
     return x < y ? -1 : x > y ? 1 : (rank.get(a.slug) ?? 0) - (rank.get(b.slug) ?? 0)
   }
-  const articles = rows.filter((p) => p.kind !== 'project').sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : bySort(a, b)))
-  const projects = rows.filter((p) => p.kind === 'project').sort((a, b) => catRank(a) - catRank(b) || bySort(a, b))
+  const articles = rows
+    .filter((p) => p.kind !== 'project')
+    .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : bySort(a, b)))
+  const projects = rows
+    .filter((p) => p.kind === 'project')
+    .sort((a, b) => catRank(a) - catRank(b) || bySort(a, b))
   return [...articles, ...projects]
 }
 

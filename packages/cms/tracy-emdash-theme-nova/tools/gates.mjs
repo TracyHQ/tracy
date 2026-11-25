@@ -33,9 +33,13 @@ export function gateRows(reportFile, { reviews = null } = {}) {
   const rows = Object.entries(report.gates).map(([gate, g]) => {
     const errors = Array.isArray(g?.errors) ? g.errors : []
     const reason =
-      g?.reason ?? (errors.length ? `${errors[0]}${errors.length > 1 ? ` (+${errors.length - 1} more)` : ''}` : g?.scope ?? '')
+      g?.reason ??
+      (errors.length
+        ? `${errors[0]}${errors.length > 1 ? ` (+${errors.length - 1} more)` : ''}`
+        : (g?.scope ?? ''))
     let file = DETAIL[gate] ? path.join(dir, DETAIL[gate]) : null
-    if (!file && reviews && existsSync(path.join(reviews, `${gate}.json`))) file = path.join(reviews, `${gate}.json`)
+    if (!file && reviews && existsSync(path.join(reviews, `${gate}.json`)))
+      file = path.join(reviews, `${gate}.json`)
     if (!file || !existsSync(file)) file = path.join(dir, 'REPORT.md')
     return { gate, status: g?.status ?? 'unknown', reason: oneLine(reason, 160), file }
   })

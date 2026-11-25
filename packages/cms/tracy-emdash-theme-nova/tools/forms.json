@@ -7,11 +7,51 @@
       "pages": [
         {
           "fields": [
-            { "id": "name-en", "type": "text", "label": "Full name", "name": "name", "required": true, "width": "half", "placeholder": "Full name" },
-            { "id": "email-en", "type": "email", "label": "Your email", "name": "email", "required": true, "width": "half", "placeholder": "Your email" },
-            { "id": "phone-en", "type": "text", "label": "Your phone", "name": "phone", "required": false, "width": "half", "placeholder": "Your phone" },
-            { "id": "subject-en", "type": "text", "label": "Your subject", "name": "subject", "required": true, "width": "half", "placeholder": "Your subject" },
-            { "id": "message-en", "type": "textarea", "label": "Message", "name": "message", "required": true, "width": "full", "placeholder": "Message" }
+            {
+              "id": "name-en",
+              "type": "text",
+              "label": "Full name",
+              "name": "name",
+              "required": true,
+              "width": "half",
+              "placeholder": "Full name"
+            },
+            {
+              "id": "email-en",
+              "type": "email",
+              "label": "Your email",
+              "name": "email",
+              "required": true,
+              "width": "half",
+              "placeholder": "Your email"
+            },
+            {
+              "id": "phone-en",
+              "type": "text",
+              "label": "Your phone",
+              "name": "phone",
+              "required": false,
+              "width": "half",
+              "placeholder": "Your phone"
+            },
+            {
+              "id": "subject-en",
+              "type": "text",
+              "label": "Your subject",
+              "name": "subject",
+              "required": true,
+              "width": "half",
+              "placeholder": "Your subject"
+            },
+            {
+              "id": "message-en",
+              "type": "textarea",
+              "label": "Message",
+              "name": "message",
+              "required": true,
+              "width": "full",
+              "placeholder": "Message"
+            }
           ]
         }
       ],

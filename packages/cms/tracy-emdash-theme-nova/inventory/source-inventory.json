@@ -1,2905 +1,2905 @@
 {
-	"source": "/home/agent/out/nova/snapshot",
-	"generatedAt": "2026-11-24T22:38:07.572Z",
-	"files": [
-		{
-			"path": "about-us-2/career/index.html",
-			"bytes": 37642,
-			"sha256": "6d7db635ed54d1b978298216a1da634f1e5afaa5c54cdd197f3bb16372826cf0",
-			"ext": ".html"
-		},
-		{
-			"path": "about-us-2/contact/index.html",
-			"bytes": 30621,
-			"sha256": "f416a669875f0d09e1f95e64620cc796b68c1ff1ba907c472297974975bb3be2",
-			"ext": ".html"
-		},
-		{
-			"path": "about-us-2/index.html",
-			"bytes": 40711,
-			"sha256": "2d51a1eb8de993fed64b9a80208298704a3bd5874010def034af0c7d298034d5",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Antoinette%20Huff/index.html",
-			"bytes": 29618,
-			"sha256": "0342099d5b152641302472fe89fd00e7a43189a8f881692c947fe5d4716c7cff",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Antoinette%20Huff/index~start=0.html",
-			"bytes": 29618,
-			"sha256": "90d27ae1f8e9913801a7df1eb20799429cd7bf0368ace80bd2397c4defabffce",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Antoinette%20Huff/index~start=12.html",
-			"bytes": 29581,
-			"sha256": "4daa94f7616f260f2690b00503ab075250a1c5ed28caec1d05985290ba23d888",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Antoinette%20Huff/index~start=16.html",
-			"bytes": 29494,
-			"sha256": "a9f8c3fe8a23425589f21368958409ddd35551cb78a69596c16abe4c427b29dd",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Antoinette%20Huff/index~start=20.html",
-			"bytes": 28839,
-			"sha256": "74844beba4f02f899eea027f1765c437ba4700b5f6e25d0ac928640333a33f98",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Antoinette%20Huff/index~start=24.html",
-			"bytes": 28679,
-			"sha256": "2ebfac0356e0d3955eec1f815d034b1b64dbc8ea4f3e871af0b5e6f7605c2782",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Antoinette%20Huff/index~start=4.html",
-			"bytes": 29528,
-			"sha256": "1118ebecac9cff626d52eca5a5cb054b212290c58f164d79b0ebd94f1a5503ed",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Antoinette%20Huff/index~start=8.html",
-			"bytes": 29576,
-			"sha256": "8ad2c954c1ab01ef9bacc7648e8991461d15d2feade4a71d4e21a4c5c05a291c",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Brian%20Jennings/index.html",
-			"bytes": 25911,
-			"sha256": "93dcd46c2c768436c3e87b6c2815b0c5f81a09c696785cf84098d64f0750d673",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Dewey%20Mann/index.html",
-			"bytes": 25929,
-			"sha256": "cb90a2bfbaf0f91edb4d68b9e5091af8608141d5e07de3ff72a163f2c11c6f16",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Elijah%20Knight/index.html",
-			"bytes": 25919,
-			"sha256": "9ed61404630c7c20562c62c0fcfc62498c2b905a63563f3c026bcc2ef5a672ed",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Henry%20Delgado/index.html",
-			"bytes": 25976,
-			"sha256": "fe06f07f4786fa36a474da23e016aee37b81e135702e8d5b2a73e851178c65c0",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Hubert%20Santos/index.html",
-			"bytes": 26001,
-			"sha256": "fbd15866bfaf3f0e53e174756d36673360742f6b8b060d594738b96567b79c51",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Lucy%20Reid/index.html",
-			"bytes": 25957,
-			"sha256": "3f9edb924382a4d983ea2107b34cf39e3510d1b865ba06661019a820cf601117",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/author/Warren%20Stevens/index.html",
-			"bytes": 25993,
-			"sha256": "8018bc7070e8ebe2e25d6e780ea068be6c0658bc576358c4d4a1d8df4ad5713c",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/index.html",
-			"bytes": 28194,
-			"sha256": "caf2d2117c57f7fd31ba0a6ca980778ce323721ed19e16875406f65cfd4a0b17",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/index~start=0.html",
-			"bytes": 28194,
-			"sha256": "1714a9a8ea67e24c45f9621673f8633ad1c514983d63c3e2aa8b1748e9421a86",
-			"ext": ".html"
-		},
-		{
-			"path": "author-listting/index~start=6.html",
-			"bytes": 24290,
-			"sha256": "f01173963bee92954a7d06ca3a0c9b2ebc78065ad2e038dfd0bcbc80456b8fa7",
-			"ext": ".html"
-		},
-		{
-			"path": "blog-detail/index.html",
-			"bytes": 31582,
-			"sha256": "7ee600464b3e83ac0b669f77ab95054a5813b72edc365cd95aef3cd944a60da4",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology/index.html",
-			"bytes": 31771,
-			"sha256": "c631f205206b099f78f8f569c84bf451068b27c5f9b72414806afac99ef91b40",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology/index.html",
-			"bytes": 31846,
-			"sha256": "e0aa8c15299c7d828a8db5792c4441992666522edcd2ddd131a2ba7e0b51dd83",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning/index.html",
-			"bytes": 31850,
-			"sha256": "af5a8fe4fd2697c7c21a4857f80ea109a0a8eb653da6ee1cbda830bd4ce2d63b",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/examining-the-role-of-business-technology-in-the-mourning-process/index.html",
-			"bytes": 31693,
-			"sha256": "8ff9008e9aba673e1a0b08e017b2ba7066442620ac645a77ccfcb521e9848549",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/from-legacy-planning-to-digital-estates-business-techs-influence-on-inheritance/index.html",
-			"bytes": 31754,
-			"sha256": "9d0be50cdd21c1c520c08a53b74c545bcb1707abd5433b7c6f1eb5892e48ccf5",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey/index.html",
-			"bytes": 31876,
-			"sha256": "1ecf9166170384412c50908d5794b6ce94be642dd261f8be5efc1930cd34de13",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/how-business-technology-changed-how-we-think-about-death/index.html",
-			"bytes": 31212,
-			"sha256": "9c8d1951ef29614868cd24fd01ea348a44b6a4dc701242328a7de8f0d8756e7e",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/how-business-technology-is-shaping-the-way-we-remember-2023/index.html",
-			"bytes": 31659,
-			"sha256": "bce1deb905a5fb6002fac3ee7af6b97094fa98c3ff916a5013659b43a0712dbb",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/how-to-create-an-awesome-software-video-about-success-busines/index.html",
-			"bytes": 31707,
-			"sha256": "0d355de0ff62b1a81ed2d09a31fb1411c95a35dec8ffff98ffd073f1c079e3b4",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/index.html",
-			"bytes": 46234,
-			"sha256": "184c3c6325f021ca144d7cc9105a989760e5792e7e0d2fcefff9daa753812670",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/index~start=18.html",
-			"bytes": 45313,
-			"sha256": "3fbc843f2969336bc3e471b88c950c6d3461d1c4be9d3b8a4d9d6b3509f0ce03",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/index~start=9.html",
-			"bytes": 46516,
-			"sha256": "593aae78222f38873fa323f3d27c0c3f547f482ae0dd1f1dcbbeb9fade326728",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones/index.html",
-			"bytes": 31843,
-			"sha256": "8d940c92b30148f114c8a4c1f5cb4b1b7aaf0fcc67f2958189997dfaf54d321e",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology/index.html",
-			"bytes": 31800,
-			"sha256": "5e340783e4f6940bfa72698457ca70ed4e3442d826bb4c4188c1f07bb0db7207",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology/index.html",
-			"bytes": 31812,
-			"sha256": "99e738c453393d4cb1343f4ba761bcf819aeb1403f758a0cc01fff298c4df08e",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning/index.html",
-			"bytes": 31865,
-			"sha256": "c4e44e3af314f6f3345e5f39755eac8386ff7935090d0d4da8cfae4e04ae05a3",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief/index.html",
-			"bytes": 31869,
-			"sha256": "41b2f34c08adcc05312f6034e6a77e3aa58dc04204492715a0e929d9bf61c21b",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services/index.html",
-			"bytes": 31763,
-			"sha256": "5e0f375591e56bf8500a6a8e39c2b1b9764fe3011220362150b01dc411856eae",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye/index.html",
-			"bytes": 31738,
-			"sha256": "e7d3c37d6f0fa9de38feaf96463db641d866f98729e21278894b43e674932e06",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life/index.html",
-			"bytes": 31711,
-			"sha256": "0831d9274ceea896499a9e0bcb7a3f12af3658c0a38487a1ea704fe5bd3804e9",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology/index.html",
-			"bytes": 31799,
-			"sha256": "01b5e8cd88a8c38a7b2cf32d827ceb7303cbb0efbc439ef75dd8a767e785d259",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief/index.html",
-			"bytes": 31843,
-			"sha256": "0e640df459026d6ac21578494ba3d6aef9cad3288e23fb77194d74c65700b1bc",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/the-evolving-landscape-of-mourning-business-technologys-role-in-the-digital-era/index.html",
-			"bytes": 31869,
-			"sha256": "25ca0002afdc3c4b660d802e6ccc59d20b20fb91a5120dbe1e978d61956408dc",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/the-influence-of-business-technology-on-mourning-practices-2023/index.html",
-			"bytes": 31736,
-			"sha256": "38f97326b6f58299df2b8e8a510c7bb4359da38c84ed634b9ef33edbfb8a45f8",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/the-rise-of-online-funeral-services-business-technologys-role/index.html",
-			"bytes": 31710,
-			"sha256": "4517882c20ad09a2af678fc903a398ba07d206a96c596a09ea2654e2e6af5d92",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process/index.html",
-			"bytes": 31382,
-			"sha256": "0033bc540c8306a0b05f1b2627c96c36022b6d0be10b7f8d5a0efaab4d1daf0f",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization/index.html",
-			"bytes": 31852,
-			"sha256": "dad95b8805a95a018e95aa838b4e4a9af508956f4a590a6603a4f72c2d71aa94",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning/index.html",
-			"bytes": 31843,
-			"sha256": "7a27c39f414b599bf41301596753caf32789dd271ca94b6407fc927f7c704faf",
-			"ext": ".html"
-		},
-		{
-			"path": "category-blog/why-the-biggest-myths-about-business-may-actually-be-right/index.html",
-			"bytes": 31657,
-			"sha256": "8ec8b443767bf324aca394063af34faa81a1fc2cdd5e3f711b8aad7f69b613ed",
-			"ext": ".html"
-		},
-		{
-			"path": "cloud-solutions/index.html",
-			"bytes": 36386,
-			"sha256": "05d410d7c04637bff4972cba860ef163e73780b8a03e111eebedf0c52eb9c892",
-			"ext": ".html"
-		},
-		{
-			"path": "crawl.json",
-			"bytes": 70415,
-			"sha256": "9b69d26eda8fdac657e72f93bf9e2e3291e0743653dfbf28c4aad0f12b5d9074",
-			"ext": ".json"
-		},
-		{
-			"path": "cybersecurity/index.html",
-			"bytes": 36358,
-			"sha256": "c35adb6198465f7c7fe4a582387780ae51d233ef42359bb643b62f1fd4edf6d6",
-			"ext": ".html"
-		},
-		{
-			"path": "development/index.html",
-			"bytes": 36336,
-			"sha256": "81bab79c2f3952e47973f316316a917e332d6956f1b878bf7ab11b7e9fba3bec",
-			"ext": ".html"
-		},
-		{
-			"path": "error-page/index.html",
-			"bytes": 22658,
-			"sha256": "ca70f7e74369879d89a9d5a63b96149034e199a0f83d7e04ea159e16d671bc4f",
-			"ext": ".html"
-		},
-		{
-			"path": "featured-articles/index.html",
-			"bytes": 34566,
-			"sha256": "18f3569c8d0d0eb26b59b9dfc77b3a8c7fa6e3105ec34e0824796e80057770b7",
-			"ext": ".html"
-		},
-		{
-			"path": "featured-articles/index~start=7.html",
-			"bytes": 33909,
-			"sha256": "f501d5da25e24879f2a0df0d684cb1ad906238b35e4da38e447accb2eb0b384d",
-			"ext": ".html"
-		},
-		{
-			"path": "illustration/index.html",
-			"bytes": 36012,
-			"sha256": "95174394ebd43c036310f3904b2dafd41e21e617cb03119b825f35824bff7fb5",
-			"ext": ".html"
-		},
-		{
-			"path": "images/joomlart/authors/item-2.jpg",
-			"bytes": 148932,
-			"sha256": "ad0bf340527ca5cca08d4997fae5589d91f001176deffbd056578cfad3a89933",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/authors/item-3.jpg",
-			"bytes": 87032,
-			"sha256": "01d5ad9344d2002cb2ade6eda8de243e60ed3bc8273729791ef00f99696383c8",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/authors/item-4.jpg",
-			"bytes": 130864,
-			"sha256": "ca2ce40fefa0be818cc1d2c000b99d82c56eee248c13f03c965ba2e769c31dae",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/authors/item-5.jpg",
-			"bytes": 95081,
-			"sha256": "5bee7c18432e2d9c889dfeb2045b5853f83fe0e76703c8830164cfb647391d10",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/authors/item-6.jpg",
-			"bytes": 168436,
-			"sha256": "9d47137f49f5cd5f9255bbe1d861ca28c2f982a9a4f3c8bea7bbd036430ab781",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/authors/item-7.jpg",
-			"bytes": 129835,
-			"sha256": "1b788426cbf9801867bb91cf9caa718cc0b95102e2956d4d89acfd374a0f39f2",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/authors/item-8.jpg",
-			"bytes": 112587,
-			"sha256": "bdb0e87441deb26a6a58e3b32885660a694a944b33ea84f51bcd675da75cd76c",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/authors/item-9.jpg",
-			"bytes": 109442,
-			"sha256": "0b9dfe86bc0c402e7932e00d09899e380224edf5da619352d4dc39758d0f5b76",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-1.jpg",
-			"bytes": 133262,
-			"sha256": "c431578ab47d096a5aa49a2fac23803b4737a92f86a0d11acf65946a9b7c464f",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-10.jpg",
-			"bytes": 141950,
-			"sha256": "ec0a75347aa6f56728b64743a5fd37ae5e19850db610e311896bc11b5831a6c1",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-11.jpg",
-			"bytes": 109035,
-			"sha256": "7d24abb97f69dc65aeff56e0b503a83ed435162c9160b670b4eb5be9a1a96c0d",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-12.jpg",
-			"bytes": 122122,
-			"sha256": "68a4db63df40df07059a78b0665c2e6607671b8299a68ae1e06b804d9b906747",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-13.jpg",
-			"bytes": 146446,
-			"sha256": "06b196f97ae7acdec97f594cc341c52664a9633f79caf458a9a4e88070b003fd",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-14.jpg",
-			"bytes": 153591,
-			"sha256": "5f724d7fcf3a4137cabe2bca883d7b5144f2cea3d22163f1eeacfefc4d841520",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-15.jpg",
-			"bytes": 212062,
-			"sha256": "2134400df0ca40cf2b405a74693ab4ed7e766c5764583bcf073f5b2f3ba7f9c0",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-16.jpg",
-			"bytes": 145627,
-			"sha256": "add63135734cc5ca8a1bcf1f3341a09b2677cca434b4ef4cb4f13ccf1669d859",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-17.jpg",
-			"bytes": 136187,
-			"sha256": "3d86cc8cfa898a4c5df136e128160480339e4b7a1c964afcb86e49d71f3e3c57",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-18.jpg",
-			"bytes": 138415,
-			"sha256": "d284c4e4a9955c6668d076a7bdf8063867002d9a557b13e7f939698859da6ade",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-19.jpg",
-			"bytes": 123285,
-			"sha256": "67fed7521e3afeb7d1d5ac52a581acc8d4f39949c1dfcae5afbbdffe3feaf885",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-2.jpg",
-			"bytes": 183592,
-			"sha256": "69f556aa04a8500c8bf5e889e31e6e8d9e062628e76f3e42a7e6923f83d1d925",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-20.jpg",
-			"bytes": 134303,
-			"sha256": "17ff4323e8230bf676a06bae4894f486af58dd29e9191ff9dd91acb436141d59",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-21.jpg",
-			"bytes": 200258,
-			"sha256": "58c972916366fe4f5f74ef60b4cf9dc69ac5ff03029112ddbf290fb1dbc739c5",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-22.jpg",
-			"bytes": 130446,
-			"sha256": "643ddb31cc65f0de60cd1f771808237f33855997327e64746e33c3703ce51394",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-23.jpg",
-			"bytes": 133266,
-			"sha256": "83182fae9f29cef1145df98a031a946f82f514ccbff7e350c8843c79797a0d7c",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-24.jpg",
-			"bytes": 90242,
-			"sha256": "fe0a03da43bd20ac79c93a1538a5128d7d7c988ce8bf55c4b3e49c711b58ddda",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-25.jpg",
-			"bytes": 105327,
-			"sha256": "8caa4dcaa9db0d3f82fa11684f0fd8df1ee98df241f0559848f14767b0fd0683",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-26.jpg",
-			"bytes": 137865,
-			"sha256": "9a130a3ae2de395ef255f5504ba14d2abd8ac8db74bda54840e2c00601e20a83",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-27.jpg",
-			"bytes": 140447,
-			"sha256": "c52c362e39076ca9bf565081c9b1fe1b0751fa2a45a0271f71a507e3894091cf",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-3.jpg",
-			"bytes": 187847,
-			"sha256": "64e5ce66d72b5dbe5e3cc3923095fc80e3abf609f5f595deb5b69cc924276afb",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-4.jpg",
-			"bytes": 131615,
-			"sha256": "07322a51205b2155bfd1f7bbc7a8218dc79e72688c0f01b1204a69f571cc4f6d",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-5.jpg",
-			"bytes": 110479,
-			"sha256": "c44237bfc64de5972e5bbf3ff590ec0ac84c4f5826f2a778d4c58fbfd5b65ff2",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-6.jpg",
-			"bytes": 141812,
-			"sha256": "3b51897d67cf0c34a3363fd97ed7bfb69f3571671e55d1fd999d6eec7c8eac21",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-7.jpg",
-			"bytes": 133029,
-			"sha256": "7c10179d9620aa3afc97a066f17555ca308920b63eb0421d7942ce5f888359dd",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-8.jpg",
-			"bytes": 123428,
-			"sha256": "f74d0cecee62e830d619098bf395a33b6aa7bd18caf123297587ca6da45abbc0",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/details/item-9.jpg",
-			"bytes": 112639,
-			"sha256": "429884dbaf120f7d2598de649994da23024c87aaa4478d6ee24444bdba49b703",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-1.jpg",
-			"bytes": 121168,
-			"sha256": "fae3e5f6200ded41139b6cf67f4af662ae5179547b9ee4d35ec123f86a5e994f",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-10.jpg",
-			"bytes": 122697,
-			"sha256": "7fffb87adbeb78b800ffa07748e77cdba3efabb8dd4b94dc07b237b45613473a",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-11.jpg",
-			"bytes": 97406,
-			"sha256": "c288e7c8e40fea5dedc88bcd9ee4600ffd785110cec7bdc7e5c092932fd5ae82",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-12.jpg",
-			"bytes": 107487,
-			"sha256": "7fa0e644699b47b5a9f4eebd3d918eda94b36bbb6d39d1cef803ad2251ffa7d6",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-13.jpg",
-			"bytes": 124384,
-			"sha256": "28d8618b3aff1a99a561a41021263f516195311ac8b40c17e1964c39541cff9c",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-14.jpg",
-			"bytes": 136949,
-			"sha256": "b397333e95b68950f29d42d3d47f8195e0b5cef2360720783701255516d27243",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-15.jpg",
-			"bytes": 183870,
-			"sha256": "3b8674f6f585f4a857a1927781dfcdad8f4f7015912830c9968f4ccc60f6bdfc",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-16.jpg",
-			"bytes": 130938,
-			"sha256": "76f1c92be25b3fcba7d3ca33b15e45f4ee50cb4e4ddc9affedbef31c53775a84",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-17.jpg",
-			"bytes": 128411,
-			"sha256": "4411174033e513e6c964897c702a6690014528ca684096284284c0a290d4e0d2",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-18.jpg",
-			"bytes": 134830,
-			"sha256": "b600b455ddfa2fc2da5ca8e22f7efc0984e28d7d7baa274335a415593065a656",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-19.jpg",
-			"bytes": 112270,
-			"sha256": "f84d9267cd50249f18c2d4deac64e1728e1d636ccab373e64e812212a849f9b6",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-2.jpg",
-			"bytes": 158193,
-			"sha256": "32b4b4aea1d10ba232431c5c7c0b58e388ada087d9d31bb482ca2be030fddedd",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-20.jpg",
-			"bytes": 123595,
-			"sha256": "cce91144d08153c525f11a765aad2b1d4456d419f2c30fbc15cf4da0a976d6c4",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-21.jpg",
-			"bytes": 190691,
-			"sha256": "4e7d8aca520b5646cfcade1db709dab705659392eee83bc0aa0e9c24a034f7e6",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-22.jpg",
-			"bytes": 117115,
-			"sha256": "e6986303a37086fbd7c613ba0ab542535b6a5fa2d7c4290683e14a5b3534ae69",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-23.jpg",
-			"bytes": 122453,
-			"sha256": "56a5da8cf9fc5240faf74a4bbd19eb6db1e14948143a46e34c872508cd120a47",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-24.jpg",
-			"bytes": 74748,
-			"sha256": "d29673d35a8b266772d03fb15643aabb6fb6ee83cc289f51aac774dc3621ccf1",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-25.jpg",
-			"bytes": 82144,
-			"sha256": "93c1f9f85d380cc56f2d97c1896bdc272b442c6ea898ea91ddf951246ec0801d",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-26.jpg",
-			"bytes": 126257,
-			"sha256": "739e221067ffa117808bd9d368fa13a560203f026ae13724c6a7c87f2a71c044",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-27.jpg",
-			"bytes": 148174,
-			"sha256": "d413fbe61512c5e7ec4578fcc0a5ccbfe97aae7df3862ce92764f8ce08b7e9b0",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-3.jpg",
-			"bytes": 158142,
-			"sha256": "0d2c06e279b4040c11c401c2eeb3231e32e6fc18fefb7988da41f0ed0009f3de",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-4.jpg",
-			"bytes": 118890,
-			"sha256": "ed3fbc8d8b162156faaec50155b90a751fa2bb9e5a0068a6f43185994dfd52fc",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-5.jpg",
-			"bytes": 102309,
-			"sha256": "c400f5dc7301da21e6c6bf5238992daeb2719e48c190d220abb5a072f148fd36",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-6.jpg",
-			"bytes": 123589,
-			"sha256": "838d629bbce2583b37ef10db28e0be526c2fc5475128240215c23898746e061e",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-7.jpg",
-			"bytes": 119917,
-			"sha256": "8e291bc4a9aff78c3a1ff481c8960c65ebf0c2a80eee3e849cd4bfbc1b9afd00",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-8.jpg",
-			"bytes": 115059,
-			"sha256": "62cfe5d8fc7ccc80b0143b3ee58c516ceccbbfac54d021532fd28c0394d63036",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/intro/item-9.jpg",
-			"bytes": 100053,
-			"sha256": "98ddb4eaa02243da8540f28b4aa7a34789e4187635dd9926010ebaf32b7ded97",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/blogs/pic-1.jpg",
-			"bytes": 88175,
-			"sha256": "1fa7b087f044d4fedfffd09ffa7289c68a24f2408bf3f57c8b41c4b31214c208",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/clients/item-1.png",
-			"bytes": 2280,
-			"sha256": "fdd69f5d656e52168f3f749cc83f5005f7b5a2a5ae85249ab9227f4b1f8d54e6",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/clients/item-2.png",
-			"bytes": 2062,
-			"sha256": "d26d2e7a1117f6fd781843cdde5c633304ac1066e041334ac25f9f4756722636",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/clients/item-3.png",
-			"bytes": 2626,
-			"sha256": "81f9b1176da294977d78f4b7ab8326a03b84041a6a6711ebcbe6fe5e26a56e63",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/clients/item-4.png",
-			"bytes": 2452,
-			"sha256": "7e5afb380600ef5fed21cd77cbf5495df6e5b6f63225c44e4c66d298166ffe7d",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/clients/item-5.png",
-			"bytes": 2406,
-			"sha256": "ef7332edc9a2266c592b401a5067b2732a2dfac2f044c9f8c276836ced4e37e4",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/clients/item-6.png",
-			"bytes": 2676,
-			"sha256": "4b0f8b2cb1f3aee3c571cd6d0bb4304e50e079d9f8806fbcdef91892315246a8",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/features/decor.png",
-			"bytes": 165371,
-			"sha256": "2c30eeb46d278d383fac1f3b6cf974da0c999e0937df36a359efd342d4f44646",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/features/icon-1.png",
-			"bytes": 2652,
-			"sha256": "145f5a18a10c09a3b4b08f8f7a347d3fbea920fc6d365eab69ab71cc051593b3",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/features/icon-2.png",
-			"bytes": 3973,
-			"sha256": "be8c5ab5a5a842521009904019bec4d3bfa7b8824631681f432c5101c7cd987c",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/features/icon-3.png",
-			"bytes": 3563,
-			"sha256": "7f85553d65d3db061e2a08c234294152735df96f3843f06cfc3f6761bc914454",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/features/icon-4.png",
-			"bytes": 4299,
-			"sha256": "2848b646dda87abe9429f29a2f38a527d9093c4202d13c52bc89d654793ca575",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/features/item-1.png",
-			"bytes": 419897,
-			"sha256": "cbd91147f9708dff7e4b21a5a0dbbc33a1ea19736da17921fe78744048881a44",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/features/item-2.png",
-			"bytes": 391598,
-			"sha256": "cb28d84c70206cd12e1caf489ff42b78fed3fa43e5a3718c8f027f8d6685dd5c",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/features/item-3.png",
-			"bytes": 544232,
-			"sha256": "e48e15f77653b277c7bc645c5d94d36cd1773408ab92743136fae28ab48f8b68",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/features/item-4.jpg",
-			"bytes": 853353,
-			"sha256": "f5f6d1560b4a987dccb125214411feed936f859e38cd9e1a99aba34b4654f203",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/icons/icon-1.png",
-			"bytes": 2547,
-			"sha256": "57762dfbfe8ad1b5ce79b0bc7834e7a7df850b49741f09ac8f302dbabde9c54c",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-10.png",
-			"bytes": 2130,
-			"sha256": "35ba361ee03a07073fe9efb0d562fc9d5973bea49ae182200e0989f2f031513e",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-11.png",
-			"bytes": 2169,
-			"sha256": "c2466a32c5e11b2ad7441b6c83a6719c53ba0a41a4d95a961f3edb7814ea2af9",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-12.png",
-			"bytes": 4458,
-			"sha256": "63d670a68b6b55b3489de3ce7e30394bb440546fda232743be2fc588bcf68024",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-13.png",
-			"bytes": 3124,
-			"sha256": "3eb4a0c3a6d60d0510cec0083c63eb45c4355c1602bfd693cdb687d24b4c11b5",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-14.png",
-			"bytes": 2994,
-			"sha256": "a651d94a0fe8bd2dc977d8ce4e7defd5a5f2b6a11a2aa284825ede8c5e3c8a70",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-15.png",
-			"bytes": 3489,
-			"sha256": "62fb25d8fa3f84c79970dc5de31f55ce6d213a45aa9dc060456ec62148cfeaaf",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-16.png",
-			"bytes": 3688,
-			"sha256": "b7f426b39007791ccaa5918f202ab875f0a4c70e4fb281a877e478a4af971ca6",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-17.png",
-			"bytes": 3210,
-			"sha256": "4167fb94448af2328ffcaac8847ea554b343783c1a2c73e399902da799dcbca9",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-18.png",
-			"bytes": 4294,
-			"sha256": "8d35012c4ec8ed90ce4565a218c9ba329518119088793e3256c043d042a0c329",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-2.png",
-			"bytes": 1926,
-			"sha256": "aa9e946602cd1dd6b870061aa940359598e66811d3d3a34f2b4553d50ce80889",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-3.png",
-			"bytes": 1279,
-			"sha256": "c5c6db5cad39fa9423feee5bb95638031a9725ac1acc4bcfd42227f452dece93",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-4.png",
-			"bytes": 1516,
-			"sha256": "1093f07aa7fc5206fa8a63eb1d00268d203358670e570ba72192ab148fb14993",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-5.png",
-			"bytes": 1332,
-			"sha256": "75eddeab989675516bff0209d72f52f3fc069886789a9927c329e723a77aed04",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-6.png",
-			"bytes": 1269,
-			"sha256": "21d18610e19cc7814fa482402cdb12314b433b549a865e909323dd80c3fb5342",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-7.png",
-			"bytes": 1542,
-			"sha256": "d862f4bd919138a88e9b253eda53e2810f08d5c9fdf275ace3db997622b11021",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-8.png",
-			"bytes": 1997,
-			"sha256": "64cea535061d9db3311d28f0a98cb3fa27fa5dec6f511adea4c99d7ac48cf108",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/icons/icon-9.png",
-			"bytes": 934,
-			"sha256": "1b33799f8b4529a55ecab28b1f91658591993525cab35e2c30c4f5bd1eab0105",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/logo/item-1.png",
-			"bytes": 3574,
-			"sha256": "5fc3418caead66cf20499b8a4ea548cdf056212b0ab1785204dbde3c72955c06",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/logo/item-2.png",
-			"bytes": 3366,
-			"sha256": "4a6b3a583c29b9437e4e7ff00db91dbd77f2d21cca156992d5e90c7645f86cbe",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/others/404.jpg",
-			"bytes": 31517,
-			"sha256": "72ab9d87f80e527d7248058928fd6d7b76ead108a8f98c9d63342a0471094a34",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/others/bg-contact.jpg",
-			"bytes": 128378,
-			"sha256": "e8cbe7d5ada04f16ddba16af8e7107fc148ff6142658de925a44f0abd68d6597",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/others/offline.jpg",
-			"bytes": 29996,
-			"sha256": "4cb8bf25bfe5916cd3679daebfadac2a77418d341b6b4333f7c112da618d5e5d",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/detail/item-1.jpg",
-			"bytes": 235229,
-			"sha256": "41726bf1a382d33fc0d864e07820e2826ce0294b36cc23e693c28a31a3a67a87",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/detail/item-2.jpg",
-			"bytes": 229047,
-			"sha256": "01a0adf721c162e5beff72f548eab10fd92b7cedcf2d1ae16b1552f7e6a93d07",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/detail/item-3.jpg",
-			"bytes": 212529,
-			"sha256": "2f7b07ea2585b8854c5826251ac84c6a70f85a84b1e3147d781a08685759d501",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/detail/item-4.jpg",
-			"bytes": 220522,
-			"sha256": "e56980c43f36bc972ce49aa86cefb028cc778953a7ceed2fa6189b16d3409f36",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/detail/item-5.jpg",
-			"bytes": 178248,
-			"sha256": "8709459de82b45f25feb69f9db378cc5852c7f9e8f01c9c94909a93c87f17bf8",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/detail/item-6.jpg",
-			"bytes": 231422,
-			"sha256": "d2e8cf677a71f81efc35137c4f44f08cd88bc9f0556a707256535471e19a2204",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/intro/item-1.jpg",
-			"bytes": 78415,
-			"sha256": "f122b5634b1bbe99a557d966e2f2d86f4c64df4a53dc27d2c4d77e5252daf815",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/intro/item-2.jpg",
-			"bytes": 84754,
-			"sha256": "9112eed186c217b5a13f0bffd44983d579f44979884591a70e3291fba8813745",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/intro/item-3.jpg",
-			"bytes": 71443,
-			"sha256": "c53cdc67d1bef4a0046f4d763d5d0a84fc26da50d5d2f37ce4a4a879e0991aa0",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/intro/item-4.jpg",
-			"bytes": 86889,
-			"sha256": "a70bf192da715acc7e305a4f605467d180dc60fd82e489a45908ced357e3cf30",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/intro/item-5.jpg",
-			"bytes": 61537,
-			"sha256": "8d25f589a4fb1b1701620be57bbd0865d691268b84067e2eab1a80a6f6fb6395",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/brand/intro/item-6.jpg",
-			"bytes": 71420,
-			"sha256": "419a66cef9d218dea706d93d7cc52f9fb03dddd0101c477fa5b63a9712c61da6",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/detail/item-1.jpg",
-			"bytes": 169042,
-			"sha256": "fc818ca5601e8d24315c0ea0b0218fd244d3cd4ed28e9ba90c0c4f660199960b",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/detail/item-2.jpg",
-			"bytes": 246093,
-			"sha256": "0a1e1738617a7e0574c1e7055604633e5c1b961a748ddbeac7aad14be843c140",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/detail/item-3.jpg",
-			"bytes": 201705,
-			"sha256": "ebd46e753552e3ba7863df4702d62912c9752652a9e62dff42c23cf759746ce5",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/detail/item-4.jpg",
-			"bytes": 182514,
-			"sha256": "fb59e55977e950ddf571d0eea456b4070bec7ac3927421b19aebe027ce152b3f",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/detail/item-5.jpg",
-			"bytes": 314542,
-			"sha256": "8a926737428ea4f3c9fa19b955c70999ded96f846186d0b6b9f8677cdd833b33",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/detail/item-6.jpg",
-			"bytes": 220351,
-			"sha256": "13b874e5114120677e2cce072a7f948726050cc1c79c8ad10d218b358d96aeb1",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/intro/item-1.jpg",
-			"bytes": 55586,
-			"sha256": "eaa50dafc16c4f4fccaad38faf50f80e5adde228b9ed5041183428193e1ac6ed",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/intro/item-2.jpg",
-			"bytes": 77512,
-			"sha256": "4a6eea8d52e94d5e3f8396a18bf2c6a6724b0f8686bfc5910006174e51419e25",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/intro/item-3.jpg",
-			"bytes": 67070,
-			"sha256": "2280ec49fe7426533d7cacb15adc96693529bbb578f4166b7e5e4c4ed8e7a9f1",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/intro/item-4.jpg",
-			"bytes": 61437,
-			"sha256": "e8f46f3fe10de7d2db5beabd1c10601255b6b912fdb56dd864aba6e26d1b3b5d",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/intro/item-5.jpg",
-			"bytes": 98316,
-			"sha256": "8c4028153c73f351b240c5f0e624cf71b8529898466b0b4e2e16804256db6cc3",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/design/intro/item-6.jpg",
-			"bytes": 77200,
-			"sha256": "e23c231638b772f3030ae292a3d012d606d9846c49253cce63f6618b2e47a946",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/detail/item-1.jpg",
-			"bytes": 302519,
-			"sha256": "b0796e9ed24bdc4ee2bcb8fb8acf331877606016dc166f17bc3eed389d30ecc2",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/detail/item-2.jpg",
-			"bytes": 219212,
-			"sha256": "da4688c82150c46eab8c1dd6e4d545b32421ffb3043e3477707b0472139919f6",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/detail/item-3.jpg",
-			"bytes": 293089,
-			"sha256": "f0d315a90f10d0f0ddec8f526d436b8d7f36544691d2033e58bcdeb14a725252",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/detail/item-4.jpg",
-			"bytes": 228052,
-			"sha256": "de5103962d099bcd017ac1372f939519c49d027c924991b1140e865de65afbfd",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/detail/item-5.jpg",
-			"bytes": 337474,
-			"sha256": "ce1f94646ab0a7543fb7c4f5d70f3dc8312d8bb5aae381e5067a0442b68ebda4",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/detail/item-6.jpg",
-			"bytes": 227192,
-			"sha256": "c6a3bb76f989a6c29fa4d3a8d66a8e555429b976baf0824fa80f1556e976c214",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/intro/item-1.jpg",
-			"bytes": 98868,
-			"sha256": "fc654ba68c395710f1a4ecb8abb9f716f70586c8236fac1a8f71d7aaf9303747",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/intro/item-2.jpg",
-			"bytes": 90797,
-			"sha256": "adf5cc529ff515c4e97a2b9ef84bc8cad34210320842889fa8e32083560c471e",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/intro/item-3.jpg",
-			"bytes": 101673,
-			"sha256": "123e8b75b14f5bc45e2073e4d0d48bca75e9acb793b53c90a179ed68eed19888",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/intro/item-4.jpg",
-			"bytes": 77077,
-			"sha256": "3fe7e8c402979958050cd411c146069630d25c2d7820f1623da9a33d7089cfc3",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/intro/item-5.jpg",
-			"bytes": 113834,
-			"sha256": "5477e5e683c0edc2dc4a846e7cdb94c9525fcb6acc20c0cdf7a31e40a0997ad2",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/illustration/intro/item-6.jpg",
-			"bytes": 91375,
-			"sha256": "ae17167b13eb78c74f6144ea30a8ee70c205c892dd106c161233a0da5f0a285d",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/project/pic-1.png",
-			"bytes": 432047,
-			"sha256": "765013ccdbcc99cb192c35a598ad82d6dbeae541e890781be563d0652d1b75da",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/project/pic-2.png",
-			"bytes": 276388,
-			"sha256": "f1c4d9bc813828faf11a575ef456b62ee57edb19bf9d78886ec7540d2e39dd0d",
-			"ext": ".png"
-		},
-		{
-			"path": "images/joomlart/team/item-1.jpg",
-			"bytes": 237114,
-			"sha256": "ef82f73106cb34271f2129220f5a340f178c2bb844f0733102a7a82f9006ec48",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/team/item-2.jpg",
-			"bytes": 153376,
-			"sha256": "d59c1d51f16b4c5c9e3d63cd4892e5634815314d3ba52d0253be2bd3105a258c",
-			"ext": ".jpg"
-		},
-		{
-			"path": "images/joomlart/team/item-3.jpg",
-			"bytes": 190953,
-			"sha256": "5b072bef3d399a0971d6c96055a169a2677445cf1bfa2f978c87bcfe55a7a5f0",
-			"ext": ".jpg"
-		},
-		{
-			"path": "index.html",
-			"bytes": 71521,
-			"sha256": "9030fa0dab67d4de965c66ee7f42bac3dedd8909824753f795599739d4514101",
-			"ext": ".html"
-		},
-		{
-			"path": "index.php/about-us-2/contact/index.html",
-			"bytes": 30631,
-			"sha256": "da5f428d652a250a2ab044b3f90ff6c60cf31632281d9efff914db4057795fd5",
-			"ext": ".html"
-		},
-		{
-			"path": "it-infrastructure/index.html",
-			"bytes": 36392,
-			"sha256": "a6d97177d5a349a5e4fd76d01fb43e74d72476184efeef889933975e73082f58",
-			"ext": ".html"
-		},
-		{
-			"path": "login-form/index.html",
-			"bytes": 24138,
-			"sha256": "a5522d975dbd126b87356d07346cd339b4c209317081159e589171f5308d26c7",
-			"ext": ".html"
-		},
-		{
-			"path": "login-form/index~view=remind.html",
-			"bytes": 22373,
-			"sha256": "973b602dc06bcc539f267ae36b4bb2fae3edc9cb6f2f80e140ab2a46e453b848",
-			"ext": ".html"
-		},
-		{
-			"path": "login-form/index~view=reset.html",
-			"bytes": 22234,
-			"sha256": "98d9ee018e3181eb7d86b59881f229674d05a80d1ecaac92b47f95df182b8e54",
-			"ext": ".html"
-		},
-		{
-			"path": "media/com_finder/css/finder.min.css",
-			"bytes": 1765,
-			"sha256": "0376f10fb61436bda3ba56b432ee050ba691a3483118ab57aa7dc07eb42ea4cd",
-			"ext": ".css"
-		},
-		{
-			"path": "media/com_finder/js/finder.min.js",
-			"bytes": 1381,
-			"sha256": "a3ccb2cd02bb4362be9d0b1f737aec5f7304af71730a1e4017ba003854fce5d6",
-			"ext": ".js"
-		},
-		{
-			"path": "media/com_tags/js/tag-default.min.js",
-			"bytes": 486,
-			"sha256": "7c97dc019c350c50f44a79b631a853a7c9dc409c2d252394eaab8201dcd25d27",
-			"ext": ".js"
-		},
-		{
-			"path": "media/com_tags/js/tags-default.min.js",
-			"bytes": 486,
-			"sha256": "7c97dc019c350c50f44a79b631a853a7c9dc409c2d252394eaab8201dcd25d27",
-			"ext": ".js"
-		},
-		{
-			"path": "media/system/css/fields/calendar.min.css",
-			"bytes": 4317,
-			"sha256": "e130941535508f3dbd044224def5004648c3f25644ea9f16c5cf2c22da79b958",
-			"ext": ".css"
-		},
-		{
-			"path": "media/system/images/select-bg.svg",
-			"bytes": 504,
-			"sha256": "0aca0d7b534234c0f5c680504d4f37784c71c4733e272d9da6e4521b185cad6b",
-			"ext": ".svg"
-		},
-		{
-			"path": "media/system/js/core.min.js",
-			"bytes": 7786,
-			"sha256": "045181e3f5ea2f3afd09831dd18ea871b8a98fcb8cb3233af395fe123bdd3934",
-			"ext": ".js"
-		},
-		{
-			"path": "media/system/js/fields/calendar-locales/date/gregorian/date-helper.min.js",
-			"bytes": 5065,
-			"sha256": "0b38b69c2d3cde558c1850edfa64674f7142b60e3d5a3e2502bbfd14e5e7731a",
-			"ext": ".js"
-		},
-		{
-			"path": "media/system/js/fields/calendar.min.js",
-			"bytes": 25195,
-			"sha256": "b4d8c60e15ad1dc5c7df10c7801571340052b80f34de7c8d6533fbe8c1888d06",
-			"ext": ".js"
-		},
-		{
-			"path": "media/system/js/fields/passwordstrength.min.js",
-			"bytes": 2750,
-			"sha256": "ba9b9bf4d2a0ccb718ad407262d5d25b5312860e038bdadf490c28a6a3c89026",
-			"ext": ".js"
-		},
-		{
-			"path": "media/system/js/fields/passwordview.min.js",
-			"bytes": 1237,
-			"sha256": "1ba2fcc7648c62b2c7cf2d539092cec381ee03631114f3e5a851b398a2c8ff25",
-			"ext": ".js"
-		},
-		{
-			"path": "media/system/js/fields/validate.min.js",
-			"bytes": 8574,
-			"sha256": "2eb3c772ac894af82059fcf115b2ee545599cacf490eae2826c6e71a069c1f37",
-			"ext": ".js"
-		},
-		{
-			"path": "media/system/js/joomla-hidden-mail.min.js",
-			"bytes": 1569,
-			"sha256": "1aacba2d5d0e5f070a52691efbf51b7183bba1fe42c6569ed5f2025c6e409f19",
-			"ext": ".js"
-		},
-		{
-			"path": "media/system/js/keepalive.min.js",
-			"bytes": 741,
-			"sha256": "983c4e677c121da92edce183d530881200e0ce545ddca1174bdb3eedb7588619",
-			"ext": ".js"
-		},
-		{
-			"path": "media/system/js/messages.min.js",
-			"bytes": 5542,
-			"sha256": "09426cb3251a9408374f3f37bb5ec75a921c2e71d8717a83e7ab0acf16addf0a",
-			"ext": ".js"
-		},
-		{
-			"path": "media/t4/optimize/css/0f7a2da57d5df7eb9d2d7198151901b4.css",
-			"bytes": 639710,
-			"sha256": "0e70541915a2a4f2343fa5a63f6442eb756368056918e016e099b0e326be77da",
-			"ext": ".css"
-		},
-		{
-			"path": "media/t4/optimize/css/28a7925a4757730081c9bb522049d99a.css",
-			"bytes": 639743,
-			"sha256": "0a3ed278f14a9b9f42a1d5ef5a99379ea1ea929e16db6735efe8c440bb6ffb1a",
-			"ext": ".css"
-		},
-		{
-			"path": "media/t4/optimize/css/4792c9308913fefb266d0e6421e7b908.css",
-			"bytes": 640404,
-			"sha256": "248a36b6991304f29f739e7c85906382af245fc70c4253e4cc538dbeae909755",
-			"ext": ".css"
-		},
-		{
-			"path": "media/t4/optimize/css/50bce72da43f1cfdb6b715917132d608.css",
-			"bytes": 640404,
-			"sha256": "248a36b6991304f29f739e7c85906382af245fc70c4253e4cc538dbeae909755",
-			"ext": ".css"
-		},
-		{
-			"path": "media/t4/optimize/css/89858bba5ce33d55cf413cef7f40065d.css",
-			"bytes": 640404,
-			"sha256": "248a36b6991304f29f739e7c85906382af245fc70c4253e4cc538dbeae909755",
-			"ext": ".css"
-		},
-		{
-			"path": "media/t4/optimize/css/9140428116b9e80a60a9a41d8975f8aa.css",
-			"bytes": 640404,
-			"sha256": "248a36b6991304f29f739e7c85906382af245fc70c4253e4cc538dbeae909755",
-			"ext": ".css"
-		},
-		{
-			"path": "media/t4/optimize/css/9fb19c42fd2f546983be0ea0a2c622f3.css",
-			"bytes": 640404,
-			"sha256": "248a36b6991304f29f739e7c85906382af245fc70c4253e4cc538dbeae909755",
-			"ext": ".css"
-		},
-		{
-			"path": "media/t4/optimize/css/b4d5f40b8e93dac5c5fbb49516764a8c.css",
-			"bytes": 639743,
-			"sha256": "0a3ed278f14a9b9f42a1d5ef5a99379ea1ea929e16db6735efe8c440bb6ffb1a",
-			"ext": ".css"
-		},
-		{
-			"path": "media/t4/optimize/js/33a0a58b3db264c2c1a0967f0fc5766b.js",
-			"bytes": 63747,
-			"sha256": "fac553c1ab5f577c29bda8eca1cfc3a0b20353d3fc40fddbd49a67ce9f9e74c7",
-			"ext": ".js"
-		},
-		{
-			"path": "media/t4/optimize/js/f8b87430c5a0da323109d45391f21853.js",
-			"bytes": 40032,
-			"sha256": "315fb0606abb6b36a55cb0cd109139acfd46412d81066c0ab80f88928d93eabb",
-			"ext": ".js"
-		},
-		{
-			"path": "media/vendor/awesomplete/css/awesomplete.css",
-			"bytes": 1755,
-			"sha256": "8570c166966479f18cd0be77bb56947a3abc05b914257698134e652274b5ffa8",
-			"ext": ".css"
-		},
-		{
-			"path": "media/vendor/awesomplete/js/awesomplete.min.js",
-			"bytes": 8003,
-			"sha256": "b88cd20ce7955245180991050108b764c14a17986e7eae2daee92273eb7f75df",
-			"ext": ".js"
-		},
-		{
-			"path": "media/vendor/bootstrap/js/collapse.min.js",
-			"bytes": 3994,
-			"sha256": "cf9de80f69ca7fb0965323fb377b2424b59d4ab961f5a7802e537c7effb98320",
-			"ext": ".js"
-		},
-		{
-			"path": "media/vendor/bootstrap/js/dropdown.min.js",
-			"bytes": 6229,
-			"sha256": "c5d8353d52ebbf41bba3c66d69981ca111fee195d1ef3ec50054d79c2abde84d",
-			"ext": ".js"
-		},
-		{
-			"path": "media/vendor/bootstrap/js/modal.min.js",
-			"bytes": 7319,
-			"sha256": "1a9326b0065dc08763f2323553814ef6f716c5948055f8d177d976eae684b9c1",
-			"ext": ".js"
-		},
-		{
-			"path": "media/vendor/bootstrap/js/tab.min.js",
-			"bytes": 4957,
-			"sha256": "b7f4e131ff29bcc464496e98255ee101d8d1fc3f81da5f479f7ce9a929db60a6",
-			"ext": ".js"
-		},
-		{
-			"path": "media/vendor/joomla-custom-elements/css/joomla-alert.min.css",
-			"bytes": 3654,
-			"sha256": "df8eb5ad4051778586df18f3e6a7d3368820b8e8134751fa5ac845cead9318cb",
-			"ext": ".css"
-		},
-		{
-			"path": "media/vendor/jquery-migrate/js/jquery-migrate.min.js",
-			"bytes": 19389,
-			"sha256": "6fa409c2c72c30d7e21c407339c5a4802c3334660d9b1dc5e3ea2752bb6a4b62",
-			"ext": ".js"
-		},
-		{
-			"path": "media/vendor/jquery/js/jquery-noconflict.min.js",
-			"bytes": 30,
-			"sha256": "b7bbe381cf509577690654422e09b73e9fdbb0b70d47028146147da7a7a0c5fa",
-			"ext": ".js"
-		},
-		{
-			"path": "media/vendor/jquery/js/jquery.min.js",
-			"bytes": 87533,
-			"sha256": "fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a",
-			"ext": ".js"
-		},
-		{
-			"path": "mobile-application/index.html",
-			"bytes": 36398,
-			"sha256": "508bf37c610b2677182e22371d2e9a9dd91b6eb2f39e4bbfeccf2ff422aa4137",
-			"ext": ".html"
-		},
-		{
-			"path": "offline-pages/index.html",
-			"bytes": 22717,
-			"sha256": "16ef81a9aba15bd9f5c9144a32c3aa98d68db7509ab54332e3fd908f0a36f128",
-			"ext": ".html"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome5/css/all.min.css",
-			"bytes": 98364,
-			"sha256": "3b961e8e82f12168fd8e04ab46f9b596aae9c7fa0ac8066112176957f336114b",
-			"ext": ".css"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.ttf",
-			"bytes": 133988,
-			"sha256": "cda59d6efffa685830fd95b55f64ae9cb51279cd34b2410b69f84c7ec30157d9",
-			"ext": ".ttf"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.woff",
-			"bytes": 89988,
-			"sha256": "f9217f66874b0c01cd8c10b6a295dbc4f609acb6f5adc41c37da46641b57eb02",
-			"ext": ".woff"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.woff2",
-			"bytes": 76736,
-			"sha256": "8ea8791754915a898a3100e63e32978a6d1763be6df8e73a39d3a90d691cdeef",
-			"ext": ".woff2"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.ttf",
-			"bytes": 33736,
-			"sha256": "e8711bbb871afd8e9dea60e16d30f00c7e4837bbc9807065017475b849fa2313",
-			"ext": ".ttf"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.woff",
-			"bytes": 16276,
-			"sha256": "cb9e9e693192413cde2b1f21c1dc1d44b6fe7b27cc2b458e8b359d18f9ff8f4e",
-			"ext": ".woff"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.woff2",
-			"bytes": 13224,
-			"sha256": "e42a88444448ac3d60549cc7c1ff2c8a9cac721034c073d80a14a44e79730cca",
-			"ext": ".woff2"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.ttf",
-			"bytes": 202744,
-			"sha256": "af6397503fcefbd613976c21ad5c1e37298c18bbe07d096db03ccd3af6e05ba8",
-			"ext": ".ttf"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.woff",
-			"bytes": 101648,
-			"sha256": "3f6d3488cf65374f6f676c315340b0ac2be832bd55240c809448e36ef9b96326",
-			"ext": ".woff"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.woff2",
-			"bytes": 78268,
-			"sha256": "9834b82ad26e2a37583d22676a12dd2eb0fe7c80356a2114d0db1aa8b3899537",
-			"ext": ".woff2"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome6/css/all.min.css",
-			"bytes": 104502,
-			"sha256": "320d572dfb844e7152480b7b62374236c4896ccca3ac9d69bb03f3bc2034acb8",
-			"ext": ".css"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-brands-400.ttf",
-			"bytes": 210736,
-			"sha256": "276af0307107fc3e28218f3d580d2636b2a85966a309b9c937c799f3e14f4ea2",
-			"ext": ".ttf"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-brands-400.woff2",
-			"bytes": 118724,
-			"sha256": "4d46c3bcd49e008582f1c01ee88ed9a494d150643e3e947eb7710180808403c9",
-			"ext": ".woff2"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-regular-400.ttf",
-			"bytes": 68064,
-			"sha256": "7caa2d8d6cc03c5ee9fc23eab7a193b4e3ce667469c3f955a35f957a14ac2b7e",
-			"ext": ".ttf"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-regular-400.woff2",
-			"bytes": 25484,
-			"sha256": "003b55144f370c07c2bc6f8f80455bca7d61a2fb2766551883734249e953e700",
-			"ext": ".woff2"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-solid-900.ttf",
-			"bytes": 426112,
-			"sha256": "23c4f99ee90741117109d813b937b9bc6e971a2781fede7aa975414acec4f53f",
-			"ext": ".ttf"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-solid-900.woff2",
-			"bytes": 158224,
-			"sha256": "38e76ab3d359e772e9f2aab11fbb07a2e2209318183a89ced0a97d6b958a7a6f",
-			"ext": ".woff2"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-v4compatibility.ttf",
-			"bytes": 10836,
-			"sha256": "e868f3012f72e15ee6e525366989549a8b60e42b484e4a22518ba657287b1740",
-			"ext": ".ttf"
-		},
-		{
-			"path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-v4compatibility.woff2",
-			"bytes": 4788,
-			"sha256": "d0cd8241178cb658c2dff876fd67ceaa926198c31449bfa1d9b5199cc57c1895",
-			"ext": ".woff2"
-		},
-		{
-			"path": "project/branding/design-system-ul-kit/index.html",
-			"bytes": 31200,
-			"sha256": "bfa504de47b82ed2942f0220e96e7330dd28e93f4b3e693ea1ab92ed9ef72bd0",
-			"ext": ".html"
-		},
-		{
-			"path": "project/branding/index.html",
-			"bytes": 30141,
-			"sha256": "83082bc2bc8ad4cdb721d296a335e536296f5eeb43e3d2697be482b8ab6b8ded",
-			"ext": ".html"
-		},
-		{
-			"path": "project/branding/landing-page-design/index.html",
-			"bytes": 30820,
-			"sha256": "a7b836edcf32339c88fd7def32662548613ca10e4a4c692d525d6cd3c8305e95",
-			"ext": ".html"
-		},
-		{
-			"path": "project/branding/mobile-app-design/index.html",
-			"bytes": 31141,
-			"sha256": "d3181ca93158c2ba82dd205ec9c098b617f7cab0f7ac0ae9ec6e67e478f0263a",
-			"ext": ".html"
-		},
-		{
-			"path": "project/branding/muckup-design/index.html",
-			"bytes": 31123,
-			"sha256": "b82fe02b968c5f3c3e27d274a726265a4cd911ff0065a5dcbef081dfbc8a2451",
-			"ext": ".html"
-		},
-		{
-			"path": "project/branding/realistic-scenarios/index.html",
-			"bytes": 31173,
-			"sha256": "9ded0c65bec57b94f253db136a36897a85dbd0338d2cccdd24ef521d0530c759",
-			"ext": ".html"
-		},
-		{
-			"path": "project/branding/web-application-design/index.html",
-			"bytes": 30830,
-			"sha256": "d7b08dd76e212d7995ea4b737a16719a3b6430e686b888d7f8915d864029ceef",
-			"ext": ".html"
-		},
-		{
-			"path": "project/illustration/email-newsletter-design/index.html",
-			"bytes": 30892,
-			"sha256": "e492dd42cd2e5d140903543dee95c4c7971e28c6e39cb34468bd2229cd1b1b74",
-			"ext": ".html"
-		},
-		{
-			"path": "project/illustration/event-invitation-design/index.html",
-			"bytes": 30907,
-			"sha256": "3bfa481cf5b9838d6997ba1e6af1c29acf989f1e3d647f125de32eea78b84dc6",
-			"ext": ".html"
-		},
-		{
-			"path": "project/illustration/index.html",
-			"bytes": 30249,
-			"sha256": "e4cce3e972fd4df09cd7f07a00e61bc21b158cabbfff52d74c2f8dc178bb7798",
-			"ext": ".html"
-		},
-		{
-			"path": "project/illustration/packaging-design/index.html",
-			"bytes": 31196,
-			"sha256": "7b281ccbfa91cf56af87ca9eb8ef14149f1b8cd9e5c1d7664c2b3c3e4375029f",
-			"ext": ".html"
-		},
-		{
-			"path": "project/illustration/poster-banner-design/index.html",
-			"bytes": 31262,
-			"sha256": "7b9248525cae5fca56f40c0f03194891d3931b4c867e803d785e96b1c30d3602",
-			"ext": ".html"
-		},
-		{
-			"path": "project/illustration/presentation-design/index.html",
-			"bytes": 31220,
-			"sha256": "f8f78905bba2df3f3ec4e4147abc055365e2bf0e61d1e2e22c6a94c8b7f63cc8",
-			"ext": ".html"
-		},
-		{
-			"path": "project/index.html",
-			"bytes": 215894,
-			"sha256": "645fe34788f3e3574ccc5c483065f41895edd3a9dca9c451aa83e3be9613969c",
-			"ext": ".html"
-		},
-		{
-			"path": "project/project-detail/index.html",
-			"bytes": 31326,
-			"sha256": "896c5d182617b111126a0f5e18326b0dd5a4d9f7ff252f5cd845f03669804902",
-			"ext": ".html"
-		},
-		{
-			"path": "project/ui-ux-design/blog-design-layout/index.html",
-			"bytes": 31240,
-			"sha256": "7bd100f5d969d957c273b8a82b94d10acf20dfa45f45a3a74f50a10f93cc8466",
-			"ext": ".html"
-		},
-		{
-			"path": "project/ui-ux-design/brand-identity-design/index.html",
-			"bytes": 31232,
-			"sha256": "6904cd69c2ad9bcda7e7704e6886f4b2418bf074896596b3e4f20360ac77233a",
-			"ext": ".html"
-		},
-		{
-			"path": "project/ui-ux-design/corporate-website-design/index.html",
-			"bytes": 30886,
-			"sha256": "8328468308abf47709e938febf195d55d058b04fa0fe97d4a8086752de410630",
-			"ext": ".html"
-		},
-		{
-			"path": "project/ui-ux-design/index.html",
-			"bytes": 30229,
-			"sha256": "4440419ae0663060cebf4dbab03ef2dcc51b9e36f374bd6fbe9b9503fa71e851",
-			"ext": ".html"
-		},
-		{
-			"path": "project/ui-ux-design/infographic-design/index.html",
-			"bytes": 30849,
-			"sha256": "b97885e4c33f61647c45d0f04f7d982c873146dcd314b8f91885e9409940b0a5",
-			"ext": ".html"
-		},
-		{
-			"path": "project/ui-ux-design/logo-design-branding/index.html",
-			"bytes": 31244,
-			"sha256": "9e4c31dcd43a4cb65beb003feb57aa8a3755e92c538cecec2914a983d03150df",
-			"ext": ".html"
-		},
-		{
-			"path": "project/ui-ux-design/social-media-graphics/index.html",
-			"bytes": 31228,
-			"sha256": "ae8dcc1280b37203f8631bc141b7f92b4e6b69ac1f6f90a136b89effd8f6ad77",
-			"ext": ".html"
-		},
-		{
-			"path": "registration-form/index.html",
-			"bytes": 34798,
-			"sha256": "a3920da4374d598b34dd293c6b460379ffadea2d0325c612a8b74580c7dbdb8e",
-			"ext": ".html"
-		},
-		{
-			"path": "services/index.html",
-			"bytes": 35500,
-			"sha256": "ee8ee83da5a473ff2def6f706674ba7c6abd9be408bd06d0de493b86d228b5d1",
-			"ext": ".html"
-		},
-		{
-			"path": "smart-search/index.html",
-			"bytes": 23969,
-			"sha256": "0c180dc2e298b1273372e3bb98165e8f93d0c60df12984733f7fb13f0491963d",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/careers/index.html",
-			"bytes": 32612,
-			"sha256": "1f2ef68197def28b5f1354c46f0ebfa02e5854fbd7493b302aa7086c8463b943",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/coding/index.html",
-			"bytes": 24711,
-			"sha256": "df8fc043c1233e4f448d7be8faceba13d53c7bead115f0dc94de37aada7d9ed0",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/company/index.html",
-			"bytes": 31790,
-			"sha256": "700e6eb182a0829930c96edffd695937a11d1d1083413e02223aef9354ffa554",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/company/index~start=20.html",
-			"bytes": 26587,
-			"sha256": "620cc0524e0c913cef5c04b1a683aa8e6d8d397e8d3abe28a23e68186f95ddf1",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/computer/index.html",
-			"bytes": 33776,
-			"sha256": "24c0f5fa9dbb0698ddea66ce1a62fa5738504b438f54427d5ccc97698324cc8b",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/computer/index~start=20.html",
-			"bytes": 25964,
-			"sha256": "f4a5f3161921a13c6b068dba796a5f638c1a056ea16b04c54abf826396319b76",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/design/index.html",
-			"bytes": 30441,
-			"sha256": "1f96b16894f0fd758f2df5502d02707fbbc54bf1293f5b9c95a1401f9bd84094",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/developer/index.html",
-			"bytes": 31647,
-			"sha256": "b6c012ee3337525b9c2b78ac44211f3af6e94999a4b23ded229d91d932175401",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/developer/index~start=20.html",
-			"bytes": 25042,
-			"sha256": "5ffb999bd416dfe94bf0a2b1c4f1ff374379df84169513cc365e466ec2071dd7",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/devops-platform/index.html",
-			"bytes": 23563,
-			"sha256": "cd28c001b3e13a5488772b0c51340e05dcf30ecf8df475f5908623c4197a39ad",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/devops/index.html",
-			"bytes": 33739,
-			"sha256": "107331020a66fd57e0f27c6b36d00bffb03ea05703eef21ced474cb873786126",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/devops/index~start=20.html",
-			"bytes": 25515,
-			"sha256": "84c21d66b68d7af3d26c08c632fa441905fa021a7484596c861c01a59ac80ace",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/digital/index.html",
-			"bytes": 24288,
-			"sha256": "d6c0e4d6a5faaaaf63771426f7f77b09af1f01ffe023289ca31b288cd955ae31",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/index.html",
-			"bytes": 26397,
-			"sha256": "622a1e7d2020d685c4480c932dacf55264a1dd15c0466b00258245fe019f65ee",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/news/index.html",
-			"bytes": 23464,
-			"sha256": "f816d772662f02c8f135928cec4dd5f363ee7eadabb01a3e12b316f43cf01a11",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/office/index.html",
-			"bytes": 23482,
-			"sha256": "6b91299ca4b3f5788a172b1598cad0e76f3ed89bd386c629fae2aff5062d5aa5",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/open-source/index.html",
-			"bytes": 23527,
-			"sha256": "0de8540719af0cfa6d121066acc8e21bd6ad5490c18b14b00302f9858057dd17",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/programming/index.html",
-			"bytes": 23899,
-			"sha256": "198b5d29f7b094177dffa76b9c8a62292e6da5c1417518d6cd89c46031212356",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/team/index.html",
-			"bytes": 25990,
-			"sha256": "dc67e93f949afebcb9ef9339db70925fa43ecdca08b78be9e84a2d6f106c6b49",
-			"ext": ".html"
-		},
-		{
-			"path": "tags/technology/index.html",
-			"bytes": 23518,
-			"sha256": "ebdb5468f43c41cfbb72607e5a6de1ea5139a6271149a48274191b88153f9c51",
-			"ext": ".html"
-		},
-		{
-			"path": "templates/ja_nova/css/darkmode.css",
-			"bytes": 25057,
-			"sha256": "4b34c34158d6c1eb375e66e48fa0d844c4703719e7ccd69fe26f8c4f86918bc3",
-			"ext": ".css"
-		},
-		{
-			"path": "templates/ja_nova/css/language-fonts.css",
-			"bytes": 5057,
-			"sha256": "3684b4961a2bdffbfa203e8550d99d0535315a98216d6ee5089972c454d20f3d",
-			"ext": ".css"
-		},
-		{
-			"path": "templates/ja_nova/favicon.ico",
-			"bytes": 2019,
-			"sha256": "7bd9b59d14b126e8c5abcb1c89b60c79e2b2e17c15745fe8d385204d87c40765",
-			"ext": ".ico"
-		},
-		{
-			"path": "templates/ja_nova/fonts/be-vietnam-pro-400-latin-ext.woff2",
-			"bytes": 6880,
-			"sha256": "c2ae124f149371e1b6209cbba234852310caeee3c32990a56ccb93ac1c7edb9a",
-			"ext": ".woff2"
-		},
-		{
-			"path": "templates/ja_nova/fonts/be-vietnam-pro-400-latin.woff2",
-			"bytes": 12908,
-			"sha256": "d25f70ff7404fddbeb150c9c687bf37069468a5cdf59117b2a30226d1ebfa5c0",
-			"ext": ".woff2"
-		},
-		{
-			"path": "templates/ja_nova/fonts/be-vietnam-pro-400-vietnamese.woff2",
-			"bytes": 4720,
-			"sha256": "b0d9b8aec7f47207ce4065be34286203e0741c8329be6d05986b149f991f84c1",
-			"ext": ".woff2"
-		},
-		{
-			"path": "templates/ja_nova/fonts/be-vietnam-pro-500-latin-ext.woff2",
-			"bytes": 7184,
-			"sha256": "83b86791eb0ebfca23daa3f70ee179f13638c69441b69a6d2deb6b96a95385ea",
-			"ext": ".woff2"
-		},
-		{
-			"path": "templates/ja_nova/fonts/be-vietnam-pro-500-latin.woff2",
-			"bytes": 13324,
-			"sha256": "0336df67f25be86ea38a6f37b11ffb4901c1ed65ce06ba99d6a304913e997e52",
-			"ext": ".woff2"
-		},
-		{
-			"path": "templates/ja_nova/fonts/be-vietnam-pro-500-vietnamese.woff2",
-			"bytes": 5100,
-			"sha256": "e83829fe40a88cff1c6ee213801661468bfed922771d1c382b4c1fdc269a5648",
-			"ext": ".woff2"
-		},
-		{
-			"path": "templates/ja_nova/fonts/be-vietnam-pro-700-latin-ext.woff2",
-			"bytes": 7164,
-			"sha256": "f446d28e986c5695283afcb13a7719dabd9f2cec28ab49ecb43a328efa009f05",
-			"ext": ".woff2"
-		},
-		{
-			"path": "templates/ja_nova/fonts/be-vietnam-pro-700-latin.woff2",
-			"bytes": 13348,
-			"sha256": "cf841d2b615f068e77a918114f44c17d51d0b73314fdff81eae95f528387c391",
-			"ext": ".woff2"
-		},
-		{
-			"path": "templates/ja_nova/fonts/be-vietnam-pro-700-vietnamese.woff2",
-			"bytes": 5132,
-			"sha256": "141f6c45010274d7d3625d0554476ec1161274d9eb09a38135977ea1b2b84895",
-			"ext": ".woff2"
-		},
-		{
-			"path": "templates/ja_nova/images/icon-decor/bg-1.png",
-			"bytes": 13651,
-			"sha256": "f0c7b0264e5294ce4f728a424aa26f1a7a886c437a34a76abddef82006378bae",
-			"ext": ".png"
-		},
-		{
-			"path": "templates/ja_nova/images/icon-decor/item-3.png",
-			"bytes": 5635,
-			"sha256": "6623411999bc43264ccfcdce79fa5b3a217e859637a2f8231f3a4dcd98f6e61e",
-			"ext": ".png"
-		},
-		{
-			"path": "templates/ja_nova/images/icons/ic_speaker.png",
-			"bytes": 5645,
-			"sha256": "b65e469f580c413920f0c958d4256ed4b79738b35efeef6156049b1a6c114d9f",
-			"ext": ".png"
-		},
-		{
-			"path": "templates/ja_nova/js/darkmode.js",
-			"bytes": 3485,
-			"sha256": "43ac20d0d5cf13a10c2dea93be903f15b20e05f09989b903a55e0f651d97c822",
-			"ext": ".js"
-		},
-		{
-			"path": "templates/ja_nova/js/owl-carousel/owl.carousel.min.css",
-			"bytes": 3351,
-			"sha256": "521410e1fc44780061e09adc980275fb5ea277fd5d9e538454214ec4379ff4bc",
-			"ext": ".css"
-		},
-		{
-			"path": "templates/ja_nova/js/owl-carousel/owl.carousel.min.js",
-			"bytes": 44342,
-			"sha256": "a53c43f834b32309b084ea9314df8307e9c78cee2202c6e07f216ae4ae5b704d",
-			"ext": ".js"
-		},
-		{
-			"path": "templates/ja_nova/js/owl-carousel/owl.video.play.png",
-			"bytes": 4976,
-			"sha256": "0436045686fddf10ccbbe2568e0cbffb457e7de7d43d1115c0056e81e97149ff",
-			"ext": ".png"
-		},
-		{
-			"path": "typography/index.html",
-			"bytes": 37904,
-			"sha256": "cd236fe5a9a743b09798a683b3ce781b8d7fc174f05a2cb9f008e94264e2be7d",
-			"ext": ".html"
-		},
-		{
-			"path": "virtualization/index.html",
-			"bytes": 36029,
-			"sha256": "11fb632c96630aa311e873c79df1c56b483eb33259058ad429382c15b3c40e95",
-			"ext": ".html"
-		}
-	],
-	"pages": [
-		{
-			"file": "about-us-2/career/index.html",
-			"sha256": "6d7db635ed54d1b978298216a1da634f1e5afaa5c54cdd197f3bb16372826cf0",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Career"
-		},
-		{
-			"file": "about-us-2/contact/index.html",
-			"sha256": "f416a669875f0d09e1f95e64620cc796b68c1ff1ba907c472297974975bb3be2",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Contact"
-		},
-		{
-			"file": "about-us-2/index.html",
-			"sha256": "2d51a1eb8de993fed64b9a80208298704a3bd5874010def034af0c7d298034d5",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "About Us"
-		},
-		{
-			"file": "author-listting/author/Antoinette%20Huff/index.html",
-			"sha256": "0342099d5b152641302472fe89fd00e7a43189a8f881692c947fe5d4716c7cff",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Antoinette Huff  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Antoinette%20Huff/index~start=0.html",
-			"sha256": "90d27ae1f8e9913801a7df1eb20799429cd7bf0368ace80bd2397c4defabffce",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=0",
-			"title": "Antoinette Huff  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Antoinette%20Huff/index~start=12.html",
-			"sha256": "4daa94f7616f260f2690b00503ab075250a1c5ed28caec1d05985290ba23d888",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=12",
-			"title": "Antoinette Huff  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Antoinette%20Huff/index~start=16.html",
-			"sha256": "a9f8c3fe8a23425589f21368958409ddd35551cb78a69596c16abe4c427b29dd",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=16",
-			"title": "Antoinette Huff  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Antoinette%20Huff/index~start=20.html",
-			"sha256": "74844beba4f02f899eea027f1765c437ba4700b5f6e25d0ac928640333a33f98",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=20",
-			"title": "Antoinette Huff  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Antoinette%20Huff/index~start=24.html",
-			"sha256": "2ebfac0356e0d3955eec1f815d034b1b64dbc8ea4f3e871af0b5e6f7605c2782",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=24",
-			"title": "Antoinette Huff  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Antoinette%20Huff/index~start=4.html",
-			"sha256": "1118ebecac9cff626d52eca5a5cb054b212290c58f164d79b0ebd94f1a5503ed",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=4",
-			"title": "Antoinette Huff  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Antoinette%20Huff/index~start=8.html",
-			"sha256": "8ad2c954c1ab01ef9bacc7648e8991461d15d2feade4a71d4e21a4c5c05a291c",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=8",
-			"title": "Antoinette Huff  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Brian%20Jennings/index.html",
-			"sha256": "93dcd46c2c768436c3e87b6c2815b0c5f81a09c696785cf84098d64f0750d673",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Brian Jennings  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Dewey%20Mann/index.html",
-			"sha256": "cb90a2bfbaf0f91edb4d68b9e5091af8608141d5e07de3ff72a163f2c11c6f16",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Dewey Mann  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Elijah%20Knight/index.html",
-			"sha256": "9ed61404630c7c20562c62c0fcfc62498c2b905a63563f3c026bcc2ef5a672ed",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Elijah Knight  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Henry%20Delgado/index.html",
-			"sha256": "fe06f07f4786fa36a474da23e016aee37b81e135702e8d5b2a73e851178c65c0",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Henry Delgado  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Hubert%20Santos/index.html",
-			"sha256": "fbd15866bfaf3f0e53e174756d36673360742f6b8b060d594738b96567b79c51",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Hubert Santos  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Lucy%20Reid/index.html",
-			"sha256": "3f9edb924382a4d983ea2107b34cf39e3510d1b865ba06661019a820cf601117",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Lucy Reid  - Web Designer"
-		},
-		{
-			"file": "author-listting/author/Warren%20Stevens/index.html",
-			"sha256": "8018bc7070e8ebe2e25d6e780ea068be6c0658bc576358c4d4a1d8df4ad5713c",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Warren Stevens - Web Designer"
-		},
-		{
-			"file": "author-listting/index.html",
-			"sha256": "caf2d2117c57f7fd31ba0a6ca980778ce323721ed19e16875406f65cfd4a0b17",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Author listting"
-		},
-		{
-			"file": "author-listting/index~start=0.html",
-			"sha256": "1714a9a8ea67e24c45f9621673f8633ad1c514983d63c3e2aa8b1748e9421a86",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=0",
-			"title": "Author listting"
-		},
-		{
-			"file": "author-listting/index~start=6.html",
-			"sha256": "f01173963bee92954a7d06ca3a0c9b2ebc78065ad2e038dfd0bcbc80456b8fa7",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=6",
-			"title": "Author listting"
-		},
-		{
-			"file": "blog-detail/index.html",
-			"sha256": "7ee600464b3e83ac0b669f77ab95054a5813b72edc365cd95aef3cd944a60da4",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Virtual Memorials: Exploring the Impact of Business Technology on Mourning"
-		},
-		{
-			"file": "category-blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology/index.html",
-			"sha256": "c631f205206b099f78f8f569c84bf451068b27c5f9b72414806afac99ef91b40",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Beyond the Funeral: Navigating Grief in the Age of Business Technology"
-		},
-		{
-			"file": "category-blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology/index.html",
-			"sha256": "e0aa8c15299c7d828a8db5792c4441992666522edcd2ddd131a2ba7e0b51dd83",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Digital Tributes: Examining the Changing Face of Mourning with Business Technology"
-		},
-		{
-			"file": "category-blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning/index.html",
-			"sha256": "af5a8fe4fd2697c7c21a4857f80ea109a0a8eb653da6ee1cbda830bd4ce2d63b",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Embracing the Virtual Goodbye: The Role of Business Technology in Modern Mourning"
-		},
-		{
-			"file": "category-blog/examining-the-role-of-business-technology-in-the-mourning-process/index.html",
-			"sha256": "8ff9008e9aba673e1a0b08e017b2ba7066442620ac645a77ccfcb521e9848549",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Examining the Role of Business Technology in the Mourning Process"
-		},
-		{
-			"file": "category-blog/from-legacy-planning-to-digital-estates-business-techs-influence-on-inheritance/index.html",
-			"sha256": "9d0be50cdd21c1c520c08a53b74c545bcb1707abd5433b7c6f1eb5892e48ccf5",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "From Legacy Planning to Digital Estates: Business Tech's Influence on Inheritance"
-		},
-		{
-			"file": "category-blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey/index.html",
-			"sha256": "1ecf9166170384412c50908d5794b6ce94be642dd261f8be5efc1930cd34de13",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "From Offline to Online: How Business Technology is Transforming the Mourning Journey"
-		},
-		{
-			"file": "category-blog/how-business-technology-changed-how-we-think-about-death/index.html",
-			"sha256": "9c8d1951ef29614868cd24fd01ea348a44b6a4dc701242328a7de8f0d8756e7e",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "How business technology changed how we think about death"
-		},
-		{
-			"file": "category-blog/how-business-technology-is-shaping-the-way-we-remember-2023/index.html",
-			"sha256": "bce1deb905a5fb6002fac3ee7af6b97094fa98c3ff916a5013659b43a0712dbb",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "How Business Technology is Shaping the Way We Remember 2023"
-		},
-		{
-			"file": "category-blog/how-to-create-an-awesome-software-video-about-success-busines/index.html",
-			"sha256": "0d355de0ff62b1a81ed2d09a31fb1411c95a35dec8ffff98ffd073f1c079e3b4",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "How to create an awesome software video about success busines"
-		},
-		{
-			"file": "category-blog/index.html",
-			"sha256": "184c3c6325f021ca144d7cc9105a989760e5792e7e0d2fcefff9daa753812670",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Blog"
-		},
-		{
-			"file": "category-blog/index~start=18.html",
-			"sha256": "3fbc843f2969336bc3e471b88c950c6d3461d1c4be9d3b8a4d9d6b3509f0ce03",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=18",
-			"title": "Blog"
-		},
-		{
-			"file": "category-blog/index~start=9.html",
-			"sha256": "593aae78222f38873fa323f3d27c0c3f547f482ae0dd1f1dcbbeb9fade326728",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=9",
-			"title": "Blog"
-		},
-		{
-			"file": "category-blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones/index.html",
-			"sha256": "8d940c92b30148f114c8a4c1f5cb4b1b7aaf0fcc67f2958189997dfaf54d321e",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Mourning in the Cloud: The Role of Business Technology in Remembering Loved Ones"
-		},
-		{
-			"file": "category-blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology/index.html",
-			"sha256": "5e340783e4f6940bfa72698457ca70ed4e3442d826bb4c4188c1f07bb0db7207",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Mourning in the Digital Age: Unpacking the Influence of Business Technology"
-		},
-		{
-			"file": "category-blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology/index.html",
-			"sha256": "99e738c453393d4cb1343f4ba761bcf819aeb1403f758a0cc01fff298c4df08e",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Mourning in the Digital World: Examining the Impact of Business Technology"
-		},
-		{
-			"file": "category-blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning/index.html",
-			"sha256": "c4e44e3af314f6f3345e5f39755eac8386ff7935090d0d4da8cfae4e04ae05a3",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Remembering Beyond Borders: The Global Impact of Business Technology on Mourning"
-		},
-		{
-			"file": "category-blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief/index.html",
-			"sha256": "41b2f34c08adcc05312f6034e6a77e3aa58dc04204492715a0e929d9bf61c21b",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Remembering in the Digital Era: Unpacking the Role of Business Technology in Grief"
-		},
-		{
-			"file": "category-blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services/index.html",
-			"sha256": "5e0f375591e56bf8500a6a8e39c2b1b9764fe3011220362150b01dc411856eae",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Revolutionizing Death Care: The Business Tech Disruption in Funeral Services"
-		},
-		{
-			"file": "category-blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye/index.html",
-			"sha256": "e7d3c37d6f0fa9de38feaf96463db641d866f98729e21278894b43e674932e06",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Tech-Enabled Funeral Industry: Changing the Paradigm of Saying Goodbye"
-		},
-		{
-			"file": "category-blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life/index.html",
-			"sha256": "0831d9274ceea896499a9e0bcb7a3f12af3658c0a38487a1ea704fe5bd3804e9",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "The Digital Age of Death: How Business Technology is Transforming End-of-Life"
-		},
-		{
-			"file": "category-blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology/index.html",
-			"sha256": "01b5e8cd88a8c38a7b2cf32d827ceb7303cbb0efbc439ef75dd8a767e785d259",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "The Digital Mourning Ritual: Examining the Influence of Business Technology"
-		},
-		{
-			"file": "category-blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief/index.html",
-			"sha256": "0e640df459026d6ac21578494ba3d6aef9cad3288e23fb77194d74c65700b1bc",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "The Digital Remembrance: Investigating the Role of Business Technology in Grief"
-		},
-		{
-			"file": "category-blog/the-evolving-landscape-of-mourning-business-technologys-role-in-the-digital-era/index.html",
-			"sha256": "25ca0002afdc3c4b660d802e6ccc59d20b20fb91a5120dbe1e978d61956408dc",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "The Evolving Landscape of Mourning: Business Technology's Role in the Digital Era"
-		},
-		{
-			"file": "category-blog/the-influence-of-business-technology-on-mourning-practices-2023/index.html",
-			"sha256": "38f97326b6f58299df2b8e8a510c7bb4359da38c84ed634b9ef33edbfb8a45f8",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "The Influence of Business Technology on Mourning Practices 2023"
-		},
-		{
-			"file": "category-blog/the-rise-of-online-funeral-services-business-technologys-role/index.html",
-			"sha256": "4517882c20ad09a2af678fc903a398ba07d206a96c596a09ea2654e2e6af5d92",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "The Rise of Online Funeral Services: Business Technology's Role"
-		},
-		{
-			"file": "category-blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process/index.html",
-			"sha256": "0033bc540c8306a0b05f1b2627c96c36022b6d0be10b7f8d5a0efaab4d1daf0f",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "The Virtual Funeral: How Business Technology is Reshaping the Mourning Process"
-		},
-		{
-			"file": "category-blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization/index.html",
-			"sha256": "dad95b8805a95a018e95aa838b4e4a9af508956f4a590a6603a4f72c2d71aa94",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Transforming Grief: Exploring the Impact of Business Technology on Memorialization"
-		},
-		{
-			"file": "category-blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning/index.html",
-			"sha256": "7a27c39f414b599bf41301596753caf32789dd271ca94b6407fc927f7c704faf",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Virtual Connections: Exploring How Business Technology is Redefining Mourning"
-		},
-		{
-			"file": "category-blog/why-the-biggest-myths-about-business-may-actually-be-right/index.html",
-			"sha256": "8ec8b443767bf324aca394063af34faa81a1fc2cdd5e3f711b8aad7f69b613ed",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Why the biggest myths about business may actually be right"
-		},
-		{
-			"file": "cloud-solutions/index.html",
-			"sha256": "05d410d7c04637bff4972cba860ef163e73780b8a03e111eebedf0c52eb9c892",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Cloud solutions"
-		},
-		{
-			"file": "cybersecurity/index.html",
-			"sha256": "c35adb6198465f7c7fe4a582387780ae51d233ef42359bb643b62f1fd4edf6d6",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Cybersecurity"
-		},
-		{
-			"file": "development/index.html",
-			"sha256": "81bab79c2f3952e47973f316316a917e332d6956f1b878bf7ab11b7e9fba3bec",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Development"
-		},
-		{
-			"file": "error-page/index.html",
-			"sha256": "ca70f7e74369879d89a9d5a63b96149034e199a0f83d7e04ea159e16d671bc4f",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Error Page"
-		},
-		{
-			"file": "featured-articles/index.html",
-			"sha256": "18f3569c8d0d0eb26b59b9dfc77b3a8c7fa6e3105ec34e0824796e80057770b7",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Featured Articles"
-		},
-		{
-			"file": "featured-articles/index~start=7.html",
-			"sha256": "f501d5da25e24879f2a0df0d684cb1ad906238b35e4da38e447accb2eb0b384d",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=7",
-			"title": "Featured Articles"
-		},
-		{
-			"file": "illustration/index.html",
-			"sha256": "95174394ebd43c036310f3904b2dafd41e21e617cb03119b825f35824bff7fb5",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Illustration"
-		},
-		{
-			"file": "index.html",
-			"sha256": "9030fa0dab67d4de965c66ee7f42bac3dedd8909824753f795599739d4514101",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Revolutionary Joomla template for business and start-up - JA Nova"
-		},
-		{
-			"file": "index.php/about-us-2/contact/index.html",
-			"sha256": "da5f428d652a250a2ab044b3f90ff6c60cf31632281d9efff914db4057795fd5",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Contact"
-		},
-		{
-			"file": "it-infrastructure/index.html",
-			"sha256": "a6d97177d5a349a5e4fd76d01fb43e74d72476184efeef889933975e73082f58",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "IT infrastructure"
-		},
-		{
-			"file": "login-form/index.html",
-			"sha256": "a5522d975dbd126b87356d07346cd339b4c209317081159e589171f5308d26c7",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Login Form"
-		},
-		{
-			"file": "login-form/index~view=remind.html",
-			"sha256": "973b602dc06bcc539f267ae36b4bb2fae3edc9cb6f2f80e140ab2a46e453b848",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~view=remind",
-			"title": "Login Form"
-		},
-		{
-			"file": "login-form/index~view=reset.html",
-			"sha256": "98d9ee018e3181eb7d86b59881f229674d05a80d1ecaac92b47f95df182b8e54",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~view=reset",
-			"title": "Login Form"
-		},
-		{
-			"file": "mobile-application/index.html",
-			"sha256": "508bf37c610b2677182e22371d2e9a9dd91b6eb2f39e4bbfeccf2ff422aa4137",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Mobile Application"
-		},
-		{
-			"file": "offline-pages/index.html",
-			"sha256": "16ef81a9aba15bd9f5c9144a32c3aa98d68db7509ab54332e3fd908f0a36f128",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Offline Pages"
-		},
-		{
-			"file": "project/branding/design-system-ul-kit/index.html",
-			"sha256": "bfa504de47b82ed2942f0220e96e7330dd28e93f4b3e693ea1ab92ed9ef72bd0",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Design system &amp; Ul kit"
-		},
-		{
-			"file": "project/branding/index.html",
-			"sha256": "83082bc2bc8ad4cdb721d296a335e536296f5eeb43e3d2697be482b8ab6b8ded",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Branding"
-		},
-		{
-			"file": "project/branding/landing-page-design/index.html",
-			"sha256": "a7b836edcf32339c88fd7def32662548613ca10e4a4c692d525d6cd3c8305e95",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Landing page design"
-		},
-		{
-			"file": "project/branding/mobile-app-design/index.html",
-			"sha256": "d3181ca93158c2ba82dd205ec9c098b617f7cab0f7ac0ae9ec6e67e478f0263a",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Mobile app design"
-		},
-		{
-			"file": "project/branding/muckup-design/index.html",
-			"sha256": "b82fe02b968c5f3c3e27d274a726265a4cd911ff0065a5dcbef081dfbc8a2451",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Muckup design"
-		},
-		{
-			"file": "project/branding/realistic-scenarios/index.html",
-			"sha256": "9ded0c65bec57b94f253db136a36897a85dbd0338d2cccdd24ef521d0530c759",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Realistic scenarios"
-		},
-		{
-			"file": "project/branding/web-application-design/index.html",
-			"sha256": "d7b08dd76e212d7995ea4b737a16719a3b6430e686b888d7f8915d864029ceef",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Web Application Design"
-		},
-		{
-			"file": "project/illustration/email-newsletter-design/index.html",
-			"sha256": "e492dd42cd2e5d140903543dee95c4c7971e28c6e39cb34468bd2229cd1b1b74",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Email Newsletter Design"
-		},
-		{
-			"file": "project/illustration/event-invitation-design/index.html",
-			"sha256": "3bfa481cf5b9838d6997ba1e6af1c29acf989f1e3d647f125de32eea78b84dc6",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Event Invitation Design"
-		},
-		{
-			"file": "project/illustration/index.html",
-			"sha256": "e4cce3e972fd4df09cd7f07a00e61bc21b158cabbfff52d74c2f8dc178bb7798",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Illustration"
-		},
-		{
-			"file": "project/illustration/packaging-design/index.html",
-			"sha256": "7b281ccbfa91cf56af87ca9eb8ef14149f1b8cd9e5c1d7664c2b3c3e4375029f",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Packaging Design"
-		},
-		{
-			"file": "project/illustration/poster-banner-design/index.html",
-			"sha256": "7b9248525cae5fca56f40c0f03194891d3931b4c867e803d785e96b1c30d3602",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Poster &amp; Banner Design"
-		},
-		{
-			"file": "project/illustration/presentation-design/index.html",
-			"sha256": "f8f78905bba2df3f3ec4e4147abc055365e2bf0e61d1e2e22c6a94c8b7f63cc8",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Presentation Design"
-		},
-		{
-			"file": "project/index.html",
-			"sha256": "645fe34788f3e3574ccc5c483065f41895edd3a9dca9c451aa83e3be9613969c",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Project"
-		},
-		{
-			"file": "project/project-detail/index.html",
-			"sha256": "896c5d182617b111126a0f5e18326b0dd5a4d9f7ff252f5cd845f03669804902",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Brochure &amp; Flyer Design"
-		},
-		{
-			"file": "project/ui-ux-design/blog-design-layout/index.html",
-			"sha256": "7bd100f5d969d957c273b8a82b94d10acf20dfa45f45a3a74f50a10f93cc8466",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Blog Design &amp; Layout"
-		},
-		{
-			"file": "project/ui-ux-design/brand-identity-design/index.html",
-			"sha256": "6904cd69c2ad9bcda7e7704e6886f4b2418bf074896596b3e4f20360ac77233a",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Brand Identity Design"
-		},
-		{
-			"file": "project/ui-ux-design/corporate-website-design/index.html",
-			"sha256": "8328468308abf47709e938febf195d55d058b04fa0fe97d4a8086752de410630",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Corporate Website Design"
-		},
-		{
-			"file": "project/ui-ux-design/index.html",
-			"sha256": "4440419ae0663060cebf4dbab03ef2dcc51b9e36f374bd6fbe9b9503fa71e851",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "UI/UX design"
-		},
-		{
-			"file": "project/ui-ux-design/infographic-design/index.html",
-			"sha256": "b97885e4c33f61647c45d0f04f7d982c873146dcd314b8f91885e9409940b0a5",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Infographic Design"
-		},
-		{
-			"file": "project/ui-ux-design/logo-design-branding/index.html",
-			"sha256": "9e4c31dcd43a4cb65beb003feb57aa8a3755e92c538cecec2914a983d03150df",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Logo Design &amp; Branding"
-		},
-		{
-			"file": "project/ui-ux-design/social-media-graphics/index.html",
-			"sha256": "ae8dcc1280b37203f8631bc141b7f92b4e6b69ac1f6f90a136b89effd8f6ad77",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Social Media Graphics"
-		},
-		{
-			"file": "registration-form/index.html",
-			"sha256": "a3920da4374d598b34dd293c6b460379ffadea2d0325c612a8b74580c7dbdb8e",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Registration Form"
-		},
-		{
-			"file": "services/index.html",
-			"sha256": "ee8ee83da5a473ff2def6f706674ba7c6abd9be408bd06d0de493b86d228b5d1",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Services"
-		},
-		{
-			"file": "smart-search/index.html",
-			"sha256": "0c180dc2e298b1273372e3bb98165e8f93d0c60df12984733f7fb13f0491963d",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Smart Search"
-		},
-		{
-			"file": "tags/careers/index.html",
-			"sha256": "1f2ef68197def28b5f1354c46f0ebfa02e5854fbd7493b302aa7086c8463b943",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Careers"
-		},
-		{
-			"file": "tags/coding/index.html",
-			"sha256": "df8fc043c1233e4f448d7be8faceba13d53c7bead115f0dc94de37aada7d9ed0",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "coding"
-		},
-		{
-			"file": "tags/company/index.html",
-			"sha256": "700e6eb182a0829930c96edffd695937a11d1d1083413e02223aef9354ffa554",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Company"
-		},
-		{
-			"file": "tags/company/index~start=20.html",
-			"sha256": "620cc0524e0c913cef5c04b1a683aa8e6d8d397e8d3abe28a23e68186f95ddf1",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=20",
-			"title": "Company"
-		},
-		{
-			"file": "tags/computer/index.html",
-			"sha256": "24c0f5fa9dbb0698ddea66ce1a62fa5738504b438f54427d5ccc97698324cc8b",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "computer"
-		},
-		{
-			"file": "tags/computer/index~start=20.html",
-			"sha256": "f4a5f3161921a13c6b068dba796a5f638c1a056ea16b04c54abf826396319b76",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=20",
-			"title": "computer"
-		},
-		{
-			"file": "tags/design/index.html",
-			"sha256": "1f96b16894f0fd758f2df5502d02707fbbc54bf1293f5b9c95a1401f9bd84094",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Design"
-		},
-		{
-			"file": "tags/developer/index.html",
-			"sha256": "b6c012ee3337525b9c2b78ac44211f3af6e94999a4b23ded229d91d932175401",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "developer"
-		},
-		{
-			"file": "tags/developer/index~start=20.html",
-			"sha256": "5ffb999bd416dfe94bf0a2b1c4f1ff374379df84169513cc365e466ec2071dd7",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=20",
-			"title": "developer"
-		},
-		{
-			"file": "tags/devops-platform/index.html",
-			"sha256": "cd28c001b3e13a5488772b0c51340e05dcf30ecf8df475f5908623c4197a39ad",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "DevOps platform"
-		},
-		{
-			"file": "tags/devops/index.html",
-			"sha256": "107331020a66fd57e0f27c6b36d00bffb03ea05703eef21ced474cb873786126",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "DevOps"
-		},
-		{
-			"file": "tags/devops/index~start=20.html",
-			"sha256": "84c21d66b68d7af3d26c08c632fa441905fa021a7484596c861c01a59ac80ace",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index~start=20",
-			"title": "DevOps"
-		},
-		{
-			"file": "tags/digital/index.html",
-			"sha256": "d6c0e4d6a5faaaaf63771426f7f77b09af1f01ffe023289ca31b288cd955ae31",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "digital"
-		},
-		{
-			"file": "tags/index.html",
-			"sha256": "622a1e7d2020d685c4480c932dacf55264a1dd15c0466b00258245fe019f65ee",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Tags"
-		},
-		{
-			"file": "tags/news/index.html",
-			"sha256": "f816d772662f02c8f135928cec4dd5f363ee7eadabb01a3e12b316f43cf01a11",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "News"
-		},
-		{
-			"file": "tags/office/index.html",
-			"sha256": "6b91299ca4b3f5788a172b1598cad0e76f3ed89bd386c629fae2aff5062d5aa5",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "office"
-		},
-		{
-			"file": "tags/open-source/index.html",
-			"sha256": "0de8540719af0cfa6d121066acc8e21bd6ad5490c18b14b00302f9858057dd17",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Open source"
-		},
-		{
-			"file": "tags/programming/index.html",
-			"sha256": "198b5d29f7b094177dffa76b9c8a62292e6da5c1417518d6cd89c46031212356",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "programming"
-		},
-		{
-			"file": "tags/team/index.html",
-			"sha256": "dc67e93f949afebcb9ef9339db70925fa43ecdca08b78be9e84a2d6f106c6b49",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "team"
-		},
-		{
-			"file": "tags/technology/index.html",
-			"sha256": "ebdb5468f43c41cfbb72607e5a6de1ea5139a6271149a48274191b88153f9c51",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "technology"
-		},
-		{
-			"file": "typography/index.html",
-			"sha256": "cd236fe5a9a743b09798a683b3ce781b8d7fc174f05a2cb9f008e94264e2be7d",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Typography"
-		},
-		{
-			"file": "virtualization/index.html",
-			"sha256": "11fb632c96630aa311e873c79df1c56b483eb33259058ad429382c15b3c40e95",
-			"kind": "html",
-			"locale": "en-gb",
-			"page": "index",
-			"title": "Virtualization"
-		}
-	],
-	"totals": {
-		"files": 329,
-		"bytes": 29204262,
-		"html": 113,
-		"byExt": {
-			".html": 113,
-			".json": 1,
-			".jpg": 106,
-			".png": 40,
-			".css": 17,
-			".js": 24,
-			".svg": 1,
-			".ttf": 7,
-			".woff": 3,
-			".woff2": 16,
-			".ico": 1
-		},
-		"dataScripts": 0
-	}
+  "source": "/home/agent/out/nova/snapshot",
+  "generatedAt": "2026-11-24T22:38:07.572Z",
+  "files": [
+    {
+      "path": "about-us-2/career/index.html",
+      "bytes": 37642,
+      "sha256": "6d7db635ed54d1b978298216a1da634f1e5afaa5c54cdd197f3bb16372826cf0",
+      "ext": ".html"
+    },
+    {
+      "path": "about-us-2/contact/index.html",
+      "bytes": 30621,
+      "sha256": "f416a669875f0d09e1f95e64620cc796b68c1ff1ba907c472297974975bb3be2",
+      "ext": ".html"
+    },
+    {
+      "path": "about-us-2/index.html",
+      "bytes": 40711,
+      "sha256": "2d51a1eb8de993fed64b9a80208298704a3bd5874010def034af0c7d298034d5",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Antoinette%20Huff/index.html",
+      "bytes": 29618,
+      "sha256": "0342099d5b152641302472fe89fd00e7a43189a8f881692c947fe5d4716c7cff",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Antoinette%20Huff/index~start=0.html",
+      "bytes": 29618,
+      "sha256": "90d27ae1f8e9913801a7df1eb20799429cd7bf0368ace80bd2397c4defabffce",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Antoinette%20Huff/index~start=12.html",
+      "bytes": 29581,
+      "sha256": "4daa94f7616f260f2690b00503ab075250a1c5ed28caec1d05985290ba23d888",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Antoinette%20Huff/index~start=16.html",
+      "bytes": 29494,
+      "sha256": "a9f8c3fe8a23425589f21368958409ddd35551cb78a69596c16abe4c427b29dd",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Antoinette%20Huff/index~start=20.html",
+      "bytes": 28839,
+      "sha256": "74844beba4f02f899eea027f1765c437ba4700b5f6e25d0ac928640333a33f98",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Antoinette%20Huff/index~start=24.html",
+      "bytes": 28679,
+      "sha256": "2ebfac0356e0d3955eec1f815d034b1b64dbc8ea4f3e871af0b5e6f7605c2782",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Antoinette%20Huff/index~start=4.html",
+      "bytes": 29528,
+      "sha256": "1118ebecac9cff626d52eca5a5cb054b212290c58f164d79b0ebd94f1a5503ed",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Antoinette%20Huff/index~start=8.html",
+      "bytes": 29576,
+      "sha256": "8ad2c954c1ab01ef9bacc7648e8991461d15d2feade4a71d4e21a4c5c05a291c",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Brian%20Jennings/index.html",
+      "bytes": 25911,
+      "sha256": "93dcd46c2c768436c3e87b6c2815b0c5f81a09c696785cf84098d64f0750d673",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Dewey%20Mann/index.html",
+      "bytes": 25929,
+      "sha256": "cb90a2bfbaf0f91edb4d68b9e5091af8608141d5e07de3ff72a163f2c11c6f16",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Elijah%20Knight/index.html",
+      "bytes": 25919,
+      "sha256": "9ed61404630c7c20562c62c0fcfc62498c2b905a63563f3c026bcc2ef5a672ed",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Henry%20Delgado/index.html",
+      "bytes": 25976,
+      "sha256": "fe06f07f4786fa36a474da23e016aee37b81e135702e8d5b2a73e851178c65c0",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Hubert%20Santos/index.html",
+      "bytes": 26001,
+      "sha256": "fbd15866bfaf3f0e53e174756d36673360742f6b8b060d594738b96567b79c51",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Lucy%20Reid/index.html",
+      "bytes": 25957,
+      "sha256": "3f9edb924382a4d983ea2107b34cf39e3510d1b865ba06661019a820cf601117",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/author/Warren%20Stevens/index.html",
+      "bytes": 25993,
+      "sha256": "8018bc7070e8ebe2e25d6e780ea068be6c0658bc576358c4d4a1d8df4ad5713c",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/index.html",
+      "bytes": 28194,
+      "sha256": "caf2d2117c57f7fd31ba0a6ca980778ce323721ed19e16875406f65cfd4a0b17",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/index~start=0.html",
+      "bytes": 28194,
+      "sha256": "1714a9a8ea67e24c45f9621673f8633ad1c514983d63c3e2aa8b1748e9421a86",
+      "ext": ".html"
+    },
+    {
+      "path": "author-listting/index~start=6.html",
+      "bytes": 24290,
+      "sha256": "f01173963bee92954a7d06ca3a0c9b2ebc78065ad2e038dfd0bcbc80456b8fa7",
+      "ext": ".html"
+    },
+    {
+      "path": "blog-detail/index.html",
+      "bytes": 31582,
+      "sha256": "7ee600464b3e83ac0b669f77ab95054a5813b72edc365cd95aef3cd944a60da4",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology/index.html",
+      "bytes": 31771,
+      "sha256": "c631f205206b099f78f8f569c84bf451068b27c5f9b72414806afac99ef91b40",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology/index.html",
+      "bytes": 31846,
+      "sha256": "e0aa8c15299c7d828a8db5792c4441992666522edcd2ddd131a2ba7e0b51dd83",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning/index.html",
+      "bytes": 31850,
+      "sha256": "af5a8fe4fd2697c7c21a4857f80ea109a0a8eb653da6ee1cbda830bd4ce2d63b",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/examining-the-role-of-business-technology-in-the-mourning-process/index.html",
+      "bytes": 31693,
+      "sha256": "8ff9008e9aba673e1a0b08e017b2ba7066442620ac645a77ccfcb521e9848549",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/from-legacy-planning-to-digital-estates-business-techs-influence-on-inheritance/index.html",
+      "bytes": 31754,
+      "sha256": "9d0be50cdd21c1c520c08a53b74c545bcb1707abd5433b7c6f1eb5892e48ccf5",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey/index.html",
+      "bytes": 31876,
+      "sha256": "1ecf9166170384412c50908d5794b6ce94be642dd261f8be5efc1930cd34de13",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/how-business-technology-changed-how-we-think-about-death/index.html",
+      "bytes": 31212,
+      "sha256": "9c8d1951ef29614868cd24fd01ea348a44b6a4dc701242328a7de8f0d8756e7e",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/how-business-technology-is-shaping-the-way-we-remember-2023/index.html",
+      "bytes": 31659,
+      "sha256": "bce1deb905a5fb6002fac3ee7af6b97094fa98c3ff916a5013659b43a0712dbb",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/how-to-create-an-awesome-software-video-about-success-busines/index.html",
+      "bytes": 31707,
+      "sha256": "0d355de0ff62b1a81ed2d09a31fb1411c95a35dec8ffff98ffd073f1c079e3b4",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/index.html",
+      "bytes": 46234,
+      "sha256": "184c3c6325f021ca144d7cc9105a989760e5792e7e0d2fcefff9daa753812670",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/index~start=18.html",
+      "bytes": 45313,
+      "sha256": "3fbc843f2969336bc3e471b88c950c6d3461d1c4be9d3b8a4d9d6b3509f0ce03",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/index~start=9.html",
+      "bytes": 46516,
+      "sha256": "593aae78222f38873fa323f3d27c0c3f547f482ae0dd1f1dcbbeb9fade326728",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones/index.html",
+      "bytes": 31843,
+      "sha256": "8d940c92b30148f114c8a4c1f5cb4b1b7aaf0fcc67f2958189997dfaf54d321e",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology/index.html",
+      "bytes": 31800,
+      "sha256": "5e340783e4f6940bfa72698457ca70ed4e3442d826bb4c4188c1f07bb0db7207",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology/index.html",
+      "bytes": 31812,
+      "sha256": "99e738c453393d4cb1343f4ba761bcf819aeb1403f758a0cc01fff298c4df08e",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning/index.html",
+      "bytes": 31865,
+      "sha256": "c4e44e3af314f6f3345e5f39755eac8386ff7935090d0d4da8cfae4e04ae05a3",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief/index.html",
+      "bytes": 31869,
+      "sha256": "41b2f34c08adcc05312f6034e6a77e3aa58dc04204492715a0e929d9bf61c21b",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services/index.html",
+      "bytes": 31763,
+      "sha256": "5e0f375591e56bf8500a6a8e39c2b1b9764fe3011220362150b01dc411856eae",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye/index.html",
+      "bytes": 31738,
+      "sha256": "e7d3c37d6f0fa9de38feaf96463db641d866f98729e21278894b43e674932e06",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life/index.html",
+      "bytes": 31711,
+      "sha256": "0831d9274ceea896499a9e0bcb7a3f12af3658c0a38487a1ea704fe5bd3804e9",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology/index.html",
+      "bytes": 31799,
+      "sha256": "01b5e8cd88a8c38a7b2cf32d827ceb7303cbb0efbc439ef75dd8a767e785d259",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief/index.html",
+      "bytes": 31843,
+      "sha256": "0e640df459026d6ac21578494ba3d6aef9cad3288e23fb77194d74c65700b1bc",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/the-evolving-landscape-of-mourning-business-technologys-role-in-the-digital-era/index.html",
+      "bytes": 31869,
+      "sha256": "25ca0002afdc3c4b660d802e6ccc59d20b20fb91a5120dbe1e978d61956408dc",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/the-influence-of-business-technology-on-mourning-practices-2023/index.html",
+      "bytes": 31736,
+      "sha256": "38f97326b6f58299df2b8e8a510c7bb4359da38c84ed634b9ef33edbfb8a45f8",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/the-rise-of-online-funeral-services-business-technologys-role/index.html",
+      "bytes": 31710,
+      "sha256": "4517882c20ad09a2af678fc903a398ba07d206a96c596a09ea2654e2e6af5d92",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process/index.html",
+      "bytes": 31382,
+      "sha256": "0033bc540c8306a0b05f1b2627c96c36022b6d0be10b7f8d5a0efaab4d1daf0f",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization/index.html",
+      "bytes": 31852,
+      "sha256": "dad95b8805a95a018e95aa838b4e4a9af508956f4a590a6603a4f72c2d71aa94",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning/index.html",
+      "bytes": 31843,
+      "sha256": "7a27c39f414b599bf41301596753caf32789dd271ca94b6407fc927f7c704faf",
+      "ext": ".html"
+    },
+    {
+      "path": "category-blog/why-the-biggest-myths-about-business-may-actually-be-right/index.html",
+      "bytes": 31657,
+      "sha256": "8ec8b443767bf324aca394063af34faa81a1fc2cdd5e3f711b8aad7f69b613ed",
+      "ext": ".html"
+    },
+    {
+      "path": "cloud-solutions/index.html",
+      "bytes": 36386,
+      "sha256": "05d410d7c04637bff4972cba860ef163e73780b8a03e111eebedf0c52eb9c892",
+      "ext": ".html"
+    },
+    {
+      "path": "crawl.json",
+      "bytes": 70415,
+      "sha256": "9b69d26eda8fdac657e72f93bf9e2e3291e0743653dfbf28c4aad0f12b5d9074",
+      "ext": ".json"
+    },
+    {
+      "path": "cybersecurity/index.html",
+      "bytes": 36358,
+      "sha256": "c35adb6198465f7c7fe4a582387780ae51d233ef42359bb643b62f1fd4edf6d6",
+      "ext": ".html"
+    },
+    {
+      "path": "development/index.html",
+      "bytes": 36336,
+      "sha256": "81bab79c2f3952e47973f316316a917e332d6956f1b878bf7ab11b7e9fba3bec",
+      "ext": ".html"
+    },
+    {
+      "path": "error-page/index.html",
+      "bytes": 22658,
+      "sha256": "ca70f7e74369879d89a9d5a63b96149034e199a0f83d7e04ea159e16d671bc4f",
+      "ext": ".html"
+    },
+    {
+      "path": "featured-articles/index.html",
+      "bytes": 34566,
+      "sha256": "18f3569c8d0d0eb26b59b9dfc77b3a8c7fa6e3105ec34e0824796e80057770b7",
+      "ext": ".html"
+    },
+    {
+      "path": "featured-articles/index~start=7.html",
+      "bytes": 33909,
+      "sha256": "f501d5da25e24879f2a0df0d684cb1ad906238b35e4da38e447accb2eb0b384d",
+      "ext": ".html"
+    },
+    {
+      "path": "illustration/index.html",
+      "bytes": 36012,
+      "sha256": "95174394ebd43c036310f3904b2dafd41e21e617cb03119b825f35824bff7fb5",
+      "ext": ".html"
+    },
+    {
+      "path": "images/joomlart/authors/item-2.jpg",
+      "bytes": 148932,
+      "sha256": "ad0bf340527ca5cca08d4997fae5589d91f001176deffbd056578cfad3a89933",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/authors/item-3.jpg",
+      "bytes": 87032,
+      "sha256": "01d5ad9344d2002cb2ade6eda8de243e60ed3bc8273729791ef00f99696383c8",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/authors/item-4.jpg",
+      "bytes": 130864,
+      "sha256": "ca2ce40fefa0be818cc1d2c000b99d82c56eee248c13f03c965ba2e769c31dae",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/authors/item-5.jpg",
+      "bytes": 95081,
+      "sha256": "5bee7c18432e2d9c889dfeb2045b5853f83fe0e76703c8830164cfb647391d10",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/authors/item-6.jpg",
+      "bytes": 168436,
+      "sha256": "9d47137f49f5cd5f9255bbe1d861ca28c2f982a9a4f3c8bea7bbd036430ab781",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/authors/item-7.jpg",
+      "bytes": 129835,
+      "sha256": "1b788426cbf9801867bb91cf9caa718cc0b95102e2956d4d89acfd374a0f39f2",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/authors/item-8.jpg",
+      "bytes": 112587,
+      "sha256": "bdb0e87441deb26a6a58e3b32885660a694a944b33ea84f51bcd675da75cd76c",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/authors/item-9.jpg",
+      "bytes": 109442,
+      "sha256": "0b9dfe86bc0c402e7932e00d09899e380224edf5da619352d4dc39758d0f5b76",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-1.jpg",
+      "bytes": 133262,
+      "sha256": "c431578ab47d096a5aa49a2fac23803b4737a92f86a0d11acf65946a9b7c464f",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-10.jpg",
+      "bytes": 141950,
+      "sha256": "ec0a75347aa6f56728b64743a5fd37ae5e19850db610e311896bc11b5831a6c1",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-11.jpg",
+      "bytes": 109035,
+      "sha256": "7d24abb97f69dc65aeff56e0b503a83ed435162c9160b670b4eb5be9a1a96c0d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-12.jpg",
+      "bytes": 122122,
+      "sha256": "68a4db63df40df07059a78b0665c2e6607671b8299a68ae1e06b804d9b906747",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-13.jpg",
+      "bytes": 146446,
+      "sha256": "06b196f97ae7acdec97f594cc341c52664a9633f79caf458a9a4e88070b003fd",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-14.jpg",
+      "bytes": 153591,
+      "sha256": "5f724d7fcf3a4137cabe2bca883d7b5144f2cea3d22163f1eeacfefc4d841520",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-15.jpg",
+      "bytes": 212062,
+      "sha256": "2134400df0ca40cf2b405a74693ab4ed7e766c5764583bcf073f5b2f3ba7f9c0",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-16.jpg",
+      "bytes": 145627,
+      "sha256": "add63135734cc5ca8a1bcf1f3341a09b2677cca434b4ef4cb4f13ccf1669d859",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-17.jpg",
+      "bytes": 136187,
+      "sha256": "3d86cc8cfa898a4c5df136e128160480339e4b7a1c964afcb86e49d71f3e3c57",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-18.jpg",
+      "bytes": 138415,
+      "sha256": "d284c4e4a9955c6668d076a7bdf8063867002d9a557b13e7f939698859da6ade",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-19.jpg",
+      "bytes": 123285,
+      "sha256": "67fed7521e3afeb7d1d5ac52a581acc8d4f39949c1dfcae5afbbdffe3feaf885",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-2.jpg",
+      "bytes": 183592,
+      "sha256": "69f556aa04a8500c8bf5e889e31e6e8d9e062628e76f3e42a7e6923f83d1d925",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-20.jpg",
+      "bytes": 134303,
+      "sha256": "17ff4323e8230bf676a06bae4894f486af58dd29e9191ff9dd91acb436141d59",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-21.jpg",
+      "bytes": 200258,
+      "sha256": "58c972916366fe4f5f74ef60b4cf9dc69ac5ff03029112ddbf290fb1dbc739c5",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-22.jpg",
+      "bytes": 130446,
+      "sha256": "643ddb31cc65f0de60cd1f771808237f33855997327e64746e33c3703ce51394",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-23.jpg",
+      "bytes": 133266,
+      "sha256": "83182fae9f29cef1145df98a031a946f82f514ccbff7e350c8843c79797a0d7c",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-24.jpg",
+      "bytes": 90242,
+      "sha256": "fe0a03da43bd20ac79c93a1538a5128d7d7c988ce8bf55c4b3e49c711b58ddda",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-25.jpg",
+      "bytes": 105327,
+      "sha256": "8caa4dcaa9db0d3f82fa11684f0fd8df1ee98df241f0559848f14767b0fd0683",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-26.jpg",
+      "bytes": 137865,
+      "sha256": "9a130a3ae2de395ef255f5504ba14d2abd8ac8db74bda54840e2c00601e20a83",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-27.jpg",
+      "bytes": 140447,
+      "sha256": "c52c362e39076ca9bf565081c9b1fe1b0751fa2a45a0271f71a507e3894091cf",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-3.jpg",
+      "bytes": 187847,
+      "sha256": "64e5ce66d72b5dbe5e3cc3923095fc80e3abf609f5f595deb5b69cc924276afb",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-4.jpg",
+      "bytes": 131615,
+      "sha256": "07322a51205b2155bfd1f7bbc7a8218dc79e72688c0f01b1204a69f571cc4f6d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-5.jpg",
+      "bytes": 110479,
+      "sha256": "c44237bfc64de5972e5bbf3ff590ec0ac84c4f5826f2a778d4c58fbfd5b65ff2",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-6.jpg",
+      "bytes": 141812,
+      "sha256": "3b51897d67cf0c34a3363fd97ed7bfb69f3571671e55d1fd999d6eec7c8eac21",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-7.jpg",
+      "bytes": 133029,
+      "sha256": "7c10179d9620aa3afc97a066f17555ca308920b63eb0421d7942ce5f888359dd",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-8.jpg",
+      "bytes": 123428,
+      "sha256": "f74d0cecee62e830d619098bf395a33b6aa7bd18caf123297587ca6da45abbc0",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/details/item-9.jpg",
+      "bytes": 112639,
+      "sha256": "429884dbaf120f7d2598de649994da23024c87aaa4478d6ee24444bdba49b703",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-1.jpg",
+      "bytes": 121168,
+      "sha256": "fae3e5f6200ded41139b6cf67f4af662ae5179547b9ee4d35ec123f86a5e994f",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-10.jpg",
+      "bytes": 122697,
+      "sha256": "7fffb87adbeb78b800ffa07748e77cdba3efabb8dd4b94dc07b237b45613473a",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-11.jpg",
+      "bytes": 97406,
+      "sha256": "c288e7c8e40fea5dedc88bcd9ee4600ffd785110cec7bdc7e5c092932fd5ae82",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-12.jpg",
+      "bytes": 107487,
+      "sha256": "7fa0e644699b47b5a9f4eebd3d918eda94b36bbb6d39d1cef803ad2251ffa7d6",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-13.jpg",
+      "bytes": 124384,
+      "sha256": "28d8618b3aff1a99a561a41021263f516195311ac8b40c17e1964c39541cff9c",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-14.jpg",
+      "bytes": 136949,
+      "sha256": "b397333e95b68950f29d42d3d47f8195e0b5cef2360720783701255516d27243",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-15.jpg",
+      "bytes": 183870,
+      "sha256": "3b8674f6f585f4a857a1927781dfcdad8f4f7015912830c9968f4ccc60f6bdfc",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-16.jpg",
+      "bytes": 130938,
+      "sha256": "76f1c92be25b3fcba7d3ca33b15e45f4ee50cb4e4ddc9affedbef31c53775a84",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-17.jpg",
+      "bytes": 128411,
+      "sha256": "4411174033e513e6c964897c702a6690014528ca684096284284c0a290d4e0d2",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-18.jpg",
+      "bytes": 134830,
+      "sha256": "b600b455ddfa2fc2da5ca8e22f7efc0984e28d7d7baa274335a415593065a656",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-19.jpg",
+      "bytes": 112270,
+      "sha256": "f84d9267cd50249f18c2d4deac64e1728e1d636ccab373e64e812212a849f9b6",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-2.jpg",
+      "bytes": 158193,
+      "sha256": "32b4b4aea1d10ba232431c5c7c0b58e388ada087d9d31bb482ca2be030fddedd",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-20.jpg",
+      "bytes": 123595,
+      "sha256": "cce91144d08153c525f11a765aad2b1d4456d419f2c30fbc15cf4da0a976d6c4",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-21.jpg",
+      "bytes": 190691,
+      "sha256": "4e7d8aca520b5646cfcade1db709dab705659392eee83bc0aa0e9c24a034f7e6",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-22.jpg",
+      "bytes": 117115,
+      "sha256": "e6986303a37086fbd7c613ba0ab542535b6a5fa2d7c4290683e14a5b3534ae69",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-23.jpg",
+      "bytes": 122453,
+      "sha256": "56a5da8cf9fc5240faf74a4bbd19eb6db1e14948143a46e34c872508cd120a47",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-24.jpg",
+      "bytes": 74748,
+      "sha256": "d29673d35a8b266772d03fb15643aabb6fb6ee83cc289f51aac774dc3621ccf1",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-25.jpg",
+      "bytes": 82144,
+      "sha256": "93c1f9f85d380cc56f2d97c1896bdc272b442c6ea898ea91ddf951246ec0801d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-26.jpg",
+      "bytes": 126257,
+      "sha256": "739e221067ffa117808bd9d368fa13a560203f026ae13724c6a7c87f2a71c044",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-27.jpg",
+      "bytes": 148174,
+      "sha256": "d413fbe61512c5e7ec4578fcc0a5ccbfe97aae7df3862ce92764f8ce08b7e9b0",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-3.jpg",
+      "bytes": 158142,
+      "sha256": "0d2c06e279b4040c11c401c2eeb3231e32e6fc18fefb7988da41f0ed0009f3de",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-4.jpg",
+      "bytes": 118890,
+      "sha256": "ed3fbc8d8b162156faaec50155b90a751fa2bb9e5a0068a6f43185994dfd52fc",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-5.jpg",
+      "bytes": 102309,
+      "sha256": "c400f5dc7301da21e6c6bf5238992daeb2719e48c190d220abb5a072f148fd36",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-6.jpg",
+      "bytes": 123589,
+      "sha256": "838d629bbce2583b37ef10db28e0be526c2fc5475128240215c23898746e061e",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-7.jpg",
+      "bytes": 119917,
+      "sha256": "8e291bc4a9aff78c3a1ff481c8960c65ebf0c2a80eee3e849cd4bfbc1b9afd00",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-8.jpg",
+      "bytes": 115059,
+      "sha256": "62cfe5d8fc7ccc80b0143b3ee58c516ceccbbfac54d021532fd28c0394d63036",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/intro/item-9.jpg",
+      "bytes": 100053,
+      "sha256": "98ddb4eaa02243da8540f28b4aa7a34789e4187635dd9926010ebaf32b7ded97",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/blogs/pic-1.jpg",
+      "bytes": 88175,
+      "sha256": "1fa7b087f044d4fedfffd09ffa7289c68a24f2408bf3f57c8b41c4b31214c208",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/clients/item-1.png",
+      "bytes": 2280,
+      "sha256": "fdd69f5d656e52168f3f749cc83f5005f7b5a2a5ae85249ab9227f4b1f8d54e6",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/clients/item-2.png",
+      "bytes": 2062,
+      "sha256": "d26d2e7a1117f6fd781843cdde5c633304ac1066e041334ac25f9f4756722636",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/clients/item-3.png",
+      "bytes": 2626,
+      "sha256": "81f9b1176da294977d78f4b7ab8326a03b84041a6a6711ebcbe6fe5e26a56e63",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/clients/item-4.png",
+      "bytes": 2452,
+      "sha256": "7e5afb380600ef5fed21cd77cbf5495df6e5b6f63225c44e4c66d298166ffe7d",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/clients/item-5.png",
+      "bytes": 2406,
+      "sha256": "ef7332edc9a2266c592b401a5067b2732a2dfac2f044c9f8c276836ced4e37e4",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/clients/item-6.png",
+      "bytes": 2676,
+      "sha256": "4b0f8b2cb1f3aee3c571cd6d0bb4304e50e079d9f8806fbcdef91892315246a8",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/features/decor.png",
+      "bytes": 165371,
+      "sha256": "2c30eeb46d278d383fac1f3b6cf974da0c999e0937df36a359efd342d4f44646",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/features/icon-1.png",
+      "bytes": 2652,
+      "sha256": "145f5a18a10c09a3b4b08f8f7a347d3fbea920fc6d365eab69ab71cc051593b3",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/features/icon-2.png",
+      "bytes": 3973,
+      "sha256": "be8c5ab5a5a842521009904019bec4d3bfa7b8824631681f432c5101c7cd987c",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/features/icon-3.png",
+      "bytes": 3563,
+      "sha256": "7f85553d65d3db061e2a08c234294152735df96f3843f06cfc3f6761bc914454",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/features/icon-4.png",
+      "bytes": 4299,
+      "sha256": "2848b646dda87abe9429f29a2f38a527d9093c4202d13c52bc89d654793ca575",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/features/item-1.png",
+      "bytes": 419897,
+      "sha256": "cbd91147f9708dff7e4b21a5a0dbbc33a1ea19736da17921fe78744048881a44",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/features/item-2.png",
+      "bytes": 391598,
+      "sha256": "cb28d84c70206cd12e1caf489ff42b78fed3fa43e5a3718c8f027f8d6685dd5c",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/features/item-3.png",
+      "bytes": 544232,
+      "sha256": "e48e15f77653b277c7bc645c5d94d36cd1773408ab92743136fae28ab48f8b68",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/features/item-4.jpg",
+      "bytes": 853353,
+      "sha256": "f5f6d1560b4a987dccb125214411feed936f859e38cd9e1a99aba34b4654f203",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/icons/icon-1.png",
+      "bytes": 2547,
+      "sha256": "57762dfbfe8ad1b5ce79b0bc7834e7a7df850b49741f09ac8f302dbabde9c54c",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-10.png",
+      "bytes": 2130,
+      "sha256": "35ba361ee03a07073fe9efb0d562fc9d5973bea49ae182200e0989f2f031513e",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-11.png",
+      "bytes": 2169,
+      "sha256": "c2466a32c5e11b2ad7441b6c83a6719c53ba0a41a4d95a961f3edb7814ea2af9",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-12.png",
+      "bytes": 4458,
+      "sha256": "63d670a68b6b55b3489de3ce7e30394bb440546fda232743be2fc588bcf68024",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-13.png",
+      "bytes": 3124,
+      "sha256": "3eb4a0c3a6d60d0510cec0083c63eb45c4355c1602bfd693cdb687d24b4c11b5",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-14.png",
+      "bytes": 2994,
+      "sha256": "a651d94a0fe8bd2dc977d8ce4e7defd5a5f2b6a11a2aa284825ede8c5e3c8a70",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-15.png",
+      "bytes": 3489,
+      "sha256": "62fb25d8fa3f84c79970dc5de31f55ce6d213a45aa9dc060456ec62148cfeaaf",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-16.png",
+      "bytes": 3688,
+      "sha256": "b7f426b39007791ccaa5918f202ab875f0a4c70e4fb281a877e478a4af971ca6",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-17.png",
+      "bytes": 3210,
+      "sha256": "4167fb94448af2328ffcaac8847ea554b343783c1a2c73e399902da799dcbca9",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-18.png",
+      "bytes": 4294,
+      "sha256": "8d35012c4ec8ed90ce4565a218c9ba329518119088793e3256c043d042a0c329",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-2.png",
+      "bytes": 1926,
+      "sha256": "aa9e946602cd1dd6b870061aa940359598e66811d3d3a34f2b4553d50ce80889",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-3.png",
+      "bytes": 1279,
+      "sha256": "c5c6db5cad39fa9423feee5bb95638031a9725ac1acc4bcfd42227f452dece93",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-4.png",
+      "bytes": 1516,
+      "sha256": "1093f07aa7fc5206fa8a63eb1d00268d203358670e570ba72192ab148fb14993",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-5.png",
+      "bytes": 1332,
+      "sha256": "75eddeab989675516bff0209d72f52f3fc069886789a9927c329e723a77aed04",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-6.png",
+      "bytes": 1269,
+      "sha256": "21d18610e19cc7814fa482402cdb12314b433b549a865e909323dd80c3fb5342",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-7.png",
+      "bytes": 1542,
+      "sha256": "d862f4bd919138a88e9b253eda53e2810f08d5c9fdf275ace3db997622b11021",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-8.png",
+      "bytes": 1997,
+      "sha256": "64cea535061d9db3311d28f0a98cb3fa27fa5dec6f511adea4c99d7ac48cf108",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/icons/icon-9.png",
+      "bytes": 934,
+      "sha256": "1b33799f8b4529a55ecab28b1f91658591993525cab35e2c30c4f5bd1eab0105",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/logo/item-1.png",
+      "bytes": 3574,
+      "sha256": "5fc3418caead66cf20499b8a4ea548cdf056212b0ab1785204dbde3c72955c06",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/logo/item-2.png",
+      "bytes": 3366,
+      "sha256": "4a6b3a583c29b9437e4e7ff00db91dbd77f2d21cca156992d5e90c7645f86cbe",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/others/404.jpg",
+      "bytes": 31517,
+      "sha256": "72ab9d87f80e527d7248058928fd6d7b76ead108a8f98c9d63342a0471094a34",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/others/bg-contact.jpg",
+      "bytes": 128378,
+      "sha256": "e8cbe7d5ada04f16ddba16af8e7107fc148ff6142658de925a44f0abd68d6597",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/others/offline.jpg",
+      "bytes": 29996,
+      "sha256": "4cb8bf25bfe5916cd3679daebfadac2a77418d341b6b4333f7c112da618d5e5d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/detail/item-1.jpg",
+      "bytes": 235229,
+      "sha256": "41726bf1a382d33fc0d864e07820e2826ce0294b36cc23e693c28a31a3a67a87",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/detail/item-2.jpg",
+      "bytes": 229047,
+      "sha256": "01a0adf721c162e5beff72f548eab10fd92b7cedcf2d1ae16b1552f7e6a93d07",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/detail/item-3.jpg",
+      "bytes": 212529,
+      "sha256": "2f7b07ea2585b8854c5826251ac84c6a70f85a84b1e3147d781a08685759d501",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/detail/item-4.jpg",
+      "bytes": 220522,
+      "sha256": "e56980c43f36bc972ce49aa86cefb028cc778953a7ceed2fa6189b16d3409f36",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/detail/item-5.jpg",
+      "bytes": 178248,
+      "sha256": "8709459de82b45f25feb69f9db378cc5852c7f9e8f01c9c94909a93c87f17bf8",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/detail/item-6.jpg",
+      "bytes": 231422,
+      "sha256": "d2e8cf677a71f81efc35137c4f44f08cd88bc9f0556a707256535471e19a2204",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/intro/item-1.jpg",
+      "bytes": 78415,
+      "sha256": "f122b5634b1bbe99a557d966e2f2d86f4c64df4a53dc27d2c4d77e5252daf815",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/intro/item-2.jpg",
+      "bytes": 84754,
+      "sha256": "9112eed186c217b5a13f0bffd44983d579f44979884591a70e3291fba8813745",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/intro/item-3.jpg",
+      "bytes": 71443,
+      "sha256": "c53cdc67d1bef4a0046f4d763d5d0a84fc26da50d5d2f37ce4a4a879e0991aa0",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/intro/item-4.jpg",
+      "bytes": 86889,
+      "sha256": "a70bf192da715acc7e305a4f605467d180dc60fd82e489a45908ced357e3cf30",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/intro/item-5.jpg",
+      "bytes": 61537,
+      "sha256": "8d25f589a4fb1b1701620be57bbd0865d691268b84067e2eab1a80a6f6fb6395",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/brand/intro/item-6.jpg",
+      "bytes": 71420,
+      "sha256": "419a66cef9d218dea706d93d7cc52f9fb03dddd0101c477fa5b63a9712c61da6",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/detail/item-1.jpg",
+      "bytes": 169042,
+      "sha256": "fc818ca5601e8d24315c0ea0b0218fd244d3cd4ed28e9ba90c0c4f660199960b",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/detail/item-2.jpg",
+      "bytes": 246093,
+      "sha256": "0a1e1738617a7e0574c1e7055604633e5c1b961a748ddbeac7aad14be843c140",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/detail/item-3.jpg",
+      "bytes": 201705,
+      "sha256": "ebd46e753552e3ba7863df4702d62912c9752652a9e62dff42c23cf759746ce5",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/detail/item-4.jpg",
+      "bytes": 182514,
+      "sha256": "fb59e55977e950ddf571d0eea456b4070bec7ac3927421b19aebe027ce152b3f",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/detail/item-5.jpg",
+      "bytes": 314542,
+      "sha256": "8a926737428ea4f3c9fa19b955c70999ded96f846186d0b6b9f8677cdd833b33",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/detail/item-6.jpg",
+      "bytes": 220351,
+      "sha256": "13b874e5114120677e2cce072a7f948726050cc1c79c8ad10d218b358d96aeb1",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/intro/item-1.jpg",
+      "bytes": 55586,
+      "sha256": "eaa50dafc16c4f4fccaad38faf50f80e5adde228b9ed5041183428193e1ac6ed",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/intro/item-2.jpg",
+      "bytes": 77512,
+      "sha256": "4a6eea8d52e94d5e3f8396a18bf2c6a6724b0f8686bfc5910006174e51419e25",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/intro/item-3.jpg",
+      "bytes": 67070,
+      "sha256": "2280ec49fe7426533d7cacb15adc96693529bbb578f4166b7e5e4c4ed8e7a9f1",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/intro/item-4.jpg",
+      "bytes": 61437,
+      "sha256": "e8f46f3fe10de7d2db5beabd1c10601255b6b912fdb56dd864aba6e26d1b3b5d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/intro/item-5.jpg",
+      "bytes": 98316,
+      "sha256": "8c4028153c73f351b240c5f0e624cf71b8529898466b0b4e2e16804256db6cc3",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/design/intro/item-6.jpg",
+      "bytes": 77200,
+      "sha256": "e23c231638b772f3030ae292a3d012d606d9846c49253cce63f6618b2e47a946",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/detail/item-1.jpg",
+      "bytes": 302519,
+      "sha256": "b0796e9ed24bdc4ee2bcb8fb8acf331877606016dc166f17bc3eed389d30ecc2",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/detail/item-2.jpg",
+      "bytes": 219212,
+      "sha256": "da4688c82150c46eab8c1dd6e4d545b32421ffb3043e3477707b0472139919f6",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/detail/item-3.jpg",
+      "bytes": 293089,
+      "sha256": "f0d315a90f10d0f0ddec8f526d436b8d7f36544691d2033e58bcdeb14a725252",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/detail/item-4.jpg",
+      "bytes": 228052,
+      "sha256": "de5103962d099bcd017ac1372f939519c49d027c924991b1140e865de65afbfd",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/detail/item-5.jpg",
+      "bytes": 337474,
+      "sha256": "ce1f94646ab0a7543fb7c4f5d70f3dc8312d8bb5aae381e5067a0442b68ebda4",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/detail/item-6.jpg",
+      "bytes": 227192,
+      "sha256": "c6a3bb76f989a6c29fa4d3a8d66a8e555429b976baf0824fa80f1556e976c214",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/intro/item-1.jpg",
+      "bytes": 98868,
+      "sha256": "fc654ba68c395710f1a4ecb8abb9f716f70586c8236fac1a8f71d7aaf9303747",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/intro/item-2.jpg",
+      "bytes": 90797,
+      "sha256": "adf5cc529ff515c4e97a2b9ef84bc8cad34210320842889fa8e32083560c471e",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/intro/item-3.jpg",
+      "bytes": 101673,
+      "sha256": "123e8b75b14f5bc45e2073e4d0d48bca75e9acb793b53c90a179ed68eed19888",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/intro/item-4.jpg",
+      "bytes": 77077,
+      "sha256": "3fe7e8c402979958050cd411c146069630d25c2d7820f1623da9a33d7089cfc3",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/intro/item-5.jpg",
+      "bytes": 113834,
+      "sha256": "5477e5e683c0edc2dc4a846e7cdb94c9525fcb6acc20c0cdf7a31e40a0997ad2",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/illustration/intro/item-6.jpg",
+      "bytes": 91375,
+      "sha256": "ae17167b13eb78c74f6144ea30a8ee70c205c892dd106c161233a0da5f0a285d",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/project/pic-1.png",
+      "bytes": 432047,
+      "sha256": "765013ccdbcc99cb192c35a598ad82d6dbeae541e890781be563d0652d1b75da",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/project/pic-2.png",
+      "bytes": 276388,
+      "sha256": "f1c4d9bc813828faf11a575ef456b62ee57edb19bf9d78886ec7540d2e39dd0d",
+      "ext": ".png"
+    },
+    {
+      "path": "images/joomlart/team/item-1.jpg",
+      "bytes": 237114,
+      "sha256": "ef82f73106cb34271f2129220f5a340f178c2bb844f0733102a7a82f9006ec48",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/team/item-2.jpg",
+      "bytes": 153376,
+      "sha256": "d59c1d51f16b4c5c9e3d63cd4892e5634815314d3ba52d0253be2bd3105a258c",
+      "ext": ".jpg"
+    },
+    {
+      "path": "images/joomlart/team/item-3.jpg",
+      "bytes": 190953,
+      "sha256": "5b072bef3d399a0971d6c96055a169a2677445cf1bfa2f978c87bcfe55a7a5f0",
+      "ext": ".jpg"
+    },
+    {
+      "path": "index.html",
+      "bytes": 71521,
+      "sha256": "9030fa0dab67d4de965c66ee7f42bac3dedd8909824753f795599739d4514101",
+      "ext": ".html"
+    },
+    {
+      "path": "index.php/about-us-2/contact/index.html",
+      "bytes": 30631,
+      "sha256": "da5f428d652a250a2ab044b3f90ff6c60cf31632281d9efff914db4057795fd5",
+      "ext": ".html"
+    },
+    {
+      "path": "it-infrastructure/index.html",
+      "bytes": 36392,
+      "sha256": "a6d97177d5a349a5e4fd76d01fb43e74d72476184efeef889933975e73082f58",
+      "ext": ".html"
+    },
+    {
+      "path": "login-form/index.html",
+      "bytes": 24138,
+      "sha256": "a5522d975dbd126b87356d07346cd339b4c209317081159e589171f5308d26c7",
+      "ext": ".html"
+    },
+    {
+      "path": "login-form/index~view=remind.html",
+      "bytes": 22373,
+      "sha256": "973b602dc06bcc539f267ae36b4bb2fae3edc9cb6f2f80e140ab2a46e453b848",
+      "ext": ".html"
+    },
+    {
+      "path": "login-form/index~view=reset.html",
+      "bytes": 22234,
+      "sha256": "98d9ee018e3181eb7d86b59881f229674d05a80d1ecaac92b47f95df182b8e54",
+      "ext": ".html"
+    },
+    {
+      "path": "media/com_finder/css/finder.min.css",
+      "bytes": 1765,
+      "sha256": "0376f10fb61436bda3ba56b432ee050ba691a3483118ab57aa7dc07eb42ea4cd",
+      "ext": ".css"
+    },
+    {
+      "path": "media/com_finder/js/finder.min.js",
+      "bytes": 1381,
+      "sha256": "a3ccb2cd02bb4362be9d0b1f737aec5f7304af71730a1e4017ba003854fce5d6",
+      "ext": ".js"
+    },
+    {
+      "path": "media/com_tags/js/tag-default.min.js",
+      "bytes": 486,
+      "sha256": "7c97dc019c350c50f44a79b631a853a7c9dc409c2d252394eaab8201dcd25d27",
+      "ext": ".js"
+    },
+    {
+      "path": "media/com_tags/js/tags-default.min.js",
+      "bytes": 486,
+      "sha256": "7c97dc019c350c50f44a79b631a853a7c9dc409c2d252394eaab8201dcd25d27",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/css/fields/calendar.min.css",
+      "bytes": 4317,
+      "sha256": "e130941535508f3dbd044224def5004648c3f25644ea9f16c5cf2c22da79b958",
+      "ext": ".css"
+    },
+    {
+      "path": "media/system/images/select-bg.svg",
+      "bytes": 504,
+      "sha256": "0aca0d7b534234c0f5c680504d4f37784c71c4733e272d9da6e4521b185cad6b",
+      "ext": ".svg"
+    },
+    {
+      "path": "media/system/js/core.min.js",
+      "bytes": 7786,
+      "sha256": "045181e3f5ea2f3afd09831dd18ea871b8a98fcb8cb3233af395fe123bdd3934",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/fields/calendar-locales/date/gregorian/date-helper.min.js",
+      "bytes": 5065,
+      "sha256": "0b38b69c2d3cde558c1850edfa64674f7142b60e3d5a3e2502bbfd14e5e7731a",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/fields/calendar.min.js",
+      "bytes": 25195,
+      "sha256": "b4d8c60e15ad1dc5c7df10c7801571340052b80f34de7c8d6533fbe8c1888d06",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/fields/passwordstrength.min.js",
+      "bytes": 2750,
+      "sha256": "ba9b9bf4d2a0ccb718ad407262d5d25b5312860e038bdadf490c28a6a3c89026",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/fields/passwordview.min.js",
+      "bytes": 1237,
+      "sha256": "1ba2fcc7648c62b2c7cf2d539092cec381ee03631114f3e5a851b398a2c8ff25",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/fields/validate.min.js",
+      "bytes": 8574,
+      "sha256": "2eb3c772ac894af82059fcf115b2ee545599cacf490eae2826c6e71a069c1f37",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/joomla-hidden-mail.min.js",
+      "bytes": 1569,
+      "sha256": "1aacba2d5d0e5f070a52691efbf51b7183bba1fe42c6569ed5f2025c6e409f19",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/keepalive.min.js",
+      "bytes": 741,
+      "sha256": "983c4e677c121da92edce183d530881200e0ce545ddca1174bdb3eedb7588619",
+      "ext": ".js"
+    },
+    {
+      "path": "media/system/js/messages.min.js",
+      "bytes": 5542,
+      "sha256": "09426cb3251a9408374f3f37bb5ec75a921c2e71d8717a83e7ab0acf16addf0a",
+      "ext": ".js"
+    },
+    {
+      "path": "media/t4/optimize/css/0f7a2da57d5df7eb9d2d7198151901b4.css",
+      "bytes": 639710,
+      "sha256": "0e70541915a2a4f2343fa5a63f6442eb756368056918e016e099b0e326be77da",
+      "ext": ".css"
+    },
+    {
+      "path": "media/t4/optimize/css/28a7925a4757730081c9bb522049d99a.css",
+      "bytes": 639743,
+      "sha256": "0a3ed278f14a9b9f42a1d5ef5a99379ea1ea929e16db6735efe8c440bb6ffb1a",
+      "ext": ".css"
+    },
+    {
+      "path": "media/t4/optimize/css/4792c9308913fefb266d0e6421e7b908.css",
+      "bytes": 640404,
+      "sha256": "248a36b6991304f29f739e7c85906382af245fc70c4253e4cc538dbeae909755",
+      "ext": ".css"
+    },
+    {
+      "path": "media/t4/optimize/css/50bce72da43f1cfdb6b715917132d608.css",
+      "bytes": 640404,
+      "sha256": "248a36b6991304f29f739e7c85906382af245fc70c4253e4cc538dbeae909755",
+      "ext": ".css"
+    },
+    {
+      "path": "media/t4/optimize/css/89858bba5ce33d55cf413cef7f40065d.css",
+      "bytes": 640404,
+      "sha256": "248a36b6991304f29f739e7c85906382af245fc70c4253e4cc538dbeae909755",
+      "ext": ".css"
+    },
+    {
+      "path": "media/t4/optimize/css/9140428116b9e80a60a9a41d8975f8aa.css",
+      "bytes": 640404,
+      "sha256": "248a36b6991304f29f739e7c85906382af245fc70c4253e4cc538dbeae909755",
+      "ext": ".css"
+    },
+    {
+      "path": "media/t4/optimize/css/9fb19c42fd2f546983be0ea0a2c622f3.css",
+      "bytes": 640404,
+      "sha256": "248a36b6991304f29f739e7c85906382af245fc70c4253e4cc538dbeae909755",
+      "ext": ".css"
+    },
+    {
+      "path": "media/t4/optimize/css/b4d5f40b8e93dac5c5fbb49516764a8c.css",
+      "bytes": 639743,
+      "sha256": "0a3ed278f14a9b9f42a1d5ef5a99379ea1ea929e16db6735efe8c440bb6ffb1a",
+      "ext": ".css"
+    },
+    {
+      "path": "media/t4/optimize/js/33a0a58b3db264c2c1a0967f0fc5766b.js",
+      "bytes": 63747,
+      "sha256": "fac553c1ab5f577c29bda8eca1cfc3a0b20353d3fc40fddbd49a67ce9f9e74c7",
+      "ext": ".js"
+    },
+    {
+      "path": "media/t4/optimize/js/f8b87430c5a0da323109d45391f21853.js",
+      "bytes": 40032,
+      "sha256": "315fb0606abb6b36a55cb0cd109139acfd46412d81066c0ab80f88928d93eabb",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/awesomplete/css/awesomplete.css",
+      "bytes": 1755,
+      "sha256": "8570c166966479f18cd0be77bb56947a3abc05b914257698134e652274b5ffa8",
+      "ext": ".css"
+    },
+    {
+      "path": "media/vendor/awesomplete/js/awesomplete.min.js",
+      "bytes": 8003,
+      "sha256": "b88cd20ce7955245180991050108b764c14a17986e7eae2daee92273eb7f75df",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/collapse.min.js",
+      "bytes": 3994,
+      "sha256": "cf9de80f69ca7fb0965323fb377b2424b59d4ab961f5a7802e537c7effb98320",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/dropdown.min.js",
+      "bytes": 6229,
+      "sha256": "c5d8353d52ebbf41bba3c66d69981ca111fee195d1ef3ec50054d79c2abde84d",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/modal.min.js",
+      "bytes": 7319,
+      "sha256": "1a9326b0065dc08763f2323553814ef6f716c5948055f8d177d976eae684b9c1",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/bootstrap/js/tab.min.js",
+      "bytes": 4957,
+      "sha256": "b7f4e131ff29bcc464496e98255ee101d8d1fc3f81da5f479f7ce9a929db60a6",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/joomla-custom-elements/css/joomla-alert.min.css",
+      "bytes": 3654,
+      "sha256": "df8eb5ad4051778586df18f3e6a7d3368820b8e8134751fa5ac845cead9318cb",
+      "ext": ".css"
+    },
+    {
+      "path": "media/vendor/jquery-migrate/js/jquery-migrate.min.js",
+      "bytes": 19389,
+      "sha256": "6fa409c2c72c30d7e21c407339c5a4802c3334660d9b1dc5e3ea2752bb6a4b62",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/jquery/js/jquery-noconflict.min.js",
+      "bytes": 30,
+      "sha256": "b7bbe381cf509577690654422e09b73e9fdbb0b70d47028146147da7a7a0c5fa",
+      "ext": ".js"
+    },
+    {
+      "path": "media/vendor/jquery/js/jquery.min.js",
+      "bytes": 87533,
+      "sha256": "fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a",
+      "ext": ".js"
+    },
+    {
+      "path": "mobile-application/index.html",
+      "bytes": 36398,
+      "sha256": "508bf37c610b2677182e22371d2e9a9dd91b6eb2f39e4bbfeccf2ff422aa4137",
+      "ext": ".html"
+    },
+    {
+      "path": "offline-pages/index.html",
+      "bytes": 22717,
+      "sha256": "16ef81a9aba15bd9f5c9144a32c3aa98d68db7509ab54332e3fd908f0a36f128",
+      "ext": ".html"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/css/all.min.css",
+      "bytes": 98364,
+      "sha256": "3b961e8e82f12168fd8e04ab46f9b596aae9c7fa0ac8066112176957f336114b",
+      "ext": ".css"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.ttf",
+      "bytes": 133988,
+      "sha256": "cda59d6efffa685830fd95b55f64ae9cb51279cd34b2410b69f84c7ec30157d9",
+      "ext": ".ttf"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.woff",
+      "bytes": 89988,
+      "sha256": "f9217f66874b0c01cd8c10b6a295dbc4f609acb6f5adc41c37da46641b57eb02",
+      "ext": ".woff"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-brands-400.woff2",
+      "bytes": 76736,
+      "sha256": "8ea8791754915a898a3100e63e32978a6d1763be6df8e73a39d3a90d691cdeef",
+      "ext": ".woff2"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.ttf",
+      "bytes": 33736,
+      "sha256": "e8711bbb871afd8e9dea60e16d30f00c7e4837bbc9807065017475b849fa2313",
+      "ext": ".ttf"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.woff",
+      "bytes": 16276,
+      "sha256": "cb9e9e693192413cde2b1f21c1dc1d44b6fe7b27cc2b458e8b359d18f9ff8f4e",
+      "ext": ".woff"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-regular-400.woff2",
+      "bytes": 13224,
+      "sha256": "e42a88444448ac3d60549cc7c1ff2c8a9cac721034c073d80a14a44e79730cca",
+      "ext": ".woff2"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.ttf",
+      "bytes": 202744,
+      "sha256": "af6397503fcefbd613976c21ad5c1e37298c18bbe07d096db03ccd3af6e05ba8",
+      "ext": ".ttf"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.woff",
+      "bytes": 101648,
+      "sha256": "3f6d3488cf65374f6f676c315340b0ac2be832bd55240c809448e36ef9b96326",
+      "ext": ".woff"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome5/webfonts/fa-solid-900.woff2",
+      "bytes": 78268,
+      "sha256": "9834b82ad26e2a37583d22676a12dd2eb0fe7c80356a2114d0db1aa8b3899537",
+      "ext": ".woff2"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome6/css/all.min.css",
+      "bytes": 104502,
+      "sha256": "320d572dfb844e7152480b7b62374236c4896ccca3ac9d69bb03f3bc2034acb8",
+      "ext": ".css"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-brands-400.ttf",
+      "bytes": 210736,
+      "sha256": "276af0307107fc3e28218f3d580d2636b2a85966a309b9c937c799f3e14f4ea2",
+      "ext": ".ttf"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-brands-400.woff2",
+      "bytes": 118724,
+      "sha256": "4d46c3bcd49e008582f1c01ee88ed9a494d150643e3e947eb7710180808403c9",
+      "ext": ".woff2"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-regular-400.ttf",
+      "bytes": 68064,
+      "sha256": "7caa2d8d6cc03c5ee9fc23eab7a193b4e3ce667469c3f955a35f957a14ac2b7e",
+      "ext": ".ttf"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-regular-400.woff2",
+      "bytes": 25484,
+      "sha256": "003b55144f370c07c2bc6f8f80455bca7d61a2fb2766551883734249e953e700",
+      "ext": ".woff2"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-solid-900.ttf",
+      "bytes": 426112,
+      "sha256": "23c4f99ee90741117109d813b937b9bc6e971a2781fede7aa975414acec4f53f",
+      "ext": ".ttf"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-solid-900.woff2",
+      "bytes": 158224,
+      "sha256": "38e76ab3d359e772e9f2aab11fbb07a2e2209318183a89ced0a97d6b958a7a6f",
+      "ext": ".woff2"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-v4compatibility.ttf",
+      "bytes": 10836,
+      "sha256": "e868f3012f72e15ee6e525366989549a8b60e42b484e4a22518ba657287b1740",
+      "ext": ".ttf"
+    },
+    {
+      "path": "plugins/system/t4/themes/base/vendors/font-awesome6/webfonts/fa-v4compatibility.woff2",
+      "bytes": 4788,
+      "sha256": "d0cd8241178cb658c2dff876fd67ceaa926198c31449bfa1d9b5199cc57c1895",
+      "ext": ".woff2"
+    },
+    {
+      "path": "project/branding/design-system-ul-kit/index.html",
+      "bytes": 31200,
+      "sha256": "bfa504de47b82ed2942f0220e96e7330dd28e93f4b3e693ea1ab92ed9ef72bd0",
+      "ext": ".html"
+    },
+    {
+      "path": "project/branding/index.html",
+      "bytes": 30141,
+      "sha256": "83082bc2bc8ad4cdb721d296a335e536296f5eeb43e3d2697be482b8ab6b8ded",
+      "ext": ".html"
+    },
+    {
+      "path": "project/branding/landing-page-design/index.html",
+      "bytes": 30820,
+      "sha256": "a7b836edcf32339c88fd7def32662548613ca10e4a4c692d525d6cd3c8305e95",
+      "ext": ".html"
+    },
+    {
+      "path": "project/branding/mobile-app-design/index.html",
+      "bytes": 31141,
+      "sha256": "d3181ca93158c2ba82dd205ec9c098b617f7cab0f7ac0ae9ec6e67e478f0263a",
+      "ext": ".html"
+    },
+    {
+      "path": "project/branding/muckup-design/index.html",
+      "bytes": 31123,
+      "sha256": "b82fe02b968c5f3c3e27d274a726265a4cd911ff0065a5dcbef081dfbc8a2451",
+      "ext": ".html"
+    },
+    {
+      "path": "project/branding/realistic-scenarios/index.html",
+      "bytes": 31173,
+      "sha256": "9ded0c65bec57b94f253db136a36897a85dbd0338d2cccdd24ef521d0530c759",
+      "ext": ".html"
+    },
+    {
+      "path": "project/branding/web-application-design/index.html",
+      "bytes": 30830,
+      "sha256": "d7b08dd76e212d7995ea4b737a16719a3b6430e686b888d7f8915d864029ceef",
+      "ext": ".html"
+    },
+    {
+      "path": "project/illustration/email-newsletter-design/index.html",
+      "bytes": 30892,
+      "sha256": "e492dd42cd2e5d140903543dee95c4c7971e28c6e39cb34468bd2229cd1b1b74",
+      "ext": ".html"
+    },
+    {
+      "path": "project/illustration/event-invitation-design/index.html",
+      "bytes": 30907,
+      "sha256": "3bfa481cf5b9838d6997ba1e6af1c29acf989f1e3d647f125de32eea78b84dc6",
+      "ext": ".html"
+    },
+    {
+      "path": "project/illustration/index.html",
+      "bytes": 30249,
+      "sha256": "e4cce3e972fd4df09cd7f07a00e61bc21b158cabbfff52d74c2f8dc178bb7798",
+      "ext": ".html"
+    },
+    {
+      "path": "project/illustration/packaging-design/index.html",
+      "bytes": 31196,
+      "sha256": "7b281ccbfa91cf56af87ca9eb8ef14149f1b8cd9e5c1d7664c2b3c3e4375029f",
+      "ext": ".html"
+    },
+    {
+      "path": "project/illustration/poster-banner-design/index.html",
+      "bytes": 31262,
+      "sha256": "7b9248525cae5fca56f40c0f03194891d3931b4c867e803d785e96b1c30d3602",
+      "ext": ".html"
+    },
+    {
+      "path": "project/illustration/presentation-design/index.html",
+      "bytes": 31220,
+      "sha256": "f8f78905bba2df3f3ec4e4147abc055365e2bf0e61d1e2e22c6a94c8b7f63cc8",
+      "ext": ".html"
+    },
+    {
+      "path": "project/index.html",
+      "bytes": 215894,
+      "sha256": "645fe34788f3e3574ccc5c483065f41895edd3a9dca9c451aa83e3be9613969c",
+      "ext": ".html"
+    },
+    {
+      "path": "project/project-detail/index.html",
+      "bytes": 31326,
+      "sha256": "896c5d182617b111126a0f5e18326b0dd5a4d9f7ff252f5cd845f03669804902",
+      "ext": ".html"
+    },
+    {
+      "path": "project/ui-ux-design/blog-design-layout/index.html",
+      "bytes": 31240,
+      "sha256": "7bd100f5d969d957c273b8a82b94d10acf20dfa45f45a3a74f50a10f93cc8466",
+      "ext": ".html"
+    },
+    {
+      "path": "project/ui-ux-design/brand-identity-design/index.html",
+      "bytes": 31232,
+      "sha256": "6904cd69c2ad9bcda7e7704e6886f4b2418bf074896596b3e4f20360ac77233a",
+      "ext": ".html"
+    },
+    {
+      "path": "project/ui-ux-design/corporate-website-design/index.html",
+      "bytes": 30886,
+      "sha256": "8328468308abf47709e938febf195d55d058b04fa0fe97d4a8086752de410630",
+      "ext": ".html"
+    },
+    {
+      "path": "project/ui-ux-design/index.html",
+      "bytes": 30229,
+      "sha256": "4440419ae0663060cebf4dbab03ef2dcc51b9e36f374bd6fbe9b9503fa71e851",
+      "ext": ".html"
+    },
+    {
+      "path": "project/ui-ux-design/infographic-design/index.html",
+      "bytes": 30849,
+      "sha256": "b97885e4c33f61647c45d0f04f7d982c873146dcd314b8f91885e9409940b0a5",
+      "ext": ".html"
+    },
+    {
+      "path": "project/ui-ux-design/logo-design-branding/index.html",
+      "bytes": 31244,
+      "sha256": "9e4c31dcd43a4cb65beb003feb57aa8a3755e92c538cecec2914a983d03150df",
+      "ext": ".html"
+    },
+    {
+      "path": "project/ui-ux-design/social-media-graphics/index.html",
+      "bytes": 31228,
+      "sha256": "ae8dcc1280b37203f8631bc141b7f92b4e6b69ac1f6f90a136b89effd8f6ad77",
+      "ext": ".html"
+    },
+    {
+      "path": "registration-form/index.html",
+      "bytes": 34798,
+      "sha256": "a3920da4374d598b34dd293c6b460379ffadea2d0325c612a8b74580c7dbdb8e",
+      "ext": ".html"
+    },
+    {
+      "path": "services/index.html",
+      "bytes": 35500,
+      "sha256": "ee8ee83da5a473ff2def6f706674ba7c6abd9be408bd06d0de493b86d228b5d1",
+      "ext": ".html"
+    },
+    {
+      "path": "smart-search/index.html",
+      "bytes": 23969,
+      "sha256": "0c180dc2e298b1273372e3bb98165e8f93d0c60df12984733f7fb13f0491963d",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/careers/index.html",
+      "bytes": 32612,
+      "sha256": "1f2ef68197def28b5f1354c46f0ebfa02e5854fbd7493b302aa7086c8463b943",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/coding/index.html",
+      "bytes": 24711,
+      "sha256": "df8fc043c1233e4f448d7be8faceba13d53c7bead115f0dc94de37aada7d9ed0",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/company/index.html",
+      "bytes": 31790,
+      "sha256": "700e6eb182a0829930c96edffd695937a11d1d1083413e02223aef9354ffa554",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/company/index~start=20.html",
+      "bytes": 26587,
+      "sha256": "620cc0524e0c913cef5c04b1a683aa8e6d8d397e8d3abe28a23e68186f95ddf1",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/computer/index.html",
+      "bytes": 33776,
+      "sha256": "24c0f5fa9dbb0698ddea66ce1a62fa5738504b438f54427d5ccc97698324cc8b",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/computer/index~start=20.html",
+      "bytes": 25964,
+      "sha256": "f4a5f3161921a13c6b068dba796a5f638c1a056ea16b04c54abf826396319b76",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/design/index.html",
+      "bytes": 30441,
+      "sha256": "1f96b16894f0fd758f2df5502d02707fbbc54bf1293f5b9c95a1401f9bd84094",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/developer/index.html",
+      "bytes": 31647,
+      "sha256": "b6c012ee3337525b9c2b78ac44211f3af6e94999a4b23ded229d91d932175401",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/developer/index~start=20.html",
+      "bytes": 25042,
+      "sha256": "5ffb999bd416dfe94bf0a2b1c4f1ff374379df84169513cc365e466ec2071dd7",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/devops-platform/index.html",
+      "bytes": 23563,
+      "sha256": "cd28c001b3e13a5488772b0c51340e05dcf30ecf8df475f5908623c4197a39ad",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/devops/index.html",
+      "bytes": 33739,
+      "sha256": "107331020a66fd57e0f27c6b36d00bffb03ea05703eef21ced474cb873786126",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/devops/index~start=20.html",
+      "bytes": 25515,
+      "sha256": "84c21d66b68d7af3d26c08c632fa441905fa021a7484596c861c01a59ac80ace",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/digital/index.html",
+      "bytes": 24288,
+      "sha256": "d6c0e4d6a5faaaaf63771426f7f77b09af1f01ffe023289ca31b288cd955ae31",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/index.html",
+      "bytes": 26397,
+      "sha256": "622a1e7d2020d685c4480c932dacf55264a1dd15c0466b00258245fe019f65ee",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/news/index.html",
+      "bytes": 23464,
+      "sha256": "f816d772662f02c8f135928cec4dd5f363ee7eadabb01a3e12b316f43cf01a11",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/office/index.html",
+      "bytes": 23482,
+      "sha256": "6b91299ca4b3f5788a172b1598cad0e76f3ed89bd386c629fae2aff5062d5aa5",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/open-source/index.html",
+      "bytes": 23527,
+      "sha256": "0de8540719af0cfa6d121066acc8e21bd6ad5490c18b14b00302f9858057dd17",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/programming/index.html",
+      "bytes": 23899,
+      "sha256": "198b5d29f7b094177dffa76b9c8a62292e6da5c1417518d6cd89c46031212356",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/team/index.html",
+      "bytes": 25990,
+      "sha256": "dc67e93f949afebcb9ef9339db70925fa43ecdca08b78be9e84a2d6f106c6b49",
+      "ext": ".html"
+    },
+    {
+      "path": "tags/technology/index.html",
+      "bytes": 23518,
+      "sha256": "ebdb5468f43c41cfbb72607e5a6de1ea5139a6271149a48274191b88153f9c51",
+      "ext": ".html"
+    },
+    {
+      "path": "templates/ja_nova/css/darkmode.css",
+      "bytes": 25057,
+      "sha256": "4b34c34158d6c1eb375e66e48fa0d844c4703719e7ccd69fe26f8c4f86918bc3",
+      "ext": ".css"
+    },
+    {
+      "path": "templates/ja_nova/css/language-fonts.css",
+      "bytes": 5057,
+      "sha256": "3684b4961a2bdffbfa203e8550d99d0535315a98216d6ee5089972c454d20f3d",
+      "ext": ".css"
+    },
+    {
+      "path": "templates/ja_nova/favicon.ico",
+      "bytes": 2019,
+      "sha256": "7bd9b59d14b126e8c5abcb1c89b60c79e2b2e17c15745fe8d385204d87c40765",
+      "ext": ".ico"
+    },
+    {
+      "path": "templates/ja_nova/fonts/be-vietnam-pro-400-latin-ext.woff2",
+      "bytes": 6880,
+      "sha256": "c2ae124f149371e1b6209cbba234852310caeee3c32990a56ccb93ac1c7edb9a",
+      "ext": ".woff2"
+    },
+    {
+      "path": "templates/ja_nova/fonts/be-vietnam-pro-400-latin.woff2",
+      "bytes": 12908,
+      "sha256": "d25f70ff7404fddbeb150c9c687bf37069468a5cdf59117b2a30226d1ebfa5c0",
+      "ext": ".woff2"
+    },
+    {
+      "path": "templates/ja_nova/fonts/be-vietnam-pro-400-vietnamese.woff2",
+      "bytes": 4720,
+      "sha256": "b0d9b8aec7f47207ce4065be34286203e0741c8329be6d05986b149f991f84c1",
+      "ext": ".woff2"
+    },
+    {
+      "path": "templates/ja_nova/fonts/be-vietnam-pro-500-latin-ext.woff2",
+      "bytes": 7184,
+      "sha256": "83b86791eb0ebfca23daa3f70ee179f13638c69441b69a6d2deb6b96a95385ea",
+      "ext": ".woff2"
+    },
+    {
+      "path": "templates/ja_nova/fonts/be-vietnam-pro-500-latin.woff2",
+      "bytes": 13324,
+      "sha256": "0336df67f25be86ea38a6f37b11ffb4901c1ed65ce06ba99d6a304913e997e52",
+      "ext": ".woff2"
+    },
+    {
+      "path": "templates/ja_nova/fonts/be-vietnam-pro-500-vietnamese.woff2",
+      "bytes": 5100,
+      "sha256": "e83829fe40a88cff1c6ee213801661468bfed922771d1c382b4c1fdc269a5648",
+      "ext": ".woff2"
+    },
+    {
+      "path": "templates/ja_nova/fonts/be-vietnam-pro-700-latin-ext.woff2",
+      "bytes": 7164,
+      "sha256": "f446d28e986c5695283afcb13a7719dabd9f2cec28ab49ecb43a328efa009f05",
+      "ext": ".woff2"
+    },
+    {
+      "path": "templates/ja_nova/fonts/be-vietnam-pro-700-latin.woff2",
+      "bytes": 13348,
+      "sha256": "cf841d2b615f068e77a918114f44c17d51d0b73314fdff81eae95f528387c391",
+      "ext": ".woff2"
+    },
+    {
+      "path": "templates/ja_nova/fonts/be-vietnam-pro-700-vietnamese.woff2",
+      "bytes": 5132,
+      "sha256": "141f6c45010274d7d3625d0554476ec1161274d9eb09a38135977ea1b2b84895",
+      "ext": ".woff2"
+    },
+    {
+      "path": "templates/ja_nova/images/icon-decor/bg-1.png",
+      "bytes": 13651,
+      "sha256": "f0c7b0264e5294ce4f728a424aa26f1a7a886c437a34a76abddef82006378bae",
+      "ext": ".png"
+    },
+    {
+      "path": "templates/ja_nova/images/icon-decor/item-3.png",
+      "bytes": 5635,
+      "sha256": "6623411999bc43264ccfcdce79fa5b3a217e859637a2f8231f3a4dcd98f6e61e",
+      "ext": ".png"
+    },
+    {
+      "path": "templates/ja_nova/images/icons/ic_speaker.png",
+      "bytes": 5645,
+      "sha256": "b65e469f580c413920f0c958d4256ed4b79738b35efeef6156049b1a6c114d9f",
+      "ext": ".png"
+    },
+    {
+      "path": "templates/ja_nova/js/darkmode.js",
+      "bytes": 3485,
+      "sha256": "43ac20d0d5cf13a10c2dea93be903f15b20e05f09989b903a55e0f651d97c822",
+      "ext": ".js"
+    },
+    {
+      "path": "templates/ja_nova/js/owl-carousel/owl.carousel.min.css",
+      "bytes": 3351,
+      "sha256": "521410e1fc44780061e09adc980275fb5ea277fd5d9e538454214ec4379ff4bc",
+      "ext": ".css"
+    },
+    {
+      "path": "templates/ja_nova/js/owl-carousel/owl.carousel.min.js",
+      "bytes": 44342,
+      "sha256": "a53c43f834b32309b084ea9314df8307e9c78cee2202c6e07f216ae4ae5b704d",
+      "ext": ".js"
+    },
+    {
+      "path": "templates/ja_nova/js/owl-carousel/owl.video.play.png",
+      "bytes": 4976,
+      "sha256": "0436045686fddf10ccbbe2568e0cbffb457e7de7d43d1115c0056e81e97149ff",
+      "ext": ".png"
+    },
+    {
+      "path": "typography/index.html",
+      "bytes": 37904,
+      "sha256": "cd236fe5a9a743b09798a683b3ce781b8d7fc174f05a2cb9f008e94264e2be7d",
+      "ext": ".html"
+    },
+    {
+      "path": "virtualization/index.html",
+      "bytes": 36029,
+      "sha256": "11fb632c96630aa311e873c79df1c56b483eb33259058ad429382c15b3c40e95",
+      "ext": ".html"
+    }
+  ],
+  "pages": [
+    {
+      "file": "about-us-2/career/index.html",
+      "sha256": "6d7db635ed54d1b978298216a1da634f1e5afaa5c54cdd197f3bb16372826cf0",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Career"
+    },
+    {
+      "file": "about-us-2/contact/index.html",
+      "sha256": "f416a669875f0d09e1f95e64620cc796b68c1ff1ba907c472297974975bb3be2",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Contact"
+    },
+    {
+      "file": "about-us-2/index.html",
+      "sha256": "2d51a1eb8de993fed64b9a80208298704a3bd5874010def034af0c7d298034d5",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "About Us"
+    },
+    {
+      "file": "author-listting/author/Antoinette%20Huff/index.html",
+      "sha256": "0342099d5b152641302472fe89fd00e7a43189a8f881692c947fe5d4716c7cff",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Antoinette Huff  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Antoinette%20Huff/index~start=0.html",
+      "sha256": "90d27ae1f8e9913801a7df1eb20799429cd7bf0368ace80bd2397c4defabffce",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=0",
+      "title": "Antoinette Huff  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Antoinette%20Huff/index~start=12.html",
+      "sha256": "4daa94f7616f260f2690b00503ab075250a1c5ed28caec1d05985290ba23d888",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=12",
+      "title": "Antoinette Huff  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Antoinette%20Huff/index~start=16.html",
+      "sha256": "a9f8c3fe8a23425589f21368958409ddd35551cb78a69596c16abe4c427b29dd",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=16",
+      "title": "Antoinette Huff  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Antoinette%20Huff/index~start=20.html",
+      "sha256": "74844beba4f02f899eea027f1765c437ba4700b5f6e25d0ac928640333a33f98",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=20",
+      "title": "Antoinette Huff  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Antoinette%20Huff/index~start=24.html",
+      "sha256": "2ebfac0356e0d3955eec1f815d034b1b64dbc8ea4f3e871af0b5e6f7605c2782",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=24",
+      "title": "Antoinette Huff  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Antoinette%20Huff/index~start=4.html",
+      "sha256": "1118ebecac9cff626d52eca5a5cb054b212290c58f164d79b0ebd94f1a5503ed",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=4",
+      "title": "Antoinette Huff  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Antoinette%20Huff/index~start=8.html",
+      "sha256": "8ad2c954c1ab01ef9bacc7648e8991461d15d2feade4a71d4e21a4c5c05a291c",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=8",
+      "title": "Antoinette Huff  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Brian%20Jennings/index.html",
+      "sha256": "93dcd46c2c768436c3e87b6c2815b0c5f81a09c696785cf84098d64f0750d673",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Brian Jennings  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Dewey%20Mann/index.html",
+      "sha256": "cb90a2bfbaf0f91edb4d68b9e5091af8608141d5e07de3ff72a163f2c11c6f16",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Dewey Mann  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Elijah%20Knight/index.html",
+      "sha256": "9ed61404630c7c20562c62c0fcfc62498c2b905a63563f3c026bcc2ef5a672ed",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Elijah Knight  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Henry%20Delgado/index.html",
+      "sha256": "fe06f07f4786fa36a474da23e016aee37b81e135702e8d5b2a73e851178c65c0",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Henry Delgado  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Hubert%20Santos/index.html",
+      "sha256": "fbd15866bfaf3f0e53e174756d36673360742f6b8b060d594738b96567b79c51",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Hubert Santos  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Lucy%20Reid/index.html",
+      "sha256": "3f9edb924382a4d983ea2107b34cf39e3510d1b865ba06661019a820cf601117",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Lucy Reid  - Web Designer"
+    },
+    {
+      "file": "author-listting/author/Warren%20Stevens/index.html",
+      "sha256": "8018bc7070e8ebe2e25d6e780ea068be6c0658bc576358c4d4a1d8df4ad5713c",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Warren Stevens - Web Designer"
+    },
+    {
+      "file": "author-listting/index.html",
+      "sha256": "caf2d2117c57f7fd31ba0a6ca980778ce323721ed19e16875406f65cfd4a0b17",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Author listting"
+    },
+    {
+      "file": "author-listting/index~start=0.html",
+      "sha256": "1714a9a8ea67e24c45f9621673f8633ad1c514983d63c3e2aa8b1748e9421a86",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=0",
+      "title": "Author listting"
+    },
+    {
+      "file": "author-listting/index~start=6.html",
+      "sha256": "f01173963bee92954a7d06ca3a0c9b2ebc78065ad2e038dfd0bcbc80456b8fa7",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=6",
+      "title": "Author listting"
+    },
+    {
+      "file": "blog-detail/index.html",
+      "sha256": "7ee600464b3e83ac0b669f77ab95054a5813b72edc365cd95aef3cd944a60da4",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Virtual Memorials: Exploring the Impact of Business Technology on Mourning"
+    },
+    {
+      "file": "category-blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology/index.html",
+      "sha256": "c631f205206b099f78f8f569c84bf451068b27c5f9b72414806afac99ef91b40",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Beyond the Funeral: Navigating Grief in the Age of Business Technology"
+    },
+    {
+      "file": "category-blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology/index.html",
+      "sha256": "e0aa8c15299c7d828a8db5792c4441992666522edcd2ddd131a2ba7e0b51dd83",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Digital Tributes: Examining the Changing Face of Mourning with Business Technology"
+    },
+    {
+      "file": "category-blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning/index.html",
+      "sha256": "af5a8fe4fd2697c7c21a4857f80ea109a0a8eb653da6ee1cbda830bd4ce2d63b",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Embracing the Virtual Goodbye: The Role of Business Technology in Modern Mourning"
+    },
+    {
+      "file": "category-blog/examining-the-role-of-business-technology-in-the-mourning-process/index.html",
+      "sha256": "8ff9008e9aba673e1a0b08e017b2ba7066442620ac645a77ccfcb521e9848549",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Examining the Role of Business Technology in the Mourning Process"
+    },
+    {
+      "file": "category-blog/from-legacy-planning-to-digital-estates-business-techs-influence-on-inheritance/index.html",
+      "sha256": "9d0be50cdd21c1c520c08a53b74c545bcb1707abd5433b7c6f1eb5892e48ccf5",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "From Legacy Planning to Digital Estates: Business Tech's Influence on Inheritance"
+    },
+    {
+      "file": "category-blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey/index.html",
+      "sha256": "1ecf9166170384412c50908d5794b6ce94be642dd261f8be5efc1930cd34de13",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "From Offline to Online: How Business Technology is Transforming the Mourning Journey"
+    },
+    {
+      "file": "category-blog/how-business-technology-changed-how-we-think-about-death/index.html",
+      "sha256": "9c8d1951ef29614868cd24fd01ea348a44b6a4dc701242328a7de8f0d8756e7e",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "How business technology changed how we think about death"
+    },
+    {
+      "file": "category-blog/how-business-technology-is-shaping-the-way-we-remember-2023/index.html",
+      "sha256": "bce1deb905a5fb6002fac3ee7af6b97094fa98c3ff916a5013659b43a0712dbb",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "How Business Technology is Shaping the Way We Remember 2023"
+    },
+    {
+      "file": "category-blog/how-to-create-an-awesome-software-video-about-success-busines/index.html",
+      "sha256": "0d355de0ff62b1a81ed2d09a31fb1411c95a35dec8ffff98ffd073f1c079e3b4",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "How to create an awesome software video about success busines"
+    },
+    {
+      "file": "category-blog/index.html",
+      "sha256": "184c3c6325f021ca144d7cc9105a989760e5792e7e0d2fcefff9daa753812670",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Blog"
+    },
+    {
+      "file": "category-blog/index~start=18.html",
+      "sha256": "3fbc843f2969336bc3e471b88c950c6d3461d1c4be9d3b8a4d9d6b3509f0ce03",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=18",
+      "title": "Blog"
+    },
+    {
+      "file": "category-blog/index~start=9.html",
+      "sha256": "593aae78222f38873fa323f3d27c0c3f547f482ae0dd1f1dcbbeb9fade326728",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=9",
+      "title": "Blog"
+    },
+    {
+      "file": "category-blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones/index.html",
+      "sha256": "8d940c92b30148f114c8a4c1f5cb4b1b7aaf0fcc67f2958189997dfaf54d321e",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Mourning in the Cloud: The Role of Business Technology in Remembering Loved Ones"
+    },
+    {
+      "file": "category-blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology/index.html",
+      "sha256": "5e340783e4f6940bfa72698457ca70ed4e3442d826bb4c4188c1f07bb0db7207",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Mourning in the Digital Age: Unpacking the Influence of Business Technology"
+    },
+    {
+      "file": "category-blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology/index.html",
+      "sha256": "99e738c453393d4cb1343f4ba761bcf819aeb1403f758a0cc01fff298c4df08e",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Mourning in the Digital World: Examining the Impact of Business Technology"
+    },
+    {
+      "file": "category-blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning/index.html",
+      "sha256": "c4e44e3af314f6f3345e5f39755eac8386ff7935090d0d4da8cfae4e04ae05a3",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Remembering Beyond Borders: The Global Impact of Business Technology on Mourning"
+    },
+    {
+      "file": "category-blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief/index.html",
+      "sha256": "41b2f34c08adcc05312f6034e6a77e3aa58dc04204492715a0e929d9bf61c21b",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Remembering in the Digital Era: Unpacking the Role of Business Technology in Grief"
+    },
+    {
+      "file": "category-blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services/index.html",
+      "sha256": "5e0f375591e56bf8500a6a8e39c2b1b9764fe3011220362150b01dc411856eae",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Revolutionizing Death Care: The Business Tech Disruption in Funeral Services"
+    },
+    {
+      "file": "category-blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye/index.html",
+      "sha256": "e7d3c37d6f0fa9de38feaf96463db641d866f98729e21278894b43e674932e06",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Tech-Enabled Funeral Industry: Changing the Paradigm of Saying Goodbye"
+    },
+    {
+      "file": "category-blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life/index.html",
+      "sha256": "0831d9274ceea896499a9e0bcb7a3f12af3658c0a38487a1ea704fe5bd3804e9",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "The Digital Age of Death: How Business Technology is Transforming End-of-Life"
+    },
+    {
+      "file": "category-blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology/index.html",
+      "sha256": "01b5e8cd88a8c38a7b2cf32d827ceb7303cbb0efbc439ef75dd8a767e785d259",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "The Digital Mourning Ritual: Examining the Influence of Business Technology"
+    },
+    {
+      "file": "category-blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief/index.html",
+      "sha256": "0e640df459026d6ac21578494ba3d6aef9cad3288e23fb77194d74c65700b1bc",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "The Digital Remembrance: Investigating the Role of Business Technology in Grief"
+    },
+    {
+      "file": "category-blog/the-evolving-landscape-of-mourning-business-technologys-role-in-the-digital-era/index.html",
+      "sha256": "25ca0002afdc3c4b660d802e6ccc59d20b20fb91a5120dbe1e978d61956408dc",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "The Evolving Landscape of Mourning: Business Technology's Role in the Digital Era"
+    },
+    {
+      "file": "category-blog/the-influence-of-business-technology-on-mourning-practices-2023/index.html",
+      "sha256": "38f97326b6f58299df2b8e8a510c7bb4359da38c84ed634b9ef33edbfb8a45f8",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "The Influence of Business Technology on Mourning Practices 2023"
+    },
+    {
+      "file": "category-blog/the-rise-of-online-funeral-services-business-technologys-role/index.html",
+      "sha256": "4517882c20ad09a2af678fc903a398ba07d206a96c596a09ea2654e2e6af5d92",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "The Rise of Online Funeral Services: Business Technology's Role"
+    },
+    {
+      "file": "category-blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process/index.html",
+      "sha256": "0033bc540c8306a0b05f1b2627c96c36022b6d0be10b7f8d5a0efaab4d1daf0f",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "The Virtual Funeral: How Business Technology is Reshaping the Mourning Process"
+    },
+    {
+      "file": "category-blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization/index.html",
+      "sha256": "dad95b8805a95a018e95aa838b4e4a9af508956f4a590a6603a4f72c2d71aa94",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Transforming Grief: Exploring the Impact of Business Technology on Memorialization"
+    },
+    {
+      "file": "category-blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning/index.html",
+      "sha256": "7a27c39f414b599bf41301596753caf32789dd271ca94b6407fc927f7c704faf",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Virtual Connections: Exploring How Business Technology is Redefining Mourning"
+    },
+    {
+      "file": "category-blog/why-the-biggest-myths-about-business-may-actually-be-right/index.html",
+      "sha256": "8ec8b443767bf324aca394063af34faa81a1fc2cdd5e3f711b8aad7f69b613ed",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Why the biggest myths about business may actually be right"
+    },
+    {
+      "file": "cloud-solutions/index.html",
+      "sha256": "05d410d7c04637bff4972cba860ef163e73780b8a03e111eebedf0c52eb9c892",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Cloud solutions"
+    },
+    {
+      "file": "cybersecurity/index.html",
+      "sha256": "c35adb6198465f7c7fe4a582387780ae51d233ef42359bb643b62f1fd4edf6d6",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Cybersecurity"
+    },
+    {
+      "file": "development/index.html",
+      "sha256": "81bab79c2f3952e47973f316316a917e332d6956f1b878bf7ab11b7e9fba3bec",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Development"
+    },
+    {
+      "file": "error-page/index.html",
+      "sha256": "ca70f7e74369879d89a9d5a63b96149034e199a0f83d7e04ea159e16d671bc4f",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Error Page"
+    },
+    {
+      "file": "featured-articles/index.html",
+      "sha256": "18f3569c8d0d0eb26b59b9dfc77b3a8c7fa6e3105ec34e0824796e80057770b7",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Featured Articles"
+    },
+    {
+      "file": "featured-articles/index~start=7.html",
+      "sha256": "f501d5da25e24879f2a0df0d684cb1ad906238b35e4da38e447accb2eb0b384d",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=7",
+      "title": "Featured Articles"
+    },
+    {
+      "file": "illustration/index.html",
+      "sha256": "95174394ebd43c036310f3904b2dafd41e21e617cb03119b825f35824bff7fb5",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Illustration"
+    },
+    {
+      "file": "index.html",
+      "sha256": "9030fa0dab67d4de965c66ee7f42bac3dedd8909824753f795599739d4514101",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Revolutionary Joomla template for business and start-up - JA Nova"
+    },
+    {
+      "file": "index.php/about-us-2/contact/index.html",
+      "sha256": "da5f428d652a250a2ab044b3f90ff6c60cf31632281d9efff914db4057795fd5",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Contact"
+    },
+    {
+      "file": "it-infrastructure/index.html",
+      "sha256": "a6d97177d5a349a5e4fd76d01fb43e74d72476184efeef889933975e73082f58",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "IT infrastructure"
+    },
+    {
+      "file": "login-form/index.html",
+      "sha256": "a5522d975dbd126b87356d07346cd339b4c209317081159e589171f5308d26c7",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Login Form"
+    },
+    {
+      "file": "login-form/index~view=remind.html",
+      "sha256": "973b602dc06bcc539f267ae36b4bb2fae3edc9cb6f2f80e140ab2a46e453b848",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~view=remind",
+      "title": "Login Form"
+    },
+    {
+      "file": "login-form/index~view=reset.html",
+      "sha256": "98d9ee018e3181eb7d86b59881f229674d05a80d1ecaac92b47f95df182b8e54",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~view=reset",
+      "title": "Login Form"
+    },
+    {
+      "file": "mobile-application/index.html",
+      "sha256": "508bf37c610b2677182e22371d2e9a9dd91b6eb2f39e4bbfeccf2ff422aa4137",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Mobile Application"
+    },
+    {
+      "file": "offline-pages/index.html",
+      "sha256": "16ef81a9aba15bd9f5c9144a32c3aa98d68db7509ab54332e3fd908f0a36f128",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Offline Pages"
+    },
+    {
+      "file": "project/branding/design-system-ul-kit/index.html",
+      "sha256": "bfa504de47b82ed2942f0220e96e7330dd28e93f4b3e693ea1ab92ed9ef72bd0",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Design system &amp; Ul kit"
+    },
+    {
+      "file": "project/branding/index.html",
+      "sha256": "83082bc2bc8ad4cdb721d296a335e536296f5eeb43e3d2697be482b8ab6b8ded",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Branding"
+    },
+    {
+      "file": "project/branding/landing-page-design/index.html",
+      "sha256": "a7b836edcf32339c88fd7def32662548613ca10e4a4c692d525d6cd3c8305e95",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Landing page design"
+    },
+    {
+      "file": "project/branding/mobile-app-design/index.html",
+      "sha256": "d3181ca93158c2ba82dd205ec9c098b617f7cab0f7ac0ae9ec6e67e478f0263a",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Mobile app design"
+    },
+    {
+      "file": "project/branding/muckup-design/index.html",
+      "sha256": "b82fe02b968c5f3c3e27d274a726265a4cd911ff0065a5dcbef081dfbc8a2451",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Muckup design"
+    },
+    {
+      "file": "project/branding/realistic-scenarios/index.html",
+      "sha256": "9ded0c65bec57b94f253db136a36897a85dbd0338d2cccdd24ef521d0530c759",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Realistic scenarios"
+    },
+    {
+      "file": "project/branding/web-application-design/index.html",
+      "sha256": "d7b08dd76e212d7995ea4b737a16719a3b6430e686b888d7f8915d864029ceef",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Web Application Design"
+    },
+    {
+      "file": "project/illustration/email-newsletter-design/index.html",
+      "sha256": "e492dd42cd2e5d140903543dee95c4c7971e28c6e39cb34468bd2229cd1b1b74",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Email Newsletter Design"
+    },
+    {
+      "file": "project/illustration/event-invitation-design/index.html",
+      "sha256": "3bfa481cf5b9838d6997ba1e6af1c29acf989f1e3d647f125de32eea78b84dc6",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Event Invitation Design"
+    },
+    {
+      "file": "project/illustration/index.html",
+      "sha256": "e4cce3e972fd4df09cd7f07a00e61bc21b158cabbfff52d74c2f8dc178bb7798",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Illustration"
+    },
+    {
+      "file": "project/illustration/packaging-design/index.html",
+      "sha256": "7b281ccbfa91cf56af87ca9eb8ef14149f1b8cd9e5c1d7664c2b3c3e4375029f",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Packaging Design"
+    },
+    {
+      "file": "project/illustration/poster-banner-design/index.html",
+      "sha256": "7b9248525cae5fca56f40c0f03194891d3931b4c867e803d785e96b1c30d3602",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Poster &amp; Banner Design"
+    },
+    {
+      "file": "project/illustration/presentation-design/index.html",
+      "sha256": "f8f78905bba2df3f3ec4e4147abc055365e2bf0e61d1e2e22c6a94c8b7f63cc8",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Presentation Design"
+    },
+    {
+      "file": "project/index.html",
+      "sha256": "645fe34788f3e3574ccc5c483065f41895edd3a9dca9c451aa83e3be9613969c",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Project"
+    },
+    {
+      "file": "project/project-detail/index.html",
+      "sha256": "896c5d182617b111126a0f5e18326b0dd5a4d9f7ff252f5cd845f03669804902",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Brochure &amp; Flyer Design"
+    },
+    {
+      "file": "project/ui-ux-design/blog-design-layout/index.html",
+      "sha256": "7bd100f5d969d957c273b8a82b94d10acf20dfa45f45a3a74f50a10f93cc8466",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Blog Design &amp; Layout"
+    },
+    {
+      "file": "project/ui-ux-design/brand-identity-design/index.html",
+      "sha256": "6904cd69c2ad9bcda7e7704e6886f4b2418bf074896596b3e4f20360ac77233a",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Brand Identity Design"
+    },
+    {
+      "file": "project/ui-ux-design/corporate-website-design/index.html",
+      "sha256": "8328468308abf47709e938febf195d55d058b04fa0fe97d4a8086752de410630",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Corporate Website Design"
+    },
+    {
+      "file": "project/ui-ux-design/index.html",
+      "sha256": "4440419ae0663060cebf4dbab03ef2dcc51b9e36f374bd6fbe9b9503fa71e851",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "UI/UX design"
+    },
+    {
+      "file": "project/ui-ux-design/infographic-design/index.html",
+      "sha256": "b97885e4c33f61647c45d0f04f7d982c873146dcd314b8f91885e9409940b0a5",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Infographic Design"
+    },
+    {
+      "file": "project/ui-ux-design/logo-design-branding/index.html",
+      "sha256": "9e4c31dcd43a4cb65beb003feb57aa8a3755e92c538cecec2914a983d03150df",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Logo Design &amp; Branding"
+    },
+    {
+      "file": "project/ui-ux-design/social-media-graphics/index.html",
+      "sha256": "ae8dcc1280b37203f8631bc141b7f92b4e6b69ac1f6f90a136b89effd8f6ad77",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Social Media Graphics"
+    },
+    {
+      "file": "registration-form/index.html",
+      "sha256": "a3920da4374d598b34dd293c6b460379ffadea2d0325c612a8b74580c7dbdb8e",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Registration Form"
+    },
+    {
+      "file": "services/index.html",
+      "sha256": "ee8ee83da5a473ff2def6f706674ba7c6abd9be408bd06d0de493b86d228b5d1",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Services"
+    },
+    {
+      "file": "smart-search/index.html",
+      "sha256": "0c180dc2e298b1273372e3bb98165e8f93d0c60df12984733f7fb13f0491963d",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Smart Search"
+    },
+    {
+      "file": "tags/careers/index.html",
+      "sha256": "1f2ef68197def28b5f1354c46f0ebfa02e5854fbd7493b302aa7086c8463b943",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Careers"
+    },
+    {
+      "file": "tags/coding/index.html",
+      "sha256": "df8fc043c1233e4f448d7be8faceba13d53c7bead115f0dc94de37aada7d9ed0",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "coding"
+    },
+    {
+      "file": "tags/company/index.html",
+      "sha256": "700e6eb182a0829930c96edffd695937a11d1d1083413e02223aef9354ffa554",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Company"
+    },
+    {
+      "file": "tags/company/index~start=20.html",
+      "sha256": "620cc0524e0c913cef5c04b1a683aa8e6d8d397e8d3abe28a23e68186f95ddf1",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=20",
+      "title": "Company"
+    },
+    {
+      "file": "tags/computer/index.html",
+      "sha256": "24c0f5fa9dbb0698ddea66ce1a62fa5738504b438f54427d5ccc97698324cc8b",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "computer"
+    },
+    {
+      "file": "tags/computer/index~start=20.html",
+      "sha256": "f4a5f3161921a13c6b068dba796a5f638c1a056ea16b04c54abf826396319b76",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=20",
+      "title": "computer"
+    },
+    {
+      "file": "tags/design/index.html",
+      "sha256": "1f96b16894f0fd758f2df5502d02707fbbc54bf1293f5b9c95a1401f9bd84094",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Design"
+    },
+    {
+      "file": "tags/developer/index.html",
+      "sha256": "b6c012ee3337525b9c2b78ac44211f3af6e94999a4b23ded229d91d932175401",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "developer"
+    },
+    {
+      "file": "tags/developer/index~start=20.html",
+      "sha256": "5ffb999bd416dfe94bf0a2b1c4f1ff374379df84169513cc365e466ec2071dd7",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=20",
+      "title": "developer"
+    },
+    {
+      "file": "tags/devops-platform/index.html",
+      "sha256": "cd28c001b3e13a5488772b0c51340e05dcf30ecf8df475f5908623c4197a39ad",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "DevOps platform"
+    },
+    {
+      "file": "tags/devops/index.html",
+      "sha256": "107331020a66fd57e0f27c6b36d00bffb03ea05703eef21ced474cb873786126",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "DevOps"
+    },
+    {
+      "file": "tags/devops/index~start=20.html",
+      "sha256": "84c21d66b68d7af3d26c08c632fa441905fa021a7484596c861c01a59ac80ace",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index~start=20",
+      "title": "DevOps"
+    },
+    {
+      "file": "tags/digital/index.html",
+      "sha256": "d6c0e4d6a5faaaaf63771426f7f77b09af1f01ffe023289ca31b288cd955ae31",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "digital"
+    },
+    {
+      "file": "tags/index.html",
+      "sha256": "622a1e7d2020d685c4480c932dacf55264a1dd15c0466b00258245fe019f65ee",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Tags"
+    },
+    {
+      "file": "tags/news/index.html",
+      "sha256": "f816d772662f02c8f135928cec4dd5f363ee7eadabb01a3e12b316f43cf01a11",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "News"
+    },
+    {
+      "file": "tags/office/index.html",
+      "sha256": "6b91299ca4b3f5788a172b1598cad0e76f3ed89bd386c629fae2aff5062d5aa5",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "office"
+    },
+    {
+      "file": "tags/open-source/index.html",
+      "sha256": "0de8540719af0cfa6d121066acc8e21bd6ad5490c18b14b00302f9858057dd17",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Open source"
+    },
+    {
+      "file": "tags/programming/index.html",
+      "sha256": "198b5d29f7b094177dffa76b9c8a62292e6da5c1417518d6cd89c46031212356",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "programming"
+    },
+    {
+      "file": "tags/team/index.html",
+      "sha256": "dc67e93f949afebcb9ef9339db70925fa43ecdca08b78be9e84a2d6f106c6b49",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "team"
+    },
+    {
+      "file": "tags/technology/index.html",
+      "sha256": "ebdb5468f43c41cfbb72607e5a6de1ea5139a6271149a48274191b88153f9c51",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "technology"
+    },
+    {
+      "file": "typography/index.html",
+      "sha256": "cd236fe5a9a743b09798a683b3ce781b8d7fc174f05a2cb9f008e94264e2be7d",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Typography"
+    },
+    {
+      "file": "virtualization/index.html",
+      "sha256": "11fb632c96630aa311e873c79df1c56b483eb33259058ad429382c15b3c40e95",
+      "kind": "html",
+      "locale": "en-gb",
+      "page": "index",
+      "title": "Virtualization"
+    }
+  ],
+  "totals": {
+    "files": 329,
+    "bytes": 29204262,
+    "html": 113,
+    "byExt": {
+      ".html": 113,
+      ".json": 1,
+      ".jpg": 106,
+      ".png": 40,
+      ".css": 17,
+      ".js": 24,
+      ".svg": 1,
+      ".ttf": 7,
+      ".woff": 3,
+      ".woff2": 16,
+      ".ico": 1
+    },
+    "dataScripts": 0
+  }
 }

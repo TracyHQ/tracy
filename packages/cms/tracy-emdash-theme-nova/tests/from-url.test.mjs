@@ -188,7 +188,10 @@ test('pages that differ only by query string are kept apart', async () => {
     assert.match(readFileSync(join(out, 'blog', 'index~start=5.html'), 'utf8'), /page two/)
     const long = report.pages.filter((p) => p.url.includes('xxxxxxxx'))
     assert.equal(new Set(long.map((p) => p.file)).size, 2, 'two long queries, two files')
-    assert.deepEqual(long.map((p) => readFileSync(join(out, p.file), 'utf8').match(/Long query (one|two)/)[1]).sort(), ['one', 'two'])
+    assert.deepEqual(
+      long.map((p) => readFileSync(join(out, p.file), 'utf8').match(/Long query (one|two)/)[1]).sort(),
+      ['one', 'two']
+    )
     assert.match(readFileSync(join(out, 'blog', 'index~a=b-c.html'), 'utf8'), /First of two/)
     assert.match(readFileSync(join(out, 'blog', 'index~a-b=c.html'), 'utf8'), /Second of two/)
     assert.ok(report.pages.some((p) => p.file === 'blog/index~start=5.html' && p.url.endsWith('?start=5')))

@@ -14,7 +14,16 @@
  * The classes are drawn in `src/styles/blocks/features.css` (section of the same name), which every block can use.
  */
 
-export type Bg = 'normal' | 'light' | 'purple' | 'purple-light' | 'green' | 'green-light' | 'yellow' | 'red' | 'cyan'
+export type Bg =
+  | 'normal'
+  | 'light'
+  | 'purple'
+  | 'purple-light'
+  | 'green'
+  | 'green-light'
+  | 'yellow'
+  | 'red'
+  | 'cyan'
 
 /** Background band of each section slug, as the source module renders it. */
 export const SECTION_BG: Record<string, Bg> = {
@@ -86,4 +95,5 @@ export function sectionStyle(slug: string, info?: SectionInfoLike | null): Secti
 }
 
 /** Shorthand: the wrapper class string of a section. */
-export const sectionWrap = (slug: string, info?: SectionInfoLike | null): string => sectionStyle(slug, info).wrap
+export const sectionWrap = (slug: string, info?: SectionInfoLike | null): string =>
+  sectionStyle(slug, info).wrap

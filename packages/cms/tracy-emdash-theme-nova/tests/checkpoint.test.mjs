@@ -11,7 +11,8 @@ import { checkpoint, DEFAULT_INPUTS, PHASE_INPUTS, PHASES } from '../tools/check
 import { gateRows } from '../tools/gates.mjs'
 
 const TOOLS = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../tools')
-const cli = (tool, args, cwd) => spawnSync(process.execPath, [path.join(TOOLS, tool), ...args], { cwd, encoding: 'utf8' })
+const cli = (tool, args, cwd) =>
+  spawnSync(process.execPath, [path.join(TOOLS, tool), ...args], { cwd, encoding: 'utf8' })
 
 function template() {
   const root = mkdtempSync(path.join(tmpdir(), 'checkpoint-'))
@@ -39,7 +40,10 @@ describe('checkpoint.mjs — phase evidence and the inputs that invalidate it', 
       assert.equal(s.next, 'P0')
       assert.throws(() => checkpoint(file, 'complete', ['P2', ev(root, 'P2')]), /P0 is not complete/)
       assert.throws(() => checkpoint(file, 'complete', ['P0']), /evidence/)
-      assert.throws(() => checkpoint(file, 'complete', ['P0', path.join(tmpdir(), 'x.md')]), /beside the checkpoint/)
+      assert.throws(
+        () => checkpoint(file, 'complete', ['P0', path.join(tmpdir(), 'x.md')]),
+        /beside the checkpoint/
+      )
       for (const p of ['P0', 'P1', 'P2', 'P3']) s = checkpoint(file, 'complete', [p, ev(root, p)])
       assert.equal(s.next, 'P4')
       assert.equal(s.phases.filter((p) => p.status === 'complete').length, 4)
@@ -99,12 +103,17 @@ describe('checkpoint.mjs — phase evidence and the inputs that invalidate it', 
     try {
       const file = path.join(root, 'checkpoint.json')
       checkpoint(file, 'init')
-      for (const p of PHASES.slice(0, PHASES.indexOf('P7') + 1)) checkpoint(file, 'complete', [p, ev(root, p)])
+      for (const p of PHASES.slice(0, PHASES.indexOf('P7') + 1))
+        checkpoint(file, 'complete', [p, ev(root, p)])
       assert.equal(checkpoint(file, 'status').next, 'P8')
-      writeFileSync(path.join(root, 'qa.contract.json'), '{"revision":2,"layouts":[{"id":"News","family":"list"}]}\n')
+      writeFileSync(
+        path.join(root, 'qa.contract.json'),
+        '{"revision":2,"layouts":[{"id":"News","family":"list"}]}\n'
+      )
       let s = checkpoint(file, 'status')
       assert.deepEqual(staleOf(s), ['P3', 'P5', 'P7'])
-      for (const p of ['P0', 'P1', 'P2', 'P4', 'P4.5', 'P4.6', 'P6']) assert.equal(statuses(s)[p], 'complete', p)
+      for (const p of ['P0', 'P1', 'P2', 'P4', 'P4.5', 'P4.6', 'P6'])
+        assert.equal(statuses(s)[p], 'complete', p)
       assert.equal(s.phases.find((p) => p.phase === 'P3').reason, 'input contract changed')
       assert.equal(s.next, 'P3')
       // the Fast Gate verdict is rerun and P3 recorded again: P4–P7 keep their records
@@ -123,24 +132,22 @@ describe('checkpoint.mjs — phase evidence and the inputs that invalidate it', 
   it('every phase that reads an input lists it; the first reader of each is the phase SKILL.md builds it for', () => {
     for (const keys of Object.values(PHASE_INPUTS)) for (const k of keys) assert.ok(DEFAULT_INPUTS[k], k)
     const first = (k) => PHASES.find((p) => PHASE_INPUTS[p].includes(k))
-    assert.deepEqual(
-      Object.fromEntries(Object.keys(DEFAULT_INPUTS).map((k) => [k, first(k)])),
-      {
-        inventory: 'P1',
-        lockfile: 'P0',
-        config: 'P2',
-        'site-model': 'P2',
-        seed: 'P2',
-        'content-api-map': 'P2',
-        contract: 'P3',
-        questions: 'P4.5',
-        personalize: 'P4.5'
-      }
-    )
+    assert.deepEqual(Object.fromEntries(Object.keys(DEFAULT_INPUTS).map((k) => [k, first(k)])), {
+      inventory: 'P1',
+      lockfile: 'P0',
+      config: 'P2',
+      'site-model': 'P2',
+      seed: 'P2',
+      'content-api-map': 'P2',
+      contract: 'P3',
+      questions: 'P4.5',
+      personalize: 'P4.5'
+    })
     // the Fast Gate runs in P3 and P5, the acceptance run in P7 and the package in P8: all read the contract
     for (const p of ['P3', 'P5', 'P7', 'P8']) assert.ok(PHASE_INPUTS[p].includes('contract'), p)
     // template.config.json is read by every phase that builds or measures the site
-    for (const p of ['P2', 'P3', 'P4', 'P4.6', 'P5', 'P7', 'P8']) assert.ok(PHASE_INPUTS[p].includes('config'), p)
+    for (const p of ['P2', 'P3', 'P4', 'P4.6', 'P5', 'P7', 'P8'])
+      assert.ok(PHASE_INPUTS[p].includes('config'), p)
   })
 
   it('an absent input is recorded as absent, and its appearance is a change', () => {
@@ -153,7 +160,10 @@ describe('checkpoint.mjs — phase evidence and the inputs that invalidate it', 
       assert.equal(checkpoint(file, 'status').next, null)
       writeFileSync(path.join(root, 'qa.contract.json'), '{}\n')
       assert.equal(checkpoint(file, 'status').next, 'P7')
-      assert.throws(() => checkpoint(path.join(root, 'other.json'), 'init', [], { phases: 'P1,P0' }), /ordered/)
+      assert.throws(
+        () => checkpoint(path.join(root, 'other.json'), 'init', [], { phases: 'P1,P0' }),
+        /ordered/
+      )
       assert.throws(() => checkpoint(path.join(root, 'other.json'), 'init', [], { phases: 'P9' }), /ordered/)
     } finally {
       rmSync(root, { recursive: true, force: true })
@@ -179,7 +189,11 @@ describe('checkpoint.mjs — phase evidence and the inputs that invalidate it', 
       assert.match(r.stdout, /stale=P0\(input lockfile changed\)/)
       r = cli('checkpoint.mjs', ['status', 'checkpoint.json', '--json'], root)
       assert.equal(JSON.parse(r.stdout).next, 'P0')
-      assert.equal(cli('checkpoint.mjs', ['init', 'checkpoint.json'], root).status, 2, 'init never overwrites')
+      assert.equal(
+        cli('checkpoint.mjs', ['init', 'checkpoint.json'], root).status,
+        2,
+        'init never overwrites'
+      )
     } finally {
       rmSync(root, { recursive: true, force: true })
     }
@@ -222,14 +236,28 @@ describe('gates.mjs — one line per gate of a qa.mjs report', () => {
       )
       assert.equal(rows[1].reason, '3 finding(s) (+1 more)')
       assert.equal(rows[1].file, path.join(dir, 'visual', 'VISUAL.md'))
-      assert.equal(rows[2].file, path.join(dir, 'REPORT.md'), 'a detail file that does not exist falls back to REPORT.md')
+      assert.equal(
+        rows[2].file,
+        path.join(dir, 'REPORT.md'),
+        'a detail file that does not exist falls back to REPORT.md'
+      )
       let r = cli('gates.mjs', [dir], dir)
       assert.equal(r.status, 1)
       const lines = r.stdout.trim().split('\n')
       assert.equal(lines.length, 6)
-      assert.equal(lines[1], `visual | fail | 3 finding(s) (+1 more) | ${path.join(dir, 'visual', 'VISUAL.md')}`)
-      assert.match(lines[4], /^email \| not-applicable \| no forms %7C none \| /, 'a | inside a field keeps the row shape')
-      assert.match(lines[5], /^gates: status=fail pass=1 fail=1 pending=2 not-applicable=1 -> .*report\.json$/)
+      assert.equal(
+        lines[1],
+        `visual | fail | 3 finding(s) (+1 more) | ${path.join(dir, 'visual', 'VISUAL.md')}`
+      )
+      assert.match(
+        lines[4],
+        /^email \| not-applicable \| no forms %7C none \| /,
+        'a | inside a field keeps the row shape'
+      )
+      assert.match(
+        lines[5],
+        /^gates: status=fail pass=1 fail=1 pending=2 not-applicable=1 -> .*report\.json$/
+      )
       const report = JSON.parse(readFileSync(path.join(dir, 'report.json'), 'utf8'))
       report.status = 'pass'
       for (const g of Object.values(report.gates)) if (g.status !== 'not-applicable') g.status = 'pass'
@@ -237,7 +265,12 @@ describe('gates.mjs — one line per gate of a qa.mjs report', () => {
       r = cli('gates.mjs', [path.join(dir, 'report.json')], dir)
       assert.equal(r.status, 0, r.stdout + r.stderr)
       assert.equal(cli('gates.mjs', [path.join(dir, 'missing')], dir).status, 2)
-      assert.equal(JSON.parse(execFileSync(process.execPath, [path.join(TOOLS, 'gates.mjs'), dir, '--json'], { encoding: 'utf8' })).rows.length, 5)
+      assert.equal(
+        JSON.parse(
+          execFileSync(process.execPath, [path.join(TOOLS, 'gates.mjs'), dir, '--json'], { encoding: 'utf8' })
+        ).rows.length,
+        5
+      )
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }

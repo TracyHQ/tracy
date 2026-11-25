@@ -4,7 +4,11 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { nameRulesOf, replaceDeep } from '../tools/personalize.mjs'
 
-const data = { title: 'RES Bar & Restaurant', body: 'RESERVATIONS open. FRESH BEER at RES, daily. (RES)', url: '/res' }
+const data = {
+  title: 'RES Bar & Restaurant',
+  body: 'RESERVATIONS open. FRESH BEER at RES, daily. (RES)',
+  url: '/res'
+}
 
 test('a plain rule replaces every occurrence, inside longer words too (the old behaviour is unchanged)', () => {
   const { rules } = nameRulesOf({ replace: [{ find: 'RES', with: 'Oak' }] }, {})
