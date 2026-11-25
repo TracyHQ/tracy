@@ -390,3 +390,24 @@ a.nv-social-item:hover { opacity: 0.8; }
 @media (min-width: 576px) { .nv-copyright { margin-top: 32px; padding-top: 32px; } }
 @media (min-width: 992px) { .nv-copyright { margin-top: 64px; } }
 .nv-copyright p { margin: 0; }
+
+/* the demo logo (dark ink on transparent) lifted in dark mode by its file name; a logo the customer uploaded is never touched */
+html[data-theme="dark"] .nv-logo-img[src$="/brand/logo.png"] { filter: invert(1) hue-rotate(180deg) brightness(1.1); }
+
+/* under a worn design system the demo logo is redrawn as a mask in the system's own ink, so it stays visible on any ground; a logo the customer uploaded is never masked */
+.nv-logo-ink { display: none; }
+html[data-ds-worn] .nv-logo-img[src$="/brand/logo.png"], html[data-ds-worn] .nv-logo-img[src$="/brand/logo-light.png"] { display: none; }
+html[data-ds-worn] .nv-logo-ink { display: block; width: 162px; height: 48px; -webkit-mask: 0 0 / 100% 100% no-repeat; mask: 0 0 / 100% 100% no-repeat; }
+html[data-ds-worn] .nv-logo-ink--logo { background: var(--color-heading); -webkit-mask-image: url("/brand/logo.png"); mask-image: url("/brand/logo.png"); }
+html[data-ds-worn] .nv-logo-ink--logo-light { background: var(--color-on-ink); -webkit-mask-image: url("/brand/logo-light.png"); mask-image: url("/brand/logo-light.png"); }
+
+/* the source columns hold 3, 4 and 4 links; a column of this template keeps that many rows of room, so the footer is as tall as the source's
+   whatever number of links a customer keeps (a link row is 0.8rem padding + a 1.5 line of 0.9375rem) */
+.nv-footer-col.is-rows-3 ul { min-height: calc(3 * (0.8rem + 1.40625rem)); }
+.nv-footer-col.is-rows-4 ul { min-height: calc(4 * (0.8rem + 1.40625rem)); }
+
+/* the source's copyright block holds two lines (the copyright and Joomla's credit line); this template prints one and keeps the room of two, so the footer is as tall as the source's */
+.nv-copyright .nv-container { min-height: 42px; }
+@media (max-width: 420px) { .nv-copyright .nv-container { min-height: 63px; } }
+/* the footer logo is 150px wide at every width */
+.nv-footer-logo .nv-logo-img { max-height: none; width: 150px; height: auto; }

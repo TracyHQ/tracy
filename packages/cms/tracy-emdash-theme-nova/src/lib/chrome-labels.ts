@@ -23,7 +23,6 @@ export const LABEL_FIELDS: Record<string, keyof UiWords> = {
   mega_team_all_label: 'viewAllTeam',
   footer_product_title: 'product',
   footer_resources_title: 'resources',
-  footer_company_title: 'company',
   social_heading: 'findUsOnline',
   breadcrumb_home: 'home',
   not_found_title: 'pageNotFound',

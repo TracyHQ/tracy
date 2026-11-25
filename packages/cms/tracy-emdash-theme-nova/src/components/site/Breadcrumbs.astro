@@ -39,8 +39,8 @@ function derive(): { label: string; url: string }[] {
       const parent = mine ? chain(chrome.primary, '/services') : null
       return mine && parent ? [...parent, ...mine] : null
     })() ??
-    chain(chrome.footerWork, path) ??
-    chain(chrome.footerCompany, path)
+    chain(chrome.footerContent, path) ??
+    chain(chrome.footerPages, path)
   return (found ?? []).map((i) => ({ label: i.label, url: i.url }))
 }
 const crumbs = (trail ?? derive()).filter((c) => c.label)

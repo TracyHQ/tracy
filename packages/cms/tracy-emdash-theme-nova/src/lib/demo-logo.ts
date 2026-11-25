@@ -1,5 +1,6 @@
-// The demo's own logo files (public/brand/): what the header draws while the customer has not given a logo. They are
-// dark ink on transparent, so `global.css` lifts them in dark mode by these file names -- never by a selector that
-// would catch a logo the customer uploaded.
+// The demo's own logo files (public/brand/): what the header and the footer draw while the customer has not given a logo (the files
+// of the source's `images/joomlart/logo/item-1.png` and `item-2.png`). `logo.png` is the lockup with dark ink for light grounds: `global.css`
+// lifts it in dark mode by this file name, never by a selector that would catch a logo the customer uploaded. `logo-light.png` is white,
+// for the footer, which is dark in both themes.
 export const DEMO_LOGO = '/brand/logo.png'
-export const DEMO_LOGO_SMALL = '/brand/logo.png'
+export const DEMO_LOGO_LIGHT = '/brand/logo-light.png'

@@ -10,7 +10,7 @@ import { href } from '@/lib/i18n'
 import { brandLogos, logoSpots } from '@/lib/brand'
 import { getSiteSettings } from 'emdash'
 import BrandLogo from '@/components/site/BrandLogo.astro'
-import NovaLogo from '@/components/site/NovaLogo.astro'
+import { DEMO_LOGO } from '@/lib/demo-logo'
 import ChromeIcon from '@/components/site/ChromeIcon.astro'
 import ThemeToggle from '@/components/site/ThemeToggle.astro'
 import OffCanvas from '@/components/site/OffCanvas.astro'
@@ -49,7 +49,7 @@ const email = String(site.header_email ?? '').trim()
 			<div class="nv-header-logo">
 				<a class="nv-brand" href={href(locale, '/')} aria-label={site.brand_name}>
 					<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="nv-logo-img">
-						<NovaLogo text={site.logo_text} stamp={$c('logo_text')} />
+						<img class="nv-logo-img" src={DEMO_LOGO} alt={site.brand_name} width="162" height="48" /><span class="nv-logo-ink nv-logo-ink--logo" aria-hidden="true"></span>
 					</BrandLogo>
 				</a>
 			</div>

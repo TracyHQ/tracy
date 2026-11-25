@@ -28,8 +28,9 @@ export interface Chrome {
   entry: ChromeEntry | null
   primary: ChromeMenuItem[]
   /** The two footer link columns; each has its own title in `site`. */
-  footerCompany: ChromeMenuItem[]
-  footerWork: ChromeMenuItem[]
+  footerUsers: ChromeMenuItem[]
+  footerPages: ChromeMenuItem[]
+  footerContent: ChromeMenuItem[]
   /** The side menu of the service pages. */
   services: ChromeMenuItem[]
   /** The `social` entries by slug (`social`: footer row and contact page). */
@@ -48,11 +49,12 @@ export const networkOf = (fontIcon: string | undefined, title?: string): string 
     .toLowerCase() || String(title ?? '').toLowerCase()
 
 export async function loadChrome(locale: Locale): Promise<Chrome> {
-  const [chromeRes, primary, company, work, services, socialRes] = await Promise.all([
+  const [chromeRes, primary, users, pages, content, services, socialRes] = await Promise.all([
     getEmDashEntry('chrome', 'chrome', { locale }),
     getMenu('primary', { locale }),
-    getMenu('footer-company', { locale }),
-    getMenu('footer-work', { locale }),
+    getMenu('footer-users', { locale }),
+    getMenu('footer-pages', { locale }),
+    getMenu('footer-content', { locale }),
     getMenu('services', { locale }),
     getEmDashCollection('social', { locale, status: 'published' })
   ])
@@ -71,8 +73,9 @@ export async function loadChrome(locale: Locale): Promise<Chrome> {
     site: { ...data, brand_name: data.brand_name ?? 'JA Nova', lang: uiTag(locale) },
     entry: chromeRes.entry ? { id: data.id, slug: chromeRes.entry.id } : null,
     primary: items(primary?.items),
-    footerCompany: items(company?.items),
-    footerWork: items(work?.items),
+    footerUsers: items(users?.items),
+    footerPages: items(pages?.items),
+    footerContent: items(content?.items),
     services: items(services?.items),
     social
   }

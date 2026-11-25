@@ -1106,18 +1106,18 @@
 					"type": "string"
 				},
 				{
-					"slug": "footer_company_title",
-					"label": "Footer company title",
+					"slug": "footer_users_title",
+					"label": "Footer users title",
 					"type": "string"
 				},
 				{
-					"slug": "footer_work_title",
-					"label": "Footer work title",
+					"slug": "footer_pages_title",
+					"label": "Footer pages title",
 					"type": "string"
 				},
 				{
-					"slug": "footer_services_title",
-					"label": "Footer services title",
+					"slug": "footer_content_title",
+					"label": "Footer content title",
 					"type": "string"
 				},
 				{
@@ -1333,11 +1333,6 @@
 				{
 					"slug": "breadcrumb_label",
 					"label": "Breadcrumb label",
-					"type": "string"
-				},
-				{
-					"slug": "logo_text",
-					"label": "Logo text",
 					"type": "string"
 				},
 				{
@@ -1735,32 +1730,29 @@
 			]
 		},
 		{
-			"id": "menu:footer-company:en",
-			"name": "footer-company",
-			"label": "Company",
+			"id": "menu:footer-users:en",
+			"name": "footer-users",
+			"label": "Users",
+			"locale": "en",
+			"items": []
+		},
+		{
+			"id": "menu:footer-pages:en",
+			"name": "footer-pages",
+			"label": "Pages",
 			"locale": "en",
 			"items": [
 				{
 					"type": "custom",
-					"label": "About Us",
-					"url": "/about"
-				},
-				{
-					"type": "custom",
-					"label": "Career",
-					"url": "/career"
-				},
-				{
-					"type": "custom",
-					"label": "Contact",
-					"url": "/contact"
+					"label": "Smart Search",
+					"url": "/search"
 				}
 			]
 		},
 		{
-			"id": "menu:footer-work:en",
-			"name": "footer-work",
-			"label": "Work",
+			"id": "menu:footer-content:en",
+			"name": "footer-content",
+			"label": "Content",
 			"locale": "en",
 			"items": [
 				{
@@ -1770,18 +1762,8 @@
 				},
 				{
 					"type": "custom",
-					"label": "Branding",
-					"url": "/project/branding"
-				},
-				{
-					"type": "custom",
-					"label": "UI/UX design",
-					"url": "/project/ui-ux-design"
-				},
-				{
-					"type": "custom",
-					"label": "Illustration",
-					"url": "/project/illustration"
+					"label": "Blog Detail",
+					"url": "/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning"
 				}
 			]
 		}
@@ -15168,9 +15150,9 @@
 					"header_phone": "+1-202-555-0160",
 					"header_email": "hello@example.invalid",
 					"footer_about": "You can find experts from all walks of life from TikTok stars to Lawyers",
-					"footer_company_title": "Company",
-					"footer_work_title": "Work",
-					"footer_services_title": "Services",
+					"footer_users_title": "Users",
+					"footer_pages_title": "Pages",
+					"footer_content_title": "Content",
 					"copyright": "Copyright © {year} {name}. All Rights Reserved.",
 					"skip_label": "Skip to content",
 					"menu_label": "Menu",
@@ -15211,7 +15193,6 @@
 					"play_video_label": "Play video",
 					"nav_label": "Primary",
 					"breadcrumb_label": "Breadcrumbs",
-					"logo_text": "Nova",
 					"all_projects_label": "All project",
 					"project_tabs_title": "We have an experienced team\nof production",
 					"project_tabs_nav_label": "Project categories",

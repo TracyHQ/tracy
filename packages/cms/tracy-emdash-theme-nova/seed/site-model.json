@@ -868,15 +868,15 @@
           "type": "text"
         },
         {
-          "name": "footer_company_title",
+          "name": "footer_users_title",
           "type": "text"
         },
         {
-          "name": "footer_work_title",
+          "name": "footer_pages_title",
           "type": "text"
         },
         {
-          "name": "footer_services_title",
+          "name": "footer_content_title",
           "type": "text"
         },
         {
@@ -1049,10 +1049,6 @@
         },
         {
           "name": "breadcrumb_label",
-          "type": "text"
-        },
-        {
-          "name": "logo_text",
           "type": "text"
         },
         {
@@ -3864,9 +3860,9 @@
         "header_phone": "+1-202-555-0160",
         "header_email": "hello@example.invalid",
         "footer_about": "You can find experts from all walks of life from TikTok stars to Lawyers",
-        "footer_company_title": "Company",
-        "footer_work_title": "Work",
-        "footer_services_title": "Services",
+        "footer_users_title": "Users",
+        "footer_pages_title": "Pages",
+        "footer_content_title": "Content",
         "copyright": "Copyright © {year} {name}. All Rights Reserved.",
         "skip_label": "Skip to content",
         "menu_label": "Menu",
@@ -3907,7 +3903,6 @@
         "play_video_label": "Play video",
         "nav_label": "Primary",
         "breadcrumb_label": "Breadcrumbs",
-        "logo_text": "Nova",
         "all_projects_label": "All project",
         "project_tabs_title": "We have an experienced team\nof production",
         "project_tabs_nav_label": "Project categories",
@@ -4113,35 +4108,30 @@
       ]
     },
     {
-      "name": "footer-company",
+      "name": "footer-users",
       "label": {
-        "en": "Company"
+        "en": "Users"
+      },
+      "items": []
+    },
+    {
+      "name": "footer-pages",
+      "label": {
+        "en": "Pages"
       },
       "items": [
         {
           "label": {
-            "en": "About Us"
+            "en": "Smart Search"
           },
-          "path": "/about"
-        },
-        {
-          "label": {
-            "en": "Career"
-          },
-          "path": "/career"
-        },
-        {
-          "label": {
-            "en": "Contact"
-          },
-          "path": "/contact"
+          "path": "/search"
         }
       ]
     },
     {
-      "name": "footer-work",
+      "name": "footer-content",
       "label": {
-        "en": "Work"
+        "en": "Content"
       },
       "items": [
         {
@@ -4152,21 +4142,9 @@
         },
         {
           "label": {
-            "en": "Branding"
+            "en": "Blog Detail"
           },
-          "path": "/project/branding"
-        },
-        {
-          "label": {
-            "en": "UI/UX design"
-          },
-          "path": "/project/ui-ux-design"
-        },
-        {
-          "label": {
-            "en": "Illustration"
-          },
-          "path": "/project/illustration"
+          "path": "/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning"
         }
       ]
     }
@@ -4226,6 +4204,11 @@
     },
     {
       "path": "/blog",
+      "kind": "list",
+      "type": "posts"
+    },
+    {
+      "path": "/search",
       "kind": "list",
       "type": "posts"
     },

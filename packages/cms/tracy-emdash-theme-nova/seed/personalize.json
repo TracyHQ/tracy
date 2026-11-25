@@ -23,12 +23,6 @@
     {
       "collection": "chrome",
       "slug": "chrome",
-      "field": "logo_text",
-      "value": "{name}"
-    },
-    {
-      "collection": "chrome",
-      "slug": "chrome",
       "field": "copyright",
       "value": {
         "en": "Copyright © {year} {name}. All Rights Reserved.",

@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-24T23:45:06.355Z",
+	"generatedAt": "2026-11-25T01:14:24.286Z",
 	"fields": {
 		"pages.title": {
 			"source": "text",
@@ -681,20 +681,20 @@
 			"target": "string",
 			"label": "Footer about"
 		},
-		"chrome.footer_company_title": {
+		"chrome.footer_users_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Footer company title"
+			"label": "Footer users title"
 		},
-		"chrome.footer_work_title": {
+		"chrome.footer_pages_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Footer work title"
+			"label": "Footer pages title"
 		},
-		"chrome.footer_services_title": {
+		"chrome.footer_content_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Footer services title"
+			"label": "Footer content title"
 		},
 		"chrome.copyright": {
 			"source": "text",
@@ -910,11 +910,6 @@
 			"source": "text",
 			"target": "string",
 			"label": "Breadcrumb label"
-		},
-		"chrome.logo_text": {
-			"source": "text",
-			"target": "string",
-			"label": "Logo text"
 		},
 		"chrome.all_projects_label": {
 			"source": "text",

@@ -82,6 +82,10 @@
       "type": "posts"
     },
     {
+      "path": "/search",
+      "type": "posts"
+    },
+    {
       "path": "/project/branding",
       "type": "posts"
     },

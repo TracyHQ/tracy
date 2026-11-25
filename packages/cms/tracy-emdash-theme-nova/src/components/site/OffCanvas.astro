@@ -10,7 +10,7 @@ import { brandLogos, logoSpots } from '@/lib/brand'
 import { getSiteSettings } from 'emdash'
 import { dataHref } from '@/lib/data-links'
 import BrandLogo from '@/components/site/BrandLogo.astro'
-import NovaLogo from '@/components/site/NovaLogo.astro'
+import { DEMO_LOGO } from '@/lib/demo-logo'
 import ChromeIcon from '@/components/site/ChromeIcon.astro'
 
 interface Props {
@@ -37,7 +37,7 @@ const active = (item: ChromeMenuItem): boolean => {
 	<div class="nv-oc-head">
 		<a class="nv-brand" href={href(locale, '/')} aria-label={site.brand_name}>
 			<BrandLogo spots={logoSpots(logos, 'themed')} alt={logos.alt || site.brand_name} imgClass="nv-logo-img">
-				<NovaLogo text={site.logo_text} />
+				<img class="nv-logo-img" src={DEMO_LOGO} alt={site.brand_name} width="162" height="48" /><span class="nv-logo-ink nv-logo-ink--logo" aria-hidden="true"></span>
 			</BrandLogo>
 		</a>
 		<button type="button" class="nv-oc-close" data-nv-oc-close aria-label={site.close_label} {...$c('close_label')}>

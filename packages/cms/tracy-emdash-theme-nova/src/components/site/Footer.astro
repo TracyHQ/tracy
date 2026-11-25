@@ -16,7 +16,7 @@ import { dataHref } from '@/lib/data-links'
 import { section } from '@/lib/content'
 import layout from '@/lib/page-layout.json'
 import BrandLogo from '@/components/site/BrandLogo.astro'
-import NovaLogo from '@/components/site/NovaLogo.astro'
+import { DEMO_LOGO_LIGHT } from '@/lib/demo-logo'
 import ChromeIcon from '@/components/site/ChromeIcon.astro'
 import Cta from '@/components/blocks/Cta.astro'
 
@@ -30,27 +30,15 @@ const settings = await getSiteSettings()
 const logos = brandLogos(settings, site.logo_dark, site.brand_name)
 const copyright = fill(site.copyright, { year: new Date().getUTCFullYear(), name: site.brand_name })
 const live = await liveLinks(Astro.request, locale, [
-  ...menuUrls(chrome.footerCompany),
-  ...menuUrls(chrome.footerWork),
-  ...menuUrls(chrome.services)
+  ...menuUrls(chrome.footerUsers),
+  ...menuUrls(chrome.footerPages),
+  ...menuUrls(chrome.footerContent)
 ])
 const own = (url: string) => (url ? dataHref(url, (p) => href(locale, p)) : '')
 const columns: { title: string; titleField: string; items: ChromeMenuItem[] }[] = [
-  {
-    title: site.footer_company_title,
-    titleField: 'footer_company_title',
-    items: pruneMenu(chrome.footerCompany, live)
-  },
-  {
-    title: site.footer_work_title,
-    titleField: 'footer_work_title',
-    items: pruneMenu(chrome.footerWork, live)
-  },
-  {
-    title: site.footer_services_title,
-    titleField: 'footer_services_title',
-    items: pruneMenu(chrome.services, live)
-  }
+  { title: site.footer_users_title, titleField: 'footer_users_title', items: pruneMenu(chrome.footerUsers, live) },
+  { title: site.footer_pages_title, titleField: 'footer_pages_title', items: pruneMenu(chrome.footerPages, live) },
+  { title: site.footer_content_title, titleField: 'footer_content_title', items: pruneMenu(chrome.footerContent, live) }
 ]
 const social = chrome.social['social']
 const ctaInfo = (
@@ -66,7 +54,7 @@ const ctaRow = await section('cta', 'cta-contact', locale)
 			<div class="nv-footer-col nv-footer-about">
 				<a class="nv-brand nv-footer-logo" href={href(locale, '/')} aria-label={site.brand_name}>
 					<BrandLogo spots={logoSpots(logos, 'dark')} alt={logos.alt || site.brand_name} imgClass="nv-logo-img">
-						<NovaLogo text={site.logo_text} stamp={$c('logo_text')} />
+						<img class="nv-logo-img" src={DEMO_LOGO_LIGHT} alt={site.brand_name} width="162" height="48" /><span class="nv-logo-ink nv-logo-ink--logo-light" aria-hidden="true"></span>
 					</BrandLogo>
 				</a>
 				<p {...$c('footer_about')}>{site.footer_about}</p>
@@ -87,8 +75,8 @@ const ctaRow = await section('cta', 'cta-contact', locale)
 					</div>
 				)}
 			</div>
-			{columns.map((col) => (
-				<div class="nv-footer-col">
+			{columns.map((col, i) => (
+				<div class:list={['nv-footer-col', i === 0 ? 'is-rows-3' : 'is-rows-4']}>
 					<h3 class="nv-footer-title" {...$c(col.titleField)}>{col.title}</h3>
 					<nav aria-label={col.title}>
 						<ul>

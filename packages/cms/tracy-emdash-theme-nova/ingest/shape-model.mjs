@@ -314,6 +314,7 @@ model.routes = [
             : r
     ),
   { path: '/blog', kind: 'list', type: 'posts' },
+  { path: '/search', kind: 'list', type: 'posts' },
   { path: '/project/branding', kind: 'list', type: 'posts' },
   { path: '/project/ui-ux-design', kind: 'list', type: 'posts' },
   { path: '/project/illustration', kind: 'list', type: 'posts' }
@@ -339,17 +340,11 @@ const leaf = (label, path) => ({ label: { en: label }, path })
 model.menus = [
   { ...main, name: 'primary', label: { en: 'Primary' }, items: main.items.map(fixItem) },
   { ...services, name: 'services', label: { en: 'Services' }, items: services.items.map(fixItem) },
-  mk('footer-company', 'Company', [
-    leaf('About Us', '/about'),
-    leaf('Career', '/career'),
-    leaf('Contact', '/contact')
-  ]),
-  mk('footer-work', 'Work', [
-    leaf('Blog', '/blog'),
-    leaf('Branding', '/project/branding'),
-    leaf('UI/UX design', '/project/ui-ux-design'),
-    leaf('Illustration', '/project/illustration')
-  ])
+  // the WordPress port 1.1.13 keeps the three Joomla footer columns (Users, Pages, Content) and points them at its own pages; this template
+  // keeps the titles and links only the pages it has (DECISIONS lead decision 2): a column with no page prints nothing until a link is added.
+  mk('footer-users', 'Users', []),
+  mk('footer-pages', 'Pages', [leaf('Smart Search', '/search')]),
+  mk('footer-content', 'Content', [leaf('Blog', '/blog'), leaf('Blog Detail', '/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning')])
 ]
 // the project detail menu item points at a project post
 const pd = main.items.flatMap((i) => i.children ?? []).find((c) => c.path === '/project/project-detail')
@@ -380,9 +375,9 @@ model.types.push({
     'header_phone',
     'header_email',
     'footer_about',
-    'footer_company_title',
-    'footer_work_title',
-    'footer_services_title',
+    'footer_users_title',
+    'footer_pages_title',
+    'footer_content_title',
     'copyright',
     'skip_label',
     'menu_label',
@@ -437,9 +432,9 @@ model.records.push({
     header_phone: phone,
     header_email: email,
     footer_about: footerLines.join(' '),
-    footer_company_title: 'Company',
-    footer_work_title: 'Work',
-    footer_services_title: 'Services',
+    footer_users_title: 'Users',
+    footer_pages_title: 'Pages',
+    footer_content_title: 'Content',
     copyright: 'Copyright © {year} {name}. All Rights Reserved.',
     skip_label: 'Skip to content',
     menu_label: 'Menu',
