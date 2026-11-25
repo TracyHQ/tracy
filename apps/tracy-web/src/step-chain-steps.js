@@ -17,8 +17,9 @@ import { brandRunDir } from './brand-step/brand-wiring.js'
 import { hostCall } from './host/client.js'
 import { CHAIN_BENCH_CHECK_FAILED, chainBenchFailure } from './lib/chain-bench-verdict.js'
 import { openContentMap } from './lib/content-map-source.js'
-import { defaultContracts } from './lib/contracts.js'
+import { contractFor, defaultContracts } from './lib/contracts.js'
 import { readReleases, templateOfTag } from './lib/quickstart-releases.js'
+import { kitContracts } from './lib/template-kit-contracts.js'
 import { openKit, readableKits } from './lib/template-kit-source.js'
 import { demoSelfNames } from './ops/quickstarts.js'
 import { contractBaselineStore } from './site-check/demo-baseline.js'
@@ -378,7 +379,12 @@ export function createStepChainSteps(deps) {
     // The template kit (the template profile the release is sealed with), fetched and checked before anything forks.
     async kit(ctx) {
       await trialsOf(ctx)
-      const ref = ctx.contract?.id
+      // An EmDash release has a kit and a content map but no profile that seals it, so a run on one carries no contract (the
+      // site needs no Claude Cowork plugin): its kit is the kit index's at the site's release and version.
+      const site = ctx.contract?.id ? null : await siteOf(ctx.siteKey)
+      const ref =
+        ctx.contract?.id ??
+        (site ? contractFor(kitContracts(), site.quickstart_tag, site.quickstart_version)?.id : undefined)
       if (!ref || !readableKits().some((k) => k.ref === ref))
         throw stepError(`no readable template kit for ${ref ?? ctx.quickstart}`)
       const kit = openKit(ref)
