@@ -22,8 +22,9 @@ import Cta from '@/components/blocks/Cta.astro'
 
 interface Props {
   chrome: Chrome
+  currentPath?: string
 }
-const { chrome } = Astro.props
+const { chrome, currentPath } = Astro.props
 const { site, locale } = chrome
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const settings = await getSiteSettings()
@@ -94,7 +95,7 @@ const ctaRow = await section('cta', 'cta-contact', locale)
 						<ul>
 							{col.items.map((l) => (
 								<li>
-									<a href={own(l.url)}>{l.label}</a>
+									<a href={own(l.url)} aria-current={currentPath && l.url === currentPath ? 'page' : undefined}>{l.label}</a>
 								</li>
 							))}
 						</ul>

@@ -354,6 +354,7 @@ html[data-theme="dark"] .nv-footer { border-top-color: var(--color-line); backgr
 @media (min-width: 992px) { .nv-footer { padding-top: 128px; } }
 .nv-footer a { color: var(--nv-foot-link); }
 .nv-footer a:hover { color: var(--color-on-ink); }
+.nv-footer a[aria-current="page"] { font-weight: 700; }
 .nv-footer-info { display: flex; flex-wrap: wrap; margin: -8px -16px; }
 @media (min-width: 768px) { .nv-footer-info { margin-block: -16px; } }
 .nv-footer-col { flex: 0 0 100%; max-width: 100%; padding: 8px 16px; min-width: 0; }

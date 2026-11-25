@@ -10,4 +10,4 @@ const { size = 16 } = Astro.props
 const Glyph = (Phosphor as unknown as Record<string, any>).FileText
 ---
 
-<Fragment set:html={(await import('react-dom/server')).renderToStaticMarkup(createElement(Glyph, { size, weight: 'regular', 'aria-hidden': true }))} />
+<Fragment set:html={(await import('react-dom/server')).renderToStaticMarkup(createElement(Glyph, { size, weight: 'bold', viewBox: '40 24 176 208', preserveAspectRatio: 'none', 'aria-hidden': true }))} />

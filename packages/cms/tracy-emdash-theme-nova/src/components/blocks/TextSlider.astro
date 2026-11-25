@@ -18,11 +18,13 @@ interface Props {
 }
 const { row, info } = Astro.props
 const $s = stampFor(Astro.request, 'text_slider', { id: row.id, slug: row.slug })
-const items: { logo?: any; title?: string }[] = Array.isArray(row.items)
+const entries: { logo?: any; title?: string }[] = Array.isArray(row.items)
   ? row.items.filter((i: any) => i && (i.title || i.logo))
   : []
-if (items.length === 0) return
+if (entries.length === 0) return
 const rtl = String(row.slide_direct) === '1'
+// Owl in rtl mode lays the entries out from the right, so the row reads in reverse entry order from the left
+const items = rtl ? [...entries].reverse() : entries
 const moves = String(row.autoplay) !== 'false'
 // the source steps one chip every 5 s (Owl's default autoplay timeout); a lap of one row is chips x 5 s, the animation covers two rows
 const lap = items.length * 5 * 2

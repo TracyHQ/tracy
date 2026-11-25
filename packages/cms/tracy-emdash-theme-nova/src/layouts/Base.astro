@@ -170,7 +170,7 @@ const skipStamp = stampFor(Astro.request, 'chrome', chrome.entry)('skip_label')
 		<div class="min-h-screen">
 			{!bare && <Header chrome={chrome} currentPath={currentPath} />}
 			<slot />
-			{!bare && <Footer chrome={chrome} />}
+			{!bare && <Footer chrome={chrome} currentPath={currentPath} />}
 		</div>
 		<EmDashBodyEnd page={pageCtx} />
 	</body>
