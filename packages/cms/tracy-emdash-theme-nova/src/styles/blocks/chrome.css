@@ -423,3 +423,6 @@ html[data-ds-worn] .nv-logo-ink--logo-light { background: var(--color-on-ink); -
 @media (max-width: 420px) { .nv-copyright .nv-container { min-height: 63px; } }
 /* the footer logo is 150px wide at every width */
 .nv-footer-logo .nv-logo-img { max-height: none; width: 150px; height: auto; }
+
+/* the source draws solid Font Awesome glyphs that fill their 16px box; the Phosphor glyphs keep padding inside theirs, so they are drawn a fifth larger */
+.nv-quick svg { transform: scale(1.22); }

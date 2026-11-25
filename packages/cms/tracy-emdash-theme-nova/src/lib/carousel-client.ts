@@ -169,7 +169,9 @@ function initAccordion(group: HTMLElement): void {
   group.addEventListener('keydown', (e) => {
     if ((e as KeyboardEvent).key !== 'Escape') return
     const at = document.activeElement
-    const b = btns.find((x) => x === at || panel(x)?.contains(at) === true) ?? btns.find((x) => x.getAttribute('aria-expanded') === 'true')
+    const b =
+      btns.find((x) => x === at || panel(x)?.contains(at) === true) ??
+      btns.find((x) => x.getAttribute('aria-expanded') === 'true')
     if (!b || b.getAttribute('aria-expanded') !== 'true') return
     set(b, false)
     b.focus()

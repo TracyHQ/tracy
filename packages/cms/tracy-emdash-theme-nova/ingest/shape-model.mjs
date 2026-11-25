@@ -344,7 +344,10 @@ model.menus = [
   // keeps the titles and links only the pages it has (DECISIONS lead decision 2): a column with no page prints nothing until a link is added.
   mk('footer-users', 'Users', []),
   mk('footer-pages', 'Pages', [leaf('Smart Search', '/search')]),
-  mk('footer-content', 'Content', [leaf('Blog', '/blog'), leaf('Blog Detail', '/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning')])
+  mk('footer-content', 'Content', [
+    leaf('Blog', '/blog'),
+    leaf('Blog Detail', '/blog/virtual-memorials-exploring-the-impact-of-business-technology-on-mourning')
+  ])
 ]
 // the project detail menu item points at a project post
 const pd = main.items.flatMap((i) => i.children ?? []).find((c) => c.path === '/project/project-detail')
@@ -591,7 +594,8 @@ model.site = { ...model.site, title: { en: 'JA Nova' }, tagline: { en: '' } }
 }
 
 // the source prints the category's own title as the heading of its list page: "UI/UX Design" (its menu label is "UI/UX design")
-for (const t of model.taxonomies.flatMap((x) => x.terms ?? [])) if (t.slug === 'ui-ux-design') t.label = { en: 'UI/UX Design' }
+for (const t of model.taxonomies.flatMap((x) => x.terms ?? []))
+  if (t.slug === 'ui-ux-design') t.label = { en: 'UI/UX Design' }
 
 // ---- a scalar field that arrives as a list holds the first non-empty value
 for (const r of model.records) {

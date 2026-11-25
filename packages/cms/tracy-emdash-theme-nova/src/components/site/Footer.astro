@@ -36,9 +36,21 @@ const live = await liveLinks(Astro.request, locale, [
 ])
 const own = (url: string) => (url ? dataHref(url, (p) => href(locale, p)) : '')
 const columns: { title: string; titleField: string; items: ChromeMenuItem[] }[] = [
-  { title: site.footer_users_title, titleField: 'footer_users_title', items: pruneMenu(chrome.footerUsers, live) },
-  { title: site.footer_pages_title, titleField: 'footer_pages_title', items: pruneMenu(chrome.footerPages, live) },
-  { title: site.footer_content_title, titleField: 'footer_content_title', items: pruneMenu(chrome.footerContent, live) }
+  {
+    title: site.footer_users_title,
+    titleField: 'footer_users_title',
+    items: pruneMenu(chrome.footerUsers, live)
+  },
+  {
+    title: site.footer_pages_title,
+    titleField: 'footer_pages_title',
+    items: pruneMenu(chrome.footerPages, live)
+  },
+  {
+    title: site.footer_content_title,
+    titleField: 'footer_content_title',
+    items: pruneMenu(chrome.footerContent, live)
+  }
 ]
 const social = chrome.social['social']
 const ctaInfo = (
