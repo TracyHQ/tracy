@@ -305,7 +305,7 @@ export const APPLY_ACTION_DOCS = {
   'content.contract': {
     summary: 'Inspect or change a site built from a sealed quickstart through its content contract',
     description:
-      'Works on the named content slots of a quickstart-built site, or of an imported site bound to the contract its plugin derived from its own database at import. `inspect` (the default), and every `*.plan` / `*.verify` operation, only read. `bind`, `apply`, `string`, and the `set`/`apply`/`revert`/`package`/`retire`/`restore` operations write. `apply` checks every change first and writes nothing if any is refused; a derived slot that no longer holds its value where it is stored is refused with `SLOT_UNWRITABLE`. After a derived write the plugin reads the page back: words the page does not show come back as a warning `{code: "WRITTEN_NOT_VISIBLE", severity: "warning", message, slotKey, url}` in `warnings`, and the answer stays `ok: true`. `string` (WordPress) overrides one gettext string a theme or plugin prints (`domain`, `msgid`, `context`, `locale`, `value`, `apply_id`): the value must keep every printf placeholder of the msgid and use only the tags the msgid uses, and `apply.revert` takes it back. `derive` builds an imported site’s contract; import provisioning runs it, and the Apply door refuses it to every seat (`CONTRACT_OPERATION_PROVISION_ONLY`). Language and demo-trim operations need a contract that ships that profile; a derived contract answers them `unsupported`. On EmDash the contract is the release’s content map, read and written over the site’s own content tools: `inspect` and `apply` only (`changes`, `empty_slots`), all or nothing, a picture named by the path `media.upload` placed it under; a change to any mapped entry between inspect and apply is refused `revision_mismatch`, and any other operation `operation_not_on_emdash`.',
+      'Works on the named content slots of a quickstart-built site, or of an imported site bound to the contract its plugin derived from its own database at import. `inspect` (the default), and every `*.plan` / `*.verify` operation, only read. `bind`, `apply`, `string`, and the `set`/`apply`/`revert`/`package`/`retire`/`restore` operations write. `apply` checks every change first and writes nothing if any is refused; a derived slot that no longer holds its value where it is stored is refused with `SLOT_UNWRITABLE`. After a derived write the plugin reads the page back: words the page does not show come back as a warning `{code: "WRITTEN_NOT_VISIBLE", severity: "warning", message, slotKey, url}` in `warnings`, and the answer stays `ok: true`. `string` (WordPress) overrides one gettext string a theme or plugin prints (`domain`, `msgid`, `context`, `locale`, `value`, `apply_id`): the value must keep every printf placeholder of the msgid and use only the tags the msgid uses, and `apply.revert` takes it back. `derive` builds an imported site’s contract; import provisioning runs it, and the Apply door refuses it to every seat (`CONTRACT_OPERATION_PROVISION_ONLY`). Language and demo-trim operations need a contract that ships that profile; a derived contract answers them `unsupported`. On EmDash the contract is the release’s content map, read and written over the site’s own content tools: `inspect` and `apply` (`changes`, `empty_slots`), all or nothing, a picture named by the path `media.upload` placed it under; each menu item is a slot `menu.<name>.<position>.label` (emptied, the item leaves the menu); `pages.unpublish` (`pages`: page entities) makes those pages drafts. A change to any mapped entry or menu between inspect and apply is refused `revision_mismatch`, and any other operation `operation_not_on_emdash`.',
     writes: true,
     platforms: ALL,
     params: {
@@ -894,6 +894,68 @@ export const APPLY_ACTION_DOCS = {
       }
     },
     requires: { joomla: '0.22.0' }
+  },
+  'emdash.settings': {
+    summary: 'Read or set an EmDash site’s logo and favicon',
+    description:
+      'The core settings `logo` and `favicon` of an EmDash site, written through the site’s own `settings_update`. `read` (the default) answers `{ok, fields}`, the settings as the site holds them (a media reference is `{mediaId, alt, url}`). `set` takes `fields: {logo?, favicon?}`, each `{mediaId, alt?}` naming a picture already in the library (`media.upload` first) or null to take it off; any other setting is refused `unsupported` and nothing is written.',
+    writes: true,
+    platforms: ['emdash'],
+    params: {
+      type: 'object',
+      properties: {
+        operation: { type: 'string', enum: ['read', 'set'], description: 'Defaults to `read`.' },
+        fields: {
+          type: 'object',
+          description: '`set` only.',
+          properties: Object.fromEntries(
+            ['logo', 'favicon'].map((key) => [
+              key,
+              {
+                type: ['object', 'null'],
+                properties: { mediaId: { type: 'string' }, alt: { type: 'string' } },
+                required: ['mediaId']
+              }
+            ])
+          ),
+          additionalProperties: false
+        },
+        apply_id: APPLY_ID
+      }
+    },
+    example: {
+      operation: 'set',
+      fields: { logo: { mediaId: '01JABCDEF0123456789MEDIA01' } },
+      apply_id: 'brand-1'
+    }
+  },
+  'emdash.entryField': {
+    summary: 'Read or set the picture field of one EmDash entry',
+    description:
+      'One picture field of one entry, found by its collection and slug: a template’s singleton entry keeps pictures the brand changes there (the dark-background logo of `chrome`). `read` (the default) answers `{ok, mediaId, locales}`. `set` takes `media`, a library item’s id (`media.upload` first), writes the field and publishes the entry again when it was published; `label` is accepted and not used. A field the entry’s schema does not have is refused by the site.',
+    writes: true,
+    platforms: ['emdash'],
+    params: {
+      type: 'object',
+      properties: {
+        operation: { type: 'string', enum: ['read', 'set'], description: 'Defaults to `read`.' },
+        collection: { type: 'string' },
+        slug: { type: 'string' },
+        field: { type: 'string' },
+        media: { type: 'string', description: '`set` only: the library item’s id.' },
+        label: { type: 'string' },
+        apply_id: APPLY_ID
+      },
+      required: ['collection', 'slug', 'field']
+    },
+    example: {
+      operation: 'set',
+      collection: 'chrome',
+      slug: 'chrome',
+      field: 'logo_dark',
+      media: '01JABCDEF0123456789MEDIA02',
+      apply_id: 'brand-1'
+    }
   },
   'template.siteSettings': {
     summary: 'Read or set a Joomla template’s logo, name and favicon',

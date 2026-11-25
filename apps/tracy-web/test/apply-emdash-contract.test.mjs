@@ -214,3 +214,30 @@ test(
     assert.ok(site.sent.every((c) => !/update|publish/.test(c.tool)))
   }
 )
+
+test(
+  'emdash.settings sets the logo through the host and is one site_write row; a read writes none',
+  opts,
+  async () => {
+    const { pool } = db
+    const site = emdashMcpSite({ media: [{ id: 'LOGO1', filename: 'logo.png', storageKey: 'k-logo.png' }] })
+    const host = fakeHost(site)
+    const { apply } = await setup(pool, host.fetchImpl)
+    const read = await apply('owner@x.y', { action: 'emdash.settings', params: { operation: 'read' } })
+    assert.equal(read.body.ok, true)
+    assert.deepEqual(await writes(pool), [])
+    const set = await apply('owner@x.y', {
+      action: 'emdash.settings',
+      params: { operation: 'set', apply_id: 'brand-1', fields: { logo: { mediaId: 'LOGO1' } } }
+    })
+    assert.equal(set.body.ok, true, JSON.stringify(set.body))
+    assert.deepEqual(site.settings.logo, { mediaId: 'LOGO1' })
+    assert.deepEqual(await writes(pool), [{ action: 'emdash.settings', outcome: 'ok' }])
+    const refused = await apply('viewer@x.y', {
+      action: 'emdash.settings',
+      params: { operation: 'set', apply_id: 'brand-2', fields: { logo: null } }
+    })
+    assert.equal(refused.status, 403)
+    assert.deepEqual(site.settings.logo, { mediaId: 'LOGO1' })
+  }
+)

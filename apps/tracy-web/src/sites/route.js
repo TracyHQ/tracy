@@ -179,6 +179,7 @@ import {
 } from './door-follow-up.js'
 import {
   EMDASH_INFO,
+  emdashBrandCall,
   emdashContractCall,
   emdashContractOf,
   emdashHostCalls,
@@ -755,6 +756,11 @@ const APPLY_RULES = new Map([
   // `lib/TemplateSiteSettings.php`): the same site-wide settings as `site.identity` and WordPress's `site_logo` option,
   // so the same `site` toolset.
   ['template.siteSettings', 'site'],
+  // An EmDash site's logo and favicon (core settings) and the picture field of a template's singleton entry (its dark logo),
+  // which the write step's brand stage writes (`emdash-contract.js` `emdashBrandCall`): the same site-wide settings as
+  // `template.siteSettings`, so the same `site` toolset.
+  ['emdash.settings', 'site'],
+  ['emdash.entryField', 'site'],
   // A Joomla site's language override file for one language (plugin 0.24.11 `lib/LanguageOverrides.php`): the template's and
   // extensions' own words a pack leaves in en-GB, written in the site's language. Site-wide like `site.identity`, so `site`.
   // 🔒 The build calls it through this door (`joomla-site-strings.js`); missing here, every Joomla site of 10/10/2026 kept
@@ -862,7 +868,13 @@ const APPLY_READS_ONLY = new Set(['db.dump', 'apply.list'])
  * overrides page by page through this door, and each read had become a "Tracy setup" row, a renewed
  * lease and a fresh `last_write_at` for a site nobody had changed.
  */
-const SET_ONLY_WRITES = new Set(['site.identity', 'template.siteSettings', 'template.languageOverrides'])
+const SET_ONLY_WRITES = new Set([
+  'site.identity',
+  'template.siteSettings',
+  'template.languageOverrides',
+  'emdash.settings',
+  'emdash.entryField'
+])
 
 /**
  * Whether one `content.contract` operation writes — the SAME rule as tracy-site-tools'
@@ -6662,7 +6674,13 @@ export function sitesRoutes({
     const emdashMediaAsked = emdashMedia ? emdashMediaRequest(params) : null
     // `content.contract` and `info` on EmDash: the release's content map over the site's own MCP tools, which its host
     // runs (`emdash-contract.js`); the write step reads and writes an EmDash site through them as it does a Joomla one.
-    const emdashContract = (action === 'content.contract' || action === 'info') && site?.platform === 'emdash'
+    const emdashOnly = action === 'emdash.settings' || action === 'emdash.entryField'
+    if (emdashOnly && site?.platform !== 'emdash') {
+      if (heldLease && freshLease) await releaseWriteLease(pool, { siteKey, sessionId: chatSession, turnId })
+      return reply({ ok: false, error: 'not_on_platform', message: `${action} is an EmDash action` })
+    }
+    const emdashContract =
+      (action === 'content.contract' || action === 'info' || emdashOnly) && site?.platform === 'emdash'
     const viaHost = emdashMedia || emdashContract
     if (emdashMediaAsked && 'error' in emdashMediaAsked) {
       if (heldLease && freshLease) await releaseWriteLease(pool, { siteKey, sessionId: chatSession, turnId })
@@ -6889,6 +6907,17 @@ export function sitesRoutes({
       if (action === 'info') {
         await recordApply(true)
         return reply({ ok: true, info: EMDASH_INFO })
+      }
+      if (emdashOnly) {
+        const done = await emdashBrandCall({
+          action,
+          params,
+          calls: emdashHostCalls({ host, config, fetchImpl, site })
+        })
+        await recordApply(done.outcome === 'ok', done.outcome, done.body)
+        if (heldLease && freshLease && done.outcome === 'refused')
+          await releaseWriteLease(pool, { siteKey, sessionId: chatSession, turnId })
+        return reply(done.body, /** @type {any} */ (done.status))
       }
       const release = emdashContractOf(site)
       if (!release) {

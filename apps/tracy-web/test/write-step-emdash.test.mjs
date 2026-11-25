@@ -39,25 +39,38 @@ function planOf(kit) {
       forbidden: [],
       legalPages: []
     },
+    // The main menu keeps three pages: the others leave it.
+    mainMenu: [
+      { page: 'page-home', intent: 'home' },
+      { page: 'page-about-us', intent: 'the story' },
+      { page: 'page-contact-us', intent: 'how to reach us' }
+    ],
     sharedBlocks: [...shared].map((block) => keep(block)),
-    pages: kit.pages.map((page) => ({
-      id: page.id,
-      decision: 'keep',
-      blocks: blocksOf(page)
-        .filter((block) => !shared.has(block))
-        .map((block) =>
-          block === 'block-home-slides'
-            ? keep(block, {
-                copy: [
-                  slide('title', 'the restaurant by the harbour'),
-                  slide('desc', 'what is cooked'),
-                  slide('button1', 'book')
-                ],
-                hiddenSlots: [{ slot: 'slideshow.slideshow.items[0].button2', why: 'no full menu online' }]
-              })
-            : keep(block)
-        )
-    }))
+    // The offers page is dropped: the business has no offers to show.
+    pages: kit.pages.map((page) =>
+      page.id === 'page-offers'
+        ? { id: page.id, decision: 'drop', why: 'no offers in the brief' }
+        : {
+            id: page.id,
+            decision: 'keep',
+            blocks: blocksOf(page)
+              .filter((block) => !shared.has(block))
+              .map((block) =>
+                block === 'block-home-slides'
+                  ? keep(block, {
+                      copy: [
+                        slide('title', 'the restaurant by the harbour'),
+                        slide('desc', 'what is cooked'),
+                        slide('button1', 'book')
+                      ],
+                      hiddenSlots: [
+                        { slot: 'slideshow.slideshow.items[0].button2', why: 'no full menu online' }
+                      ]
+                    })
+                  : keep(block)
+              )
+          }
+    )
   }
 }
 
@@ -68,7 +81,10 @@ const copy = {
   slots: [
     w('slideshow.slideshow.items[0].title', 'Harbour Kitchen'),
     w('slideshow.slideshow.items[0].desc', 'Fish from the morning boats, cooked over charcoal.'),
-    w('slideshow.slideshow.items[0].button1', 'Book a table')
+    w('slideshow.slideshow.items[0].button1', 'Book a table'),
+    w('menu.primary.1.label', 'Home'),
+    w('menu.primary.2.label', 'Our story'),
+    w('menu.primary.6.label', 'Find us')
   ],
   alts: [],
   seo: [],
@@ -145,6 +161,19 @@ test('an EmDash Diner run writes its words into the entries and empties the hidd
   const line = (slot) => report.slots.find((s) => s.slot === slot)
   assert.equal(line('slideshow.slideshow.items[0].title')?.status, 'written')
   assert.equal(line('slideshow.slideshow.items[0].button2')?.status, 'hidden')
+  // The main menu: the kept items carry the writer's labels, the others left it.
+  assert.deepEqual(
+    site.menus.get('primary').items.map((i) => [i.label, i.customUrl]),
+    [
+      ['Home', '/'],
+      ['Our story', '/about-us'],
+      ['Find us', '/contact-us']
+    ]
+  )
+  // The dropped page's entry is a draft: no visitor reaches it.
+  assert.equal(site.entry('pages', 'offers').status, 'draft')
+  assert.equal(site.entry('pages', 'about-us').status, 'published')
+  assert.equal(line('page-offers')?.status, 'hidden')
   // 🔒 Only what the Apply door takes on EmDash was sent.
   assert.deepEqual(
     calls.filter((c) => !EMDASH_TAKES.has(c.action)),

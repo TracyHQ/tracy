@@ -5,6 +5,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
   EMDASH_INFO,
+  emdashBrandCall,
   emdashContractCall,
   emdashContractOf,
   markdownOf,
@@ -296,4 +297,98 @@ test("the contract's markup becomes Markdown for rich text and words alone for a
   assert.equal(plainOf('Hey Harry!!!<br/> Are you ready?'), 'Hey Harry!!!<br/> Are you ready?')
   assert.equal(plainOf('((p))One((/p))\n((p))Two((/p))'), 'One\nTwo')
   assert.equal(plainOf('((span class="accent"))Fresh((/span)) fish'), 'Fresh fish')
+})
+
+test("the brand's logo and favicon go into the core settings; the dark logo into the chrome entry's picture field", async () => {
+  const logo = { id: 'LOGO1', filename: `${sha('e')}.png`, storageKey: 'k-logo.png', mimeType: 'image/png' }
+  const site = emdashMcpSite({ media: [logo] })
+  const ask = (action, params) => emdashBrandCall({ action, params, calls: site.calls })
+  const set = await ask('emdash.settings', {
+    operation: 'set',
+    apply_id: 'brand-1',
+    fields: { logo: { mediaId: 'LOGO1' }, favicon: { mediaId: 'LOGO1', alt: 'Harbour Kitchen' } }
+  })
+  assert.equal(set.outcome, 'ok')
+  assert.deepEqual(site.settings.logo, { mediaId: 'LOGO1' })
+  assert.deepEqual(site.settings.favicon, { mediaId: 'LOGO1', alt: 'Harbour Kitchen' })
+  const read = await ask('emdash.settings', { operation: 'read' })
+  assert.equal(read.body.fields.logo.mediaId, 'LOGO1')
+  // Only the brand's two settings: anything else is refused and nothing is sent.
+  site.sent.length = 0
+  const other = await ask('emdash.settings', { operation: 'set', fields: { title: 'x' } })
+  assert.equal(other.body.error, 'unsupported')
+  assert.equal(
+    (await ask('emdash.settings', { operation: 'set', fields: { logo: { id: 'LOGO1' } } })).body.error,
+    'bad_params'
+  )
+  assert.deepEqual(site.sent, [])
+
+  const dark = await ask('emdash.entryField', {
+    operation: 'set',
+    collection: 'chrome',
+    slug: 'chrome',
+    field: 'logo_dark',
+    label: 'Logo for dark backgrounds',
+    media: 'LOGO1'
+  })
+  assert.equal(dark.body.ok, true, JSON.stringify(dark.body))
+  assert.deepEqual(dark.body.locales, ['en'])
+  assert.equal(site.entry('chrome', 'chrome').data.logo_dark.id, 'LOGO1')
+  assert.equal(site.entry('chrome', 'chrome').data.logo_dark.src, '/_emdash/api/media/file/k-logo.png')
+  assert.equal(site.entry('chrome', 'chrome').status, 'published')
+  const back = await ask('emdash.entryField', {
+    operation: 'read',
+    collection: 'chrome',
+    slug: 'chrome',
+    field: 'logo_dark'
+  })
+  assert.equal(back.body.mediaId, 'LOGO1')
+  const missing = await ask('emdash.entryField', {
+    operation: 'set',
+    collection: 'chrome',
+    slug: 'chrome',
+    field: 'logo_dark',
+    media: 'NOPE'
+  })
+  assert.equal(missing.body.error, 'not_found')
+})
+
+test('the menus are slots too: a label is changed and an emptied item leaves the menu, the rest kept in order', async () => {
+  const site = emdashMcpSite()
+  const ask = door(site)
+  const reading = await inspect(ask)
+  const labels = reading.slots.filter((s) => s.key.startsWith('menu.primary.'))
+  assert.deepEqual(
+    labels.map((s) => [s.key, s.current]),
+    [
+      ['menu.primary.1.label', 'Home'],
+      ['menu.primary.2.label', 'About Us'],
+      ['menu.primary.3.label', 'Reservation'],
+      ['menu.primary.4.label', 'Offers'],
+      ['menu.primary.5.label', 'Our Blog'],
+      ['menu.primary.6.label', 'Contact Us']
+    ]
+  )
+  assert.equal(labels[3].canHide, 'unmeasured')
+  const done = await ask(
+    applyOf(reading.revision, {
+      changes: { 'menu.primary.2.label': 'Our story' },
+      empty_slots: ['menu.primary.4.label', 'menu.primary.5.label']
+    })
+  )
+  assert.equal(done.body.ok, true, JSON.stringify(done.body))
+  const items = site.menus.get('primary').items
+  assert.deepEqual(
+    items.map((i) => [i.label, i.customUrl]),
+    [
+      ['Home', '/'],
+      ['Our story', '/about-us'],
+      ['Reservation', '/reservation'],
+      ['Contact Us', '/contact-us']
+    ]
+  )
+  // A menu label is never emptied by words: that is what taking the item off is for.
+  const again = await inspect(ask)
+  const blank = await ask(applyOf(again.revision, { changes: { 'menu.primary.1.label': ' ' } }))
+  assert.equal(blank.body.errors[0].code, 'SLOT_REQUIRED')
 })

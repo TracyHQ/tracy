@@ -74,6 +74,8 @@ const PARAMS = {
       'evidence'
     ],
     'blocks.unpublish': ['operation', 'apply_id', 'request_id', 'expected_revision', 'blocks'],
+    // EmDash: the page entries a plan drops, made drafts (sites/emdash-contract.js).
+    'pages.unpublish': ['operation', 'apply_id', 'pages'],
     'rows.remove': ['operation', 'apply_id', 'request_id', 'expected_revision', 'slots', 'keep'],
     'phone.link': [
       'operation',
@@ -90,6 +92,9 @@ const PARAMS = {
   'template.siteSettings': { set: ['operation', 'template', 'fields', 'profiles', 'apply_id'] },
   'template.languageOverrides': { setSource: ['operation', 'apply_id', 'template', 'strings'] },
   'site.identity': { set: ['operation', 'fields', 'apply_id'] },
+  // EmDash's logo and favicon settings, and the picture field of a template entry (the brand stage's EmDash writer).
+  'emdash.settings': { set: ['operation', 'fields', 'apply_id'] },
+  'emdash.entryField': { set: ['operation', 'collection', 'slug', 'field', 'label', 'media', 'apply_id'] },
   'media.upload': { [undefined]: ['path', 'content_b64', 'apply_id', 'sha256'] },
   'content.update': { [undefined]: ['apply_id', 'kind', 'id', 'fields'] },
   'content.batch': { [undefined]: ['apply_id', 'request_id', 'operations'] }

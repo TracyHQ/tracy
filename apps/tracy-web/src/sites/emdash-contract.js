@@ -131,15 +131,68 @@ function readCall(entity, { markdown }) {
   if (entity.kind === 'settings') return { tool: 'settings_get', args: {} }
   if (entity.kind === 'taxonomy')
     return { tool: 'taxonomy_list_terms', args: { taxonomy: entity.identity.taxonomy, limit: 100 } }
+  if (entity.kind === 'menu') return { tool: 'menu_get', args: { name: entity.identity.name } }
   return null
 }
+
+/** The menus the content map lists, as entities of their own: `menu.<name>`. */
+const menuEntities = (contentMap) =>
+  (Array.isArray(contentMap.menus) ? contentMap.menus : [])
+    .filter((m) => typeof m?.name === 'string' && m.name)
+    .map((m) => ({ key: `menu.${m.name}`, kind: 'menu', identity: { name: m.name } }))
+
+/**
+ * A menu's items as a tree in menu order, parents before their children: `{position, item, parent}`, the position 1-based
+ * by order under its parent (`2.1`: the first child of the second top item), as the main menu's slot ids name them
+ * (`lib/site-copy/main-menu-emdash.js`: `menu.<name>.<position>.label`).
+ */
+export function menuTree(items) {
+  const list = (Array.isArray(items) ? items : []).filter((i) => isObject(i) && typeof i.id === 'string')
+  const under = (parent) =>
+    list
+      .filter((i) => (i.parentId ?? null) === parent)
+      .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+  const out = []
+  const walk = (parent, prefix) =>
+    under(parent).forEach((item, i) => {
+      const position = prefix ? `${prefix}.${i + 1}` : String(i + 1)
+      out.push({ position, item, parent: prefix || null })
+      walk(item.id, position)
+    })
+  walk(null, '')
+  return out
+}
+
+/** The label slots of the menus the site holds: one per item, text, emptied by taking the item off the menu. */
+function menuSlotsOf(state) {
+  const slots = []
+  for (const held of state.values()) {
+    if (held.entity.kind !== 'menu' || !held.found) continue
+    for (const node of menuTree(held.items))
+      slots.push({
+        key: `${held.entity.key}.${node.position}.label`,
+        entity: held.entity.key,
+        target: { menu: held.entity.identity.name, position: node.position },
+        type: 'text',
+        role: 'editorial.menu_label',
+        label: `Menu ${held.entity.identity.name}: ${node.item.label}`,
+        sample: String(node.item.label ?? '')
+      })
+  }
+  return slots
+}
+
+/** Every slot of the contract on this site: the content map's, and the menus' labels. */
+const slotsOf = (contentMap, state) => [...contentMap.slots.filter((s) => s?.key), ...menuSlotsOf(state)]
 
 /**
  * Every entity the content map names, as the site holds it now: `{entity, found, item?, rev?, settings?, terms?}`.
  * @returns {Promise<{ ok: true, state: Map<string, any>, revision: string } | { ok: false, code: string, detail: any }>}
  */
 async function readState({ contentMap, calls, markdown }) {
-  const entities = contentMap.entities.filter((e) => e?.key && readCall(e, { markdown }))
+  const entities = [...contentMap.entities, ...menuEntities(contentMap)].filter(
+    (e) => e?.key && readCall(e, { markdown })
+  )
   const read = await callAll(
     calls,
     entities.map((e) => readCall(e, { markdown }))
@@ -158,6 +211,8 @@ async function readState({ contentMap, calls, markdown }) {
       state.set(entity.key, { entity, found: Boolean(item?.id), item, rev: data?._rev ?? item?._rev ?? null })
     } else if (entity.kind === 'settings')
       state.set(entity.key, { entity, found: true, settings: data ?? {} })
+    else if (entity.kind === 'menu')
+      state.set(entity.key, { entity, found: true, items: Array.isArray(data?.items) ? data.items : [] })
     else
       state.set(entity.key, {
         entity,
@@ -181,6 +236,8 @@ function revisionOf(state, contentMap) {
     if (s.entity.kind === 'entry') return [s.entity.key, s.rev ?? hashOf(s.item?.data ?? null)]
     if (s.entity.kind === 'settings')
       return [s.entity.key, settingNames.map((name) => [name, s.settings?.[name] ?? null])]
+    if (s.entity.kind === 'menu')
+      return [s.entity.key, menuTree(s.items).map((n) => [n.position, n.item.id, n.item.label])]
     return [s.entity.key, s.terms.map((t) => [t.slug, t.label]).sort()]
   })
   return `emdash-${hashOf(parts).slice(0, 40)}`
@@ -207,6 +264,10 @@ function heldValue(slot, state) {
   const held = state.get(slot.entity)
   if (!held?.found) return undefined
   if (t.setting) return held.settings?.[t.setting] ?? ''
+  if (t.menu) {
+    const node = menuTree(held.items).find((n) => n.position === t.position)
+    return node ? String(node.item.label ?? '') : undefined
+  }
   if (t.taxonomy) {
     const term = held.terms.find((x) => x.slug === t.term)
     return term ? String(term.label ?? '') : undefined
@@ -241,8 +302,8 @@ async function inspect({ contract, contentMap, calls }) {
   const read = await readState({ contentMap, calls, markdown: true })
   if (!read.ok) return { site: read }
   const slots = []
-  for (const slot of contentMap.slots) {
-    if (!slot?.key || !slot.entity) continue
+  for (const slot of slotsOf(contentMap, read.state)) {
+    if (!slot.entity) continue
     const value = heldValue(slot, read.state)
     if (value === undefined) continue
     const t = slot.target ?? {}
@@ -266,7 +327,11 @@ async function inspect({ contract, contentMap, calls }) {
       ...(p.title ? { title: p.title } : {}),
       published: read.state.get(p.entity).item?.status === 'published'
     }))
-  return { body: { ok: true, contract, revision: read.revision, slots, pages } }
+  // Each page entry's state by entity, which a page taken off reads back from (`pages.unpublish`).
+  const pageStates = Object.fromEntries(
+    pages.map((p) => [p.entity, read.state.get(p.entity).item?.status ?? null])
+  )
+  return { body: { ok: true, contract, revision: read.revision, slots, pages, pageStates } }
 }
 
 // ── Words as the field takes them ────────────────────────────────────────────────────────────────────────────────────────
@@ -360,7 +425,10 @@ function judge({ slots, mapSlots, changes, emptySlots, emptyLinks }) {
       )
       continue
     }
-    if ((slot.target?.setting === 'title' || slot.type === 'term') && value.trim() === '') {
+    if (
+      (slot.target?.setting === 'title' || slot.target?.menu || slot.type === 'term') &&
+      value.trim() === ''
+    ) {
       errors.push(slotError(key, 'SLOT_REQUIRED', `${key} cannot be empty`))
       continue
     }
@@ -451,12 +519,19 @@ function writesOf({ values, mapSlots, state, pictures }) {
   for (const [key, value] of values) {
     const slot = mapSlots.get(key)
     const held = state.get(slot.entity)
-    const into = byEntity.get(slot.entity) ?? { held, data: {}, settings: {}, terms: new Map() }
+    const into = byEntity.get(slot.entity) ?? {
+      held,
+      data: {},
+      settings: {},
+      terms: new Map(),
+      menu: new Map()
+    }
     byEntity.set(slot.entity, into)
     const t = slot.target
     const v = stored(slot, value, pictures)
     if (v === undefined) continue
-    if (t.setting) into.settings[t.setting] = v
+    if (t.menu) into.menu.set(t.position, value === null ? null : v)
+    else if (t.setting) into.settings[t.setting] = v
     else if (t.taxonomy) into.terms.set(t.term, v)
     else if (t.item === undefined) into.data[t.field] = v
     else {
@@ -485,6 +560,14 @@ function writesOf({ values, mapSlots, state, pictures }) {
       })
     if (e.kind === 'settings' && Object.keys(w.settings).length)
       writes.push({ entity: entityKey, call: { tool: 'settings_update', args: w.settings } })
+    if (e.kind === 'menu' && w.menu.size)
+      writes.push({
+        entity: entityKey,
+        call: {
+          tool: 'menu_set_items',
+          args: { name: e.identity.name, items: menuItemsOf(w.held.items, w.menu) }
+        }
+      })
     if (e.kind === 'taxonomy')
       for (const [termSlug, label] of w.terms)
         writes.push({
@@ -493,6 +576,100 @@ function writesOf({ values, mapSlots, state, pictures }) {
         })
   }
   return writes
+}
+
+/**
+ * A menu's whole item list for `menu_set_items`, from the items it holds: each label of `changed` (by position) changed,
+ * each position whose label is null taken off with the items under it. Every other item is kept as it is, in its order.
+ */
+export function menuItemsOf(items, changed) {
+  const out = []
+  const index = new Map()
+  for (const node of menuTree(items)) {
+    if (changed.get(node.position) === null) continue
+    if (node.parent && !index.has(node.parent)) continue
+    const it = node.item
+    const own = (name) => (typeof it[name] === 'string' && it[name] ? { [name]: it[name] } : {})
+    index.set(node.position, out.length)
+    out.push({
+      label: changed.has(node.position) ? changed.get(node.position) : String(it.label ?? ''),
+      type: it.type,
+      ...own('customUrl'),
+      ...own('referenceCollection'),
+      ...own('referenceId'),
+      ...own('titleAttr'),
+      ...own('target'),
+      ...own('cssClasses'),
+      ...(node.parent ? { parentIndex: index.get(node.parent) } : {})
+    })
+  }
+  return out
+}
+
+/**
+ * `pages.unpublish` `{pages: [entity], apply_id}`: the page entries a plan drops, made drafts, so no visitor reaches them.
+ * Only the content map's pages; one that is a draft already is left as it is. All or nothing: a page refused writes none.
+ */
+async function unpublishPages({ contentMap, calls, params }) {
+  if (typeof params.apply_id !== 'string' || !params.apply_id.trim())
+    return { body: refusal('bad_params', 'apply_id required') }
+  const asked = Array.isArray(params.pages) ? params.pages.filter((p) => typeof p === 'string') : []
+  if (!asked.length) return { body: refusal('bad_params', 'pages: the page entities to take off') }
+  const read = await readState({ contentMap, calls, markdown: false })
+  if (!read.ok) return { site: read }
+  const pages = new Set((Array.isArray(contentMap.pages) ? contentMap.pages : []).map((p) => p?.entity))
+  const errors = []
+  const writes = []
+  for (const entity of asked) {
+    const held = read.state.get(entity)
+    if (!pages.has(entity) || held?.entity.kind !== 'entry') {
+      errors.push(slotError(entity, 'PAGE_UNKNOWN', `${entity} is not a page of this release`))
+      continue
+    }
+    if (!held.found) {
+      errors.push(slotError(entity, 'PAGE_UNKNOWN', `The site has no page ${entity}`))
+      continue
+    }
+    if (held.item.status !== 'published') continue
+    writes.push({
+      entity,
+      call: {
+        tool: 'content_update',
+        args: {
+          collection: held.entity.identity.collection,
+          id: held.item.id,
+          _rev: held.rev,
+          status: 'draft'
+        }
+      }
+    })
+  }
+  if (errors.length)
+    return {
+      body: refusal('pages_refused', `${errors.length} pages refused; nothing was taken off`, { errors })
+    }
+  if (!writes.length)
+    return { body: { ok: true, apply_id: params.apply_id, unpublished: [], unchanged: true } }
+  const sent = await callAll(
+    calls,
+    writes.map((w) => w.call)
+  )
+  if (!sent.ok) return { site: sent, writing: true }
+  const failed = writes.filter((_, i) => !sent.results[i]?.ok)
+  if (failed.length) {
+    const landed = failed.length < writes.length
+    return {
+      body: refusal(
+        'write_failed',
+        `${failed.length} of ${writes.length} pages were not taken off by the site (${failed
+          .map((w) => w.entity)
+          .join(', ')})`,
+        { landed }
+      ),
+      landed
+    }
+  }
+  return { body: { ok: true, apply_id: params.apply_id, unpublished: writes.map((w) => w.entity) } }
 }
 
 async function apply({ siteKey, contentMap, calls, params }) {
@@ -513,7 +690,7 @@ async function apply({ siteKey, contentMap, calls, params }) {
   if (!read.ok) return { site: read }
   if (read.revision !== params.expected_revision)
     return { body: refusal('revision_mismatch', 'Content changed; inspect again') }
-  const mapSlots = new Map(contentMap.slots.filter((s) => s?.key).map((s) => [s.key, s]))
+  const mapSlots = new Map(slotsOf(contentMap, read.state).map((s) => [s.key, s]))
   const held = new Map([...mapSlots].map(([key, slot]) => [key, heldValue(slot, read.state)]))
   const { errors, values } = judge({ slots: held, mapSlots, changes, emptySlots, emptyLinks })
 
@@ -608,8 +785,11 @@ export async function emdashContractCall({ siteKey, params, contract, contentMap
     const done = await inspect({ contract, contentMap, calls })
     return done.site ? siteAnswer(done.site, false) : { outcome: 'ok', status: 200, body: done.body }
   }
-  if (operation === 'apply') {
-    const done = await apply({ siteKey, contentMap, calls, params })
+  if (operation === 'apply' || operation === 'pages.unpublish') {
+    const done =
+      operation === 'apply'
+        ? await apply({ siteKey, contentMap, calls, params })
+        : await unpublishPages({ contentMap, calls, params })
     if (done.site) return siteAnswer(done.site, Boolean(done.writing))
     if (done.body.ok) return { outcome: 'ok', status: 200, body: done.body }
     return {
@@ -624,7 +804,98 @@ export async function emdashContractCall({ siteKey, params, contract, contentMap
     status: 200,
     body: refusal(
       'operation_not_on_emdash',
-      `content.contract ${operation} has no EmDash door: an EmDash site takes inspect and apply (words, pictures, links, emptied slots)`
+      `content.contract ${operation} has no EmDash door: an EmDash site takes inspect, apply (words, pictures, links, emptied slots) and pages.unpublish`
     )
   }
+}
+
+// ── The brand's settings ─────────────────────────────────────────────────────────────────────────────────────────────────
+// The write step's brand stage on EmDash (`write-step/brand-writes.js` `writeEmdashSettings`) asks two actions of the shape
+// the REST door it was written for answers (`write-step/emdash-brand-door.js`): the core settings `logo` and `favicon`, and
+// the picture field of a template's singleton entry (the dark logo of `chrome`). Both run over the same content tools.
+
+/** The settings the brand writes: media references `{mediaId, alt?}`, or null to take one off. */
+const BRAND_SETTINGS = new Set(['logo', 'favicon'])
+
+const brandAnswer = (body) => ({ outcome: body.ok ? 'ok' : 'refused', status: 200, body })
+
+/**
+ * `emdash.settings` `{operation: 'read' | 'set', fields}` and `emdash.entryField` `{operation: 'read' | 'set', collection,
+ * slug, field, media}` on an EmDash site.
+ * @param {{ action: string, params: Record<string, any>, calls: Function }} input
+ * @returns {Promise<{ outcome: 'ok' | 'refused' | 'unknown', status: number, body: Record<string, unknown> }>}
+ */
+export async function emdashBrandCall({ action, params, calls }) {
+  const writing = params.operation === 'set'
+  if (params.operation !== undefined && params.operation !== 'read' && !writing)
+    return brandAnswer(refusal('bad_params', 'operation: read or set'))
+  if (action === 'emdash.settings') {
+    if (!writing) {
+      const read = await callAll(calls, [{ tool: 'settings_get', args: {} }])
+      if (!read.ok) return siteAnswer(read, false)
+      const answer = read.results[0]
+      return brandAnswer(
+        answer.ok ? { ok: true, fields: answer.data ?? {} } : refusal('site_refused', answer.detail)
+      )
+    }
+    const fields = isObject(params.fields) ? params.fields : {}
+    const names = Object.keys(fields)
+    if (!names.length) return brandAnswer(refusal('bad_params', 'fields: logo and/or favicon'))
+    const args = {}
+    for (const name of names) {
+      const value = fields[name]
+      if (!BRAND_SETTINGS.has(name))
+        return brandAnswer(
+          refusal('unsupported', `${name} is not a setting the brand writes (logo, favicon)`)
+        )
+      if (value !== null && !(isObject(value) && typeof value.mediaId === 'string' && value.mediaId))
+        return brandAnswer(refusal('bad_params', `${name}: {mediaId, alt?} or null`))
+      args[name] =
+        value === null
+          ? null
+          : { mediaId: value.mediaId, ...(typeof value.alt === 'string' ? { alt: value.alt } : {}) }
+    }
+    const sent = await callAll(calls, [{ tool: 'settings_update', args }])
+    if (!sent.ok) return siteAnswer(sent, true)
+    const answer = sent.results[0]
+    return brandAnswer(
+      answer.ok ? { ok: true, fields: answer.data ?? {} } : refusal('site_refused', answer.detail)
+    )
+  }
+  // emdash.entryField: one picture field of one entry.
+  for (const name of ['collection', 'slug', 'field'])
+    if (typeof params[name] !== 'string' || !params[name])
+      return brandAnswer(refusal('bad_params', `${name} required`))
+  const read = await callAll(calls, [
+    { tool: 'content_get', args: { collection: params.collection, id: params.slug } }
+  ])
+  if (!read.ok) return siteAnswer(read, false)
+  const got = read.results[0]
+  if (!got.ok || !got.data?.item?.id)
+    return brandAnswer(refusal('not_found', got.detail ?? `${params.slug} not found`))
+  const item = got.data.item
+  const locales = [item.locale].filter(Boolean)
+  if (!writing) return brandAnswer({ ok: true, mediaId: dataOf(item)[params.field]?.id ?? null, locales })
+  if (typeof params.media !== 'string' || !params.media)
+    return brandAnswer(refusal('bad_params', 'media required'))
+  const media = await callAll(calls, [{ tool: 'media_get', args: { id: params.media } }])
+  if (!media.ok) return siteAnswer(media, false)
+  const found = media.results[0]?.ok ? (media.results[0].data?.item ?? media.results[0].data) : null
+  if (typeof found?.id !== 'string' || typeof found.storageKey !== 'string')
+    return brandAnswer(refusal('not_found', `the media item ${params.media} is not in the library`))
+  const sent = await callAll(calls, [
+    {
+      tool: 'content_update',
+      args: {
+        collection: params.collection,
+        id: item.id,
+        data: { [params.field]: pictureValue(found) },
+        _rev: got.data._rev ?? null,
+        ...(item.status === 'published' ? { status: 'published' } : {})
+      }
+    }
+  ])
+  if (!sent.ok) return siteAnswer(sent, true)
+  const answer = sent.results[0]
+  return brandAnswer(answer.ok ? { ok: true, locales } : refusal('site_refused', answer.detail))
 }

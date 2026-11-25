@@ -63,6 +63,20 @@ export function emdashMcpSite(script = {}) {
       (t.terms ?? []).map((x) => ({ id: x.id, slug: x.slug, label: x.label }))
     ])
   )
+  // Each menu as `menu_get` answers it: its items flat, each with its parent's id and its order under that parent.
+  let itemIds = 0
+  const flatten = (nodes, parentId = null) =>
+    (nodes ?? []).flatMap((node, i) => {
+      const id = `MI${String((itemIds += 1)).padStart(4, '0')}`
+      const { children, url, ...rest } = node
+      return [
+        { ...rest, id, parentId, sortOrder: i, ...(url ? { customUrl: url } : {}) },
+        ...flatten(children, id)
+      ]
+    })
+  const menus = new Map(
+    (s.menus ?? []).map((m) => [m.name, { name: m.name, label: m.label, items: flatten(m.items) }])
+  )
   const media = [...(script.media ?? [])]
   const sent = []
   const byRef = (collection, ref) =>
@@ -109,6 +123,26 @@ export function emdashMcpSite(script = {}) {
       if (label !== undefined) term.label = label
       return ok({ term: { ...term } })
     },
+    menu_get({ name }) {
+      const menu = menus.get(name)
+      return menu ? ok(structuredClone(menu)) : no(`Menu '${name}' not found`)
+    },
+    menu_set_items({ name, items }) {
+      const menu = menus.get(name)
+      if (!menu) return no(`Menu '${name}' not found`)
+      const ids = []
+      const order = new Map()
+      menu.items = items.map((it) => {
+        const id = `MI${String((itemIds += 1)).padStart(4, '0')}`
+        ids.push(id)
+        const parentId = it.parentIndex === undefined ? null : ids[it.parentIndex]
+        const sortOrder = order.get(parentId) ?? 0
+        order.set(parentId, sortOrder + 1)
+        const { parentIndex: _p, ...rest } = it
+        return { ...rest, id, parentId, sortOrder }
+      })
+      return ok({ ...structuredClone(menu) })
+    },
     media_list({ cursor }) {
       const at = cursor ? Number(cursor) : 0
       const items = media.slice(at, at + 100)
@@ -123,6 +157,7 @@ export function emdashMcpSite(script = {}) {
   return {
     sent,
     entries,
+    menus,
     settings,
     terms,
     media,

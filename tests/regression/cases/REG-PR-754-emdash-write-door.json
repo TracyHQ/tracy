@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-754-emdash-write-door",
   "kind": "feat",
-  "title": "The write step writes an EmDash site's content contract through the Apply door, over the site's own content tools run by its host",
+  "title": "The write step writes an EmDash site through the Apply door: its content contract, menus, dropped pages and brand settings, over the site's own content tools run by its host",
   "pr": 754,
   "area": "website-opportunities/write-step",
   "cms": ["em"],
@@ -12,7 +12,7 @@
     "S2: Confirm every test named in run.tests reports ok."
   ],
   "expect": [
-    "content.contract inspect on an EmDash site answers the release content map's slots with what each holds, its pages and a revision of every mapped entry's _rev; apply refuses a moved revision, refuses by slot and writes nothing when one slot is refused, otherwise writes one content_update per entry (published entries published, drafts kept drafts), settings and term labels; a picture is written by the path media.upload placed it under; the host runs only the fixed content tools in one docker exec in <label>-web-1; a write step run on the JA Diner EmDash kit ends done with its words in the entries and sends nothing EmDash has no door for."
+    "content.contract inspect on an EmDash site answers the release content map's slots with what each holds, its pages and a revision of every mapped entry's _rev; apply refuses a moved revision, refuses by slot and writes nothing when one slot is refused, otherwise writes one content_update per entry (published entries published, drafts kept drafts), settings and term labels; a picture is written by the path media.upload placed it under; the host runs only the fixed content tools in one docker exec in <label>-web-1; a write step run on the JA Diner EmDash kit ends done with its words in the entries and sends nothing EmDash has no door for. The main menu labels are contract slots: a changed label is written and an emptied one takes its item off the menu (menu_set_items), and an EmDash menu item the plan does not keep leaves without holding its page; a page the plan drops becomes a draft (pages.unpublish) and reads back as one; emdash.settings sets the logo and favicon as media references and emdash.entryField a template entry's picture field."
   ],
   "selectors": {},
   "run": {
@@ -35,7 +35,9 @@
       "pictures: the path the run uploaded becomes the library item, found by its upload or by its file name",
       "an EmDash Diner run writes its words into the entries and empties the hidden slot, through the contract alone",
       "🔒 on EmDash a call the Apply door has no door for is answered by name and never sent; on Joomla every call is sent",
-      "the calls go in one exec in <label>-web-1, in order, each answered on its own"
+      "the calls go in one exec in <label>-web-1, in order, each answered on its own",
+      "the menus are slots too: a label is changed and an emptied item leaves the menu, the rest kept in order",
+      "the brand's logo and favicon go into the core settings; the dark logo into the chrome entry's picture field"
     ]
   }
 }

@@ -449,8 +449,11 @@ files it measures from the site folder, then uploads the drawn files with `media
 **c3. The content contract on EmDash (`content.contract`, `info`).** EmDash has no Tracy component, so the Apply door
 answers `content.contract` itself (`apps/tracy-web/src/sites/emdash-contract.js`, 25/11/2026): the contract is the
 release's content map (found by `site.quickstart_tag` + `quickstart_version` in the kit index), each slot one field of an
-entry, one field of a repeater row, a site setting or a term's label. `inspect` reads every mapped entity and answers the
-slots, the pages and a revision made of every entry's `_rev`, the mapped settings and the terms; `apply` reads them again,
+entry, one field of a repeater row, a site setting or a term's label, plus one label slot per item of each menu the map
+lists (`menu.<name>.<position>.label`: changed in place, emptied = the item leaves the menu, both by `menu_set_items`).
+`pages.unpublish` makes the page entries a plan drops drafts. The brand stage's `emdash.settings` (logo, favicon) and
+`emdash.entryField` (a template entry's picture field) go the same road. `inspect` reads every mapped entity and answers the
+slots, the pages and a revision made of every entry's `_rev`, the mapped settings, the terms and the menus; `apply` reads them again,
 refuses a moved revision (`revision_mismatch`), checks every slot and picture first and writes nothing when one is
 refused (`errors[]` by slot), then writes one `content_update` per entry (a published entry is published again at once,
 a draft stays a draft), `settings_update` and `taxonomy_update_term`. The site's own MCP tools are called by its host

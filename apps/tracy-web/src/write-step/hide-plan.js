@@ -41,11 +41,14 @@ export function pageDependingOn(path, { plan, kit }) {
   return null
 }
 
-/** The menu items the plan hides, parted by whether unpublishing one would break a kept page. */
-function menuOrders({ plan, kit, hide }) {
+/**
+ * The menu items the plan hides, parted by whether unpublishing one would break a kept page. `ownsPage: false` where a menu
+ * item only links to its page (EmDash: an item off the menu leaves its entry published), so no kept page holds it.
+ */
+function menuOrders({ plan, kit, hide, ownsPage = true }) {
   const orders = new Map()
   for (const entry of each(hide)) {
-    const depends = pageDependingOn(entry.path, { plan, kit })
+    const depends = ownsPage ? pageDependingOn(entry.path, { plan, kit }) : null
     orders.set(entry.slot, {
       item: entry.item,
       path: entry.path,
@@ -318,7 +321,8 @@ export function hideOrders({
   last = NO_LAST,
   heldWords = new Map(),
   linked = new Set(),
-  doorOf: linkDoorOf = null
+  doorOf: linkDoorOf = null,
+  menuOwnsPage = true
 }) {
   const onSite = new Map(each(reading?.slots).map((s) => [s?.key, s]))
   const icons = iconsOf(kit)
@@ -330,7 +334,7 @@ export function hideOrders({
       .filter((l) => typeof l?.id === 'string')
       .map((l) => [l.id, l])
   )
-  const menu = menuOrders({ plan, kit, hide: extras?.mainMenu?.hide })
+  const menu = menuOrders({ plan, kit, hide: extras?.mainMenu?.hide, ownsPage: menuOwnsPage })
   const blocks = droppedBlocks(plan, kit)
   const gone = new Set(blocks.values())
   const removal =
@@ -532,7 +536,8 @@ export function hideOrders({
       orders.set(slot, { via: 'failed', key, reason: `this button cannot leave whole: ${refused.reason}` })
     }
   }
-  const taken = new Set(each(extras?.mainMenu?.hide).map((h) => slashless(h.path)))
+  // A page whose menu item leaves is taken off with it where the item owns its page (Joomla); elsewhere it is dropped itself.
+  const taken = new Set(menuOwnsPage ? each(extras?.mainMenu?.hide).map((h) => slashless(h.path)) : [])
   // The plan's drops, then the kit's stock screens the plan does not keep (lib/stock-screens.js), each dropped like any other.
   const planDrops = planDropsOf(plan, kit)
   const stock = stockScreensToDrop(kit, plan).filter((s) => !planDrops.some((page) => page.id === s.id))
