@@ -350,3 +350,46 @@ test('a result page link of an EmDash (`?page=`) or WordPress (`?paged=`, `/page
     assert.equal(kit.blocks[1].links[0].fixedLabel?.rule, 'pagination', `${target} back to page 1`)
   }
 })
+
+test('a step link names the title slot of the page it opens when the page is read as sections (JA Nova)', () => {
+  // EmDash page read as sections: the slots keep their `pages.<slug>.` keys, but their entity is the section block.
+  const map = {
+    pages: [
+      { entity: 'pages.development', route: '/development', openAs: '/development' },
+      { entity: 'pages.illustration', route: '/illustration', openAs: '/illustration' }
+    ],
+    slots: [
+      {
+        key: 'pages.development.title',
+        entity: 'block-development-body',
+        type: 'text',
+        role: 'editorial.heading',
+        sample: 'Development'
+      },
+      {
+        key: 'pages.illustration.title',
+        entity: 'block-illustration-body',
+        type: 'text',
+        role: 'editorial.heading',
+        sample: 'Illustration'
+      }
+    ]
+  }
+  const kit = {
+    pages: [{ id: 'page-illustration', path: '/illustration', blocks: ['block-illustration-body'] }],
+    blocks: [
+      {
+        id: 'block-illustration-body',
+        source: { entity: 'block-illustration-body', contains: [] },
+        fixedText: [],
+        slots: [{ id: 'pages.illustration.title', type: 'text' }],
+        links: [{ id: 'l1', label: 'Previous article: Development Prev', target: '/development' }]
+      }
+    ],
+    checks: {},
+    errors: []
+  }
+  const r = relabelKit(kit, { map, linkLabelSlots, listLabelSlots })
+  assert.equal(kit.blocks[0].links[0].labelId, 'pages.development.title')
+  assert.equal(r.wrong, 0)
+})

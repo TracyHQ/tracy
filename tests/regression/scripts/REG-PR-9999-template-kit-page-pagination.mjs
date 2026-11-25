@@ -4,7 +4,11 @@
  * S1: a link "2" to a `?page=2` / `?paged=2` / `/page/2/` page of the listing gets the `pagination` reason.
  * S2: a rebuilt kit takes `fullShotOf` from the previous one.
  */
-import { fixedLinkLabels } from '../../../packages/cms/tracy-quickstart-tools/template-kit/lib/link-label-reasons.mjs'
+import {
+  fixedLinkLabels,
+  relabelKit
+} from '../../../packages/cms/tracy-quickstart-tools/template-kit/lib/link-label-reasons.mjs'
+import { linkLabelSlots } from '../../../packages/cms/tracy-quickstart-tools/template-kit/lib/link-label-slots.mjs'
 import { keepFullShots } from '../../../packages/cms/tracy-quickstart-tools/template-kit/lib/pack.mjs'
 import { checks } from './lib.mjs'
 
@@ -39,4 +43,33 @@ keepFullShots(rebuilt, {
   ]
 })
 c.eq('S2: page-b keeps fullShotOf', rebuilt.pages[1].fullShotOf, 'page-a')
+// S3: a page read as sections keeps its `pages.<slug>.` slot keys under a section block's entity (JA Nova).
+const sectioned = {
+  pages: [{ entity: 'pages.development', route: '/development', openAs: '/development' }],
+  slots: [
+    {
+      key: 'pages.development.title',
+      entity: 'block-development-body',
+      type: 'text',
+      role: 'editorial.heading',
+      sample: 'Development'
+    }
+  ]
+}
+const step = {
+  pages: [{ id: 'page-a', path: '/a', blocks: ['block-a'] }],
+  blocks: [
+    {
+      id: 'block-a',
+      source: { entity: 'block-a', contains: [] },
+      fixedText: [],
+      slots: [],
+      links: [{ id: 'l1', label: 'Previous article: Development Prev', target: '/development' }]
+    }
+  ],
+  checks: {},
+  errors: []
+}
+relabelKit(step, { map: sectioned, linkLabelSlots })
+c.eq('S3: step link names the opened page title', step.blocks[0].links[0].labelId, 'pages.development.title')
 c.done()

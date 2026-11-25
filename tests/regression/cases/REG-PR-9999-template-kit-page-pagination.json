@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-9999-template-kit-page-pagination",
   "kind": "fix",
-  "title": "Template kit: ?page=, ?paged= and /page/N/ result pages are pagination links, and a rebuild keeps fullShotOf",
+  "title": "Template kit: ?page=, ?paged= and /page/N/ result pages are pagination links, and a rebuild keeps fullShotOf, and a step link finds the opened page's title when the page is read as sections",
   "pr": 9999,
   "area": "template-kit/link-labels",
   "cms": ["any"],
@@ -9,17 +9,19 @@
   "flaky_model": false,
   "steps": [
     "S1: Run fixedLinkLabels on a kit whose listing page has a link \"2\" to /donations?page=2, /news?paged=2 or /blog/page/2/ (the result page is also a kit page).",
-    "S2: Run keepFullShots on a rebuilt kit with the previous kit's pages naming fullShotOf."
+    "S2: Run keepFullShots on a rebuilt kit with the previous kit's pages naming fullShotOf.",
+    "S3: Run relabelKit on a kit whose block has a link \"Previous article: Development Prev\" to /development, with a content map whose slot pages.development.title belongs to the entity block-development-body (a page read as sections)."
   ],
   "expect": [
     "S1: the link carries the fixed label rule \"pagination\" (no link-label error).",
-    "S2: each rebuilt page has the previous page's fullShotOf."
+    "S2: each rebuilt page has the previous page's fullShotOf.",
+    "S3: the link's labelId is pages.development.title."
   ],
   "selectors": {
     "files": "packages/cms/tracy-quickstart-tools/template-kit/lib/{link-label-reasons,pack}.mjs",
     "tool": "tests/regression/scripts/REG-PR-9999-template-kit-page-pagination.mjs"
   },
-  "evidence": "JA Impact: the pagination link 2 on Donations and Events was reported as a link-label error; JA Morgan: a rebuild lost fullShotOf",
+  "evidence": "JA Impact: the pagination link 2 on Donations and Events was reported as a link-label error; JA Morgan: a rebuild lost fullShotOf; JA Nova: with emdash-sections.json, relabel left 28 Prev/Next links without a label (658 named, 686 without the file)",
   "fence": "Pure functions of the kit tool read on made-up kits",
   "run": {
     "cmd": ["node", "tests/regression/scripts/REG-PR-9999-template-kit-page-pagination.mjs"]
