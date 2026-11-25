@@ -7,7 +7,8 @@
 //   3.1.2: passive external assets use bounded request transport without changing their URLs or fonts.
 //   3.1.3: inline sentences retain their visible order when choosing the owning block of a stored slot.
 //   3.1.4: a build into a folder holding only a kit keeps its declared site fields and looks through the first assemble.
-export const TOOL_VERSION = '3.1.4'
+//   3.1.5: a rebuild keeps each page's `fullShotOf`; `?page=` result pages are pagination links, not link-label errors.
+export const TOOL_VERSION = '3.1.5'
 export const TOOL = `template-kit ${TOOL_VERSION}`
 
 /** Stamp a kit settled again by a no-browser command: the tool that did it and when. */

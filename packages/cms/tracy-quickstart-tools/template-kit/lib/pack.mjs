@@ -151,6 +151,23 @@ function recordsOf(kit, refs) {
 }
 
 /**
+ * After a rebuild, keep `fullShotOf` of each page the previous kit named it on. A build without `--full` and every
+ * assemble write the kit again without a pack step, so the field (written by `writePack`, which makes it again from
+ * the current groups) would be gone from a kit that held it, a committed one among them.
+ * Returns how many pages kept it.
+ */
+export function keepFullShots(kit, previous) {
+  const old = new Map((previous?.pages ?? []).filter((p) => p?.fullShotOf).map((p) => [p.id, p.fullShotOf]))
+  let kept = 0
+  for (const p of kit.pages ?? [])
+    if (old.has(p.id) && p.fullShotOf === undefined) {
+      p.fullShotOf = old.get(p.id)
+      kept++
+    }
+  return kept
+}
+
+/**
  * Write `<out>/pack/` (template-kit.json naming only the packed images, and those images) and `<out>/<name>.zip`.
  * A page that does not stand for its group points at its representative's full-page shots (`fullShotOf`), so every
  * image id the pack names is in it. An approval of the previous pack is kept when it saw this very image set.

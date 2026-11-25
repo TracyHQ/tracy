@@ -325,3 +325,28 @@ test('a category or tag archive link, and an in-page control with no address, ar
     ['taxonomy-term', 'taxonomy-term', 'page-control', null]
   )
 })
+
+test('a result page link of an EmDash (`?page=`) or WordPress (`?paged=`, `/page/N/`) listing is pagination, not a label error', () => {
+  const cases = [
+    ['/donations', '/donations?page=2'],
+    ['/news', '/news?paged=2'],
+    ['/blog', '/blog/page/2/']
+  ]
+  for (const [path, target] of cases) {
+    const kit = {
+      pages: [
+        { id: 'page-list', path, blocks: ['body-list'] },
+        { id: 'page-list-2', path: target, blocks: ['body-list-2'] }
+      ],
+      blocks: [
+        { id: 'body-list', links: [{ id: 'body-list.link-1', label: '2', target }] },
+        { id: 'body-list-2', links: [{ id: 'body-list-2.link-1', label: '1', target: path }] }
+      ],
+      checks: {},
+      errors: []
+    }
+    fixedLinkLabels(kit)
+    assert.equal(kit.blocks[0].links[0].fixedLabel?.rule, 'pagination', target)
+    assert.equal(kit.blocks[1].links[0].fixedLabel?.rule, 'pagination', `${target} back to page 1`)
+  }
+})

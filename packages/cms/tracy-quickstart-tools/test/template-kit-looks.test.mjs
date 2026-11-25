@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url'
 
 import { looksMissingOf } from '../../../../apps/tracy-web/src/lib/template-kit/reader.js'
 import { applyLooks, indentOf, keepLooks, lookWorklist } from '../template-kit/lib/looks.mjs'
-import { packKitFolder, placeLook } from '../template-kit/lib/pack.mjs'
+import { keepFullShots, packKitFolder, placeLook } from '../template-kit/lib/pack.mjs'
 
 const CLI = fileURLToPath(new URL('../template-kit/cli.mjs', import.meta.url))
 const sha = (s) => createHash('sha256').update(s).digest('hex')
@@ -172,6 +172,23 @@ test('pack carries each look to the pages and blocks drawn by the shot of anothe
     const rebuilt = gallery(dir)
     assert.equal(keepLooks(rebuilt, kit), 5)
     assert.deepEqual(lookWorklist(rebuilt, dir).need, [])
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a rebuild keeps the `fullShotOf` of each page the kit named it on', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'kit-fullshot-'))
+  try {
+    const kit = gallery(dir)
+    writeFileSync(join(dir, 'template-kit.json'), JSON.stringify(kit))
+    packKitFolder(dir)
+    const packed = JSON.parse(readFileSync(join(dir, 'pack/template-kit.json'), 'utf8'))
+    const named = packed.pages.filter((p) => p.fullShotOf)
+    assert.ok(named.length > 0)
+    const rebuilt = gallery(dir)
+    assert.equal(keepFullShots(rebuilt, packed), named.length)
+    for (const p of named) assert.equal(rebuilt.pages.find((x) => x.id === p.id).fullShotOf, p.fullShotOf)
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }

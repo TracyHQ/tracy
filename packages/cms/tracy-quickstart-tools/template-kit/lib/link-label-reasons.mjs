@@ -66,23 +66,30 @@ function fixedWords(label, fixed) {
   )
 }
 
+const PAGE_PARAMS = ['start', 'page', 'paged']
+
 const iconName = (l) =>
   !!l.icon && [l.icon.title, l.icon.network].some((x) => x && normText(x) === normText(l.label))
 
-/** The address without its `start` parameter, and whether it had one. */
+/**
+ * The address without its result page parameter, and whether it had one: Joomla's `start`, an EmDash theme's `page`,
+ * WordPress's `paged`, or its `/page/N/` path segment.
+ */
 function resultPage(path) {
   try {
     const u = new URL(String(path), 'http://kit.invalid')
-    const start = u.searchParams.has('start')
-    u.searchParams.delete('start')
-    return { base: `${u.pathname}?${u.searchParams}`, start }
+    const paged = /\/page\/\d+\/?$/.test(u.pathname)
+    const start = PAGE_PARAMS.some((k) => u.searchParams.has(k)) || paged
+    for (const k of PAGE_PARAMS) u.searchParams.delete(k)
+    const pathname = u.pathname.replace(/\/page\/\d+\/?$/, '/').replace(/(.)\/$/, '$1')
+    return { base: `${pathname}?${u.searchParams}`, start }
   } catch {
     return null
   }
 }
 
 /**
- * The link opens the listing its block is shown on at another result page (`?start=`), or a result page of a list the
+ * The link opens the listing its block is shown on at another result page (`?start=`, `?page=`, `?paged=`, `/page/N/`), or a result page of a list the
  * kit paged through under another address (a menu page showing an author's list, whose router writes the author's own
  * address in the pager).
  */

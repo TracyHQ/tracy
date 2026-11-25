@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-9999-template-kit-page-pagination",
+  "kind": "fix",
+  "title": "Template kit: ?page=, ?paged= and /page/N/ result pages are pagination links, and a rebuild keeps fullShotOf",
+  "pr": 9999,
+  "area": "template-kit/link-labels",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run fixedLinkLabels on a kit whose listing page has a link \"2\" to /donations?page=2, /news?paged=2 or /blog/page/2/ (the result page is also a kit page).",
+    "S2: Run keepFullShots on a rebuilt kit with the previous kit's pages naming fullShotOf."
+  ],
+  "expect": [
+    "S1: the link carries the fixed label rule \"pagination\" (no link-label error).",
+    "S2: each rebuilt page has the previous page's fullShotOf."
+  ],
+  "selectors": {
+    "files": "packages/cms/tracy-quickstart-tools/template-kit/lib/{link-label-reasons,pack}.mjs",
+    "tool": "tests/regression/scripts/REG-PR-9999-template-kit-page-pagination.mjs"
+  },
+  "evidence": "JA Impact: the pagination link 2 on Donations and Events was reported as a link-label error; JA Morgan: a rebuild lost fullShotOf",
+  "fence": "Pure functions of the kit tool read on made-up kits",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-9999-template-kit-page-pagination.mjs"]
+  }
+}
