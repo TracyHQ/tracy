@@ -77,6 +77,10 @@ try {
     const row = { state: s.name, steps: {} }
     const open = async () => {
       const t = page.locator(s.trigger).first()
+      // boundingBox() is in viewport coordinates: a trigger below the first screen (an accordion, a tab strip) has y > viewport
+      // height, and a pointer move/click at those coordinates hits nothing, so the panel is reported "never opened".
+      // centred, not just "into view": the panel opens beside the trigger and must stay on the screen too
+      await t.evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
       const box = await t.boundingBox()
       if (!box) throw new Error(`trigger not visible: ${s.trigger}`)
       await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
