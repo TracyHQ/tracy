@@ -66,7 +66,8 @@ export function woOpsRoutes({
   fetchImpl = fetch,
   log = console,
   now = Date.now,
-  prefetch = null
+  prefetch = null,
+  chainReplays = null
 }) {
   const app = new Hono()
 
@@ -113,6 +114,39 @@ export function woOpsRoutes({
     if (!pool) return c.json({ error: 'NO_DATABASE' }, 503)
     c.header('cache-control', 'no-store')
     return c.json(await listChainBuilds(pool, config))
+  })
+  // The replay of a chain build's write (step-chain-replay.js, bench only): its frozen inputs written to a fresh trial site
+  // of the same template, then the site check, with no model call. Owners and admins start one, as themselves; it runs on
+  // after the answer, one at a time, and is read from the replay doors below.
+  const REPLAY_STATUS = { REPLAY_BUSY: 409, NO_CHAIN_BUILD: 404, REPLAY_NO_ACCOUNT: 400 }
+  app.post('/api/ops/wo/chain-builds/:siteKey/replay', async (c) => {
+    const g = await guard(c, { write: true })
+    if (g.deny) return g.deny
+    if (!pool || !chainReplays) return c.json({ error: 'NO_REPLAY' }, 503)
+    const body = await c.req.json().catch(() => ({}))
+    const started = await chainReplays.start({
+      siteKey: c.req.param('siteKey'),
+      account: g.who.email,
+      allGroups: body?.allGroups === true
+    })
+    if (!started.ok)
+      return c.json({ error: started.code, reason: started.reason }, REPLAY_STATUS[started.code] ?? 400)
+    return c.json({ replay: started.replay }, 202)
+  })
+  app.get('/api/ops/wo/chain-replays', async (c) => {
+    const g = await guard(c)
+    if (g.deny) return g.deny
+    if (!chainReplays) return c.json({ error: 'NO_REPLAY' }, 503)
+    c.header('cache-control', 'no-store')
+    return c.json({ replays: chainReplays.list() })
+  })
+  app.get('/api/ops/wo/chain-replays/:id', async (c) => {
+    const g = await guard(c)
+    if (g.deny) return g.deny
+    if (!chainReplays) return c.json({ error: 'NO_REPLAY' }, 503)
+    c.header('cache-control', 'no-store')
+    const replay = chainReplays.get(c.req.param('id'))
+    return replay ? c.json({ replay }) : c.json({ error: 'NO_SUCH_REPLAY' }, 404)
   })
   app.get('/api/ops/wo/bench-runs/:bench', async (c) => {
     const g = await guard(c)

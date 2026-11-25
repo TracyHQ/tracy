@@ -18,7 +18,9 @@ async function go(over = {}) {
     sleep: clock.sleep,
     pollMs: 1000,
     timeoutMs: 60_000,
-    label: over.label ?? 'write-bench-aaa111'
+    label: over.label ?? 'write-bench-aaa111',
+    ...(over.startedBy ? { startedBy: over.startedBy } : {}),
+    ...(over.keepOthers ? { keepOthers: true } : {})
   })
   return { result, door, store, clock }
 }
@@ -121,6 +123,35 @@ test('the previous bench site is removed only after the new one succeeded', asyn
   )
   assert.equal(winning.store.rows[0].status, 'removed')
   assert.equal(winning.store.rows.filter((r) => r.status === 'ready').length, 1)
+})
+
+test('with keepOthers, only the earlier sites of the same label are removed; another line keeps its trial site', async () => {
+  const theirs = {
+    id: 'run-0',
+    status: 'ready',
+    label: 'write-bench-old001',
+    siteKey: 'write-bench-old001.sites.example',
+    startedBy: 'cli'
+  }
+  const mine = {
+    id: 'run-00',
+    status: 'ready',
+    label: 'write-bench-old002',
+    siteKey: 'write-bench-old002.sites.example',
+    startedBy: 'cli:chain-replay'
+  }
+  const { result, door, store } = await go({
+    store: memoryStore([{ ...theirs }, { ...mine }]),
+    startedBy: 'cli:chain-replay',
+    keepOthers: true
+  })
+  assert.equal(result.ok, true)
+  assert.deepEqual(result.removed, ['write-bench-old002.sites.example'])
+  assert.deepEqual(
+    kinds(door, 'remove').map(([, key]) => key),
+    ['write-bench-old002.sites.example']
+  )
+  assert.equal(store.rows.find((r) => r.id === 'run-0').status, 'ready')
 })
 
 test('never deletes a site that is not the bench own: a record whose address does not match its label is refused', async () => {

@@ -7,7 +7,8 @@ import { createBenchSite, specOfKit } from './bench-site-creator.js'
 
 export const USAGE = `  create-site --kit <ref> --account <email>   create a trial site from the kit's quickstart by the customer's path,
       [--by <label>] [--force-baseline]       prove its contract is the kit's, keep it as the bench's one site and
-                                              delete the previous run's; prints the creation time. The new site is
+      [--keep-others]                         delete the previous run's (with --keep-others, only the earlier sites
+                                              of the same --by label); prints the creation time. The new site is
                                               untouched, so the demo baseline of the kit's version is settled on it:
                                               a stored one is reused, a missing one is measured once and stored, and
                                               a line says which. --force-baseline measures again on purpose.
@@ -38,6 +39,7 @@ export async function runCli(argv, deps) {
         account: { type: 'string' },
         by: { type: 'string' },
         'force-baseline': { type: 'boolean' },
+        'keep-others': { type: 'boolean' },
         limit: { type: 'string' }
       }
     })
@@ -65,6 +67,8 @@ async function createSite(d, values) {
   if (!values.account) throw new Usage('create-site needs --account')
   if (values.by !== undefined && !LABEL.test(values.by))
     throw new Usage('--by takes letters, digits and . _ @ - only, up to 64')
+  if (values['keep-others'] && values.by === undefined)
+    throw new Usage('--keep-others needs --by: it removes only the earlier sites of that label')
   const where = d.index ? { index: d.index } : {}
   const kit = openKit(values.kit, where)
   const spec = specOfKit(kit)
@@ -80,6 +84,7 @@ async function createSite(d, values) {
     door,
     store: d.store,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
+    keepOthers: values['keep-others'] === true,
     ...(d.now ? { now: d.now } : {}),
     ...(d.sleep ? { sleep: d.sleep } : {}),
     ...(d.pollMs ? { pollMs: d.pollMs } : {}),

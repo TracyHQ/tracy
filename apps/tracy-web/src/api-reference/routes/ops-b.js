@@ -179,6 +179,42 @@ export const OPS_B_ROUTES = [
     answers: '`{builds, medianMinutes, slowAfterMinutes}`'
   },
   {
+    method: 'POST',
+    path: '/api/ops/wo/chain-builds/:siteKey/replay',
+    summary: "Replay a chain build's write on a fresh trial site",
+    description: `Bench only, no model call. Starts the replay of the site's last chain build. The replay takes the build's frozen inputs from its own bench runs: the planner's last plan, the copy, the brand file, the picture mapping and manifest, and the research revision. A step that made nothing gets the chain's own stand-in. It writes them with the write step bench to a fresh trial site of the same template, made under the label \`chain-replay\` (only the earlier replay site is removed, never another bench line's), then runs the site check. It answers at once and runs on in this process, one replay at a time; a restart ends it. \`allGroups\` runs the page groups even when read-back is red. ${WRITE_RULE}`,
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    params: { path: { siteKey: 'The site the chain built' } },
+    body: { type: 'object', properties: { allGroups: { type: 'boolean' } } },
+    answers:
+      '202 `{replay}`; 409 `REPLAY_BUSY` while another replay runs, 404 `NO_CHAIN_BUILD`, 503 `NO_REPLAY` on a server without the bench'
+  },
+  {
+    method: 'GET',
+    path: '/api/ops/wo/chain-replays',
+    summary: 'List the chain build replays this server keeps',
+    description:
+      'The replays started since tracy-web last started (at most 20), newest first, each as `GET /api/ops/wo/chain-replays/:id` answers it. Staff seat required.',
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    answers: '`{replays}`'
+  },
+  {
+    method: 'GET',
+    path: '/api/ops/wo/chain-replays/:id',
+    summary: 'Read one chain build replay',
+    description:
+      'Its state (`running`, `done`, `failed`), its phase (`inputs`, `site`, `write`, `check`), the minutes of each phase, the inputs it took (kit, research revision, run ids, and which steps had made their own file), its trial site and write run, the last 60 bench lines, and, when done, the write and its site check summed up as the chain builds door sums up a build (`diagnostics`). Staff seat required.',
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    params: { path: { id: 'The replay id the start answered' } },
+    answers: '`{replay}`, or 404 `NO_SUCH_REPLAY`'
+  },
+  {
     method: 'GET',
     path: '/api/ops/wo/bench-runs/:bench',
     summary: 'List the bench runs started in a time window',

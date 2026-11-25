@@ -63,8 +63,12 @@ export function memoryStore(seed = []) {
         fields
       )
     },
-    async others(id) {
-      return rows.filter((r) => r.id !== id && r.status !== 'removed').map((r) => ({ ...r }))
+    async others(id, { startedBy = null } = {}) {
+      return rows
+        .filter(
+          (r) => r.id !== id && r.status !== 'removed' && (startedBy === null || r.startedBy === startedBy)
+        )
+        .map((r) => ({ ...r }))
     },
     async list({ limit = 20 } = {}) {
       return rows

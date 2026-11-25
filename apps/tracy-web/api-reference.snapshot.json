@@ -32134,6 +32134,89 @@
           "x-internal": true
         }
       },
+      "/api/ops/wo/chain-builds/{siteKey}/replay": {
+        "post": {
+          "operationId": "post_api_ops_wo_chain_builds_siteKey_replay",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "siteKey",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "allGroups": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Ops: fleet"],
+          "x-audience": ["team"],
+          "x-internal": true
+        }
+      },
+      "/api/ops/wo/chain-replays": {
+        "get": {
+          "operationId": "get_api_ops_wo_chain_replays",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Ops: fleet"],
+          "x-audience": ["team"],
+          "x-internal": true
+        }
+      },
+      "/api/ops/wo/chain-replays/{id}": {
+        "get": {
+          "operationId": "get_api_ops_wo_chain_replays_id_",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Ops: fleet"],
+          "x-audience": ["team"],
+          "x-internal": true
+        }
+      },
       "/api/ops/wo/demos/summary": {
         "get": {
           "operationId": "get_api_ops_wo_demos_summary",
