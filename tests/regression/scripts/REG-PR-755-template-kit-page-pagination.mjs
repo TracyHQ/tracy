@@ -1,5 +1,5 @@
 /**
- * REG-PR-9999-template-kit-page-pagination: the template kit tool (3.1.5) treats `?page=` and `?paged=`
+ * REG-PR-755-template-kit-page-pagination: the template kit tool (3.1.5) treats `?page=` and `?paged=`
  * result pages as pagination links, and a rebuild keeps each page's `fullShotOf`.
  * S1: a link "2" to a `?page=2` / `?paged=2` page of the listing gets the `pagination` reason.
  * S2: a rebuilt kit takes `fullShotOf` from the previous one.

@@ -1,8 +1,8 @@
 {
-  "id": "REG-PR-9999-template-kit-page-pagination",
+  "id": "REG-PR-755-template-kit-page-pagination",
   "kind": "fix",
   "title": "Template kit: ?page= and ?paged= result pages are pagination links, and a rebuild keeps fullShotOf, and a step link finds the opened page's title when the page is read as sections",
-  "pr": 9999,
+  "pr": 755,
   "area": "template-kit/link-labels",
   "cms": ["any"],
   "needs": [],
@@ -22,12 +22,12 @@
     "S5: page b has no fullShotOf."
   ],
   "selectors": {
-    "files": "packages/cms/tracy-quickstart-tools/template-kit/lib/{link-label-reasons,pack}.mjs",
-    "tool": "tests/regression/scripts/REG-PR-9999-template-kit-page-pagination.mjs"
+    "files": "packages/cms/tracy-quickstart-tools/template-kit/lib/{link-label-reasons,link-label-slots,pack,assemble}.mjs",
+    "tool": "tests/regression/scripts/REG-PR-755-template-kit-page-pagination.mjs"
   },
   "evidence": "JA Impact: the pagination link 2 on Donations and Events was reported as a link-label error; JA Morgan: a rebuild lost fullShotOf; JA Nova: with emdash-sections.json, relabel left 28 Prev/Next links without a label (658 named, 686 without the file)",
   "fence": "Pure functions of the kit tool read on made-up kits",
   "run": {
-    "cmd": ["node", "tests/regression/scripts/REG-PR-9999-template-kit-page-pagination.mjs"]
+    "cmd": ["node", "tests/regression/scripts/REG-PR-755-template-kit-page-pagination.mjs"]
   }
 }
