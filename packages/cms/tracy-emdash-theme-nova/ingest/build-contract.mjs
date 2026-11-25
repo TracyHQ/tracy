@@ -105,9 +105,9 @@ contract.interactions = {
     open: 'click'
   },
   'show-more': {
-    trigger: '[data-collapse-toggle] >> nth=0',
-    panel: '.nv-collapse >> nth=0',
-    link: '.nv-collapse >> nth=0 >> a',
+    trigger: '[data-collapse-toggle]',
+    panel: '.nv-collapse',
+    link: '.nv-collapse a',
     open: 'click'
   }
 }
@@ -163,22 +163,14 @@ const layout = (id, view, rep, pages, family, states = ['default']) => ({
 })
 const stateOf = (suffix) => contract.pages.find((p) => p.id.endsWith(`-${suffix}`)).states
 contract.layouts = [
-  layout(
-    'Home',
-    'src/views/Home.astro',
-    'en-home',
-    ['en-home', 'en-home-offcanvas', 'en-home-dropdown', 'en-home-accordion', 'en-home-pricing'],
-    undefined,
-    ['default', 'offcanvas', 'dropdown', 'accordion', 'pricing-tabs']
-  ),
-  layout(
-    'Page',
-    'src/views/Page.astro',
-    'en-about',
-    ['en-about', 'en-career', 'en-career-show-more', 'en-services', 'en-project'],
-    undefined,
-    ['default', 'show-more']
-  ),
+  layout('Home', 'src/views/Home.astro', 'en-home', ['en-home']),
+  layout('Page', 'src/views/Page.astro', 'en-about', ['en-about', 'en-career', 'en-services', 'en-project']),
+  // one layout per interaction state, each on its own page (a state is measured at the variants where the widget exists)
+  layout('Offcanvas', 'src/components/site/OffCanvas.astro', 'en-home-offcanvas', ['en-home-offcanvas'], undefined, ['default', 'offcanvas']),
+  layout('Dropdown', 'src/components/site/Header.astro', 'en-home-dropdown', ['en-home-dropdown'], undefined, ['default', 'dropdown']),
+  layout('Faq', 'src/components/blocks/Accordion.astro', 'en-home-accordion', ['en-home-accordion'], undefined, ['default', 'accordion']),
+  layout('PricingTabs', 'src/components/blocks/Pricing.astro', 'en-home-pricing', ['en-home-pricing'], undefined, ['default', 'pricing-tabs']),
+  layout('Positions', 'src/components/blocks/features/Style7.astro', 'en-career-show-more', ['en-career-show-more'], undefined, ['default', 'show-more']),
   layout('Service', 'src/views/Service.astro', 'en-svc-illustration', ids(/^en-svc-/), 'detail'),
   layout(
     'BlogList',
@@ -207,7 +199,7 @@ contract.design.parity = {
   pxTolerance: 1
 }
 contract.design.images = { scope: 'body', placeholder: null }
-contract.design.exceptions = []
+contract.design.exceptions = spec.exceptions ?? []
 delete contract.design.coverage
 contract.fonts = {
   selectors: ['h1', 'h2', 'h3', 'p', 'a', 'button', 'span', 'li'],

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-nova",
-  "revision": 4,
+  "revision": 7,
   "pending": [],
   "locales": [
     "en"
@@ -2580,7 +2580,56 @@
       "scope": "body",
       "placeholder": null
     },
-    "exceptions": []
+    "exceptions": [
+      {
+        "kind": "scan:contrast",
+        "match": "nv-hl-(cyan|green|yellow|orange)",
+        "reason": "contrast of the coloured heading words matches the source: cyan rgb(45,195,245) on violet rgb(94,72,219) (2.99), cyan on rgb(247,247,247) (1.92), green rgb(4,173,104) on rgb(230,246,240) (2.62), yellow rgb(248,171,17) on white (1.94), orange rgb(253,126,20) on rgb(247,247,247) (2.40), same elements measured on the live source",
+        "decision": "D15"
+      },
+      {
+        "kind": "scan:contrast",
+        "match": "nv-pricing-price",
+        "reason": "price in yellow rgb(248,171,17) on rgb(247,247,247) (1.81) is the source's own colours (.pricing-plan-price h2.text-yellow)",
+        "decision": "D15"
+      },
+      {
+        "kind": "scan:contrast",
+        "match": "nv-sec-h",
+        "reason": "white title on green rgb(4,173,104) (2.92) is the source's own colours (.main-title on the green band)",
+        "decision": "D15"
+      },
+      {
+        "kind": "scan:contrast",
+        "match": "nv-teams-desc",
+        "reason": "white text on yellow rgb(248,171,17) (1.94) is the source's own colours (.teams-desc h2)",
+        "decision": "D15"
+      },
+      {
+        "kind": "scan:contrast",
+        "match": "nv-contact-(label|hl)",
+        "reason": "green rgb(4,173,104) on rgb(247,247,247) (2.73) and on white (2.92) is the source's own colours (.title h3, the contact lead span)",
+        "decision": "D15"
+      },
+      {
+        "kind": "scan:contrast",
+        "match": "nv-latest-intro|^a\\.$",
+        "reason": "white text laid over the card picture (the scan sees only the white page behind the image); same white rgba(255,255,255,.75) over the same picture on the source (.item-introtext, the card title)",
+        "decision": "D15"
+      },
+      {
+        "kind": "mega-menu",
+        "match": "^(accordion|pricing-tabs|show-more)$",
+        "reason": "mega-hover tests a panel hung from a trigger (hover travel, Escape returns focus, outside click closes); an accordion, tab strip or collapse is a click toggle with none of those, and the tool clicks at the trigger's page position, which is below the first screen, so it never reaches it. The real behaviour is measured by hand (click opens the panel at 1440 and 390: /home/agent/out/nova/t2/widgets.mjs)",
+        "decision": "D16"
+      },
+      {
+        "kind": "scan:bright-border",
+        "match": "nv-btn|nv-blk-btn|nv-pricing-tab|ec-form-submit",
+        "reason": "a filled primary button, the active pricing tab and the form submit carry a 1px border of the fill colour rgb(94,72,219) in dark mode, as the source does (.btn.btn-primary border rgb(94,72,219) on fill rgb(94,72,219); active pricing tab border rgb(94,72,219)); the border is invisible against its own fill",
+        "decision": "D18"
+      }
+    ]
   },
   "interactions": {
     "offcanvas": {
@@ -2609,9 +2658,9 @@
       "open": "click"
     },
     "show-more": {
-      "trigger": "[data-collapse-toggle] >> nth=0",
-      "panel": ".nv-collapse >> nth=0",
-      "link": ".nv-collapse >> nth=0 >> a",
+      "trigger": "[data-collapse-toggle]",
+      "panel": ".nv-collapse",
+      "link": ".nv-collapse a",
       "open": "click"
     }
   },
@@ -4156,18 +4205,10 @@
       "view": "src/views/Home.astro",
       "representative": "en-home",
       "pages": [
-        "en-home",
-        "en-home-offcanvas",
-        "en-home-dropdown",
-        "en-home-accordion",
-        "en-home-pricing"
+        "en-home"
       ],
       "states": [
-        "default",
-        "offcanvas",
-        "dropdown",
-        "accordion",
-        "pricing-tabs"
+        "default"
       ],
       "hasSource": true
     },
@@ -4178,9 +4219,72 @@
       "pages": [
         "en-about",
         "en-career",
-        "en-career-show-more",
         "en-services",
         "en-project"
+      ],
+      "states": [
+        "default"
+      ],
+      "hasSource": true
+    },
+    {
+      "id": "Offcanvas",
+      "view": "src/components/site/OffCanvas.astro",
+      "representative": "en-home-offcanvas",
+      "pages": [
+        "en-home-offcanvas"
+      ],
+      "states": [
+        "default",
+        "offcanvas"
+      ],
+      "hasSource": true
+    },
+    {
+      "id": "Dropdown",
+      "view": "src/components/site/Header.astro",
+      "representative": "en-home-dropdown",
+      "pages": [
+        "en-home-dropdown"
+      ],
+      "states": [
+        "default",
+        "dropdown"
+      ],
+      "hasSource": true
+    },
+    {
+      "id": "Faq",
+      "view": "src/components/blocks/Accordion.astro",
+      "representative": "en-home-accordion",
+      "pages": [
+        "en-home-accordion"
+      ],
+      "states": [
+        "default",
+        "accordion"
+      ],
+      "hasSource": true
+    },
+    {
+      "id": "PricingTabs",
+      "view": "src/components/blocks/Pricing.astro",
+      "representative": "en-home-pricing",
+      "pages": [
+        "en-home-pricing"
+      ],
+      "states": [
+        "default",
+        "pricing-tabs"
+      ],
+      "hasSource": true
+    },
+    {
+      "id": "Positions",
+      "view": "src/components/blocks/features/Style7.astro",
+      "representative": "en-career-show-more",
+      "pages": [
+        "en-career-show-more"
       ],
       "states": [
         "default",

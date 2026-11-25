@@ -90,7 +90,7 @@
 .nv-teams-img img { display: block; width: 100%; height: auto; transition: transform .5s; }
 .nv-teams-card:hover .nv-teams-img img { transform: scale(1.1); }
 .nv-teams-text { margin: 32px 0 16px; }
-.nv-teams-name { margin: 0 0 8px; color: var(--color-heading); font-size: 18px; line-height: 1.2; }
+.nv-mod .nv-teams-card .nv-teams-name, .nv-teams-name { margin: 0 0 8px; color: var(--color-heading); font-size: 18px; line-height: 1.2; }
 @media (min-width: 576px) { .nv-teams-name { font-size: 24px; } }
 .nv-teams-name a { color: var(--color-heading); }
 .nv-teams-name a:hover, .nv-teams-name a:focus-visible { color: var(--color-accent); }

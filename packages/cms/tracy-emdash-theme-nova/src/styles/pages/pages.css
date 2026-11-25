@@ -173,8 +173,9 @@ html[data-theme="dark"] .nv-contact-label { color: var(--ds-c-accent-text, #9d8c
 .nv-finder-empty p { margin: 0; color: var(--pg-muted); }
 
 /* ---- 404: a page of its own, no header or footer ---- */
-.nv-error-body { background: var(--color-bg); }
-.nv-err { position: relative; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
+.nv-error-body { background: var(--color-bg); display: flex; flex-direction: column; min-height: 100vh; padding: 1rem; } /* the source's body.error-page carries the frame (jpages.scss) */
+.nv-error-body > .min-h-screen { display: flex; flex: 1; min-height: 0; }
+.nv-err { position: relative; display: flex; flex: 1; align-items: center; justify-content: center; }
 .nv-err-toggle { position: fixed; top: 20px; right: 20px; z-index: 10; }
 .nv-err-wrap { max-width: 1000px; margin: 0 auto; text-align: center; }
 .nv-err-code { display: block; font-size: 10rem; font-weight: 500; letter-spacing: -.48px; line-height: 1.2; color: var(--color-heading); }

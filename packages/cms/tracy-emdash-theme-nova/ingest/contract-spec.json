@@ -1,70 +1,165 @@
 {
   "$comment": "Decisions for ingest/build-contract.mjs: which pages, which roles, which strings. Numbers are not here: they are measured on the SOURCE (live Joomla) into ingest/source-measures.json.",
-  "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
-  "base": ["body-type", "header", "nav-link", "footer", "footer-title"],
+  "variants": [
+    "1440-light",
+    "1440-dark",
+    "390-light",
+    "390-dark"
+  ],
+  "base": [
+    "body-type",
+    "header",
+    "nav-link",
+    "footer",
+    "footer-title"
+  ],
   "roles": [
     [
       "body-type",
       "body",
       "body",
-      ["font-family", "font-size", "font-weight", "line-height", "color", "background-color"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "color",
+        "background-color"
+      ]
     ],
-    ["header", ".nv-header", "header.header-block", ["background-color", "color"]],
+    [
+      "header",
+      ".nv-header",
+      "header.header-block",
+      [
+        "background-color",
+        "color"
+      ]
+    ],
     [
       "nav-link",
       ".nv-nav > ul > li:not(.is-active):not(.has-sub) > a:not(:hover)",
       ".t4-megamenu .navbar-nav > li.nav-item:not(.active):not(.current) > a.nav-link:not(:hover)",
-      ["font-size", "font-weight", "letter-spacing", "text-transform", "color"],
+      [
+        "font-size",
+        "font-weight",
+        "letter-spacing",
+        "text-transform",
+        "color"
+      ],
       true
     ],
-    ["footer", ".nv-footer", "#t4-footer", ["font-size", "color", "background-color"]],
+    [
+      "footer",
+      ".nv-footer",
+      "#t4-footer",
+      [
+        "font-size",
+        "color",
+        "background-color"
+      ]
+    ],
     [
       "footer-title",
       ".nv-footer-title",
       "#t4-footer .module-title",
-      ["font-size", "font-weight", "line-height", "color"]
+      [
+        "font-size",
+        "font-weight",
+        "line-height",
+        "color"
+      ]
     ],
     [
       "hero-title",
       ".nv-hero-title",
       ".hero-title",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "h2-info",
       ".nv-info-title h2",
       ".info-title h2",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "cta-title",
       ".nv-cta-title",
       "h2.cta-title",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "cta-line",
       ".nv-cta-line",
       ".cta-desc",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "h3-item",
       ".nv-item-inner h3",
       ".item-inner h3",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "h4-team",
       ".nv-teams-name",
       ".teams-text h4",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "h4-item",
       ".nv-item-inner h4",
       ".item-inner h4",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "btn-primary",
@@ -100,43 +195,94 @@
       "page-h1",
       "main h1:not(.sr-only):not(.nv-hero-title):not(.nv-list-sub):not(.nv-contact-h1):not(.nv-list-h1)",
       ".page-header h1",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "list-sub",
       "h1.nv-list-sub",
       "h1.page-subtitle",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "card-title",
       ".nv-card-title",
       "h2.item-title, .items-leading h2, .items-row h2, .blog-items h2",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "err-code",
       ".nv-err-code",
       ".error-code",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform", "color"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform",
+        "color"
+      ]
     ],
     [
       "err-msg",
       ".nv-err-msg h1",
       ".error-msg h2",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform", "color"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform",
+        "color"
+      ]
     ],
     [
       "list-h1",
       "h1.nv-list-h1",
       ".com-content-category-blog.type-project h1",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ],
     [
       "contact-h1",
       "h1.nv-contact-h1",
       ".contact h1",
-      ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "text-transform"]
+      [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "text-transform"
+      ]
     ]
   ],
   "pages": [
@@ -144,176 +290,462 @@
       "id": "home",
       "path": "/",
       "src": "/",
-      "roles": ["hero-title", "h2-info", "cta-title", "btn-primary", "btn-light"],
+      "roles": [
+        "hero-title",
+        "h2-info",
+        "cta-title",
+        "btn-primary",
+        "btn-light"
+      ],
       "identity": ".nv-hero-title",
       "content": [
-        ["hero", ".nv-hero-title", ".hero-title", "field", "home hero block title"],
-        ["cta-title", ".nv-cta-title", "h2.cta-title", "field", "home cta block title"],
-        ["info", ".nv-info-title h2", ".info-title h2", "field", "home info block title"],
-        ["btn-primary", ".nv-btn-primary", ".btn.btn-primary", "field", "home hero button label"]
+        [
+          "hero",
+          ".nv-hero-title",
+          ".hero-title",
+          "field",
+          "home hero block title"
+        ],
+        [
+          "cta-title",
+          ".nv-cta-title",
+          "h2.cta-title",
+          "field",
+          "home cta block title"
+        ],
+        [
+          "info",
+          ".nv-info-title h2",
+          ".info-title h2",
+          "field",
+          "home info block title"
+        ],
+        [
+          "btn-primary",
+          ".nv-btn-primary",
+          ".btn.btn-primary",
+          "field",
+          "home hero button label"
+        ]
       ]
     },
     {
       "id": "about",
       "path": "/about",
       "src": "/about-us-2",
-      "roles": ["h2-info", "h3-item", "h4-team", "cta-line"],
+      "roles": [
+        "h2-info",
+        "h3-item",
+        "h4-team",
+        "cta-line"
+      ],
       "content": [
-        ["h1", "h1", "h1", "field", "the page title (h1)"],
-        ["info", ".nv-info-title h2", ".info-title h2", "field", "about info block title"],
-        ["team-1", ".nv-teams-name", ".teams-text h4", "field", "about team block, first member"]
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ],
+        [
+          "info",
+          ".nv-info-title h2",
+          ".info-title h2",
+          "field",
+          "about info block title"
+        ],
+        [
+          "team-1",
+          ".nv-teams-name",
+          ".teams-text h4",
+          "field",
+          "about team block, first member"
+        ]
       ]
     },
     {
       "id": "career",
       "path": "/career",
       "src": "/about-us-2/career",
-      "roles": ["btn-primary", "cta-line"],
+      "roles": [
+        "btn-primary",
+        "cta-line"
+      ],
       "content": [
-        ["h1", "h1", "h1", "field", "the page title (h1)"],
-        ["show-more", ".nv-show-more", ".show-more", "setting", "chrome label: show more"]
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ],
+        [
+          "show-more",
+          ".nv-show-more",
+          ".show-more",
+          "setting",
+          "chrome label: show more"
+        ]
       ]
     },
     {
       "id": "contact",
       "path": "/contact",
       "src": "/about-us-2/contact",
-      "roles": ["contact-h1", "cta-line"],
+      "roles": [
+        "contact-h1",
+        "cta-line"
+      ],
       "content": [
-        ["h1", "h1", "h1", "field", "the page title (h1)"],
-        ["title", ".nv-contact-title", "h2", "field", "contact block title"]
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ],
+        [
+          "title",
+          ".nv-contact-title",
+          "h2",
+          "field",
+          "contact block title"
+        ]
       ]
     },
     {
       "id": "services",
       "path": "/services",
       "src": "/services",
-      "roles": ["h2-info", "h4-item", "cta-line"],
+      "roles": [
+        "h2-info",
+        "h4-item",
+        "cta-line"
+      ],
       "content": [
-        ["h1", "h1", "h1", "field", "the page title (h1)"],
-        ["info", ".nv-info-title h2", ".info-title h2", "field", "services info block title"],
-        ["item-1", ".nv-item-inner h4", ".item-inner h4", "field", "services features block, first item"]
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ],
+        [
+          "info",
+          ".nv-info-title h2",
+          ".info-title h2",
+          "field",
+          "services info block title"
+        ],
+        [
+          "item-1",
+          ".nv-item-inner h4",
+          ".item-inner h4",
+          "field",
+          "services features block, first item"
+        ]
       ]
     },
     {
       "id": "svc-illustration",
       "path": "/illustration",
       "src": "/illustration",
-      "roles": ["page-h1", "cta-line"],
-      "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
+      "roles": [
+        "page-h1",
+        "cta-line"
+      ],
+      "content": [
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ]
+      ]
     },
     {
       "id": "svc-development",
       "path": "/development",
       "src": "/development",
-      "roles": ["page-h1", "cta-line"],
-      "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
+      "roles": [
+        "page-h1",
+        "cta-line"
+      ],
+      "content": [
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ]
+      ]
     },
     {
       "id": "svc-mobile-application",
       "path": "/mobile-application",
       "src": "/mobile-application",
-      "roles": ["page-h1", "cta-line"],
-      "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
+      "roles": [
+        "page-h1",
+        "cta-line"
+      ],
+      "content": [
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ]
+      ]
     },
     {
       "id": "svc-cloud-solutions",
       "path": "/cloud-solutions",
       "src": "/cloud-solutions",
-      "roles": ["page-h1", "cta-line"],
-      "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
+      "roles": [
+        "page-h1",
+        "cta-line"
+      ],
+      "content": [
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ]
+      ]
     },
     {
       "id": "svc-it-infrastructure",
       "path": "/it-infrastructure",
       "src": "/it-infrastructure",
-      "roles": ["page-h1", "cta-line"],
-      "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
+      "roles": [
+        "page-h1",
+        "cta-line"
+      ],
+      "content": [
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ]
+      ]
     },
     {
       "id": "svc-cybersecurity",
       "path": "/cybersecurity",
       "src": "/cybersecurity",
-      "roles": ["page-h1", "cta-line"],
-      "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
+      "roles": [
+        "page-h1",
+        "cta-line"
+      ],
+      "content": [
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ]
+      ]
     },
     {
       "id": "svc-virtualization",
       "path": "/virtualization",
       "src": "/virtualization",
-      "roles": ["page-h1", "cta-line"],
-      "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
+      "roles": [
+        "page-h1",
+        "cta-line"
+      ],
+      "content": [
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ]
+      ]
     },
     {
       "id": "project",
       "path": "/project",
       "src": "/project",
-      "roles": ["cta-line"],
-      "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
+      "roles": [
+        "cta-line"
+      ],
+      "content": [
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ]
+      ]
     },
     {
       "id": "project-illustration",
       "path": "/project/illustration",
       "src": "/project/illustration",
-      "roles": ["list-h1", "cta-line"],
+      "roles": [
+        "list-h1",
+        "cta-line"
+      ],
       "content": [
-        ["h1", "h1", "h1", "field", "the page title (h1)"],
-        ["card-1", ".nv-card-title", "h2", "derived", "posts of the category"]
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ],
+        [
+          "card-1",
+          ".nv-card-title",
+          "h2",
+          "derived",
+          "posts of the category"
+        ]
       ]
     },
     {
       "id": "project-branding",
       "path": "/project/branding",
       "src": "/project/branding",
-      "roles": ["list-h1", "cta-line"],
+      "roles": [
+        "list-h1",
+        "cta-line"
+      ],
       "content": [
-        ["h1", "h1", "h1", "field", "the page title (h1)"],
-        ["card-1", ".nv-card-title", "h2", "derived", "posts of the category"]
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ],
+        [
+          "card-1",
+          ".nv-card-title",
+          "h2",
+          "derived",
+          "posts of the category"
+        ]
       ]
     },
     {
       "id": "project-ui-ux-design",
       "path": "/project/ui-ux-design",
       "src": "/project/ui-ux-design",
-      "roles": ["list-h1", "cta-line"],
+      "roles": [
+        "list-h1",
+        "cta-line"
+      ],
       "content": [
-        ["h1", "h1", "h1", "field", "the page title (h1)"],
-        ["card-1", ".nv-card-title", "h2", "derived", "posts of the category"]
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ],
+        [
+          "card-1",
+          ".nv-card-title",
+          "h2",
+          "derived",
+          "posts of the category"
+        ]
       ]
     },
     {
       "id": "project-detail",
       "path": "/project/illustration/packaging-design",
       "src": "/project/illustration/packaging-design",
-      "roles": ["page-h1", "cta-line"],
+      "roles": [
+        "page-h1",
+        "cta-line"
+      ],
       "content": [
-        ["h1", "h1", "h1", "field", "the page title (h1)"],
-        ["title", "h2.is-h1", "h2.h1", "field", "project title"]
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ],
+        [
+          "title",
+          "h2.is-h1",
+          "h2.h1",
+          "field",
+          "project title"
+        ]
       ]
     },
     {
       "id": "blog",
       "path": "/blog",
       "src": "/category-blog",
-      "roles": ["list-sub", "cta-line"],
+      "roles": [
+        "list-sub",
+        "cta-line"
+      ],
       "content": [
-        ["h1", "h1", "h1", "field", "the page title (h1)"],
-        ["card-1", ".nv-card-title", "h2", "derived", "posts, newest first"]
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ],
+        [
+          "card-1",
+          ".nv-card-title",
+          "h2",
+          "derived",
+          "posts, newest first"
+        ]
       ]
     },
     {
       "id": "post",
       "path": "/blog/how-business-technology-changed-how-we-think-about-death",
       "src": "/category-blog/how-business-technology-changed-how-we-think-about-death",
-      "roles": ["page-h1", "cta-line"],
-      "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
+      "roles": [
+        "page-h1",
+        "cta-line"
+      ],
+      "content": [
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ]
+      ]
     },
     {
       "id": "search",
       "path": "/search",
       "src": "/smart-search",
       "roles": [],
-      "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
+      "content": [
+        [
+          "h1",
+          "h1",
+          "h1",
+          "field",
+          "the page title (h1)"
+        ]
+      ]
     },
     {
       "id": "not-found",
@@ -321,13 +753,90 @@
       "src": "/nope-404",
       "status": 404,
       "bare": true,
-      "roles": ["err-code", "err-msg"],
+      "roles": [
+        "err-code",
+        "err-msg"
+      ],
       "content": [
-        ["code", ".nv-err-code", ".error-code", "static", "template word"],
-        ["title", ".nv-err-msg h1", ".error-msg h2", "static", "template word"],
-        ["text", ".nv-err-other p", ".error-other-info p", "static", "template word"],
-        ["back", ".nv-err-redirect a", ".page-redirect a", "static", "template word"]
+        [
+          "code",
+          ".nv-err-code",
+          ".error-code",
+          "static",
+          "template word"
+        ],
+        [
+          "title",
+          ".nv-err-msg h1",
+          ".error-msg h2",
+          "static",
+          "template word"
+        ],
+        [
+          "text",
+          ".nv-err-other p",
+          ".error-other-info p",
+          "static",
+          "template word"
+        ],
+        [
+          "back",
+          ".nv-err-redirect a",
+          ".page-redirect a",
+          "static",
+          "template word"
+        ]
       ]
+    }
+  ],
+  "exceptions": [
+    {
+      "kind": "scan:contrast",
+      "match": "nv-hl-(cyan|green|yellow|orange)",
+      "reason": "contrast of the coloured heading words matches the source: cyan rgb(45,195,245) on violet rgb(94,72,219) (2.99), cyan on rgb(247,247,247) (1.92), green rgb(4,173,104) on rgb(230,246,240) (2.62), yellow rgb(248,171,17) on white (1.94), orange rgb(253,126,20) on rgb(247,247,247) (2.40), same elements measured on the live source",
+      "decision": "D15"
+    },
+    {
+      "kind": "scan:contrast",
+      "match": "nv-pricing-price",
+      "reason": "price in yellow rgb(248,171,17) on rgb(247,247,247) (1.81) is the source's own colours (.pricing-plan-price h2.text-yellow)",
+      "decision": "D15"
+    },
+    {
+      "kind": "scan:contrast",
+      "match": "nv-sec-h",
+      "reason": "white title on green rgb(4,173,104) (2.92) is the source's own colours (.main-title on the green band)",
+      "decision": "D15"
+    },
+    {
+      "kind": "scan:contrast",
+      "match": "nv-teams-desc",
+      "reason": "white text on yellow rgb(248,171,17) (1.94) is the source's own colours (.teams-desc h2)",
+      "decision": "D15"
+    },
+    {
+      "kind": "scan:contrast",
+      "match": "nv-contact-(label|hl)",
+      "reason": "green rgb(4,173,104) on rgb(247,247,247) (2.73) and on white (2.92) is the source's own colours (.title h3, the contact lead span)",
+      "decision": "D15"
+    },
+    {
+      "kind": "scan:contrast",
+      "match": "nv-latest-intro|^a\\.$",
+      "reason": "white text laid over the card picture (the scan sees only the white page behind the image); same white rgba(255,255,255,.75) over the same picture on the source (.item-introtext, the card title)",
+      "decision": "D15"
+    },
+    {
+      "kind": "mega-menu",
+      "match": "^(accordion|pricing-tabs|show-more)$",
+      "reason": "mega-hover tests a panel hung from a trigger (hover travel, Escape returns focus, outside click closes); an accordion, tab strip or collapse is a click toggle with none of those, and the tool clicks at the trigger's page position, which is below the first screen, so it never reaches it. The real behaviour is measured by hand (click opens the panel at 1440 and 390: /home/agent/out/nova/t2/widgets.mjs)",
+      "decision": "D16"
+    },
+    {
+      "kind": "scan:bright-border",
+      "match": "nv-btn|nv-blk-btn|nv-pricing-tab|ec-form-submit",
+      "reason": "a filled primary button, the active pricing tab and the form submit carry a 1px border of the fill colour rgb(94,72,219) in dark mode, as the source does (.btn.btn-primary border rgb(94,72,219) on fill rgb(94,72,219); active pricing tab border rgb(94,72,219)); the border is invisible against its own fill",
+      "decision": "D18"
     }
   ]
 }
