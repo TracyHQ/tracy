@@ -1,4 +1,4 @@
-- **Staff can replay a finished chain build's write on a fresh trial site of the same template: the build's own frozen inputs, the write step, then the site check, with no model call** — David (WO) · #PR · `feat/wo-chain-replay` · 2026-11-25
+- **Staff can replay a finished chain build's write on a fresh trial site of the same template: the build's own frozen inputs, the write step, then the site check, with no model call** — David (WO) · #750 · `feat/wo-chain-replay` · 2026-11-25
   **Affects:** /ops/wo staff, through three new internal doors:
   - `POST /api/ops/wo/chain-builds/:siteKey/replay` (owner/admin, same Origin; 202, one replay at a time, 409 `REPLAY_BUSY`);
   - `GET /api/ops/wo/chain-replays`;

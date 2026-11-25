@@ -1,0 +1,1 @@
+{"id":"REG-PR-750-chain-replay","verdict":"PASS","commit":"0be28fd9710a1ad609db45fdc5abf4449306de79","ran_at":"2026-11-25T03:35:00.521Z","evidence":"tests/regression/.runs/2026-11-25-0be28fd97/REG-PR-750-chain-replay.log"}

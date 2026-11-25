@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-750-chain-replay",
+  "kind": "feat",
+  "title": "A finished chain build's write is replayed on a fresh trial site of its own, from the build's frozen inputs, with no model call",
+  "pr": 750,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A replay takes the build's own plan, copy, brand and pictures (stand-ins for a gone run), makes its own trial site with --keep-others, writes and checks it in that order and answers the chain's diagnostics; one replay runs at a time and frees the next start when it ends or fails; the bench removes only the earlier sites of the same label with --keep-others."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-replay.test.mjs",
+      "apps/tracy-web/test/write-step-bench-site.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a replay writes the build's own inputs to its own trial site, then checks it, and answers as the chain does",
+      "one replay at a time: a second start while one runs is refused, and starts again once it ends",
+      "a step whose run is gone gets the chain's own stand-in, and the replay says it was not the build's",
+      "a trial site that is not made ends the replay with its words, and nothing is written",
+      "a replay whose files cannot be laid out fails in words, and the next one can start",
+      "with keepOthers, only the earlier sites of the same label are removed; another line keeps its trial site"
+    ]
+  }
+}
