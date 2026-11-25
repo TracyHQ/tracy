@@ -1341,6 +1341,21 @@
 					"type": "string"
 				},
 				{
+					"slug": "category_branding_label",
+					"label": "Category branding label",
+					"type": "string"
+				},
+				{
+					"slug": "category_ui_ux_design_label",
+					"label": "Category ui ux design label",
+					"type": "string"
+				},
+				{
+					"slug": "category_illustration_label",
+					"label": "Category illustration label",
+					"type": "string"
+				},
+				{
 					"slug": "all_projects_label",
 					"label": "All projects label",
 					"type": "string"
@@ -15205,6 +15220,9 @@
 					"play_video_label": "Play video",
 					"nav_label": "Primary",
 					"breadcrumb_label": "Breadcrumbs",
+					"category_branding_label": "Branding",
+					"category_ui_ux_design_label": "UI/UX Design",
+					"category_illustration_label": "Illustration",
 					"all_projects_label": "All project",
 					"project_tabs_title": "We have an experienced team\nof production",
 					"project_tabs_nav_label": "Project categories",

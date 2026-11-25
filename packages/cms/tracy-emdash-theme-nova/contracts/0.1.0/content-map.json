@@ -1528,12 +1528,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 84,
-            "height": 20
+            "width": 363,
+            "height": 100
           },
           "phone": {
-            "width": 84,
-            "height": 20
+            "width": 358,
+            "height": 29
           }
         },
         "lines": {
@@ -1541,10 +1541,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 12,
-          "phone": 12
+          "desktop": 27,
+          "phone": 33
         },
-        "maxCharacters": 12,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -2256,11 +2256,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 33,
+            "width": 34,
             "height": 35
           },
           "phone": {
-            "width": 33,
+            "width": 34,
             "height": 35
           }
         },
@@ -44926,6 +44926,114 @@
       "nonVisualFrom": "the label is only the accessible name (`aria-label` of the breadcrumb navigation (Breadcrumbs.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit",
       "fit": {
         "measured": false
+      }
+    },
+    {
+      "key": "chrome.chrome.category_branding_label",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "category_branding_label"
+      },
+      "type": "text",
+      "sample": "Branding",
+      "label": "Category branding label",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 70,
+            "height": 20
+          },
+          "phone": {
+            "width": 70,
+            "height": 20
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 8,
+          "phone": 8
+        },
+        "maxCharacters": 8,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "chrome.chrome.category_ui_ux_design_label",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "category_ui_ux_design_label"
+      },
+      "type": "text",
+      "sample": "UI/UX Design",
+      "label": "Category ui ux design label",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 104,
+            "height": 20
+          },
+          "phone": {
+            "width": 104,
+            "height": 20
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 12,
+          "phone": 12
+        },
+        "maxCharacters": 12,
+        "casing": "none",
+        "overflow": "rewrite"
+      }
+    },
+    {
+      "key": "chrome.chrome.category_illustration_label",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "category_illustration_label"
+      },
+      "type": "text",
+      "sample": "Illustration",
+      "label": "Category illustration label",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 84,
+            "height": 20
+          },
+          "phone": {
+            "width": 84,
+            "height": 20
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 12,
+          "phone": 12
+        },
+        "maxCharacters": 12,
+        "casing": "none",
+        "overflow": "rewrite"
       }
     },
     {

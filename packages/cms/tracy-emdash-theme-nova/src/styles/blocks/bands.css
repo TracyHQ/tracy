@@ -59,7 +59,7 @@ html[data-theme="dark"] .nv-pricing { --nv-soft: var(--color-band); --nv-soft-2:
 @media (min-width: 576px) { .nv-pricing-wrap { padding: 32px; } }
 .nv-pricing-wrap.is-title { padding: 0; min-height: 0; background: transparent; }
 @media (min-width: 1200px) { .nv-pricing-wrap.is-title { padding: 32px; min-height: 100%; background: var(--nv-soft); } }
-.nv-pricing-tabs { display: flex; flex-wrap: wrap; flex-direction: row; }
+.nv-pricing-tabs { display: flex; flex-wrap: wrap; flex-direction: row; color: var(--color-heading); }
 @media (min-width: 1200px) { .nv-pricing-tabs { flex-direction: column; flex-wrap: nowrap; } }
 .nv-pricing-tab {
 	display: block; margin: 0 16px 7px 0; padding: 16px; border: 1px solid var(--color-line); border-radius: var(--ds-card-radius, 16px);
@@ -71,8 +71,8 @@ html[data-theme="dark"] .nv-pricing { --nv-soft: var(--color-band); --nv-soft-2:
 	.nv-pricing-tab { margin: 0 0 31px; padding: 32px; border-color: transparent; font-size: 28px; }
 	.nv-pricing-tab:last-child { margin-bottom: 0; }
 }
-.nv-pricing-tab:hover { color: var(--color-accent); }
-.nv-pricing-tab.is-active { border-color: var(--color-accent); background: var(--color-accent-light); color: var(--color-accent); }
+.nv-pricing-tab:hover { color: var(--color-accent-text); }
+.nv-pricing-tab.is-active { border-color: var(--color-accent); background: var(--color-accent-light); color: var(--color-accent-text); }
 html[data-theme="dark"] .nv-pricing-tab { color: var(--color-fg); }
 html[data-theme="dark"] .nv-pricing-tab:not(.is-active) { border-color: var(--color-line-strong); }
 html[data-theme="dark"] .nv-pricing-tab:hover { color: var(--color-accent-text); }
@@ -156,3 +156,4 @@ a.nv-sb-link:hover, a.nv-sb-link:focus-visible { opacity: .8; }
 @media (max-width: 575.98px) { .nv-pricing .nv-main-title { font-size: 24px; } }
 /* coloured words of the footer strip: the source's `.text-cyan` */
 .nv-cta .nv-hl-cyan { color: var(--ds-c-accent-text, var(--color-cyan)); }
+.nv-cta.nv-bg-purple .nv-hl-cyan { color: var(--ds-c-accent-on, var(--ds-c-accent-text, var(--color-cyan))); }

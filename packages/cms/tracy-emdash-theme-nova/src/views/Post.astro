@@ -23,6 +23,7 @@ import { introOf, loadPostsInOrder, paragraphs, tagsOf } from '@/components/site
 
 const { chrome, locale, path, slug, category } = Astro.props
 const w = chrome.site
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const all = await loadPostsInOrder(locale)
 const wantProject = typeof category === 'string' && category !== ''
 const post = all.find(
@@ -62,16 +63,18 @@ if (post && isProject && intro && paragraphs(body)[0] === intro) {
 }
 const stamped = post ? stampBlocks($p, 'body', body as any[]) : []
 const tags = post ? tagsOf(post) : []
-const catLabel = post?.category?.label ?? ''
-// the crumb label is the label of the `primary` menu item with the same address (a menu-item label slot for the kit); the term label is the fallback
-const menuLabelOf = (url: string): string | undefined =>
-  chrome.primary.flatMap((i: any) => [i, ...(i.children ?? [])]).find((i: any) => i.url === url)?.label
+// a project category is printed from the chrome word of its slug (a text slot the kit can name as the label); the term label is the fallback
+const catField = post?.category?.slug ? `category_${post.category.slug.replace(/-/g, '_')}_label` : ''
+const catWord = catField ? (w as any)[catField] : ''
+const catLabel = catWord || (post?.category?.label ?? '')
+const catStamp = catWord ? catField : undefined
 const trail = post
   ? isProject
     ? [
         { label: w.project_title, url: '/project' },
         {
-          label: menuLabelOf(`/project/${post.category?.slug}`) ?? catLabel,
+          label: catLabel,
+          field: catStamp,
           url: `/project/${post.category?.slug}`
         },
         { label: post.title, url: '' }
@@ -96,7 +99,7 @@ const trail = post
 						)}
 						{isProject ? (
 							<>
-								<header class="nv-article-head"><h1>{catLabel}</h1></header>
+								<header class="nv-article-head"><h1 {...(catStamp ? $c(catStamp) : {})}>{catLabel}</h1></header>
 								<header class="nv-article-head is-sub"><h2 class="is-h1" itemprop="headline" {...$p('title')}>{post.title}</h2></header>
 								{intro && <div class="nv-article-intro"><p {...$p('body')}>{intro}</p></div>}
 								{tags.length > 0 && <ul class="nv-article-tags" {...$p('tags')}>{tags.map((t) => <li><span>{t}</span></li>)}</ul>}

@@ -16,7 +16,11 @@
   "modes": true,
   "modesNote": "the light/dark switch (data-theme on html, [data-theme-toggle] in Header.astro)",
   "selectors": {
-    "themeToggle": "[data-theme-toggle]"
+    "themeToggle": "[data-theme-toggle]",
+    "logo": [
+      ".nv-header .nv-brand .nv-logo-ink",
+      ".nv-header .nv-brand img"
+    ]
   },
   "roles": {
     "page": "body",
@@ -37,7 +41,7 @@
     "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
   },
   "ready": false,
-  "readyNote": "not measured yet: flow.mjs --cms emdash has not been run on a site built from the 0.1.0 release; the measurement goes to contracts/0.1.0/design-system-measurement.json and this row flips to true after it passes",
+  "readyNote": "measured 25/11/2026 with flow.mjs --cms emdash on a clean install of the 0.1.0 source (15 featured systems, 1440 and 390): 45 of 64 pass, so not ready. Roles, fonts, identity, mode and undo pass on every view; contrast (CON-1) still fails where a system's own pair reads worse than the template: the yellow Team band words (a mid-tone warning colour), the active pricing tab (a system's accent text on a 10% tint of its accent, 4.2 to 4.5), and the news band title on a system's success green in Pitch's dark side (2.73). The preview rows were not measured (no demo address yet). Measurement: contracts/0.1.0/design-system-measurement.json",
   "measureStill": true,
   "discovered": {},
   "measureNote": "Carousels (the home hero and the text slider) are stopped on their first slide before each measure",

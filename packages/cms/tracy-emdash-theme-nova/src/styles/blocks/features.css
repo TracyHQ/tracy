@@ -124,6 +124,18 @@ html[data-theme="dark"] .nv-mod.nv-bg-purple-light, html[data-theme="dark"] .nv-
 	color: color-mix(in srgb, var(--color-on-ink) 75%, transparent);
 }
 .nv-mod.nv-bg-color :is(h1, h2, h3, h4, h5, h6, .nv-h2, .nv-h3, .nv-h4) { color: var(--color-on-ink); }
+/* a band painted with the accent: words on it use the accent's own on-colour (a system's accent is not always dark enough for white) */
+html .nv-mod.nv-bg-color.nv-bg-purple { color: var(--ds-c-accent-on, color-mix(in srgb, var(--color-on-ink) 75%, transparent)); }
+.nv-features-1.nv-bg-purple .nv-svg-intro { color: var(--ds-c-accent-on, var(--color-on-ink)); }
+.nv-mod.nv-bg-purple :is(h1, h2, h3, h4, h5, h6, .nv-h2, .nv-h3, .nv-h4) { color: var(--ds-c-accent-on, var(--color-on-ink)); }
+.nv-features.nv-bg-purple .nv-hl-green { color: var(--ds-c-accent-on, var(--color-green)); }
+.nv-features.nv-bg-purple .nv-hl-purple { color: var(--ds-c-accent-on, var(--color-accent-text)); }
+.nv-features.nv-bg-purple .nv-hl-cyan { color: var(--ds-c-accent-on, var(--nv-cyan)); }
+.nv-features.nv-bg-purple .nv-hl-red { color: var(--ds-c-accent-on, var(--color-red)); }
+.nv-features.nv-bg-purple .nv-hl-yellow { color: var(--ds-c-accent-on, var(--color-yellow)); }
+.nv-features.nv-bg-purple .nv-hl-orange { color: var(--ds-c-accent-on, var(--nv-orange)); }
+.nv-features.nv-bg-yellow .nv-hl-black, .nv-teams.nv-bg-yellow .nv-hl-black { color: var(--ds-c-ink, var(--ds-c-heading, #000)); } /* dark words on the yellow band: the system's ink, not its heading (which may be light in the dark side) */
+.nv-features.nv-bg-purple .nv-hl-black { color: var(--ds-c-accent-on, var(--ds-c-heading, #000)); }
 
 /* ---- 3. coloured words of a heading (heading-html.ts) -------------------------------------------------------------------- */
 .nv-hl-green { color: var(--ds-c-accent-text, var(--color-green)); }

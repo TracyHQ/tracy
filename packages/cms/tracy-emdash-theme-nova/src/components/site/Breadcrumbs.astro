@@ -13,7 +13,7 @@ interface Props {
   chrome: Chrome
   currentPath: string
   /** The crumbs after Home, the last one being the current page. An empty `url` prints the label without a link. */
-  trail?: { label: string; url: string }[]
+  trail?: { label: string; url: string; field?: string }[]
 }
 const { chrome, currentPath, trail } = Astro.props
 const { site, locale } = chrome
@@ -29,7 +29,7 @@ function chain(items: ChromeMenuItem[], path: string): ChromeMenuItem[] | null {
   }
   return null
 }
-function derive(): { label: string; url: string }[] {
+function derive(): { label: string; url: string; field?: string }[] {
   const path = currentPath.length > 1 ? currentPath.replace(/\/$/, '') : currentPath
   const found =
     chain(chrome.primary, path) ??
@@ -59,7 +59,7 @@ const home = { label: site.breadcrumb_home, url: '/' }
 						</li>
 						{crumbs.map((c, i) => (
 							<li>
-								{c.url ? <a href={own(c.url)} aria-current={i === crumbs.length - 1 ? 'page' : undefined}>{c.label}</a> : <span aria-current={i === crumbs.length - 1 ? 'page' : undefined}>{c.label}</span>}
+								{c.url ? <a href={own(c.url)} aria-current={i === crumbs.length - 1 ? 'page' : undefined} {...(c.field ? $c(c.field) : {})}>{c.label}</a> : <span aria-current={i === crumbs.length - 1 ? 'page' : undefined}>{c.label}</span>}
 								{i < crumbs.length - 1 && <span class="nv-bc-sep" aria-hidden="true" />}
 							</li>
 						))}

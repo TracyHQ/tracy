@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-25T05:21:38.045Z",
+	"generatedAt": "2026-11-25T06:36:59.300Z",
 	"roleVocabularyVersion": "place-content-roles/3",
 	"settings": {
 		"title": {
@@ -1239,6 +1239,21 @@
 			"target": "string",
 			"label": "Breadcrumb label",
 			"role": "editorial.button_label"
+		},
+		"chrome.category_branding_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Category branding label"
+		},
+		"chrome.category_ui_ux_design_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Category ui ux design label"
+		},
+		"chrome.category_illustration_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Category illustration label"
 		},
 		"chrome.all_projects_label": {
 			"source": "text",

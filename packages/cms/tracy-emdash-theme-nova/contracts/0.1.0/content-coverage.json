@@ -7,23 +7,23 @@
   "platform": "emdash",
   "contract": {
     "id": "tracy-nova/emdash-0.x/0.1.0",
-    "contentMapSha256": "e982bf2de08e032e7a5fca20fbf9d8153a1cbf55e328bbffba87fd7a9c92b9c7",
+    "contentMapSha256": "ad6156accb83d413e3b7963b5684a9919224a5b38a53e8b8fdca8294e991cafe",
     "presentationLockSha256": null
   },
-  "measuredAt": "2026-11-25T05:26:18.909Z",
+  "measuredAt": "2026-11-25T06:57:04.338Z",
   "viewports": [
     "desktop",
     "phone"
   ],
   "bound": {
-    "stamp": 2727,
-    "entry": 432,
-    "menu": 1103,
-    "words": 506,
+    "stamp": 2748,
+    "entry": 466,
+    "menu": 1031,
+    "words": 503,
     "excerpt": 130,
     "media": 408,
     "route": 481,
-    "clone": 108
+    "clone": 107
   },
   "lockedFiles": [
     "/nova/icon-decor/bg-1.png"
@@ -38,8 +38,8 @@
   },
   "counts": {
     "text": {
-      "total": 1358,
-      "matched": 1252,
+      "total": 1354,
+      "matched": 1248,
       "locked": 0,
       "capture": 0,
       "captureLocked": 0,
@@ -75,7 +75,7 @@
     }
   },
   "coverage": {
-    "text": 92.5,
+    "text": 92.4,
     "images": 100,
     "links": 52.8
   },

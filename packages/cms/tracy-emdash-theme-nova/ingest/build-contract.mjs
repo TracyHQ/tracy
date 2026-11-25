@@ -107,9 +107,9 @@ contract.interactions = {
     persistent: true
   },
   'show-more': {
-    trigger: '[data-collapse-toggle]',
-    panel: '.nv-collapse',
-    link: '.nv-collapse a',
+    trigger: '[data-collapse-toggle="nv-pos-career-positions-0"]',
+    panel: '#nv-pos-career-positions-0',
+    link: '#nv-pos-career-positions-0 a',
     open: 'click',
     persistent: true
   }

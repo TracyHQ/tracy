@@ -32,7 +32,9 @@ const all = await loadPostsInOrder(locale)
 const list = isProject
   ? all.filter((p) => p.kind === 'project' && p.category?.slug === category)
   : all.filter((p) => p.kind !== 'project')
-const label = isProject ? (all.find((p) => p.category?.slug === category)?.category?.label ?? '') : ''
+const catField = isProject ? `category_${String(category).replace(/-/g, '_')}_label` : ''
+const catWord: string = catField ? ((w as any)[catField] ?? '') : ''
+const label = isProject ? catWord || (all.find((p) => p.category?.slug === category)?.category?.label ?? '') : ''
 const page = await section('pages', isProject ? 'project' : 'blog', locale)
 const $p = stampFor(Astro.request, 'pages', page)
 const $c = stampFor(Astro.request, 'chrome', chrome.entry)
@@ -47,7 +49,7 @@ const title = pageNo > 1 ? `${heading} — ${fill(w.page_title_label, { n: pageN
 const trail = isProject
   ? [
       { label: w.project_title, url: '/project' },
-      { label: heading, url: here }
+      { label: heading, url: here, field: catWord ? catField : undefined }
     ]
   : [{ label: heading, url: here }]
 const social = chrome.social['social-page']
@@ -85,7 +87,7 @@ if (isProject && list.length === 0) Astro.response.status = 404
 			<div class:list={['nv-body', !isProject && 'nv-body--tight']}>
 				<div class="nv-ct">
 					<div class:list={['nv-list', isProject ? 'is-project' : 'is-blog']}>
-						{isProject ? <h1 class="nv-list-h1" {...$p('title')}>{heading}</h1> : <h1 class="nv-list-sub" {...$p('title')}>{heading}</h1>}
+						{isProject ? <h1 class="nv-list-h1" {...(catWord ? $c(catField) : $p('title'))}>{heading}</h1> : <h1 class="nv-list-sub" {...$p('title')}>{heading}</h1>}
 						<div class:list={['nv-cards', isProject ? 'is-2' : 'is-3']}>
 							{shown.map((p) => <PostCard post={p} chrome={chrome} locale={locale} variant={isProject ? 'project' : 'blog'} />)}
 						</div>

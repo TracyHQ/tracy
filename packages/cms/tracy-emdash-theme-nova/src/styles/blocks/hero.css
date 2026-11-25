@@ -7,7 +7,16 @@
 	background-position: center;
 }
 .nv-hero .nv-hero-content { max-width: 700px; margin-inline: auto; padding-block: 160px; text-align: center; }
-.nv-hero .nv-hero-title { margin: 0 0 2rem; font-weight: 700; }
+.nv-hero .nv-hero-title {
+	margin: 0 0 2rem;
+	font-weight: var(--ds-weight-display, 700);
+	font-size: var(--ds-size-display, 2.5rem);
+	line-height: var(--ds-leading-display, 1.2);
+	letter-spacing: var(--ds-tracking-display, normal);
+}
+@media (max-width: 1199px) { .nv-hero .nv-hero-title { font-size: var(--ds-size-display, 38px); } }
+@media (max-width: 767px) { .nv-hero .nv-hero-title { font-size: var(--ds-size-display-phone, var(--ds-size-display, 32px)); } }
+@media (max-width: 575px) { .nv-hero .nv-hero-title { font-size: var(--ds-size-display-phone, var(--ds-size-display, 28px)); } }
 .nv-hero .nv-hero-desc { margin: .5rem 0; }
 .nv-hero .nv-action { margin-top: 4rem; }
 

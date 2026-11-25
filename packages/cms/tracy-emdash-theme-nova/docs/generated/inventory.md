@@ -35,6 +35,7 @@ Template: JA Nova (tracy-nova). Default locale: en. Locales: en.
 | banner | image | no | Banner |
 | summary | string | no | Summary |
 | sub_title | string | no | Sub title |
+| tags | string | no | Tags |
 | path | string | no | Path |
 
 ### posts
@@ -220,9 +221,9 @@ Template: JA Nova (tracy-nova). Default locale: en. Locales: en.
 | header_phone | string | no | Header phone |
 | header_email | string | no | Header email |
 | footer_about | string | no | Footer about |
-| footer_company_title | string | no | Footer company title |
-| footer_work_title | string | no | Footer work title |
-| footer_services_title | string | no | Footer services title |
+| footer_users_title | string | no | Footer users title |
+| footer_pages_title | string | no | Footer pages title |
+| footer_content_title | string | no | Footer content title |
 | copyright | string | no | Copyright |
 | skip_label | string | no | Skip label |
 | menu_label | string | no | Menu label |
@@ -266,7 +267,9 @@ Template: JA Nova (tracy-nova). Default locale: en. Locales: en.
 | play_video_label | string | no | Play video label |
 | nav_label | string | no | Nav label |
 | breadcrumb_label | string | no | Breadcrumb label |
-| logo_text | string | no | Logo text |
+| category_branding_label | string | no | Category branding label |
+| category_ui_ux_design_label | string | no | Category ui ux design label |
+| category_illustration_label | string | no | Category illustration label |
 | all_projects_label | string | no | All projects label |
 | project_tabs_title | string | no | Project tabs title |
 | project_tabs_nav_label | string | no | Project tabs nav label |
@@ -322,8 +325,9 @@ Template: JA Nova (tracy-nova). Default locale: en. Locales: en.
 | --- | --- | --- |
 | primary | en | 10 |
 | services | en | 7 |
-| footer-company | en | 3 |
-| footer-work | en | 4 |
+| footer-users | en | 0 |
+| footer-pages | en | 1 |
+| footer-content | en | 2 |
 
 ## Taxonomies
 

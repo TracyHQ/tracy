@@ -7,6 +7,7 @@
  */
 export const prerender = false
 import { splitPath } from '@/lib/i18n'
+import { getEmDashEntry } from 'emdash'
 import { loadChrome } from '@/lib/chrome'
 import pageRoutes from '@/lib/page-routes.json'
 import Home from '@/views/Home.astro'
@@ -45,6 +46,11 @@ else if (segs.length === 2 && segs[0] === 'blog' && SLUG.test(segs[1]))
 else if (segs.length === 3 && segs[0] === 'project' && CATEGORIES.includes(segs[1]) && SLUG.test(segs[2]))
   view = { component: Post, props: { slug: segs[2], category: segs[1] } }
 
+// an article address with no published article behind it answers 404 here, before any view streams (a status set deep inside a view comes too late on a built server)
+if (view && view.component === Post) {
+  const { entry } = await getEmDashEntry('posts', String(view.props.slug), { locale })
+  if (!entry) view = null
+}
 // a page the customer unticked (its record is unpublished), and everything that hangs under it, answers 404
 if (view && !(await childLive(Astro.request, locale, clean))) view = null
 const Component = view?.component ?? NotFound

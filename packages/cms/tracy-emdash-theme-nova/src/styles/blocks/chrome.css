@@ -410,9 +410,13 @@ html[data-theme="dark"] .nv-logo-img[src$="/brand/logo.png"] { filter: invert(1)
 /* under a worn design system the demo logo is redrawn as a mask in the system's own ink, so it stays visible on any ground; a logo the customer uploaded is never masked */
 .nv-logo-ink { display: none; }
 html[data-ds-worn] .nv-logo-img[src$="/brand/logo.png"], html[data-ds-worn] .nv-logo-img[src$="/brand/logo-light.png"] { display: none; }
-html[data-ds-worn] .nv-logo-ink { display: block; width: 162px; height: 48px; -webkit-mask: 0 0 / 100% 100% no-repeat; mask: 0 0 / 100% 100% no-repeat; }
-html[data-ds-worn] .nv-logo-ink--logo { background: var(--color-heading); -webkit-mask-image: url("/brand/logo.png"); mask-image: url("/brand/logo.png"); }
-html[data-ds-worn] .nv-logo-ink--logo-light { background: var(--color-on-ink); -webkit-mask-image: url("/brand/logo-light.png"); mask-image: url("/brand/logo-light.png"); }
+html[data-ds-worn] .nv-logo-ink { display: block; width: 162px; height: 48px; color: var(--color-heading); -webkit-mask: 0 0 / 100% 100% no-repeat; mask: 0 0 / 100% 100% no-repeat; }
+html[data-ds-worn] .nv-logo-ink--logo { background: var(--color-heading); background-image: linear-gradient(currentColor, currentColor); -webkit-mask-image: url("/brand/logo.png"); mask-image: url("/brand/logo.png"); }
+html[data-ds-worn] .nv-logo-ink--logo-light { color: var(--color-on-ink); background: var(--color-on-ink); background-image: linear-gradient(currentColor, currentColor); -webkit-mask-image: url("/brand/logo-light.png"); mask-image: url("/brand/logo-light.png"); }
+
+@media (max-width: 767.98px) { html[data-ds-worn] .nv-logo-ink { width: 108px; height: 32px; } }
+html[data-ds-worn] .nv-oc-head .nv-logo-ink { width: 108px; height: 32px; }
+html[data-ds-worn] .nv-footer-logo .nv-logo-ink { width: 150px; height: 44px; }
 
 /* the source columns hold 3, 4 and 4 links; a column of this template keeps that many rows of room, so the footer is as tall as the source's
    whatever number of links a customer keeps (a link row is 0.8rem padding + a 1.5 line of 0.9375rem) */

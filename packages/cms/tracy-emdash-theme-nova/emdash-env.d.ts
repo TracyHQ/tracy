@@ -325,8 +325,11 @@ export interface Chrome {
   nav_label?: string;
   breadcrumb_label?: string;
   all_projects_label?: string;
+  category_branding_label?: string;
   project_tabs_title?: string;
+  category_ui_ux_design_label?: string;
   project_tabs_nav_label?: string;
+  category_illustration_label?: string;
   view_all_news_label?: string;
   prev_article_label?: string;
   next_article_label?: string;
