@@ -1,5 +1,5 @@
 {
-	"generatedAt": "2026-11-25T02:06:32.995Z",
+	"generatedAt": "2026-11-25T03:29:15.831Z",
 	"fields": {
 		"pages.title": {
 			"source": "text",
@@ -30,6 +30,11 @@
 			"source": "text",
 			"target": "string",
 			"label": "Sub title"
+		},
+		"pages.tags": {
+			"source": "text",
+			"target": "string",
+			"label": "Tags"
 		},
 		"pages.path": {
 			"source": "text",

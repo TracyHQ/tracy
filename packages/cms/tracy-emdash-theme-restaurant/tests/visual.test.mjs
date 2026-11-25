@@ -78,6 +78,7 @@ ${source && d.twoSignalSource ? 'html[data-bs-theme=dark] main a.btn{color:#e8e8
 <div class="cards"><div class="card"><p>Card one</p><p class="meta">Meta one</p></div><div class="card"><p>Card two</p><p class="meta">Meta two</p></div><div class="card"><p>Card three</p><p class="byline">By someone</p></div></div>
 ${d.slotRace || d.slotNeverFills ? `<picture-slot src="/logo.png"${d.slotFilled ? ' data-filled=""' : ''}></picture-slot>` : ''}
 ${d.lazySource ? `<div style="height:12000px"></div><img class="deep" loading="lazy" src="/logo.png" alt="deep" width="40" height="40">` : ''}
+${d.lazyOffscreen ? `<div style="overflow:hidden;width:300px"><div style="display:flex;transform:translateX(-4000px)"><img class="side" loading="lazy" src="/logo.png" alt="side" width="40" height="40"></div></div>` : ''}
 <div class="seam-a"></div><div class="seam-b"><p>Below the cards.</p>${d.siteLostCta && !source ? '' : '<a class="btn" href="/kontakt">Contact us</a>'}<button>Click</button></div>
 <ul><li>one</li><li>two</li><li>three</li><li>four</li></ul></main>
 <footer><a href="/about">About</a> · <a href="/kontakt">Kontakt</a> · <span>© Mock</span></footer>
@@ -1071,6 +1072,23 @@ describe('F12 — visual-scan and mega-hover CLIs', { concurrency: CONCURRENCY }
           `\`${bad}\` must not masquerade as a one-sided absence`
         )
       }
+    } finally {
+      await site.close()
+    }
+  })
+  it('a lazy source picture outside the screen horizontally (a carousel, a tab pane) is loaded and decoded before the shot: no source-not-rendered (JA Nova /project, 2026-11-25)', {
+    timeout: 120000
+  }, async () => {
+    // Scrolling the document only reaches pictures that enter the viewport vertically; a `loading="lazy"` picture inside an
+    // overflow-hidden strip that is shifted sideways never does, so it stayed undecoded and the page was reported as
+    // `source-not-rendered`: a finding about the capture, printed as a finding about the design.
+    const site = await serve({ lazyOffscreen: true })
+    try {
+      const r = await visual(site, contract())
+      assert.ok(
+        !r.kinds.includes('source-not-rendered'),
+        `an off-screen lazy picture must be loaded by the capture\n${JSON.stringify(r.kinds)}`
+      )
     } finally {
       await site.close()
     }

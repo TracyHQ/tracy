@@ -334,49 +334,49 @@
     {
       "kind": "scan:contrast",
       "match": "nv-hl-(cyan|green|yellow|orange)",
-      "reason": "contrast of the coloured heading words matches the source: cyan rgb(45,195,245) on violet rgb(94,72,219) (2.99), cyan on rgb(247,247,247) (1.92), green rgb(4,173,104) on rgb(230,246,240) (2.62), yellow rgb(248,171,17) on white (1.94), orange rgb(253,126,20) on rgb(247,247,247) (2.40), same elements measured on the live source",
+      "reason": "Source does the same. Measured on the live source, page / (home), 1440 wide, light theme, getComputedStyle: .text-cyan 'investigation' rgb(45,195,245) on rgb(94,72,219) = 2.99; .text-cyan '36k' on rgb(247,247,247) = 1.92; .text-green '1200+' rgb(4,173,104) on rgb(230,246,240) = 2.62; .text-green 'We make' on white = 2.92; .text-yellow 'Share' rgb(248,171,17) on rgb(239,237,252) = 1.68; .text-orange '119' rgb(253,126,20) on rgb(247,247,247) = 2.40. Same colours on the same grounds on the site.",
       "decision": "D15"
     },
     {
       "kind": "scan:contrast",
       "match": "nv-pricing-price",
-      "reason": "price in yellow rgb(248,171,17) on rgb(247,247,247) (1.81) is the source's own colours (.pricing-plan-price h2.text-yellow)",
+      "reason": "Source does the same. Live source, page / (home), 1440, light: .pricing-plan-price h2.text-yellow '$19.50' (and $29.50, $59.50) colour rgb(248,171,17) on rgb(247,247,247) = 1.81.",
       "decision": "D15"
     },
     {
       "kind": "scan:contrast",
       "match": "nv-sec-h",
-      "reason": "white title on green rgb(4,173,104) (2.92) is the source's own colours (.main-title on the green band)",
+      "reason": "Source does the same. Live source, page / (home), 1440, light: .bg-green .main-title 'Latest news from us' colour rgb(255,255,255) on rgb(4,173,104) = 2.92.",
       "decision": "D15"
     },
     {
       "kind": "scan:contrast",
       "match": "nv-teams-desc",
-      "reason": "white text on yellow rgb(248,171,17) (1.94) is the source's own colours (.teams-desc h2)",
+      "reason": "Source does the same. Live source, page / (home), 1440, light: .teams-desc h2 'This is why industry...' colour rgb(255,255,255) on rgb(248,171,17) = 1.94.",
       "decision": "D15"
     },
     {
       "kind": "scan:contrast",
       "match": "nv-contact-(label|hl)",
-      "reason": "green rgb(4,173,104) on rgb(247,247,247) (2.73) and on white (2.92) is the source's own colours (.title h3, the contact lead span)",
+      "reason": "Source does the same. Live source, page /about-us-2/contact, 1440, light: '.title h3' span 'Phone' rgb(4,173,104) on rgb(247,247,247) = 2.73; span.text-green 'from you' (the contact lead) rgb(4,173,104) on white = 2.92.",
       "decision": "D15"
     },
     {
       "kind": "scan:contrast",
       "match": "nv-latest-intro|^a\\.$",
-      "reason": "white text laid over the card picture (the scan sees only the white page behind the image); same white rgba(255,255,255,.75) over the same picture on the source (.item-introtext, the card title)",
+      "reason": "Source does the same. Live source, page / (home), 1440, light: .item-introtext colour rgba(255,255,255,0.75) over .item-inner rgba(0,0,0,0.7) laid on the card picture; the scan reads only the white page behind the picture (ratio 1). Same white over the same picture on the site.",
       "decision": "D15"
     },
     {
-      "kind": "mega-menu",
-      "match": "^(accordion|pricing-tabs|show-more)$",
-      "reason": "mega-hover tests a panel hung from a trigger (hover travel, Escape returns focus, outside click closes); an accordion, tab strip or collapse is a click toggle with none of those, and the tool clicks at the trigger's page position, which is below the first screen, so it never reaches it. The real behaviour is measured by hand (click opens the panel at 1440 and 390: /home/agent/out/nova/t2/widgets.mjs)",
-      "decision": "D16"
+      "kind": "scan:contrast",
+      "match": "nv-news-date",
+      "reason": "Source does the same (lead decision L7, no colour change). Live source, page / (home), 1440, light: .item-date '11 July 2023' colour rgb(239,56,103) over .item-inner rgba(0,0,0,0.7) on the card photo (3.87 against plain white, which is all the scan sees behind the picture); the site's .nv-news-date measures rgb(239,56,103) on the same overlay and photo.",
+      "decision": "L7"
     },
     {
       "kind": "scan:bright-border",
       "match": "nv-btn|nv-blk-btn|nv-pricing-tab|ec-form-submit",
-      "reason": "a filled primary button, the active pricing tab and the form submit carry a 1px border of the fill colour rgb(94,72,219) in dark mode, as the source does (.btn.btn-primary border rgb(94,72,219) on fill rgb(94,72,219); active pricing tab border rgb(94,72,219)); the border is invisible against its own fill",
+      "reason": "Source does the same. Live source, page / (home), 1440, dark theme (?theme=dark): .btn.btn-primary 'Get started' border 1px rgb(94,72,219) on fill rgb(94,72,219) (invisible against its own fill); the active pricing tab 'Basic Plan' has border 1px rgb(94,72,219) on fill rgb(38,44,54), text rgb(157,140,255).",
       "decision": "D18"
     }
   ]

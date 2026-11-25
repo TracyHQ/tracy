@@ -1,9 +1,11 @@
 {
   "schemaVersion": 1,
   "id": "tracy-nova",
-  "revision": 7,
+  "revision": 8,
   "pending": [],
-  "locales": ["en"],
+  "locales": [
+    "en"
+  ],
   "defaultLocale": "en",
   "source": {
     "reference": "../../../../home/agent/out/nova/snapshot",
@@ -2564,7 +2566,13 @@
         },
         "ground": "body"
       },
-      "properties": ["font-size", "font-weight", "letter-spacing", "padding-top", "padding-left"],
+      "properties": [
+        "font-size",
+        "font-weight",
+        "letter-spacing",
+        "padding-top",
+        "padding-left"
+      ],
       "hexTolerance": 8,
       "pxTolerance": 1
     },
@@ -2576,49 +2584,49 @@
       {
         "kind": "scan:contrast",
         "match": "nv-hl-(cyan|green|yellow|orange)",
-        "reason": "contrast of the coloured heading words matches the source: cyan rgb(45,195,245) on violet rgb(94,72,219) (2.99), cyan on rgb(247,247,247) (1.92), green rgb(4,173,104) on rgb(230,246,240) (2.62), yellow rgb(248,171,17) on white (1.94), orange rgb(253,126,20) on rgb(247,247,247) (2.40), same elements measured on the live source",
+        "reason": "Source does the same. Measured on the live source, page / (home), 1440 wide, light theme, getComputedStyle: .text-cyan 'investigation' rgb(45,195,245) on rgb(94,72,219) = 2.99; .text-cyan '36k' on rgb(247,247,247) = 1.92; .text-green '1200+' rgb(4,173,104) on rgb(230,246,240) = 2.62; .text-green 'We make' on white = 2.92; .text-yellow 'Share' rgb(248,171,17) on rgb(239,237,252) = 1.68; .text-orange '119' rgb(253,126,20) on rgb(247,247,247) = 2.40. Same colours on the same grounds on the site.",
         "decision": "D15"
       },
       {
         "kind": "scan:contrast",
         "match": "nv-pricing-price",
-        "reason": "price in yellow rgb(248,171,17) on rgb(247,247,247) (1.81) is the source's own colours (.pricing-plan-price h2.text-yellow)",
+        "reason": "Source does the same. Live source, page / (home), 1440, light: .pricing-plan-price h2.text-yellow '$19.50' (and $29.50, $59.50) colour rgb(248,171,17) on rgb(247,247,247) = 1.81.",
         "decision": "D15"
       },
       {
         "kind": "scan:contrast",
         "match": "nv-sec-h",
-        "reason": "white title on green rgb(4,173,104) (2.92) is the source's own colours (.main-title on the green band)",
+        "reason": "Source does the same. Live source, page / (home), 1440, light: .bg-green .main-title 'Latest news from us' colour rgb(255,255,255) on rgb(4,173,104) = 2.92.",
         "decision": "D15"
       },
       {
         "kind": "scan:contrast",
         "match": "nv-teams-desc",
-        "reason": "white text on yellow rgb(248,171,17) (1.94) is the source's own colours (.teams-desc h2)",
+        "reason": "Source does the same. Live source, page / (home), 1440, light: .teams-desc h2 'This is why industry...' colour rgb(255,255,255) on rgb(248,171,17) = 1.94.",
         "decision": "D15"
       },
       {
         "kind": "scan:contrast",
         "match": "nv-contact-(label|hl)",
-        "reason": "green rgb(4,173,104) on rgb(247,247,247) (2.73) and on white (2.92) is the source's own colours (.title h3, the contact lead span)",
+        "reason": "Source does the same. Live source, page /about-us-2/contact, 1440, light: '.title h3' span 'Phone' rgb(4,173,104) on rgb(247,247,247) = 2.73; span.text-green 'from you' (the contact lead) rgb(4,173,104) on white = 2.92.",
         "decision": "D15"
       },
       {
         "kind": "scan:contrast",
         "match": "nv-latest-intro|^a\\.$",
-        "reason": "white text laid over the card picture (the scan sees only the white page behind the image); same white rgba(255,255,255,.75) over the same picture on the source (.item-introtext, the card title)",
+        "reason": "Source does the same. Live source, page / (home), 1440, light: .item-introtext colour rgba(255,255,255,0.75) over .item-inner rgba(0,0,0,0.7) laid on the card picture; the scan reads only the white page behind the picture (ratio 1). Same white over the same picture on the site.",
         "decision": "D15"
       },
       {
-        "kind": "mega-menu",
-        "match": "^(accordion|pricing-tabs|show-more)$",
-        "reason": "mega-hover tests a panel hung from a trigger (hover travel, Escape returns focus, outside click closes); an accordion, tab strip or collapse is a click toggle with none of those, and the tool clicks at the trigger's page position, which is below the first screen, so it never reaches it. The real behaviour is measured by hand (click opens the panel at 1440 and 390: /home/agent/out/nova/t2/widgets.mjs)",
-        "decision": "D16"
+        "kind": "scan:contrast",
+        "match": "nv-news-date",
+        "reason": "Source does the same (lead decision L7, no colour change). Live source, page / (home), 1440, light: .item-date '11 July 2023' colour rgb(239,56,103) over .item-inner rgba(0,0,0,0.7) on the card photo (3.87 against plain white, which is all the scan sees behind the picture); the site's .nv-news-date measures rgb(239,56,103) on the same overlay and photo.",
+        "decision": "L7"
       },
       {
         "kind": "scan:bright-border",
         "match": "nv-btn|nv-blk-btn|nv-pricing-tab|ec-form-submit",
-        "reason": "a filled primary button, the active pricing tab and the form submit carry a 1px border of the fill colour rgb(94,72,219) in dark mode, as the source does (.btn.btn-primary border rgb(94,72,219) on fill rgb(94,72,219); active pricing tab border rgb(94,72,219)); the border is invisible against its own fill",
+        "reason": "Source does the same. Live source, page / (home), 1440, dark theme (?theme=dark): .btn.btn-primary 'Get started' border 1px rgb(94,72,219) on fill rgb(94,72,219) (invisible against its own fill); the active pricing tab 'Basic Plan' has border 1px rgb(94,72,219) on fill rgb(38,44,54), text rgb(157,140,255).",
         "decision": "D18"
       }
     ]
@@ -2657,10 +2665,23 @@
     }
   },
   "fonts": {
-    "selectors": ["h1", "h2", "h3", "p", "a", "button", "span", "li"],
+    "selectors": [
+      "h1",
+      "h2",
+      "h3",
+      "p",
+      "a",
+      "button",
+      "span",
+      "li"
+    ],
     "platform": "Chromium (Playwright). Local files served by Astro (src/fonts.json): Golos Text 400, 500 and 700.",
     "allowed": {
-      "en": ["Golos Text", "Golos Text Medium", "Golos Text Bold"]
+      "en": [
+        "Golos Text",
+        "Golos Text Medium",
+        "Golos Text Bold"
+      ]
     }
   },
   "pages": [
@@ -2668,11 +2689,20 @@
       "id": "en-home",
       "path": "/",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": ".nv-hero-title",
-      "source": ["index.html"],
+      "source": [
+        "index.html"
+      ],
       "rules": [
         "body-type",
         "header",
@@ -2685,7 +2715,12 @@
         "btn-primary",
         "btn-light"
       ],
-      "parity": ["nav", "footerTitle", "ground", "heroTitle"],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground",
+        "heroTitle"
+      ],
       "content": [
         {
           "id": "hero",
@@ -2729,11 +2764,20 @@
       "id": "en-about",
       "path": "/about",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"About Us\")",
-      "source": ["about-us-2/index.html"],
+      "source": [
+        "about-us-2/index.html"
+      ],
       "rules": [
         "body-type",
         "header",
@@ -2745,7 +2789,11 @@
         "h4-team",
         "cta-line"
       ],
-      "parity": ["nav", "footerTitle", "ground"],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -2780,13 +2828,34 @@
       "id": "en-career",
       "path": "/career",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Career\")",
-      "source": ["about-us-2/career/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "btn-primary", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "about-us-2/career/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "btn-primary",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -2812,13 +2881,34 @@
       "id": "en-contact",
       "path": "/contact",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Contact\")",
-      "source": ["about-us-2/contact/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "contact-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "about-us-2/contact/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "contact-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -2844,11 +2934,20 @@
       "id": "en-services",
       "path": "/services",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Services\")",
-      "source": ["services/index.html"],
+      "source": [
+        "services/index.html"
+      ],
       "rules": [
         "body-type",
         "header",
@@ -2859,7 +2958,11 @@
         "h4-item",
         "cta-line"
       ],
-      "parity": ["nav", "footerTitle", "ground"],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -2894,13 +2997,34 @@
       "id": "en-svc-illustration",
       "path": "/illustration",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Illustration\")",
-      "source": ["illustration/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "page-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "illustration/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "page-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -2917,13 +3041,34 @@
       "id": "en-svc-development",
       "path": "/development",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Development\")",
-      "source": ["development/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "page-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "development/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "page-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -2940,13 +3085,34 @@
       "id": "en-svc-mobile-application",
       "path": "/mobile-application",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Mobile Application\")",
-      "source": ["mobile-application/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "page-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "mobile-application/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "page-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -2963,13 +3129,34 @@
       "id": "en-svc-cloud-solutions",
       "path": "/cloud-solutions",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Cloud solutions\")",
-      "source": ["cloud-solutions/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "page-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "cloud-solutions/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "page-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -2986,13 +3173,34 @@
       "id": "en-svc-it-infrastructure",
       "path": "/it-infrastructure",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"IT infrastructure\")",
-      "source": ["it-infrastructure/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "page-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "it-infrastructure/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "page-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3009,13 +3217,34 @@
       "id": "en-svc-cybersecurity",
       "path": "/cybersecurity",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Cybersecurity\")",
-      "source": ["cybersecurity/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "page-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "cybersecurity/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "page-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3032,13 +3261,34 @@
       "id": "en-svc-virtualization",
       "path": "/virtualization",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Virtualization\")",
-      "source": ["virtualization/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "page-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "virtualization/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "page-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3055,13 +3305,33 @@
       "id": "en-project",
       "path": "/project",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Project\")",
-      "source": ["project/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "project/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3078,13 +3348,34 @@
       "id": "en-project-illustration",
       "path": "/project/illustration",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Illustration\")",
-      "source": ["project/illustration/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "list-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "project/illustration/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "list-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3110,13 +3401,34 @@
       "id": "en-project-branding",
       "path": "/project/branding",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Branding\")",
-      "source": ["project/branding/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "list-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "project/branding/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "list-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3142,13 +3454,34 @@
       "id": "en-project-ui-ux-design",
       "path": "/project/ui-ux-design",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"UI/UX Design\")",
-      "source": ["project/ui-ux-design/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "list-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "project/ui-ux-design/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "list-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3174,13 +3507,34 @@
       "id": "en-project-detail",
       "path": "/project/illustration/packaging-design",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Illustration\")",
-      "source": ["project/illustration/packaging-design/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "page-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "project/illustration/packaging-design/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "page-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3206,13 +3560,34 @@
       "id": "en-blog",
       "path": "/blog",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Blog\")",
-      "source": ["category-blog/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "list-sub", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "category-blog/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "list-sub",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3238,13 +3613,34 @@
       "id": "en-post",
       "path": "/blog/how-business-technology-changed-how-we-think-about-death",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"How business technology changed how we think about death\")",
-      "source": ["category-blog/how-business-technology-changed-how-we-think-about-death/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "page-h1", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "category-blog/how-business-technology-changed-how-we-think-about-death/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "page-h1",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3261,13 +3657,32 @@
       "id": "en-search",
       "path": "/search",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Smart Search\")",
-      "source": ["smart-search/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "smart-search/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3284,13 +3699,27 @@
       "id": "en-not-found",
       "path": "/404",
       "locale": "en",
-      "states": ["default"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 404,
       "identity": ".nv-err-code",
-      "source": ["nope-404/index.html"],
-      "rules": ["err-code", "err-msg"],
-      "parity": ["ground"],
+      "source": [
+        "nope-404/index.html"
+      ],
+      "rules": [
+        "err-code",
+        "err-msg"
+      ],
+      "parity": [
+        "ground"
+      ],
       "content": [
         {
           "id": "code",
@@ -3334,11 +3763,19 @@
       "id": "en-home-offcanvas",
       "path": "/?ui=menu",
       "locale": "en",
-      "states": ["default", "offcanvas"],
-      "variants": ["390-light", "390-dark"],
+      "states": [
+        "default",
+        "offcanvas"
+      ],
+      "variants": [
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": ".nv-hero-title",
-      "source": ["index.html"],
+      "source": [
+        "index.html"
+      ],
       "rules": [
         "body-type",
         "header",
@@ -3351,7 +3788,12 @@
         "btn-primary",
         "btn-light"
       ],
-      "parity": ["nav", "footerTitle", "ground", "heroTitle"],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground",
+        "heroTitle"
+      ],
       "content": [
         {
           "id": "hero",
@@ -3395,11 +3837,19 @@
       "id": "en-home-dropdown",
       "path": "/?ui=nav",
       "locale": "en",
-      "states": ["default", "dropdown"],
-      "variants": ["1440-light", "1440-dark"],
+      "states": [
+        "default",
+        "dropdown"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark"
+      ],
       "status": 200,
       "identity": ".nv-hero-title",
-      "source": ["index.html"],
+      "source": [
+        "index.html"
+      ],
       "rules": [
         "body-type",
         "header",
@@ -3412,7 +3862,12 @@
         "btn-primary",
         "btn-light"
       ],
-      "parity": ["nav", "footerTitle", "ground", "heroTitle"],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground",
+        "heroTitle"
+      ],
       "content": [
         {
           "id": "hero",
@@ -3456,11 +3911,21 @@
       "id": "en-home-accordion",
       "path": "/?ui=faq",
       "locale": "en",
-      "states": ["default", "accordion"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default",
+        "accordion"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": ".nv-hero-title",
-      "source": ["index.html"],
+      "source": [
+        "index.html"
+      ],
       "rules": [
         "body-type",
         "header",
@@ -3473,7 +3938,12 @@
         "btn-primary",
         "btn-light"
       ],
-      "parity": ["nav", "footerTitle", "ground", "heroTitle"],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground",
+        "heroTitle"
+      ],
       "content": [
         {
           "id": "hero",
@@ -3517,11 +3987,21 @@
       "id": "en-home-pricing",
       "path": "/?ui=plans",
       "locale": "en",
-      "states": ["default", "pricing-tabs"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default",
+        "pricing-tabs"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": ".nv-hero-title",
-      "source": ["index.html"],
+      "source": [
+        "index.html"
+      ],
       "rules": [
         "body-type",
         "header",
@@ -3534,7 +4014,12 @@
         "btn-primary",
         "btn-light"
       ],
-      "parity": ["nav", "footerTitle", "ground", "heroTitle"],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground",
+        "heroTitle"
+      ],
       "content": [
         {
           "id": "hero",
@@ -3578,13 +4063,35 @@
       "id": "en-career-show-more",
       "path": "/career?ui=positions",
       "locale": "en",
-      "states": ["default", "show-more"],
-      "variants": ["1440-light", "1440-dark", "390-light", "390-dark"],
+      "states": [
+        "default",
+        "show-more"
+      ],
+      "variants": [
+        "1440-light",
+        "1440-dark",
+        "390-light",
+        "390-dark"
+      ],
       "status": 200,
       "identity": "h1:text-is(\"Career\")",
-      "source": ["about-us-2/career/index.html"],
-      "rules": ["body-type", "header", "nav-link", "footer", "footer-title", "btn-primary", "cta-line"],
-      "parity": ["nav", "footerTitle", "ground"],
+      "source": [
+        "about-us-2/career/index.html"
+      ],
+      "rules": [
+        "body-type",
+        "header",
+        "nav-link",
+        "footer",
+        "footer-title",
+        "btn-primary",
+        "cta-line"
+      ],
+      "parity": [
+        "nav",
+        "footerTitle",
+        "ground"
+      ],
       "content": [
         {
           "id": "h1",
@@ -3639,7 +4146,12 @@
       "mode": "required"
     }
   },
-  "capabilities": ["audit-log", "seo", "media", "forms"],
+  "capabilities": [
+    "audit-log",
+    "seo",
+    "media",
+    "forms"
+  ],
   "distribution": {
     "include": [
       "package.json",
@@ -3692,56 +4204,92 @@
       "id": "Home",
       "view": "src/views/Home.astro",
       "representative": "en-home",
-      "pages": ["en-home"],
-      "states": ["default"],
+      "pages": [
+        "en-home"
+      ],
+      "states": [
+        "default"
+      ],
       "hasSource": true
     },
     {
       "id": "Page",
       "view": "src/views/Page.astro",
       "representative": "en-about",
-      "pages": ["en-about", "en-career", "en-services", "en-project"],
-      "states": ["default"],
+      "pages": [
+        "en-about",
+        "en-career",
+        "en-services",
+        "en-project"
+      ],
+      "states": [
+        "default"
+      ],
       "hasSource": true
     },
     {
       "id": "Offcanvas",
       "view": "src/components/site/OffCanvas.astro",
       "representative": "en-home-offcanvas",
-      "pages": ["en-home-offcanvas"],
-      "states": ["default", "offcanvas"],
+      "pages": [
+        "en-home-offcanvas"
+      ],
+      "states": [
+        "default",
+        "offcanvas"
+      ],
       "hasSource": true
     },
     {
       "id": "Dropdown",
       "view": "src/components/site/Header.astro",
       "representative": "en-home-dropdown",
-      "pages": ["en-home-dropdown"],
-      "states": ["default", "dropdown"],
+      "pages": [
+        "en-home-dropdown"
+      ],
+      "states": [
+        "default",
+        "dropdown"
+      ],
       "hasSource": true
     },
     {
       "id": "Faq",
       "view": "src/components/blocks/Accordion.astro",
       "representative": "en-home-accordion",
-      "pages": ["en-home-accordion"],
-      "states": ["default", "accordion"],
+      "pages": [
+        "en-home-accordion"
+      ],
+      "states": [
+        "default",
+        "accordion"
+      ],
       "hasSource": true
     },
     {
       "id": "PricingTabs",
       "view": "src/components/blocks/Pricing.astro",
       "representative": "en-home-pricing",
-      "pages": ["en-home-pricing"],
-      "states": ["default", "pricing-tabs"],
+      "pages": [
+        "en-home-pricing"
+      ],
+      "states": [
+        "default",
+        "pricing-tabs"
+      ],
       "hasSource": true
     },
     {
       "id": "Positions",
       "view": "src/components/blocks/features/Style7.astro",
       "representative": "en-career-show-more",
-      "pages": ["en-career-show-more"],
-      "states": ["default", "show-more"],
+      "pages": [
+        "en-career-show-more"
+      ],
+      "states": [
+        "default",
+        "show-more"
+      ],
       "hasSource": true
     },
     {
@@ -3757,7 +4305,9 @@
         "en-svc-cybersecurity",
         "en-svc-virtualization"
       ],
-      "states": ["default"],
+      "states": [
+        "default"
+      ],
       "family": "detail",
       "hasSource": true
     },
@@ -3765,8 +4315,15 @@
       "id": "BlogList",
       "view": "src/views/BlogList.astro",
       "representative": "en-blog",
-      "pages": ["en-blog", "en-project-illustration", "en-project-branding", "en-project-ui-ux-design"],
-      "states": ["default"],
+      "pages": [
+        "en-blog",
+        "en-project-illustration",
+        "en-project-branding",
+        "en-project-ui-ux-design"
+      ],
+      "states": [
+        "default"
+      ],
       "family": "list",
       "hasSource": true
     },
@@ -3774,8 +4331,13 @@
       "id": "Post",
       "view": "src/views/Post.astro",
       "representative": "en-post",
-      "pages": ["en-post", "en-project-detail"],
-      "states": ["default"],
+      "pages": [
+        "en-post",
+        "en-project-detail"
+      ],
+      "states": [
+        "default"
+      ],
       "family": "detail",
       "hasSource": true
     },
@@ -3783,8 +4345,12 @@
       "id": "Contact",
       "view": "src/views/Contact.astro",
       "representative": "en-contact",
-      "pages": ["en-contact"],
-      "states": ["default"],
+      "pages": [
+        "en-contact"
+      ],
+      "states": [
+        "default"
+      ],
       "family": "form",
       "hasSource": true
     },
@@ -3792,8 +4358,12 @@
       "id": "Search",
       "view": "src/views/Search.astro",
       "representative": "en-search",
-      "pages": ["en-search"],
-      "states": ["default"],
+      "pages": [
+        "en-search"
+      ],
+      "states": [
+        "default"
+      ],
       "family": "form",
       "hasSource": true
     },
@@ -3801,8 +4371,12 @@
       "id": "NotFound",
       "view": "src/views/NotFound.astro",
       "representative": "en-not-found",
-      "pages": ["en-not-found"],
-      "states": ["default"],
+      "pages": [
+        "en-not-found"
+      ],
+      "states": [
+        "default"
+      ],
       "hasSource": true
     }
   ],
@@ -3810,51 +4384,100 @@
     "stages": [
       {
         "id": "light-desktop",
-        "variants": ["1440-light"]
+        "variants": [
+          "1440-light"
+        ]
       },
       {
         "id": "light-responsive",
-        "variants": ["390-light"]
+        "variants": [
+          "390-light"
+        ]
       },
       {
         "id": "dark-desktop",
-        "variants": ["1440-dark"]
+        "variants": [
+          "1440-dark"
+        ]
       },
       {
         "id": "dark-responsive",
-        "variants": ["390-dark"]
+        "variants": [
+          "390-dark"
+        ]
       }
     ],
     "shots": [
       {
-        "stages": ["light-desktop"],
+        "stages": [
+          "light-desktop"
+        ],
         "side": "site",
-        "locales": ["en"],
-        "consumers": ["layout", "typography", "color", "images", "interaction"]
+        "locales": [
+          "en"
+        ],
+        "consumers": [
+          "layout",
+          "typography",
+          "color",
+          "images",
+          "interaction"
+        ]
       },
       {
-        "stages": ["light-responsive"],
+        "stages": [
+          "light-responsive"
+        ],
         "side": "site",
-        "locales": ["en"],
-        "consumers": ["layout", "typography", "images"]
+        "locales": [
+          "en"
+        ],
+        "consumers": [
+          "layout",
+          "typography",
+          "images"
+        ]
       },
       {
-        "stages": ["dark-desktop"],
+        "stages": [
+          "dark-desktop"
+        ],
         "side": "site",
-        "locales": ["en"],
-        "consumers": ["color", "layout"]
+        "locales": [
+          "en"
+        ],
+        "consumers": [
+          "color",
+          "layout"
+        ]
       },
       {
-        "stages": ["dark-responsive"],
+        "stages": [
+          "dark-responsive"
+        ],
         "side": "site",
-        "locales": ["en"],
-        "consumers": ["layout", "color"]
+        "locales": [
+          "en"
+        ],
+        "consumers": [
+          "layout",
+          "color"
+        ]
       },
       {
-        "stages": ["light-desktop", "light-responsive"],
+        "stages": [
+          "light-desktop",
+          "light-responsive"
+        ],
         "side": "source",
-        "locales": ["en"],
-        "consumers": ["layout", "typography", "images"],
+        "locales": [
+          "en"
+        ],
+        "consumers": [
+          "layout",
+          "typography",
+          "images"
+        ],
         "ownSourceOnly": true
       }
     ],

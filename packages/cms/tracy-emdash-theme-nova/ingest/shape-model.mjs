@@ -185,7 +185,14 @@ for (const r of model.records.filter((x) => x.type === 'pages')) {
 const rowOf = (alias) => inventory.content.find((c) => c.alias === alias)
 const imgOf = (row, key) => String(JSON.parse(row.images || '{}')[key] ?? '').split('#')[0]
 const pageType = model.types.find((t) => t.name === 'pages')
-for (const f of ['banner', 'summary', 'sub_title'])
+// tags of an article that became a page (two service articles carry Company, Design, developer): the Popular tags module counts them too
+const tagsOfRow = (cid) =>
+  inventory.contentitem_tag_map
+    .filter((m) => m.type_alias === 'com_content.article' && m.content_item_id === cid)
+    .map((m) => inventory.tags.find((t) => t.id === m.tag_id)?.title)
+    .filter(Boolean)
+    .join('\n')
+for (const f of ['banner', 'summary', 'sub_title', 'tags'])
   if (!pageType.fields.some((x) => x.name === f))
     pageType.fields.push({ name: f, type: f === 'banner' ? 'image' : 'text' })
 for (const slug of SERVICE_SLUGS) {
@@ -193,7 +200,8 @@ for (const slug of SERVICE_SLUGS) {
   const row = rowOf(slug)
   Object.assign(rec.values, {
     body: `${row.introtext}\n${row.fulltext}`,
-    banner: imgOf(row, 'image_fulltext') || imgOf(row, 'image_intro')
+    banner: imgOf(row, 'image_fulltext') || imgOf(row, 'image_intro'),
+    tags: tagsOfRow(row.id)
   })
 }
 // the blog gets a page record of its own, so a customer can hide it from the header

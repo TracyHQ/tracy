@@ -16,6 +16,7 @@ export interface Page {
   summary?: string;
   sub_title?: string;
   path?: string;
+  tags?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;

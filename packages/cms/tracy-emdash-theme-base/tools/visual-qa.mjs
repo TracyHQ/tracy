@@ -450,11 +450,12 @@ async function measureAxis(spec, variant) {
       axis.sourceConsumers = consumersFor(spec, variant, 'source')
       if (axis.sourceConsumers && !existsSync(frame)) F('reference-missing', { file: frame })
       axis.sourceScreenshot = axis.sourceConsumers && existsSync(frame) ? frame : null
-      if (axis.sourceScreenshot) {
-        const cut = await tileFrame(context, frame, `shots/${spec.id}--${variant.id}--source.png`)
-        axis.sourceTiles = cut.tiles
-        axis.sourceTilesCoverPicture = cut.fullWidthCovered
-      }
+      if (axis.sourceScreenshot)
+        {
+          const cut = await tileFrame(context, frame, `shots/${spec.id}--${variant.id}--source.png`)
+          axis.sourceTiles = cut.tiles
+          axis.sourceTilesCoverPicture = cut.fullWidthCovered
+        }
       axis.parity = { basis: 'declared', reference: spec.source[0] }
     } else axis.parity = { basis: 'requirements-only' }
     if (sourceSite && contract.design?.parity && spec.source?.[0] && !frame) {
@@ -612,6 +613,11 @@ async function measureAxis(spec, variant) {
             // were undecoded at this exact point on three loads, and 0 of 11 after this pass every
             // time. Reloading cannot fix that -- lazy stays lazy -- so the pass belongs here, inside
             // what an attempt re-does, rather than in the retry that answers a latched render.
+            // A lazy picture inside a strip shifted sideways (a carousel, a tab pane) never enters the viewport vertically, so
+            // scrolling alone leaves it undecoded: ask the browser to load every lazy picture of the source now (JA Nova /project).
+            await ref.evaluate(() => {
+              for (const img of document.querySelectorAll('img[loading="lazy"]')) img.loading = 'eager'
+            })
             await ref.evaluate(async () => {
               const step = Math.max(200, innerHeight - 100)
               for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
@@ -855,16 +861,16 @@ async function measureAxis(spec, variant) {
         // to precede this read only paid for a two-frame stability wait and a CDP round trip
         // (72 ms of a 195 ms element, measured 15/09; see `settledRect` for the numbers and for why
         // reading every rest rect in one batch up front was not the answer).
-        // The pointer is still on the PREVIOUS target, and a hover rule does not have to act on the
-        // element under the pointer: `.card:hover .secondary { width: 140px }` is ordinary markup.
-        // Reading a rest state then reads an already-hovered box and the two reads agree. Measured
+          // The pointer is still on the PREVIOUS target, and a hover rule does not have to act on the
+          // element under the pointer: `.card:hover .secondary { width: 140px }` is ordinary markup.
+          // Reading a rest state then reads an already-hovered box and the two reads agree. Measured
         // 2026-09-17 on a card holding two links: the second read `rest w=156, hover w=156` and
         // produced no finding, hiding an 80 px change. Park the pointer first; the settle inside the
         // rest read then waits for whatever the previous hover started to unwind.
         await page.mouse.move(0, 0)
         // The pointer is still on the PREVIOUS target, and a hover rule does not have to act on the
-        // element under the pointer: `.card:hover .secondary { width: 140px }` is ordinary markup.
-        // Reading a rest state then reads an already-hovered box and the two reads agree. Measured
+      // element under the pointer: `.card:hover .secondary { width: 140px }` is ordinary markup.
+      // Reading a rest state then reads an already-hovered box and the two reads agree. Measured
         // 2026-09-17 on a card holding two links: the second read `rest w=156, hover w=156` and
         // produced no finding, hiding an 80 px change. Park the pointer first; the settle inside the
         // rest read then waits for whatever the previous hover started to unwind.
@@ -1101,8 +1107,7 @@ const distinctKeys = new Set()
  * already in the key the caller builds around this.
  */
 const distinctKey = (f) => {
-  const where =
-    f.element ?? f.selector ?? f.file ?? f.page ?? (Array.isArray(f.elements) ? f.elements.join(' + ') : null)
+  const where = f.element ?? f.selector ?? f.file ?? f.page ?? (Array.isArray(f.elements) ? f.elements.join(' + ') : null)
   const what = f.rule ?? f.property ?? f.reason ?? null
   return `${f.kind}|${where ?? ''}|${what ?? ''}`
 }
@@ -1168,7 +1173,9 @@ try {
           summary.components += axis.components.length
           summary.findings += axis.findings.length
           summary.unclassified += axis.coverage?.unclassified?.length ?? 0
-          say(`same ${spec.id} ${axis.variant} (reused from ${reuseDir}) findings=${axis.findings.length}`)
+          say(
+            `same ${spec.id} ${axis.variant} (reused from ${reuseDir}) findings=${axis.findings.length}`
+          )
         }
         continue
       }
@@ -1271,13 +1278,7 @@ const whatOf = (f) => f.rule ?? f.property ?? f.reason ?? '—'
 // printed. Since (kind, where, what) IS the grouping key, printing all three in full cannot leave
 // two rows alike — which is the one property this table has to have.
 const triageRows = (groups) => {
-  const cell = (e) => ({
-    kind: e.finding.kind,
-    short: String(whereOf(e.finding)).slice(-60),
-    full: String(whereOf(e.finding)),
-    what: whatOf(e.finding),
-    e
-  })
+  const cell = (e) => ({ kind: e.finding.kind, short: String(whereOf(e.finding)).slice(-60), full: String(whereOf(e.finding)), what: whatOf(e.finding), e })
   const cells = groups.map(cell)
   const collisions = new Set()
   const seen = new Set()
@@ -1373,9 +1374,7 @@ for (const p of pages)
 if (!pages.some((p) => p.axes.some((a) => a.accepted?.length))) md.push('none')
 md.push('', '## Source requests blocked (the source is captured offline)', '')
 for (const [u, axes] of Object.entries(sourceBlocked).sort())
-  md.push(
-    `- \`${u}\` — ${axes.length} axis(es): ${axes.slice(0, 6).join(', ')}${axes.length > 6 ? ', …' : ''}`
-  )
+  md.push(`- \`${u}\` — ${axes.length} axis(es): ${axes.slice(0, 6).join(', ')}${axes.length > 6 ? ', …' : ''}`)
 if (!summary.sourceBlocked) md.push('none')
 md.push('', '## Findings', '')
 for (const p of pages)
@@ -1449,8 +1448,7 @@ const HINT = {
   // is exactly where the reader opening notes/machine.md has least context and most need of one.
   'page-did-not-render':
     'the page served almost nothing: check the site is up, the route exists, and the seed ran before QA',
-  'rule-error':
-    'the rule selector threw in the page: fix the selector in design.rules, it is not valid CSS here',
+  'rule-error': 'the rule selector threw in the page: fix the selector in design.rules, it is not valid CSS here',
   'parity-selector-unsupported':
     'the batched reader cannot resolve this selector shape: use one plain CSS selector, optionally + one non-negative `nth=`',
   'parity-selector-undeclared':
@@ -1459,12 +1457,9 @@ const HINT = {
     'no pair resolved on BOTH sides: usually a source that did not load, or a contract narrowed to keys this page has none of',
   'source-not-rendered':
     'the source is not showing these pictures, so the count the site is judged against is too low: re-render the reference or check the picture is reachable',
-  'fonts-not-ready':
-    'document.fonts never settled: a webfont 404s, or the page is still loading when it is measured',
-  'axis-error':
-    'this axis crashed and measured nothing: read the message, the page or the browser died mid-run',
-  'mega-error':
-    'the mega-hover child process failed before it could write its JSON: run it by hand on this page to see why',
+  'fonts-not-ready': 'document.fonts never settled: a webfont 404s, or the page is still loading when it is measured',
+  'axis-error': 'this axis crashed and measured nothing: read the message, the page or the browser died mid-run',
+  'mega-error': 'the mega-hover child process failed before it could write its JSON: run it by hand on this page to see why',
   'parity-not-measured': 'one side lacks the element: add it to the site, or narrow pages[].parity',
   'image-missing': 'register the picture in build-seed.mjs / media-map (or set pages[].images: placeholders)',
   'image-placeholder': 'give the entry its picture in the seed; placeholders are defects',

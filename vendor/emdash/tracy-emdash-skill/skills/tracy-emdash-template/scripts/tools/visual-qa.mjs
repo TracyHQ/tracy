@@ -613,6 +613,11 @@ async function measureAxis(spec, variant) {
             // were undecoded at this exact point on three loads, and 0 of 11 after this pass every
             // time. Reloading cannot fix that -- lazy stays lazy -- so the pass belongs here, inside
             // what an attempt re-does, rather than in the retry that answers a latched render.
+            // A lazy picture inside a strip shifted sideways (a carousel, a tab pane) never enters the viewport vertically, so
+            // scrolling alone leaves it undecoded: ask the browser to load every lazy picture of the source now (JA Nova /project).
+            await ref.evaluate(() => {
+              for (const img of document.querySelectorAll('img[loading="lazy"]')) img.loading = 'eager'
+            })
             await ref.evaluate(async () => {
               const step = Math.max(200, innerHeight - 100)
               for (let y = 0; y < document.documentElement.scrollHeight; y += step) {

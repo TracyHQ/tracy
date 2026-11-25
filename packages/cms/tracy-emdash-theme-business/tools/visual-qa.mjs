@@ -25,10 +25,8 @@
 // picture as opened only when every tile was. The full-page file stays for the record.
 // Stages (contract visual.stages, in order): a later stage runs only after the earlier one is clean.
 // --stage runs the named stage(s) for the fix loop; --reuse copies a page's earlier evidence when its
-// page hash (visual-lib pageHash: render inputs, view + imports, seed slices, criteria incl. designSystem,
-// source reference, tools) is unchanged AND the earlier run's verdict inputs (visual.json `inputs`: scans
-// and thresholds, theme hook, source cited, renderer) match this run's, so a rerun after a fix measures
-// only the pages the fix could have touched. A declined prior says why (stderr, and `reuse` in visual.json).
+// page hash (visual-lib pageHash: render inputs, view + imports, seed slices, criteria, source reference,
+// tools) is unchanged, so a rerun after a fix measures only the pages the fix could have touched.
 //
 // Scopes (visual.json `scope.kind`, and every file of the run):
 //   full            every page (default). May cite `--fast-gate <run>`: that run must hold a passing
@@ -58,8 +56,8 @@ import { shownPath } from './distribution.mjs'
 import { summaryLine, takeVerbose } from './cli-output.mjs'
 import { resolveFastGate, planMarkdown } from './fast-gate.mjs'
 import {
-  launchBrowser,
   browserIdentity,
+  launchBrowser,
   loadConfig,
   themeOf,
   seedTheme,
@@ -69,6 +67,8 @@ import {
   captureDesign,
   snapshotOf,
   siteSnapshotOf,
+  pngRows,
+  cutPng,
   sourcePending,
   diffSnapshots,
   scanWhiteSurfaces,
@@ -79,14 +79,12 @@ import {
   tagInteractive,
   settledRect,
   DEFAULT_INTERACTIVE,
-  SNAPSHOT_PROPERTIES,
+  parityPropertiesFor,
   firstFamily,
   imageCensus,
   findOneSpec,
   pageHash,
   scanOffSystem,
-  pngRows,
-  cutPng,
   keepSourceOffline
 } from './visual-lib.mjs'
 const execFileP = promisify(execFile)
@@ -111,13 +109,6 @@ const scopeArg = opt('--scope', 'full'),
   fastGateRun = opt('--fast-gate'),
   sourceDir = opt('--source-dir')
 const scans = opt('--scans', 'white,darktext,contrast,border,seam,hover,offsystem').split(',').filter(Boolean)
-// How long the hover scan waits for a box to stop moving before it declares the element
-// unmeasurable (`scan:hover-not-measured`, reason `unsettled`). 2000 ms is twice Tailwind's largest
-// duration utility (`duration-1000`); every finite hover transition finishes well inside it, so the
-// bound is hit only by motion that is pathological for a hover check -- chained transitions that keep
-// restarting, or a finite animation still running from page load. Not a tuning knob: lowering it
-// turns real settled measurements into skips, raising it only costs time on pages that already fail.
-const HOVER_SETTLE_MS = 2000
 const contrastMin = Number(opt('--contrast-min', 3)),
   borderLuma = Number(opt('--border-luma', 80)),
   tileHeight = Math.max(10, Number(opt('--tile-height', 1200)) || 1200)
@@ -227,8 +218,13 @@ const compareStyle = (property, expected, actual) =>
       ? Math.abs(parseFloat(expected) - parseFloat(actual)) <= 0.1
       : expected === actual
 
-// One entry per (source file, variant); see the read site of this map for the two conditions a
-// hit must satisfy. Lives for the run, which is exactly how long a source file stays unchanged.
+// How long the hover scan waits for a box to stop moving before it declares the element
+// unmeasurable (`scan:hover-not-measured`, reason `unsettled`). 2000 ms is twice Tailwind's largest
+// duration utility (`duration-1000`); every finite hover transition finishes well inside it, so the
+// bound is hit only by motion that is pathological for a hover check -- chained transitions that keep
+// restarting, or a finite animation still running from page load. Not a tuning knob: lowering it
+// turns real settled measurements into skips, raising it only costs time on pages that already fail.
+const HOVER_SETTLE_MS = 2000
 let OFFSYSTEM_ABSENCE_SAID = false
 const SOURCE_CACHE = new Map()
 const browser = await launchBrowser()
@@ -412,7 +408,12 @@ async function measureAxis(spec, variant) {
     }
     const cap = { rules: measuredRules }
     for (const r of cap.rules) {
-      const expected = contract.design.rules.find((x) => x.id === r.id).styles[variant.id] ?? {}
+      const rule = contract.design.rules.find((x) => x.id === r.id)
+      const expected = rule.styles[variant.id] ?? {}
+      if (r.elements.length && rule.optional && rule.styles[variant.id] === undefined) {
+        F('rule-unexpected-visible', { rule: r.id, selector: r.selector, count: r.elements.length })
+        continue
+      }
       if (!r.elements.length) {
         // `optional` rules describe a role a page may not have (chips, h3); a required rule that
         // matches nothing is a finding — the page lost a component or the selector rotted.
@@ -449,16 +450,17 @@ async function measureAxis(spec, variant) {
       axis.sourceConsumers = consumersFor(spec, variant, 'source')
       if (axis.sourceConsumers && !existsSync(frame)) F('reference-missing', { file: frame })
       axis.sourceScreenshot = axis.sourceConsumers && existsSync(frame) ? frame : null
-      if (axis.sourceScreenshot) {
-        const cut = await tileFrame(context, frame, `shots/${spec.id}--${variant.id}--source.png`)
-        axis.sourceTiles = cut.tiles
-        axis.sourceTilesCoverPicture = cut.fullWidthCovered
-      }
+      if (axis.sourceScreenshot)
+        {
+          const cut = await tileFrame(context, frame, `shots/${spec.id}--${variant.id}--source.png`)
+          axis.sourceTiles = cut.tiles
+          axis.sourceTilesCoverPicture = cut.fullWidthCovered
+        }
       axis.parity = { basis: 'declared', reference: spec.source[0] }
     } else axis.parity = { basis: 'requirements-only' }
     if (sourceSite && contract.design?.parity && spec.source?.[0] && !frame) {
       const sel = contract.design.parity.selectors,
-        props = contract.design.parity.properties ?? SNAPSHOT_PROPERTIES
+        props = parityPropertiesFor(contract.design.parity, variant.theme)
       // `pages[].parity` (array of keys) narrows the pairs for a page whose source is a different
       // page type (a detail page measured against its list page shares chrome, not headings).
       //
@@ -491,7 +493,8 @@ async function measureAxis(spec, variant) {
       const siteSnap = {}
       const unresolved = new Set()
       // One in-page pass for every pair first (`siteSnapshotOf` keeps the locator's element choice;
-      // its header carries the 612 s that the twelve per-pair locator round trips used to cost).
+      // its header carries the reason: on a template built from this kit the twelve per-pair locator
+      // round trips cost 612 s of a 39-minute matrix, all of it waiting on selectors not on the page).
       // A key absent from `rest` is absent from the page, and absence is an ANSWER here -- the pair
       // is either a role this page does not have, or a real gap that `parity-not-measured` reports
       // below from the two sides disagreeing. Either way nothing is left to wait for.
@@ -534,8 +537,11 @@ async function measureAxis(spec, variant) {
       }
       // The source is a STATIC document: for one (source file, variant) neither its selector
       // snapshot nor its image census can differ between two site pages that cite it. This contract
-      // has 48 pages over 34 source files, so 14 of every 48 axes re-open a file this run has
-      // already measured — 3.6 minutes of a 39-minute matrix, measured 2026-09-16.
+      // Contracts repeat source files: a template built from this kit measured 31 pages over 25
+      // source files, so of its 178 axes, 28 named a (source file, variant) an earlier axis had
+      // already measured. Fewer are served -- the two conditions below are decided per axis at
+      // runtime, and a page that wants the source picture or asks a content-keyed question opens
+      // the file itself.
       //
       // Two conditions keep a hit honest, and both are checked, not assumed:
       //   · the axis must want no source SCREENSHOT — that is decided per page (`consumersFor`), so
@@ -544,8 +550,8 @@ async function measureAxis(spec, variant) {
       //     own expected text (`findOneSpec`), so their reading is a property of the page, not of
       //     the file, and an entry filled by another page would answer the wrong question.
       // A hit also has to COVER the keys this page asks for: a narrowed page must not be served an
-      // entry that never measured the key it wants. Every page sharing a source file in this
-      // contract narrows `parity` to the same six non-content keys, which is why this applies at all.
+      // entry that never measured the key it wants -- the runtime check below is what decides it,
+      // so a contract whose pages narrow `parity` differently simply gets misses, never a wrong read.
       const cacheKey = `${spec.source[0]}|${variant.id}`
       axis.sourceConsumers = consumersFor(spec, variant, 'source')
       const prior = SOURCE_CACHE.get(cacheKey)
@@ -603,11 +609,15 @@ async function measureAxis(spec, variant) {
               )
             // Scroll the whole document once before anything is measured or shot. A full-page
             // screenshot does not scroll, so `loading="lazy"` pictures below the fold are never
-            // requested: measured 2026-09-17 on the sibling base template's `about.html`, 5, 6 and
-            // 6 of 11 images were undecoded at this exact point on three loads, and 0 of 11 after
-            // this pass every time. Reloading cannot fix that -- lazy stays lazy -- so the pass
-            // belongs here, inside what an attempt re-does, not in the retry that answers a
-            // latched render. The fix lived only in the kit and base; this copy never had it.
+            // requested: measured 2026-09-17 on the base template's `about.html`, 5, 6 and 6 of 11 images
+            // were undecoded at this exact point on three loads, and 0 of 11 after this pass every
+            // time. Reloading cannot fix that -- lazy stays lazy -- so the pass belongs here, inside
+            // what an attempt re-does, rather than in the retry that answers a latched render.
+            // A lazy picture inside a strip shifted sideways (a carousel, a tab pane) never enters the viewport vertically, so
+            // scrolling alone leaves it undecoded: ask the browser to load every lazy picture of the source now (JA Nova /project).
+            await ref.evaluate(() => {
+              for (const img of document.querySelectorAll('img[loading="lazy"]')) img.loading = 'eager'
+            })
             await ref.evaluate(async () => {
               const step = Math.max(200, innerHeight - 100)
               for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
@@ -616,25 +626,29 @@ async function measureAxis(spec, variant) {
               }
               scrollTo(0, 0)
             })
-            // Scrolling only STARTS the requests; a flat wait after it decides readiness by the
+            // Scrolling only STARTS the requests. A flat wait after it decides readiness by the
             // clock rather than by the pictures, so a source served over a slow link reads as
-            // broken and is reported as not-rendered. Wait for the network instead, bounded.
+            // broken, gets loaded again, and is reported as `source-not-rendered` -- a finding
+            // about the network, printed as a finding about the design. Wait for the requests
+            // instead, bounded, then fall through: a picture still undecoded after this is what
+            // `sourcePending` is for, and the retry that follows is what answers a latched render.
             await ref.waitForLoadState('networkidle').catch(() => {})
             await ref.waitForTimeout(200)
           }
-          // The source render settles into one of two end states per load and the losing one paints
-          // a dashed placeholder ring over every picture (`sourcePending` carries the measurements).
-          // Waiting does not decide it -- the state latches -- so the only honest options are load
-          // again, or say the picture is not the design. `attempts` is small on purpose: a page that
-          // needs many tries is telling us something a finding should carry, not a loop.
-          // The slot selector is the contract's own (`design.images.sourceSlot`), so this does not
-          // invent a second idea of what a picture is; `design.source.rendered` overrides both parts
-          // for an export that marks readiness differently.
-          const rendered = {
-            selector: contract.design.images?.sourceSlot ?? 'image-slot[src]',
-            attribute: 'data-filled',
-            ...contract.design.source?.rendered
-          }
+          // Ask whether the source is actually showing its pictures, and say so when it is not.
+          // `prepare()` above already scrolls, which is what a plain-HTML source's lazy images need; the
+          // loop is for a render whose end state is decided per LOAD rather than by waiting -- an
+          // export whose picture component latches filled or unfilled (a template built from this
+          // kit does exactly that). Waiting cannot decide such a state, so the only honest
+          // options are load again, or say the picture is not the design. Three is small on
+          // purpose: a page that needs many tries is telling us something a finding should carry.
+
+          // Plain `<img>` is the common source shape. Selector and attribute are ONE decision,
+          // not two: an export whose picture component marks itself ready declares both in
+          // `design.source.rendered`. Taking the selector from `design.images.sourceSlot` while
+          // leaving the attribute at its default mixes the two contracts and asks a custom element
+          // whether it decoded -- which it never did, so every source page reads as pending.
+          const rendered = { selector: 'img', attribute: null, ...contract.design.source?.rendered }
           let state = null
           for (let attempt = 1; attempt <= 3; attempt++) {
             await prepare()
@@ -695,8 +709,8 @@ async function measureAxis(spec, variant) {
           // Only the part taken WITHOUT page-specific input may be reused, but that part is worth
           // keeping even when this page also asked for content-keyed pairs -- and it usually does,
           // because the FIRST page to cite a source file is the unnarrowed one. Storing nothing in
-          // that case left the cache empty for exactly the pages meant to hit it: measured before
-          // this line existed, 32 of 288 axes were served instead of the 84 the contract allows.
+          // that case left the cache empty for exactly the pages meant to hit it (measured on the
+          // a template built from this kit: 32 of its 288 axes served instead of the 84 it allows).
           const shareable = pairs.filter(([, pr]) => pr.source?.text === undefined).map(([k]) => k)
           // A reading taken while the source was still showing placeholders is not something a later
           // axis may inherit: the finding stays on this axis, and a reused entry would carry none of it.
@@ -714,13 +728,18 @@ async function measureAxis(spec, variant) {
         }
       }
       const imgCfg = contract.design.images ?? {}
+      // Unless the contract sets `design.images.scope`, both sides count the same root: a source with no <main>
+      // (Joomla/T3, most CMS themes) counts its whole body, and then so must the site, or the same pictures
+      // read as missing.
+      const siteScope = imgCfg.scope ?? (srcImages?.resolved === 'body' ? 'body' : 'main')
       const siteImages = await page.evaluate(imageCensus, {
-        scope: imgCfg.scope ?? 'main',
+        scope: siteScope,
         placeholder: imgCfg.placeholder ?? null
       })
       axis.images = {
         source: srcImages.images,
         site: siteImages.images,
+        roots: { source: srcImages.resolved, site: siteImages.resolved },
         placeholders: siteImages.placeholders.length
       }
       // `pages[].images: 'placeholders'` — a derived page's count is data-driven; placeholders still fail.
@@ -728,11 +747,12 @@ async function measureAxis(spec, variant) {
         F('image-missing', {
           expected: srcImages.images,
           observed: siteImages.images,
+          roots: { source: srcImages.resolved, site: siteImages.resolved },
           sourceSlots: srcImages.slots.slice(0, 12)
         })
       for (const ph of siteImages.placeholders) F('image-placeholder', ph)
       axis.parity = { basis: 'two-sided', site: siteSnap, source: srcSnap, pairs: pairs.length }
-      // a pair absent on BOTH sides is a role this page does not have; absent on one side is a real gap.
+      // a pair absent on BOTH sides is a role this page does not have; absent on one side is a real gap
       // A pair whose site selector could not be RESOLVED is neither: the page was never asked, so
       // calling it a one-sided absence would report the same contract error twice, the second time
       // under a kind that means something else.
@@ -774,15 +794,10 @@ async function measureAxis(spec, variant) {
     // coverage runs AFTER rules and parity so an element either side measured counts as classified
     Object.assign(
       cap,
-      // No `identity` here on purpose. `captureDesign` used it for one field, `identityMatches`,
-      // that nothing in this package ever read; the assertion it looks like is performed for real
-      // twice over -- `navigate()` above waits on the same selector and throws when it is not
-      // visible, and `qa-browser.mjs` asserts a match count directly. Computing it cost a
-      // `querySelectorAll` plus a visibility filter on every axis of every page, and all 48 pages
-      // of this contract declare an identity, for a number thrown away.
       await page.evaluate(captureDesign, {
         rules: [],
         coverage: contract.design.coverage ?? [],
+        identity: spec.identity,
         tokens: contract.design.tokens ?? []
       }),
       { rules: measuredRules }
@@ -846,16 +861,16 @@ async function measureAxis(spec, variant) {
         // to precede this read only paid for a two-frame stability wait and a CDP round trip
         // (72 ms of a 195 ms element, measured 15/09; see `settledRect` for the numbers and for why
         // reading every rest rect in one batch up front was not the answer).
-        // The pointer is still on the PREVIOUS target, and a hover rule does not have to act on the
-        // element under the pointer: `.card:hover .secondary { width: 140px }` is ordinary markup.
-        // Reading a rest state then reads an already-hovered box and the two reads agree. Measured
+          // The pointer is still on the PREVIOUS target, and a hover rule does not have to act on the
+          // element under the pointer: `.card:hover .secondary { width: 140px }` is ordinary markup.
+          // Reading a rest state then reads an already-hovered box and the two reads agree. Measured
         // 2026-09-17 on a card holding two links: the second read `rest w=156, hover w=156` and
         // produced no finding, hiding an 80 px change. Park the pointer first; the settle inside the
         // rest read then waits for whatever the previous hover started to unwind.
         await page.mouse.move(0, 0)
         // The pointer is still on the PREVIOUS target, and a hover rule does not have to act on the
-        // element under the pointer: `.card:hover .secondary { width: 140px }` is ordinary markup.
-        // Reading a rest state then reads an already-hovered box and the two reads agree. Measured
+      // element under the pointer: `.card:hover .secondary { width: 140px }` is ordinary markup.
+      // Reading a rest state then reads an already-hovered box and the two reads agree. Measured
         // 2026-09-17 on a card holding two links: the second read `rest w=156, hover w=156` and
         // produced no finding, hiding an 80 px change. Park the pointer first; the settle inside the
         // rest read then waits for whatever the previous hover started to unwind.
@@ -878,7 +893,7 @@ async function measureAxis(spec, variant) {
         // for whatever is still animating on the element, its subtree or its ancestors (the test
         // fixture's 400 ms `translateY` transition costs 400 ms here, and that is the point), and
         // reports a box that will not settle within HOVER_SETTLE_MS instead of measuring mid-motion.
-        // Measured 15/09 on this template's en-home and en-about: none of the 13 hovered elements
+        // Measured 15/09 on a template built from this kit, en-home and en-about: none of its 13 hovered
         // per axis starts an animation, so the settle step costs one `evaluate` round trip (2-7 ms)
         // per element and the two pages' wall time is unchanged within run-to-run noise (±4 s).
         await page.waitForTimeout(60)
@@ -942,10 +957,8 @@ async function measureAxis(spec, variant) {
   const states = (spec.states ?? []).filter((s) => s !== 'default' && contract.interactions?.[s])
   if (states.length && variant.width === Math.max(...axesFor(spec.variants).map((v) => v.width))) {
     for (const state of states) {
-      // Keyed by state as well. The name used to carry only page and axis while the loop it sits
-      // in runs once per state, so every state after the first overwrote the one before and the
-      // directory kept the last one only -- the report read each file back before the next was
-      // written so the findings were right, but the artifact left for a reviewer did not match.
+      // One file per state: mega-hover.mjs writes the whole file, so a shared name would leave only
+      // the last state's row and silently hide the others (measured on Tracy Base: 3 states, 1 row).
       const jsonFile = path.join(out, `mega--${spec.id}--${variant.id}--${state}.json`)
       try {
         await execFileP(process.execPath, [
@@ -972,29 +985,19 @@ async function measureAxis(spec, variant) {
       // 🔒 NO JSON IS NO MEASUREMENT, WHATEVER THE EXIT CODE SAID. mega-hover builds its browser and
       // reads the theme hook BEFORE its own try block, so a bad `qa.theme` throws there: Node exits
       // 1 -- indistinguishable from "ran and found something" -- and nothing was written. The whole
-      // interaction check for this page, state and axis then vanished with no finding and no trace,
-      // which is the failure the comments around it were written to prevent.
+      // interaction check for this page, state and axis then vanished with no finding and no trace.
       if (!existsSync(jsonFile))
         F('mega-error', {
           state,
           message: `mega-hover wrote no ${path.basename(jsonFile)}: it failed before it could measure anything (run it by hand on this page to see why)`
         })
-      if (existsSync(jsonFile)) {
-        const mega = JSON.parse(readFileSync(jsonFile, 'utf8'))
-        // The child inherits the environment and so should pick the same binary; if it did not, the
-        // panel travel was measured on a renderer this report does not name, so say so as a finding.
-        if (mega.browser && mega.browser.version !== renderer.version)
-          F('mega-error', {
-            state,
-            message: `mega-hover rendered with ${mega.browser.engine} ${mega.browser.version} (${mega.browser.launch}); this run is on ${renderer.version} (${renderer.launch})`
-          })
-        for (const row of mega.rows) {
+      if (existsSync(jsonFile))
+        for (const row of JSON.parse(readFileSync(jsonFile, 'utf8')).rows) {
           axis.mega = axis.mega ?? []
           axis.mega.push(row)
           if (row.verdict !== 'PASS')
             F('mega-menu', { state: row.state, verdict: row.verdict, steps: row.steps })
         }
-      }
     }
   }
   return axis
@@ -1104,8 +1107,7 @@ const distinctKeys = new Set()
  * already in the key the caller builds around this.
  */
 const distinctKey = (f) => {
-  const where =
-    f.element ?? f.selector ?? f.file ?? f.page ?? (Array.isArray(f.elements) ? f.elements.join(' + ') : null)
+  const where = f.element ?? f.selector ?? f.file ?? f.page ?? (Array.isArray(f.elements) ? f.elements.join(' + ') : null)
   const what = f.rule ?? f.property ?? f.reason ?? null
   return `${f.kind}|${where ?? ''}|${what ?? ''}`
 }
@@ -1142,41 +1144,19 @@ try {
       )
       if (!variants.length) continue
       st.pages++
-      // Reuse: a prior run whose verdict inputs match measured this page with the same hash on every
-      // axis this stage needs. When nothing qualifies, one line says why per prior, so a run that
-      // measured everything is distinguishable from a run that had nothing to reuse.
+      // Reuse: the prior run measured this page with the same hash on every axis this stage needs.
       let prevAxes = null,
         reuseDir = null
-      const declined = []
       for (const { dir, report: pr, stale } of priors) {
         if (stale.length) continue // inputs differ — said once above, for the whole run
-        const prev = pr.pages?.find((p) => p.id === spec.id)
-        if (!prev) {
-          declined.push(`${dir}: page not in that run`)
-          continue
+        const prev = pr.pages?.find((p) => p.id === spec.id && p.hash === pageReport.hash)
+        const axes = prev ? variants.map((v) => prev.axes.find((a) => a.variant === v.id)) : null
+        if (axes && axes.every(Boolean)) {
+          prevAxes = axes
+          reuseDir = dir
+          break
         }
-        if (prev.hash !== pageReport.hash) {
-          declined.push(`${dir}: page hash changed`)
-          continue
-        }
-        const axes = variants.map((v) => prev.axes.find((a) => a.variant === v.id))
-        if (!axes.every(Boolean)) {
-          declined.push(
-            `${dir}: no evidence for ${variants
-              .filter((_, i) => !axes[i])
-              .map((v) => v.id)
-              .join(', ')}`
-          )
-          continue
-        }
-        prevAxes = axes
-        reuseDir = dir
-        break
       }
-      if (!prevAxes && priors.length)
-        console.log(
-          `measure ${spec.id}: ${declined.length ? declined.join('; ') : 'every --reuse run was declined on its inputs'}`
-        )
       if (prevAxes) {
         for (const a of prevAxes) {
           // Evidence is referenced, not copied: a second copy of the same picture is disk garbage.
@@ -1193,7 +1173,9 @@ try {
           summary.components += axis.components.length
           summary.findings += axis.findings.length
           summary.unclassified += axis.coverage?.unclassified?.length ?? 0
-          say(`same ${spec.id} ${axis.variant} (reused from ${reuseDir}) findings=${axis.findings.length}`)
+          say(
+            `same ${spec.id} ${axis.variant} (reused from ${reuseDir}) findings=${axis.findings.length}`
+          )
         }
         continue
       }
@@ -1246,15 +1228,12 @@ const report = {
   sourceDir: sourceDir ? path.resolve(sourceDir) : null,
   contract: contractFile,
   contractHash: contractHash(contract),
-  browser: renderer,
-  // what a later --reuse compares itself against (see verdictInputs), and what this run decided
-  // about each prior it was handed — a declined prior is in here with its reasons, not only on stderr
   inputs: verdictInputs,
-  reuse: priors.map(({ dir, stale }) => ({ dir, usable: !stale.length, stale })),
+  browser: renderer,
   scope,
   fastGate,
   method:
-    'screenshot + interaction + computed-px, staged (light desktop → light responsive → dark desktop → dark responsive); a stage runs only after the previous one is clean; a page whose hash is unchanged reuses its earlier evidence when the run inputs match',
+    'screenshot + interaction + computed-px, staged (light desktop → light responsive → dark desktop → dark responsive); a stage runs only after the previous one is clean; a page whose hash is unchanged reuses its earlier evidence',
   stages: stageReports,
   summary,
   pages
@@ -1263,12 +1242,13 @@ writeFileSync(path.join(out, 'visual.json'), JSON.stringify(report, null, 2) + '
 if (scope.plan) writeFileSync(path.join(out, 'FAST-GATE-PLAN.md'), planMarkdown(scope.plan))
 // 🔒 TRIAGE FIRST — 1,302 findings were 17 problems. A finding list is one row per SIGHTING,
 // so one undeclared selector arrives as 70 rows that a reader must collapse
-// by hand before deciding anything; measured 18/09 on base, 1,302 rows grouped to 17 KEYS — and
-// reading those 17 is what showed that nine of them name the same shape of problem (selectors
-// listed in pages[].parity that nothing measures). Seventeen keys is not a claim of seventeen
-// independent causes; it is a surface small enough that a reader can look for the causes. Accepted findings are grouped
-// beside them ON PURPOSE: they are the discrepancies a cited exception is excusing, and a reader
-// who never sees them cannot tell whether the exception still excuses what it was written for.
+// by hand before deciding anything; measured 18/09 on the sibling base template, 1,302 rows
+// grouped to 17 KEYS — and reading those 17 is what showed that nine of them name the same shape
+// of problem (selectors listed in pages[].parity that nothing measures). Seventeen keys is not a
+// claim of seventeen independent causes; it is a surface small enough to look for the causes in.
+// Accepted findings are grouped beside them ON PURPOSE: they are the discrepancies a cited
+// exception is excusing, and a reader who never sees them cannot tell whether the exception
+// still excuses what it was written for.
 const groupRows = (rows) => {
   const g = new Map()
   for (const { page, finding } of rows) {
@@ -1298,13 +1278,7 @@ const whatOf = (f) => f.rule ?? f.property ?? f.reason ?? '—'
 // printed. Since (kind, where, what) IS the grouping key, printing all three in full cannot leave
 // two rows alike — which is the one property this table has to have.
 const triageRows = (groups) => {
-  const cell = (e) => ({
-    kind: e.finding.kind,
-    short: String(whereOf(e.finding)).slice(-60),
-    full: String(whereOf(e.finding)),
-    what: whatOf(e.finding),
-    e
-  })
+  const cell = (e) => ({ kind: e.finding.kind, short: String(whereOf(e.finding)).slice(-60), full: String(whereOf(e.finding)), what: whatOf(e.finding), e })
   const cells = groups.map(cell)
   const collisions = new Set()
   const seen = new Set()
@@ -1360,13 +1334,13 @@ const md = [
   '| Page | Axis | Component | Status | Deltas |',
   '|---|---|---|---|---|'
 ]
-// 🔒 THE COMPONENT TABLE PRINTS EXCEPTIONS, NOT THE CORPUS. Measured 18/09 on base: all 12,898
-// rows were `PASS` with no deltas, and printing them made this file 1.79 MB — of which 1.53 MB
-// (85%) said only "this was checked and it matched". A digest that large is not read, and a
-// digest nobody reads is the same failure as a gate nobody can fail. The rows stay in
-// visual.json, which is where `--reuse` and any run-to-run comparison read them from; what
-// changes is only what a READER is handed first. The count is kept so "0 exceptions of 12,898"
-// cannot be mistaken for "nothing was measured".
+// 🔒 THE COMPONENT TABLE PRINTS EXCEPTIONS, NOT THE CORPUS. Measured 18/09 on the sibling base
+// template: all 12,898 rows were `PASS` with no deltas, and printing them made that file 1.79 MB
+// — of which 1.53 MB (85%) said only "this was checked and it matched". A digest that large is
+// not read, and a digest nobody reads is the same failure as a gate nobody can fail. The rows
+// stay in visual.json, which is where `--reuse` and any run-to-run comparison read them from;
+// what changes is only what a READER is handed first. The count is kept so "0 exceptions of
+// 12,898" cannot be mistaken for "nothing was measured".
 // 🔒 A ROW IS NOISE ONLY IF IT SAYS SO IN A WAY THIS WRITER RECOGNISES. These producers write
 // `PASS`; the WordPress sibling writes `ok` for the same thing. Matching one spelling and
 // swallowing the other is how a filter quietly stops filtering — measured 18/09, the first
@@ -1400,9 +1374,7 @@ for (const p of pages)
 if (!pages.some((p) => p.axes.some((a) => a.accepted?.length))) md.push('none')
 md.push('', '## Source requests blocked (the source is captured offline)', '')
 for (const [u, axes] of Object.entries(sourceBlocked).sort())
-  md.push(
-    `- \`${u}\` — ${axes.length} axis(es): ${axes.slice(0, 6).join(', ')}${axes.length > 6 ? ', …' : ''}`
-  )
+  md.push(`- \`${u}\` — ${axes.length} axis(es): ${axes.slice(0, 6).join(', ')}${axes.length > 6 ? ', …' : ''}`)
 if (!summary.sourceBlocked) md.push('none')
 md.push('', '## Findings', '')
 for (const p of pages)
@@ -1465,6 +1437,8 @@ writeFileSync(
 // works from ONE list. Ids are stable within a run (M1…); the merge step re-keys across lenses.
 const HINT = {
   'rule-mismatch': "set the property on the rule's selector to the expected value (global.css / tokens.css)",
+  'rule-unexpected-visible':
+    'the contract declares this optional role absent in this variant (no styles for it) but it is visible — hide it, or measure it and add its styles',
   'rule-no-visible-match': 'the page lost the component, or the selector rotted — check the view',
   'unclassified-element': 'add a design.rule for this role (or fold it into an existing selector)',
   'parity-mismatch':
@@ -1474,8 +1448,7 @@ const HINT = {
   // is exactly where the reader opening notes/machine.md has least context and most need of one.
   'page-did-not-render':
     'the page served almost nothing: check the site is up, the route exists, and the seed ran before QA',
-  'rule-error':
-    'the rule selector threw in the page: fix the selector in design.rules, it is not valid CSS here',
+  'rule-error': 'the rule selector threw in the page: fix the selector in design.rules, it is not valid CSS here',
   'parity-selector-unsupported':
     'the batched reader cannot resolve this selector shape: use one plain CSS selector, optionally + one non-negative `nth=`',
   'parity-selector-undeclared':
@@ -1484,12 +1457,9 @@ const HINT = {
     'no pair resolved on BOTH sides: usually a source that did not load, or a contract narrowed to keys this page has none of',
   'source-not-rendered':
     'the source is not showing these pictures, so the count the site is judged against is too low: re-render the reference or check the picture is reachable',
-  'fonts-not-ready':
-    'document.fonts never settled: a webfont 404s, or the page is still loading when it is measured',
-  'axis-error':
-    'this axis crashed and measured nothing: read the message, the page or the browser died mid-run',
-  'mega-error':
-    'the mega-hover child process failed before it could write its JSON: run it by hand on this page to see why',
+  'fonts-not-ready': 'document.fonts never settled: a webfont 404s, or the page is still loading when it is measured',
+  'axis-error': 'this axis crashed and measured nothing: read the message, the page or the browser died mid-run',
+  'mega-error': 'the mega-hover child process failed before it could write its JSON: run it by hand on this page to see why',
   'parity-not-measured': 'one side lacks the element: add it to the site, or narrow pages[].parity',
   'image-missing': 'register the picture in build-seed.mjs / media-map (or set pages[].images: placeholders)',
   'image-placeholder': 'give the entry its picture in the seed; placeholders are defects',
@@ -1501,8 +1471,6 @@ const HINT = {
   'scan:bright-border': 'border colour from a line token; deliberate accents go to design.accentBorders',
   'scan:doubled-seam': "drop the last row's border (last:border-b-0) or the container's",
   'scan:hover-jump': 'hover must not change box size: keep border/padding constant across states',
-  'scan:hover-not-measured':
-    'the pointer never got a settled box (hidden by then, unreachable, moving without end, or scrolled under the pointer): make it reachable and finite, or accept it with a cited decision',
   'mega-menu': 'see the steps: pointer travel to the panel must keep it open; Escape returns focus',
   'horizontal-overflow': 'an element wider than the viewport: check fixed widths/images at this width',
   'theme-not-applied': 'the theme hook (data-theme, storage key) did not resolve on this page',

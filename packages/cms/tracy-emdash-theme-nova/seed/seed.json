@@ -56,6 +56,11 @@
 					"type": "string"
 				},
 				{
+					"slug": "tags",
+					"label": "Tags",
+					"type": "string"
+				},
+				{
 					"slug": "path",
 					"label": "Path",
 					"type": "string"
@@ -2163,6 +2168,7 @@
 					],
 					"view": "service",
 					"banner": "images/joomlart/project/illustration/detail/item-6.jpg",
+					"tags": "Company\nDesign\ndeveloper",
 					"path": "/project/illustration"
 				}
 			},
@@ -2484,6 +2490,7 @@
 					],
 					"view": "service",
 					"banner": "images/joomlart/project/illustration/detail/item-1.jpg",
+					"tags": "Company\nDesign\ndeveloper",
 					"path": "/development"
 				}
 			},
@@ -2805,6 +2812,7 @@
 					],
 					"view": "service",
 					"banner": "images/joomlart/project/illustration/detail/item-2.jpg",
+					"tags": "",
 					"path": "/mobile-application"
 				}
 			},
@@ -3126,6 +3134,7 @@
 					],
 					"view": "service",
 					"banner": "images/joomlart/project/illustration/detail/item-3.jpg",
+					"tags": "",
 					"path": "/cloud-solutions"
 				}
 			},
@@ -3447,6 +3456,7 @@
 					],
 					"view": "service",
 					"banner": "images/joomlart/project/illustration/detail/item-4.jpg",
+					"tags": "",
 					"path": "/it-infrastructure"
 				}
 			},
@@ -3768,6 +3778,7 @@
 					],
 					"view": "service",
 					"banner": "images/joomlart/project/illustration/detail/item-5.jpg",
+					"tags": "",
 					"path": "/cybersecurity"
 				}
 			},
@@ -4089,6 +4100,7 @@
 					],
 					"view": "service",
 					"banner": "images/joomlart/project/illustration/detail/item-6.jpg",
+					"tags": "",
 					"path": "/virtualization"
 				}
 			},
