@@ -16,7 +16,7 @@ const TOOLS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../too
 const CONFIG = {
   qa: { theme: { selector: 'html', attribute: 'data-theme', values: { light: null, dark: 'dark' }, storageKey: 'fold-theme' } }
 }
-const PAGE = (spacer) => `<!doctype html><html lang="en"><body style="margin:0">
+const PAGE = (spacer, outside = true) => `<!doctype html><html lang="en"><body style="margin:0">
 <div style="height:${spacer}px"></div>
 <button id="trigger" type="button" aria-expanded="false">Open</button>
 <div id="panel" hidden><a id="link" href="/next">Next</a></div>
@@ -26,14 +26,14 @@ const PAGE = (spacer) => `<!doctype html><html lang="en"><body style="margin:0">
   const close = () => { p.hidden = true; t.setAttribute('aria-expanded', 'false') }
   t.addEventListener('click', () => { p.hidden = !p.hidden; t.setAttribute('aria-expanded', String(!p.hidden)) })
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !p.hidden) { close(); t.focus() } })
-  document.addEventListener('click', (e) => { if (!p.contains(e.target) && e.target !== t) close() })
+  ${outside ? "document.addEventListener('click', (e) => { if (!p.contains(e.target) && e.target !== t) close() })" : ''}
 </script></body></html>`
 
-function serve(spacer) {
+function serve(spacer, outside = true) {
   return new Promise((res) => {
     const srv = http.createServer((req, r) => {
       r.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
-      r.end(new URL(req.url, 'http://x').pathname === '/next' ? '<!doctype html><html lang="en"><body>next</body></html>' : PAGE(spacer))
+      r.end(new URL(req.url, 'http://x').pathname === '/next' ? '<!doctype html><html lang="en"><body>next</body></html>' : PAGE(spacer, outside))
     })
     srv.listen(0, '127.0.0.1', () =>
       res({ origin: `http://127.0.0.1:${srv.address().port}`, close: () => new Promise((r) => srv.close(r)) })
@@ -68,4 +68,22 @@ describe('mega-hover — a click widget below the first screen', () => {
       }
     })
   }
+})
+
+describe('mega-hover — a disclosure (accordion, tab) that stays open on an outside click', () => {
+  it('fails as a popup panel, passes with `--persistent` (and the contract field `persistent`)', { timeout: 120000 }, async () => {
+    const root = mkdtempSync(path.join(tmpdir(), 'persist-'))
+    writeFileSync(path.join(root, 'template.config.json'), JSON.stringify(CONFIG))
+    const site = await serve(0, false)
+    const args = [`${site.origin}/`, '--trigger', '#trigger', '--panel', '#panel', '--link', '#link', '--open', 'click']
+    try {
+      let r = await run('mega-hover.mjs', args, root)
+      assert.equal(r.code, 1, r.out)
+      r = await run('mega-hover.mjs', [...args, '--persistent'], root)
+      assert.equal(r.code, 0, r.out)
+      assert.match(r.out, /"outsideClickKeepsOpen":true/)
+    } finally {
+      await site.close()
+    }
+  })
 })

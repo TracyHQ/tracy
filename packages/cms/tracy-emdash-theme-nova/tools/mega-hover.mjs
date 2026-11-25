@@ -34,12 +34,19 @@ const explicit = {
   trigger: opt('--trigger'),
   panel: opt('--panel'),
   link: opt('--link'),
-  open: opt('--open', 'click')
+  open: opt('--open', 'click'),
+  // a disclosure (accordion, tab, "show more") stays open until its own control closes it: an outside click must NOT close it
+  persistent: (() => {
+    const i = argv.indexOf('--persistent')
+    if (i < 0) return false
+    argv.splice(i, 1)
+    return true
+  })()
 }
 const url = argv[0]
 if (!url || (!contractFile && !explicit.trigger)) {
   console.error(
-    'usage: mega-hover.mjs <url> (--contract qa.contract.json [--state s] | --trigger --panel --link [--open click|hover]) [--viewport 1440] [--json out]'
+    'usage: mega-hover.mjs <url> (--contract qa.contract.json [--state s] | --trigger --panel --link [--open click|hover] [--persistent]) [--viewport 1440] [--json out]'
   )
   process.exit(2)
 }
@@ -239,6 +246,11 @@ try {
         () => true,
         () => false
       )
+    // a persistent state (a disclosure) is judged the other way round: it must still be open after the outside click
+    if (s.persistent) {
+      row.steps.outsideClickKeepsOpen = !row.steps.outsideClickCloses
+      row.steps.outsideClickCloses = true
+    }
     const st = row.steps
     const geometryOk =
       (s.fullWidth ? st.fullWidth : true) && (s.inner ? st.inner?.centred && st.inner?.withinMax : true)
@@ -250,6 +262,7 @@ try {
       st.escapeCloses &&
       st.escapeRefocuses &&
       st.outsideClickCloses &&
+      (s.persistent ? st.outsideClickKeepsOpen : true) &&
       geometryOk
         ? 'PASS'
         : 'FAIL'

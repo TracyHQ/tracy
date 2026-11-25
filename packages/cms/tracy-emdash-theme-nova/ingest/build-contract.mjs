@@ -96,19 +96,22 @@ contract.interactions = {
     trigger: '.nv-acc-group > :nth-child(2) .nv-acc-btn',
     panel: '.nv-acc-group > :nth-child(2) .nv-acc-panel',
     link: '.nv-acc-action a',
-    open: 'click'
+    open: 'click',
+    persistent: true
   },
   'pricing-tabs': {
     trigger: '.nv-pricing-tab >> nth=1',
     panel: '.nv-pricing-pane >> nth=1',
     link: '.nv-pricing-pane >> nth=1 >> .nv-blk-btn',
-    open: 'click'
+    open: 'click',
+    persistent: true
   },
   'show-more': {
     trigger: '[data-collapse-toggle]',
     panel: '.nv-collapse',
     link: '.nv-collapse a',
-    open: 'click'
+    open: 'click',
+    persistent: true
   }
 }
 

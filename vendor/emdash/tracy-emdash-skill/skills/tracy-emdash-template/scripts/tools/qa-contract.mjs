@@ -237,6 +237,8 @@ export function validateContract(c, sourceRoot) {
     check(['click', 'hover'].includes(i.open), `interaction open method: ${id}`)
     if ('fullWidth' in i)
       check(typeof i.fullWidth === 'boolean', `interaction fullWidth must be boolean: ${id}`)
+    if ('persistent' in i)
+      check(typeof i.persistent === 'boolean', `interaction persistent must be boolean: ${id}`)
     if ('inner' in i || 'maxInnerWidth' in i)
       check(
         text(i.inner) && Number.isInteger(i.maxInnerWidth) && i.maxInnerWidth > 0,
