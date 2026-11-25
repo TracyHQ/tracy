@@ -185,8 +185,14 @@ try {
     const link = page.locator(`${s.link}`).first()
     const href = await link.getAttribute('href').catch(() => null)
     if (closedAtY === null && href && !href.startsWith('#') && !href.startsWith('javascript')) {
-      const lb = await link.boundingBox()
-      await page.mouse.move(lb.x + 4, geo.panelTop + 12, { steps: 10 })
+      let lb = await link.boundingBox()
+      // A tall panel (an opened accordion item, a long "show more") puts its link below the first screen, where a pointer move
+      // and click hit nothing: bring it to the middle of the screen first and go straight to it.
+      const offscreen = lb.y + lb.height > (page.viewportSize()?.height ?? 900) - 4
+      if (offscreen) {
+        await link.evaluate((el) => el.scrollIntoView({ block: 'center' }))
+        lb = await link.boundingBox()
+      } else await page.mouse.move(lb.x + 4, geo.panelTop + 12, { steps: 10 })
       await page.mouse.move(lb.x + 4, lb.y + lb.height / 2, { steps: 6 })
       await page.waitForTimeout(100)
       row.steps.reachesLink = await isOpen()

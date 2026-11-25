@@ -100,9 +100,9 @@ contract.interactions = {
     persistent: true
   },
   'pricing-tabs': {
-    trigger: '.nv-pricing-tab >> nth=1',
-    panel: '.nv-pricing-pane >> nth=1',
-    link: '.nv-pricing-pane >> nth=1 >> .nv-blk-btn',
+    trigger: '.nv-pricing-tabs > .nv-pricing-tab:nth-child(2)',
+    panel: '.nv-pricing-wrap.is-detail > .nv-pricing-pane:nth-child(2)',
+    link: '.nv-pricing-wrap.is-detail > .nv-pricing-pane:nth-child(2) .nv-blk-btn',
     open: 'click',
     persistent: true
   },

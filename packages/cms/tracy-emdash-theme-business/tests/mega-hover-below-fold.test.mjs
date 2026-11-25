@@ -16,10 +16,10 @@ const TOOLS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../too
 const CONFIG = {
   qa: { theme: { selector: 'html', attribute: 'data-theme', values: { light: null, dark: 'dark' }, storageKey: 'fold-theme' } }
 }
-const PAGE = (spacer, outside = true) => `<!doctype html><html lang="en"><body style="margin:0">
+const PAGE = (spacer, outside = true, tall = false) => `<!doctype html><html lang="en"><body style="margin:0">
 <div style="height:${spacer}px"></div>
 <button id="trigger" type="button" aria-expanded="false">Open</button>
-<div id="panel" hidden><a id="link" href="/next">Next</a></div>
+<div id="panel" hidden>${tall ? '<div style="height:1400px"></div>' : ''}<a id="link" href="/next">Next</a></div>
 <div style="height:1200px"></div>
 <script>
   const t = document.getElementById('trigger'), p = document.getElementById('panel')
@@ -29,11 +29,11 @@ const PAGE = (spacer, outside = true) => `<!doctype html><html lang="en"><body s
   ${outside ? "document.addEventListener('click', (e) => { if (!p.contains(e.target) && e.target !== t) close() })" : ''}
 </script></body></html>`
 
-function serve(spacer, outside = true) {
+function serve(spacer, outside = true, tall = false) {
   return new Promise((res) => {
     const srv = http.createServer((req, r) => {
       r.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
-      r.end(new URL(req.url, 'http://x').pathname === '/next' ? '<!doctype html><html lang="en"><body>next</body></html>' : PAGE(spacer, outside))
+      r.end(new URL(req.url, 'http://x').pathname === '/next' ? '<!doctype html><html lang="en"><body>next</body></html>' : PAGE(spacer, outside, tall))
     })
     srv.listen(0, '127.0.0.1', () =>
       res({ origin: `http://127.0.0.1:${srv.address().port}`, close: () => new Promise((r) => srv.close(r)) })
@@ -82,6 +82,25 @@ describe('mega-hover — a disclosure (accordion, tab) that stays open on an out
       r = await run('mega-hover.mjs', [...args, '--persistent'], root)
       assert.equal(r.code, 0, r.out)
       assert.match(r.out, /"outsideClickKeepsOpen":true/)
+    } finally {
+      await site.close()
+    }
+  })
+})
+
+describe('mega-hover — a panel so tall that its link is below the first screen', () => {
+  it('scrolls the link into view and the click navigates', { timeout: 120000 }, async () => {
+    const root = mkdtempSync(path.join(tmpdir(), 'tall-'))
+    writeFileSync(path.join(root, 'template.config.json'), JSON.stringify(CONFIG))
+    const site = await serve(0, false, true)
+    try {
+      const r = await run(
+        'mega-hover.mjs',
+        [`${site.origin}/`, '--trigger', '#trigger', '--panel', '#panel', '--link', '#link', '--open', 'click', '--persistent'],
+        root
+      )
+      assert.equal(r.code, 0, r.out)
+      assert.match(r.out, /"clickNavigates":true/)
     } finally {
       await site.close()
     }
