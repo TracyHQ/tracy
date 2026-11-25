@@ -5,7 +5,6 @@
  */
 import type { Chrome } from '@/lib/chrome'
 import { stampFor } from '@/lib/stamps'
-import Icon from '@/components/site/Icon.astro'
 
 interface Props {
   chrome: Chrome
@@ -17,6 +16,15 @@ const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const w = chrome.site
 const u = encodeURIComponent(url)
 const t = encodeURIComponent(title)
+// The source draws these three with its icon font (Font Awesome: facebook, x-twitter, reddit-alien), 16px in the 40px circle.
+const GLYPH: Record<string, string> = {
+  facebook:
+    'M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z',
+  twitter:
+    'M389.2 48h70.6L305.6 224.200 487 464H345L233.700 318.600 106.500 464H35.800L200.700 275.500 26.800 48H172.400L272.900 180.900 389.200 48zM364.400 421.800h39.100L151.100 88h-42L364.400 421.800z',
+  reddit:
+    'M440.300 203.500c-15 0-28.200 6.200-37.900 15.900-35.700-24.700-83.800-40.600-137.100-42.300L293 52.300l88.200 19.800c0 21.600 17.600 39.200 39.200 39.200 22 0 39.700-18.100 39.700-39.700s-17.600-39.700-39.700-39.700c-15.400 0-28.700 9.300-35.300 22l-97.400-21.600c-4.900-1.300-9.700 2.200-11 7.100L246.300 177c-52.900 2.200-100.500 18.100-136.300 42.800-9.700-10.100-23.400-16.300-38.400-16.300-55.600 0-73.800 74.600-22.900 100.100-1.800 7.900-2.600 16.300-2.600 24.700 0 83.800 94.400 151.700 210.300 151.700 116.400 0 210.800-67.900 210.800-151.700 0-8.400-.9-17.200-3.100-25.100 49.900-25.600 31.500-99.700-23.800-99.700zM129.400 308.900c0-22 17.600-39.700 39.700-39.700 21.600 0 39.200 17.600 39.200 39.700 0 21.600-17.600 39.200-39.200 39.200-22 .1-39.700-17.600-39.700-39.200zm214.300 93.500c-36.400 36.400-139.100 36.400-175.500 0-4-3.500-4-9.700 0-13.700 3.500-3.500 9.700-3.500 13.200 0 27.800 28.500 120 29 149 0 3.500-3.500 9.700-3.500 13.200 0 4.100 4 4.100 10.200.1 13.700zm-.8-54.200c-21.600 0-39.200-17.600-39.200-39.200 0-22 17.600-39.700 39.200-39.700 22 0 39.700 17.600 39.700 39.700-.1 21.500-17.700 39.200-39.700 39.200z'
+}
 const links = [
   {
     key: 'facebook',
@@ -45,9 +53,7 @@ const links = [
 		{links.map((l) => (
 			<li class={`is-${l.key}`}>
 				<a href={l.href} target="_blank" rel="noopener noreferrer" aria-label={l.label} {...$c(l.field)}>
-					{l.key === 'reddit' ? (
-						<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor"><ellipse cx="12" cy="14" rx="8" ry="5.5" /><circle cx="5.500" cy="10.500" r="2" /><circle cx="18.500" cy="10.500" r="2" /><circle cx="17.500" cy="4.500" r="1.500" /></svg>
-					) : <Icon name={l.key} size={18} weight="fill" />}
+					<svg viewBox="0 0 512 512" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d={GLYPH[l.key]} /></svg>
 				</a>
 			</li>
 		))}

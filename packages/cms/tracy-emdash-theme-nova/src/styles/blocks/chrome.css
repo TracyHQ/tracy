@@ -195,7 +195,7 @@ html[data-theme="dark"] .nv-theme-sun { display: block; }
 	transition: color 0.35s ease-in-out;
 }
 .nv-menu-button:hover { color: var(--nv-nav-hover); }
-.nv-menu-button svg { display: block; }
+.nv-menu-button svg { display: block; margin-right: 3px; }
 @media (min-width: 992px) { .nv-menu-button { display: none; } }
 
 /* ---------- off-canvas ---------- */
