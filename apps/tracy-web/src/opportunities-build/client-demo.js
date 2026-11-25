@@ -443,7 +443,10 @@ export function createClientDemoService(deps) {
       if (gate === 'trial' && !state.action.selection?.trial) {
         const trial = readinessNote(readiness)
         await pool.query(
-          `update wo_demo_action set selection = coalesce(selection, '{}'::jsonb) || $2::jsonb, updated_at = $3 where id = $1`,
+          `update wo_demo_action
+              set selection = (case when jsonb_typeof(selection) = 'object' then selection else '{}'::jsonb end) || $2::jsonb,
+                  updated_at = $3
+            where id = $1`,
           [state.action.id, JSON.stringify({ trial }), new Date(now())]
         )
         state.action.selection = { ...state.action.selection, trial }

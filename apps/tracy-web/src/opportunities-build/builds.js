@@ -315,8 +315,10 @@ export async function startBuild({
   // The demo action of a trial site says so too, for the seller's progress card (demo-actions.js `trial`).
   if (answer.ok && demoActionId && buildGateOf(readiness) === 'trial')
     await pool.query(
-      `update wo_demo_action set selection = coalesce(selection, '{}'::jsonb) || $2::jsonb
-          where id = $1 and not (coalesce(selection, '{}'::jsonb) ? 'trial')`,
+      // An older action's selection may be SQL NULL or JSON null: either starts as an empty object, never an array.
+      `update wo_demo_action
+          set selection = (case when jsonb_typeof(selection) = 'object' then selection else '{}'::jsonb end) || $2::jsonb
+        where id = $1 and not (jsonb_typeof(selection) = 'object' and selection ? 'trial')`,
       [demoActionId, JSON.stringify({ trial: readinessNote(readiness) })]
     )
   const build = await reconcileBuild(pool, saved)
