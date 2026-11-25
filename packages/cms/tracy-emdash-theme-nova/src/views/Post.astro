@@ -93,13 +93,13 @@ const trail = post
 								<header class="nv-article-head"><h1>{catLabel}</h1></header>
 								<header class="nv-article-head is-sub"><h2 class="is-h1" itemprop="headline" {...$p('title')}>{post.title}</h2></header>
 								{intro && <div class="nv-article-intro"><p {...$p('body')}>{intro}</p></div>}
+								{tags.length > 0 && <ul class="nv-article-tags" {...$p('tags')}>{tags.map((t) => <li><span>{t}</span></li>)}</ul>}
 								<ProjectMeta chrome={chrome} post={post} />
 							</>
 						) : (
 							<>
 								<header class="nv-article-head"><h1 itemprop="headline" {...$p('title')}>{post.title}</h1></header>
-								{tags.length > 0 && <ul class="nv-article-tags" {...$p('tags')}>{tags.map((t) => <li><span>{t}</span></li>)}</ul>}
-							</>
+									</>
 						)}
 						{isProject && banner && <figure class="nv-article-pic is-wide" {...$p('banner')}><img src={banner} alt="" width={post.banner?.width ?? 1344} height={post.banner?.height ?? 672} loading="lazy" decoding="async" itemprop="image" /></figure>}
 						<div class="nv-article-box">

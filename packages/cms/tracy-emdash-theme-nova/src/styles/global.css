@@ -30,6 +30,9 @@
 		-webkit-font-smoothing: antialiased;
 		overflow-x: hidden;
 	}
+	/* no single-word last lines in headings and paragraphs (the source leaves them: "want", "here", "URL") */
+	h1, h2, h3, h4, h5, h6, .nv-h2 { text-wrap: balance; }
+	p, li { text-wrap: pretty; }
 	h1, h2, h3, h4, h5, h6 { margin: 0 0 .5rem; font-family: var(--font-display); font-weight: var(--ds-weight-heading, 700); line-height: 1.2; color: var(--color-heading); }
 	h1 { font-size: 2.5rem; }
 	h2 { font-size: 2rem; }

@@ -24,7 +24,13 @@ export function introOf(post: Pick<PostRow, 'excerpt' | 'body'>): string {
 }
 
 /** The source's `substr($text, 0, n) . " ..."` of the related-items and latest-news modules. */
-export const cut = (text: string, n: number): string => (text.length > n ? text.slice(0, n) : text) + ' ...'
+// the source cuts at n characters; this one ends on a whole word (a cut inside a word reads as a defect), then the same ' ...'
+export const cut = (text: string, n: number): string => {
+  if (text.length <= n) return `${text} ...`
+  const head = text.slice(0, n)
+  const at = head.lastIndexOf(' ')
+  return `${(at > 0 ? head.slice(0, at) : head).trimEnd()} ...`
+}
 
 /** The source's category-list truncation: at most n characters, ending on a whole word, then an ellipsis. */
 export function clip(text: string, n: number): string {
