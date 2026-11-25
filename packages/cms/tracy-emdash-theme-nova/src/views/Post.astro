@@ -99,6 +99,8 @@ const trail = post
 						) : (
 							<>
 								<header class="nv-article-head"><h1 itemprop="headline" {...$p('title')}>{post.title}</h1></header>
+								{/* the source's blog article has a hairline under the title block and no tag pills: the empty list draws the rule */}
+								<ul class="nv-article-tags" aria-hidden="true"></ul>
 									</>
 						)}
 						{isProject && banner && <figure class="nv-article-pic is-wide" {...$p('banner')}><img src={banner} alt="" width={post.banner?.width ?? 1344} height={post.banner?.height ?? 672} loading="lazy" decoding="async" itemprop="image" /></figure>}

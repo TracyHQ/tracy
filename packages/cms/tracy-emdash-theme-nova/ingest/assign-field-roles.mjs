@@ -81,7 +81,10 @@ const guess = (name, source) => {
   if (NONE.test(name)) return ['editorial.design_element']
   if (source === 'image') return ['editorial.illustration']
   if (source === 'url') return ['editorial.navigation_url']
-  if (/(^|_)(button|btn|label|placeholder|submit|more|read|back|search)(_|$)/.test(name) && !/_(title|desc)$/.test(name))
+  if (
+    /(^|_)(button|btn|label|placeholder|submit|more|read|back|search)(_|$)/.test(name) &&
+    !/_(title|desc)$/.test(name)
+  )
     return ['editorial.button_label']
   if (/(desc|description|text|intro|body|note|line)/.test(name)) return ['editorial.paragraph']
   if (/(title|heading|subtitle|sub_title|name|badge)/.test(name)) return ['editorial.heading']
@@ -116,7 +119,11 @@ const SUB = {
     btn_link: 'editorial.navigation_url',
     btn_type: 'editorial.design_element'
   },
-  'clients.items': { logo: 'editorial.illustration', title: 'editorial.paragraph', link: 'editorial.navigation_url' },
+  'clients.items': {
+    logo: 'editorial.illustration',
+    title: 'editorial.paragraph',
+    link: 'editorial.navigation_url'
+  },
   'teams.items': {
     img: 'person.image',
     title: 'person.name',

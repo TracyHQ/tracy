@@ -17,7 +17,8 @@ const count = new Map<string, number>()
 for (const p of await loadPostsInOrder(chrome.locale))
   for (const t of tagsOf(p)) count.set(t, (count.get(t) ?? 0) + 1)
 // the service pages carry tags too (articles of the source): the module counts every tagged item, as the source's tag table does
-for (const e of (await getEmDashCollection('pages', { locale: chrome.locale, status: 'published' })).entries as any[])
+for (const e of (await getEmDashCollection('pages', { locale: chrome.locale, status: 'published' }))
+  .entries as any[])
   for (const t of tagsOf({ tags: (e.data.tags as string) ?? '' })) count.set(t, (count.get(t) ?? 0) + 1)
 const tags = [...count.entries()]
   .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))

@@ -1026,7 +1026,7 @@
       "entity": "posts.how-to-create-an-awesome-software-video-about-success-busines",
       "route": "/blog/how-to-create-an-awesome-software-video-about-success-busines",
       "openAs": "/blog/how-to-create-an-awesome-software-video-about-success-busines",
-      "title": "How to create an awesome software video about success busines",
+      "title": "How to create an awesome software video about success business",
       "view": null
     },
     {
@@ -6850,7 +6850,7 @@
         "field": "title"
       },
       "type": "text",
-      "sample": "How to create an awesome software video about success busines",
+      "sample": "How to create an awesome software video about success business",
       "label": "Title",
       "role": "article.title"
     },
