@@ -33,12 +33,8 @@ function derive(): { label: string; url: string; field?: string }[] {
   const path = currentPath.length > 1 ? currentPath.replace(/\/$/, '') : currentPath
   const found =
     chain(chrome.primary, path) ??
-    // a service page hangs under Services; the footer lists hold the rest of the pages
-    (() => {
-      const mine = chain(chrome.services, path)
-      const parent = mine ? chain(chrome.primary, '/services') : null
-      return mine && parent ? [...parent, ...mine] : null
-    })() ??
+    // a service page is a crumb of its own: the source's trail for a service is Home, then the page
+    chain(chrome.services, path) ??
     chain(chrome.footerContent, path) ??
     chain(chrome.footerPages, path)
   return (found ?? []).map((i) => ({ label: i.label, url: i.url }))

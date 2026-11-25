@@ -136,7 +136,7 @@ html[data-theme="dark"] .nv-popular li span { background: var(--ds-c-surface, #1
 .nv-article-body > h3:first-child { margin-top: 0; }
 @media (max-width: 767px) { .nv-article-body h3 { font-size: 22px; } }
 .nv-article-body img { border-radius: 1rem; max-width: 100%; height: auto; }
-.nv-article-body ul { margin: 0; padding-left: 0; list-style: none; }
+.nv-article-body ul { margin: 0 0 1.5rem; padding-left: 0; list-style: none; }
 .nv-article-body ul li { position: relative; padding-left: 1.5rem; }
 .nv-article-body ul li + li { margin-top: 10px; }
 .nv-article-body ul li::before { content: ""; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); }

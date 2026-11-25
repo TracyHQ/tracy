@@ -378,6 +378,18 @@
       "match": "nv-btn|nv-blk-btn|nv-pricing-tab|ec-form-submit",
       "reason": "Source does the same. Live source, page / (home), 1440, dark theme (?theme=dark): .btn.btn-primary 'Get started' border 1px rgb(94,72,219) on fill rgb(94,72,219) (invisible against its own fill); the active pricing tab 'Basic Plan' has border 1px rgb(94,72,219) on fill rgb(38,44,54), text rgb(157,140,255).",
       "decision": "D18"
+    },
+    {
+      "kind": "scan:bright-border",
+      "match": "^a\\.$",
+      "reason": "Source does the same. Live source, page /virtualization, 1440, dark: the current menu item a.nav-link[aria-current=page] 'Virtualization' has border 1px rgb(94,72,219); the site's current menu link measures the same border on the same page.",
+      "decision": "D19"
+    },
+    {
+      "kind": "scan:bright-border",
+      "match": "nv-list-features",
+      "reason": "Source does the same. Live source, page /about-us-2, 1440, dark: .list-features border-top 1px rgb(233,236,239), padding-top 32px (light and dark alike); the site's .nv-list-features measures the same on /about.",
+      "decision": "D19"
     }
   ]
 }
