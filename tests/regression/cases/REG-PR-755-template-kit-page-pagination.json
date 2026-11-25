@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-755-template-kit-page-pagination",
+  "kind": "fix",
+  "title": "Template kit: ?page= and ?paged= result pages are pagination links, and a rebuild keeps fullShotOf, and a step link finds the opened page's title when the page is read as sections",
+  "pr": 755,
+  "area": "template-kit/link-labels",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run fixedLinkLabels on a kit whose listing page has a link \"2\" to /donations?page=2 or /news?paged=2 (the result page is also a kit page).",
+    "S2: Run keepFullShots on a rebuilt kit with the previous kit's pages naming fullShotOf.",
+    "S3: Run relabelKit on a kit whose block has a link \"Previous article: Development Prev\" to /development, with a content map whose slot pages.development.title belongs to the entity block-development-body (a page read as sections).",
+    "S4: Run fixedLinkLabels on kits whose link \"2\" opens /info?page=about, /news?start=abc, or, on a kit with real pages / and /page/2/, a block shown only on /page/2/ linking to /page/3/.",
+    "S5: Run keepFullShots on a rebuilt kit that no longer holds page a, with the previous page b pointing at a."
+  ],
+  "expect": [
+    "S1: the link carries the fixed label rule \"pagination\" (no link-label error).",
+    "S2: each rebuilt page has the previous page's fullShotOf.",
+    "S3: the link's labelId is pages.development.title.",
+    "S4: the link carries no pagination rule.",
+    "S5: page b has no fullShotOf."
+  ],
+  "selectors": {
+    "files": "packages/cms/tracy-quickstart-tools/template-kit/lib/{link-label-reasons,link-label-slots,pack,assemble}.mjs",
+    "tool": "tests/regression/scripts/REG-PR-755-template-kit-page-pagination.mjs"
+  },
+  "evidence": "JA Impact: the pagination link 2 on Donations and Events was reported as a link-label error; JA Morgan: a rebuild lost fullShotOf; JA Nova: with emdash-sections.json, relabel left 28 Prev/Next links without a label (658 named, 686 without the file)",
+  "fence": "Pure functions of the kit tool read on made-up kits",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-755-template-kit-page-pagination.mjs"]
+  }
+}

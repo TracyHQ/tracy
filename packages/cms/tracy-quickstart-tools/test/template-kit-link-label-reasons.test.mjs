@@ -325,3 +325,106 @@ test('a category or tag archive link, and an in-page control with no address, ar
     ['taxonomy-term', 'taxonomy-term', 'page-control', null]
   )
 })
+
+test('a result page link of an EmDash (`?page=`) or WordPress (`?paged=`) listing is pagination, not a label error', () => {
+  const cases = [
+    ['/donations', '/donations?page=2'],
+    ['/news', '/news?paged=2']
+  ]
+  for (const [path, target] of cases) {
+    const kit = {
+      pages: [
+        { id: 'page-list', path, blocks: ['body-list'] },
+        { id: 'page-list-2', path: target, blocks: ['body-list-2'] }
+      ],
+      blocks: [
+        { id: 'body-list', links: [{ id: 'body-list.link-1', label: '2', target }] },
+        { id: 'body-list-2', links: [{ id: 'body-list-2.link-1', label: '1', target: path }] }
+      ],
+      checks: {},
+      errors: []
+    }
+    fixedLinkLabels(kit)
+    assert.equal(kit.blocks[0].links[0].fixedLabel?.rule, 'pagination', target)
+    assert.equal(kit.blocks[1].links[0].fixedLabel?.rule, 'pagination', `${target} back to page 1`)
+  }
+})
+
+test('a step link names the title slot of the page it opens when the page is read as sections (JA Nova)', () => {
+  // EmDash page read as sections: the slots keep their `pages.<slug>.` keys, but their entity is the section block.
+  const map = {
+    pages: [
+      { entity: 'pages.development', route: '/development', openAs: '/development' },
+      { entity: 'pages.illustration', route: '/illustration', openAs: '/illustration' }
+    ],
+    slots: [
+      {
+        key: 'pages.development.title',
+        entity: 'block-development-body',
+        type: 'text',
+        role: 'editorial.heading',
+        sample: 'Development'
+      },
+      {
+        key: 'pages.illustration.title',
+        entity: 'block-illustration-body',
+        type: 'text',
+        role: 'editorial.heading',
+        sample: 'Illustration'
+      }
+    ]
+  }
+  const kit = {
+    pages: [{ id: 'page-illustration', path: '/illustration', blocks: ['block-illustration-body'] }],
+    blocks: [
+      {
+        id: 'block-illustration-body',
+        source: { entity: 'block-illustration-body', contains: [] },
+        fixedText: [],
+        slots: [{ id: 'pages.illustration.title', type: 'text' }],
+        links: [{ id: 'l1', label: 'Previous article: Development Prev', target: '/development' }]
+      }
+    ],
+    checks: {},
+    errors: []
+  }
+  const r = relabelKit(kit, { map, linkLabelSlots, listLabelSlots })
+  assert.equal(kit.blocks[0].links[0].labelId, 'pages.development.title')
+  assert.equal(r.wrong, 0)
+})
+
+test('only a whole result page number is pagination: `/info?page=about`, `?start=abc` and any `/page/N/` path are not', () => {
+  const kitOf = (path, target, pages = []) => ({
+    pages: [{ id: 'page-list', path, blocks: ['body-list'] }, ...pages],
+    blocks: [{ id: 'body-list', links: [{ id: 'l1', label: '2', target }] }],
+    checks: {},
+    errors: []
+  })
+  const rule = (kit) => (fixedLinkLabels(kit), kit.blocks[0].links[0].fixedLabel?.rule)
+  assert.equal(
+    rule(kitOf('/info', '/info?page=about', [{ id: 'p2', path: '/info?page=about', blocks: [] }])),
+    undefined
+  )
+  assert.equal(
+    rule(kitOf('/news', '/news?start=abc', [{ id: 'p2', path: '/news?start=abc', blocks: [] }])),
+    undefined
+  )
+  assert.equal(
+    rule(kitOf('/news', '/news?paged=0', [{ id: 'p2', path: '/news?paged=0', blocks: [] }])),
+    undefined
+  )
+  // A `/page/N/` path is never read as pagination: it may be a real page (the block is shown only on `/page/2/`).
+  const real = [
+    { id: 'home', path: '/', blocks: ['x'] },
+    { id: 'p2', path: '/page/2/', blocks: ['body-list'] }
+  ]
+  const onlyOn2 = {
+    pages: real,
+    blocks: [{ id: 'body-list', links: [{ id: 'l1', label: '3', target: '/page/3/' }] }]
+  }
+  fixedLinkLabels(onlyOn2)
+  assert.equal(onlyOn2.blocks[0].links[0].fixedLabel?.rule, undefined)
+  assert.equal(rule(kitOf('/blog', '/blog/page/2/')), undefined)
+  // The real ones still are.
+  assert.equal(rule(kitOf('/news', '/news?start=0')), 'pagination')
+})

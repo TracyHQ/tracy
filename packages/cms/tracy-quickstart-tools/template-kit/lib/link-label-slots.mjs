@@ -65,7 +65,7 @@ function labelResolver(map) {
   const titleIn = (n, entities) => {
     for (const e of entities) {
       const hit = text
-        .filter((s) => s.entity === e && /(_label|\.title|\.name|\.heading)$/.test(s.role ?? ''))
+        .filter((s) => ofEntity(s, e) && /(_label|\.title|\.name|\.heading)$/.test(s.role ?? ''))
         .filter((s) => hasLetters(normText(s.sample ?? '')) && wholeIn(n, normText(s.sample)))
         .sort((x, y) => normText(y.sample).length - normText(x.sample).length)[0]
       if (hit) return neutralKey(hit.key)
@@ -243,10 +243,14 @@ function openedBy(map) {
   }
 }
 
+// A slot belongs to an entity it names as its own, or whose key it starts with: an EmDash page read as sections puts
+// the page's slots under its section blocks (`block-development-body`), and their keys still start `pages.development.`.
+const ofEntity = (s, e) => s.entity === e || neutralKey(s.key).startsWith(`${e}.`)
+
 // The slot of the first entity the link opens among slots sharing its words, or null.
 function openedOf(same, entities, used, first) {
   for (const e of entities) {
-    const own = same.filter((s) => s.entity === e)
+    const own = same.filter((s) => ofEntity(s, e))
     if (own.length) return first(own, used)
   }
   return null

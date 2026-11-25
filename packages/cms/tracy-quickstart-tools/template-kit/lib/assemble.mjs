@@ -15,6 +15,7 @@ import { buildKit } from './kit.mjs'
 import { mergeSite } from './kit-site.mjs'
 import { fixedLinkLabels, linkLabelChecks } from './link-label-reasons.mjs'
 import { keepLooks } from './looks.mjs'
+import { keepFullShots } from './pack.mjs'
 import { keepEmbeddedMaps, reachChecks } from './reach-checks.mjs'
 import { pairListRows, rowPairChecks } from './row-pairs.mjs'
 import { showcaseViewFor, templateFileOf } from './site/adapters/index.mjs'
@@ -168,6 +169,7 @@ export async function assembleKit(o, out, tool) {
   if (!kit.template.version) kit.errors.push({ kind: 'missing', field: 'template.version', reason: tv.from })
   // A look (looks.mjs) is written by a person's Claude Code once per kit version: a shot that did not change keeps it.
   keepLooks(kit, previous)
+  keepFullShots(kit, previous)
   writeJson(join(out, 'template-kit.json'), kit)
   return kit
 }
