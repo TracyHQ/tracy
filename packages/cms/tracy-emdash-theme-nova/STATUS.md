@@ -1,46 +1,55 @@
 # STATUS — tracy-nova
 
-**Phase reached: P5 built and compared (every page family has a view, matched against the source by measurement at 1440/992/768/390 for most blocks), P4.5 personalization done, P2 docs done, contract written. NOT done: Fast Gate, the four visual tiers and lenses, kit, release chain, pre-check, content coverage (P7/P8 not started). Nothing is published; no PR.**
+**Phase reached: P7 in progress. Built and compared (P3–P5), personalization (P4.5), docs (P2/P8 docs), acceptance contract, `qa.mjs --browser` passing, Fast Gate machine part clean on all four stages, two lens rounds read. NOT done: the Fast Gate is not signed (open items below), the full visual tiers with lenses, the Opus lens, the ten receipts, design-system measurement/readiness, kit, release chain, content coverage, pre-check. Nothing is published; no PR.**
 
+## Gates (evidence)
 | Gate / step | Result | Evidence |
 |---|---|---|
-| Source pins | `j6/SHA256SUMS` all OK; `wp7/SHA256SUMS` names `wp-ja-nova-1.1.17.zip`, not staged (reference only, D5) | `/home/agent/src/nova/` |
-| P1 stand, model, snapshot, source render | done (114 pages, 68 renders, 0 overflow) | `source/REBUILD.md`, `inventory/`, `/home/agent/out/nova/{work,snapshot,render}` |
-| P2 seed | `ingest/rebuild-seed.sh` → 13 collections, 84 entries, 4 menus, 139 images; `validate-seed` valid | `seed/` |
-| P3-P5 views | Home, About, Career, Services + 7 service pages, Project list + 3 categories, Blog, Post (article and project), Contact, Search, 404; header, off-canvas, footer; text slider, clients, teams, pricing, accordion, CTA, social, features styles 1-7, hero | `src/`, per-agent compare scripts in `/home/agent/out/nova/{chrome,r2b,r2c}` |
-| `astro check` | 0 errors, 0 warnings | run 2026-11-25 |
-| Kit tests `node --test tests/*.test.mjs` | 483 of 483 passed after the format pass (`/home/agent/out/nova/tests.log`) | — |
-| `check-emdash-kit-sync` | 9 templates match the kit (Nova: 139 identical, 0 differ) | — |
-| `generate-docs --check` | passed | — |
-| `qa-contract.mjs qa.contract.json --source <snapshot>` | exit 0, 26 pages, 116 cases, 4 variants (1440/390 x light/dark) | `qa.contract.json`, `ingest/contract-spec.json`, `ingest/source-measures.json` |
-| `qa.mjs --browser` | NOT RUN to the end: two runs were cut off (10 min tool limit; the second ran 40+ min without a report) | `/home/agent/out/nova/qa/qa.{1,2}.log` |
-| LANG-2 / personalize | `tests/lang2-printed-words.test.mjs` passes; dry run changes exactly the identity fields | `seed/personalize.json` |
+| Kit tests `node --test tests/*.test.mjs` | 483 of 483 pass (2026-11-25, after the format pass and the lead-decision changes) | `/home/agent/out/nova/tests2.log` |
+| `astro check` | 0 errors | earlier today; rerun before release |
+| `check-emdash-kit-sync` | level, 9 templates | — |
+| `generate-docs --check` | pass | — |
+| `qa-contract.mjs` | exit 0 (26 pages, 116 cases, 4 variants, revision 7) | `qa.contract.json`, `ingest/{contract-spec,source-measures}.json` |
+| `qa.mjs --browser` | `contracts`, `preflight`, `browser`, `routing` pass; `distribution` pending (needs `--artifact` from a pack) | `/home/agent/out/nova/qa/qa.7` (browser/routing pass; later contract revisions changed only layouts) |
+| `fast-gate.mjs plan` | ok, 12 cases | `/tmp/tracy-cli/fast-gate-plan-*.md`, `vis/fg6/FAST-GATE-PLAN.md` |
+| Fast Gate visual-qa machine part | pass on light-desktop, light-responsive, dark-desktop, dark-responsive, 0 findings | `/home/agent/out/nova/vis/fg6` (clean site c5, contract revision 7) |
+| Fast Gate lens round 1 / 2 | 112 notes → fix round (groups chrome/blocks/views) → round 2: 40 notes | `vis/fg5/notes`, `vis/fg6/notes`, `lens/` |
+| Forms, mail, recovery, admin round-trip, content-api gate | all pass (contact form POST 200, mail in Mailpit at the notification address, stored submission, admin edit/publish/restore, backup/restore into a second dir) | `/home/agent/out/nova/t3/` |
+| Full-scope visual run (baseline, no lenses) | see the section at the end of this file | `/home/agent/out/nova/vis/full1` |
 
-## Known differences from the source (from the builders' reports)
-- Header/footer logo is an SVG redraw of the source mark (`NovaLogo.astro`): no logo image exists in the seed; to use the real PNGs import `images/joomlart/logo/item-1.png` / `item-2.png` as `settings.logo` / `chrome.logo_dark` (P4.6).
-- Footer is about 85 px taller: the third link column is "Services" with 7 links (D11), and the source's "Joomla!" credit line is dropped. Owner question.
-- Contact page: the three info-card icons are plain glyphs; the source draws colour illustrations (template images in `templates/ja_nova/images/`, set by CSS). Needs three image assets or fields.
-- Blog detail: the source lays an image beside the following heading and text in some bodies (about 430 px on blog-detail); only the image + h3 + list pattern is rebuilt.
-- Popular tags are derived from the posts' `tags` strings; order differs from Joomla's tag table. Tag pills link nowhere.
-- Home news band = title-ascending first 3 articles (matches Joomla module 128).
-- Header menu button x/size at 768/576/390 and the 8-23 px offsets of the CTA strip were reported by the views agent and are not re-measured after the chrome agent's last pass.
-- The contact form id binds when `seed-apply forms` runs; `ContactForm*` words are only partly from the `contact` entry, the rest rely on the `forms` rule.
+## Fast Gate: why it is not signed (open, need the owner or a kit change)
+1. Notes flagged `LEE` (design intent): footer link columns and the missing Joomla legal line (settled by lead decision L2: the WP port's columns, only links to pages this template has); the "Advanced Search" button and help box on `/search` (not ported: owner decision pending, would be a design addition).
+2. `state shot does not show the state` (dropdown, off-canvas, accordion, pricing tab, show-more): the Fast Gate "mega" capture clicks at the trigger's page position, below the first screen, so the shots show the closed state; real clicks open all of them at 1440 and 390 (`/home/agent/out/nova/t2/widgets.mjs`). This is a kit-tool defect (D16): fix in `scripts/tools/` with a negative fixture, then re-shoot; until then the todos stay open.
+3. Contrast of coloured heading words, price, teams text etc.: measured equal on the source, recorded as exceptions (D15). Needs the owner's confirmation that "a defect the source shares" is accepted.
+4. Tags Popular order (Careers before developer): the seed post tags carry developer 19 vs 20 for Careers, the source tag table has developer 21: a data difference of the adapter, not a CSS fix.
+5. The pink news date on photos is hard to read in light and dark; the source is identical (SOURCE flag candidate): fix better than the source or accept.
+The source-site proxy used for visual runs: `--source-site http://127.0.0.1:18090` (`node /home/agent/out/nova/t2/proxy.mjs`, maps `<path>/index.html` to the live route); the live Joomla at 18082 answers 404 for snapshot-style paths. The mirror `http://127.0.0.1:18218` (snapshot) also works.
 
-## Repo wiring done (commit "repo wiring, docs, journal, licence rows")
-`pnpm-workspace.yaml`, `turbo.json`, `apps/tracy-web/turbo.json`, `scripts/check-emdash-kit-sync.ts`, `scripts/check-tests.ts` (`standalone:nova`), `scripts/ci/plan-ci.mjs` (`tests emdash-nova`), `docs/licensing.md` (JoomlArt grant row), `docs/references/vocabulary.md`, `changes/2026-11-24-emdash-port-nova.md` (PR number `#TBD`).
-**Not done on purpose (they need the release):** Road rows `emdash-tool.js`, `emdash-tool.test.mjs` row, `quickstart-render-map.json`, `template-profiles.json`, the Dockerfile copies of `contracts/`; `docs/README.md` (`pnpm docs:index`); `public-tree.json`; the regression case `tests/regression/cases/REG-PR-<n>-emdash-nova-0-1-0.json`.
-**Language policy:** `scripts/language-policy.json` rows for the package are generated by `/home/agent/out/nova/scripts/lp-rows.mjs` (exact-line rows of the questionnaire and kit-file lines); rerun it after any edit to those files (row hashes are of whole lines). The `language-policy` PR check also reads every intermediate commit: squash the local commits into one before pushing, otherwise the placeholder versions of `seed/questions.json` in the early commits are flagged.
+## Known differences from the source
+- Footer: three columns Users / Pages / Content per lead decision L2; Users prints only its title; link rows are padded with `min-height` so the footer height equals the source's at 1440/1200/992/768/576/390 (measured: 502/502/710/614/566/934 both sides); the Joomla credit line is not printed (its room is kept).
+- Logo: the real logo files ship as `public/brand/logo.png` / `logo-light.png` (lead decision L3).
+- Contact page: the info-card icons are the source PNGs (`public/nova/contact/`).
+- Blog detail: only the image + heading + list/paragraph patterns of the source bodies are rebuilt as two-column rows.
+- Forms plugin prints three English literals (`aria-label="Page 1"`, `aria-label="required"`, the honeypot label "Leave blank"): plugin-owned, not changeable here.
+- Popular tags are derived from the posts' `tags` strings, pills link nowhere (no tag pages are ported).
+
+## Repo wiring done
+`pnpm-workspace.yaml`, `turbo.json`, `apps/tracy-web/turbo.json`, `check-emdash-kit-sync.ts`, `check-tests.ts` (`standalone:nova`), `plan-ci.mjs` (`tests emdash-nova`), `docs/licensing.md`, `vocabulary.md`, `changes/2026-11-24-emdash-port-nova.md` (PR number `#TBD`), `scripts/language-policy.json` rows (regenerate with `/home/agent/out/nova/scripts/lp-rows.mjs` after any edit of the questionnaire or kit files; squash the local commits before pushing, the policy check reads every intermediate commit).
+**Not done (need the release):** Road rows (`emdash-tool.js`, its test row, `quickstart-render-map.json`, `template-profiles.json`, Dockerfile copies of `contracts/`), `docs/README.md` (`pnpm docs:index`), `public-tree.json`, the regression case `tests/regression/cases/REG-PR-<n>-emdash-nova-0-1-0.json`.
 
 ## Next commands (resume here)
-1. Start the stand: `docker start nova-db nova-web` is not possible (containers were removed); rebuild per `source/REBUILD.md` (`/home/agent/out/nova/stand` keeps webroot + Dockerfile). Dev site: `bash /home/agent/out/nova/scripts/site-up.sh 4360` (wipes and reseeds; `reseed.sh` applies seed changes). Snapshot mirror: `cd /home/agent/out/nova/snapshot && python3 -I -m http.server 18218 --bind 127.0.0.1`.
-2. Run `node tools/qa.mjs --contract qa.contract.json --source /home/agent/out/nova/snapshot --site http://127.0.0.1:4360 --out <new dir> --browser` in the background to completion, then `node tools/gates.mjs <run>`; triage contract-vs-site findings (the contract agent expects: missing `public/favicon.svg`, 404 h1 vs h2, Escape-closes check on accordion/tabs, twin pages `/?ui=menu`).
-3. P3 exit: `node tools/fast-gate.mjs plan` then `verdict` (Fast Gate signed), then P7 tiers with `visual-qa.mjs`, lenses by Sonnet readers, one Opus layout lens at the final checkpoint.
-4. Kit: build with `--reread-sections`; write `ingest/kit-sections-check.mjs` as Impact did (not on this branch); footer/nav links as separate label and address slots; `?start=` pagination (already the URL form used).
-5. P4.6: real logo, `logo_dark`, `tracy_site_pages.json`; `flow.mjs` design-system measurement; `scripts/template-design-system-readiness.mjs` 0 FAIL.
-6. P8: `node tools/release-chain.mjs`, content coverage with `emdash-audit.mjs` (map sha equals final map), `road-precheck.mjs --release <dir> --tag tracy-nova/emdash-0.x --stage release` until CLEAR.
+1. Stand: `bash /home/agent/out/nova/scripts/stand-up.sh` (Joomla + MariaDB :18082, snapshot mirror :18218; do not pipe it, it keeps the pipe open); source proxy `nohup node /home/agent/out/nova/t2/proxy.mjs &` (:18090). Dev site: `bash /home/agent/out/nova/scripts/site-up.sh 4360` (wipes and reseeds); `reseed.sh` applies seed changes. Clean sites: `tools/clean-install.sh /home/agent/out/nova/clean/<new> <port>`.
+2. Decide the open Fast Gate items above, fix the kit capture defect (item 2), rerun `node tools/visual-qa.mjs --contract qa.contract.json --site <clean> --source-site http://127.0.0.1:18090 --out <new> --scope fast-gate`, lens readers per `/home/agent/out/nova/scripts/lens-plan.mjs <run> <dir>` (17 Sonnet readers, one message), `qa-notes.mjs merge`, a coding round, then `node tools/fast-gate.mjs verdict <run> --contract qa.contract.json`.
+3. Full tiers: `visual-qa.mjs --scope full --fast-gate <run>` x2, lenses, Opus layout lens once (model `claude-opus-5-5`), merge both notes, `qa-receipt.mjs` receipts (build, security, editability, forms, recovery, clean-install, independent; the T3 evidence supports forms/recovery/editability).
+4. Design system: `contracts/0.1.0/design-system-measurement.json` via `flow.mjs`, `design-system-roles.json` (VARS-1: every colour through `--ds-c-*`, already the rule in `tokens.css`), `node scripts/template-design-system-readiness.mjs <release copy>` until 0 FAIL.
+5. Kit: `template-kit/cli.mjs build --reread-sections` against a release; write `ingest/kit-sections-check.mjs` as Impact did (not on this branch); looks by Sonnet readers; approval is the owner's.
+6. P8: `node tools/release-chain.mjs`, content coverage with `packages/cms/tracy-quickstart-tools/content-coverage/emdash-audit.mjs` (map sha equals the final map) on the released zip's clean install, `road-precheck.mjs --release <dir> --tag tracy-nova/emdash-0.x --stage release` until CLEAR.
 
 ## Owner questions (batched)
-1. D8: Joomla system pages (login, registration, profile, typography, offline, error, smart-search, tagged items, featured, author list) are not ported.
-2. D11: footer link columns Company / Work / Services replace the Users / J!Pages / J! Content demo columns.
-3. Logo: use the real PNG logos (needs the media import) or keep the SVG redraw.
-4. Kit approval is the owner's; not requested yet.
+1. "Advanced Search" button and help box on `/search`: add (design addition) or leave out?
+2. Accept the source-shared contrast (D15) and the pink news date as they are?
+3. Tag order: fix the seed post tag counts to the source's tag table (developer 21)?
+4. Kit approval: not requested yet (no kit built).
+
+## Full-scope baseline (`vis/full1`, clean site c7, no lenses, not a pass)
+`visual-qa.mjs --scope full` on 25 pages: light-desktop fails with ONE finding, `source-not-rendered` on `/project` (the source page's pictures carry `#joomlaImage://…` fragments and 4 of 7 do not decode in the capture, i.e. the source side is not fully rendered: a capture limitation to settle, then the later stages run). Every other page is clean at light-desktop; 17 accepted exception groups (D15–D18, made by builder agents from measurements on the source: **the lead should confirm them**). The responsive and dark stages did not run (an earlier stage failed). Next: settle that finding (wait for lazy source images in the capture, kit tool, or record an exception with the lead's decision), rerun `--stage light-desktop --reuse vis/full1`, then the other stages.
