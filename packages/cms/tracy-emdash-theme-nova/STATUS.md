@@ -2,6 +2,16 @@
 
 **Phase reached (session 3, 2026-11-25): P7 in progress, kit built (not clean, not approved). Built and compared (P3–P5), personalization (P4.5), docs (P2/P8 docs), acceptance contract, `qa.mjs --browser` passing, Fast Gate machine part clean on all four stages, two lens rounds read. NOT done: the Fast Gate is not signed (blockers below), the full visual tiers with lenses, the Opus lens, the ten receipts, design-system measurement (`flow.mjs`) and readiness, release chain, Road rows, content coverage, pre-check. Nothing is published; no PR.**
 
+## Session 4 (2026-11-25, lead answers L12-L16) - state at the deadline
+- **Phase reached: P7, tier loop not closed.** Kit: only the 19 EmDash-inherent errors, 0 specific, `approval: null` (owner step). Kit approval, release and Road rows NOT done.
+- **Fast Gate:** signed (pass) at `vis/fg22` (lens round 0 notes, contract rev 12) but the tree changed afterwards (service crumb, article list margin, split text margins), so that verdict is STALE. Last machine run on the final tree: `vis/fg24` pass, 0 findings, 12 cases; no lens round or verdict on it yet.
+- **Full tier:** `vis/fullB` pass (4 stages, 0 findings) on the fg22 tree; its lens round found 5 notes, all fixed in the tree since (list-to-paragraph margin 24px, the service crumb without the Services level, "What's next" 32px gap and last-paragraph margin: measured equal to the source). No full run, no second full run and no Opus lens on the final tree.
+- **Source-shared (measured with ?theme=dark on the live source, not defects):** about-page dark value patch rgb(26,30,37), chips rgb(30,35,43), the light divider, current nav link border (exceptions D19), contact hero photo corners.
+- **Receipts:** evidence for build, clean-install, security, editability, forms, recovery, font-review, viewing-contexts is collected and passes (`/home/agent/out/nova/receipts/`); the receipts themselves, `independent` and `visual-review` are not written. Release chain dry run reached `qa` (browser, routing pass).
+- **Design system:** `ready: false`, flow 45/64 (three system-own colour pairs); readiness script not run to 0 FAIL. Content coverage and `road-precheck` not run.
+- Note: `recovery-check.mjs` restarts the server without `EMDASH_SITE_URL` (the canonical becomes localhost). Kit tool defect, not fixed here.
+- Next: lens round on a fg run of the final tree, verdict, two full runs + Opus lens, then the chain from a fresh worktree, receipts, DS readiness, Road rows, coverage, precheck.
+
 ## Gates (evidence)
 | Gate / step | Result | Evidence |
 |---|---|---|
