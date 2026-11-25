@@ -1,0 +1,105 @@
+{
+  "$comment": "Limits of text slots that no visible box measures (read by packages/cms/tracy-quickstart-tools/content-coverage/emdash-content-map.mjs into the content map). A number needs a real source: a box that was measured (how is said in `from`; Playwright, Chromium, 1440 / 768 / 390 px, on the running site of this theme) or a field's schema maxLength (none of these fields declares one). A text no page draws in a box has no number: it is declared `nonVisual` with where it is used, and the kit asks no limit of it.",
+  "limits": [
+    {
+      "slot": "settings.title",
+      "nonVisual": true,
+      "from": "the site title is used only in the document `<title>` and `og:site_name` (Base.astro) and as the logo's alt text when neither the logo nor the business name has one: no page draws it in a box and the setting declares no maxLength, so it has no limit (the business name the footer prints is its own slot, chrome.brand_name, which is measured)"
+    },
+    {
+      "slot": "chrome.chrome.brand_name",
+      "maxCharacters": 62,
+      "from": "the business name is printed as words only in the footer copyright line (Footer.astro, `{name}` of `copyright`, 39 fixed characters around it); the line is one row at 1440 and 768 px and may take two rows at 390 px; filled with Latin running text until the line gains a row beyond that (Playwright, Chromium, the running site, 1440 / 768 / 390 px): the whole line takes 194 characters at 1440 px, 101 at 768 px (one row), 102 at 390 px (two rows), so 101 minus the fixed 39 = 62"
+    },
+    {
+      "slot": "chrome.chrome.copyright",
+      "maxCharacters": 101,
+      "from": "the whole copyright line is one paragraph in the footer's bottom band; filled with Latin running text until it gains a row beyond today's (one row at 1440 and 768 px, two rows allowed at 390 px; Playwright, Chromium, the running site): 194 characters at 1440 px, 101 at 768 px, 102 at 390 px, counted as printed (`{year}` and `{name}` filled)"
+    },
+    {
+      "slot": "chrome.chrome.skip_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of the skip link, drawn visually hidden until focused (Base.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.menu_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of the menu icon button and its dialog (Header.astro, OffCanvas.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.close_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of a close glyph button (OffCanvas.astro, Style5.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.theme_toggle_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` and tooltip of the light/dark icon button (ThemeToggle.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.nav_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of the main navigation (Header.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.breadcrumb_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of the breadcrumb navigation (Breadcrumbs.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.project_tabs_nav_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of the project category tabs (CategoryTabs.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.article_nav_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of the previous/next article navigation (PostNav.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.pager_nav_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of the pagination (Pager.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.pager_first_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of an icon link (Pager.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.pager_prev_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of an icon link (Pager.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.pager_next_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of an icon link (Pager.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.pager_last_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of an icon link (Pager.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.play_video_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of the round play button (Style5.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.share_facebook_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of a share icon link (ShareRow.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.share_twitter_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of a share icon link (ShareRow.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    },
+    {
+      "slot": "chrome.chrome.share_reddit_label",
+      "nonVisual": true,
+      "from": "the label is only the accessible name (`aria-label` of a share icon link (ShareRow.astro)) and prints no words in a box (a sr-only link, an icon or glyph control, a landmark): no page draws it, so it has no limit"
+    }
+  ]
+}

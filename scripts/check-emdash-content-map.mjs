@@ -27,7 +27,11 @@ import {
   withoutMeasured
 } from '../packages/cms/tracy-quickstart-tools/content-coverage/lib/emdash-content-map.mjs'
 
-export const REQUIRED = ['tracy-emdash-theme-diner', 'tracy-emdash-theme-restaurant']
+export const REQUIRED = [
+  'tracy-emdash-theme-diner',
+  'tracy-emdash-theme-restaurant',
+  'tracy-emdash-theme-nova'
+]
 
 const sha256 = (file) => createHash('sha256').update(readFileSync(file)).digest('hex')
 

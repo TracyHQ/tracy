@@ -214,7 +214,7 @@ html[data-theme="dark"] .nv-features-6 .nv-features-item { background-color: var
 @media (max-width: 1199.98px) { .nv-features-2 .nv-features-item { padding: 2rem; } }
 @media (max-width: 575.98px) { .nv-features-2 .nv-features-item { padding: 2rem 1.5rem; } }
 .nv-features-2 .nv-link-mask { border-radius: 1rem; position: absolute; top: 0; left: 0; height: 100%; width: 100%; transition: 500ms all; }
-.nv-features-2 .nv-link-mask:hover { box-shadow: 0 0 10px rgba(0, 0, 0, 0.14); }
+.nv-features-2 .nv-link-mask:hover { box-shadow: 0 0 10px rgba(0, 0, 0, 0.14); } /* ds-keep: neutral black shadow */
 .nv-features-2 .nv-img-icon { margin-bottom: 2rem; }
 @media (max-width: 767.98px) { .nv-features-2 .nv-img-icon { margin-bottom: 1rem; } .nv-features-2 .nv-img-icon img { max-height: 80px; width: auto; } }
 .nv-features-2 .nv-features-item h4 { margin-top: 0; margin-bottom: 1rem; }
@@ -258,7 +258,7 @@ html[data-theme="dark"] .nv-features-6 .nv-features-item { background-color: var
 .nv-features-5 .nv-ic-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 30px; }
 .nv-features-5 .nv-play-btn { display: block; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
 .nv-features-5 .nv-play-btn .nv-icon {
-	display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.2); color: var(--color-on-ink);
+	display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.2); color: var(--color-on-ink); /* ds-keep: translucent white chip over a coloured band */
 	border-radius: 50%; height: 120px; width: 120px;
 }
 .nv-features-5 .nv-play-btn .nv-icon svg { margin-left: 6px; }
@@ -269,7 +269,7 @@ html[data-theme="dark"] .nv-features-6 .nv-features-item { background-color: var
 .nv-features-5 .nv-video-modal::backdrop { background: var(--ds-c-ink, rgba(0, 0, 0, 0.9)); }
 .nv-features-5 .nv-modal-dialog { position: relative; width: 900px; max-width: 100%; }
 .nv-features-5 .nv-modal-close {
-	position: absolute; top: 10px; right: 10px; z-index: 2; font-size: 22px; border: 2px solid var(--color-on-ink); background: #000; color: var(--color-on-ink);
+	position: absolute; top: 10px; right: 10px; z-index: 2; font-size: 22px; border: 2px solid var(--color-on-ink); background: #000; color: var(--color-on-ink); /* ds-keep: black play badge over a photograph */
 	border-radius: 50%; line-height: 20px; width: 28px; height: 28px; padding: 0; cursor: pointer;
 }
 .nv-features-5 .nv-video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }

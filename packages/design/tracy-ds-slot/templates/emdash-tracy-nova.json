@@ -1,0 +1,49 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "emdash/tracy-nova",
+  "minVersion": {
+    "tracy-nova/emdash-0.x": "0.1.0"
+  },
+  "maxVersion": {
+    "tracy-nova/emdash-0.x": "0.1.0"
+  },
+  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-btn-radius, --ds-card-radius, --ds-input-radius, --ds-media-radius) and every colour role systems define in src/styles/tokens.css and global.css, with the template value as the fallback; src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base.",
+  "release": "tracy-nova/emdash-0.x@0.1.0",
+  "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
+  "readsComponents": true,
+  "readsRoles": true,
+  "readsRolesNote": "src/styles/tokens.css and global.css read every standard role variable, or declare it unused with a reason; the type and shape tokens are read with the template's own value as the fallback",
+  "modes": true,
+  "modesNote": "the light/dark switch (data-theme on html, [data-theme-toggle] in Header.astro)",
+  "selectors": {
+    "themeToggle": "[data-theme-toggle]"
+  },
+  "roles": {
+    "page": "body",
+    "display": ".nv-hero-title",
+    "heading": "main .nv-card-title",
+    "body": "main .nv-article-body p",
+    "button-primary": "main a.nv-btn",
+    "card": "main .nv-card--project",
+    "container": "main .nv-container",
+    "input": ".nv-search-box input[type=\"search\"]"
+  },
+  "contrast": {
+    "accent-text": "main .nv-sec-title",
+    "muted": "main .nv-card-meta",
+    "body": "main p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": false,
+  "readyNote": "not measured yet: flow.mjs --cms emdash has not been run on a site built from the 0.1.0 release; the measurement goes to contracts/0.1.0/design-system-measurement.json and this row flips to true after it passes",
+  "measureStill": true,
+  "discovered": {},
+  "measureNote": "Carousels (the home hero and the text slider) are stopped on their first slide before each measure",
+  "paletteKeep": [
+    ".nv-news-item",
+    ".nv-latest-pic::before"
+  ],
+  "paletteKeepNote": "The scrims over the news and latest-post pictures are neutral black layers over a photograph: a system does not repaint them."
+}
