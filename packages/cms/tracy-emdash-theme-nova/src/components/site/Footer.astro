@@ -95,7 +95,7 @@ const ctaRow = await section('cta', 'cta-contact', locale)
 						<ul>
 							{col.items.map((l) => (
 								<li>
-									<a href={own(l.url)} aria-current={currentPath && l.url === currentPath ? 'page' : undefined}>{l.label}</a>
+									<a href={own(l.url)} aria-current={currentPath && (l.url === currentPath || (l.url.length > 1 && currentPath.startsWith(`${l.url}/`))) ? 'page' : undefined}>{l.label}</a>
 								</li>
 							))}
 						</ul>
