@@ -402,11 +402,11 @@ test(
 )
 
 test(
-  'the picker and looker prompts open with the CMS line of the kit, WordPress or Joomla',
+  'the picker and looker prompts open with the CMS line of the kit, WordPress, Joomla or EmDash',
   opts,
   async () => {
     const { pool } = db
-    for (const platform of ['wordpress', 'joomla']) {
+    for (const platform of ['wordpress', 'joomla', 'emdash']) {
       await db.reset()
       const own = kitIndex({ platform })
       try {

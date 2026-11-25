@@ -74,9 +74,9 @@ test('a brand file the gate accepts on round 0 ends the run with that file', opt
   assert.ok(Number.isInteger(reviewer.latencyMs) && reviewer.costUsd === 0.0003)
 })
 
-test('the brand prompt opens with the CMS line of the kit, WordPress or Joomla', opts, async () => {
+test('the brand prompt opens with the CMS line of the kit, WordPress, Joomla or EmDash', opts, async () => {
   const { pool } = db
-  for (const platform of ['wordpress', 'joomla']) {
+  for (const platform of ['wordpress', 'joomla', 'emdash']) {
     await db.reset()
     const c = await brandCase()
     const { run, model } = await runOnce(pool, c, {

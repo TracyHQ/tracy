@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-749-emdash-read-side",
+  "kind": "feat",
+  "title": "The step chain's read steps take an EmDash kit: CMS line, primary menu labelled by position, menu labels kept out of the contract mapping",
+  "pr": 749,
+  "area": "website-opportunities/step-chain",
+  "cms": ["em", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "An EmDash kit gets its own CMS line in front of the locked prompts; its main menu is the content map's primary menu with label slots named by position (dropdown children under their parent), a plan page no item opens is a problem, and the copy export keys words by content map key with the menu labels left out of the contract mapping; the WordPress main menu reads as before."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/cms-line.test.mjs",
+      "apps/tracy-web/test/site-writer-emdash.test.mjs",
+      "apps/tracy-web/test/site-writer-wordpress.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a WordPress kit gets the WordPress line, a Joomla kit the Joomla line, an EmDash kit the EmDash line",
+      "an EmDash kit's main menu is its content map's primary menu, labelled by position",
+      "a dropdown child the plan keeps is a slot under its parent; one it does not keep is hidden",
+      "a plan page no menu item opens is a problem, never a guessed slot",
+      "the EmDash export keys words by content map key and leaves the menu labels to step 9"
+    ]
+  }
+}
