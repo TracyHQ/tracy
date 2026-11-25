@@ -1,0 +1,1 @@
+{"id":"REG-PR-749-emdash-read-side","verdict":"PASS","commit":"210d59695e8ee38484a75a0e9e235a1044b5a0de","ran_at":"2026-11-25T03:21:07.584Z","evidence":"tests/regression/.runs/2026-11-25-210d59695/REG-PR-749-emdash-read-side.log"}
