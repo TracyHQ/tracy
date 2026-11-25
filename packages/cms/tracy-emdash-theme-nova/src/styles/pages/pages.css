@@ -83,12 +83,12 @@ html[data-theme="dark"] .nv-menu-box a:hover, html[data-theme="dark"] .nv-menu-b
 .nv-article-right .nv-container { max-width: none; padding-inline: 0; }
 
 /* ---- contact ---- */
-.nv-contact-h1 { text-align: center; font-size: 40px; margin: 1rem 0 .5rem; }
+.nv-contact-h1 { text-align: start; font-size: 40px; margin: 1rem 0 .5rem; }
 @media (max-width: 1199.98px) { .nv-contact-h1 { font-size: 38px; } }
 @media (max-width: 767.98px) { .nv-contact-h1 { font-size: 32px; } }
 @media (max-width: 575.98px) { .nv-contact-h1 { font-size: 28px; } }
 .nv-contact-pic { margin: 0; }
-.nv-contact-pic img { width: 100%; border-radius: 2rem; display: block; }
+.nv-contact-pic img { width: 100%; display: block; }
 .nv-contact-cards { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 2rem 0 8rem; }
 @media (max-width: 1199.98px) { .nv-contact-cards { margin-bottom: 4rem; } }
 @media (max-width: 991.98px) { .nv-contact-cards { grid-template-columns: repeat(2, 1fr); } }
@@ -98,6 +98,10 @@ html[data-theme="dark"] .nv-menu-box a:hover, html[data-theme="dark"] .nv-menu-b
 @media (max-width: 1199.98px) { .nv-contact-card { padding: 1.5rem; border-radius: 1rem; flex-wrap: wrap; flex-direction: column; } }
 @media (max-width: 991.98px) { .nv-contact-card { width: 100%; } }
 .nv-contact-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 50%; background: var(--pg-card); color: var(--color-accent); margin-right: 2rem; }
+.nv-contact-icon::before { content: ""; display: inline-block; width: 48px; height: 48px; background: center / contain no-repeat; }
+.nv-contact-card.is-address .nv-contact-icon::before { background-image: url("/nova/contact/ic_location.png"); }
+.nv-contact-card.is-phone .nv-contact-icon::before { background-image: url("/nova/contact/ic_phone.png"); }
+.nv-contact-card.is-email .nv-contact-icon::before { background-image: url("/nova/contact/ic_email.png"); }
 html[data-theme="dark"] .nv-contact-icon { background: var(--ds-c-surface-warm, #262c36); }
 @media (max-width: 1199.98px) { .nv-contact-icon { margin: 0 auto 1rem; } }
 .nv-contact-info { flex: 1; line-height: 1.5; }
@@ -108,7 +112,7 @@ html[data-theme="dark"] .nv-contact-icon { background: var(--ds-c-surface-warm, 
 .nv-contact-card.is-phone .nv-contact-label { color: var(--ds-c-success, #04ad68); }
 .nv-contact-card.is-email .nv-contact-label { color: var(--ds-c-accent, #5e48db); }
 .nv-contact-card.is-address .nv-contact-label { color: var(--color-heading); }
-html[data-theme="dark"] .nv-contact-label { color: var(--ds-c-accent-text, #9d8cff); }
+html[data-theme="dark"] .nv-contact-card .nv-contact-label { color: var(--ds-c-accent-text, #9d8cff); }
 .nv-contact-text { display: block; font-size: 1.125rem; font-weight: 500; color: var(--color-heading); }
 @media (max-width: 991.98px) { .nv-contact-text { font-size: 1rem; } }
 .nv-contact-text a { color: var(--color-heading); }
@@ -120,8 +124,8 @@ html[data-theme="dark"] .nv-contact-label { color: var(--ds-c-accent-text, #9d8c
 @media (max-width: 1199px) { .nv-contact-title { font-size: 40px; } }
 @media (max-width: 575px) { .nv-contact-title { font-size: 32px; } }
 .nv-contact-hl { display: block; position: relative; color: var(--ds-c-success, #04ad68); }
-.nv-contact-mega { position: absolute; top: 0; margin-left: 12px; width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center; color: var(--ds-c-success, #04ad68); }
-@media (max-width: 1199.98px) { .nv-contact-mega { width: 60px; height: 60px; } }
+.nv-contact-hl::after { content: ""; position: absolute; top: 0; display: inline-block; width: 80px; height: 80px; margin-left: 12px; background: url("/nova/contact/ic_speaker.png") center / contain no-repeat; }
+@media (max-width: 1199.98px) { .nv-contact-hl::after { width: 60px; height: 60px; } }
 .nv-contact-intro { padding-bottom: 4rem; margin-bottom: 4rem; border-bottom: 1px solid var(--pg-line); color: var(--color-fg); }
 @media (max-width: 1199.98px) { .nv-contact-intro { padding-bottom: 2rem; margin-bottom: 2rem; } }
 .nv-contact-intro p:last-child { margin-bottom: 0; }

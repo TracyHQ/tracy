@@ -93,7 +93,6 @@ html[data-theme="dark"] .nv-counter { background: var(--ds-c-surface-warm, #1a1e
 .nv-modband-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
 /* Bootstrap row of the source: a 2rem gutter each side, col-4 then the rest, a rule on the left of the second column */
 @media (min-width: 992px) { .nv-modband-grid { grid-template-columns: 1fr 2fr; gap: 0; margin: 0 -2rem; } .nv-modband-grid > * { padding: 0 2rem; } .nv-modband-grid > * + * { border-left: 1px solid var(--pg-line); } }
-html[data-theme="dark"] .nv-modband-grid > * + * { border-left-color: var(--ds-c-fg, #c2c9d2); }
 .nv-search-box { position: relative; }
 .nv-search-box input { width: 100%; padding: 18px 56px 18px 32px; font: inherit; line-height: 1.63; color: var(--color-fg); background: var(--pg-card); border: 0; border-radius: 1rem; }
 .nv-search-box input:focus { outline: 1px solid var(--color-accent); outline-offset: 0; }

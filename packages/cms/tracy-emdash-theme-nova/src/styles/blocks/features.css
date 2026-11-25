@@ -320,7 +320,6 @@ html[data-theme="dark"] .nv-features-6 .nv-list-features li:not(:has(> a)), html
 .nv-features-7 .nv-show-more { display: none; }
 .nv-features-7 .nv-collapsed .nv-show-less { display: none; }
 .nv-features-7 .nv-collapsed .nv-show-more { display: block; }
-@media (max-width: 991.98px) { .nv-features-7 .nv-text-end { text-align: left; } }
 
 @media (min-width: 768px) {
 	.nv-features-1 .nv-columns-2 > .nv-item-col { width: 50%; }

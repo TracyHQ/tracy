@@ -8,7 +8,6 @@ import PageOwner from '@/components/site/PageOwner.astro'
 import Breadcrumbs from '@/components/site/Breadcrumbs.astro'
 import Sections from '@/components/blocks/Sections.astro'
 import ContactForm from '@/components/site/ContactForm.astro'
-import ContactGlyph from '@/components/site/ContactGlyph.astro'
 import SocialIcon from '@/components/site/SocialIcon.astro'
 import NotFound from '@/views/NotFound.astro'
 import { section } from '@/lib/content'
@@ -71,7 +70,7 @@ if (!c) Astro.response.status = 404
 							<ul class="nv-contact-cards">
 								{cards.map((k) => (
 									<li class={`nv-contact-card is-${k.key}`}>
-										<span class="nv-contact-icon"><ContactGlyph name={k.key as 'address' | 'phone' | 'email'} size={36} /></span>
+										<span class="nv-contact-icon" aria-hidden="true"></span>
 										<span class="nv-contact-info">
 											<span class="nv-contact-label" {...$k(k.lf)}>{k.label}</span>
 											<span class="nv-contact-text" {...$k(k.vf)}>{k.href ? <a href={k.href}>{k.value}</a> : k.value}</span>
@@ -84,7 +83,7 @@ if (!c) Astro.response.status = 404
 							<div class="nv-contact-left">
 								{heading.length > 0 && (
 									<h2 class="nv-contact-title" {...$k('heading')}>
-										{heading.map((l, i) => i === heading.length - 1 && heading.length > 1 ? <span class="nv-contact-hl">{l}<span class="nv-contact-mega" aria-hidden="true"><ContactGlyph name="speaker" size={48} /></span></span> : <>{i > 0 && ' '}{l}{' '}</>)}
+										{heading.map((l, i) => i === heading.length - 1 && heading.length > 1 ? <span class="nv-contact-hl">{l}</span> : <>{i > 0 && ' '}{l}{' '}</>)}
 									</h2>
 								)}
 								{c.intro && <div class="nv-contact-intro" {...$k('intro')} set:html={cleanHtml(c.intro)} />}

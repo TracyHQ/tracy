@@ -26,7 +26,7 @@ const before = (tokenAt < 0 ? blocks : blocks.slice(0, tokenAt)).filter(keep)
 const after = tokenAt < 0 ? [] : blocks.slice(tokenAt + 1).filter(keep)
 
 // consecutive pictures sit in one row; a picture followed by a heading and a bullet list is the source's two-column row
-// (picture left, heading and list right)
+// or a heading and paragraphs (picture left, heading and text right)
 const group = (list: any[]): any[] => {
   const rows: any[] = []
   for (let i = 0; i < list.length; i++) {
@@ -37,10 +37,11 @@ const group = (list: any[]): any[] => {
     const run: any[] = []
     while (list[i]?._type === 'image') run.push(list[i++])
     const head = list[i]
-    if (run.length === 1 && head?._type === 'block' && head.style === 'h3' && list[i + 1]?.listItem) {
+    const follows = (b: any) => b?.listItem || (b?._type === 'block' && (b.style ?? 'normal') === 'normal')
+    if (run.length === 1 && head?._type === 'block' && head.style === 'h3' && follows(list[i + 1])) {
       const text = [head]
       i++
-      while (list[i]?.listItem) text.push(list[i++])
+      while (follows(list[i])) text.push(list[i++])
       rows.push({ kind: 'split', image: run[0], text })
       i--
       continue

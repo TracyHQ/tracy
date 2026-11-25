@@ -55,6 +55,9 @@
 .nv-clients-logo > img { opacity: .4; transition: opacity .5s; }
 .nv-clients-logo > img:hover { opacity: 1; }
 
+/* dark: the source softens the grid dividers to a low-opacity white hairline (css/darkmode.css, client-logo grid) */
+html[data-theme="dark"] .nv-clients-item { border-left-color: var(--vds-fg-8, var(--ds-c-fg, rgba(255, 255, 255, 0.08))); }
+
 /* ---------- teams ---------- */
 .nv-teams { overflow: hidden; }
 .nv-teams-top { display: flex; flex-wrap: wrap; align-items: center; margin: -8px 0 24px; }
@@ -91,7 +94,7 @@
 .nv-teams-card:hover .nv-teams-img img { transform: scale(1.1); }
 .nv-teams-text { margin: 32px 0 16px; }
 .nv-mod .nv-teams-card .nv-teams-name, .nv-teams-name { margin: 0 0 8px; color: var(--color-heading); font-size: 18px; line-height: 1.2; }
-@media (min-width: 576px) { .nv-teams-name { font-size: 24px; } }
+@media (min-width: 576px) { .nv-mod .nv-teams-card .nv-teams-name, .nv-teams-name { font-size: 24px; } }
 .nv-teams-name a { color: var(--color-heading); }
 .nv-teams-name a:hover, .nv-teams-name a:focus-visible { color: var(--color-accent); }
 .nv-teams-text span { color: var(--color-meta); }
