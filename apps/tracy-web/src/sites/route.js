@@ -177,6 +177,13 @@ import {
   releaseHold,
   waitForMoment
 } from './door-follow-up.js'
+import {
+  EMDASH_INFO,
+  emdashContractCall,
+  emdashContractOf,
+  emdashHostCalls,
+  rememberEmdashPicture
+} from './emdash-contract.js'
 import { emdashMediaRequest, emdashMediaUpload } from './emdash-media.js'
 import { declaredSiteIcon } from './favicon.js'
 import { shareHistoryJobs } from './history-share.js'
@@ -6653,6 +6660,10 @@ export function sitesRoutes({
     // `media.upload` on EmDash: the site's host runs the site's own `media_upload` (`emdash-media.js`); no component.
     const emdashMedia = action === 'media.upload' && site?.platform === 'emdash'
     const emdashMediaAsked = emdashMedia ? emdashMediaRequest(params) : null
+    // `content.contract` and `info` on EmDash: the release's content map over the site's own MCP tools, which its host
+    // runs (`emdash-contract.js`); the write step reads and writes an EmDash site through them as it does a Joomla one.
+    const emdashContract = (action === 'content.contract' || action === 'info') && site?.platform === 'emdash'
+    const viaHost = emdashMedia || emdashContract
     if (emdashMediaAsked && 'error' in emdashMediaAsked) {
       if (heldLease && freshLease) await releaseWriteLease(pool, { siteKey, sessionId: chatSession, turnId })
       return reply({ code: 'INVALID_MEDIA', field: emdashMediaAsked.error }, 400)
@@ -6669,12 +6680,8 @@ export function sitesRoutes({
         501
       )
     }
-    let cred = emdashMedia
-      ? null
-      : contentDoor
-        ? { config: contentDoor }
-        : await currentComponent(pool, siteKey)
-    if (!emdashMedia && (!cred?.config?.endpoint || !cred?.config?.token)) {
+    let cred = viaHost ? null : contentDoor ? { config: contentDoor } : await currentComponent(pool, siteKey)
+    if (!viaHost && (!cred?.config?.endpoint || !cred?.config?.token)) {
       // 🔒 PAIR HERE RATHER THAN REFUSE A SITE THAT HAS A DOOR. A site can carry a component and
       // no row: every Joomla site built from a JoomlArt card before 19/09 (the card's provision
       // installed none — `platform/joomla.sh`), and any site provisioned while `/agent-token` was
@@ -6704,7 +6711,7 @@ export function sitesRoutes({
     // `copyReason` says which (`FleetCopyWhy`), and `transient` whether waiting can change it: a cold
     // copy (30/09/2026, tracy.ai on a local stand) is retried in a moment, a wrong token is not.
     let componentBudgetMs = COMPONENT_TIMEOUT_MS
-    if (!emdashMedia && site?.origin === 'migrated' && !isOnCopy(cred.config.endpoint, site, config)) {
+    if (!viaHost && site?.origin === 'migrated' && !isOnCopy(cred.config.endpoint, site, config)) {
       const pairingFrom = Date.now()
       const paired = await pairFleetCopy(site, auth.email)
       if (paired.cred === null) {
@@ -6865,6 +6872,10 @@ export function sitesRoutes({
 
     if (emdashMediaAsked) {
       const placed = await emdashMediaUpload({ host, config, fetchImpl, site, request: emdashMediaAsked })
+      // The contract write names this picture by the path it uploaded; a picture of the same bytes already held answers
+      // that item, under its own file name, so the id is kept for the write that follows (`emdash-contract.js`).
+      if (placed.outcome === 'ok')
+        rememberEmdashPicture(siteKey, String(emdashMediaAsked.filename), String(placed.body.id))
       await recordApply(placed.outcome === 'ok', placed.outcome, placed.body, {
         changed: placed.body?.deduplicated !== true
       })
@@ -6872,6 +6883,36 @@ export function sitesRoutes({
       if (heldLease && freshLease && placed.outcome === 'refused')
         await releaseWriteLease(pool, { siteKey, sessionId: chatSession, turnId })
       return reply(placed.body, /** @type {any} */ (placed.status))
+    }
+
+    if (emdashContract) {
+      if (action === 'info') {
+        await recordApply(true)
+        return reply({ ok: true, info: EMDASH_INFO })
+      }
+      const release = emdashContractOf(site)
+      if (!release) {
+        if (heldLease && freshLease)
+          await releaseWriteLease(pool, { siteKey, sessionId: chatSession, turnId })
+        await recordApply(false, 'refused')
+        return reply({
+          ok: false,
+          error: 'contract_unavailable',
+          message:
+            `No content map is known for ${site.quickstart_tag ?? '(no release)'} ${site.quickstart_version ?? ''}`.trim()
+        })
+      }
+      const done = await emdashContractCall({
+        siteKey,
+        params,
+        contract: release.contract,
+        contentMap: release.contentMap,
+        calls: emdashHostCalls({ host, config, fetchImpl, site })
+      })
+      await recordApply(done.outcome === 'ok', done.outcome, done.body, { landed: done.landed === true })
+      if (heldLease && freshLease && done.outcome === 'refused')
+        await releaseWriteLease(pool, { siteKey, sessionId: chatSession, turnId })
+      return reply(done.body, /** @type {any} */ (done.status))
     }
 
     // One canonical envelope for every CMS (integration decision b0a40e0 §2): the flat query in

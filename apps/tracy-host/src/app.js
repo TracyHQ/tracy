@@ -55,6 +55,7 @@ import {
 } from './webroot.js'
 import { readSiteFiles } from './site-files.js'
 import { writeDisplayLocale } from './display-locale.js'
+import { emdashContentRoute } from './emdash-content.js'
 import { emdashMediaRoute } from './emdash-media.js'
 import { CMS_LOG_KIND, runCmsLogJob, validateCmsLogBody } from './cms-log.js'
 import { LOOK_CSS_KIND, runLookCssJob, validateLookCssBody } from './look-css.js'
@@ -1229,6 +1230,8 @@ export function buildApp({
   app.post('/_host/site-files', siteFilesRoute({ config }))
   app.post('/_host/display-locale', displayLocaleRoute({ config }))
   app.post('/_host/emdash-media', emdashMediaRoute({ config, run, safeLabel: SAFE_LABEL }))
+  // The site's own MCP calls on its entries, menus, settings and terms, for a contract write (`emdash-content.js`).
+  app.post('/_host/emdash-content', emdashContentRoute({ config, run, safeLabel: SAFE_LABEL }))
   app.post('/_host/dsh-versions', async (c) => {
     const result = await run({
       script: 'node',

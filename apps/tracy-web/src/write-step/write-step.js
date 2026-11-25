@@ -65,7 +65,7 @@ import { runPrintedStage } from './printed-stage.js'
 import { writeRecordAlts } from './record-alt-stage.js'
 import { followRenamedLinks, rewriteRenamedLinks } from './renamed-link-stage.js'
 import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
-import { platformStop, siteDoorFor } from './site-doors/index.js'
+import { onPlatform, platformStop, siteDoorFor } from './site-doors/index.js'
 import { doorCall } from './settings-door.js'
 import { runShareStage } from './share-stage.js'
 import { correctionsReader, galleryAlts, pictureAltsOf } from './slot-corrections.js'
@@ -143,9 +143,10 @@ const IMAGE_PATH = /^\/?images\/\S+$/i
 
 export async function runWriteStep(input) {
   const { siteKey, kit, contentMap = null, files } = input
-  // Every write of the run goes through this door (look-guard.js), and what it refuses is never sent.
+  // Every write of the run goes through this door (look-guard.js), and what it refuses is never sent; nor is a call the
+  // site's CMS has no door for (site-doors/index.js `onPlatform`).
   const guard = lookGuard({ kit: kit.doc, contentMap })
-  const door = guard.door(input.door)
+  const door = guard.door(onPlatform(input.door, kit.platform))
   const {
     isCancelled = async () => false,
     onPhase = async () => {},

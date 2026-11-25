@@ -446,6 +446,23 @@ write step's own drawing code (`lib/picture-paint/icons/icon-pick.js`). The door
 files it measures from the site folder, then uploads the drawn files with `media.upload` and writes every slot in one
 `content.contract apply`, both through Apply as above, so the change is in Changes and `apply.revert` undoes it.
 
+**c3. The content contract on EmDash (`content.contract`, `info`).** EmDash has no Tracy component, so the Apply door
+answers `content.contract` itself (`apps/tracy-web/src/sites/emdash-contract.js`, 25/11/2026): the contract is the
+release's content map (found by `site.quickstart_tag` + `quickstart_version` in the kit index), each slot one field of an
+entry, one field of a repeater row, a site setting or a term's label. `inspect` reads every mapped entity and answers the
+slots, the pages and a revision made of every entry's `_rev`, the mapped settings and the terms; `apply` reads them again,
+refuses a moved revision (`revision_mismatch`), checks every slot and picture first and writes nothing when one is
+refused (`errors[]` by slot), then writes one `content_update` per entry (a published entry is published again at once,
+a draft stays a draft), `settings_update` and `taxonomy_update_term`. The site's own MCP tools are called by its host
+(`POST /_host/emdash-content`, `apps/tracy-host/src/emdash-content.js`): one `docker exec` in `<label>-web-1` reads the
+agent token from its root-only mount and makes the calls on the container's loopback, from a fixed list of content tools
+(no schema, delete, import, user or upload tool; of the media library only `media_get` and `media_list`), so tracy-web
+still holds only its read-only PAT. A picture is named by the path `media.upload` placed it under: the door keeps the id
+that upload answered, or finds the file name in the library. The audit, lease and `site_write` row are the Apply door's
+own, so a chain build's writes fold into its "Tracy setup" row. `info` answers what the write step's stages may ask
+(`EMDASH_INFO`). The write step reaches an EmDash site through this door alone: its EmDash site door
+(`write-step/site-doors/emdash.js`) answers any other action itself, by name, and never sends it.
+
 **d. Writes outside Apply, reported afterwards.** Three kinds of write do not go through Apply: EmDash's own MCP
 (`tracy_emdash`), look changes via file tools, and `look.revert`. `tracy-site-tools` reports each
 success to `POST /api/sites/:key/changed`. Since 20/10/2026: before **every** EmDash write
