@@ -12,5 +12,5 @@
     - A main menu item the plan does not keep leaves the menu without holding its page. On Joomla an unpublished item takes its page with it; that rule is unchanged.
     - A dropped page is made a draft.
     - Calls EmDash has no door for (articles, Joomla menu items, modules, template settings, page meta) are answered in words by the door and never sent.
-  - The chain still builds only JA Boxing and JA Diner on Joomla. `STEP_CHAIN_TEMPLATES` is unchanged.
+  - The chain still builds only JA Boxing and JA Diner on Joomla for customers; `STEP_CHAIN_TEMPLATES` is unchanged. The new `STEP_CHAIN_STAFF_TEMPLATES` lists JA Diner on EmDash (`tracy-diner/emdash-0.x`) for staff accounts only (an accepted seat in the `tracy_admin` workspace), while the master switch is on, so staff can measure it on dev. Every place that decides this asks `stepChainFor`: the build start, the demo action, and the `POST /api/sites` chain check.
   **Why:** the three CMS plan, step 4: the WO chain build must write EmDash sites before EmDash Diner can run on the chain.

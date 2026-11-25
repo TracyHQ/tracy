@@ -33,7 +33,7 @@ import {
 import { templateRefusal } from './revisions.js'
 import { choiceKey } from './build-choice.js'
 import { QUALITY_PROTOCOL } from './quality-protocol.js'
-import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
+import { STEP_CHAIN_WORKFLOW, stepChainFor } from '../lib/step-chain-switch.js'
 
 const ABOUT_MAX = 300
 
@@ -265,7 +265,7 @@ export async function startBuild({
     stepChain &&
     (row.receipt?.workflow
       ? row.receipt.workflow === STEP_CHAIN_WORKFLOW
-      : stepChainEnabled({ quickstart: revision.template.quickstart }))
+      : await stepChainFor({ quickstart: revision.template.quickstart, db: pool, accountId }))
   const answer = await readJson(request, '/api/sites', {
     method: 'POST',
     headers: {

@@ -9,7 +9,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { autoTemplate, chooseTemplate, templateRanking } from '../lib/wo-revision-choice.js'
 import { failedQaHash } from './demo-qa.js'
 import { BUILD_LIVE } from './build-store.js'
-import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
+import { STEP_CHAIN_WORKFLOW, stepChainFor } from '../lib/step-chain-switch.js'
 import { failedChainRetryBrief } from '../lib/chain-retry-authority.js'
 
 const DAY_MS = 86_400_000
@@ -397,7 +397,7 @@ export async function acceptDemoActions(
         selection?.chatMode &&
         !e.retryOf &&
         ['demo', 'own-site'].includes(usageKind) &&
-        stepChainEnabled({ quickstart: selection.quickstart })
+        (await stepChainFor({ quickstart: selection.quickstart, db: client, accountId }))
       )
         delete selection.chatMode
       if (selection?.workflow === AGENT_DEMO) {

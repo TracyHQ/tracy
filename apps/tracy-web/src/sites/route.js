@@ -345,7 +345,7 @@ import {
 } from './store.js'
 import { teardownSaid } from './teardown-said.js'
 import { researchRevisionOwned } from '../lib/research-revision.js'
-import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
+import { STEP_CHAIN_WORKFLOW, stepChainFor } from '../lib/step-chain-switch.js'
 
 /** How long a call to a site's component may take. Why this number: the signal it feeds. */
 const COMPONENT_TIMEOUT_MS = 170_000
@@ -3358,7 +3358,8 @@ export function sitesRoutes({
     if (body.brief !== undefined) return { code: 'STEP_CHAIN_BRIEF_GIVEN', status: 400 }
     if (typeof body.researchRevisionId !== 'string' || !UUID.test(body.researchRevisionId))
       return { code: 'INVALID_RESEARCH_REVISION', status: 400 }
-    if (!stepChainEnabled({ quickstart })) return { code: 'STEP_CHAIN_OFF', status: 409 }
+    if (!(await stepChainFor({ quickstart, db: pool, accountId })))
+      return { code: 'STEP_CHAIN_OFF', status: 409 }
     if (!(await researchRevisionOwned(pool, body.researchRevisionId, accountId)))
       return { code: 'RESEARCH_REVISION_UNKNOWN', status: 404 }
     return null

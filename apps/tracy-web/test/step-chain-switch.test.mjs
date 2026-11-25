@@ -39,3 +39,36 @@ test('a template that is not listed, or no quickstart, never runs the chain', ()
   assert.equal(stepChainEnabled({ quickstart: undefined, env: on }), false)
   assert.equal(stepChainEnabled({ env: on }), false)
 })
+
+test('a staff template runs the chain only for a staff account, and only while the master switch is on', async () => {
+  const { STEP_CHAIN_STAFF_TEMPLATES, stepChainFor } = await import('../src/lib/step-chain-switch.js')
+  // test-quality: contract JA Diner on EmDash is measured on dev by staff before customers get it
+  assert.deepEqual(STEP_CHAIN_STAFF_TEMPLATES, ['tracy-diner/emdash-0.x'])
+  const asked = []
+  const db = (staff) => ({
+    query: async (sql, params) => {
+      asked.push(params)
+      return { rows: staff ? [{ '?column?': 1 }] : [] }
+    }
+  })
+  for (const quickstart of ['tracy-diner/emdash-0.x', 'tracy-diner/emdash-0.x@0.1.4']) {
+    assert.equal(stepChainEnabled({ quickstart, env: on }), false, 'not for a customer')
+    assert.equal(stepChainEnabled({ quickstart, env: on, staff: true }), true)
+    assert.equal(await stepChainFor({ quickstart, env: on, db: db(true), accountId: 'a1' }), true)
+    assert.equal(await stepChainFor({ quickstart, env: on, db: db(false), accountId: 'a2' }), false)
+    assert.equal(await stepChainFor({ quickstart, env: {}, db: db(true), accountId: 'a1' }), false)
+  }
+  const failing = { query: async () => Promise.reject(new Error('down')) }
+  assert.equal(
+    await stepChainFor({ quickstart: 'tracy-diner/emdash-0.x', env: on, db: failing, accountId: 'a1' }),
+    false,
+    'a doubt is no staff'
+  )
+  // A listed template needs no account read.
+  asked.length = 0
+  assert.equal(
+    await stepChainFor({ quickstart: 'ja-diner/j6', env: on, db: db(false), accountId: 'a3' }),
+    true
+  )
+  assert.deepEqual(asked, [])
+})

@@ -2733,7 +2733,8 @@ step deadline, but the native turn's execution window starts only after its prom
 HTML reads of the exact same path are shared across groups, including failures; the next check reads fresh pages.
 
 **The step chain as one build** (#483, spec #472). A build of an allow-listed template (`apps/tracy-web/src/lib/step-chain-switch.js`:
-the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
+the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch; `STEP_CHAIN_STAFF_TEMPLATES` are
+on it only for an account seated in the `tracy_admin` workspace, while they are measured) reaches `POST /api/sites` with
 `workflow: 'step-chain/1'` and `researchRevisionId` (a `wo_revision` of the caller's own; no `brief`). The door refuses before
 anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`) or the revision is not the caller's (404); otherwise
 the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
