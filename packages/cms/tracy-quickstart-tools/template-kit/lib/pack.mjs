@@ -151,19 +151,23 @@ function recordsOf(kit, refs) {
 }
 
 /**
- * After a rebuild, keep `fullShotOf` of each page the previous kit named it on. A build without `--full` and every
+ * After a rebuild, keep `fullShotOf` of each page the previous kit named it on, when the page it points to is still
+ * in the kit (and in the page's group); otherwise `pack` makes it again. A build without `--full` and every
  * assemble write the kit again without a pack step, so the field (written by `writePack`, which makes it again from
  * the current groups) would be gone from a kit that held it, a committed one among them.
  * Returns how many pages kept it.
  */
 export function keepFullShots(kit, previous) {
   const old = new Map((previous?.pages ?? []).filter((p) => p?.fullShotOf).map((p) => [p.id, p.fullShotOf]))
+  const byId = new Map((kit.pages ?? []).map((p) => [p.id, p]))
   let kept = 0
-  for (const p of kit.pages ?? [])
-    if (old.has(p.id) && p.fullShotOf === undefined) {
-      p.fullShotOf = old.get(p.id)
-      kept++
-    }
+  for (const p of kit.pages ?? []) {
+    const to = byId.get(old.get(p.id))
+    // The page it points to must still be in the kit, and in the page's own group when it has one.
+    if (!to || p.fullShotOf !== undefined || (p.group && to.group !== p.group)) continue
+    p.fullShotOf = to.id
+    kept++
+  }
   return kept
 }
 

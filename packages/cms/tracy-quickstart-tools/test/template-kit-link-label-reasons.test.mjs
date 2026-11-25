@@ -336,7 +336,7 @@ test('a result page link of an EmDash (`?page=`) or WordPress (`?paged=`, `/page
     const kit = {
       pages: [
         { id: 'page-list', path, blocks: ['body-list'] },
-        { id: 'page-list-2', path: target, blocks: ['body-list-2'] }
+        { id: 'page-list-2', path: target, blocks: ['body-list-2'], paginationOf: 'page-list' }
       ],
       blocks: [
         { id: 'body-list', links: [{ id: 'body-list.link-1', label: '2', target }] },
@@ -392,4 +392,33 @@ test('a step link names the title slot of the page it opens when the page is rea
   const r = relabelKit(kit, { map, linkLabelSlots, listLabelSlots })
   assert.equal(kit.blocks[0].links[0].labelId, 'pages.development.title')
   assert.equal(r.wrong, 0)
+})
+
+test('only a whole result page number is pagination: `/info?page=about`, `?start=abc` and a real `/page/2/` page are not', () => {
+  const kitOf = (path, target, pages = []) => ({
+    pages: [{ id: 'page-list', path, blocks: ['body-list'] }, ...pages],
+    blocks: [{ id: 'body-list', links: [{ id: 'l1', label: '2', target }] }],
+    checks: {},
+    errors: []
+  })
+  const rule = (kit) => (fixedLinkLabels(kit), kit.blocks[0].links[0].fixedLabel?.rule)
+  assert.equal(
+    rule(kitOf('/info', '/info?page=about', [{ id: 'p2', path: '/info?page=about', blocks: [] }])),
+    undefined
+  )
+  assert.equal(
+    rule(kitOf('/news', '/news?start=abc', [{ id: 'p2', path: '/news?start=abc', blocks: [] }])),
+    undefined
+  )
+  assert.equal(
+    rule(kitOf('/news', '/news?paged=0', [{ id: 'p2', path: '/news?paged=0', blocks: [] }])),
+    undefined
+  )
+  // A real page named `page`, never read as a further result page of the listing, is no pagination.
+  assert.equal(rule(kitOf('/', '/page/2/', [{ id: 'p2', path: '/page/2/', blocks: ['x'] }])), undefined)
+  // Nor is a path-form address of a listing the block is not shown at.
+  assert.equal(rule(kitOf('/news', '/blog/page/2/')), undefined)
+  // The real ones still are.
+  assert.equal(rule(kitOf('/news', '/news?start=0')), 'pagination')
+  assert.equal(rule(kitOf('/blog', '/blog/page/2/')), 'pagination')
 })

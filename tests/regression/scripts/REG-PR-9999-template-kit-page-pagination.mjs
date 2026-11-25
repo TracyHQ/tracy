@@ -22,7 +22,7 @@ for (const [path, target] of [
   const kit = {
     pages: [
       { id: 'page-list', path, blocks: ['body-list'] },
-      { id: 'page-list-2', path: target, blocks: ['body-list-2'] }
+      { id: 'page-list-2', path: target, blocks: ['body-list-2'], paginationOf: 'page-list' }
     ],
     blocks: [
       { id: 'body-list', links: [{ id: 'l1', label: '2', target }] },
@@ -43,6 +43,32 @@ keepFullShots(rebuilt, {
   ]
 })
 c.eq('S2: page-b keeps fullShotOf', rebuilt.pages[1].fullShotOf, 'page-a')
+// S4: a value that is no page number, and a real page named `page`, are no pagination.
+for (const [path, target, extra] of [
+  ['/info', '/info?page=about', { id: 'p', path: '/info?page=about', blocks: [] }],
+  ['/news', '/news?start=abc', { id: 'p', path: '/news?start=abc', blocks: [] }],
+  ['/', '/page/2/', { id: 'p', path: '/page/2/', blocks: ['x'] }]
+]) {
+  const kit = {
+    pages: [{ id: 'page-list', path, blocks: ['body-list'] }, extra],
+    blocks: [{ id: 'body-list', links: [{ id: 'l1', label: '2', target }] }],
+    checks: {},
+    errors: []
+  }
+  fixedLinkLabels(kit)
+  c.eq(`S4: ${target} is not pagination`, kit.blocks[0].links[0].fixedLabel?.rule, undefined)
+}
+
+// S5: a `fullShotOf` pointing at a removed page is not kept.
+const gone = { pages: [{ id: 'b', group: 'g' }] }
+keepFullShots(gone, {
+  pages: [
+    { id: 'a', group: 'g' },
+    { id: 'b', group: 'g', fullShotOf: 'a' }
+  ]
+})
+c.eq('S5: b drops fullShotOf of removed a', gone.pages[0].fullShotOf, undefined)
+
 // S3: a page read as sections keeps its `pages.<slug>.` slot keys under a section block's entity (JA Nova).
 const sectioned = {
   pages: [{ entity: 'pages.development', route: '/development', openAs: '/development' }],

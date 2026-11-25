@@ -10,12 +10,16 @@
   "steps": [
     "S1: Run fixedLinkLabels on a kit whose listing page has a link \"2\" to /donations?page=2, /news?paged=2 or /blog/page/2/ (the result page is also a kit page).",
     "S2: Run keepFullShots on a rebuilt kit with the previous kit's pages naming fullShotOf.",
-    "S3: Run relabelKit on a kit whose block has a link \"Previous article: Development Prev\" to /development, with a content map whose slot pages.development.title belongs to the entity block-development-body (a page read as sections)."
+    "S3: Run relabelKit on a kit whose block has a link \"Previous article: Development Prev\" to /development, with a content map whose slot pages.development.title belongs to the entity block-development-body (a page read as sections).",
+    "S4: Run fixedLinkLabels on kits whose link \"2\" opens /info?page=about, /news?start=abc, or a real page /page/2/ (a kit page that is no result page of a listing).",
+    "S5: Run keepFullShots on a rebuilt kit that no longer holds page a, with the previous page b pointing at a."
   ],
   "expect": [
     "S1: the link carries the fixed label rule \"pagination\" (no link-label error).",
     "S2: each rebuilt page has the previous page's fullShotOf.",
-    "S3: the link's labelId is pages.development.title."
+    "S3: the link's labelId is pages.development.title.",
+    "S4: the link carries no pagination rule.",
+    "S5: page b has no fullShotOf."
   ],
   "selectors": {
     "files": "packages/cms/tracy-quickstart-tools/template-kit/lib/{link-label-reasons,pack}.mjs",

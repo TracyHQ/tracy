@@ -194,6 +194,33 @@ test('a rebuild keeps the `fullShotOf` of each page the kit named it on', () => 
   }
 })
 
+test('a rebuild drops a `fullShotOf` whose page is gone or in another group', () => {
+  const previous = {
+    pages: [
+      { id: 'a', group: 'g1' },
+      { id: 'b', group: 'g1', fullShotOf: 'a' },
+      { id: 'c', group: 'g1', fullShotOf: 'b' }
+    ]
+  }
+  const gone = {
+    pages: [
+      { id: 'b', group: 'g1' },
+      { id: 'c', group: 'g1' }
+    ]
+  }
+  assert.equal(keepFullShots(gone, previous), 1)
+  assert.equal(gone.pages[0].fullShotOf, undefined, 'page a was removed')
+  assert.equal(gone.pages[1].fullShotOf, 'b')
+  const moved = {
+    pages: [
+      { id: 'a', group: 'g2' },
+      { id: 'b', group: 'g1' }
+    ]
+  }
+  assert.equal(keepFullShots(moved, previous), 0)
+  assert.equal(moved.pages[1].fullShotOf, undefined, 'a is in another group now')
+})
+
 test('a rebuild in its own folder keeps the looks through the assemble that runs before any shot is taken', () => {
   const dir = mkdtempSync(join(tmpdir(), 'kit-looks-'))
   try {
