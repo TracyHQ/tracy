@@ -1,4 +1,4 @@
-- **An EmDash chain build gets past its brand, pictures and setup hold** — David (WO) · #PR · `fix/wo-emdash-chain-benches` · 2026-11-26
+- **An EmDash chain build gets past its brand, pictures and setup hold** — David (WO) · #757 · `fix/wo-emdash-chain-benches` · 2026-11-26
   **Affects:** staff chain builds of JA Diner on EmDash (`STEP_CHAIN_STAFF_TEMPLATES`). Joomla and WordPress do not change.
   - The brand step names the EmDash release's design system slot contract (`emdash-tracy-diner`, through `quickstartContractOf`). Before, it looked for a Joomla slot of the product name.
   - The picture bench opens the kits it lists, EmDash ones included: `openKitWithMap` reads the kit index.
