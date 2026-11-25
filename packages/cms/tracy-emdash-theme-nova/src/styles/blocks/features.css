@@ -345,3 +345,10 @@ html[data-theme="dark"] .nv-features-6 .nv-list-features li:not(:has(> a)), html
 /* the source's body headings carry `mt-5 mb-4`; the first of them `mt-0` */
 .nv-pg--service .nv-article-body > h3 { margin-top: 2rem; }
 .nv-pg--service .nv-article-body > h3:first-of-type { margin-top: 0; }
+
+/* dark: the stats cards take the surface token and a line so they read as cards on the band */
+html[data-theme="dark"] .nv-features-3 .nv-stat-col .nv-features-inner { background: var(--color-surface); border: 1px solid var(--color-line); }
+/* dark: the "Verified Teacher" card is a translucent part of the picture; a white backing makes it match its white siblings */
+html[data-theme="dark"] .nv-features-home-intro-2 .nv-intro-img { position: relative; }
+html[data-theme="dark"] .nv-features-home-intro-2 .nv-intro-img::before { content: ""; position: absolute; left: 68%; top: 14.7%; width: 32%; height: 39%; border-radius: 16px; background: var(--ds-c-icon-chip, #ffffff); }
+html[data-theme="dark"] .nv-features-home-intro-2 .nv-intro-img img { position: relative; }

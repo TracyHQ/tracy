@@ -1,5 +1,57 @@
 {
-	"generatedAt": "2026-11-25T03:29:15.831Z",
+	"generatedAt": "2026-11-25T03:59:43.174Z",
+	"roleVocabularyVersion": "place-content-roles/3",
+	"settings": {
+		"title": {
+			"role": "business.name",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		},
+		"tagline": {
+			"role": "business.tagline",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		}
+	},
+	"taxonomyRoles": {
+		"category": {
+			"role": "editorial.heading"
+		}
+	},
+	"slotRoles": {
+		"hero.home-hero.desc": {
+			"role": "claim.notice",
+			"group": {
+				"kind": "claim",
+				"name": "result"
+			}
+		},
+		"features_intro.home-intro-2.info_desc": {
+			"role": "claim.notice",
+			"group": {
+				"kind": "claim",
+				"name": "result"
+			}
+		},
+		"features_intro.home-intro-3.info_desc": {
+			"role": "claim.notice",
+			"group": {
+				"kind": "claim",
+				"name": "result"
+			}
+		},
+		"features_intro.services-intro.info_desc": {
+			"role": "claim.notice",
+			"group": {
+				"kind": "claim",
+				"name": "result"
+			}
+		}
+	},
 	"fields": {
 		"pages.title": {
 			"source": "text",
@@ -640,14 +692,14 @@
 			"source": "group",
 			"target": "repeater",
 			"label": "Items",
+			"group": {
+				"kind": "person"
+			},
 			"subRoles": {
 				"img": "person.image",
 				"title": "person.name",
 				"team_position": "person.role",
 				"link": "person.social_url"
-			},
-			"group": {
-				"kind": "person"
 			}
 		},
 		"teams.main_title": {
@@ -690,6 +742,9 @@
 			"source": "group",
 			"target": "repeater",
 			"label": "Items",
+			"group": {
+				"kind": "package"
+			},
 			"subRoles": {
 				"title": "package.name",
 				"desc": "package.summary",
@@ -698,9 +753,6 @@
 				"btn_title": "package.cta_label",
 				"btn_link": "package.cta_url",
 				"btn_type": "editorial.design_element"
-			},
-			"group": {
-				"kind": "package"
 			}
 		},
 		"pricing.main_title": {
@@ -773,12 +825,12 @@
 			"source": "group",
 			"target": "repeater",
 			"label": "Items",
+			"group": {
+				"kind": "faq"
+			},
 			"subRoles": {
 				"accordion_name": "faq.question",
 				"accordion_desc": "faq.answer"
-			},
-			"group": {
-				"kind": "faq"
 			}
 		},
 		"accordion.main_title": {
@@ -1456,58 +1508,6 @@
 			"source": "text",
 			"target": "string",
 			"label": "Form id"
-		}
-	},
-	"roleVocabularyVersion": "place-content-roles/3",
-	"settings": {
-		"title": {
-			"role": "business.name",
-			"group": {
-				"kind": "business",
-				"name": "identity"
-			}
-		},
-		"tagline": {
-			"role": "business.tagline",
-			"group": {
-				"kind": "business",
-				"name": "identity"
-			}
-		}
-	},
-	"taxonomyRoles": {
-		"category": {
-			"role": "editorial.heading"
-		}
-	},
-	"slotRoles": {
-		"hero.home-hero.desc": {
-			"role": "claim.notice",
-			"group": {
-				"kind": "claim",
-				"name": "result"
-			}
-		},
-		"features_intro.home-intro-2.info_desc": {
-			"role": "claim.notice",
-			"group": {
-				"kind": "claim",
-				"name": "result"
-			}
-		},
-		"features_intro.home-intro-3.info_desc": {
-			"role": "claim.notice",
-			"group": {
-				"kind": "claim",
-				"name": "result"
-			}
-		},
-		"features_intro.services-intro.info_desc": {
-			"role": "claim.notice",
-			"group": {
-				"kind": "claim",
-				"name": "result"
-			}
 		}
 	}
 }

@@ -102,7 +102,7 @@ html[data-theme="dark"] .nv-menu-box a:hover, html[data-theme="dark"] .nv-menu-b
 .nv-contact-card.is-address .nv-contact-icon::before { background-image: url("/nova/contact/ic_location.png"); }
 .nv-contact-card.is-phone .nv-contact-icon::before { background-image: url("/nova/contact/ic_phone.png"); }
 .nv-contact-card.is-email .nv-contact-icon::before { background-image: url("/nova/contact/ic_email.png"); }
-html[data-theme="dark"] .nv-contact-icon { background: var(--ds-c-surface-warm, #262c36); }
+html[data-theme="dark"] .nv-contact-icon { background: var(--ds-c-icon-chip, #ffffff); } /* the icon art is dark-stroke: the circle stays light */
 @media (max-width: 1199.98px) { .nv-contact-icon { margin: 0 auto 1rem; } }
 .nv-contact-info { flex: 1; line-height: 1.5; }
 @media (max-width: 1199.98px) { .nv-contact-info { flex: none; width: 100%; text-align: center; } }
@@ -194,4 +194,8 @@ html[data-theme="dark"] .nv-contact-card .nv-contact-label { color: var(--ds-c-a
 .nv-err-redirect a { display: inline-block; height: 64px; padding: 1rem 2rem; font-size: 1rem; font-weight: 500; line-height: 1.8; color: var(--ds-c-accent-on, #fff); background: var(--color-accent); border-radius: var(--ds-btn-radius, 16px); transition: opacity .2s; }
 @media (max-width: 767.98px) { .nv-err-redirect a { height: 50px; padding: 12px 24px; } }
 .nv-err-redirect a:hover { opacity: .85; }
-html[data-theme="dark"] .nv-err-redirect a { color: var(--color-accent-text); }
+html[data-theme="dark"] .nv-err-redirect a { color: var(--color-accent-on); }
+
+/* placeholders read as the source's (light: the field text colour; dark: the muted token), not the browser's faded default */
+.nv-contact-form input::placeholder, .nv-contact-form textarea::placeholder, .nv-finder-group input::placeholder { color: var(--color-fg); opacity: 1; }
+html[data-theme="dark"] .nv-contact-form input::placeholder, html[data-theme="dark"] .nv-contact-form textarea::placeholder, html[data-theme="dark"] .nv-finder-group input::placeholder { color: var(--pg-muted); }

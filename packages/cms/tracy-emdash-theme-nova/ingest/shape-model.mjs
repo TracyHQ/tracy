@@ -292,6 +292,8 @@ for (const r of model.records.filter((x) => x.type === 'posts')) {
     project_link: fields['prj-completed'] ?? '',
     sort: String(row.ordering ?? '').padStart(4, '0')
   })
+  // documented text fix: the Joomla demo article title is cut mid-word ("busines"); the slug stays
+  if (/success busines$/.test(r.values.title)) r.values.title += 's'
 }
 {
   const posts = model.records

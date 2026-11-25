@@ -320,7 +320,7 @@ html[data-theme="dark"] .nv-oc-close { color: var(--color-bg); }
 .nv-breadcrumbs { border-top: 1px solid var(--color-line); }
 .nv-breadcrumbs ol { display: flex; flex-wrap: wrap; margin: 0; padding: 16px 0 0; list-style: none; }
 @media (min-width: 768px) { .nv-breadcrumbs ol { padding-top: 32px; } }
-.nv-breadcrumbs li { line-height: 1.5; color: var(--color-heading); }
+.nv-breadcrumbs li { line-height: 1.5; color: var(--color-heading); text-align: center; }
 .nv-breadcrumbs a { color: var(--color-heading); }
 .nv-breadcrumbs a:hover { color: var(--color-accent-text); }
 .nv-bc-sep { position: relative; display: inline-block; vertical-align: top; width: 44px; height: 24px; margin-left: 4px; }

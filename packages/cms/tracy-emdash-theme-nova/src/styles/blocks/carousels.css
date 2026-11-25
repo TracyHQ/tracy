@@ -98,3 +98,7 @@ html[data-theme="dark"] .nv-clients-item { border-left-color: var(--vds-fg-8, va
 .nv-teams-name a { color: var(--color-heading); }
 .nv-teams-name a:hover, .nv-teams-name a:focus-visible { color: var(--color-accent); }
 .nv-teams-text span { color: var(--color-meta); }
+
+/* dark: the demo logo strip and the pill icons are dark art on a dark ground; lift them as the source's darkmode.css section 14 does for its dark icons */
+html[data-theme="dark"] .nv-clients-logo img { filter: invert(1) brightness(1.6); }
+html[data-theme="dark"] .nv-ts-logo img { filter: invert(1) hue-rotate(180deg); }
