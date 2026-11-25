@@ -1,6 +1,6 @@
 # Installation
 
-Read ../AGENTS.md. Requirements: Node >= 22.23.4, pnpm 11.9.0 via corepack (`corepack enable && corepack prepare pnpm@11.9.0 --activate`), an empty destination folder; `tools/clean-install.sh` also needs `rsync`, `lsof` and network access (fonts, packages). Signing in to the admin of a built site needs a mail catcher on 127.0.0.1:1025 / 8025 (`docker run -d --name nova-mailpit -p 127.0.0.1:1025:1025 -p 127.0.0.1:8025:8025 axllent/mailpit`; if those ports are taken, reuse the catcher that holds them or stop it; remove yours with `docker rm -f nova-mailpit` when done).
+Read ../AGENTS.md. Requirements: Node >= 22.23.4, pnpm 11.9.0 via corepack (`corepack enable && corepack prepare pnpm@11.9.0 --activate`; `pnpm test` also needs `pnpm exec playwright install chromium` and takes about four minutes), an empty destination folder; `tools/clean-install.sh` also needs `rsync`, `lsof` and network access (fonts, packages). Signing in to the admin of a built site needs a mail catcher on 127.0.0.1:1025 / 8025 (`docker run -d --name nova-mailpit -p 127.0.0.1:1025:1025 -p 127.0.0.1:8025:8025 axllent/mailpit`; if those ports are taken, reuse the catcher that holds them or stop it; remove yours with `docker rm -f nova-mailpit` when done).
 
 ```bash
 pnpm install --frozen-lockfile
