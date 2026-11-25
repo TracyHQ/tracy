@@ -1011,35 +1011,70 @@ test(
   }
 )
 
-test('a readiness refusal cannot be retried or charged against the same frozen revision', opts, async () => {
-  const { account, ids } = await fixture(1)
-  const initial = await acceptDemoActions(db.pool, {
-    accountId: account,
-    entries: [entry(ids[0], 'blocked-brief')]
-  })
-  const id = initial.body.actions[0].id
-  const readiness = {
-    verdict: 'block',
-    next: 'research-again',
-    checks: ['own-usable-photos'],
-    ownerQuestions: []
+test(
+  'a hard readiness refusal cannot be retried or charged against the same frozen revision',
+  opts,
+  async () => {
+    const { account, ids } = await fixture(1)
+    const initial = await acceptDemoActions(db.pool, {
+      accountId: account,
+      entries: [entry(ids[0], 'blocked-brief')]
+    })
+    const id = initial.body.actions[0].id
+    // A picture with no known source or credit still stops a build (builds.js `buildGateOf`): its retry is refused.
+    const readiness = {
+      verdict: 'block',
+      next: 'research-again',
+      checks: ['own-usable-photos', 'source-and-credit'],
+      ownerQuestions: []
+    }
+    await db.pool.query(
+      "update wo_demo_action set status='failed', error='BRIEF_NOT_READY', selection=$2 where id=$1",
+      [id, { readiness }]
+    )
+    const before = await readDemoUsage(db.pool, account)
+    const retry = await acceptDemoActions(db.pool, {
+      accountId: account,
+      entries: [{ ...entry(ids[0], 'blocked-retry'), retryOf: id }]
+    })
+    assert.equal(retry.status, 409)
+    assert.equal(retry.body.code, 'BRIEF_NOT_READY')
+    assert.deepEqual(retry.body.readiness, readiness)
+    assert.deepEqual(await readDemoUsage(db.pool, account), before)
+    assert.equal((await db.pool.query('select id from wo_demo_action')).rowCount, 1)
+    assert.deepEqual((await demoActionOf(db.pool, account, id)).readiness, readiness)
   }
-  await db.pool.query(
-    "update wo_demo_action set status='failed', error='BRIEF_NOT_READY', selection=$2 where id=$1",
-    [id, { readiness }]
-  )
-  const before = await readDemoUsage(db.pool, account)
-  const retry = await acceptDemoActions(db.pool, {
-    accountId: account,
-    entries: [{ ...entry(ids[0], 'blocked-retry'), retryOf: id }]
-  })
-  assert.equal(retry.status, 409)
-  assert.equal(retry.body.code, 'BRIEF_NOT_READY')
-  assert.deepEqual(retry.body.readiness, readiness)
-  assert.deepEqual(await readDemoUsage(db.pool, account), before)
-  assert.equal((await db.pool.query('select id from wo_demo_action')).rowCount, 1)
-  assert.deepEqual((await demoActionOf(db.pool, account, id)).readiness, readiness)
-})
+)
+
+test(
+  'a press refused on trial checks only is retried: the brief now builds as a trial site (25/11/2026)',
+  opts,
+  async () => {
+    const { account, ids } = await fixture(1)
+    const initial = await acceptDemoActions(db.pool, {
+      accountId: account,
+      entries: [entry(ids[0], 'trial-brief')]
+    })
+    const id = initial.body.actions[0].id
+    // A tester's cafe: too few own photos, no wide opening photo, a template card kind with nothing for it.
+    const readiness = {
+      verdict: 'block',
+      next: 'ask-owner',
+      checks: ['own-usable-photos', 'hero-candidates', 'template-kinds', 'people-with-portrait'],
+      ownerQuestions: []
+    }
+    await db.pool.query(
+      "update wo_demo_action set status='failed', error='BRIEF_NOT_READY', selection=$2 where id=$1",
+      [id, { readiness }]
+    )
+    const retry = await acceptDemoActions(db.pool, {
+      accountId: account,
+      entries: [{ ...entry(ids[0], 'trial-retry'), retryOf: id }]
+    })
+    assert.equal(retry.status, 202, JSON.stringify(retry.body))
+    assert.equal(retry.body.actions[0].revisionId, initial.body.actions[0].revisionId)
+  }
+)
 
 // #564: a press refused before any billable work (no site, no chat, no build model run) gives its daily build back.
 const charged = async (account, kind = 'demo') =>

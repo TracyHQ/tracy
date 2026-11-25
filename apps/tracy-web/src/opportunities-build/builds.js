@@ -178,7 +178,7 @@ export async function startBuild({
       }
     }
   const readiness = readinessOfBuild(revision, domain)
-  if (readiness?.verdict === 'block') return readinessRefusal(readiness)
+  if (buildGateOf(readiness) === 'block') return readinessRefusal(readiness)
   const buildId = deterministicBuildId(accountId, revision.id, requestId)
   const existing = await pool.query('select * from wo_build where account_id = $1 and request_id = $2', [
     accountId,
@@ -302,8 +302,9 @@ export async function startBuild({
     ...(chain ? { workflow: STEP_CHAIN_WORKFLOW } : {}),
     ...(demoActionId ? { demoActionId } : {}),
     ...(pagePlan ? { pagePlan } : {}),
-    // A warned brief builds, and what it lacks goes with the build as questions for the owner (#50).
-    ...(readiness?.verdict === 'warn' ? { readiness: readinessNote(readiness) } : {})
+    // A warned brief builds, and what it lacks goes with the build as questions for the owner (#50); so does a brief
+    // blocked on trial checks only, marked `trial` (buildGateOf).
+    ...(readiness && readiness.verdict !== 'pass' ? { readiness: readinessNote(readiness) } : {})
   }
   const saved = await saveBuildReceipt(pool, row.id, {
     state: answer.ok ? 'provisioning' : 'refused',
@@ -311,6 +312,13 @@ export async function startBuild({
     siteKey: answer.ok && typeof answer.body?.siteKey === 'string' ? answer.body.siteKey : null,
     siteJobId: answer.ok && typeof answer.body?.jobId === 'string' ? answer.body.jobId : null
   })
+  // The demo action of a trial site says so too, for the seller's progress card (demo-actions.js `trial`).
+  if (answer.ok && demoActionId && buildGateOf(readiness) === 'trial')
+    await pool.query(
+      `update wo_demo_action set selection = coalesce(selection, '{}'::jsonb) || $2::jsonb
+          where id = $1 and not (coalesce(selection, '{}'::jsonb) ? 'trial')`,
+      [demoActionId, JSON.stringify({ trial: readinessNote(readiness) })]
+    )
   const build = await reconcileBuild(pool, saved)
   if (answer.ok) return { status: 202, body: { build } }
   return {
@@ -342,13 +350,57 @@ export function readinessOfBuild(revision, domain) {
     : stored
 }
 
-/** What a build keeps of a readiness: its verdict, next step, the checks that were not passed and the owner questions. */
+/**
+ * The brief checks a build goes past as a trial site (David, 25/11/2026: "a site may have one or two small gaps; let the
+ * user into the site and say it is a trial version"): fewer own photos than a full site wants, photos not labelled
+ * yet, no wide photo to open the site with, or a card kind of the template the brief holds nothing for. The site is
+ * built from what there is, and the owner is told what a full version still needs (`trial` on the build's readiness).
+ */
+export const TRIAL_CHECKS = Object.freeze(
+  new Set(['own-usable-photos', 'labelled-share', 'hero-candidates', 'template-kinds'])
+)
+/** The checks that only ever warn (brief-readiness.mjs): they never stop a build. */
+const WARN_ONLY_CHECKS = new Set([
+  'offerings-with-photo',
+  'offerings-with-description',
+  'people-with-portrait',
+  'items-routed'
+])
+
+/**
+ * Whether a brief builds: `build` (it passes or only warns), `trial` (it is blocked on trial checks only) or `block`.
+ * 🔒 TWO BLOCKS STILL STOP A BUILD. A picture with no known source or credit may not be shown, and a brief with nothing of
+ * the business would build the template with a name on it (#554). Any block a later check adds stops it too.
+ * @param {{ verdict: string, checks: { id: string, verdict: string }[] } | null} readiness
+ * @returns {'build' | 'trial' | 'block'}
+ */
+export function buildGateOf(readiness) {
+  if (readiness?.verdict !== 'block') return 'build'
+  const blocking = readiness.checks.filter((c) => c.verdict === 'block')
+  return blocking.length && blocking.every((c) => TRIAL_CHECKS.has(c.id)) ? 'trial' : 'block'
+}
+
+/**
+ * The same gate read from a stored readiness note (`readinessNote`), which names its blocked and warned checks together.
+ * A check that can stop a build and is not a trial one never warns, so its name in the note means it blocked.
+ */
+export function noteGateOf(note) {
+  if (note?.verdict !== 'block') return 'build'
+  const ids = Array.isArray(note.checks) ? note.checks : []
+  return ids.some((id) => !TRIAL_CHECKS.has(id) && !WARN_ONLY_CHECKS.has(id)) ? 'block' : 'trial'
+}
+
+/**
+ * What a build keeps of a readiness: its verdict, next step, the checks that were not passed and the owner questions;
+ * `trial` when the build goes past its block as a trial site (`buildGateOf`).
+ */
 export function readinessNote(readiness) {
   return {
     verdict: readiness.verdict,
     next: readiness.next,
     checks: readiness.checks.filter((c) => c.verdict === 'block' || c.verdict === 'warn').map((c) => c.id),
-    ownerQuestions: readiness.ownerQuestions ?? []
+    ownerQuestions: readiness.ownerQuestions ?? [],
+    ...(buildGateOf(readiness) === 'trial' ? { trial: true } : {})
   }
 }
 

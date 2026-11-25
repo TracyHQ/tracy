@@ -11,6 +11,7 @@ import { failedQaHash } from './demo-qa.js'
 import { BUILD_LIVE } from './build-store.js'
 import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
 import { failedChainRetryBrief } from '../lib/chain-retry-authority.js'
+import { noteGateOf } from './builds.js'
 
 const DAY_MS = 86_400_000
 
@@ -463,8 +464,9 @@ export async function acceptDemoActions(
         )
       }
       // A retry reuses the same immutable revision. Repeating a readiness refusal cannot repair it.
-      // Refuse before usage is incremented; a new build after research must freeze a new revision.
-      if (retry?.error === 'BRIEF_NOT_READY') {
+      // Refuse before usage is incremented; a new build after research must freeze a new revision. A refusal on trial
+      // checks only now builds as a trial site (builds.js `buildGateOf`), so its retry goes on.
+      if (retry?.error === 'BRIEF_NOT_READY' && noteGateOf(retry.selection?.readiness) === 'block') {
         await client.query('rollback')
         return refusal(
           409,
@@ -648,6 +650,8 @@ export function demoActionShape(a) {
     step: a.step,
     error: a.error ?? null,
     ...(a.error === 'BRIEF_NOT_READY' && a.selection?.readiness ? { readiness: a.selection.readiness } : {}),
+    // A build that went past its brief's block as a trial site: what a full version still needs (builds.js).
+    ...(a.selection?.trial ? { trial: { checks: a.selection.trial.checks ?? [] } } : {}),
     ...(agentDemo && !a.selection?.chatMode && a.chat_site_key ? { siteKey: a.chat_site_key } : {}),
     acceptedAt: a.accepted_at,
     updatedAt: a.updated_at

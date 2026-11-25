@@ -11,6 +11,8 @@ export interface DemoAction {
   chatMode?: string
   revisionId?: string
   readiness?: { verdict: string; next: string; checks: string[]; ownerQuestions: unknown[] }
+  /** Built past its brief's block as a trial site: the brief checks a full version still needs (builds.js `buildGateOf`). */
+  trial?: { checks: string[] }
   opportunityId?: string
   chat?: { siteKey: string; sessionId: string; href: string } | null
   id: string

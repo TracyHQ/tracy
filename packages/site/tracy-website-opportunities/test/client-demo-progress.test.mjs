@@ -218,3 +218,27 @@ test('an empty business reading names its own check, never only the generic refu
     assert.match(html, /\[brief\.check\.business-content\]/)
   }
 })
+
+test('a trial site says it is a trial version and what a full version needs, while it builds and once built', () => {
+  const trial = { checks: ['own-usable-photos', 'hero-candidates', 'unknown-check'] }
+  const plain = { id: 'o4', latestRevision: { id: 'r4', cms: 'joomla' } }
+  const building = { ...plain, demoAction: { id: 'a4', state: 'queued', step: 'build', error: null, trial } }
+  const built = { ...plain, demoAction: { id: 'a4', state: 'completed', step: 'check', error: null, trial } }
+  const chain = chainRow(chainRun(), { trial })
+  for (const row of [building, built, chain]) {
+    const html = draw(row)
+    assert.match(html, /data-trial-note/)
+    assert.match(html, /\[demo\.trial\]/)
+    assert.match(html, /\[brief\.check\.own-usable-photos\]/)
+    assert.match(html, /\[brief\.check\.hero-candidates\]/)
+    assert.doesNotMatch(html, /unknown-check/)
+  }
+  // A build that stopped is not a trial site: its card names why it stopped instead.
+  const stopped = chainRow(chainRun(), { state: 'failed', error: 'DEMO_STEP_FAILED', trial })
+  assert.doesNotMatch(draw(stopped), /data-trial-note/)
+  // A completed build that is no trial draws nothing here, as before.
+  assert.equal(
+    draw({ ...plain, demoAction: { id: 'a5', state: 'completed', step: 'check', error: null } }),
+    ''
+  )
+})

@@ -203,6 +203,8 @@ export const en: Record<string, string> = {
   'demo.reason.access': 'This account can no longer reach the demo site.',
   'demo.reason.otherWriter': 'Another task was already changing this demo site.',
   'demo.reason.unknown': 'The demo stopped on an unexpected error.',
+  'demo.reason.briefNotReady':
+    'The brief needs attention. Review its checks, complete the research or owner answers, then make a new brief before building again.',
   'demo.reason.needsReview': 'The site is built, but its last check found problems to review.',
 
   // Card
