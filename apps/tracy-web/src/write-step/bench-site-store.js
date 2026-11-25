@@ -51,10 +51,12 @@ export function pgBenchSiteStore(pool) {
     },
     attach: update,
     settle: update,
-    async others(id) {
+    // Every other site the bench made and has not removed; with `startedBy`, only those started under that label.
+    async others(id, { startedBy = null } = {}) {
       const { rows } = await pool.query(
-        `select * from write_bench_site where id <> $1 and status <> 'removed' order by created_at`,
-        [id]
+        `select * from write_bench_site where id <> $1 and status <> 'removed'
+            and ($2::text is null or started_by = $2) order by created_at`,
+        [id, startedBy]
       )
       return rows.map(recordOf)
     },

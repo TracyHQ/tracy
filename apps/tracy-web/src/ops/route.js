@@ -272,7 +272,16 @@ export function opsRoutes(deps) {
   // /ops › Agents › Voice: the voice switch, the speech key, limits and today's use (`speech.js`).
   app.route('/', speechOpsRoutes({ pool, config, ...(deps.now ? { now: deps.now } : {}) }))
   // /ops/wo: Website Opportunities Live Queue across all accounts + provider keys & settings (`wo.js`).
-  app.route('/', woOpsRoutes({ pool, config, fetchImpl, prefetch: deps.prefetch ?? null }))
+  app.route(
+    '/',
+    woOpsRoutes({
+      pool,
+      config,
+      fetchImpl,
+      prefetch: deps.prefetch ?? null,
+      chainReplays: deps.chainReplays ?? null
+    })
+  )
   // /ops/wo › Places: the shared place store across accounts (`wo-places.js`).
   app.route('/', woPlacesOpsRoutes({ pool, config, ...(deps.now ? { now: deps.now } : {}) }))
   // /ops/wo › Briefs: the photos, labels, links and readiness of a brief revision (`wo-brief-labels.js`).
