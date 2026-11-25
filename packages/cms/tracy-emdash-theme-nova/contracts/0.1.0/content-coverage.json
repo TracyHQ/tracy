@@ -7,10 +7,10 @@
   "platform": "emdash",
   "contract": {
     "id": "tracy-nova/emdash-0.x/0.1.0",
-    "contentMapSha256": "5d9e6cbaa94c798177ff7f1889ef460b169d777fd99b6a63635e8936420048dd",
+    "contentMapSha256": "e982bf2de08e032e7a5fca20fbf9d8153a1cbf55e328bbffba87fd7a9c92b9c7",
     "presentationLockSha256": null
   },
-  "measuredAt": "2026-11-25T05:02:43.148Z",
+  "measuredAt": "2026-11-25T05:26:18.909Z",
   "viewports": [
     "desktop",
     "phone"
@@ -2558,7 +2558,7 @@
     {
       "entity": "pages.illustration",
       "title": "Illustration",
-      "route": "/project/illustration",
+      "route": "/illustration",
       "opens": "live",
       "status": 200
     },
@@ -2977,12 +2977,12 @@
           "posts.realistic-scenarios.project_client_name + posts.realistic-scenarios.project_budget",
           "posts.design-system-ul-kit.project_client_name + posts.design-system-ul-kit.project_budget",
           "posts.mobile-app-design.project_client_name + posts.mobile-app-design.project_budget",
-          "posts.email-newsletter-design.project_client_name + posts.email-newsletter-design.project_budget",
-          "posts.poster-banner-design.project_client_name + posts.poster-banner-design.project_budget",
+          "posts.blog-design-layout.project_client_name + posts.blog-design-layout.project_budget",
+          "posts.social-media-graphics.project_client_name + posts.social-media-graphics.project_budget",
           "posts.presentation-design.project_client_name + posts.presentation-design.project_budget",
+          "posts.brand-identity-design.project_client_name + posts.brand-identity-design.project_budget",
           "posts.packaging-design.project_client_name + posts.packaging-design.project_budget",
-          "posts.event-invitation-design.project_client_name + posts.event-invitation-design.project_budget",
-          "posts.blog-design-layout.project_client_name + posts.blog-design-layout.project_budget"
+          "posts.muckup-design.project_client_name + posts.muckup-design.project_budget"
         ]
       },
       "R9": {

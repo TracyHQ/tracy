@@ -828,8 +828,8 @@
     },
     {
       "entity": "pages.illustration",
-      "route": "/project/illustration",
-      "openAs": "/project/illustration",
+      "route": "/illustration",
+      "openAs": "/illustration",
       "title": "Illustration",
       "view": "service"
     },

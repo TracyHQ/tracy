@@ -19,7 +19,9 @@ const arg = (name, fallback) => {
 }
 const kitPath = arg('kit', null)
 if (!kitPath) {
-  console.error('usage: kit-sections-check.mjs --kit <template-kit.json> [--map <content-map.json>] [--sections <emdash-sections.json>]')
+  console.error(
+    'usage: kit-sections-check.mjs --kit <template-kit.json> [--map <content-map.json>] [--sections <emdash-sections.json>]'
+  )
   process.exit(2)
 }
 const mapPath = arg('map', resolve(pkg, 'contracts/0.1.0/content-map.json'))
@@ -36,7 +38,9 @@ if (missing === null) {
   count++
 } else {
   for (const m of missing) {
-    console.log(`section ${m.section} (${m.slots} visual slots) is printed on ${m.pages.join(', ')} and is no kit block`)
+    console.log(
+      `section ${m.section} (${m.slots} visual slots) is printed on ${m.pages.join(', ')} and is no kit block`
+    )
     count++
   }
 }

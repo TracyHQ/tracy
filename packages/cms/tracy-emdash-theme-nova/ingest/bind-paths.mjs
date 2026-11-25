@@ -21,9 +21,10 @@ addPath('pages')
 addPath('posts')
 
 const slugOf = (p) => (p === '/' ? 'home' : p.split('/').filter(Boolean).pop())
-const pagePath = new Map(
-  model.routes.filter((r) => r.kind === 'page' || r.kind === 'list').map((r) => [slugOf(r.path), r.path])
-)
+// A page entry and a category list can share a last segment (/illustration is the service page, /project/illustration
+// the project category): the entry's own page route wins, a list route only names a page that has no page route.
+const pagePath = new Map(model.routes.filter((r) => r.kind === 'list').map((r) => [slugOf(r.path), r.path]))
+for (const r of model.routes.filter((x) => x.kind === 'page')) pagePath.set(slugOf(r.path), r.path)
 const postPath = new Map(model.routes.filter((r) => r.kind === 'detail').map((r) => [r.slug, r.path]))
 
 let pages = 0
