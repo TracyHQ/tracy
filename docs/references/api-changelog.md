@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-25: The Apply door writes an EmDash site's content contract, menus and brand settings
+
+Changed (public, additive): on an EmDash site, `content.contract` answers `inspect`, `apply` and `pages.unpublish` itself. Before, any of them was refused `COMPONENT_NOT_REGISTERED`. The contract is the release's content map, plus one label slot per menu item (`menu.<name>.<position>.label`; an emptied one takes the item off the menu). `apply` is all or nothing, refuses by slot, and refuses `revision_mismatch` when a mapped entry or menu moved since `inspect`. `pages.unpublish` makes pages drafts. Any other operation is refused `operation_not_on_emdash`. `info` answers `{ok: true, info: {platform: "emdash", hide_ops, page_create, slot_corrections}}` there. Added (public): `emdash.settings` (read or set the `logo` and `favicon` settings) and `emdash.entryField` (read or set one picture field of one entry); both are EmDash only, need the `site` toolset, and write only on `set`.
+
 ## 2026-11-15: A demo's share link can preview the demo in other design systems
 
 Changed (public, behind an operator switch that is off by default): while `wo-demo-looks` is on, `GET /d/{token}` and `GET /d/{token}/{path}` answer a person's own top-level visit (not a program, a prefetch or a frame) of a demo whose release can wear a design system with a 200 page instead of the 302: the same demo page in a frame, counted as an open exactly as before, with a See another look control. Every other visit is the 302, unchanged. Added (internal): `GET /api/demo-links/{token}/systems` (up to four looks, each a Design system preview ticket for the demo's own address; nothing is written to the demo) and `POST /api/demo-links/{token}/systems/pick` (`{id}`: `current` or an offered look; a person's pick is counted like an open, never a program, the seller's own session or past 30 an hour). Changed (internal): `GET /api/website-opportunities/:id` and each list row add `demo.systemPicks`; each `GET /api/ops/wo` opportunity adds `demoSystemPicks`.

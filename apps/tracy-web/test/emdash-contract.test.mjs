@@ -12,6 +12,12 @@ import {
   plainOf,
   rememberEmdashPicture
 } from '../src/sites/emdash-contract.js'
+import {
+  HIDE_ORDERS_DOOR,
+  opens,
+  PAGE_CREATE_DOOR,
+  ROWS_REMOVE_DOOR
+} from '../src/write-step/plugin-doors.js'
 import { DINER_CONTRACT, DINER_SITE, dinerContentMap, emdashMcpSite } from './_emdash-mcp-site.mjs'
 
 const SITE_KEY = 'emd-contract.sites.example'
@@ -284,9 +290,10 @@ test('an operation EmDash has no door for is refused by name; a host that does n
   })
   assert.equal(down.body.code, 'EMDASH_NO_TOKEN')
   assert.equal(down.outcome, 'refused')
-  assert.equal(EMDASH_INFO.hide_ops.version, 1)
-  assert.equal(EMDASH_INFO.hide_ops.rows_remove, 0)
-  assert.equal(EMDASH_INFO.page_create.version, 0)
+  // `info` as the write step's stages read it (plugin-doors.js): hide orders open, no rows.remove, no page creation.
+  assert.equal(opens(HIDE_ORDERS_DOOR, EMDASH_INFO), true)
+  assert.equal(opens(ROWS_REMOVE_DOOR, EMDASH_INFO), false)
+  assert.equal(opens(PAGE_CREATE_DOOR, EMDASH_INFO), false)
 })
 
 test("the contract's markup becomes Markdown for rich text and words alone for a plain field", () => {
