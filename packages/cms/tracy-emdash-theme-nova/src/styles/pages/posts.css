@@ -82,7 +82,7 @@ html[data-theme="dark"] .nv-counter { background: var(--ds-c-surface-warm, #1a1e
 .nv-latest-title a { color: var(--color-heading); }
 .nv-latest-title a:hover { color: var(--color-accent-text-hover); }
 .nv-latest-intro { margin: 0; }
-.nv-latest-first .nv-date { color: var(--pg-date); }
+.nv-latest-first .nv-date { color: var(--ds-c-on-ink, var(--pg-date)); } /* over the photograph's dark scrim a system's accent text is not guaranteed to read; its on-ink role is */
 .nv-latest-first .nv-latest-title a { color: #fff; } /* ds-keep: white words over a photograph scrim */
 .nv-latest-first .nv-latest-title a:hover { color: var(--color-accent-text-hover); }
 .nv-latest-first .nv-latest-intro { color: rgba(255, 255, 255, .75); } /* ds-keep: words over a photograph scrim */
@@ -96,6 +96,7 @@ html[data-theme="dark"] .nv-counter { background: var(--ds-c-surface-warm, #1a1e
 @media (min-width: 992px) { .nv-modband-grid { grid-template-columns: 1fr 2fr; gap: 0; margin: 0 -2rem; } .nv-modband-grid > * { padding: 0 2rem; } .nv-modband-grid > * + * { border-left: 1px solid var(--pg-line); } }
 .nv-search-box { position: relative; }
 .nv-search-box input { width: 100%; padding: 18px 56px 18px 32px; font: inherit; line-height: 1.63; color: var(--color-fg); background: var(--pg-card); border: 0; border-radius: 1rem; }
+html[data-ds-worn] .nv-search-box input { border: 1px solid var(--ds-c-border, transparent); }
 .nv-search-box input:focus { outline: 1px solid var(--color-accent); outline-offset: 0; }
 .nv-search-box button { position: absolute; top: 50%; right: 8px; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; background: transparent; border: 0; color: var(--color-heading); cursor: pointer; }
 .nv-listsocial { list-style: none; margin: 2rem 0 0; padding: 0; display: flex; gap: 16px; }

@@ -56,7 +56,7 @@
 .nv-clients-logo > img:hover { opacity: 1; }
 
 /* dark: the source softens the grid dividers to a low-opacity white hairline (css/darkmode.css, client-logo grid) */
-html[data-theme="dark"] .nv-clients-item { border-left-color: var(--vds-fg-8, var(--ds-c-fg, rgba(255, 255, 255, 0.08))); }
+html[data-theme="dark"] .nv-clients-item { border-left-color: var(--ds-c-border, rgba(255, 255, 255, 0.08)); }
 
 /* ---------- teams ---------- */
 .nv-teams { overflow: hidden; }

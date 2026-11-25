@@ -29,6 +29,8 @@
 .nv-blk-btn.is-light { background: var(--ds-c-surface-warm, #fafafa); border-color: var(--ds-c-border-soft, #fafafa); color: var(--ds-c-fg, #000); }
 .nv-blk-btn.is-light:hover, .nv-blk-btn.is-light:focus-visible { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-on); }
 .nv-blk-btn.is-secondary { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-ink); }
+/* a status colour is tuned to read as words, so under a system the accent can sink into a band painted with it: the primary button there takes the ink pair */
+html[data-ds-worn] .nv-bg-yellow .nv-blk-btn.is-primary { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-on-ink); }
 html[data-theme="dark"] .nv-blk-btn.is-light { background: var(--ds-c-surface-warm, #262c36); border-color: var(--ds-c-border, #2e353f); color: var(--color-heading); }
 html[data-theme="dark"] .nv-blk-btn.is-light:hover, html[data-theme="dark"] .nv-blk-btn.is-light:focus-visible { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-accent-on); }
 
@@ -62,7 +64,7 @@ html[data-theme="dark"] .nv-pricing { --nv-soft: var(--color-band); --nv-soft-2:
 .nv-pricing-tabs { display: flex; flex-wrap: wrap; flex-direction: row; color: var(--color-heading); }
 @media (min-width: 1200px) { .nv-pricing-tabs { flex-direction: column; flex-wrap: nowrap; } }
 .nv-pricing-tab {
-	display: block; margin: 0 16px 7px 0; padding: 16px; border: 1px solid var(--color-line); border-radius: var(--ds-card-radius, 16px);
+	display: block; margin: 0 16px 7px 0; padding: 16px; border: 1px solid var(--color-line); border-radius: var(--ds-btn-radius, var(--ds-card-radius, 16px));
 	background: var(--color-surface); color: var(--color-heading); font-family: var(--font-display); font-size: 18px; font-weight: 600; line-height: 1;
 	text-align: left; cursor: pointer; transition: color .15s, border-color .15s, background-color .15s;
 }
@@ -73,6 +75,8 @@ html[data-theme="dark"] .nv-pricing { --nv-soft: var(--color-band); --nv-soft-2:
 }
 .nv-pricing-tab:hover { color: var(--color-accent-text); }
 .nv-pricing-tab.is-active { border-color: var(--color-accent); background: var(--color-accent-light); color: var(--color-accent-text); }
+/* accent words are made to read on the page, so under a system the tint behind them is lighter (a 10% tint cost them up to 0.4:1) */
+html[data-ds-worn] .nv-pricing-tab.is-active { background: color-mix(in srgb, var(--color-accent) 4%, var(--color-bg)); }
 html[data-theme="dark"] .nv-pricing-tab { color: var(--color-fg); }
 html[data-theme="dark"] .nv-pricing-tab:not(.is-active) { border-color: var(--color-line-strong); }
 html[data-theme="dark"] .nv-pricing-tab:hover { color: var(--color-accent-text); }
@@ -117,7 +121,7 @@ html[data-theme="dark"] .nv-accordion { --nv-soft: var(--color-surface); }
 	display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0; border: 0; background: transparent;
 	color: var(--color-heading); font: inherit; text-align: left; cursor: pointer;
 }
-.nv-acc-btn:hover, .nv-acc-btn:focus-visible { color: var(--color-accent); }
+.nv-acc-btn:hover, .nv-acc-btn:focus-visible { color: var(--ds-c-accent-text, var(--color-accent)); }
 .nv-acc-q { padding-right: 16px; font-family: var(--font-display); font-size: 16px; font-weight: var(--ds-weight-heading, 700); line-height: 1.2; }
 @media (min-width: 576px) { .nv-acc-q { font-size: 18px; } }
 .nv-acc-marker { position: relative; flex: none; width: 11px; height: 12px; }
@@ -130,6 +134,9 @@ html[data-theme="dark"] .nv-accordion { --nv-soft: var(--color-surface); }
 @media (prefers-reduced-motion: reduce) { .nv-acc-panel { transition: none; } }
 .nv-acc-body { padding-top: 16px; color: var(--color-ink); }
 html[data-theme="dark"] .nv-acc-body { color: var(--color-fg); }
+/* under a system the opened question keeps a gap to its answer on the button's own side, so a wider system font never sets the two touching */
+html[data-ds-worn] .nv-acc-btn.is-open { margin-bottom: 16px; }
+html[data-ds-worn] .nv-acc-body { padding-top: 0; }
 .nv-acc-body > :last-child { margin-bottom: 0; }
 
 /* ---------- social ---------- */

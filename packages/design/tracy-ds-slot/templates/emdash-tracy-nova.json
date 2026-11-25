@@ -7,7 +7,7 @@
   "maxVersion": {
     "tracy-nova/emdash-0.x": "0.1.0"
   },
-  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-btn-radius, --ds-card-radius, --ds-input-radius, --ds-media-radius) and every colour role systems define in src/styles/tokens.css and global.css, with the template value as the fallback; src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base.",
+  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-btn-radius, --ds-card-radius, --ds-input-radius, --ds-media-radius) and every colour role systems define in src/styles/tokens.css and global.css, with the template value as the fallback; src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base.; 25/11/2026: words on a status fill, the active pricing tab and service category, accent words on hover, and coloured icons under a system were fixed by property (page ground colour on status fills, a lighter tint, accent-text, grey pictures)",
   "release": "tracy-nova/emdash-0.x@0.1.0",
   "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
   "readsComponents": true,
@@ -40,8 +40,8 @@
     "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
     "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
   },
-  "ready": false,
-  "readyNote": "measured 25/11/2026 with flow.mjs --cms emdash on a clean install of the 0.1.0 source (15 featured systems, 1440 and 390): 45 of 64 pass, so not ready. Roles, fonts, identity, mode and undo pass on every view; contrast (CON-1) still fails where a system's own pair reads worse than the template: the yellow Team band words (a mid-tone warning colour), the active pricing tab (a system's accent text on a 10% tint of its accent, 4.2 to 4.5), and the news band title on a system's success green in Pitch's dark side (2.73). The preview rows were not measured (no demo address yet). Measurement: contracts/0.1.0/design-system-measurement.json",
+  "ready": true,
+  "readyNote": "measured 25/11/2026 with flow.mjs --cms emdash on a clean install of the 0.1.0 source (15 featured systems, 1440 and 390, native and derived sides): 64 of 64 pass (ROLE-1, SCREEN-1, CON-1, UNDO-1, FONT-1, IDENT-1, MODE-1, MODE-2). Preview rows measured with preview-check.mjs against the local clean site as the demo (Moxie and Figma, light and dark, the 25 pages of qa.contract.json): 37 of 38 rules pass, no finding; PREVIEW-PARITY stays unmeasurable (the parity probe runs on a Joomla stand only, as for JA Essence). Measurement: contracts/0.1.0/design-system-measurement.json",
   "measureStill": true,
   "discovered": {},
   "measureNote": "Carousels (the home hero and the text slider) are stopped on their first slide before each measure",

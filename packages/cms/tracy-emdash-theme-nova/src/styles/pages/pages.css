@@ -55,7 +55,9 @@ html[data-theme="dark"] .nv-pg, html[data-theme="dark"] .nv-err {
 @media (max-width: 1199px) { .nv-sec-h { font-size: 32px; } }
 @media (max-width: 767px) { .nv-sec-h { font-size: 28px; } }
 @media (max-width: 575px) { .nv-sec-h { font-size: 24px; } }
-.nv-green .nv-sec-h { color: var(--ds-c-on-ink, #fff); }
+.nv-green .nv-sec-h { color: var(--ds-c-bg, #fff); }
+/* a status colour is tuned to read as words on the page, so words ON a status fill are the page's own ground colour (a worn dark side makes the success green light) */
+.nv-green .nv-sec-title { color: var(--ds-c-bg, rgba(255, 255, 255, .75)); }
 .nv-bottom-actions { text-align: center; margin-top: 4rem; }
 @media (max-width: 1199.98px) { .nv-bottom-actions { margin-top: 2rem; } }
 @media (max-width: 991.98px) { .nv-bottom-actions { margin-top: 1rem; } }
@@ -75,8 +77,9 @@ html[data-theme="dark"] .nv-pg, html[data-theme="dark"] .nv-err {
 @media (max-width: 576px) { .nv-menu-box a, .nv-menu-box span { padding: 1rem; } }
 @media (max-width: 575.98px) { .nv-menu-box a, .nv-menu-box span { font-size: 18px; } }
 .nv-menu-box li + li { margin-top: 1rem; }
-.nv-menu-box a:hover { color: var(--color-accent); }
-.nv-menu-box li.is-on a { padding: calc(2rem - 1px) calc(2rem - 1px); font-weight: 700; color: var(--color-accent); background: var(--color-accent-light); border: 1px solid var(--color-accent); }
+.nv-menu-box a:hover { color: var(--ds-c-accent-text, var(--color-accent)); }
+.nv-menu-box li.is-on a { padding: calc(2rem - 1px) calc(2rem - 1px); font-weight: 700; color: var(--ds-c-accent-text, var(--color-accent)); background: var(--color-accent-light); border: 1px solid var(--color-accent); }
+html[data-ds-worn] .nv-menu-box li.is-on a { background: color-mix(in srgb, var(--color-accent) 4%, var(--color-bg)); }
 @media (max-width: 576px) { .nv-menu-box li.is-on a { padding: calc(1rem - 1px); } }
 html[data-theme="dark"] .nv-menu-box a { background: var(--ds-c-surface, #1e232b); color: var(--ds-c-fg, #c2c9d2); }
 html[data-theme="dark"] .nv-menu-box a:hover, html[data-theme="dark"] .nv-menu-box li.is-on a { background: var(--ds-c-surface-warm, #262c36); border-color: var(--color-accent); color: var(--color-accent-text); }
@@ -110,8 +113,8 @@ html[data-theme="dark"] .nv-contact-icon::before { filter: invert(1) hue-rotate(
 .nv-contact-label { display: block; margin: 0; padding-bottom: 1rem; font-family: var(--font-display); font-weight: 600; line-height: 1.21; font-size: 1.75rem; color: var(--color-accent-text); }
 @media (max-width: 1199.98px) { .nv-contact-label { font-size: 1.5rem; } }
 @media (max-width: 991.98px) { .nv-contact-label { font-size: 1.25rem; } }
-.nv-contact-card.is-phone .nv-contact-label { color: var(--ds-c-success, #04ad68); }
-.nv-contact-card.is-email .nv-contact-label { color: var(--ds-c-accent, #5e48db); }
+.nv-contact-card.is-phone .nv-contact-label { color: var(--ds-c-success-text, var(--ds-c-success, #04ad68)); }
+.nv-contact-card.is-email .nv-contact-label { color: var(--ds-c-accent-text, #5e48db); }
 .nv-contact-card.is-address .nv-contact-label { color: var(--color-heading); }
 html[data-theme="dark"] .nv-contact-card .nv-contact-label { color: var(--ds-c-accent-text, #9d8cff); }
 .nv-contact-text { display: block; font-size: 1.125rem; font-weight: 500; color: var(--color-heading); }
