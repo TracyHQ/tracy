@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-753-replay-inputs",
+  "kind": "fix",
+  "title": "A chain build replay uses a picture run that ends 3 and sets aside a brand file or mapping whose pictures are gone, saying so",
+  "pr": 753,
+  "area": "website-opportunities/step-chain",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A picture run whose get ends 3 on mapping problems is still written; a brand file or picture mapping whose pictures are missing (a run older than the last deploy) is replaced by the chain's stand-in, never written half, and the replay names it in inputs.gone and a line."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-replay.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a run older than the last deploy has its documents but not its pictures: they are set aside and the replay says so",
+      "a picture run whose get ends 3 on mapping problems is still used, as the chain uses it",
+      "a replay writes the build's own inputs to its own trial site, then checks it, and answers as the chain does"
+    ]
+  }
+}
