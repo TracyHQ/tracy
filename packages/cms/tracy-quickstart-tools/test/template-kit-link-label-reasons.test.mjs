@@ -326,17 +326,16 @@ test('a category or tag archive link, and an in-page control with no address, ar
   )
 })
 
-test('a result page link of an EmDash (`?page=`) or WordPress (`?paged=`, `/page/N/`) listing is pagination, not a label error', () => {
+test('a result page link of an EmDash (`?page=`) or WordPress (`?paged=`) listing is pagination, not a label error', () => {
   const cases = [
     ['/donations', '/donations?page=2'],
-    ['/news', '/news?paged=2'],
-    ['/blog', '/blog/page/2/']
+    ['/news', '/news?paged=2']
   ]
   for (const [path, target] of cases) {
     const kit = {
       pages: [
         { id: 'page-list', path, blocks: ['body-list'] },
-        { id: 'page-list-2', path: target, blocks: ['body-list-2'], paginationOf: 'page-list' }
+        { id: 'page-list-2', path: target, blocks: ['body-list-2'] }
       ],
       blocks: [
         { id: 'body-list', links: [{ id: 'body-list.link-1', label: '2', target }] },
@@ -394,7 +393,7 @@ test('a step link names the title slot of the page it opens when the page is rea
   assert.equal(r.wrong, 0)
 })
 
-test('only a whole result page number is pagination: `/info?page=about`, `?start=abc` and a real `/page/2/` page are not', () => {
+test('only a whole result page number is pagination: `/info?page=about`, `?start=abc` and any `/page/N/` path are not', () => {
   const kitOf = (path, target, pages = []) => ({
     pages: [{ id: 'page-list', path, blocks: ['body-list'] }, ...pages],
     blocks: [{ id: 'body-list', links: [{ id: 'l1', label: '2', target }] }],
@@ -414,11 +413,18 @@ test('only a whole result page number is pagination: `/info?page=about`, `?start
     rule(kitOf('/news', '/news?paged=0', [{ id: 'p2', path: '/news?paged=0', blocks: [] }])),
     undefined
   )
-  // A real page named `page`, never read as a further result page of the listing, is no pagination.
-  assert.equal(rule(kitOf('/', '/page/2/', [{ id: 'p2', path: '/page/2/', blocks: ['x'] }])), undefined)
-  // Nor is a path-form address of a listing the block is not shown at.
-  assert.equal(rule(kitOf('/news', '/blog/page/2/')), undefined)
+  // A `/page/N/` path is never read as pagination: it may be a real page (the block is shown only on `/page/2/`).
+  const real = [
+    { id: 'home', path: '/', blocks: ['x'] },
+    { id: 'p2', path: '/page/2/', blocks: ['body-list'] }
+  ]
+  const onlyOn2 = {
+    pages: real,
+    blocks: [{ id: 'body-list', links: [{ id: 'l1', label: '3', target: '/page/3/' }] }]
+  }
+  fixedLinkLabels(onlyOn2)
+  assert.equal(onlyOn2.blocks[0].links[0].fixedLabel?.rule, undefined)
+  assert.equal(rule(kitOf('/blog', '/blog/page/2/')), undefined)
   // The real ones still are.
   assert.equal(rule(kitOf('/news', '/news?start=0')), 'pagination')
-  assert.equal(rule(kitOf('/blog', '/blog/page/2/')), 'pagination')
 })

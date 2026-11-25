@@ -69,64 +69,39 @@ function fixedWords(label, fixed) {
 const iconName = (l) =>
   !!l.icon && [l.icon.title, l.icon.network].some((x) => x && normText(x) === normText(l.label))
 
-const trimmed = (pathname) => pathname.replace(/(.)\/$/, '$1')
-const PAGE_PATH = /\/page\/(\d+)\/?$/
-
 /**
  * The address without its result page parameter, and whether it had one: Joomla's `start` (a whole number, 0 up), an
- * EmDash theme's `page` or WordPress's `paged` (a positive whole number), or WordPress's `/page/N/` path segment (N a
- * positive whole number, and `pathForm` says the path before it is a listing: a path alone cannot tell it from a
- * page named `page`).
+ * EmDash theme's `page` or WordPress's `paged` (a whole number, 1 up). A `/page/N/` path is not read as one: nothing
+ * tells it from a real page at that path.
  */
-function resultPage(path, pathForm = () => false) {
+function resultPage(path) {
   try {
     const u = new URL(String(path), 'http://kit.invalid')
-    const number = { start: /^\d+$/, page: /^[1-9]\d*$/, paged: /^[1-9]\d*$/ }
+    const numbers = { start: /^\d+$/, page: /^[1-9]\d*$/, paged: /^[1-9]\d*$/ }
     let start = false
-    for (const [k, re] of Object.entries(number))
-      if (re.test(u.searchParams.get(k) ?? '')) {
+    for (const [k, whole] of Object.entries(numbers))
+      if (whole.test(u.searchParams.get(k) ?? '')) {
         start = true
         u.searchParams.delete(k)
       }
-    let pathname = trimmed(u.pathname)
-    const m = PAGE_PATH.exec(u.pathname)
-    if (m && Number(m[1]) > 0) {
-      const base = trimmed(u.pathname.replace(PAGE_PATH, '/'))
-      if (pathForm(base, u.pathname)) {
-        start = true
-        pathname = base
-      }
-    }
-    return { base: `${pathname}?${u.searchParams}`, start }
+    return { base: `${u.pathname}?${u.searchParams}`, start }
   } catch {
     return null
   }
 }
 
 /**
- * The link opens the listing its block is shown on at another result page (`?start=`, `?page=`, `?paged=`, `/page/N/`),
- * or a result page of a list the kit paged through under another address (a menu page showing an author's list, whose
+ * The link opens the listing its block is shown on at another result page (`?start=`, `?page=`, `?paged=`), or a
+ * result page of a list the kit paged through under another address (a menu page showing an author's list, whose
  * router writes the author's own address in the pager).
  */
-function paginationLink(l, pagePaths, pagedBases, known) {
+function paginationLink(l, pagePaths, pagedBases) {
   if (!l.target) return false
-  // `/page/N/` is a result page when the block is shown at the path before it, and the address is no page of the
-  // kit of its own, unless the kit read it as a further result page of a listing (`paginationOf`).
-  const listings = new Set(
-    pagePaths.flatMap((p) => {
-      const path = new URL(String(p), 'http://kit.invalid').pathname
-      return [trimmed(path), trimmed(path.replace(PAGE_PATH, '/'))]
-    })
-  )
-  const pathForm = (base, full) => {
-    const page = known.get(trimmed(full))
-    return listings.has(base) && (!page || !!page.paginationOf)
-  }
-  const to = resultPage(l.target, pathForm)
+  const to = resultPage(l.target)
   if (!to) return false
   if (to.start && pagedBases.has(to.base)) return true
   return pagePaths.some((p) => {
-    const at = resultPage(p, pathForm)
+    const at = resultPage(p)
     return at && at.base === to.base && (at.start || to.start) && String(p) !== String(l.target)
   })
 }
@@ -185,10 +160,9 @@ export function fixedLinkLabels(kit) {
     const ids = Array.isArray(p.blocks) ? p.blocks : Object.values(p.blocks ?? {}).flat()
     for (const id of new Set(ids)) pathsOf.get(id)?.push(p.path)
   }
-  const known = new Map((kit.pages ?? []).map((p) => [trimmed(String(p.path).split(/[?#]/)[0]), p]))
   const pagedBases = new Set(
     (kit.pages ?? [])
-      .map((p) => resultPage(p.path, (base) => known.has(base) && known.get(base) !== p))
+      .map((p) => resultPage(p.path))
       .filter((r) => r?.start)
       .map((r) => r.base)
   )
@@ -198,7 +172,7 @@ export function fixedLinkLabels(kit) {
     for (const l of b.links ?? []) {
       delete l.fixedLabel
       if (l.labelId || !hasWords(normText(l.label ?? ''))) continue
-      const rule = paginationLink(l, pathsOf.get(b.id) ?? [], pagedBases, known)
+      const rule = paginationLink(l, pathsOf.get(b.id) ?? [], pagedBases)
         ? 'pagination'
         : controlValue(l)
           ? 'control-value'

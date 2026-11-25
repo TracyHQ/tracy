@@ -1,7 +1,7 @@
 /**
- * REG-PR-9999-template-kit-page-pagination: the template kit tool (3.1.5) treats `?page=`, `?paged=` and `/page/N/`
+ * REG-PR-9999-template-kit-page-pagination: the template kit tool (3.1.5) treats `?page=` and `?paged=`
  * result pages as pagination links, and a rebuild keeps each page's `fullShotOf`.
- * S1: a link "2" to a `?page=2` / `?paged=2` / `/page/2/` page of the listing gets the `pagination` reason.
+ * S1: a link "2" to a `?page=2` / `?paged=2` page of the listing gets the `pagination` reason.
  * S2: a rebuilt kit takes `fullShotOf` from the previous one.
  */
 import {
@@ -16,13 +16,12 @@ const c = checks()
 
 for (const [path, target] of [
   ['/donations', '/donations?page=2'],
-  ['/news', '/news?paged=2'],
-  ['/blog', '/blog/page/2/']
+  ['/news', '/news?paged=2']
 ]) {
   const kit = {
     pages: [
       { id: 'page-list', path, blocks: ['body-list'] },
-      { id: 'page-list-2', path: target, blocks: ['body-list-2'], paginationOf: 'page-list' }
+      { id: 'page-list-2', path: target, blocks: ['body-list-2'] }
     ],
     blocks: [
       { id: 'body-list', links: [{ id: 'l1', label: '2', target }] },
@@ -43,11 +42,11 @@ keepFullShots(rebuilt, {
   ]
 })
 c.eq('S2: page-b keeps fullShotOf', rebuilt.pages[1].fullShotOf, 'page-a')
-// S4: a value that is no page number, and a real page named `page`, are no pagination.
+// S4: a value that is no page number, and a `/page/N/` path, are no pagination.
 for (const [path, target, extra] of [
   ['/info', '/info?page=about', { id: 'p', path: '/info?page=about', blocks: [] }],
   ['/news', '/news?start=abc', { id: 'p', path: '/news?start=abc', blocks: [] }],
-  ['/', '/page/2/', { id: 'p', path: '/page/2/', blocks: ['x'] }]
+  ['/page/2/', '/page/3/', { id: 'p', path: '/', blocks: ['x'] }]
 ]) {
   const kit = {
     pages: [{ id: 'page-list', path, blocks: ['body-list'] }, extra],
