@@ -7,7 +7,7 @@ Built with **EmDash 1.1.0** on **Astro 7.4.12** (SSR, Node adapter) and **Tailwi
 
 ## Requirements
 
-Node >= 22.23.4, pnpm via corepack (`pnpm@11.9.0`). Everything else is pinned in `package.json` + `pnpm-lock.yaml`. Optional for local mail testing: Docker (Mailpit).
+Node >= 22.23.4, pnpm via corepack (`pnpm@11.9.0`). Everything else is pinned in `package.json` + `pnpm-lock.yaml`. `tools/clean-install.sh` also needs `rsync` and `lsof` on the PATH and network access (it fetches fonts and packages). Signing in to the admin of a BUILT site (and so the admin round trip) needs a mail catcher on `127.0.0.1:1025` (SMTP) and `8025` (API): `docker run -d --name mailpit -p 127.0.0.1:1025:1025 -p 127.0.0.1:8025:8025 axllent/mailpit`; without Docker any SMTP sink with Mailpit's search API will do. A development site (`astro dev`) needs none of this.
 
 ## Install and run (development)
 
@@ -24,6 +24,7 @@ tools/bootstrap-site.sh http://127.0.0.1:4360 ./data   # first-run setup: admin 
 ```bash
 pnpm install --frozen-lockfile
 pnpm build
+mkdir -p data uploads
 EMDASH_SITE_URL=http://127.0.0.1:4361 HOST=127.0.0.1 PORT=4361 node dist/server/entry.mjs &
 tools/bootstrap-site.sh http://127.0.0.1:4361 ./data
 ```
@@ -36,7 +37,7 @@ tools/bootstrap-site.sh http://127.0.0.1:4361 ./data
 
 **Where a text lives.** Header, footer, labels and search words: Admin > the `chrome` entry. Page copy, posts and sections: `pages`, `posts`, `hero`, `features_intro`, `text_slider`, `cta`, `clients`, `teams`, `pricing`, `accordion`, `social`, `contact`. Words the template prints itself: `src/lib/ui-words.ts`. Identity, mail, forms and audit policy: `template.config.json`.
 
-**Environment** (`.env.example`): `EMDASH_ENCRYPTION_KEY`, `EMDASH_SITE_URL`, `SITE_DATA_DIR`, `HOST`, `PORT`, `TRACY_OWNER_EMAIL`, `TRACY_OWNER_NAME`. The server does not read `.env` itself: export the variables. The code also reads `TRACY_CONTENT_API_SCALARS` (the Dockerfile sets it to 1) and `TRACY_FRAME_ANCESTORS` (demo sites only). `SITE_DATA_DIR` also holds the optional `ds-slot.css` (see `docs/design-system.md`).
+**Environment** (`.env.example`): `EMDASH_ENCRYPTION_KEY` (the local scripts do not create it: generate one, for example `openssl rand -hex 32`, before a site stores plugin secrets, and keep it with the backups), `EMDASH_SITE_URL`, `SITE_DATA_DIR`, `HOST`, `PORT`, `TRACY_OWNER_EMAIL`, `TRACY_OWNER_NAME`. The server does not read `.env` itself: export the variables. The code also reads `TRACY_CONTENT_API_SCALARS` (the Dockerfile sets it to 1) and `TRACY_FRAME_ANCESTORS` (demo sites only). `SITE_DATA_DIR` also holds the optional `ds-slot.css` (see `docs/design-system.md`).
 
 ## Personalize (the customer's answers)
 
@@ -55,8 +56,7 @@ tools/bootstrap-site.sh http://127.0.0.1:4361 ./data
 | `ingest/`, `contract/` | rebuild of the seed from the source (`ingest/rebuild-seed.sh`) and the model validator |
 | `tools/` | importer (`seed-apply.mjs`), acceptance (`qa.mjs`, `qa-contract.mjs`, `qa-receipt.mjs`, `distribution.mjs`), backup/restore, `recovery-check.mjs` |
 | `docs/`, `AGENTS.md` | guidance for a maintenance agent |
-| `source/`, `inventory/` | the source render recipe, snapshot hashes and inventory: repository checkout only |
-| `DECISIONS.md`, `STATUS.md` | decisions taken and the state of the port (in the repository) |
+| `source/`, `inventory/`, `DECISIONS.md`, `STATUS.md` | the source render recipe, decisions and state of the port: kept in the Tracy repository, NOT in this package; what a maintainer needs is in `docs/` and `docs/generated/` |
 
 ## Updating the template on a live site
 
@@ -77,7 +77,7 @@ node tools/seed-apply.mjs media $S && node tools/seed-apply.mjs forms $S
 
 ## Checks
 
-`node tools/qa.mjs --help` lists the acceptance run; `pnpm test` runs `node --test tests/*.test.mjs`; `pnpm typecheck` runs `astro check`. Details: `docs/checks-and-recovery.md`.
+`node tools/qa.mjs --help` lists the acceptance run; `pnpm test` runs `node --test tests/*.test.mjs`; `pnpm typecheck` runs `astro check`. Audit of a running site: `node tools/audit.mjs http://127.0.0.1:4361 ./audit-out --roots /` (about a minute; it needs the two arguments). Admin round trip: the recipe in `docs/checks-and-recovery.md`.
 
 ## Known limitations
 

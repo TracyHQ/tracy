@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "tracy-nova",
-  "revision": 12,
+  "revision": 16,
   "pending": [],
   "locales": [
     "en"
@@ -2718,6 +2718,21 @@
       "source": [
         "index.html"
       ],
+      "render": {
+        "view": "src/views/Home.astro",
+        "collections": [
+          "chrome",
+          "hero",
+          "features_intro",
+          "text_slider",
+          "cta",
+          "teams",
+          "pricing",
+          "posts",
+          "accordion",
+          "clients"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -2793,6 +2808,16 @@
       "source": [
         "about-us-2/index.html"
       ],
+      "render": {
+        "view": "src/views/Page.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "features_intro",
+          "teams",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -2857,6 +2882,15 @@
       "source": [
         "about-us-2/career/index.html"
       ],
+      "render": {
+        "view": "src/views/Page.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "features_intro",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -2910,6 +2944,14 @@
       "source": [
         "about-us-2/contact/index.html"
       ],
+      "render": {
+        "view": "src/views/Contact.astro",
+        "collections": [
+          "chrome",
+          "contact",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -2963,6 +3005,16 @@
       "source": [
         "services/index.html"
       ],
+      "render": {
+        "view": "src/views/Page.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "features_intro",
+          "accordion",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3026,6 +3078,16 @@
       "source": [
         "illustration/index.html"
       ],
+      "render": {
+        "view": "src/views/Service.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "features_intro",
+          "accordion",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3070,6 +3132,16 @@
       "source": [
         "development/index.html"
       ],
+      "render": {
+        "view": "src/views/Service.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "features_intro",
+          "accordion",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3114,6 +3186,16 @@
       "source": [
         "mobile-application/index.html"
       ],
+      "render": {
+        "view": "src/views/Service.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "features_intro",
+          "accordion",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3158,6 +3240,16 @@
       "source": [
         "cloud-solutions/index.html"
       ],
+      "render": {
+        "view": "src/views/Service.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "features_intro",
+          "accordion",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3202,6 +3294,16 @@
       "source": [
         "it-infrastructure/index.html"
       ],
+      "render": {
+        "view": "src/views/Service.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "features_intro",
+          "accordion",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3246,6 +3348,16 @@
       "source": [
         "cybersecurity/index.html"
       ],
+      "render": {
+        "view": "src/views/Service.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "features_intro",
+          "accordion",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3290,6 +3402,16 @@
       "source": [
         "virtualization/index.html"
       ],
+      "render": {
+        "view": "src/views/Service.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "features_intro",
+          "accordion",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3334,6 +3456,15 @@
       "source": [
         "project/index.html"
       ],
+      "render": {
+        "view": "src/views/BlogList.astro",
+        "collections": [
+          "chrome",
+          "pages",
+          "posts",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3377,6 +3508,14 @@
       "source": [
         "project/illustration/index.html"
       ],
+      "render": {
+        "view": "src/views/BlogList.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3430,6 +3569,14 @@
       "source": [
         "project/branding/index.html"
       ],
+      "render": {
+        "view": "src/views/BlogList.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3483,6 +3630,14 @@
       "source": [
         "project/ui-ux-design/index.html"
       ],
+      "render": {
+        "view": "src/views/BlogList.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3536,6 +3691,14 @@
       "source": [
         "project/illustration/packaging-design/index.html"
       ],
+      "render": {
+        "view": "src/views/Post.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3589,6 +3752,15 @@
       "source": [
         "category-blog/index.html"
       ],
+      "render": {
+        "view": "src/views/BlogList.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "pages",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3642,6 +3814,14 @@
       "source": [
         "category-blog/how-business-technology-changed-how-we-think-about-death/index.html"
       ],
+      "render": {
+        "view": "src/views/Post.astro",
+        "collections": [
+          "chrome",
+          "posts",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3686,6 +3866,13 @@
       "source": [
         "smart-search/index.html"
       ],
+      "render": {
+        "view": "src/views/Search.astro",
+        "collections": [
+          "chrome",
+          "cta"
+        ]
+      },
       "rules": [
         "body-type",
         "header",
@@ -3728,6 +3915,12 @@
       "source": [
         "nope-404/index.html"
       ],
+      "render": {
+        "view": "src/views/NotFound.astro",
+        "collections": [
+          "chrome"
+        ]
+      },
       "rules": [
         "err-code",
         "err-msg"

@@ -143,6 +143,21 @@
     {
       "id": "home",
       "path": "/",
+      "render": {
+        "view": "Home",
+        "cols": [
+          "chrome",
+          "hero",
+          "features_intro",
+          "text_slider",
+          "cta",
+          "teams",
+          "pricing",
+          "posts",
+          "accordion",
+          "clients"
+        ]
+      },
       "src": "/",
       "roles": ["hero-title", "h2-info", "cta-title", "btn-primary", "btn-light"],
       "identity": ".nv-hero-title",
@@ -156,6 +171,7 @@
     {
       "id": "about",
       "path": "/about",
+      "render": { "view": "Page", "cols": ["chrome", "pages", "features_intro", "teams", "cta"] },
       "src": "/about-us-2",
       "roles": ["h2-info", "h3-item", "h4-team", "cta-line"],
       "content": [
@@ -167,6 +183,7 @@
     {
       "id": "career",
       "path": "/career",
+      "render": { "view": "Page", "cols": ["chrome", "pages", "features_intro", "cta"] },
       "src": "/about-us-2/career",
       "roles": ["btn-primary", "cta-line"],
       "content": [
@@ -177,6 +194,7 @@
     {
       "id": "contact",
       "path": "/contact",
+      "render": { "view": "Contact", "cols": ["chrome", "contact", "cta"] },
       "src": "/about-us-2/contact",
       "roles": ["contact-h1", "cta-line"],
       "content": [
@@ -187,6 +205,7 @@
     {
       "id": "services",
       "path": "/services",
+      "render": { "view": "Page", "cols": ["chrome", "pages", "features_intro", "accordion", "cta"] },
       "src": "/services",
       "roles": ["h2-info", "h4-item", "cta-line"],
       "content": [
@@ -198,6 +217,7 @@
     {
       "id": "svc-illustration",
       "path": "/illustration",
+      "render": { "view": "Service", "cols": ["chrome", "pages", "features_intro", "accordion", "cta"] },
       "src": "/illustration",
       "roles": ["page-h1", "cta-line"],
       "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
@@ -205,6 +225,7 @@
     {
       "id": "svc-development",
       "path": "/development",
+      "render": { "view": "Service", "cols": ["chrome", "pages", "features_intro", "accordion", "cta"] },
       "src": "/development",
       "roles": ["page-h1", "cta-line"],
       "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
@@ -212,6 +233,7 @@
     {
       "id": "svc-mobile-application",
       "path": "/mobile-application",
+      "render": { "view": "Service", "cols": ["chrome", "pages", "features_intro", "accordion", "cta"] },
       "src": "/mobile-application",
       "roles": ["page-h1", "cta-line"],
       "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
@@ -219,6 +241,7 @@
     {
       "id": "svc-cloud-solutions",
       "path": "/cloud-solutions",
+      "render": { "view": "Service", "cols": ["chrome", "pages", "features_intro", "accordion", "cta"] },
       "src": "/cloud-solutions",
       "roles": ["page-h1", "cta-line"],
       "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
@@ -226,6 +249,7 @@
     {
       "id": "svc-it-infrastructure",
       "path": "/it-infrastructure",
+      "render": { "view": "Service", "cols": ["chrome", "pages", "features_intro", "accordion", "cta"] },
       "src": "/it-infrastructure",
       "roles": ["page-h1", "cta-line"],
       "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
@@ -233,6 +257,7 @@
     {
       "id": "svc-cybersecurity",
       "path": "/cybersecurity",
+      "render": { "view": "Service", "cols": ["chrome", "pages", "features_intro", "accordion", "cta"] },
       "src": "/cybersecurity",
       "roles": ["page-h1", "cta-line"],
       "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
@@ -240,6 +265,7 @@
     {
       "id": "svc-virtualization",
       "path": "/virtualization",
+      "render": { "view": "Service", "cols": ["chrome", "pages", "features_intro", "accordion", "cta"] },
       "src": "/virtualization",
       "roles": ["page-h1", "cta-line"],
       "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
@@ -247,6 +273,7 @@
     {
       "id": "project",
       "path": "/project",
+      "render": { "view": "BlogList", "cols": ["chrome", "pages", "posts", "cta"] },
       "src": "/project",
       "roles": ["cta-line"],
       "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
@@ -254,6 +281,7 @@
     {
       "id": "project-illustration",
       "path": "/project/illustration",
+      "render": { "view": "BlogList", "cols": ["chrome", "posts", "cta"] },
       "src": "/project/illustration",
       "roles": ["list-h1", "cta-line"],
       "content": [
@@ -264,6 +292,7 @@
     {
       "id": "project-branding",
       "path": "/project/branding",
+      "render": { "view": "BlogList", "cols": ["chrome", "posts", "cta"] },
       "src": "/project/branding",
       "roles": ["list-h1", "cta-line"],
       "content": [
@@ -274,6 +303,7 @@
     {
       "id": "project-ui-ux-design",
       "path": "/project/ui-ux-design",
+      "render": { "view": "BlogList", "cols": ["chrome", "posts", "cta"] },
       "src": "/project/ui-ux-design",
       "roles": ["list-h1", "cta-line"],
       "content": [
@@ -284,6 +314,7 @@
     {
       "id": "project-detail",
       "path": "/project/illustration/packaging-design",
+      "render": { "view": "Post", "cols": ["chrome", "posts", "cta"] },
       "src": "/project/illustration/packaging-design",
       "roles": ["page-h1", "cta-line"],
       "content": [
@@ -294,6 +325,7 @@
     {
       "id": "blog",
       "path": "/blog",
+      "render": { "view": "BlogList", "cols": ["chrome", "posts", "pages", "cta"] },
       "src": "/category-blog",
       "roles": ["list-sub", "cta-line"],
       "content": [
@@ -304,6 +336,7 @@
     {
       "id": "post",
       "path": "/blog/how-business-technology-changed-how-we-think-about-death",
+      "render": { "view": "Post", "cols": ["chrome", "posts", "cta"] },
       "src": "/category-blog/how-business-technology-changed-how-we-think-about-death",
       "roles": ["page-h1", "cta-line"],
       "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
@@ -311,6 +344,7 @@
     {
       "id": "search",
       "path": "/search",
+      "render": { "view": "Search", "cols": ["chrome", "cta"] },
       "src": "/smart-search",
       "roles": [],
       "content": [["h1", "h1", "h1", "field", "the page title (h1)"]]
@@ -318,6 +352,7 @@
     {
       "id": "not-found",
       "path": "/404",
+      "render": { "view": "NotFound", "cols": ["chrome"] },
       "src": "/nope-404",
       "status": 404,
       "bare": true,

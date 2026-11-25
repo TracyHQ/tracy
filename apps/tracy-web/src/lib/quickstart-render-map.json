@@ -1164,5 +1164,110 @@
         "/blog/farm-to-fork-sustainable-eating"
       ]
     }
+  },
+  "tracy-nova": {
+    "revision": 16,
+    "sourceSha256": "7055be7af285a48f8ecbaa95fc362c4ab70f87ac6d0971a84fb491b72f44d779",
+    "collections": {
+      "en:chrome": [
+        "/",
+        "/about",
+        "/career",
+        "/contact",
+        "/services",
+        "/illustration",
+        "/development",
+        "/mobile-application",
+        "/cloud-solutions",
+        "/it-infrastructure",
+        "/cybersecurity",
+        "/virtualization",
+        "/project",
+        "/project/illustration",
+        "/project/branding",
+        "/project/ui-ux-design",
+        "/project/illustration/packaging-design",
+        "/blog",
+        "/blog/how-business-technology-changed-how-we-think-about-death",
+        "/search",
+        "/404"
+      ],
+      "en:hero": ["/"],
+      "en:features_intro": [
+        "/",
+        "/about",
+        "/career",
+        "/services",
+        "/illustration",
+        "/development",
+        "/mobile-application",
+        "/cloud-solutions",
+        "/it-infrastructure",
+        "/cybersecurity",
+        "/virtualization"
+      ],
+      "en:text_slider": ["/"],
+      "en:cta": [
+        "/",
+        "/about",
+        "/career",
+        "/contact",
+        "/services",
+        "/illustration",
+        "/development",
+        "/mobile-application",
+        "/cloud-solutions",
+        "/it-infrastructure",
+        "/cybersecurity",
+        "/virtualization",
+        "/project",
+        "/project/illustration",
+        "/project/branding",
+        "/project/ui-ux-design",
+        "/project/illustration/packaging-design",
+        "/blog",
+        "/blog/how-business-technology-changed-how-we-think-about-death",
+        "/search"
+      ],
+      "en:teams": ["/", "/about"],
+      "en:pricing": ["/"],
+      "en:posts": [
+        "/",
+        "/project",
+        "/project/illustration",
+        "/project/branding",
+        "/project/ui-ux-design",
+        "/project/illustration/packaging-design",
+        "/blog",
+        "/blog/how-business-technology-changed-how-we-think-about-death"
+      ],
+      "en:accordion": [
+        "/",
+        "/services",
+        "/illustration",
+        "/development",
+        "/mobile-application",
+        "/cloud-solutions",
+        "/it-infrastructure",
+        "/cybersecurity",
+        "/virtualization"
+      ],
+      "en:clients": ["/"],
+      "en:pages": [
+        "/about",
+        "/career",
+        "/services",
+        "/illustration",
+        "/development",
+        "/mobile-application",
+        "/cloud-solutions",
+        "/it-infrastructure",
+        "/cybersecurity",
+        "/virtualization",
+        "/project",
+        "/blog"
+      ],
+      "en:contact": ["/contact"]
+    }
   }
 }

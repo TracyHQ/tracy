@@ -127,6 +127,7 @@ const mk = (pg, over = {}) => ({
   status: pg.status ?? 200,
   identity: pg.identity ?? `h1:text-is(${q(measures.content[pg.id].h1 ?? measures.content[pg.id].title)})`,
   source: [srcFile(pg.src)],
+  render: { view: `src/views/${pg.render.view}.astro`, collections: pg.render.cols },
   rules: pageRoles(pg),
   parity: PARITY(pg),
   content: pg.content.map((c) => F(pg.id, c)),
@@ -143,7 +144,7 @@ const home = UI_PAGES.find((p) => p.id === 'home')
 const D = ALL.filter((v) => v.startsWith('1440'))
 const M = ALL.filter((v) => v.startsWith('390'))
 const twin = (suffix, key, variants, state, pg = home) =>
-  mk(pg, { id: `en-${pg.id}-${suffix}`, path: `${pg.path}?ui=${key}`, variants, states: ['default', state] })
+  mk(pg, { id: `en-${pg.id}-${suffix}`, path: `${pg.path}?ui=${key}`, render: undefined, variants, states: ['default', state] })
 const careerPg = UI_PAGES.find((p) => p.id === 'career')
 contract.pages.push(
   twin('offcanvas', 'menu', M, 'offcanvas'),

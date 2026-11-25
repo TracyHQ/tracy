@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Nova",
-	"generatedAt": "2026-11-25T10:41:58.340Z",
+	"generatedAt": "2026-11-25T11:36:07.758Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -70,14 +70,14 @@
 	"checksums": {
 		"AGENTS.md": "sha256:353aed52bb6bb7d3e4f444e2350f2344946819fe0aa76ee48646d0a695d5f972",
 		"docs/architecture.md": "sha256:696b27eedb41ec5ad9cc085314c1a2104d1e9c57f2ab8e0deb9e21f3cfc4cc1b",
-		"docs/checks-and-recovery.md": "sha256:fdcd17ab2f7846ddb7679b3a1a5a60a96f6668eeb8b23c8dbdea9235193e09c1",
+		"docs/checks-and-recovery.md": "sha256:9c80004da6064e0aeb81643b0e2b928b189d02a0ad2e82e3faaeb5bb12834ebe",
 		"docs/content-api.md": "sha256:e47148a0ae91b9855f9cbf6f9e6ba234ca41434099e2e9eecd016cc806da1f98",
 		"docs/content-model.md": "sha256:03a8e3f4bdf9c5805f01333415b319274aca0e8fc9ee94304d93bf2b404f0aed",
 		"docs/content-rules.md": "sha256:1c70025e321b4789810c79aaaf6d23f19fbd075f192b191969b9421447512d61",
 		"docs/design-system.md": "sha256:c5c76bcd535c88a7d699960e60295cda2d8d00d0098f14f93cb1acc3e000724b",
 		"docs/generated/inventory.json": "sha256:d83212c011ec4f6e01a56055dcd32394f4269a01a155a26735eb01a324c5996e",
 		"docs/generated/inventory.md": "sha256:fea1374efa2ce348f6f7134d7c2d95d00c074ebbe55aacf7cd9257480c814167",
-		"docs/install.md": "sha256:1dd28e63147d90124b7045dea7b518b3943493f7cedbe917b47d627204d71531",
+		"docs/install.md": "sha256:4f1cd976f5fc9ea55ce24f2e517cecebc630dee1d340e409705dec93557ab0f7",
 		"docs/languages.md": "sha256:e9efa59f8f05521e153c9711bd507d712f30c742afa546b3f1c618acab24a900",
 		"template.config.json": "sha256:0c11aa7a05c397ff796f49a35be17690d75ea1dfe99d753a41e1d84ec74faf92",
 		"seed/seed.json": "sha256:8485fdfa9cdefed68ab5e29ec4275418a99ebd9f0af5860c0b11d72ac4125e52",
