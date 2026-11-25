@@ -33,7 +33,7 @@ tools/bootstrap-site.sh http://127.0.0.1:4361 ./data
 
 ## Day to day
 
-**Public addresses** (router `src/pages/[...path].astro`, page table `src/lib/page-routes.json`): `/`, `/about`, `/career`, `/services` and its six service pages, `/project` and `/project/<branding|ui-ux-design|illustration>`, projects at `/project/<category>/<slug>`, `/contact`, `/blog` (`?page=N`), posts at `/blog/<slug>`, `/search?q=`. An unknown path answers 404.
+**Public addresses** (router `src/pages/[...path].astro`, page table `src/lib/page-routes.json`): `/`, `/about`, `/career`, `/services` and its six service pages, `/project` and `/project/<branding|ui-ux-design|illustration>`, projects at `/project/<category>/<slug>`, `/contact`, `/blog`, posts at `/blog/<slug>`, `/search?q=`. Lists page with `?start=N` (the offset, a multiple of the page size, as the source does; the first page has no query), `/project` filters with `?category=<slug>` (combined as `/project?category=<slug>&start=N`); each such address answers 200 and names the list without the query as its canonical address. `?page=` is not used. An unknown path answers 404.
 
 **Where a text lives.** Header, footer, labels and search words: Admin > the `chrome` entry. Page copy, posts and sections: `pages`, `posts`, `hero`, `features_intro`, `text_slider`, `cta`, `clients`, `teams`, `pricing`, `accordion`, `social`, `contact`. Words the template prints itself: `src/lib/ui-words.ts`. Identity, mail, forms and audit policy: `template.config.json`.
 
@@ -77,8 +77,8 @@ node tools/seed-apply.mjs media $S && node tools/seed-apply.mjs forms $S
 
 ## Checks
 
-`node tools/qa.mjs --help` lists the acceptance run; `pnpm test` runs `node --test tests/*.test.mjs`; `pnpm typecheck` runs `astro check`. Audit of a running site: `node tools/audit.mjs http://127.0.0.1:4361 ./audit-out --roots /` (about a minute; it needs the two arguments). Admin round trip: the recipe in `docs/checks-and-recovery.md`.
+`node tools/qa.mjs --help` lists the acceptance run; `pnpm test` runs `node --test tests/*.test.mjs`; `pnpm typecheck` runs `astro check`. Audit of a running site: `node tools/audit.mjs http://127.0.0.1:4361 ./audit-out` (about a minute; the base URL and the out folder are required, `--roots` is optional and defaults to `/`; the report is `audit.md`, see `docs/checks-and-recovery.md`). Admin round trip: the recipe in `docs/checks-and-recovery.md`.
 
 ## Known limitations
 
-Not ported (`DECISIONS.md` D8): front-end accounts, Typography, Offline and Error demo pages, the Smart Search and Tagged Items utility pages. The port is in progress; see `STATUS.md`. Contact form notifications go to a placeholder address until the owner sets one.
+Not ported (`DECISIONS.md` D8): front-end accounts, Typography, Offline and Error demo pages, the Smart Search and Tagged Items utility pages. The state of the port is kept in the Tracy repository (`STATUS.md`, `DECISIONS.md`), not in this package. Contact form notifications go to a placeholder address until the owner sets one.
