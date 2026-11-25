@@ -1374,6 +1374,37 @@ test('a required setup seal finishes within the engine budget before any content
   assert.deepEqual(order, ['sealed', 'write'])
 })
 
+test(
+  'an EmDash run needs no webroot seal: its writes go on, and committing the setup is nothing to do',
+  dbOpts,
+  async () => {
+    // `setupWebroot` holds Joomla and WordPress webroots only, and answers {held: false} for an EmDash site, whose words live
+    // in its database. Dev 25/11/2026: every EmDash Diner chain build stopped here with STEP_CHAIN_SETUP_HOLD_UNPROVEN.
+    let writes = 0
+    const e = engine({
+      apply: async (ctx) => {
+        await ctx.commitSetupWrites()
+        writes++
+        return { wrote: 1 }
+      }
+    })
+    e.requiresSetupHold = true
+    const b = builds(
+      db.pool,
+      { emdash: e },
+      {
+        webroot: {
+          open: async () => ({ held: false }),
+          close: async () => assert.fail('an EmDash run holds no webroot to close')
+        }
+      }
+    )
+    await b.start(input({ platform: 'emdash' }))
+    assert.equal((await untilSettled(b, 'bakery.tracy.test')).state, 'applied')
+    assert.equal(writes, 1)
+  }
+)
+
 test('a required setup hold refusal prevents all scripted and native writes', dbOpts, async () => {
   let writes = 0
   const e = engine({ apply: async () => (writes++, { wrote: 1 }) })

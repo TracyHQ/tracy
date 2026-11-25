@@ -1,9 +1,11 @@
 // Which design system slot contracts a kit's template may wear, by the CMS the kit was read from (#462).
-// Joomla: `joomla-<product>-modes`, then `joomla-<product>`. WordPress: the contract made for the release's theme,
-// found by the same lookup the Add site door uses (`quickstartContractOf` in lib/ds-slot.js). A WordPress release with
-// no slot has NO names: it is never given the Joomla slot of a product that happens to share the name.
+// Joomla: `joomla-<product>-modes`, then `joomla-<product>`. WordPress and EmDash: the contract made for the release,
+// found by the same lookup the Add site door uses (`quickstartContractOf` in lib/ds-slot.js). A WordPress or EmDash
+// release with no slot has NO names: it is never given the Joomla slot of a product that happens to share the name.
 
 const WORDPRESS_CONTRACT_ID = /^([a-z0-9-]+\/wp\d+)\/[^/]+$/
+/** An EmDash kit's contract id: `<template>/emdash-<line>/<version>` (lib/template-kit-contracts.js). */
+const EMDASH_CONTRACT_ID = /^([a-z0-9-]+\/emdash-[a-z0-9.x-]+)\/([^/]+)$/
 const WORDPRESS_RELEASE = /^quickstart\/[a-z0-9-]+\/wp\d+$/
 
 /**
@@ -25,6 +27,16 @@ export function wordpressTagOfKit(kit) {
  * @returns {{ names: string[], problem: null } | { names: [], problem: string }}
  */
 export function slotNamesOfKit(kit, wordpressSlotOf) {
+  const emdash = EMDASH_CONTRACT_ID.exec(typeof kit.contract === 'string' ? kit.contract : '')
+  if (emdash) {
+    const found = wordpressSlotOf?.({ platform: 'emdash', tag: emdash[1], version: emdash[2] })
+    if (found && 'contract' in found) return { names: [found.contract], problem: null }
+    const reason = found && 'reason' in found ? found.reason : 'TEMPLATE_NOT_READY'
+    return {
+      names: [],
+      problem: `the Design system has no EmDash template contract for ${emdash[1]} (${reason}): no accent can be built`
+    }
+  }
   const tag = wordpressTagOfKit(kit)
   if (tag === null) {
     const product = kit.quickstart?.product
