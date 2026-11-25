@@ -64,12 +64,12 @@ test('the writer prompt opens with the CMS line of the kit, WordPress, Joomla or
       assert.equal(run.status, 'succeeded', run.error)
       const system = model.requests[0].body.messages[0].content
       assert.equal(system, withCmsLine(writerPrompt().text, platform))
-      assert.match(
-        system,
-        platform === 'wordpress'
-          ? /^This site runs on WordPress \(block editor\)\.\n\n/
-          : /^This site runs on Joomla\.\n\n/
-      )
+      const opening = {
+        wordpress: /^This site runs on WordPress \(block editor\)\.\n\n/,
+        joomla: /^This site runs on Joomla\.\n\n/,
+        emdash: /^This site runs on EmDash \(an Astro CMS: [^)]*\)\.\n\n/
+      }[platform]
+      assert.match(system, opening)
     } finally {
       own.done()
     }
