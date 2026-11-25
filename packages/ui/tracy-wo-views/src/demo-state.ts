@@ -58,6 +58,7 @@ export function demoStateOf(row: DemoStateRow | null | undefined): DemoState {
  */
 const REASONS: Record<string, string> = {
   QA_NEEDS_REVIEW: 'demo.reason.needsReview',
+  BRIEF_NOT_READY: 'demo.reason.briefNotReady',
   DEMO_STEP_TIMEOUT: 'demo.reason.timeout',
   DEMO_STEP_FAILED: 'demo.reason.stepFailed',
   DEMO_LEASE_LOST: 'demo.reason.interrupted',

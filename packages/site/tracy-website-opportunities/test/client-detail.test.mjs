@@ -794,6 +794,8 @@ test('a build failure reason that is a code reads as its plain sentence; a sente
   const t = (key) => `[${key}]`
   assert.equal(failureReasonText('DEMO_STEP_TIMEOUT', t), '[demo.reason.timeout]')
   assert.equal(failureReasonText('SOMETHING_NEW_HERE', t), '[demo.reason.unknown]')
+  // A refused brief says so, never the unexpected error a tester read on 25/11/2026 (#547).
+  assert.equal(failureReasonText('BRIEF_NOT_READY', t), '[demo.reason.briefNotReady]')
   assert.equal(
     failureReasonText('The server did not answer in time.', t),
     'The server did not answer in time.'
