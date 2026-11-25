@@ -357,7 +357,7 @@ html[data-theme="dark"] .nv-features-6 .nv-list-features li:not(:has(> a)), html
 .nv-article-split .nv-split-text { margin-top: 2rem; }
 .nv-article-split .nv-split-text h3 { margin-top: 0; }
 /* the source's last paragraph in the text column has no bottom margin */
-.nv-article-split .nv-split-text > :last-child { margin-bottom: 0; }
+.nv-article-split .nv-split-text > p:last-child { margin-bottom: 0; }
 /* the source's paragraph before the split row has no bottom margin (the row's mt-5 alone makes the gap) */
 .nv-article:not(.is-side) .nv-article-body p:has(+ .nv-article-split) { margin-bottom: 0; }
 @media (min-width: 992px) { .nv-article-split > * { width: 50%; } }

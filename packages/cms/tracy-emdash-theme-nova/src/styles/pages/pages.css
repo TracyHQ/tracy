@@ -203,3 +203,7 @@ html[data-theme="dark"] .nv-err-redirect a { color: var(--color-accent-on); }
 /* placeholders read as the source's (light: the field text colour; dark: the muted token), not the browser's faded default */
 .nv-contact-form input::placeholder, .nv-contact-form textarea::placeholder, .nv-finder-group input::placeholder { color: var(--color-fg); opacity: 1; }
 html[data-theme="dark"] .nv-contact-form input::placeholder, html[data-theme="dark"] .nv-contact-form textarea::placeholder, html[data-theme="dark"] .nv-finder-group input::placeholder { color: var(--pg-muted); }
+
+/* the service article's closing section (the FAQ accordion) carries the source's `border-top` */
+.nv-pg--service .nv-mod.nv-accordion { border-top: 1px solid var(--ds-c-border, #e9ecef); }
+html[data-theme="dark"] .nv-pg--service .nv-mod.nv-accordion { border-top-color: var(--ds-c-border, #495057); }
