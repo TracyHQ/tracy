@@ -374,7 +374,7 @@ export function createStepChainSteps(deps) {
       if (!images.ok) throw stepError(`the kit ${ref} images: ${images.code}: ${images.reason}`)
       const map = openContentMap(ref)
       if (map?.invalid) throw stepError(`the kit ${ref} content map: ${map.invalid}`)
-      return { value: { ref, doc: kit.doc, contentMap: map?.doc ?? null }, usd: 0 }
+      return { value: { ref, platform: kit.platform, doc: kit.doc, contentMap: map?.doc ?? null }, usd: 0 }
     },
 
     async brand(ctx, { kit }, { signal }) {
@@ -551,7 +551,7 @@ export function createStepChainSteps(deps) {
         host,
         door: siteDoor,
         siteKey: ctx.siteKey,
-        kit: { ref: inputs.kit.ref, doc: inputs.kit.doc },
+        kit: { ref: inputs.kit.ref, doc: inputs.kit.doc, platform: inputs.kit.platform },
         contentMap: inputs.kit.contentMap,
         files: {
           plan: planFile,

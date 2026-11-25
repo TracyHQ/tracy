@@ -25,7 +25,6 @@
 
 import { menuRows } from '../lib/joomla-menu-rows.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
-import { seeder } from '../lib/seeder.js'
 import { contentMapKey, exportContractMapping } from '../lib/site-copy/contract-mapping.js'
 import { indexInputs } from '../lib/site-copy/inputs-index.js'
 import { readCopy } from '../lib/site-copy-view.js'
@@ -66,6 +65,7 @@ import { runPrintedStage } from './printed-stage.js'
 import { writeRecordAlts } from './record-alt-stage.js'
 import { followRenamedLinks, rewriteRenamedLinks } from './renamed-link-stage.js'
 import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
+import { platformStop, siteDoorFor } from './site-doors/index.js'
 import { doorCall } from './settings-door.js'
 import { runShareStage } from './share-stage.js'
 import { correctionsReader, galleryAlts, pictureAltsOf } from './slot-corrections.js'
@@ -121,7 +121,8 @@ function siteProblem({ reading, contract, changes }) {
 }
 
 /**
- * @param {{ door: { apply: Function }, siteKey: string, kit: { ref: string, doc: object }, contentMap?: object | null,
+ * @param {{ door: { apply: Function }, siteKey: string, kit: { ref: string, doc: object, platform: string },
+ *   contentMap?: object | null,
  *   files: { plan: string, copy: string, brief?: string, brand?: string, pictures?: string },
  *   last?: object | null, lastRun?: string | null,
  *   accentPlace?: (slotContract: string) => Promise<object | null>, isCancelled?: () => Promise<boolean>,
@@ -278,6 +279,11 @@ export async function runWriteStep(input) {
     return report
   }
   const stopped = (cause) => finish('stopped', cause)
+  // The site's CMS chooses the door its contract is read and written through (site-doors/index.js). A kit whose platform has
+  // no door that writes stops here, before any file is read or any call is sent.
+  const unwritable = platformStop(kit)
+  if (unwritable) return stopped(unwritable)
+  const siteDoor = siteDoorFor(kit.platform)
   // A page the run gave its demo address back and did not rename again is said to be at the demo address, never carried as renamed.
   const pageRouteLines = () =>
     renamedLines ??
@@ -664,10 +670,9 @@ export async function runWriteStep(input) {
 
   const apply = (call) => door.apply(call)
   const inspected = await timed('inspect', async () => {
-    const { doorRefusal } = await seeder('apply-joomla-contract')
     try {
       const reading = await apply({ siteKey, action: 'content.contract', params: { operation: 'inspect' } })
-      if (!reading?.ok) return { stop: { code: 'INSPECT_REFUSED', reason: doorRefusal(reading) } }
+      if (!reading?.ok) return { stop: { code: 'INSPECT_REFUSED', reason: await siteDoor.refusal(reading) } }
       // A slot the site does not have has nothing to write to: it is left out, and its owner's step is named.
       const missing =
         reading.contract === contract ? missingOnSite({ reading, changes: mapping.changes }) : []
@@ -888,10 +893,9 @@ export async function runWriteStep(input) {
     delete mapping.changes[key]
     delete mapping.evidence?.[key]
   }
-  const { applyJoomlaContract } = await seeder('apply-joomla-contract')
   const wrote = await timed('write', () =>
     writeContract({
-      applyJoomlaContract,
+      applyContract: siteDoor.applyContract,
       apply,
       siteKey,
       reading,
@@ -930,7 +934,7 @@ export async function runWriteStep(input) {
     inspect: () => apply({ siteKey, action: 'content.contract', params: { operation: 'inspect' } }),
     send: (order) =>
       writeContract({
-        applyJoomlaContract,
+        applyContract: siteDoor.applyContract,
         apply,
         siteKey,
         reading: order.reading,
@@ -1060,10 +1064,9 @@ export async function runWriteStep(input) {
         siteKey,
         routes: out.routes,
         hosts: input.siteHosts ?? [],
-        writeSlots: async ({ reading, changes, evidence }) => {
-          const { applyJoomlaContract } = await seeder('apply-joomla-contract')
-          return writeContract({
-            applyJoomlaContract,
+        writeSlots: async ({ reading, changes, evidence }) =>
+          writeContract({
+            applyContract: siteDoor.applyContract,
             apply,
             siteKey,
             reading,
@@ -1071,7 +1074,6 @@ export async function runWriteStep(input) {
             isCancelled,
             sleep
           })
-        }
       })
       return out
     })

@@ -16,6 +16,7 @@ import { isBenchSite } from './write-step/bench-site-creator.js'
 import { runCli as runSiteCli, SITE_COMMANDS, USAGE as SITE_USAGE } from './write-step/bench-site-cli.js'
 import { runWriteStep } from './write-step/write-step.js'
 import { STEP_NINE_USAGE, stepNineOfRun, stepNineRefusal } from './write-step-bench-step-nine.js'
+import { platformStop } from './write-step/site-doors/index.js'
 
 export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   run --site <key> --kit <ref> --plan-file <path> --copy-file <path> --account <email>
@@ -131,11 +132,9 @@ async function startRun(d, values) {
       d,
       `No readable kit "${values.kit}". Readable kits: ${kits.map((k) => k.ref).join(', ') || 'none'}.`
     )
-  if (listed.platform && listed.platform !== 'joomla')
-    return refused(
-      d,
-      `KIT_PLATFORM: the write step writes Joomla sites only; ${values.kit} is ${listed.platform}.`
-    )
+  // The write step's own rule for which CMS it writes (site-doors/index.js), said before a run is recorded.
+  const unwritable = platformStop({ ref: values.kit, platform: listed.platform })
+  if (unwritable) return refused(d, `${unwritable.code}: ${unwritable.reason}`)
   const map = openContentMap(values.kit, where)
   if (map?.invalid) return refused(d, `KIT_CONTENT_MAP: ${map.invalid}.`)
   // The write step does not care how its site was made; this command only ever writes a site the bench made itself.
@@ -169,7 +168,7 @@ async function startRun(d, values) {
       door: d.makeDoor({ account: values.account, platform: 'joomla' }),
       siteKey: values.site,
       ...(d.makeHost ? { host: async (payload) => (await d.makeHost(values.site))(payload) } : {}),
-      kit: { ref: values.kit, doc: opened.doc },
+      kit: { ref: values.kit, doc: opened.doc, platform: opened.platform },
       contentMap: map?.doc ?? null,
       last: lastRun?.report ?? null,
       lastRun: lastRun?.id ?? null,

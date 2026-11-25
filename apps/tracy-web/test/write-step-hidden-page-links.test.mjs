@@ -176,7 +176,7 @@ const refusedAnswer = (keys, code = 'SLOT_NOT_HIDEABLE') => {
 test('the contract call writes the living address in place of an empty a row will not lose, once', async () => {
   const sent = []
   const result = await writeContract({
-    applyJoomlaContract: async ({ mapping }) => {
+    applyContract: async ({ mapping }) => {
       sent.push(structuredClone({ changes: mapping.changes, emptySlots: mapping.emptySlots }))
       if (mapping.emptySlots.includes('module-30.8')) throw refusedAnswer(['module-30.8'])
     },
@@ -205,7 +205,7 @@ test('the contract call writes the living address in place of an empty a row wil
 
   // The door refuses the address too: a refused line in the plugin's words, naming both refusals.
   const refusing = await writeContract({
-    applyJoomlaContract: async ({ mapping }) => {
+    applyContract: async ({ mapping }) => {
       if (mapping.emptySlots.includes('module-30.8')) throw refusedAnswer(['module-30.8'])
       if ('module-30.8' in mapping.changes) throw refusedAnswer(['module-30.8'], 'URL_REFUSED')
     },

@@ -18,7 +18,7 @@ function basePlan() {
   return plan
 }
 
-export const KIT = () => ({ ref: CONTRACT, doc: { ...baseKit(), contract: CONTRACT } })
+export const KIT = () => ({ ref: CONTRACT, platform: 'joomla', doc: { ...baseKit(), contract: CONTRACT } })
 
 /** Every kit slot of a kit, as the site's inspect lists them. */
 function siteSlots(kit, extra) {

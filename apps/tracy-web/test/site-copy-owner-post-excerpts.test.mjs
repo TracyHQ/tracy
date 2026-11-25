@@ -149,7 +149,7 @@ test("the write step writes the planned post's own opening in place of an invent
   const { report, site } = await runStep(
     { copy: input.copy, plan: input.plan, brief: input.brief },
     {},
-    { kit: { ref: 'demo-gym/j6/1.0.0', doc: input.kit } }
+    { kit: { ref: 'demo-gym/j6/1.0.0', platform: 'joomla', doc: input.kit } }
   )
   assert.equal(report.status, 'done', JSON.stringify(report.cause))
   const sent = Object.assign({}, ...site.applies().map((a) => a.params.changes ?? {}))
