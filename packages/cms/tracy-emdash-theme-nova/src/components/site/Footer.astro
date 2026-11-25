@@ -16,8 +16,8 @@ import { dataHref } from '@/lib/data-links'
 import { section } from '@/lib/content'
 import layout from '@/lib/page-layout.json'
 import BrandLogo from '@/components/site/BrandLogo.astro'
+import SocialIcon from '@/components/site/SocialIcon.astro'
 import { DEMO_LOGO_LIGHT } from '@/lib/demo-logo'
-import ChromeIcon from '@/components/site/ChromeIcon.astro'
 import Cta from '@/components/blocks/Cta.astro'
 
 interface Props {
@@ -77,11 +77,11 @@ const ctaRow = await section('cta', 'cta-contact', locale)
 							const net = networkOf(it.font_icon, it.title)
 							return it.link && it.link !== '#' ? (
 								<a class={`nv-social-item is-${net}`} href={it.link} title={it.title} aria-label={it.title}>
-									<ChromeIcon name={net} size={20} />
+									<SocialIcon name={net} size={16} />
 								</a>
 							) : (
 								<span class={`nv-social-item is-${net}`} title={it.title}>
-									<ChromeIcon name={net} size={20} />
+									<SocialIcon name={net} size={16} />
 								</span>
 							)
 						})}
