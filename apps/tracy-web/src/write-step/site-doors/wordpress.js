@@ -166,7 +166,7 @@ export const wordpressSiteDoor = Object.freeze({
    */
   answerOf: (call, answer) => {
     if (call?.action === 'info' && answer?.ok !== false && answer && typeof answer === 'object')
-      return { ...answer, info: { ...(answer.info ?? {}), hide_ops: { version: 1, rows_remove: 0 } } }
+      return { ...answer, info: { ...answer.info, hide_ops: { version: 1, rows_remove: 0 } } }
     return call?.action === 'content.contract' && (call.params?.operation ?? 'inspect') === 'inspect'
       ? wordpressReading(answer)
       : answer
