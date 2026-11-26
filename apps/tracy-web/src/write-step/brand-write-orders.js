@@ -7,6 +7,8 @@
 //   small-logo  the phone menu's own picture: a small-logo key of the profile, or CSS when the profile has none
 //   contract    a content slot, in the one contract call; a T3 logo is its template style frame
 //   head        a tab icon, as a link tag in the kit's head injection block
+//   wordpress-option  a WordPress option that names an attachment (`site_logo`, `tracy_logo_dark`, `site_icon`): the Site Logo
+//               block and the tab icon follow it
 //   module      the accent-only Design system module, on every page
 //   follows     nothing to write: the page prints it from the site name
 //   none        nothing to write, with the reason
@@ -30,14 +32,27 @@ function nameOrder(s) {
   return { ...base, via: setting[1] === 'global configuration' ? 'identity' : 'profile', key: setting[2] }
 }
 
-function logoOrder(k, s) {
+/** What a dark spot shows once its option names no picture: the site name, as the kit measured (`emptyShows`). */
+const NAME_AS_TEXT =
+  'the brand file has no picture for this spot, so it shows the site name rather than the demo logo'
+
+function logoOrder(k, s, { world, bySpot }) {
   const base = { item: 'logo', slot: k.id, spot: k.id }
-  if (!s?.file) return { ...base, via: 'none', reason: 'the brand file has no picture for this spot' }
+  // The same decision as the Template kit gate: a T3 style param goes through its frame, not the T4 profile, and a
+  // WordPress Site Logo block through its option.
+  const path = logoWritePath(k, world)
+  if (!s?.file) {
+    // A WordPress twin spot (the dark-background logo) beside a logo the brand gives: the option is cleared, so the
+    // demo's logo never sits beside the customer's (the Apply popup's WordPress writer does the same, brand-wordpress.js).
+    const twin = k.twinOf ? bySpot.get(k.twinOf) : null
+    if (path.via === 'wordpress-option' && twin?.file && k.emptyShows === 'name-as-text')
+      return { ...base, via: 'wordpress-option', key: path.key, value: 0, reason: NAME_AS_TEXT }
+    return { ...base, via: 'none', reason: 'the brand file has no picture for this spot' }
+  }
   const order = { ...base, file: s.file }
-  // The same decision as the Template kit gate: a T3 style param goes through its frame, not the T4 profile.
-  const path = logoWritePath(k)
   if (path.via === 'none') return { ...base, via: 'none', reason: path.reason }
-  if (path.via === 'emdash-setting') return { ...order, via: 'emdash-setting', key: path.key }
+  if (path.via === 'emdash-setting' || path.via === 'wordpress-option')
+    return { ...order, via: path.via, key: path.key }
   if (path.via === 'contract') return { ...order, via: 'contract', slot: path.frame, key: path.key }
   if (path.via === 'small-logo')
     return { ...order, via: 'small-logo', key: path.key, side: k.ground?.side ?? 'light' }
@@ -45,8 +60,19 @@ function logoOrder(k, s) {
 }
 
 function faviconOrders(favicon, kit, headModule) {
-  const setting = /site setting (\w+)/.exec(String(kit?.site?.favicon?.mechanism?.setting ?? ''))?.[1]
+  const mechanism = String(kit?.site?.favicon?.mechanism?.setting ?? '')
+  const setting = /site setting (\w+)/.exec(mechanism)?.[1]
   const none = (slot, reason) => ({ item: 'favicon', slot, via: 'none', reason })
+  // WordPress prints the tab icon from the option `site_icon` (an attachment of at least 512 pixels), so no head link.
+  const option = /^option (site_icon)$/.exec(mechanism)?.[1]
+  if (option) {
+    const file = favicon?.png512
+    return [
+      file
+        ? { item: 'favicon', slot: 'favicon-option', file, via: 'wordpress-option', key: option }
+        : none('favicon-option', 'the brand file has no 512 pixel icon')
+    ]
+  }
   // EmDash prints the tab icon from core `settings.favicon`; the picture is one media file, so no ico, no head link.
   if (kit?.site?.favicon?.mechanism?.setting === 'settings.favicon') {
     const file = favicon?.png512 ?? favicon?.png32
@@ -90,11 +116,12 @@ export const headModuleOf = (kit) => {
 }
 
 /**
- * @param {{ brand: object, kit: object }} input
+ * @param {{ brand: object, kit: object, world?: { siteLogoBlock?: boolean } }} input `world.siteLogoBlock`: the theme's
+ *   header prints a Site Logo block (WordPress, `headerSiteLogoBlockOf`), the evidence the Template kit gate reads too
  * @returns {{ orders: object[], problems: string[], templateFolder: string | null, headModule: number | null,
  *   headMaxBytes: number | null }} `problems`: what keeps this file off this kit, each as a sentence
  */
-export function exportBrandOrders({ brand, kit }) {
+export function exportBrandOrders({ brand, kit, world = {} }) {
   const problems = []
   if (brand?.kind !== 'brand-file')
     problems.push(`kind must be "brand-file", found ${JSON.stringify(brand?.kind)}`)
@@ -112,7 +139,7 @@ export function exportBrandOrders({ brand, kit }) {
   const bySpot = new Map(each(brand?.logo?.spots).map((s) => [s?.spot, s]))
   const orders = [
     ...each(brand?.name?.slots).map(nameOrder),
-    ...kitSpots.map((k) => logoOrder(k, bySpot.get(k.id))),
+    ...kitSpots.map((k) => logoOrder(k, bySpot.get(k.id), { world, bySpot })),
     ...faviconOrders(brand?.favicon, kit, headModule),
     accentOrder(brand?.colours)
   ]

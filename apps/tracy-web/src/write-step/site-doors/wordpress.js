@@ -9,8 +9,10 @@
 // its emptied text and address slots go as `''`, and what the plugin does not take yet (a picture taken off) is refused
 // here by slot, before anything is sent: the write step's rounds (contract-write.js) go on without exactly those slots
 // and their lines say "not on WordPress yet" (index.js `notOnPlatform`). A refusal of the plugin is named by slot when
-// its words name one, as the seeder reads it. Every other stage's call (articles, Joomla menu items, modules, template
-// settings) is answered here and never sent (`takes`).
+// its words name one, as the seeder reads it. The brand stage's logo and tab icon are WordPress options that name an
+// attachment (`site_logo`, `tracy_logo_dark`, `site_icon`), its pictures go to `wp-content/uploads/tracy-brand/`. Every
+// other stage's call (articles, Joomla menu items, modules, template settings, any other option) is answered here and
+// never sent (`takes`).
 import { createHash } from 'node:crypto'
 import { seeder } from '../../lib/seeder.js'
 
@@ -23,16 +25,26 @@ export const WORDPRESS_TAKES = Object.freeze(
 
 /** A picture the write step placed: `images/tracy-content/<sha256>.<ext>` (write-step/picture-package.js). */
 const PICTURE_PATH = /^\/?images\/tracy-content\/([0-9a-f]{64}\.(?:png|jpe?g|webp))$/i
+/** A picture of the brand stage: `images/tracy-brand/<spot>-<hash>.<ext>` (write-step/brand-writes.js `picturePath`). */
+const BRAND_PATH = /^\/?images\/tracy-brand\/([\w.-]+\.(?:png|jpe?g|webp))$/i
+/**
+ * The WordPress options the brand stage writes, each the id of an attachment: the Site Logo block's picture, the
+ * dark-background logo of a theme that reads one, and the tab icon (brand-write-orders.js, `wordpress-option`).
+ */
+export const WORDPRESS_BRAND_OPTIONS = Object.freeze(new Set(['site_logo', 'tracy_logo_dark', 'site_icon']))
 
 /**
  * Where a picture of the write step sits on a WordPress site: the plugin's own folder for an image slot's pictures,
- * `wp-content/uploads/tracy-content/<sha256>.<ext>` (Claude Cowork for WordPress `media.upload`). Any other value is as
- * it came. The site check compares a picture by its file name, which this keeps.
+ * `wp-content/uploads/tracy-content/<sha256>.<ext>` (Claude Cowork for WordPress `media.upload`), and the brand's
+ * pictures beside it in `wp-content/uploads/tracy-brand/`. Any other value is as it came. The site check compares a
+ * picture by its file name, which this keeps.
  * @param {unknown} value
  */
 export function wordpressPath(value) {
   const file = PICTURE_PATH.exec(String(value ?? ''))?.[1]
-  return file ? `wp-content/uploads/tracy-content/${file}` : value
+  if (file) return `wp-content/uploads/tracy-content/${file}`
+  const brand = BRAND_PATH.exec(String(value ?? ''))?.[1]
+  return brand ? `wp-content/uploads/tracy-brand/${brand}` : value
 }
 
 /** The marker of a slot or call this door answers itself: what the plugin does not take yet. */
@@ -171,8 +183,15 @@ export const wordpressSiteDoor = Object.freeze({
       ? wordpressReading(answer)
       : answer
   },
-  /** Whether the Apply door is asked this call by the write step on a WordPress site. */
-  takes: (call) => WORDPRESS_TAKES.has(call?.action),
+  /**
+   * Whether the Apply door is asked this call by the write step on a WordPress site: the contract, `info`, the uploads and
+   * the Content API reads, and a brand option written or read (`WORDPRESS_BRAND_OPTIONS`), never another option.
+   */
+  takes: (call) =>
+    WORDPRESS_TAKES.has(call?.action) ||
+    (['content.update', 'content.get'].includes(call?.action) &&
+      call.params?.kind === 'option' &&
+      WORDPRESS_BRAND_OPTIONS.has(call.params?.key)),
   /** A call as the plugin takes it: a picture of the write step uploaded to the plugin's folder (`wordpressPath`). */
   callOf: (call) =>
     call?.action === 'media.upload' && typeof call.params?.path === 'string'

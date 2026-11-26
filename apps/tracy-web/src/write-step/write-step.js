@@ -28,7 +28,7 @@ import { planShapeProblems } from '../lib/plan-shape.js'
 import { contentMapKey, exportContractMapping } from '../lib/site-copy/contract-mapping.js'
 import { indexInputs } from '../lib/site-copy/inputs-index.js'
 import { readCopy } from '../lib/site-copy-view.js'
-import { prepareBrandStage } from './brand-stage.js'
+import { kitSiteLogoBlock, prepareBrandStage } from './brand-stage.js'
 import { closeDemoLeft, withClosing } from './closing-ladder.js'
 import { writeContract } from './contract-write.js'
 import { hideOnCreatedPages } from './created-page-hide-stage.js'
@@ -331,7 +331,8 @@ export async function runWriteStep(input) {
       kit: headKit,
       accentPlace: input.accentPlace,
       last,
-      templateSheets: input.templateSheets && (() => input.templateSheets({ door, siteKey }))
+      templateSheets: input.templateSheets && (() => input.templateSheets({ door, siteKey })),
+      siteLogoBlock: input.siteLogoBlock ?? kitSiteLogoBlock(kit)
     })
     if (brand.stop) return { stop: brand.stop }
     leaveOut(brand.unaddressable ?? [])
