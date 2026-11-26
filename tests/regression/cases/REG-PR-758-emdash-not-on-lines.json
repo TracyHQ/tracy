@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-758-emdash-not-on-lines",
+  "kind": "fix",
+  "title": "On EmDash a write step line that failed only for want of a door is skipped and says so, never read as a refusal of the site",
+  "pr": 758,
+  "area": "website-opportunities/write-step",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "notOnPlatform makes a failed EmDash line whose reason is not_on_emdash or a closed info door skipped with \"not on EmDash yet: <reason>\", keeps a refusal of the site failed, and changes nothing on Joomla; the JA Diner EmDash write step run with SEO words skips page-home:title and page-home:description with those words and leaves no failed line of that kind."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-site-doors.test.mjs",
+      "apps/tracy-web/test/write-step-emdash.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "on EmDash a line that failed only for want of a door is skipped and says so; any other failure stays",
+      "an EmDash Diner run writes its words into the entries and empties the hidden slot, through the contract alone"
+    ]
+  }
+}
