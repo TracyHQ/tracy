@@ -74,9 +74,20 @@ export async function mediaPathsOf({ siteUrl, tokenFile, map }) {
 }
 
 /**
+ * The page reader a sections file was written by. Reader 2 names a part without a unique id or class by its place among
+ * the siblings of its own tag; an older file (no `reader`) counted every sibling, the page owner element only a stamped
+ * page prints included, so its selectors name the next section on the pages the kit captures.
+ */
+export const EMDASH_SECTIONS_READER = 2
+
+/** Was this sections file written by an older page reader? */
+export const isStaleSections = (doc) => !!doc && doc.reader !== EMDASH_SECTIONS_READER
+
+/**
  * Settle the sections every read of the contract map splits an EmDash theme's pages by, for this run; any other
- * platform is left as it is. Reads the site when a browser and a site are given and `reread` is set or no file exists;
- * else the work folder's file. Returns where they came from and how many pages they cover.
+ * platform is left as it is. Reads the site when a browser and a site are given and `reread` is set, no file exists or
+ * the file is an older reader's; else the work folder's file. Returns where they came from, how many pages they cover,
+ * and `stale` when the file used is an older reader's (a run with no browser cannot read it again).
  * `tokenFile` (the agent token) also reads which media file each picture slot holds (`mediaPathsOf`).
  * @param {{platform?: string, out: string, map: object, siteUrl?: string, hostHeader?: string, chromium?: object|null,
  *   tokenFile?: string, reread?: boolean, log?: Function}} a
@@ -94,9 +105,10 @@ export async function settleEmdashSections({
 }) {
   if (String(platform ?? '').toLowerCase() !== 'emdash') return null
   const file = join(out, EMDASH_SECTIONS_FILE)
+  const kept = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null
   let doc = null
   let from = 'none'
-  if (chromium && siteUrl && (reread || !existsSync(file))) {
+  if (chromium && siteUrl && (reread || !kept || isStaleSections(kept))) {
     const paths = [...new Set((map.pages ?? []).map(emdashPagePath))]
     const r = await readSectionsFromSite({ chromium, siteUrl, hostHeader, paths, log })
     if (!Object.keys(r.pages).length)
@@ -104,13 +116,17 @@ export async function settleEmdashSections({
         `no page could be read for its sections (${r.failures[0]?.path}: ${r.failures[0]?.reason}); ${file} was left as it was`
       )
     const media = tokenFile ? await mediaPathsOf({ siteUrl, tokenFile, map }) : null
-    doc = { pages: r.pages, failures: r.failures, media }
+    doc = { reader: EMDASH_SECTIONS_READER, pages: r.pages, failures: r.failures, media }
     writeFileSync(file, `${JSON.stringify(doc, null, 1)}\n`)
     from = 'site'
-  } else if (existsSync(file)) {
-    doc = JSON.parse(readFileSync(file, 'utf8'))
+  } else if (kept) {
+    doc = kept
     from = EMDASH_SECTIONS_FILE
   }
   useEmdashSections(doc?.pages ?? null, doc?.media ?? null)
-  return { pages: Object.keys(doc?.pages ?? {}).length, from }
+  return {
+    pages: Object.keys(doc?.pages ?? {}).length,
+    from,
+    ...(from === EMDASH_SECTIONS_FILE && isStaleSections(doc) ? { stale: true } : {})
+  }
 }

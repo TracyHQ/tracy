@@ -815,6 +815,13 @@ An EmDash theme (`packages/cms/tracy-emdash-theme-<name>`) is read like the othe
   `adapters/emdash-map.mjs`). A part every page prints is one block (`header`, `part-<name>`, `footer`); a part that prints
   the fields of one entry which is no page (a reservation form) is that entry's block; any other part belongs to its page.
   A slot belongs to the one block that prints it: its own page first, then an entry with no page, then the shared parts.
+  A stamp on one cell of a repeater (`items[0].title`) places every row of that field. Every field a block's stamps
+  place is the block's, shown at the read width or not (a closed tab, a hidden slide): a block slot, a frame, or a row
+  of a list, one list per stored repeater with the repeater's own rows (`rowsFrom: "repeater"`, bounded by the map's
+  group of the same name, else by the stored rows). Words a block shows that equal another block's placed field are
+  never its own. A part's selector counts the siblings of its own tag (`:nth-of-type`): only the stamped read prints
+  the page owner element (`<template data-tracy-owner>`), so a count over all siblings named the next section on the
+  pages the kit captures. A sections file written before this rule must be read again (`--reread-sections`).
   `assemble` and the settle commands read `emdash-sections.json` and need no browser.
 - **`--token-file`** (the site's `data/tracy-agent.token`) lets the tool read two things from the site's REST door, GET
   only: the site settings (`/_emdash/api/settings`: title, logo, favicon) and which media file each picture slot holds

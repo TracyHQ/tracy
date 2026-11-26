@@ -5,16 +5,25 @@
 // whose rows are the stored rows, another block's words never become this block's field, and a part is found again on
 // the page the kit captures (no stamps, no page owner element). No browser, no site: made-up data only.
 import assert from 'node:assert/strict'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { test } from 'node:test'
 
 import { parseHTML } from 'linkedom'
 
+import { useEmdashSections } from '../template-kit/lib/contract-read.mjs'
 import { buildBlock } from '../template-kit/lib/kit-blocks.mjs'
 import { indexMap } from '../template-kit/lib/map-index.mjs'
 import { orphanTextChecks, settleForeignTexts } from '../template-kit/lib/orphan-text.mjs'
 import { sampleIndex } from '../template-kit/lib/sample-index.mjs'
 import { assignSlotOwners, slotOwnerChecks } from '../template-kit/lib/slot-owners.mjs'
 import { rootField, withEmdashPages } from '../template-kit/lib/site/adapters/emdash-map.mjs'
+import {
+  EMDASH_SECTIONS_FILE,
+  EMDASH_SECTIONS_READER,
+  settleEmdashSections
+} from '../template-kit/lib/site/emdash-sections-file.mjs'
 import { readEmdashSections } from '../template-kit/lib/site/read-emdash-sections.js'
 
 const text = (key, sample, role, extra = {}) => slotOf(key, 'text', sample, role, extra)
@@ -423,5 +432,62 @@ test('a section read on the stamped page is found again on the page the kit capt
     assert.equal(found.length, 1, p.selector)
     const heading = found[0].querySelector('h2, h3, a')?.textContent
     assert.equal(heading, p.headings[0] ?? 'Home', `${p.selector} finds the part it was read from`)
+  }
+})
+
+test('a sections file an older reader wrote is named stale when no browser can read it again', async () => {
+  const out = mkdtempSync(join(tmpdir(), 'kit-emdash-sections-'))
+  const settle = () => settleEmdashSections({ platform: 'emdash', out, map: MAP, chromium: null })
+  try {
+    writeFileSync(
+      join(out, EMDASH_SECTIONS_FILE),
+      JSON.stringify({ pages: SECTIONS, failures: [], media: null })
+    )
+    assert.deepEqual(await settle(), { pages: 1, from: EMDASH_SECTIONS_FILE, stale: true })
+    writeFileSync(
+      join(out, EMDASH_SECTIONS_FILE),
+      JSON.stringify({ reader: EMDASH_SECTIONS_READER, pages: SECTIONS, failures: [], media: null })
+    )
+    assert.deepEqual(await settle(), { pages: 1, from: EMDASH_SECTIONS_FILE })
+  } finally {
+    useEmdashSections(null)
+    rmSync(out, { recursive: true, force: true })
+  }
+})
+
+test('a build with a site reads a stale sections file again, with the pick header, and stamps the reader', async () => {
+  const out = mkdtempSync(join(tmpdir(), 'kit-emdash-sections-'))
+  const asked = []
+  // A stand-in for Playwright's chromium: every page answers 200 and reads as the fixture's home page.
+  const page = {
+    setExtraHTTPHeaders: async (h) => asked.push(h),
+    goto: async () => ({ status: () => 200 }),
+    waitForLoadState: async () => {},
+    evaluate: async () => SECTIONS['/'],
+    close: async () => {}
+  }
+  const browser = {
+    newContext: async () => ({ route: async () => {}, newPage: async () => page }),
+    close: async () => {}
+  }
+  try {
+    writeFileSync(
+      join(out, EMDASH_SECTIONS_FILE),
+      JSON.stringify({ pages: SECTIONS, failures: [], media: null })
+    )
+    const r = await settleEmdashSections({
+      platform: 'emdash',
+      out,
+      map: MAP,
+      siteUrl: 'http://127.0.0.1:4361',
+      chromium: { launch: async () => browser }
+    })
+    assert.deepEqual(r, { pages: 1, from: 'site' })
+    assert.deepEqual(asked, [{ 'X-Tracy-Preview': 'pick' }])
+    const written = JSON.parse(readFileSync(join(out, EMDASH_SECTIONS_FILE), 'utf8'))
+    assert.equal(written.reader, EMDASH_SECTIONS_READER)
+  } finally {
+    useEmdashSections(null)
+    rmSync(out, { recursive: true, force: true })
   }
 })
