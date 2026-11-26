@@ -54,6 +54,8 @@ import { withBaseSite } from './brief-engines/step-chain.js'
  * host that words it otherwise (or cannot say) costs nothing — the poll door's `done` still starts the writing.
  */
 const SITE_IS_UP = /building the site folder/i
+/** The platforms whose webroot a setup run seals and commits as one moment (`setupWebroot` in sites/route.js). */
+export const WEBROOT_SEALED = Object.freeze(new Set(['joomla', 'wordpress']))
 
 /** What the wizard's console says while a site's words are being made and written, in the customer's terms. */
 export const STAGE = Object.freeze({
@@ -624,12 +626,17 @@ export function createBriefBuilds({
       const upAt = now()
 
       if (!(await advanceBrief(pool, siteKey, ['ready'], { state: 'applying', stage: STAGE.placing }))) return
-      let held = await holdWebroot('open', ctx, runCap.webrootMs, engine.requiresSetupHold === true)
-      if (engine.requiresSetupHold && !held)
+      // 🔒 THE SEAL IS PROVEN WHERE THERE IS A WEBROOT TO SEAL: Joomla and WordPress (`setupWebroot`). An EmDash site keeps
+      // its words in its database and writes no setup files; every setup write there is its own Apply door row (origin setup),
+      // so it has no seal to open and no moment to commit. Before (dev 25/11/2026) every EmDash Diner chain build ended here.
+      const sealed = engine.requiresSetupHold === true && WEBROOT_SEALED.has(input.platform)
+      let held = await holdWebroot('open', ctx, runCap.webrootMs, sealed)
+      if (sealed && !held)
         throw new Error('STEP_CHAIN_SETUP_HOLD_UNPROVEN: the opening seal did not finish successfully.')
       // Native repairs own separate turns. Commit scripted setup files before their first seal,
       // otherwise the setup marker makes it skip and their Undo includes the initial personalization.
       const commitSetupWrites = async () => {
+        if (engine.requiresSetupHold && !sealed) return
         if (!held) throw new Error('The scripted setup has no proven webroot hold.')
         const checkpoint = await withTimeout(
           webroot.close(ctx),

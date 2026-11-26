@@ -6,7 +6,7 @@
 // (frame-surface/surface-cache.js); null when the manifest names none.
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { defaultContracts } from '../lib/contracts.js'
+import { kitContracts } from '../lib/template-kit-contracts.js'
 import { openKit } from '../lib/template-kit-source.js'
 
 const CONTENT_MAP = 'content-map.json'
@@ -16,7 +16,9 @@ const CONTENT_MAP = 'content-map.json'
  * @param {string} ref the contract id, e.g. "ja-boxing/j6/1.0.10"
  * @param {{ index?: Map<string, { id: string, dir?: string }> }} [options] the contracts to find kits in (tests)
  */
-export function openKitWithMap(ref, { index = defaultContracts() } = {}) {
+// The kit index, as `readableKits` and `openKit` read it: the sealing profiles and the EmDash kits, which have no profile.
+// Before (dev 25/11/2026) this read the profiles alone, so the bench listed the EmDash Diner kit and then could not open it.
+export function openKitWithMap(ref, { index = kitContracts() } = {}) {
   const kit = openKit(ref, { index })
   if (!kit) return null
   const contract = [...index.values()].find((c) => c.id === ref)
