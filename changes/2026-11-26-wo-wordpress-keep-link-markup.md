@@ -1,4 +1,4 @@
-- **On WordPress a button keeps its link and class around the new words, and the write step no longer uploads pictures it cannot place** — David (WO) · #PR · `fix/wo-wordpress-keep-link-markup` · 2026-11-26
+- **On WordPress a button keeps its link and class around the new words, and the write step no longer uploads pictures it cannot place** — David (WO) · #763 · `fix/wo-wordpress-keep-link-markup` · 2026-11-26
   **Affects:** WordPress exports of a site copy (`contract-mapping-wordpress.js` `wrapperOf`), and the write step on WordPress (`write-step/site-doors/wordpress.js`). Joomla and EmDash do not change.
   - A slot whose plugin keeps its inline markup (`markup: "inline"`, TracyHQ/tracy#459) and whose demo is one inline element around all its words keeps that element around the new words: `((a class="btn btn-primary" href="/about-us"))Book a table((/a))`. Every other slot is plain words, as before. JA Diner WP has 15 such buttons and links.
   - The write step's WordPress door answers `media.upload` itself as "not on WordPress yet". It writes no picture slot yet, and the plugin refused the picture stage's Joomla-style path ("unusable media path").
