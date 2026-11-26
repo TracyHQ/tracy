@@ -43,7 +43,7 @@ test('a template that is not listed, or no quickstart, never runs the chain', ()
 test('a staff template runs the chain only for a staff account, and only while the master switch is on', async () => {
   const { STEP_CHAIN_STAFF_TEMPLATES, stepChainFor } = await import('../src/lib/step-chain-switch.js')
   // test-quality: contract JA Diner on EmDash is measured on dev by staff before customers get it
-  assert.deepEqual(STEP_CHAIN_STAFF_TEMPLATES, ['tracy-diner/emdash-0.x'])
+  assert.deepEqual(STEP_CHAIN_STAFF_TEMPLATES, ['tracy-diner/emdash-0.x', 'ja-diner/wp7'])
   const asked = []
   const db = (staff) => ({
     query: async (sql, params) => {
@@ -51,7 +51,11 @@ test('a staff template runs the chain only for a staff account, and only while t
       return { rows: staff ? [{ '?column?': 1 }] : [] }
     }
   })
-  for (const quickstart of ['tracy-diner/emdash-0.x', 'tracy-diner/emdash-0.x@0.1.4']) {
+  for (const quickstart of [
+    'tracy-diner/emdash-0.x',
+    'tracy-diner/emdash-0.x@0.1.4',
+    'quickstart/ja-diner/wp7'
+  ]) {
     assert.equal(stepChainEnabled({ quickstart, env: on }), false, 'not for a customer')
     assert.equal(stepChainEnabled({ quickstart, env: on, staff: true }), true)
     assert.equal(await stepChainFor({ quickstart, env: on, db: db(true), accountId: 'a1' }), true)

@@ -77,12 +77,17 @@ export async function applyWordPressContract({ apply, siteKey, mapping, dry = fa
   if (answer?.ok !== false) return { ...answer, applyId: params.apply_id, contract: state.contract }
   const words = doorRefusal(answer, { writing: true })
   // The plugin names its slots in `errors[]`, or only in its words: a slot named there is refused alone.
-  const named = Array.isArray(answer.errors) && answer.errors.some((e) => typeof e?.field?.slotKey === 'string')
-    ? answer.errors
-    : changes
-        .map(([key]) => key)
-        .filter((key) => words.includes(key))
-        .map((slotKey) => ({ code: String(answer.error ?? answer.code ?? 'REFUSED'), message: words, field: { slotKey } }))
+  const named =
+    Array.isArray(answer.errors) && answer.errors.some((e) => typeof e?.field?.slotKey === 'string')
+      ? answer.errors
+      : changes
+          .map(([key]) => key)
+          .filter((key) => words.includes(key))
+          .map((slotKey) => ({
+            code: String(answer.error ?? answer.code ?? 'REFUSED'),
+            message: words,
+            field: { slotKey }
+          }))
   throw refusal(words, named, answer)
 }
 
@@ -96,8 +101,7 @@ export const wordpressSiteDoor = Object.freeze({
    * Whether a stage's failure words say only that WordPress has no door for it here: a call or slot this door answered
    * itself, or a stage that read `info` and found its door closed on the WordPress plugin.
    */
-  notDone: (reason) =>
-    new RegExp(`\\b${NOT_ON}\\b|the plugin on this site is older than `).test(reason),
+  notDone: (reason) => new RegExp(`\\b${NOT_ON}\\b|the plugin on this site is older than `).test(reason),
   /** Whether the Apply door is asked this call by the write step on a WordPress site. */
   takes: (call) => WORDPRESS_TAKES.has(call?.action),
   /** The answer to a call it does not take: nothing is sent. */

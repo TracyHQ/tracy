@@ -100,32 +100,27 @@ test('🔒 on EmDash a call the Apply door has no door for is answered by name a
   assert.equal(onPlatform(joomla, 'joomla'), joomla)
 })
 
-test('WordPress has no door that writes yet, and an unknown platform has none at all', () => {
-  const door = siteDoorFor('wordpress')
-  assert.equal(door.platform, 'wordpress')
-  assert.equal(door.writes, false)
-  assert.match(door.missing, /\w/)
+test('every CMS the write step knows has a door that writes; an unknown platform has none at all', () => {
+  for (const platform of ['joomla', 'wordpress', 'emdash']) {
+    assert.equal(siteDoorFor(platform).platform, platform)
+    assert.equal(siteDoorFor(platform).writes, true)
+  }
   assert.equal(siteDoorFor('drupal'), null)
   assert.equal(siteDoorFor(undefined), null)
 })
 
-test('a kit stops the write by its platform: none for Joomla and EmDash, a code for WordPress and for none', () => {
+test('a kit stops the write by its platform: none for the three CMS, a code for none', () => {
   assert.equal(platformStop({ ref: CONTRACT, platform: 'joomla' }), null)
   assert.equal(platformStop({ ref: 'tracy-diner/emdash-0.x/0.1.4', platform: 'emdash' }), null)
-  const wp = platformStop({ ref: 'ja-diner/wp7/1.0.4', platform: 'wordpress' })
-  assert.equal(wp.code, 'WRITE_STEP_NOT_ON_PLATFORM')
-  assert.match(wp.reason, /WordPress site/)
-  assert.match(wp.reason, /Nothing was read or written/)
+  assert.equal(platformStop({ ref: 'ja-diner/wp7/1.0.4', platform: 'wordpress' }), null)
+  assert.equal(platformStop({ ref: 'x/1', platform: 'drupal' }).code, 'WRITE_STEP_KIT_PLATFORM')
   // A kit that names no platform is an error, never taken for Joomla.
   const none = platformStop({ ref: 'test-kit' })
   assert.equal(none.code, 'WRITE_STEP_KIT_PLATFORM')
   assert.match(none.reason, /test-kit/)
 })
 
-for (const [platform, code] of [
-  ['wordpress', 'WRITE_STEP_NOT_ON_PLATFORM'],
-  [undefined, 'WRITE_STEP_KIT_PLATFORM']
-]) {
+for (const [platform, code] of [[undefined, 'WRITE_STEP_KIT_PLATFORM']]) {
   test(`a write step run on a ${platform ?? 'platform-less'} kit stops with ${code} before any call or file read`, async () => {
     const site = recordingSite()
     const report = await runWriteStep({
