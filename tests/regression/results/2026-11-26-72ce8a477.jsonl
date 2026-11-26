@@ -1,0 +1,1 @@
+{"id":"REG-PR-760-wordpress-recovery-probe","verdict":"PASS","commit":"72ce8a4771a61aa3a70e905c149c37fb9171f8c7","ran_at":"2026-11-26T13:02:23.099Z","evidence":"tests/regression/.runs/2026-11-26-72ce8a477/REG-PR-760-wordpress-recovery-probe.log"}
