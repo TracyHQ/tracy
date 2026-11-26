@@ -46,7 +46,9 @@ function planOf(kit) {
                   slot('front-page.slideshow.desc.1', 'what is cooked'),
                   slot('front-page.slideshow.button1.1', 'book a table')
                 ],
-                hiddenSlots: [{ slot: 'front-page.slideshow.button1.2', why: 'no table booking online' }]
+                hiddenSlots: [
+                  { slot: 'front-page.features-intro.basic-description', why: 'nothing true to say' }
+                ]
               })
             : keep(block)
         )
@@ -157,9 +159,11 @@ test('a WordPress Diner run writes its words as plain text in one apply, and ski
     )
     const line = (slot) => report.slots.find((s) => s.slot === slot)
     assert.equal(line('front-page.slideshow.title.1')?.status, 'written')
-    // The plugin empties no slot yet: the hidden slot is skipped in words, and so is the page title stage.
-    assert.equal(line('front-page.slideshow.button1.2')?.status, 'skipped')
-    assert.match(line('front-page.slideshow.button1.2').reason, /^not on WordPress yet: /)
+    // The hidden slot is emptied in the one apply (the plugin writes ''), and so are kept blocks' demo words no file fills.
+    assert.equal(line('front-page.features-intro.basic-description')?.status, 'hidden')
+    assert.equal(sent['front-page.features-intro.basic-description'], '')
+    assert.ok(report.counts.hidden > 100, JSON.stringify(report.counts))
+    // The page title stage has no door on WordPress: its line is skipped in words.
     assert.equal(line('page-home:title')?.status, 'skipped')
     assert.equal(
       report.slots.filter((l) => l.status === 'failed' && /not_on_wordpress|older than/.test(l.reason ?? ''))

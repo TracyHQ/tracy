@@ -814,7 +814,7 @@ export async function runWriteStep(input) {
       heldWords,
       linked: links?.overHides ?? new Set(),
       doorOf: links?.doorOf ?? null,
-      menuOwnsPage: !siteDoor.menuInContract,
+      menuOwnsPage: siteDoor.menuOwnsPage ?? !siteDoor.menuInContract,
       ...(siteDoor.dropPages ? { dropPages: (args) => siteDoor.dropPages({ ...args, contentMap }) } : {}),
       onNoWayOut: async (named) => {
         report.noWayOut = named

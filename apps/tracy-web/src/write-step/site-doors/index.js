@@ -66,15 +66,24 @@ export function onPlatform(door, platform) {
 }
 
 /**
- * The run's door with each answer read as every CMS answers it (the site door's `answerOf`: the WordPress plugin's inspect
- * as a list of slots), and every call sent. The site check reads the site through this, as the write step does.
+ * The run's door with each call as the site's CMS takes it (the site door's `callOf`: a picture uploaded to the WordPress
+ * plugin's folder) and each answer read as every CMS answers it (`answerOf`: the WordPress plugin's inspect as a list of
+ * slots); every call is sent. The site check reads the site through this, as the write step does.
  * @param {{ apply: Function }} door
  * @param {string | undefined} platform
  */
 export function readingOnPlatform(door, platform) {
   const site = siteDoorFor(platform)
-  if (typeof site?.answerOf !== 'function') return door
-  return { ...door, apply: async (call) => site.answerOf(call, await door.apply(call)) }
+  if (typeof site?.answerOf !== 'function' && typeof site?.callOf !== 'function') return door
+  const callOf = site.callOf ?? ((call) => call)
+  const answerOf = site.answerOf ?? ((_call, answer) => answer)
+  return {
+    ...door,
+    apply: async (call) => {
+      const sent = callOf(call)
+      return answerOf(sent, await door.apply(sent))
+    }
+  }
 }
 
 /**
