@@ -98,6 +98,12 @@ export const emdashSiteDoor = Object.freeze({
   refusal: async (answer, options) => (await tools()).doorRefusal(answer, options),
   /** One contract write, all or nothing (`applyJoomlaContract`: inspect, then apply). */
   applyContract: async (input) => (await tools()).applyJoomlaContract(input),
+  /**
+   * Whether a stage's failure words say only that EmDash has no door for it: a call this door answered itself
+   * (`not_on_emdash`), or a stage that read `info` and found its door closed. An EmDash site has no plugin to be older than,
+   * so "the plugin on this site is older than …" there means the same.
+   */
+  notDone: (reason) => /\bnot_on_emdash\b|the plugin on this site is older than /.test(reason),
   /** Whether the Apply door takes this call on an EmDash site. */
   takes: (call) => EMDASH_TAKES.has(call?.action),
   /** The answer to a call it does not take: nothing is sent. */

@@ -87,7 +87,13 @@ const copy = {
     w('menu.primary.6.label', 'Find us')
   ],
   alts: [],
-  seo: [],
+  seo: [
+    {
+      page: 'page-home',
+      title: 'Harbour Kitchen, fish by the harbour',
+      description: 'Fish from the morning boats.'
+    }
+  ],
   pages: [],
   notebook: [],
   returns: []
@@ -174,6 +180,16 @@ test('an EmDash Diner run writes its words into the entries and empties the hidd
   assert.equal(site.entry('pages', 'offers').status, 'draft')
   assert.equal(site.entry('pages', 'about-us').status, 'published')
   assert.equal(line('page-offers')?.status, 'hidden')
+  // The page title and description have no field on this release: their lines are skipped and say so, never failed.
+  for (const slot of ['page-home:title', 'page-home:description']) {
+    assert.equal(line(slot)?.status, 'skipped', slot)
+    assert.match(line(slot).reason, /^not on EmDash yet: /)
+  }
+  assert.equal(
+    report.slots.filter((l) => l.status === 'failed' && /not_on_emdash|older than/.test(l.reason ?? ''))
+      .length,
+    0
+  )
   // 🔒 Only what the Apply door takes on EmDash was sent.
   assert.deepEqual(
     calls.filter((c) => !EMDASH_TAKES.has(c.action)),

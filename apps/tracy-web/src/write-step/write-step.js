@@ -65,7 +65,7 @@ import { runPrintedStage } from './printed-stage.js'
 import { writeRecordAlts } from './record-alt-stage.js'
 import { followRenamedLinks, rewriteRenamedLinks } from './renamed-link-stage.js'
 import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
-import { onPlatform, platformStop, siteDoorFor } from './site-doors/index.js'
+import { notOnPlatform, onPlatform, platformStop, siteDoorFor } from './site-doors/index.js'
 import { doorCall } from './settings-door.js'
 import { runShareStage } from './share-stage.js'
 import { correctionsReader, galleryAlts, pictureAltsOf } from './slot-corrections.js'
@@ -257,6 +257,9 @@ export async function runWriteStep(input) {
     const followedForms = followClosedForms(lines, kit.doc, formLines)
     const discharged = new Set(followedForms.filter((line, i) => line !== lines[i]).map((line) => line.slot))
     lines = followedForms
+    // A stage the site's CMS has no door for says so on its line, which is then skipped, never a refusal of the site
+    // (site-doors/index.js `notOnPlatform`; the three CMS plan, decision 3).
+    lines = lines.map((line) => notOnPlatform(line, kit.platform))
     if (report.noWayOut) report.noWayOut = report.noWayOut.filter((item) => !discharged.has(item.slot))
     if (closing.length) report.closing = closing
     if (emphasis.size)

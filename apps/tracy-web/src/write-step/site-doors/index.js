@@ -64,3 +64,20 @@ export function onPlatform(door, platform) {
   if (!site?.writes || typeof site.takes !== 'function') return door
   return { ...door, apply: async (call) => (site.takes(call) ? door.apply(call) : site.notTaken(call)) }
 }
+
+/**
+ * A report line as it reads on this platform: a line that failed only because the site's CMS has no door for what its
+ * stage asks (the site door's `notDone`) is skipped, and says that, so the site check never takes it for a refusal of the
+ * site. Every other line is as it was.
+ * @param {{ status?: string, reason?: string | null }} line
+ * @param {string | undefined} platform
+ */
+export function notOnPlatform(line, platform) {
+  const site = siteDoorFor(platform)
+  if (!site?.notDone || line?.status !== 'failed' || !site.notDone(String(line.reason ?? ''))) return line
+  return {
+    ...line,
+    status: 'skipped',
+    reason: `not on ${PLATFORM_NAMES[site.platform]} yet: ${line.reason}`
+  }
+}
