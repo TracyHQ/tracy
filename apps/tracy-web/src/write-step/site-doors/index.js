@@ -61,7 +61,20 @@ export function platformStop(kit) {
 export function onPlatform(door, platform) {
   const site = siteDoorFor(platform)
   if (!site?.writes || typeof site.takes !== 'function') return door
-  return { ...door, apply: async (call) => (site.takes(call) ? door.apply(call) : site.notTaken(call)) }
+  const read = readingOnPlatform(door, platform)
+  return { ...read, apply: async (call) => (site.takes(call) ? read.apply(call) : site.notTaken(call)) }
+}
+
+/**
+ * The run's door with each answer read as every CMS answers it (the site door's `answerOf`: the WordPress plugin's inspect
+ * as a list of slots), and every call sent. The site check reads the site through this, as the write step does.
+ * @param {{ apply: Function }} door
+ * @param {string | undefined} platform
+ */
+export function readingOnPlatform(door, platform) {
+  const site = siteDoorFor(platform)
+  if (typeof site?.answerOf !== 'function') return door
+  return { ...door, apply: async (call) => site.answerOf(call, await door.apply(call)) }
 }
 
 /**

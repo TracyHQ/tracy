@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-762-wordpress-inspect-shape",
+  "kind": "fix",
+  "title": "The WordPress plugin's inspect is read as a list of slots, so a WordPress write step writes its words and the site check reads them back",
+  "pr": 762,
+  "area": "website-opportunities/write-step",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "wordpressReading turns the plugin's {key: words} slots and imageSlots into [{key, current, type}] with pictures typed image and keeps lists, refusals and other operations as they came; readingOnPlatform and onPlatform read a WordPress inspect that way and leave Joomla untouched; a whole JA Diner WordPress write step against the plugin's real inspect shape writes its words in one apply; the closing rule's 'does not let … be emptied' is skipped as not on WordPress yet, on WordPress only."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-wordpress-door.test.mjs",
+      "apps/tracy-web/test/write-step-wordpress.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the plugin inspect is read as a list of slots, pictures typed, by the write step and the site check alike",
+      "a WordPress Diner run writes its words as plain text in one apply, and skips in words what the plugin does not take"
+    ]
+  }
+}

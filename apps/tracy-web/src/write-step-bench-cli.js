@@ -16,7 +16,7 @@ import { isBenchSite } from './write-step/bench-site-creator.js'
 import { runCli as runSiteCli, SITE_COMMANDS, USAGE as SITE_USAGE } from './write-step/bench-site-cli.js'
 import { runWriteStep } from './write-step/write-step.js'
 import { STEP_NINE_USAGE, stepNineOfRun, stepNineRefusal } from './write-step-bench-step-nine.js'
-import { platformStop } from './write-step/site-doors/index.js'
+import { platformStop, readingOnPlatform } from './write-step/site-doors/index.js'
 
 export const USAGE = `usage: node scripts/write-step-bench.mjs <command>
   run --site <key> --kit <ref> --plan-file <path> --copy-file <path> --account <email>
@@ -298,15 +298,20 @@ async function checkRun(d, values) {
         ? `baseline ${baselineOutcome({ measured: false })} for ${r.report.contract}`
         : `baseline: none stored for ${r.report.contract}, so the demo groups stay unmeasured (create-site measures it on an untouched site)`
     )
+  // The site read as every CMS answers it (the WordPress plugin's inspect as a list of slots), as the chain reads it.
+  const checkedKit = openKit(r.report.kit, d.index ? { index: d.index } : {})
   const check = await runSiteCheck({
-    door: d.makeDoor({ account: values.account, platform: 'joomla' }),
+    door: readingOnPlatform(
+      d.makeDoor({ account: values.account, platform: checkedKit?.platform ?? 'joomla' }),
+      checkedKit?.platform
+    ),
     report: r.report,
     // The page groups need the site's host and the demo baseline of the quickstart; both are optional (site-check.js).
     ...(d.makeHost ? { host: await d.makeHost(r.report.site) } : {}),
     // The pages as a visitor reads them, for `written-not-printed` (written-not-printed.js).
     ...(d.pageHtml ? { pageHtml: (path) => d.pageHtml({ siteKey: r.report.site, path }) } : {}),
     baseline,
-    kit: openKit(r.report.kit, d.index ? { index: d.index } : {})?.doc ?? null,
+    kit: checkedKit?.doc ?? null,
     pictures,
     allGroups: values['all-groups'] === true,
     ...(d.now ? { now: d.now } : {})
