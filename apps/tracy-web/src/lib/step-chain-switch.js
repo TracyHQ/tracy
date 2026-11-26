@@ -14,9 +14,9 @@ export const STEP_CHAIN_TEMPLATES = ['ja-boxing/j6', 'ja-diner/j6']
 /**
  * The templates the chain builds for Tracy staff only (an account seated in the `tracy_admin` workspace), while their write
  * is measured on dev; a customer's build of one keeps its own build until it joins the list above. JA Diner on EmDash: the
- * write step writes EmDash since TracyHQ/tracy#754.
+ * write step writes EmDash since TracyHQ/tracy#754; JA Diner on WordPress: its words through the plugin's contract.
  */
-export const STEP_CHAIN_STAFF_TEMPLATES = ['tracy-diner/emdash-0.x']
+export const STEP_CHAIN_STAFF_TEMPLATES = ['tracy-diner/emdash-0.x', 'ja-diner/wp7']
 
 /** A quickstart tag without its release prefix or version suffix: `quickstart/ja-boxing/j6/1.0.10` is `ja-boxing/j6`. */
 export function chainTemplateOf(quickstart) {

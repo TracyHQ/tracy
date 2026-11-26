@@ -370,7 +370,9 @@ export async function runWriteStep(input) {
       kit: kit.doc,
       brief,
       plan,
-      contentMap
+      contentMap,
+      // A WordPress contract takes plain text keyed by slot (contract-mapping-wordpress.js); the others take the markup.
+      platform: kit.platform
     })
     const provenanceProblems = exported.problems.filter((p) => p.code === 'ARTICLE_PROVENANCE')
     const refusedCopy = new Set(provenanceProblems.map((p) => p.where))

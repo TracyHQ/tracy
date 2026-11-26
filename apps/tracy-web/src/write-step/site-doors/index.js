@@ -9,16 +9,14 @@
 //
 // The contract read and write go through the door on each CMS. The stages that call other plugin actions (hides of pages,
 // page creation, menus, page settings) send them as the Claude Cowork for Joomla takes them; a door that takes only some
-// actions (EmDash: `takes`) answers the others itself (`onPlatform`), so those stages say what was not done there. WordPress
-// has no door that writes yet.
+// actions (EmDash, WordPress: `takes`) answers the others itself (`onPlatform`), and a line that failed for want of a door
+// is skipped with words (`notOnPlatform`), so those stages say what was not done there.
 import { emdashSiteDoor } from './emdash.js'
 import { joomlaSiteDoor } from './joomla.js'
+import { wordpressSiteDoor } from './wordpress.js'
 
 /** What the write step still lacks on each CMS it has no door for. */
-const NOT_YET = Object.freeze({
-  wordpress:
-    'WordPress write doors (the Claude Cowork for WordPress empties no slot, hides no block, removes no row, creates no page and renames no menu item yet)'
-})
+const NOT_YET = Object.freeze({})
 
 /** The name of each platform as a reader knows it. */
 export const PLATFORM_NAMES = Object.freeze({ joomla: 'Joomla', wordpress: 'WordPress', emdash: 'EmDash' })
@@ -27,6 +25,7 @@ export const PLATFORM_NAMES = Object.freeze({ joomla: 'Joomla', wordpress: 'Word
 export function siteDoorFor(platform) {
   if (platform === 'joomla') return joomlaSiteDoor
   if (platform === 'emdash') return emdashSiteDoor
+  if (platform === 'wordpress') return wordpressSiteDoor
   if (typeof platform === 'string' && Object.hasOwn(NOT_YET, platform))
     return Object.freeze({ platform, writes: false, missing: NOT_YET[platform] })
   return null

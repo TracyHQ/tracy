@@ -465,6 +465,12 @@ that upload answered, or finds the file name in the library. The audit, lease an
 own, so a chain build's writes fold into its "Tracy setup" row. `info` answers what the write step's stages may ask
 (`EMDASH_INFO`). The write step reaches an EmDash site through this door alone: its EmDash site door
 (`write-step/site-doors/emdash.js`) answers any other action itself, by name, and never sends it.
+On WordPress the write step writes through the Claude Cowork for WordPress's own `content.contract` (inspect, then one
+`apply` of plain-text changes keyed by content map slot, as the seeder does: `write-step/site-doors/wordpress.js`). What
+that plugin does not take yet is refused by slot before anything is sent: an emptied slot, a link taken off, a picture
+or address slot. The calls of Joomla stages are answered by the door itself. On every CMS, a line that failed only for
+want of a door is `skipped` with the words `not on <CMS> yet: …` (`notOnPlatform`), so the site check never reads it
+as a refusal of the site.
 
 **d. Writes outside Apply, reported afterwards.** Three kinds of write do not go through Apply: EmDash's own MCP
 (`tracy_emdash`), look changes via file tools, and `look.revert`. `tracy-site-tools` reports each
