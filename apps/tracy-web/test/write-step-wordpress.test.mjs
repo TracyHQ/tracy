@@ -92,14 +92,21 @@ function wordpressDoor(contentMap) {
         if (action === 'info') return { ok: true, info: { platform: 'wordpress', version: '0.18.45' } }
         if (action !== 'content.contract')
           return { ok: false, error: 'bad_action', message: `unknown action ${action}` }
-        if (params.operation === 'inspect')
+        // The plugin's own shape (dev 26/11/2026): `slots` keyed by slot with the current words, pictures apart.
+        if (params.operation === 'inspect') {
+          const pictures = contentMap.slots.filter((s) => s.type === 'image')
           return {
             ok: true,
             contract: CONTRACT,
             revision: `rev-${calls.length}`,
             bound: true,
-            slots: contentMap.slots.map((s) => ({ key: s.key, type: s.type, current: held.get(s.key) }))
+            slots: Object.fromEntries(contentMap.slots.map((s) => [s.key, held.get(s.key)])),
+            imageSlots: Object.fromEntries(
+              pictures.map((s) => [s.key, `wp-content/uploads/2026/10/${s.sample}`])
+            ),
+            markupSlots: {}
           }
+        }
         if (params.operation === 'apply') {
           for (const [key, value] of Object.entries(params.changes ?? {})) held.set(key, value)
           return { ok: true, afterRevision: 'rev-after' }

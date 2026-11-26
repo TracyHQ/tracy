@@ -34,6 +34,7 @@ import { stepNineDiagnostics } from './step-chain-write-diagnostics.js'
 import { mintSeatSession } from './workspace/seat-door.js'
 import { httpSiteDoor } from './write-step/bench-site-door.js'
 import { siteFileReader } from './write-step/site-file.js'
+import { readingOnPlatform } from './write-step/site-doors/index.js'
 import { probeSiteHome, runWithSiteRecovery } from './write-step/site-recovery.js'
 import { sitePageReader, siteSheetsReader } from './write-step/site-sheets.js'
 import { standInBrand, standInCopy, standInPlan } from './write-step/stand-in-files.js'
@@ -560,7 +561,9 @@ export function createStepChainSteps(deps) {
       // The comment requests and turn undo of 9b go through the web app's own doors as the site owner; every Apply call of
       // the step, the write and the site check's reads, goes through the setup door under this run's id.
       const http = ownerSiteDoor(ctx, site)
-      const siteDoor = { ...http, apply: door.apply }
+      // Every answer read as every CMS answers it (the WordPress plugin's inspect as a list of slots), for the write and the
+      // site check alike (write-step/site-doors/index.js `readingOnPlatform`).
+      const siteDoor = readingOnPlatform({ ...http, apply: door.apply }, inputs.kit.platform)
       const manifest = inputs.pictures
         ? JSON.parse(await readFile(inputs.pictures.manifest, 'utf8').catch(() => 'null'))
         : null

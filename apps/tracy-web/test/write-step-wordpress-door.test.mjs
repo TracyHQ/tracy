@@ -4,7 +4,13 @@
 // step's rounds go on without exactly those slots and their lines say "not on WordPress yet". All data made up.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { notOnPlatform, onPlatform, siteDoorFor } from '../src/write-step/site-doors/index.js'
+import {
+  notOnPlatform,
+  onPlatform,
+  readingOnPlatform,
+  siteDoorFor
+} from '../src/write-step/site-doors/index.js'
+import { wordpressReading } from '../src/write-step/site-doors/wordpress.js'
 import { writeContract } from '../src/write-step/contract-write.js'
 
 const CONTRACT = 'harbour-wp/wp7/1.0.0'
@@ -157,4 +163,46 @@ test('🔒 on WordPress a call of a Joomla stage is answered by name and never s
     site.calls.map((c) => c.action),
     ['media.upload', 'content.contract']
   )
+})
+
+test('the plugin inspect is read as a list of slots, pictures typed, by the write step and the site check alike', async () => {
+  const answer = {
+    ok: true,
+    contract: CONTRACT,
+    revision: 'rev-1',
+    slots: { 'hero.title': 'Hey Harry!!!', 'hero.picture': 'item-1.jpg' },
+    imageSlots: { 'hero.picture': 'wp-content/uploads/2026/10/item-1.jpg' },
+    markupSlots: { 'hero.title': { tags: ['br'], classes: [] } }
+  }
+  assert.deepEqual(wordpressReading(answer).slots, [
+    { key: 'hero.title', type: 'text', current: 'Hey Harry!!!', markup: { tags: ['br'], classes: [] } },
+    { key: 'hero.picture', type: 'image', current: 'wp-content/uploads/2026/10/item-1.jpg' }
+  ])
+  // A list already, a refusal, or no inspect at all: as it came.
+  const listed = { ok: true, slots: [{ key: 'a' }] }
+  assert.equal(wordpressReading(listed), listed)
+  const refused = { ok: false, error: 'contract_unbound' }
+  assert.equal(wordpressReading(refused), refused)
+  const raw = { apply: async () => answer }
+  const read = readingOnPlatform(raw, 'wordpress')
+  assert.equal(
+    (await read.apply({ action: 'content.contract', params: { operation: 'inspect' } })).slots.length,
+    2
+  )
+  assert.equal(await read.apply({ action: 'content.contract', params: { operation: 'apply' } }), answer)
+  assert.equal(
+    (await onPlatform(raw, 'wordpress').apply({ action: 'content.contract', params: {} })).slots[0].key,
+    'hero.title'
+  )
+  // Nothing changes on Joomla.
+  assert.equal(readingOnPlatform(raw, 'joomla'), raw)
+  // The closing rule's words for a slot the plugin cannot empty read as not on WordPress yet.
+  const line = {
+    slot: 'x',
+    status: 'failed',
+    reason:
+      'no file fills this slot of a kept block; the kit or the site does not let x.title be emptied, so the demo content stays'
+  }
+  assert.equal(notOnPlatform(line, 'wordpress').status, 'skipped')
+  assert.equal(notOnPlatform(line, 'joomla'), line)
 })

@@ -30,6 +30,32 @@ const notOn = (slotKey, what) => ({
   field: { slotKey }
 })
 
+const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
+
+/**
+ * An inspect of the WordPress plugin in the shape the write step and the site check read on every CMS: the plugin
+ * answers `slots` as `{<slot key>: <current value>}` and its pictures apart (`imageSlots`: `{<slot key>: <path>}`), where
+ * the Joomla plugin and the EmDash door answer `slots: [{key, current, …}]`. Each slot becomes `{key, current, type}`,
+ * `image` for a picture slot (its current value the path the page shows), `text` else; `markupSlots` rides along as
+ * `markup`. Dev 26/11/2026: read as a list, the plugin's `slots` was empty, so `arabian-tea-wp2` left out every change as
+ * "the site does not have the slot" and wrote nothing. Any other answer is as it came.
+ * @param {any} answer
+ */
+export function wordpressReading(answer) {
+  if (!answer?.ok || !isObject(answer.slots)) return answer
+  const images = isObject(answer.imageSlots) ? answer.imageSlots : {}
+  const markup = isObject(answer.markupSlots) ? answer.markupSlots : {}
+  return {
+    ...answer,
+    slots: Object.entries(answer.slots).map(([key, value]) => ({
+      key,
+      type: key in images ? 'image' : 'text',
+      current: String((key in images ? images[key] : value) ?? ''),
+      ...(markup[key] ? { markup: markup[key] } : {})
+    }))
+  }
+}
+
 /** A refusal as the write step's rounds read one: the sentence, the answer, and the slots it names. */
 function refusal(message, errors, answer = null) {
   const error = /** @type {Error & { errors?: object[], answer?: any }} */ (new Error(message))
@@ -45,7 +71,9 @@ function refusal(message, errors, answer = null) {
  */
 export async function applyWordPressContract({ apply, siteKey, mapping, dry = false }) {
   const { doorRefusal } = await tools()
-  const state = await apply({ siteKey, action: 'content.contract', params: { operation: 'inspect' } })
+  const state = wordpressReading(
+    await apply({ siteKey, action: 'content.contract', params: { operation: 'inspect' } })
+  )
   if (!state?.ok) throw refusal(doorRefusal(state), [], state)
   if (mapping?.contract !== state.contract)
     throw new Error('The content mapping must name the installed quickstart contract')
@@ -99,9 +127,18 @@ export const wordpressSiteDoor = Object.freeze({
   applyContract: applyWordPressContract,
   /**
    * Whether a stage's failure words say only that WordPress has no door for it here: a call or slot this door answered
-   * itself, or a stage that read `info` and found its door closed on the WordPress plugin.
+   * itself, a stage that read `info` and found its door closed on the WordPress plugin, or the closing rule's "does not
+   * let … be emptied" (the plugin empties no slot yet, so no slot of its review is one it may empty).
    */
-  notDone: (reason) => new RegExp(`\\b${NOT_ON}\\b|the plugin on this site is older than `).test(reason),
+  notDone: (reason) =>
+    new RegExp(
+      `\\b${NOT_ON}\\b|the plugin on this site is older than |the kit or the site does not let \\S+ be emptied`
+    ).test(reason),
+  /** Each answer as every CMS answers it: the plugin's inspect read as a list of slots (`wordpressReading`). */
+  answerOf: (call, answer) =>
+    call?.action === 'content.contract' && (call.params?.operation ?? 'inspect') === 'inspect'
+      ? wordpressReading(answer)
+      : answer,
   /** Whether the Apply door is asked this call by the write step on a WordPress site. */
   takes: (call) => WORDPRESS_TAKES.has(call?.action),
   /** The answer to a call it does not take: nothing is sent. */
