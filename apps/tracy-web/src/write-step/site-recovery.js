@@ -53,14 +53,46 @@ export async function runWithSiteRecovery({ door, siteKey, runId, probe, run, sl
   )
 }
 
-/** A visitor's home through the same site resolver as the write step's existing page reader. */
+/** How many redirects the home probe follows, each to the site's own address. */
+const PROBE_REDIRECTS = 3
+
+/**
+ * A visitor's home through the same site resolver as the write step's existing page reader.
+ *
+ * 🔒 A REDIRECT IS FOLLOWED ONLY TO THE SITE ITSELF. WordPress answers a read of its container origin with a canonical 301
+ * to its own public address (dev 26/11/2026: every JA Diner WordPress chain build stopped SITE_RECOVERY_BASE_UNHEALTHY,
+ * `before: {state: unknown, status: 301}`, before its first write). Such a redirect is followed, at most three times, when
+ * it stays on the site's read or public origin; one that leaves the site proves nothing and stays `unknown`.
+ */
 export async function probeSiteHome({ site, readers, fetchImpl = fetch }) {
   try {
-    const response = await fetchImpl(readers.readOrigin(site), {
-      headers: { accept: 'text/html' },
-      redirect: 'manual',
-      signal: AbortSignal.timeout(10_000)
-    })
+    const own = new Set(
+      [readers.readOrigin(site), readers.publicOf?.(site)]
+        .filter(Boolean)
+        .map((origin) => {
+          try {
+            return new URL(String(origin)).origin
+          } catch {
+            return null
+          }
+        })
+        .filter(Boolean)
+    )
+    let url = String(readers.readOrigin(site))
+    let response
+    for (let hop = 0; ; hop += 1) {
+      response = await fetchImpl(url, {
+        headers: { accept: 'text/html' },
+        redirect: 'manual',
+        signal: AbortSignal.timeout(10_000)
+      })
+      const location =
+        response.status >= 300 && response.status < 400 ? response.headers?.get?.('location') : null
+      if (!location || hop >= PROBE_REDIRECTS) break
+      const next = new URL(location, url)
+      if (!own.has(next.origin)) return { state: 'unknown', status: response.status, redirect: next.origin }
+      url = next.href
+    }
     if (response.status >= 500) return { state: 'broken', status: response.status }
     if (!response.ok) return { state: 'unknown', status: response.status }
     let html = ''

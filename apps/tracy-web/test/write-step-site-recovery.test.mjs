@@ -191,3 +191,39 @@ test('a canceled recovery read receives the run signal and cannot start health p
   assert.equal(probes, 0)
   assert.equal(writes, 0)
 })
+
+test('the home probe follows a redirect to the site itself (WordPress canonical), never one that leaves it', async () => {
+  // Dev 26/11/2026: WordPress answered the container origin with a 301 to its public address, so every WordPress chain
+  // build stopped SITE_RECOVERY_BASE_UNHEALTHY before its first write.
+  const { probeSiteHome } = await import('../src/write-step/site-recovery.js')
+  const readers = { readOrigin: () => 'http://wp1-web-1:80/', publicOf: () => 'https://wp1.tracy.site' }
+  const page = {
+    status: 200,
+    ok: true,
+    headers: { get: () => null },
+    text: async () => '<!doctype html><html></html>'
+  }
+  const moved = (location) => ({
+    status: 301,
+    ok: false,
+    headers: { get: (n) => (n === 'location' ? location : null) }
+  })
+  const asked = []
+  const fetchOf = (answers) => async (url) => (asked.push(url), answers.shift())
+  assert.deepEqual(
+    await probeSiteHome({ site: {}, readers, fetchImpl: fetchOf([moved('https://wp1.tracy.site/'), page]) }),
+    { state: 'healthy', status: 200 }
+  )
+  assert.deepEqual(asked, ['http://wp1-web-1:80/', 'https://wp1.tracy.site/'])
+  const away = await probeSiteHome({
+    site: {},
+    readers,
+    fetchImpl: fetchOf([moved('https://elsewhere.example/')])
+  })
+  assert.equal(away.state, 'unknown')
+  assert.equal(away.redirect, 'https://elsewhere.example')
+  // A loop on the site's own address ends after three hops, unknown.
+  const loop = Array.from({ length: 5 }, () => moved('https://wp1.tracy.site/'))
+  const looped = await probeSiteHome({ site: {}, readers, fetchImpl: fetchOf(loop) })
+  assert.deepEqual(looped, { state: 'unknown', status: 301 })
+})
