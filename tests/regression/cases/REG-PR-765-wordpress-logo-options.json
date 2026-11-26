@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-765-wordpress-logo-options",
+  "kind": "feat",
+  "title": "The write step writes a WordPress site's logo, dark-background logo and tab icon as the options the theme reads",
+  "pr": 765,
+  "area": "website-opportunities/write-step",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "On the JA Diner WordPress 1.0.4 kit, whose header prints a Site Logo block, the logo, the dark logo and the tab icon are ordered as the options site_logo, tracy_logo_dark and site_icon; each picture is uploaded to wp-content/uploads/tracy-brand/ and its option names the attachment, read back through content.get; a dark spot with no picture is set to 0; the look guard and the WordPress door open no other option."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-brand-wordpress.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the theme header prints a Site Logo block, so the logo, the dark logo and the tab icon are options",
+      "each picture is uploaded to the brand folder and its option names the attachment; each reads back",
+      "a picture the site holds already goes once more under its own name, so its option names a real attachment",
+      "🔒 the look guard opens only the options the kit names, as the id of a picture"
+    ]
+  }
+}

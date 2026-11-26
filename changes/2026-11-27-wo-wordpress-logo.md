@@ -1,4 +1,4 @@
-- **The write step writes the logo, the dark-background logo and the tab icon of a WordPress site** — David (WO) · #PR · `feat/wo-wordpress-logo` · 2026-11-27
+- **The write step writes the logo, the dark-background logo and the tab icon of a WordPress site** — David (WO) · #765 · `feat/wo-wordpress-logo` · 2026-11-27
   **Affects:** the brand stage of the write step on WordPress (staff chain builds of JA Diner WP). Joomla and EmDash orders do not change.
   - A logo spot set by a WordPress option (`site_logo`, `tracy_logo_dark`) is ordered `wordpress-option` when the theme header prints a Site Logo block, the evidence the Template kit gate reads (`kitSiteLogoBlock`). The tab icon is `site_icon`.
   - The picture is uploaded to `wp-content/uploads/tracy-brand/`, then `content.update {kind: "option", id: 0, key, fields: {value: <attachment>}}`. Each line reads back through `content.get`.
