@@ -1,4 +1,4 @@
-- **The write step writes WordPress pictures and addresses and empties demo words there, through the plugin's existing contract** — David (WO) · #PR · `feat/wo-wordpress-pictures-links-empties` · 2026-11-26
+- **The write step writes WordPress pictures and addresses and empties demo words there, through the plugin's existing contract** — David (WO) · #764 · `feat/wo-wordpress-pictures-links-empties` · 2026-11-26
   **Affects:** the write step on WordPress (`write-step/site-doors/wordpress.js`), staff chain builds of JA Diner WP. Joomla and EmDash do not change. No plugin release is needed: the Claude Cowork for WordPress already takes all of this.
   - Pictures: an upload of the write step goes to the plugin's folder for image slots (`wp-content/uploads/tracy-content/<sha256>.<ext>`), and the image slot gets that path in the one apply. The site check compares pictures by file name, so its read-back is unchanged.
   - Addresses: a `url` slot's link is sent. Before, it was refused as not on WordPress.
