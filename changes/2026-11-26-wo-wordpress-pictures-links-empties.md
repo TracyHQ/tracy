@@ -4,4 +4,5 @@
   - Addresses: a `url` slot's link is sent. Before, it was refused as not on WordPress.
   - Emptied slots: a text or address slot is emptied by writing `''`. The WordPress inspect marks those slots `canHide: 'unmeasured'`, and the door adds `hide_ops` to the plugin's `info`, so the hide stage and the closing rule empty demo words. A picture slot cannot be taken off yet; its line says so.
   - A WordPress menu item only links to its page, so an item the plan hides no longer holds its page (`menuOwnsPage: false`).
+  - The look guard reads an emptied slot (`''` in `changes`, how WordPress empties one) as the plan's hide, as it reads `empty_slots`. Before, every emptied heading counted as taking off its template classes.
   **Why:** `arabian-tea-wp4` (dev, 26/11) still had 20 demo words, 20 demo pictures and 18 link faults. Everything that blocked fixing them was on the Tracy side.

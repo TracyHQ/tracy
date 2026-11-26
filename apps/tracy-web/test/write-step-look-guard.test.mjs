@@ -408,6 +408,15 @@ test("taking things off is the plan's hide, by its stated exception", async () =
     empty_slots: ['module-1.0'],
     empty_links: ['module-1.3']
   })
+  // WordPress empties a slot by writing nothing into it: a slot whose demo has markup is emptied, never stripped of it.
+  await green('content.contract', {
+    operation: 'apply',
+    changes: { 'module-1.1': '', 'module-1.4': '', 'module-1.3': '' }
+  })
+  // Words that drop the demo's class are still a finding.
+  await red(['content.contract', { operation: 'apply', changes: { 'module-1.1': 'One' } }], {
+    names: 'list-star'
+  })
   await green('template.languageOverrides', {
     operation: 'setSource',
     template: 'demo',

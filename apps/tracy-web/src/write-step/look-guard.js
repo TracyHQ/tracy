@@ -219,6 +219,10 @@ export function lookGuard({ kit, contentMap = null }) {
         : [fault(step, key, `${key} holds a picture, and this is not one`)]
     if (slot?.type === 'url')
       return ADDRESS_NOT.test(text) ? [fault(step, key, `${key} holds an address, and this is not one`)] : []
+    // An emptied slot is the plan's hide decision (decision 2), as `empty_slots` is: no words, so no markup to judge. The
+    // Claude Cowork for WordPress empties a slot by writing `''` (site-doors/wordpress.js), where Joomla names it in
+    // `empty_slots`; judged as words, every emptied heading read as taking off its template classes.
+    if (text === '') return []
     const sample = slot?.sample ?? slot?.current ?? ''
     const { kept, allowed: through } = socialIconsAllowed({
       sample,
