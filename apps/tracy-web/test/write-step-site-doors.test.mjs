@@ -5,7 +5,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import { seeder } from '../src/lib/seeder.js'
-import { onPlatform, platformStop, siteDoorFor } from '../src/write-step/site-doors/index.js'
+import { notOnPlatform, onPlatform, platformStop, siteDoorFor } from '../src/write-step/site-doors/index.js'
 import { runWriteStep } from '../src/write-step/write-step.js'
 
 const CONTRACT = 'harbour-test/j6/0.0.1'
@@ -141,3 +141,29 @@ for (const [platform, code] of [
     assert.deepEqual(site.calls, [])
   })
 }
+
+test('on EmDash a line that failed only for want of a door is skipped and says so; any other failure stays', () => {
+  const noDoor = {
+    slot: 'page-home:title',
+    status: 'failed',
+    reason: 'the menu could not be read: not_on_emdash: EmDash has no door for content.list menuItem yet'
+  }
+  assert.deepEqual(notOnPlatform(noDoor, 'emdash'), {
+    ...noDoor,
+    status: 'skipped',
+    reason: `not on EmDash yet: ${noDoor.reason}`
+  })
+  const closed = {
+    slot: 'legal:privacy',
+    status: 'failed',
+    reason: 'the plugin on this site is older than page creation'
+  }
+  assert.equal(notOnPlatform(closed, 'emdash').status, 'skipped')
+  // A refusal of the site itself is a failure on every platform, and nothing changes on Joomla.
+  const refused = { slot: 'x', status: 'failed', reason: 'SLOT_BAD_URL: "Book" is no address' }
+  assert.equal(notOnPlatform(refused, 'emdash'), refused)
+  assert.equal(notOnPlatform(noDoor, 'joomla'), noDoor)
+  assert.equal(notOnPlatform(closed, 'joomla'), closed)
+  const written = { slot: 'y', status: 'written', reason: null }
+  assert.equal(notOnPlatform(written, 'emdash'), written)
+})
