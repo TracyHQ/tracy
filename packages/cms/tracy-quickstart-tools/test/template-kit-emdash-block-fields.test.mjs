@@ -249,8 +249,8 @@ test('a block lists every field its stamps place, shown at the read width or not
       ['menu.drinks.items', 'repeater', 2, [['menu.drinks.items[0].name'], ['menu.drinks.items[1].name']]]
     ]
   )
-  assert.equal(b.lists[1].whenFewer, undefined)
   assert.equal(b.lists[0].maxFrom, 'demo-count', "the map's group of the same name gives the bounds")
+  assert.equal(b.lists[0].uniform, true, "and the rest of what the map's group says")
   assert.ok(
     errors.some((e) => e.field === `blocks[${tabs}].lists[menu.drinks.items].min`),
     'a list with no measured minimum says so'
