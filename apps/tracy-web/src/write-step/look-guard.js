@@ -14,6 +14,7 @@ import { selfLinkButtonsOf } from '../lib/self-link-buttons.js'
 import { ownerStep, stepName } from '../lib/site-build-steps.js'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
+import { navigationFaults } from './look-guard-navigation.js'
 import { batchFaults, updateFaults } from './look-guard-rows.js'
 import { SOCIAL_ICONS_REASON, SOCIAL_ICONS_RULE, socialIconsAllowed } from './look-guard-social.js'
 import { MARK } from './page-create-lines.js'
@@ -97,7 +98,7 @@ const PARAMS = {
   'emdash.settings': { set: ['operation', 'fields', 'apply_id'] },
   'emdash.entryField': { set: ['operation', 'collection', 'slug', 'field', 'label', 'media', 'apply_id'] },
   'media.upload': { [undefined]: ['path', 'content_b64', 'apply_id', 'sha256'] },
-  'content.update': { [undefined]: ['apply_id', 'kind', 'id', 'key', 'fields'] },
+  'content.update': { [undefined]: ['apply_id', 'kind', 'id', 'key', 'fields', 'expected_body_revision'] },
   'content.batch': { [undefined]: ['apply_id', 'request_id', 'operations'] }
 }
 
@@ -300,6 +301,8 @@ export function lookGuard({ kit, contentMap = null }) {
         : [fault(WRITE, `upload ${p.path}`, `an upload is a picture under images/, and ${p.path} is not`)],
     'content.update': (p) => {
       if (p.kind === 'option') return optionFaults(p, options)
+      // A WordPress navigation post, for its labels and the items the plan takes off (look-guard-navigation.js).
+      if (p.kind === 'post') return navigationFaults(p, state)
       // `key` names an option only: on a row it would be a way nobody listed.
       if ('key' in p)
         return [channelFault(`content.update ${p.kind} key`, 'only an option is named by its key')]

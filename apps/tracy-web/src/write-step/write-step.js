@@ -981,6 +981,20 @@ export async function runWriteStep(input) {
   })
   // A heading whose demo value is HTML takes its emphasis as real tags, after the contract call wrote its words (emphasis-stage.js).
   emphasis = await runEmphasisStage({ door, siteKey, contentMap, written: wrote.written, ordered })
+  // On WordPress the main menu is its navigation post, which the site door writes itself (site-doors/wordpress-menu.js):
+  // the writer's labels and the items the plan takes off. The page settings stage, which writes Joomla menu items, gets
+  // none of its hides.
+  let menuWritten = []
+  if (siteDoor.writeMenu && hide.settingsExtras?.mainMenu) {
+    const wrote = await siteDoor.writeMenu({
+      apply: door.apply,
+      siteKey,
+      applyId: `menu-${Date.now().toString(36)}`,
+      mainMenu: hide.settingsExtras.mainMenu
+    })
+    menuWritten = [...wrote]
+    hide.settingsExtras = { ...hide.settingsExtras, mainMenu: { ...hide.settingsExtras.mainMenu, hide: [] } }
+  }
   // Last: the page settings, which the contract door does not take (page-settings-stage.js).
   const settings = await timed('settings', () =>
     runPageSettings({
@@ -1002,6 +1016,7 @@ export async function runWriteStep(input) {
     ...hide.held,
     ...created.results,
     ...strandedLabels,
+    ...menuWritten,
     ...menuGone.map((h) => [
       h.item,
       emptied.includes(h.slot)

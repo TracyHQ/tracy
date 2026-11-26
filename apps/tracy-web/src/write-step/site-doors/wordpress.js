@@ -10,11 +10,13 @@
 // here by slot, before anything is sent: the write step's rounds (contract-write.js) go on without exactly those slots
 // and their lines say "not on WordPress yet" (index.js `notOnPlatform`). A refusal of the plugin is named by slot when
 // its words name one, as the seeder reads it. The brand stage's logo and tab icon are WordPress options that name an
-// attachment (`site_logo`, `tracy_logo_dark`, `site_icon`), its pictures go to `wp-content/uploads/tracy-brand/`. Every
+// attachment (`site_logo`, `tracy_logo_dark`, `site_icon`), its pictures go to `wp-content/uploads/tracy-brand/`. The main
+// menu is its `wp_navigation` post, read and written whole (wordpress-menu.js). Every
 // other stage's call (articles, Joomla menu items, modules, template settings, any other option) is answered here and
 // never sent (`takes`).
 import { createHash } from 'node:crypto'
 import { seeder } from '../../lib/seeder.js'
+import { writeWordpressMenu } from './wordpress-menu.js'
 
 const tools = () => seeder('apply-joomla-contract')
 
@@ -191,7 +193,15 @@ export const wordpressSiteDoor = Object.freeze({
     WORDPRESS_TAKES.has(call?.action) ||
     (['content.update', 'content.get'].includes(call?.action) &&
       call.params?.kind === 'option' &&
-      WORDPRESS_BRAND_OPTIONS.has(call.params?.key)),
+      WORDPRESS_BRAND_OPTIONS.has(call.params?.key)) ||
+    // The main menu's navigation post (`writeMenu`); the look guard holds a write to any other post.
+    (call?.action === 'content.list' && call.params?.post_type === 'wp_navigation') ||
+    (['content.update', 'content.get'].includes(call?.action) && call.params?.kind === 'post'),
+  /**
+   * The main menu, written on its navigation post after the contract call: the writer's labels, and the items the plan
+   * takes off (wordpress-menu.js). Its outcomes stand for the menu's lines (write-step.js).
+   */
+  writeMenu: writeWordpressMenu,
   /** A call as the plugin takes it: a picture of the write step uploaded to the plugin's folder (`wordpressPath`). */
   callOf: (call) =>
     call?.action === 'media.upload' && typeof call.params?.path === 'string'
