@@ -56,6 +56,11 @@ export function sitePathOf(href, ownHosts = new Set()) {
   if (/\.(jpe?g|png|gif|webp|svg|ico|css|js|pdf|zip|mp4|webm|woff2?|ttf|xml|json|txt)$/i.test(url.pathname))
     return null
   if (/^\/(images|media|templates|administrator|plugins|cache)\//i.test(url.pathname)) return null
+  // Cloudflare's own addresses on every site it serves, never a page of it: an address it hides from bots is printed as a
+  // link to `/cdn-cgi/l/email-protection#…` (a `mailto:` its script puts back in a browser), which answers nothing to a
+  // reader without that script. Dev 26/11/2026 (`arabian-tea-wp4`): the footer's e-mail address blocked as a page that
+  // does not answer.
+  if (/^\/cdn-cgi\//i.test(url.pathname)) return null
   if (/[?&](format|task|option=com_users|tmpl)=/i.test(url.search)) return null
   return `${url.pathname}${url.search}`
 }
