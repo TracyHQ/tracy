@@ -151,8 +151,7 @@ export function withEmdashPages(map, sections = null, media = null) {
   const sectionGaps = []
   // A part every page prints (same place in the layout) is one block: the header, the footer, a signup strip. Its
   // place among same-tag siblings is not part of its identity (an older read named it by `:nth-child`).
-  const keyOfPart = (where, part) =>
-    `${where}|${part.selector.replace(/:nth-(?:child|of-type)\(\d+\)/g, '')}`
+  const keyOfPart = (where, part) => `${where}|${part.selector.replace(/:nth-(?:child|of-type)\(\d+\)/g, '')}`
   const pagesRead = listed.filter((p) => read[p.path])
   const onPages = new Map()
   for (const p of pagesRead)
