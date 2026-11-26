@@ -4,6 +4,10 @@
 // signup strip, a picture strip, the footer). Each part has a CSS selector that finds it on a page without stamps, and
 // the entry fields printed inside it, read from the stamps (`data-tracy-src`, `src/lib/stamps.ts` of the theme), and
 // the headings it prints (an element the theme does not stamp, such as a page's own title, is found by its words).
+// The page read here is not the page the kit captures: only a stamped request prints the page owner
+// (`<template data-tracy-owner>`, the theme's `PageOwner.astro`, the first child of `<main>`), so a part's place is
+// counted among siblings of its own tag (`:nth-of-type`), which that element never is. A place counted among all
+// siblings (`:nth-child`) named, on the unstamped page, the section after it.
 
 /**
  * @returns {{before: object[], main: object[], after: object[]} | null} null when the page has no `<main>`
@@ -16,13 +20,16 @@ export function readEmdashSections() {
   const STAMP = /^emdash:([a-z0-9_]+):([^:\s]+):(\S+)(?:\s+(field|block):(\S+))?/
   const token = (s) => /^[A-Za-z_][\w-]*$/.test(s)
   const sameLevel = (el, test) => [...el.parentElement.children].filter(test)
-  /** A selector that finds `el` again on another page: an id, a class no sibling has, else its place among siblings. */
+  /**
+   * A selector that finds `el` again on another page: an id, a class no sibling has, else its place among the
+   * siblings of its tag.
+   */
   const stepOf = (el) => {
-    if (el.id && token(el.id)) return `${el.tagName.toLowerCase()}#${el.id}`
+    const tag = el.tagName.toLowerCase()
+    if (el.id && token(el.id)) return `${tag}#${el.id}`
     for (const c of el.classList)
-      if (token(c) && sameLevel(el, (x) => x.classList.contains(c)).length === 1)
-        return `${el.tagName.toLowerCase()}.${c}`
-    return `${el.tagName.toLowerCase()}:nth-child(${[...el.parentElement.children].indexOf(el) + 1})`
+      if (token(c) && sameLevel(el, (x) => x.classList.contains(c)).length === 1) return `${tag}.${c}`
+    return `${tag}:nth-of-type(${sameLevel(el, (x) => x.tagName === el.tagName).indexOf(el) + 1})`
   }
   const pathOf = (el) => {
     const steps = []

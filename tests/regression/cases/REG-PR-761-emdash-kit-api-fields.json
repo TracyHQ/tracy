@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-761-emdash-kit-api-fields",
+  "kind": "fix",
+  "title": "An EmDash template kit's blocks take their fields from the theme's stamps, every repeater is a list of its rows, and sections are found again on the captured page",
+  "pr": 761,
+  "area": "quickstart-tools/template-kit",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "rootField names the stored field for items[0].title, items.title and block:items; one cell stamp places every row of a repeater in its block; a block lists every field its stamps place shown or not, and each repeater as a list of its rows; a stamped slot stays with its block when another block shows the same words; a Joomla-shaped block keeps its own lists; a section read on the stamped page is found again on the unstamped page; an older sections file is named stale without a browser and read again with one."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-emdash-block-fields.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a stamp names its stored field whatever the row or block part it carries",
+      "a stamp on one cell of a repeater places every row of that field in the block that prints it",
+      "a block lists every field its stamps place, shown at the read width or not, and each repeater as a list",
+      "a stamped slot stays with its block when only another block shows its words; without a stamp the shown one wins",
+      "a block of a platform that places no slot by stamp keeps its lists from its own groups only",
+      "a section read on the stamped page is found again on the page the kit captures, without the page owner"
+    ]
+  }
+}

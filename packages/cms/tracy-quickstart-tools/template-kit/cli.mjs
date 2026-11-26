@@ -466,6 +466,11 @@ async function main() {
       log
     })
     log('emdash sections', parts.pages, 'pages, from', parts.from)
+    // An older reader's selectors name the next section on the captured pages: a kit made from them is wrong.
+    if (parts.stale)
+      log(
+        'emdash sections: the file was written by an older page reader; run build with --site and --reread-sections'
+      )
   }
   if (cmd === 'sheet') return sheet(o, out).then(() => 0)
   if (cmd === 'approve') return approve(o, out)
