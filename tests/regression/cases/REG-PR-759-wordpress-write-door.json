@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-759-wordpress-write-door",
+  "kind": "feat",
+  "title": "The write step writes a WordPress site's words through the Claude Cowork for WordPress contract, and skips in words what the plugin does not take yet",
+  "pr": 759,
+  "area": "website-opportunities/write-step",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The WordPress door sends content.contract inspect then one apply of plain-text changes with expected_revision, apply_id and request_id and no evidence or empty_slots; empties, picture and address slots are refused by slot before anything is sent and the words are written on the next round; a slot the plugin names is refused alone; a whole write step on the JA Diner WordPress 1.0.4 kit sends its words as plain text, skips the hidden slot and the page title with \"not on WordPress yet\", and sends no Joomla stage call; JA Diner WP runs the chain for staff only."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-wordpress-door.test.mjs",
+      "apps/tracy-web/test/write-step-wordpress.test.mjs",
+      "apps/tracy-web/test/step-chain-switch.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the door writes plain changes in one apply, as the seeder does: revision, apply id, request id, no evidence",
+      "what the plugin does not take is refused by slot before anything is sent, and the next round writes the rest",
+      "a slot the plugin refuses by name in its words is refused alone, and the others are written on the next round",
+      "a WordPress Diner run writes its words as plain text in one apply, and skips in words what the plugin does not take",
+      "a staff template runs the chain only for a staff account, and only while the master switch is on"
+    ]
+  }
+}
