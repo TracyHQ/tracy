@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-763-wordpress-keep-link-markup",
+  "kind": "fix",
+  "title": "On WordPress a button keeps its link and class around the new words, and picture uploads the door cannot place are skipped in words",
+  "pr": 763,
+  "area": "website-opportunities/write-step",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A WordPress export keeps a slot's single inline wrapper (a button link, a whole-span badge) around the new words when the slot keeps inline markup, and writes every other slot as plain words; the JA Diner WordPress write step sends the first slide's button as ((a class=\"btn btn-primary\" href=\"/about-us\"))Book a table((/a)); the WordPress door answers media.upload itself as not_on_wordpress and never sends it."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/contract-mapping-wordpress.test.mjs",
+      "apps/tracy-web/test/write-step-wordpress.test.mjs",
+      "apps/tracy-web/test/write-step-wordpress-door.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a slot whose demo is one inline element around its words keeps it; every other slot is plain words",
+      "the wrapper is the one element around all the words, never part of a sentence or a nested one",
+      "a WordPress Diner run writes its words as plain text in one apply, and skips in words what the plugin does not take",
+      "🔒 on WordPress a call of a Joomla stage or an upload is answered by name and never sent; the contract is sent"
+    ]
+  }
+}

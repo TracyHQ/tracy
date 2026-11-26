@@ -18,6 +18,24 @@ import { visibleText } from './emphasis-markup.js'
  *   menuSlots?: Set<string> }} input `menuSlots`: the main menu label slots, which go to step 9 and not to the door
  * @returns {{ mapping: object, problems: object[] }}
  */
+/** One inline element around all the words of a demo value, in the content map's notation: `((a …))words((/a))`. */
+const WHOLE_WRAP = /^(\(\((a|span|strong|em|b|i)\b[^()]*\)\))[^()]*(\(\(\/\2\)\))$/
+
+/**
+ * The element a slot's words sit in, when its demo is one inline element around all of them and the plugin keeps the
+ * slot's markup (`markup: "inline"`, Claude Cowork for WordPress, TracyHQ/tracy#459): `{open, close}` in the content
+ * map's notation, which the plugin writes back as HTML from its allowlist. Written as plain words, a button's link and
+ * class were dropped: JA Diner's "Book a table" printed as a bare paragraph with no link (dev arabian-tea-wp3,
+ * 26/11/2026). Null for any other slot, whose words go as plain text.
+ * @param {{ markup?: string, sample?: unknown }} slot
+ * @returns {{ open: string, close: string } | null}
+ */
+export function wrapperOf(slot) {
+  if (slot?.markup !== 'inline') return null
+  const m = WHOLE_WRAP.exec(String(slot.sample ?? '').trim())
+  return m ? { open: m[1], close: m[3] } : null
+}
+
 export function wordpressContractMapping({
   copy,
   contract,
@@ -49,11 +67,15 @@ export function wordpressContractMapping({
       })
       continue
     }
-    // Paragraphs and bullets of one slot are one text node on WordPress: their words, a space between.
-    const value = visibleText(s.items.join(' '))
+    // Paragraphs and bullets of one slot are one text node on WordPress: their words, a space between. A slot whose demo is
+    // one inline element around all its words (a button's link: `((a class="btn btn-primary" href="/about-us"))Book a
+    // Table((/a))`) keeps that element around the new words (`wrapperOf`).
+    const words = visibleText(s.items.join(' '))
+    const wrapper = wrapperOf(slot)
+    const value = wrapper ? `${wrapper.open}${words}${wrapper.close}` : words
     const max = Number(slot.maxCharacters ?? 0)
-    if (max > 0 && value.length > max)
-      problems.push({ where: s.slot, detail: `${value.length} characters, over the slot's ${max}` })
+    if (max > 0 && words.length > max)
+      problems.push({ where: s.slot, detail: `${words.length} characters, over the slot's ${max}` })
     changes[s.slot] = value
     targets[s.slot] = {
       entity: slot.entity,

@@ -43,7 +43,8 @@ function planOf(kit) {
             ? keep(block, {
                 copy: [
                   slot('front-page.slideshow.title.1', 'the restaurant by the harbour'),
-                  slot('front-page.slideshow.desc.1', 'what is cooked')
+                  slot('front-page.slideshow.desc.1', 'what is cooked'),
+                  slot('front-page.slideshow.button1.1', 'book a table')
                 ],
                 hiddenSlots: [{ slot: 'front-page.slideshow.button1.2', why: 'no table booking online' }]
               })
@@ -64,7 +65,8 @@ const copyOf = (kit) => ({
   },
   slots: [
     w('front-page.slideshow.title.1', 'Harbour Kitchen'),
-    w('front-page.slideshow.desc.1', ['Fish from the morning boats.', 'Cooked over charcoal.'])
+    w('front-page.slideshow.desc.1', ['Fish from the morning boats.', 'Cooked over charcoal.']),
+    w('front-page.slideshow.button1.1', 'Book a table')
   ],
   alts: [],
   seo: [{ page: 'page-home', title: 'Harbour Kitchen', description: 'Fish from the morning boats.' }],
@@ -148,6 +150,11 @@ test('a WordPress Diner run writes its words as plain text in one apply, and ski
       /Fish from the morning boats\. ?Cooked over charcoal\./
     )
     assert.ok(applies.every((a) => a.params.empty_slots === undefined && a.params.evidence === undefined))
+    // A button keeps its link and class around the new words (dev arabian-tea-wp3: it printed as a bare paragraph).
+    assert.equal(
+      sent['front-page.slideshow.button1.1'],
+      '((a class="btn btn-primary" href="/about-us"))Book a table((/a))'
+    )
     const line = (slot) => report.slots.find((s) => s.slot === slot)
     assert.equal(line('front-page.slideshow.title.1')?.status, 'written')
     // The plugin empties no slot yet: the hidden slot is skipped in words, and so is the page title stage.

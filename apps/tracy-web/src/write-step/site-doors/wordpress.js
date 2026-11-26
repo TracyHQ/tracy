@@ -13,9 +13,14 @@ import { seeder } from '../../lib/seeder.js'
 
 const tools = () => seeder('apply-joomla-contract')
 
-/** The actions the write step sends a WordPress site through the Apply door. */
+/**
+ * The actions the write step sends a WordPress site through the Apply door. Not `media.upload`: this door writes no
+ * picture slot yet (the plugin's contract takes a picture as a media library attachment in the slot's shape, and the
+ * picture stage uploads to Joomla's `images/` path, which the plugin refuses: "unusable media path", dev
+ * arabian-tea-wp3, 26/11/2026), so an upload would be a refusal for nothing. Its line says "not on WordPress yet".
+ */
 export const WORDPRESS_TAKES = Object.freeze(
-  new Set(['content.contract', 'info', 'media.upload', 'content.read', 'content.locate'])
+  new Set(['content.contract', 'info', 'content.read', 'content.locate'])
 )
 
 /** The marker of a slot or call this door answers itself: what the plugin does not take yet. */
