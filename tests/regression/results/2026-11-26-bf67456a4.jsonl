@@ -1,0 +1,1 @@
+{"id":"REG-PR-763-wordpress-keep-link-markup","verdict":"PASS","commit":"bf67456a4386ce49f47db95592caa585845d7a78","ran_at":"2026-11-26T14:54:01.856Z","evidence":"tests/regression/.runs/2026-11-26-bf67456a4/REG-PR-763-wordpress-keep-link-markup.log"}
