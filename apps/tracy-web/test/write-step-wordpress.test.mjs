@@ -163,6 +163,14 @@ test('a WordPress Diner run writes its words as plain text in one apply, and ski
     assert.equal(line('front-page.features-intro.basic-description')?.status, 'hidden')
     assert.equal(sent['front-page.features-intro.basic-description'], '')
     assert.ok(report.counts.hidden > 100, JSON.stringify(report.counts))
+    // An emptied heading is a hide, never a finding of taking off its classes (`''` carries no markup).
+    const emptied = Object.entries(sent)
+      .filter(([, v]) => v === '')
+      .map(([k]) => k)
+    assert.deepEqual(
+      report.guard.findings.filter((f) => emptied.includes(f.what)),
+      []
+    )
     // The page title stage has no door on WordPress: its line is skipped in words.
     assert.equal(line('page-home:title')?.status, 'skipped')
     assert.equal(
