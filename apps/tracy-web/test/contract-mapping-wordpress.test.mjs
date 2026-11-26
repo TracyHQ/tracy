@@ -76,3 +76,49 @@ test('the wrapper is the one element around all the words, never part of a sente
   assert.equal(wrapperOf(slot('x', '((a href="/x"))Go((/span))', { markup: 'inline' })), null)
   assert.equal(wrapperOf(slot('x', '((script))x((/script))', { markup: 'inline' })), null)
 })
+
+test("the writer's emphasis is wrapped in the demo's accent span where the plugin keeps the slot's markup", () => {
+  const kit = {
+    blocks: [
+      {
+        id: 'block-hero',
+        slots: [
+          {
+            id: 'hero.lead',
+            inline: [{ tag: 'span', attrs: 'class="jd-name"', text: 'Three Broomsticks', at: 'inside' }]
+          },
+          { id: 'hero.title', inline: [{ tag: 'span', attrs: 'class="x"', text: 'Harry', at: 'end' }] }
+        ]
+      }
+    ]
+  }
+  const { mapping } = wordpressContractMapping({
+    copy: {
+      version: 'site-copy/1',
+      fingerprint: {
+        kit: 'tracy-template-kit/2 demo/wp7/1.0.0',
+        planSha256: 'a'.repeat(64),
+        briefSha256: 'b'.repeat(64),
+        promptSha256: 'c'.repeat(64)
+      },
+      slots: [
+        { ...w('hero.lead', 'Harbour Kitchen is a fish restaurant'), emphasis: 'Harbour Kitchen' },
+        // A slot whose markup the plugin does not keep takes plain words, emphasis or not.
+        { ...w('hero.title', 'Hello Harbour'), emphasis: 'Harbour' }
+      ],
+      alts: [],
+      seo: [],
+      pages: [],
+      notebook: [],
+      returns: []
+    },
+    contract: 'demo/wp7/1.0.0',
+    revision: 'r1',
+    contentMap,
+    kit
+  })
+  assert.deepEqual(mapping.changes, {
+    'hero.lead': '((span class="jd-name"))Harbour Kitchen((/span)) is a fish restaurant',
+    'hero.title': 'Hello Harbour'
+  })
+})
