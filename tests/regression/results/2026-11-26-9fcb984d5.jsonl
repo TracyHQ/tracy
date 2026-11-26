@@ -1,0 +1,1 @@
+{"id":"REG-PR-758-emdash-not-on-lines","verdict":"PASS","commit":"9fcb984d50eddfc306fc6b0def2230e3a71e5906","ran_at":"2026-11-26T06:58:51.973Z","evidence":"tests/regression/.runs/2026-11-26-9fcb984d5/REG-PR-758-emdash-not-on-lines.log"}
