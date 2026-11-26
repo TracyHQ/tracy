@@ -1,4 +1,4 @@
-- **A chain build on WordPress gets past the home health check: the probe follows WordPress's redirect to its own address** — David (WO) · #PR · `fix/wo-wordpress-recovery-probe` · 2026-11-26
+- **A chain build on WordPress gets past the home health check: the probe follows WordPress's redirect to its own address** — David (WO) · #760 · `fix/wo-wordpress-recovery-probe` · 2026-11-26
   **Affects:** the write step's site recovery probe (`probeSiteHome`) on every CMS, used before and after a chain build's write.
   - The probe follows a redirect at most three times, and only while it stays on the site's read or public origin.
   - A redirect that leaves the site stays `unknown`, as before.

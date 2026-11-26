@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-760-wordpress-recovery-probe",
+  "kind": "fix",
+  "title": "The step chain's home probe follows a redirect to the site itself, so a WordPress chain build reaches its write step",
+  "pr": 760,
+  "area": "website-opportunities/step-chain",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "probeSiteHome follows a 301 from the container origin to the site's public address and reads the home healthy; a redirect to another origin stays unknown with that origin; a loop on the site's own address is unknown after three hops; the existing probe and recovery cases still hold."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-site-recovery.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the home probe follows a redirect to the site itself (WordPress canonical), never one that leaves it",
+      "home recovery probes distinguish confirmed CMS failure from network and access failures"
+    ]
+  }
+}
