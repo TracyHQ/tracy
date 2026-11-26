@@ -2,8 +2,9 @@
 // header listed every business name and logo of the map). Each slot belongs to the block that renders it, read from
 // the DOM of the read pass: its words among the block's shown words, or its picture among the block's measured
 // frames. Among the blocks that render it, the block of the slot's own entity wins; a slot nothing visibly renders
-// stays with its own entity's block. Other blocks that also show it are named on the owner (`alsoShownIn`), never
-// listed as theirs. Items lists only point at their items' slots (`rowSlots[].slots[]`): references, not ownership.
+// stays with its own entity's block. A slot the platform placed by what printed it (EmDash stamps) stays with the block
+// it was placed in. Other blocks that also show it are named on the owner (`alsoShownIn`), never listed as theirs.
+// Items lists only point at their items' slots (`rowSlots[].slots[]`): references, not ownership.
 
 const norm = (s) =>
   String(s ?? '')
@@ -66,7 +67,10 @@ export function assignSlotOwners({ blocks, slotOf, textsOf }) {
       !!slot?.entity && (b.source?.entity === slot.entity || (b.source?.contains ?? []).includes(slot.entity))
     const all = [...set]
     const shown = all.filter(renders)
-    const owner = shown.find(ownsEntity) ?? shown[0] ?? all.find(ownsEntity) ?? all[0]
+    // A slot a stamp placed (EmDash, emdash-map.mjs `placedBy`) is its block's even where the read pass did not see it
+    // (a closed tab) and another block shows the same words: the stamp named the field that element printed.
+    const placed = slot?.placedBy ? all.find(ownsEntity) : null
+    const owner = placed ?? shown.find(ownsEntity) ?? shown[0] ?? all.find(ownsEntity) ?? all[0]
     const also = shown.filter((b) => b !== owner).map((b) => b.id)
     for (const b of all) {
       if (b === owner) continue

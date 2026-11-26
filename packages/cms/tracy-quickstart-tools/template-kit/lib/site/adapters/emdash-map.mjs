@@ -5,7 +5,8 @@
 // layout prints before `<main>` (top bar, header, menu), each direct child of `<main>` (a section), and what it prints
 // after (a signup strip, a picture strip, the footer). The theme stamps which entry field printed each element when a
 // request carries `X-Tracy-Preview: pick`; those stamps say which block a slot belongs to, never a guess from words.
-// A slot has one block: the section of its own page that prints it, else the first shared part that does. A slot no
+// A slot has one block: the section of its own page that prints it, else the first shared part that does. A stamp on
+// one cell of a repeater places every row of that field (rows the page hides or does not print included). A slot no
 // stamp reaches stays with its entry, and the coverage gate names it.
 // The Joomla-only keys stay absent; `platformGaps` names each one the kit cannot read on EmDash and why.
 import { normText } from '../../../../content-coverage/lib/normalize.mjs'
@@ -91,8 +92,13 @@ function labelOf(part, prefix) {
   return words[0] ?? part.tag
 }
 
-/** The field a stamp names, without a repeater row or Portable Text block part (`items.title` -> `items`). */
-const rootField = (field) => String(field ?? '').split('.')[0]
+/**
+ * The stored field a stamp names, without its repeater row, sub-field or Portable Text block: the stored field the
+ * content map keys `target.field` by. A theme stamps a repeater cell with its row (`items[0].title`, the form the
+ * views print), or without it (`items.title`), and a row itself as `block:items`; all three are `items`. Cutting at
+ * the first dot only left `items[0]`, which no slot is keyed by, so no stamped repeater row reached any block.
+ */
+export const rootField = (field) => String(field ?? '').split(/[.[]/)[0]
 
 /**
  * The map with `pages[]` derived from the sections the run read, and `platformGaps` naming what the map cannot say.
@@ -130,13 +136,23 @@ export function withEmdashPages(map, sections = null, media = null) {
     st.field
       ? (slotsOf.get(`${stampEntity(st)}|${rootField(st.field)}`) ?? []).filter((s) => !ofHeader(s))
       : []
+  // How each claimed slot was placed: by a stamp naming its field (`stamp`, the API's own word), or by the words of a
+  // heading the theme does not stamp (`heading`). The kit lists every slot a stamp places in its block, shown at the
+  // read width or not (kit-blocks.mjs).
+  const placedBy = new Map()
   const claim = (st, owner) => {
-    for (const s of slotsOfStamp(st)) if (!claims.has(s.key)) claims.set(s.key, owner)
+    for (const s of slotsOfStamp(st))
+      if (!claims.has(s.key)) {
+        claims.set(s.key, owner)
+        placedBy.set(s.key, 'stamp')
+      }
   }
   const sectionEntities = []
   const sectionGaps = []
-  // A part every page prints (same place in the layout) is one block: the header, the footer, a signup strip.
-  const keyOfPart = (where, part) => `${where}|${part.selector.replace(/:nth-child\(\d+\)/g, '')}`
+  // A part every page prints (same place in the layout) is one block: the header, the footer, a signup strip. Its
+  // place among same-tag siblings is not part of its identity (an older read named it by `:nth-child`).
+  const keyOfPart = (where, part) =>
+    `${where}|${part.selector.replace(/:nth-(?:child|of-type)\(\d+\)/g, '')}`
   const pagesRead = listed.filter((p) => read[p.path])
   const onPages = new Map()
   for (const p of pagesRead)
@@ -203,7 +219,10 @@ export function withEmdashPages(map, sections = null, media = null) {
       if (s.entity !== q.page.entity || s.type !== 'text' || claims.has(s.key) || !s.sample) continue
       const words = normText(s.sample)
       const at = partsOf(q).find((a) => (a.part.headings ?? []).some((h) => normText(h) === words))
-      if (words && at) claims.set(s.key, at.entity)
+      if (words && at) {
+        claims.set(s.key, at.entity)
+        placedBy.set(s.key, 'heading')
+      }
     }
   for (const q of placed.filter((x) => x.s))
     for (const a of partsOf(q))
@@ -285,9 +304,13 @@ export function withEmdashPages(map, sections = null, media = null) {
       field: 'blocks[].frames[].picture',
       reason: `${pictureSlots.length} picture slots hold their demo file name, not the file the page serves, so no frame is matched to its slot (no agent token to read which media file each holds: --token-file)`
     })
+  // A placed slot names its block as its entity, keeps the entry it is a field of (`mapEntity`: the content map's
+  // `<collection>.<slug>`, which the map's `fitGroups` and the repeater rows are keyed by) and says how it was placed.
   const slots = (map.slots ?? []).map((s) => ({
     ...s,
-    ...(claims.get(s.key) ? { entity: claims.get(s.key) } : {}),
+    ...(claims.get(s.key)
+      ? { entity: claims.get(s.key), mapEntity: s.entity, placedBy: placedBy.get(s.key) }
+      : {}),
     ...(s.type === 'image' && media?.[s.key] ? { sample: media[s.key] } : {})
   }))
   return {

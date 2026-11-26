@@ -89,70 +89,104 @@ export function buildBlock({
   const position = rec.position ?? (entity ? idx.positionOf.get(entity) : null)
   const used = new Set()
   const owns = (listId) => [id, ...entities.map(neutralKey)].some((x) => listId.startsWith(`${x}.`))
-  const lists = Object.entries(idx.map.fitGroups ?? {})
-    .filter(([k]) => entities.some((e) => k.startsWith(`${e}.`)))
-    .map(([k, g]) => {
-      const listId = neutralKey(k)
-      // The rows are the list's slot groups (`<list>.<n>`), in order: a map that numbers every row as its own group
-      // (item 0 of each) still has as many rows as groups, whatever its item count says.
-      const groupIds = [
-        ...new Set(
-          slots
-            .map((s) => String(s.group?.id ?? ''))
-            .filter((gid) => new RegExp(`^${esc(k)}\\.\\d+$`).test(gid))
-        )
-      ].sort((a, b) => Number(a.slice(k.length + 1)) - Number(b.slice(k.length + 1)))
-      const slotOut = (s) => ({
-        id: neutralKey(s.key),
-        role: s.role ?? null,
-        type: s.type,
-        ...(s.maxCharacters != null ? { maxCharacters: s.maxCharacters } : {})
-      })
-      const rowsOf = groupIds.map((gid, index) => ({
-        index,
-        slots: slots
-          .filter((s) => String(s.group?.id ?? '') === gid)
-          .map((s) => ({
-            ...slotOut(s),
-            ...(s.type === 'image' || s.type === 'url' ? {} : { sample: sampleOfSlot(s) })
-          }))
-      }))
-      const mapMax = g.max ?? g.items ?? null
-      const max = mapMax != null && groupIds.length > mapMax ? groupIds.length : mapMax
-      const row0 = slots.filter((s) => String(s.group?.id ?? '') === groupIds[0])
-      // What the map says of the list beyond its size (a listing's source category, the items it shows...)
-      // is carried as it is, so a richer content map needs no change here.
-      const { min: _min, max: _max, items: _items, minFrom: _from, rowKind = 'slots', ...extra } = g
-      const list = {
-        id: listId,
-        rowKind,
-        min: null,
-        max,
-        rowSlots: row0.map(slotOut),
-        ...extra,
-        ...(max !== mapMax ? { maxFrom: 'slot-rows', shown: groupIds.length } : {}),
-        ...(rowsOf.length > 1 ? { rows: rowsOf } : {})
-      }
-      const measured = minEvidence?.[listId]
-      const repeat = matchRepeat(desk?.repeats, max, used)
-      const rule = repeat?.shownCount === 0 ? null : ruleOneMin(repeat, max)
-      if (g.min != null) Object.assign(list, { min: g.min, minSource: g.minFrom ?? 'content map' })
-      else if (measured?.okCounts?.length) Object.assign(list, measuredMin(measured))
-      else if (rule) Object.assign(list, rule)
-      // Rows of uneven shapes (a masonry gallery) form no row set to measure: the demo's own count is the safe
-      // minimum, said as not measured.
-      else if (list.uniform === false && repeat?.shownCount !== 0 && Number.isFinite(list.shown ?? max))
-        Object.assign(list, { min: list.shown ?? max, minSource: 'demo count (not measured)' })
-      else
-        missing(
-          `lists[${listId}].min`,
-          repeat?.shownCount === 0
-            ? 'the rows are on the page but hidden until a part of it is opened (a closed tab): not measured'
-            : 'no row set with this many rows was found on the page at desktop width'
-        )
-      if (max == null) missing(`lists[${listId}].max`, 'the content map gives no row count')
-      return list
+  /**
+   * One list of the block: `k` the map's key for it, `g` what the map says of it, `rowSlots` the slots of each row in
+   * order (a row is a group `<list>.<n>`, or a stored repeater row).
+   */
+  const listOf = (k, g, rowSlots) => {
+    const listId = neutralKey(k)
+    const slotOut = (s) => ({
+      id: neutralKey(s.key),
+      role: s.role ?? null,
+      type: s.type,
+      ...(s.maxCharacters != null ? { maxCharacters: s.maxCharacters } : {})
     })
+    const rowsOf = rowSlots.map((row, index) => ({
+      index,
+      slots: row.map((s) => ({
+        ...slotOut(s),
+        ...(s.type === 'image' || s.type === 'url' ? {} : { sample: sampleOfSlot(s) })
+      }))
+    }))
+    const mapMax = g.max ?? g.items ?? null
+    const max = mapMax != null && rowSlots.length > mapMax ? rowSlots.length : mapMax
+    const row0 = rowSlots[0] ?? []
+    // What the map says of the list beyond its size (a listing's source category, the items it shows...)
+    // is carried as it is, so a richer content map needs no change here.
+    const { min: _min, max: _max, items: _items, minFrom: _from, rowKind = 'slots', ...extra } = g
+    const list = {
+      id: listId,
+      rowKind,
+      min: null,
+      max,
+      rowSlots: row0.map(slotOut),
+      ...extra,
+      ...(max !== mapMax ? { maxFrom: 'slot-rows', shown: rowSlots.length } : {}),
+      ...(rowsOf.length > 1 ? { rows: rowsOf } : {})
+    }
+    const measured = minEvidence?.[listId]
+    const repeat = matchRepeat(desk?.repeats, max, used)
+    const rule = repeat?.shownCount === 0 ? null : ruleOneMin(repeat, max)
+    if (g.min != null) Object.assign(list, { min: g.min, minSource: g.minFrom ?? 'content map' })
+    else if (measured?.okCounts?.length) Object.assign(list, measuredMin(measured))
+    else if (rule) Object.assign(list, rule)
+    // Rows of uneven shapes (a masonry gallery) form no row set to measure: the demo's own count is the safe
+    // minimum, said as not measured.
+    else if (list.uniform === false && repeat?.shownCount !== 0 && Number.isFinite(list.shown ?? max))
+      Object.assign(list, { min: list.shown ?? max, minSource: 'demo count (not measured)' })
+    else
+      missing(
+        `lists[${listId}].min`,
+        repeat?.shownCount === 0
+          ? 'the rows are on the page but hidden until a part of it is opened (a closed tab): not measured'
+          : 'no row set with this many rows was found on the page at desktop width'
+      )
+    if (max == null) missing(`lists[${listId}].max`, 'the content map gives no row count')
+    return list
+  }
+  // The rows of a map group are its slot groups (`<list>.<n>`), in order: a map that numbers every row as its own group
+  // (item 0 of each) still has as many rows as groups, whatever its item count says.
+  const groupRows = (k) =>
+    [
+      ...new Set(
+        slots
+          .map((s) => String(s.group?.id ?? ''))
+          .filter((gid) => new RegExp(`^${esc(k)}\\.\\d+$`).test(gid))
+      )
+    ]
+      .sort((a, b) => Number(a.slice(k.length + 1)) - Number(b.slice(k.length + 1)))
+      .map((gid) => slots.filter((s) => String(s.group?.id ?? '') === gid))
+  // A platform that places each slot in the block that prints it (EmDash: the theme's stamps, emdash-map.mjs) keeps the
+  // entry the slot is a field of (`mapEntity`). Each stored repeater of such an entry the block holds is a list, its
+  // rows the repeater's rows (`target.item`, the content API's own), every row the block holds whether the page shows
+  // it or not (a closed tab, a hidden slide); the map's group of the same name gives its bounds (`menu.x.items`).
+  const repeaterKey = (s) =>
+    s.mapEntity && s.target?.field && Number.isInteger(s.target?.item)
+      ? `${s.mapEntity}.${s.target.field}`
+      : null
+  const repeaters = Map.groupBy(
+    slots.filter((s) => repeaterKey(s)),
+    (s) => repeaterKey(s)
+  )
+  const lists = [...repeaters].map(([k, cells]) => {
+    const items = [...new Set(cells.map((s) => s.target.item))].sort((a, b) => a - b)
+    const rows = items.map((item) => cells.filter((s) => s.target.item === item))
+    const g = idx.map.fitGroups?.[k] ?? { items: rows.length, maxFrom: 'demo-count' }
+    return { ...listOf(k, g, rows), rowsFrom: 'repeater' }
+  })
+  const inRepeater = new Set([...repeaters.values()].flat().map((s) => s.key))
+  // The map's groups of the block's own entities (a Joomla module's `module-5.slide`), and of the entries its placed
+  // slots are fields of when the block holds a slot of the group; a group whose every slot is in a repeater row of the
+  // block adds no row of its own (two descriptions of one entry grouped as a contact, each in its own row).
+  const placedEntries = [...new Set(slots.map((s) => s.mapEntity).filter(Boolean))]
+  for (const [k, g] of Object.entries(idx.map.fitGroups ?? {})) {
+    if (repeaters.has(k)) continue
+    const own = entities.some((e) => k.startsWith(`${e}.`))
+    if (!own && !placedEntries.some((e) => k.startsWith(`${e}.`))) continue
+    const rows = groupRows(k)
+    if (!own && (!rows.length || rows.flat().every((s) => inRepeater.has(s.key)))) continue
+    lists.push(listOf(k, g, rows))
+  }
   // Lists of content items a block pulls from a category (the map's itemLists).
   const items = itemListsOf({ map: idx.map, blockId: id, entities, minEvidence, cardFields, errors })
   lists.push(...items.lists)
@@ -413,10 +447,15 @@ export function buildBlock({
   const pageItems = new Set(
     (idx.map.pages ?? []).filter((p) => pagesOf(rec, widths).has(pageIdOf(p.route))).map((p) => p.entity)
   )
+  // A slot a stamp placed in another block (emdash-map.mjs `placedBy`) is that block's, whatever words this one prints:
+  // the stamps name the field each element prints, so equal words here (a footer's "Location." beside a section's
+  // "Location.") are a coincidence, never this block's field.
   for (const t of textsShown) {
     const s = t.source
-    if (!s || t.label || ownKeys.has(s.key) || held.has(t.slot) || pageItems.has(entityOfKey(s.key))) continue
-    if (PLACED.test(s.key) || t.how === 'piece') t.foreign = slotOut(s)
+    if (!s || t.label || ownKeys.has(s.key) || held.has(t.slot)) continue
+    if (s.placedBy) t.foreign = slotOut(s)
+    else if (pageItems.has(entityOfKey(s.key))) continue
+    else if (PLACED.test(s.key) || t.how === 'piece') t.foreign = slotOut(s)
   }
   // The block's own slots it shows that nothing above holds (a section title, an intro, a lone button label), and
   // the shown words of other entities it prints (a CMS string, a form field label, a module shown inside it).
@@ -433,7 +472,11 @@ export function buildBlock({
       String(x.sample ?? '').trim() &&
       ((x.jsonPath && shownPaths.has(slotPath(x))) || (x.group && shownGroups.has(x.group.id)))
   )
-  const blockSlots = [...shown.values(), ...urls]
+  // On a platform whose stamps place each field in the block that prints it (EmDash), every field placed here is the
+  // block's, shown at the read width or not (a closed tab, a hidden slide, a button's address), unless a list row, a
+  // frame, a link or a demo fact holds it: the content API says the block holds it, not the words the read pass saw.
+  const placed = slots.filter((x) => x.placedBy && !held.has(neutralKey(x.key)))
+  const blockSlots = [...shown.values(), ...urls, ...placed]
     .filter((x, i, all) => all.findIndex((y) => y.key === x.key) === i)
     .map(slotOut)
   const images = {}
