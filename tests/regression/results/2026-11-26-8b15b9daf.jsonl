@@ -1,0 +1,1 @@
+{"id":"REG-PR-759-wordpress-write-door","verdict":"PASS","commit":"8b15b9dafdc7045f6b665a0d58728c169a924b6a","ran_at":"2026-11-26T12:32:26.982Z","evidence":"tests/regression/.runs/2026-11-26-8b15b9daf/REG-PR-759-wordpress-write-door.log"}
