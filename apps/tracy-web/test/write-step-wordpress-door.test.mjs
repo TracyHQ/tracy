@@ -145,7 +145,7 @@ test('a refusal that names no slot stops the write in the plugin words; a wrong 
   )
 })
 
-test('🔒 on WordPress a call of a Joomla stage is answered by name and never sent; the contract and uploads are sent', async () => {
+test('🔒 on WordPress a call of a Joomla stage or an upload is answered by name and never sent; the contract is sent', async () => {
   const site = wordpressSite()
   const wp = onPlatform({ apply: site.apply }, 'wordpress')
   const answer = await wp.apply({
@@ -157,11 +157,17 @@ test('🔒 on WordPress a call of a Joomla stage is answered by name and never s
   assert.match(answer.message, /WordPress has no door for content\.update menuItem/)
   await wp.apply({ siteKey: 'harbour', action: 'template.siteSettings', params: { operation: 'set' } })
   assert.deepEqual(site.calls, [])
-  await wp.apply({ siteKey: 'harbour', action: 'media.upload', params: {} })
+  // No picture is written on WordPress yet: an upload is answered here too, in words, and never sent.
+  const upload = await wp.apply({
+    siteKey: 'harbour',
+    action: 'media.upload',
+    params: { path: 'images/x.jpg' }
+  })
+  assert.equal(upload.error, 'not_on_wordpress')
   await wp.apply({ siteKey: 'harbour', action: 'content.contract', params: { operation: 'inspect' } })
   assert.deepEqual(
     site.calls.map((c) => c.action),
-    ['media.upload', 'content.contract']
+    ['content.contract']
   )
 })
 
