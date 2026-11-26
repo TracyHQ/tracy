@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-764-wordpress-pictures-links-empties",
+  "kind": "feat",
+  "title": "The write step writes WordPress pictures and addresses and empties demo words there, through the plugin's contract",
+  "pr": 764,
+  "area": "website-opportunities/write-step",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The WordPress door sends words, a picture rewritten to wp-content/uploads/tracy-content/<sha256>.<ext>, an address and an emptied text slot ('') in one apply; a picture taken off is refused by slot and skipped as not on WordPress yet; an upload goes to the plugin's folder; info carries hide_ops and a WordPress menu item holds no page; a whole JA Diner WordPress write step empties the plan's hidden text slot and the kept blocks' demo words."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-wordpress-door.test.mjs",
+      "apps/tracy-web/test/write-step-wordpress.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "words, an address, a picture and emptied text go in one apply; a picture taken off is refused by slot, in words",
+      "the plugin info carries the hide orders this door makes (an emptied slot), and a WordPress menu item holds no page",
+      "a WordPress Diner run writes its words as plain text in one apply, and skips in words what the plugin does not take"
+    ]
+  }
+}

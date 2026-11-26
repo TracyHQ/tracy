@@ -467,8 +467,9 @@ own, so a chain build's writes fold into its "Tracy setup" row. `info` answers w
 (`write-step/site-doors/emdash.js`) answers any other action itself, by name, and never sends it.
 On WordPress the write step writes through the Claude Cowork for WordPress's own `content.contract` (inspect, then one
 `apply` of plain-text changes keyed by content map slot, as the seeder does: `write-step/site-doors/wordpress.js`). What
-that plugin does not take yet is refused by slot before anything is sent: an emptied slot, a link taken off, a picture
-or address slot. The calls of Joomla stages are answered by the door itself. On every CMS, a line that failed only for
+that plugin does not take yet is refused by slot before anything is sent (a picture taken off). Its pictures go to
+the plugin's own folder (`wp-content/uploads/tracy-content/<sha256>.<ext>`), an address slot takes a link, and an emptied
+text or address slot is written `''`, so the hide stage and the closing rule empty demo words there too. The calls of Joomla stages are answered by the door itself. On every CMS, a line that failed only for
 want of a door is `skipped` with the words `not on <CMS> yet: …` (`notOnPlatform`), so the site check never reads it
 as a refusal of the site.
 

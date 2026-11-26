@@ -66,33 +66,47 @@ test('the door writes plain changes in one apply, as the seeder does: revision, 
   assert.equal(params.empty_slots, undefined)
 })
 
-test('what the plugin does not take is refused by slot before anything is sent, and the next round writes the rest', async () => {
+test('words, an address, a picture and emptied text go in one apply; a picture taken off is refused by slot, in words', async () => {
   const site = wordpressSite()
+  const picture = `images/tracy-content/${'a'.repeat(64)}.jpg`
   const wrote = await writeContract({
     applyContract: door.applyContract,
     apply: site.apply,
     siteKey: 'harbour',
     reading: INSPECT,
     mapping: mapping({
-      changes: {
-        'hero.title': 'Harbour Kitchen',
-        'hero.picture': 'images/tracy-content/abc.jpg',
-        'hero.button_url': '/menu'
-      },
+      changes: { 'hero.title': 'Harbour Kitchen', 'hero.picture': picture, 'hero.button_url': '/menu' },
       emptySlots: ['hero.lead']
     }),
     isCancelled: async () => false,
     sleep: async () => {}
   })
-  assert.deepEqual(wrote.written, ['hero.title'])
-  assert.deepEqual([...wrote.refused.keys()].sort(), ['hero.button_url', 'hero.lead', 'hero.picture'])
-  for (const entry of wrote.refused.values()) assert.match(entry.message, /^not_on_wordpress: /)
-  // One apply only, with the words alone.
+  assert.deepEqual(wrote.written.sort(), ['hero.button_url', 'hero.picture', 'hero.title'])
+  assert.deepEqual(wrote.emptied, ['hero.lead'])
   const applies = site.calls.filter((c) => c.params.operation === 'apply')
   assert.equal(applies.length, 1)
-  assert.deepEqual(applies[0].params.changes, { 'hero.title': 'Harbour Kitchen' })
-  // Their lines are skipped on WordPress, in words, never read as a refusal of the site.
-  const line = { slot: 'hero.lead', status: 'failed', reason: wrote.refused.get('hero.lead').message }
+  // The picture goes to the plugin's own folder, the emptied text as nothing.
+  assert.deepEqual(applies[0].params.changes, {
+    'hero.title': 'Harbour Kitchen',
+    'hero.picture': `wp-content/uploads/tracy-content/${'a'.repeat(64)}.jpg`,
+    'hero.button_url': '/menu',
+    'hero.lead': ''
+  })
+  // A picture slot cannot be emptied yet: refused alone, before anything is sent, and its line says so.
+  const other = wordpressSite()
+  const taken = await writeContract({
+    applyContract: door.applyContract,
+    apply: other.apply,
+    siteKey: 'harbour',
+    reading: INSPECT,
+    mapping: mapping({ emptySlots: ['hero.picture'] }),
+    isCancelled: async () => false,
+    sleep: async () => {}
+  })
+  assert.deepEqual([...taken.refused.keys()], ['hero.picture'])
+  assert.match(taken.refused.get('hero.picture').message, /^not_on_wordpress: .*takes no picture off/)
+  assert.equal(other.calls.filter((c) => c.params.operation === 'apply').length, 1)
+  const line = { slot: 'hero.picture', status: 'failed', reason: taken.refused.get('hero.picture').message }
   assert.equal(notOnPlatform(line, 'wordpress').status, 'skipped')
   assert.match(notOnPlatform(line, 'wordpress').reason, /^not on WordPress yet: /)
 })
@@ -145,7 +159,7 @@ test('a refusal that names no slot stops the write in the plugin words; a wrong 
   )
 })
 
-test('🔒 on WordPress a call of a Joomla stage or an upload is answered by name and never sent; the contract is sent', async () => {
+test('🔒 on WordPress a call of a Joomla stage is answered by name and never sent; the contract and uploads are sent', async () => {
   const site = wordpressSite()
   const wp = onPlatform({ apply: site.apply }, 'wordpress')
   const answer = await wp.apply({
@@ -157,18 +171,19 @@ test('🔒 on WordPress a call of a Joomla stage or an upload is answered by nam
   assert.match(answer.message, /WordPress has no door for content\.update menuItem/)
   await wp.apply({ siteKey: 'harbour', action: 'template.siteSettings', params: { operation: 'set' } })
   assert.deepEqual(site.calls, [])
-  // No picture is written on WordPress yet: an upload is answered here too, in words, and never sent.
-  const upload = await wp.apply({
+  // A picture of the write step is uploaded to the plugin's own folder.
+  const file = `${'b'.repeat(64)}.webp`
+  await wp.apply({
     siteKey: 'harbour',
     action: 'media.upload',
-    params: { path: 'images/x.jpg' }
+    params: { path: `images/tracy-content/${file}` }
   })
-  assert.equal(upload.error, 'not_on_wordpress')
   await wp.apply({ siteKey: 'harbour', action: 'content.contract', params: { operation: 'inspect' } })
   assert.deepEqual(
     site.calls.map((c) => c.action),
-    ['content.contract']
+    ['media.upload', 'content.contract']
   )
+  assert.equal(site.calls[0].params.path, `wp-content/uploads/tracy-content/${file}`)
 })
 
 test('the plugin inspect is read as a list of slots, pictures typed, by the write step and the site check alike', async () => {
@@ -181,7 +196,13 @@ test('the plugin inspect is read as a list of slots, pictures typed, by the writ
     markupSlots: { 'hero.title': { tags: ['br'], classes: [] } }
   }
   assert.deepEqual(wordpressReading(answer).slots, [
-    { key: 'hero.title', type: 'text', current: 'Hey Harry!!!', markup: { tags: ['br'], classes: [] } },
+    {
+      key: 'hero.title',
+      type: 'text',
+      current: 'Hey Harry!!!',
+      canHide: 'unmeasured',
+      markup: { tags: ['br'], classes: [] }
+    },
     { key: 'hero.picture', type: 'image', current: 'wp-content/uploads/2026/10/item-1.jpg' }
   ])
   // A list already, a refusal, or no inspect at all: as it came.
@@ -211,4 +232,21 @@ test('the plugin inspect is read as a list of slots, pictures typed, by the writ
   }
   assert.equal(notOnPlatform(line, 'wordpress').status, 'skipped')
   assert.equal(notOnPlatform(line, 'joomla'), line)
+})
+
+test('the plugin info carries the hide orders this door makes (an emptied slot), and a WordPress menu item holds no page', async () => {
+  const raw = { apply: async () => ({ ok: true, info: { version: '0.18.45', platform: 'wordpress' } }) }
+  const answer = await readingOnPlatform(raw, 'wordpress').apply({ action: 'info', params: {} })
+  assert.deepEqual(answer.info, {
+    version: '0.18.45',
+    platform: 'wordpress',
+    hide_ops: { version: 1, rows_remove: 0 }
+  })
+  const refused = { ok: false, error: 'bad_action' }
+  assert.equal(
+    await readingOnPlatform({ apply: async () => refused }, 'wordpress').apply({ action: 'info' }),
+    refused
+  )
+  assert.equal(siteDoorFor('wordpress').menuOwnsPage, false)
+  assert.equal(siteDoorFor('joomla').menuOwnsPage, undefined)
 })

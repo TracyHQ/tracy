@@ -1,0 +1,1 @@
+{"id":"REG-PR-764-wordpress-pictures-links-empties","verdict":"PASS","commit":"a0f82bd3e2a24b8f96105e6f208f71d7cab22fc6","ran_at":"2026-11-26T16:54:24.722Z","evidence":"tests/regression/.runs/2026-11-26-a0f82bd3e/REG-PR-764-wordpress-pictures-links-empties.log"}
