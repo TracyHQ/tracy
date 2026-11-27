@@ -23,12 +23,24 @@ import { articleExportProblems } from './article-provenance.js'
 
 const BULLET_ALL = (slot) => Number(slot?.bullets) > 0 && !(Number(slot?.paragraphs) > 0)
 
+/**
+ * Whether a content map slot is one text node of an HTML value (its `xpath` ends in `text()`): the words of one element,
+ * which hold no paragraph or list of their own. Written as paragraphs, they nest a `<p>` in the element that holds them,
+ * and the parser splits it: JA Diner's reservation text `<p>words</p>` was stored as `<p></p><p>…</p><p>…</p><p>…</p><p></p>`,
+ * so the slot's xpath matched three text nodes and every inspect after it answered `contract_failed` ("HTML slot is
+ * missing or ambiguous"): the whole final check went unmeasured (dev arabian-tea-lat34 and lat36, 2026-11-25/26).
+ * @param {{ xpath?: unknown } | null | undefined} slot
+ */
+export const isTextNodeSlot = (slot) => /\/text\(\)(?:\[\d+\])?$/.test(String(slot?.xpath ?? ''))
+
 // A content map stores markup as plain text with doubled round brackets: a paragraph is `((p))text((/p))`, a bullet
 // list `((ul))` with one `((li))text((/li))` per item (see the ja-tour and ja-seven content maps). A slot written as
 // one string is exported as is. A list of strings is joined by the slot's format: bullets when the kit shows only
-// bullets, otherwise paragraphs. Without a kit, a list is read as paragraphs, the common case.
-export function joinItems(items, kitSlot, sample = '') {
+// bullets, otherwise paragraphs. Without a kit, a list is read as paragraphs, the common case. A slot that is one text
+// node (`isTextNodeSlot`) takes every item as one paragraph, a space between them, whatever count the kit allows.
+export function joinItems(items, kitSlot, sample = '', contentSlot = null) {
   if (items.length === 1) return items[0]
+  if (isTextNodeSlot(contentSlot)) return items.join(' ')
   const form = listFormOf(sample)
   if (form) {
     const lead = form.lead ? [`${form.lead}${items[0]}((/p))`] : []
@@ -156,7 +168,7 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
     }
   }
   const kitSlots = kitSlotIndex(kit)
-  const samples = new Map((contentMap?.slots ?? []).map((c) => [c?.key, c?.sample]))
+  const contentSlots = new Map((contentMap?.slots ?? []).map((c) => [c?.key, c]))
   const facts = new Map((brief?.facts ?? []).map((f) => [f.id, f.value]))
   const mainMenu = plan && contentMap ? mainMenuExport({ plan, kit, contentMap, copy }) : null
   const changes = {}
@@ -165,7 +177,13 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
     const key = contentMapKey(s.slot)
     // The writer's emphasis is wrapped in the demo's span; a slot whose demo marks no span ignores it (ADR 0042 section 11).
     const kitSlot = kitSlots.get(s.slot)
-    changes[key] = joinItems(withEmphasis(s.items, s.emphasis, kitSlot), kitSlot, samples.get(key))
+    const contentSlot = contentSlots.get(key)
+    changes[key] = joinItems(
+      withEmphasis(s.items, s.emphasis, kitSlot),
+      kitSlot,
+      contentSlot?.sample,
+      contentSlot
+    )
     if (s.factIds.length) {
       const cited = s.factIds.map((id) => (facts.has(id) ? `${id}: ${facts.get(id)}` : id))
       evidence[key] = `Brief facts: ${cited.join('; ')}`

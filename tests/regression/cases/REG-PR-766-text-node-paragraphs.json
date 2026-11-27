@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-766-text-node-paragraphs",
+  "kind": "fix",
+  "title": "A Joomla slot that is one text node of an HTML value takes the writer's paragraphs as one, so the contract stays readable",
+  "pr": 766,
+  "area": "website-opportunities/write-step",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "On the JA Diner Joomla 1.0.8 kit, article-28.4 written as three paragraphs exports as one paragraph with no ((p)) codes; a whole-element slot keeps its paragraphs and a bullets slot its list."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/contract-mapping-text-node.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a text node slot takes every paragraph of the writer as one, even where the kit counts three",
+      "a slot that is a whole element, or no HTML at all, keeps its paragraphs and lists"
+    ]
+  }
+}
