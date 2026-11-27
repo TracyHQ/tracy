@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-774-emdash-diner-display-face",
+  "kind": "fix",
+  "title": "The Tracy Diner EmDash contract declares its heading face, so the brand step can set the name in it",
+  "pr": 774,
+  "area": "website-opportunities/brand-step",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The EmDash, Joomla and WordPress Diner contracts each resolve the display face Eczar at weight 400."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/brand-template-font.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the Diner contract of every CMS declares its heading face, so the brand step can set the name in it"
+    ]
+  }
+}

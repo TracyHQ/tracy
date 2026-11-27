@@ -122,3 +122,13 @@ test('step 3: refused with the reason when the face is nowhere', async () => {
   await refused({ contract, fetchImpl: junk.fetchImpl, googleFontFaces, cacheDir }, /not a readable font/)
   assert.deepEqual(readdirSync(cacheDir), [], 'a refused download is not cached')
 })
+
+test('the Diner contract of every CMS declares its heading face, so the brand step can set the name in it', async () => {
+  const { readFileSync } = await import('node:fs')
+  const dir = new URL('../../../packages/design/tracy-ds-slot/templates/', import.meta.url)
+  for (const file of ['emdash-tracy-diner.json', 'joomla-ja-diner.json', 'wordpress-wp-ja-diner.json']) {
+    const read = JSON.parse(readFileSync(new URL(file, dir), 'utf8'))
+    assert.equal(displayFaceOf(read), 'Eczar', file)
+    assert.equal(displayWeightOf(read), 400, file)
+  }
+})

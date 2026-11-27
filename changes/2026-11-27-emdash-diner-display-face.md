@@ -1,0 +1,5 @@
+- **The Tracy Diner EmDash contract declares its heading face** — David (WO) · #774 · `fix/wo-emdash-diner-display-face` · 2026-11-27
+  **Affects:** the brand step of every Website opportunity build on Tracy Diner (EmDash) — `packages/design/tracy-ds-slot/templates/emdash-tracy-diner.json` gains `discovered.displayFace`. No other template changes.
+  - The brand step sets the site name in the template's heading face for the logo. The Diner EmDash contract declared none (`discovered: {}`), so every Diner EmDash build failed its brand step with `BRAND_FONT_UNRESOLVED` and kept the demo logo. It now declares Eczar 400, tracking -0.008em, read off its own `tokens.css` and `global.css` and equal to the JA Diner Joomla contract.
+  **Why:** dev `arabian-tea-em6` (27/11): brand step failed, "the template contract declares no display face".
+  **Still owed:** seven other ready contracts declare no heading face either (EmDash Coffee, Essence, Fresco; Joomla JA Spark, Tracy Airbnb; WordPress JA Essence, JA Vega); each needs its face read off its own source before a brand run on it can pass.
