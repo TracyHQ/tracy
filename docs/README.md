@@ -118,6 +118,7 @@ Numbering rules and the inheritance register: [adr/README.md](adr/README.md).
 | [0042. Site writer trial bench: the site-copy/1 contract and the copy check](adr/0042-site-writer-trial-bench-copy-contract-and-check.md) | 0042. Site writer trial bench: the site-copy/1 contract and the copy check |
 | [0043. Picture step: the site-pictures/1 manifest, the picture check and the fallback ladder](adr/0043-picture-step-manifest-check-and-fallback-ladder.md) | 0043. Picture step: the site-pictures/1 manifest, the picture check and the fallback ladder |
 | [0044. Write step and site check: one writer, one owner per slot, removal instead of hiding](adr/0044-write-step-and-site-check.md) | 0044. Write step and site check: one writer, one owner per slot, removal instead of hiding |
+| [0045. Progressive site plan: copy and pictures start on each page group the plan has settled](adr/0045-progressive-site-plan-pipeline.md) | 0045. Progressive site plan: copy and pictures start on each page group the plan has settled |
 
 ## READMEs next to the code
 
