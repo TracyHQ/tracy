@@ -39,6 +39,9 @@
   "ready": true,
   "readyNote": "measured 08/11/2026 with flow.mjs --cms emdash on a site built from the 0.1.0 package: the 15 featured systems at 1440 and 390, roles match on every view, page follows, every text reads at least as well as on the template, 4 controls 0 differences. With no system worn the site is pixel-identical (Fast Gate). Measurement: contracts/0.1.0/design-system-measurement.json",
   "measureStill": true,
-  "discovered": {},
+  "discovered": {
+    "displayFace": "Eczar 400, tracking -0.008em"
+  },
+  "discoveredNote": "read 27/11/2026 off the 0.1.4 source: src/styles/tokens.css --font-display is Eczar and global.css sets the slide heading (the display role) at weight 400, 60px, letter-spacing -.5px (-0.008em); the same face the JA Diner Joomla contract measured (joomla-ja-diner.json). The brand step sets the site name in this face for the logo",
   "measureNote": "Carousels (the home slideshow) are stopped on their first slide before each measure"
 }
