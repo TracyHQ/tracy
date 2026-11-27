@@ -630,8 +630,8 @@ export function createStepChainSteps(deps) {
             baselines: contractBaselineStore({ index: defaultContracts() }),
             pageHtml: (page) => pageHtml({ siteKey: ctx.siteKey, path: page }),
             limits,
-            // A chain build runs 9b only when it could leave the site clean (write-step-nine.js cannotFinish).
-            repairOnlyWhenItCanFinish: true,
+            // A chain build runs 9b when it has a fault to send, and skips it with none (write-step-nine.js nothingToSend).
+            repairOnlyWhatItCanSend: true,
             saveFile: (name, data) => writeFile(path.join(out, name), data),
             log: { warn: (line) => log.warn?.(`[step-chain] ${ctx.siteKey}: ${line}`) }
           })
