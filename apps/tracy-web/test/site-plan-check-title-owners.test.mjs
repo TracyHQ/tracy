@@ -141,3 +141,14 @@ test('a paid run frozen on checker 5 cannot resume under the new title semantics
   assert.match(finishes[0].error, /site-plan-check\/5/)
   assert.equal(row.checker_version, 'site-plan-check/5')
 })
+
+test('a brand title slot whose kit names its page instead of its block is still the brand step’s', () => {
+  // Dev arabian-tea-wp7 (JA Diner WordPress, 27/11/2026): `nameSlots[].block` is the page, `page-contact-us`.
+  const input = omitBooking(fixture())
+  input.kit.site.nameSlots = [{ kind: 'slot', id: 'block-7.3', block: 'page-contact' }]
+  const r20 = rule(input)
+  assert.deepEqual(r20.failures ?? [], [], JSON.stringify(r20))
+  // A name slot that names another page is not this page's.
+  input.kit.site.nameSlots = [{ kind: 'slot', id: 'block-7.3', block: 'page-booking' }]
+  assert.equal(rule(input).status, 'fail')
+})
