@@ -87,6 +87,22 @@ export async function dropEmdashPages({ door, siteKey, pages, results, contentMa
   return Boolean(answer?.ok && !answer.unchanged)
 }
 
+/** A picture the write step placed: `images/tracy-content/<sha256>.<ext>` (write-step/picture-package.js). */
+const PICTURE_PATH = /^\/?images\/tracy-content\/([0-9a-f]{64}\.(?:png|jpe?g|webp))$/i
+const PLACED_LIMIT = 5000
+/** @type {Map<string, string>} a placed picture's file name → the address the site draws it at, oldest first */
+const placed = new Map()
+
+/** Each picture an apply placed, as the door answered it (sites/emdash-contract.js `placed`). */
+function rememberPlaced(answer) {
+  for (const [name, src] of Object.entries(answer?.placed ?? {})) {
+    if (typeof src !== 'string' || !src) continue
+    placed.delete(name)
+    placed.set(name, src)
+    if (placed.size > PLACED_LIMIT) placed.delete(placed.keys().next().value)
+  }
+}
+
 export const emdashSiteDoor = Object.freeze({
   platform: 'emdash',
   writes: true,
@@ -104,6 +120,21 @@ export const emdashSiteDoor = Object.freeze({
    * so "the plugin on this site is older than …" there means the same.
    */
   notDone: (reason) => /\bnot_on_emdash\b|the plugin on this site is older than /.test(reason),
+  /** Each answer as the write step reads it, remembering where an apply placed each picture. */
+  answerOf: (call, answer) => {
+    if (call?.action === 'content.contract' && call.params?.operation === 'apply' && answer?.ok)
+      rememberPlaced(answer)
+    return answer
+  },
+  /**
+   * A report line as the site holds its value: a picture the library renamed (a media item keeps its own storage key) at
+   * the address the pages draw it, so the read-back and the printed rule find what was written. Dev arabian-tea-em5
+   * (27/11/2026): ordered as `images/tracy-content/…`, 4 placed pictures read as not held and 4 as not printed.
+   */
+  lineOf: (line) => {
+    const name = PICTURE_PATH.exec(String(line?.ordered ?? ''))?.[1]?.toLowerCase()
+    return name && placed.has(name) ? { ...line, ordered: placed.get(name) } : line
+  },
   /** Whether the Apply door takes this call on an EmDash site. */
   takes: (call) => EMDASH_TAKES.has(call?.action),
   /** The answer to a call it does not take: nothing is sent. */

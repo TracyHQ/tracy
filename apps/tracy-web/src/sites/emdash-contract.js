@@ -749,8 +749,22 @@ async function apply({ siteKey, contentMap, calls, params }) {
       landed
     }
   }
+  // Where each picture written now sits, as the pages draw it: the write step reports a picture by that address
+  // (write-step/site-doors/emdash.js `lineOf`), since its own path names a file the library renamed.
+  const placed = {}
+  for (const v of values.values()) {
+    const name = typeof v === 'string' ? PICTURE_PATH.exec(v)?.[1]?.toLowerCase() : null
+    const item = name ? pictures.get(name) : null
+    if (item) placed[name] = `/_emdash/api/media/file/${item.storageKey}`
+  }
   return {
-    body: { ok: true, apply_id: params.apply_id, applied: values.size, entities: writes.length }
+    body: {
+      ok: true,
+      apply_id: params.apply_id,
+      applied: values.size,
+      entities: writes.length,
+      ...(Object.keys(placed).length ? { placed } : {})
+    }
   }
 }
 
