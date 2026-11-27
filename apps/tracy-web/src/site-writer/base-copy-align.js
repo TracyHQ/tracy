@@ -1,5 +1,5 @@
-// A copy matched to its plan where W02 has one right answer that needs no model: a slot the plan hides or no longer
-// decides holds nothing, a plan label the plan rewrote is the plan's words, and an entry marked as a plan label on a slot
+// A copy matched to its plan where W02 and W09 have one right answer that needs no model: a slot the plan hides or no
+// longer decides holds nothing, an alt of a frame the plan no longer has is left out, a plan label the plan rewrote is the plan's words, and an entry marked as a plan label on a slot
 // the plan gives no label words is the writer's. A chain build's draft copy is written on the plan's first checked draft
 // while the planner still fixes its plan (step-chain-steps.js copyDraft), so the copy run on the final plan meets these
 // as round 0 (`--base-copy`); a fix round's answer can bring the last one too. This puts them right after every answer,
@@ -66,9 +66,24 @@ export function alignBaseCopy(copy, { plan, kit, brief, contentMap = null }) {
         return false
       })
     : copy.pages
+  // An alt of a frame the final plan no longer has: W09 fails it ("alt text for a frame the plan does not have"). Dev
+  // bxr-london-lat38 (27/11/2026): twelve alts of frames the plan's fix rounds dropped, still standing after both rounds.
+  const frames = idx.frames ?? new Set()
+  const alts = Array.isArray(copy.alts)
+    ? copy.alts.filter((a) => {
+        if (!isObject(a) || typeof a.frame !== 'string' || frames.has(a.frame)) return true
+        left.push(a.frame)
+        return false
+      })
+    : copy.alts
   if (!left.length && !relabelled.length && !owned.length) return { copy, left, relabelled, owned }
   return {
-    copy: { ...copy, slots, ...(Array.isArray(copy.pages) ? { pages } : {}) },
+    copy: {
+      ...copy,
+      slots,
+      ...(Array.isArray(copy.pages) ? { pages } : {}),
+      ...(Array.isArray(copy.alts) ? { alts } : {})
+    },
     left,
     relabelled,
     owned
