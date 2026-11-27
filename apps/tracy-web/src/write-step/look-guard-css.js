@@ -28,6 +28,8 @@ const ALLOWED_AT = /^@(?:media|supports|layer|container)\b/i
 const KEYFRAMES = /^@(?:-\w+-)?keyframes\b/i
 
 const keyOf = (at, selector, prop = '') => JSON.stringify([at, selector, prop])
+/** The mark of a value allowed word for word, as the template writes it (a repeated rival keeps its own colours). */
+const EXACT = '='
 const said = (text) => String(text).replace(/\s+/g, ' ').trim().toLowerCase()
 
 /** Where a `color-mix(` that holds a brand tone ends, or -1. */
@@ -84,6 +86,9 @@ export function accentRoutesOf(sheets, seed) {
   for (const { rule, name } of routes.rescope) put(decls, keyOf(rule.at, rule.selector, name), '#')
   for (const { rule } of routes.words) put(decls, keyOf(rule.at, rule.selector, 'color'), '#')
   for (const k of routes.keyframes) put(keyframes, keyOf(k.at, k.head), shapeOf(k.body))
+  // The template's own later rules the module repeats to keep its order (accent-routes.js `laterRivals`): word for word.
+  for (const { rule, decl } of routes.restore ?? [])
+    put(decls, keyOf(rule.at, rule.selector, decl.prop), `${EXACT}${said(decl.value)}`)
   return { decls, keyframes }
 }
 
@@ -124,7 +129,9 @@ function declFault(rule, decl, routes) {
   const allowed = routes?.decls.get(keyOf(rule.at, rule.selector, decl.prop))
   if (allowed)
     // A template that mixes its accent itself keeps its mix: only the colour inside it changes.
-    return allowed.has(shapeOf(decl.value)) || allowed.has(shapeOf(decl.value, { keepMixes: true }))
+    return allowed.has(shapeOf(decl.value)) ||
+      allowed.has(shapeOf(decl.value, { keepMixes: true })) ||
+      allowed.has(`${EXACT}${said(decl.value)}`)
       ? null
       : fault(
           `${decl.prop} changes more than its colour: it differs from the template's own value (${rule.selector.slice(0, 80)}: ${decl.value.slice(0, 80)})`
