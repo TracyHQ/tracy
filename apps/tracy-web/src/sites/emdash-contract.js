@@ -316,7 +316,10 @@ async function inspect({ contract, contentMap, calls }) {
       sample: typeof slot.sample === 'string' ? slot.sample : '',
       current: asWords(slot, value),
       canHide: canEmpty(slot) ? 'unmeasured' : false,
-      ...(t.item !== undefined ? { row: `${slot.entity}.${t.field}[${t.item}]` } : {})
+      ...(t.item !== undefined ? { row: `${slot.entity}.${t.field}[${t.item}]` } : {}),
+      // The row a slot shares with its neighbours (a social link's label and its address), as Joomla's inspect gives it: the
+      // write step finds a link's address slot by its label's group (link-doors.js `byItsLabel`).
+      ...(slot.group?.id ? { group: slot.group } : {})
     })
   }
   const pages = (Array.isArray(contentMap.pages) ? contentMap.pages : [])
