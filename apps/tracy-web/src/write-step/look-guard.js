@@ -7,7 +7,7 @@
 // see is listed in the ADR.
 
 import { createdPageHideOf } from '../lib/created-page-hide.js'
-import { WORDPRESS_LOGO_OPTIONS } from '../lib/template-kit/logo-write-path.js'
+import { EMDASH_LOGO_SETTINGS, WORDPRESS_LOGO_OPTIONS } from '../lib/template-kit/logo-write-path.js'
 import { emptyVideoButtonsOf } from '../lib/empty-video-buttons.js'
 import { hiddenPageLinksOf } from '../lib/hidden-page-links.js'
 import { selfLinkButtonsOf } from '../lib/self-link-buttons.js'
@@ -147,6 +147,53 @@ function optionFaults(params, options) {
   return []
 }
 
+/**
+ * The EmDash brand places this kit names (brand-writes.js `writeEmdashSettings`): `settings.logo` and `chrome.logo_dark`
+ * from its logo spots, `settings.favicon` from its tab icon. Each holds one media reference.
+ */
+function emdashBrandKeysOf(kit) {
+  const keys = new Set(
+    each(kit?.site?.logoSpots)
+      .map((spot) => spot?.setting)
+      .filter((setting) => EMDASH_LOGO_SETTINGS.has(setting))
+  )
+  if (kit?.site?.favicon?.mechanism?.setting === 'settings.favicon') keys.add('settings.favicon')
+  return keys
+}
+
+/** A media reference the EmDash library answers for an upload (a ULID or a like id): no path, no markup. */
+const MEDIA_ID = /^[A-Za-z0-9._:-]{1,200}$/
+
+/** `emdash.settings` set: core settings the kit names, each `{mediaId}` alone. */
+function emdashSettingFaults(params, keys) {
+  return Object.entries(params.fields ?? {}).flatMap(([name, value]) => {
+    const what = `EmDash setting ${name}`
+    if (!keys.has(`settings.${name}`))
+      return [channelFault(what, `only the brand settings the kit names are open, and not ${name}`)]
+    const one = value && typeof value === 'object' && Object.keys(value).join() === 'mediaId'
+    return one && MEDIA_ID.test(String(value.mediaId))
+      ? []
+      : [fault(WRITE, what, `${name} holds one media reference`)]
+  })
+}
+
+/** `emdash.entryField` set: the picture field the kit names on its singleton entry (`chrome/chrome`), one media reference. */
+function entryFieldFaults(params, keys) {
+  const key = `${params.collection}.${params.field}`
+  const what = `EmDash entry field ${key}`
+  if (!keys.has(key) || params.slug !== params.collection)
+    return [
+      channelFault(what, `only the brand fields the kit names are open, and not ${key} of ${params.slug}`)
+    ]
+  if (
+    !MEDIA_ID.test(String(params.media ?? '')) ||
+    typeof params.label !== 'string' ||
+    hasMarkup(params.label)
+  )
+    return [fault(WRITE, what, `${key} holds one media reference, labelled in words`)]
+  return []
+}
+
 /** The columns of rows this kit names as its setting slots. */
 const kitColumns = (kit) =>
   new Set(
@@ -177,6 +224,7 @@ export function lookGuard({ kit, contentMap = null }) {
   const settings = settingsOf(kit)
   const named = kitColumns(kit)
   const options = wordpressOptionsOf(kit)
+  const emdashKeys = emdashBrandKeysOf(kit)
   const map = new Map(each(contentMap?.slots).map((s) => [s?.key, s]))
   const state = {
     rows: new Map(),
@@ -308,12 +356,20 @@ export function lookGuard({ kit, contentMap = null }) {
         return [channelFault(`content.update ${p.kind} key`, 'only an option is named by its key')]
       return updateFaults(p, state, named)
     },
-    'content.batch': (p) => batchFaults(p, state)
+    'content.batch': (p) => batchFaults(p, state),
+    'emdash.settings': (p) => emdashSettingFaults(p, emdashKeys),
+    'emdash.entryField': (p) => entryFieldFaults(p, emdashKeys)
   }
 
   const isRead = ({ action, params }) =>
     READ_ACTIONS.has(action) ||
-    (['content.contract', 'template.siteSettings', 'site.identity'].includes(action) &&
+    ([
+      'content.contract',
+      'template.siteSettings',
+      'site.identity',
+      'emdash.settings',
+      'emdash.entryField'
+    ].includes(action) &&
       READ_OPERATIONS.has(params?.operation))
 
   /** What this write would be refused for: an action, operation or parameter off the list, or what its judge finds. */
@@ -333,7 +389,10 @@ export function lookGuard({ kit, contentMap = null }) {
       return extra.map((name) =>
         channelFault(`${action} ${name}`, `the parameter ${name} of ${action} is not open to the write step`)
       )
-    return JUDGES[action](params)
+    // An action listed with no judge is held back: an unjudged write never goes out, and never ends the run (27/11).
+    const judge = JUDGES[action]
+    if (!judge) return [channelFault(action, `the action ${action} has no judge in the look guard`)]
+    return judge(params)
   }
 
   /** `sent`: whether the call goes out all the same (a finding on a value) or is held back (a channel nobody listed). */
