@@ -87,14 +87,16 @@ export function readingOnPlatform(door, platform) {
 }
 
 /**
- * A report line as it reads on this platform: a line that failed only because the site's CMS has no door for what its
- * stage asks (the site door's `notDone`) is skipped, and says that, so the site check never takes it for a refusal of the
- * site. Every other line is as it was.
+ * A report line as it reads on this platform: first as the site holds its value (the site door's `lineOf`: a WordPress
+ * picture at the path the plugin placed it under), then, when it failed only because the site's CMS has no door for what
+ * its stage asks (the site door's `notDone`), skipped, and saying that, so the site check never takes it for a refusal of
+ * the site. Every other line is as it was.
  * @param {{ status?: string, reason?: string | null }} line
  * @param {string | undefined} platform
  */
 export function notOnPlatform(line, platform) {
   const site = siteDoorFor(platform)
+  if (typeof site?.lineOf === 'function') line = site.lineOf(line)
   if (!site?.notDone || line?.status !== 'failed' || !site.notDone(String(line.reason ?? ''))) return line
   return {
     ...line,

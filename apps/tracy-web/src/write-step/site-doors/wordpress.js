@@ -62,10 +62,12 @@ const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
 
 /**
  * An inspect of the WordPress plugin in the shape the write step and the site check read on every CMS: the plugin
- * answers `slots` as `{<slot key>: <current value>}` and its pictures apart (`imageSlots`: `{<slot key>: <path>}`), where
- * the Joomla plugin and the EmDash door answer `slots: [{key, current, …}]`. Each slot becomes `{key, current, type}`,
- * `image` for a picture slot (its current value the path the page shows), `text` else; `markupSlots` rides along as
- * `markup`. Dev 26/11/2026: read as a list, the plugin's `slots` was empty, so `arabian-tea-wp2` left out every change as
+ * answers `slots` as `{<slot key>: <current value>}`, and `imageSlots` (`{<slot key>: <path>}`) names its picture slots by
+ * their DEMO picture, the shape a new one must have (Claude Cowork for WordPress README, `inspect`), where the Joomla
+ * plugin and the EmDash door answer `slots: [{key, current, …}]`. Each slot becomes `{key, current, type}`, `image` for a
+ * picture slot (its current value the path the site holds now, its `sample` the demo picture), `text` else;
+ * `markupSlots` rides along as `markup`. Dev 27/11/2026 (`arabian-tea-wp7`): read as the current value, the demo picture
+ * made every picture Tracy placed read back as the demo. Dev 26/11/2026: read as a list, the plugin's `slots` was empty, so `arabian-tea-wp2` left out every change as
  * "the site does not have the slot" and wrote nothing. Any other answer is as it came.
  *
  * A text or address slot can be emptied (the plugin writes `''`), which no one measured on the page: `canHide:
@@ -82,8 +84,8 @@ export function wordpressReading(answer) {
     slots: Object.entries(answer.slots).map(([key, value]) => ({
       key,
       type: key in images ? 'image' : 'text',
-      current: String((key in images ? images[key] : value) ?? ''),
-      ...(key in images ? {} : { canHide: 'unmeasured' }),
+      current: String(value ?? ''),
+      ...(key in images ? { sample: String(images[key] ?? '') } : { canHide: 'unmeasured' }),
       ...(markup[key] ? { markup: markup[key] } : {})
     }))
   }
@@ -185,6 +187,15 @@ export const wordpressSiteDoor = Object.freeze({
       ? wordpressReading(answer)
       : answer
   },
+  /**
+   * A report line as the site holds its value: a picture of the write step at the plugin's own path (`wordpressPath`), the
+   * path the page prints and the inspect answers, so the site check finds what was written. Dev 27/11/2026
+   * (`arabian-tea-wp7`): ordered as `images/tracy-content/…`, 20 pictures the pages printed read as written and not printed.
+   */
+  lineOf: (line) =>
+    typeof line?.ordered === 'string' && wordpressPath(line.ordered) !== line.ordered
+      ? { ...line, ordered: wordpressPath(line.ordered) }
+      : line,
   /**
    * Whether the Apply door is asked this call by the write step on a WordPress site: the contract, `info`, the uploads and
    * the Content API reads, and a brand option written or read (`WORDPRESS_BRAND_OPTIONS`), never another option.

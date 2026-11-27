@@ -191,7 +191,12 @@ test('the plugin inspect is read as a list of slots, pictures typed, by the writ
     ok: true,
     contract: CONTRACT,
     revision: 'rev-1',
-    slots: { 'hero.title': 'Hey Harry!!!', 'hero.picture': 'item-1.jpg' },
+    // As the plugin answers (dev arabian-tea-wp7, 27/11/2026): `slots` holds what the site holds now, `imageSlots` the
+    // demo picture a new one must take the shape of.
+    slots: {
+      'hero.title': 'Hey Harry!!!',
+      'hero.picture': `wp-content/uploads/tracy-content/${'c'.repeat(64)}.jpg`
+    },
     imageSlots: { 'hero.picture': 'wp-content/uploads/2026/10/item-1.jpg' },
     markupSlots: { 'hero.title': { tags: ['br'], classes: [] } }
   }
@@ -203,7 +208,12 @@ test('the plugin inspect is read as a list of slots, pictures typed, by the writ
       canHide: 'unmeasured',
       markup: { tags: ['br'], classes: [] }
     },
-    { key: 'hero.picture', type: 'image', current: 'wp-content/uploads/2026/10/item-1.jpg' }
+    {
+      key: 'hero.picture',
+      type: 'image',
+      current: `wp-content/uploads/tracy-content/${'c'.repeat(64)}.jpg`,
+      sample: 'wp-content/uploads/2026/10/item-1.jpg'
+    }
   ])
   // A list already, a refusal, or no inspect at all: as it came.
   const listed = { ok: true, slots: [{ key: 'a' }] }
@@ -249,4 +259,19 @@ test('the plugin info carries the hide orders this door makes (an emptied slot),
   )
   assert.equal(siteDoorFor('wordpress').menuOwnsPage, false)
   assert.equal(siteDoorFor('joomla').menuOwnsPage, undefined)
+})
+
+test('a picture line is reported at the path WordPress prints it, so the site check finds what was written', () => {
+  const file = `${'d'.repeat(64)}.webp`
+  const line = {
+    slot: 'hero.picture',
+    status: 'written',
+    part: 'picture',
+    ordered: `images/tracy-content/${file}`
+  }
+  assert.equal(notOnPlatform(line, 'wordpress').ordered, `wp-content/uploads/tracy-content/${file}`)
+  // Words, an address, and every other CMS are as they came.
+  const words = { slot: 'hero.title', status: 'written', ordered: 'Harbour Kitchen' }
+  assert.equal(notOnPlatform(words, 'wordpress'), words)
+  assert.equal(notOnPlatform(line, 'joomla'), line)
 })
