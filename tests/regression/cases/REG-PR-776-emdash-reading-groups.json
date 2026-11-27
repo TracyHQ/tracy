@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-776-emdash-reading-groups",
+  "kind": "fix",
+  "title": "EmDash social links find their address slot through their label's row",
+  "pr": 776,
+  "area": "website-opportunities/write-step",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "The EmDash inspect slots carry the content map's row group, and each Tracy Diner contact social link's door is the url slot of its own row."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/emdash-link-doors.test.mjs"
+    ],
+    "needs": [],
+    "tests": ["each social link of the Diner contact goes to the address slot of its own row"]
+  }
+}

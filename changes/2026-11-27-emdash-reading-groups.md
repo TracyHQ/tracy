@@ -1,0 +1,4 @@
+- **EmDash links find their address through their label's row** — David (WO) · #776 · `fix/wo-emdash-reading-groups` · 2026-11-27
+  **Affects:** the EmDash content contract's inspect answer (`sites/emdash-contract.js`), and through it the write step's link doors and the site check's button owners on EmDash. Joomla and WordPress do not change.
+  - Each inspected slot now carries the content map's row `group`, as Joomla's inspect does. The write step finds a link's address slot by its label's group (`link-doors.js` `byItsLabel`); without it, a link whose demo address is shared by its neighbours (the four social links of Tracy Diner's contact, all `http://joomlart.com`) had no door, and the page kept the demo address under the customer's labels.
+  **Why:** dev `arabian-tea-em8` (27/11): the contact page printed Facebook, Instagram and WhatsApp leading to joomlart.com; three plan-links blocks.
