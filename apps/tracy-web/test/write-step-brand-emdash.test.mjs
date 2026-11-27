@@ -6,6 +6,7 @@ import { test } from 'node:test'
 
 import { emdashBrandDoor } from '../src/write-step/emdash-brand-door.js'
 import { brandAsker, writeBrand } from '../src/write-step/brand-writes.js'
+import { lookGuard } from '../src/write-step/look-guard.js'
 
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3])
 const order = (spot, key, file) => ({ item: 'logo', slot: spot, spot, file, via: 'emdash-setting', key })
@@ -298,4 +299,60 @@ test('the dark logo is read back from the published languages only, and every on
   // Nothing published: nothing was written, so nothing reads back.
   site.state.entries.forEach((e) => (e.status = 'draft'))
   assert.equal((await ask('emdash.entryField', { operation: 'read', ...where })).mediaId, null)
+})
+
+test('🔒 the look guard judges the EmDash brand writes: only the places the kit names, one media reference each', async () => {
+  const kit = {
+    site: {
+      logoSpots: [
+        { id: 'logo-header-1', setting: 'settings.logo' },
+        { id: 'logo-dark-1', setting: 'chrome.logo_dark' }
+      ],
+      favicon: { mechanism: { setting: 'settings.favicon' } }
+    }
+  }
+  const guard = lookGuard({ kit })
+  const sent = []
+  const door = guard.door({ apply: async (call) => (sent.push(call), { ok: true }) })
+  const ask = (action, params) => door.apply({ siteKey: 'harbour', action, params })
+  await ask('emdash.settings', {
+    operation: 'set',
+    apply_id: 'b',
+    fields: { logo: { mediaId: '01M8DK' }, favicon: { mediaId: '01M8DL' } }
+  })
+  await ask('emdash.entryField', {
+    operation: 'set',
+    apply_id: 'b',
+    collection: 'chrome',
+    slug: 'chrome',
+    field: 'logo_dark',
+    label: 'Logo for dark backgrounds',
+    media: '01M8DM'
+  })
+  // Reading back is not a write: no judge, no finding.
+  await ask('emdash.settings', { operation: 'read' })
+  await ask('emdash.entryField', {
+    operation: 'read',
+    collection: 'chrome',
+    slug: 'chrome',
+    field: 'logo_dark'
+  })
+  assert.deepEqual(guard.findings(), [])
+  assert.equal(sent.length, 4)
+  // A setting or a field the kit does not name is a channel nobody listed: never sent.
+  await ask('emdash.settings', { operation: 'set', apply_id: 'b', fields: { title: { mediaId: '01M8DK' } } })
+  await ask('emdash.entryField', {
+    operation: 'set',
+    apply_id: 'b',
+    collection: 'posts',
+    slug: 'posts',
+    field: 'cover',
+    label: 'x',
+    media: '01M8DK'
+  })
+  assert.equal(sent.length, 4)
+  // A value that is not one media reference is a finding on the value.
+  await ask('emdash.settings', { operation: 'set', apply_id: 'b', fields: { logo: { mediaId: '/x.png' } } })
+  assert.equal(sent.length, 5)
+  assert.ok(guard.findings().some((f) => /logo holds one media reference/.test(f.reason)))
 })

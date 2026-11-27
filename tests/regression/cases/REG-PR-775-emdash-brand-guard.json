@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-775-emdash-brand-guard",
+  "kind": "fix",
+  "title": "The look guard judges the EmDash brand writes instead of ending the write step",
+  "pr": 775,
+  "area": "website-opportunities/write-step",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "emdash.settings and emdash.entryField pass through the look guard for the places the kit names, are held back for any other, and read-backs are reads."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-brand-emdash.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "🔒 the look guard judges the EmDash brand writes: only the places the kit names, one media reference each"
+    ]
+  }
+}
