@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-771-r20-name-slot-page",
+  "kind": "fix",
+  "title": "R20 delegates a brand title slot the kit names by its page, and a chain copy drops alts of frames the final plan no longer has",
+  "pr": 771,
+  "area": "website-opportunities/planner",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A name slot with block equal to the page passes R20; one naming another page fails; existing delegation failures stay failures.",
+    "An alt of a frame the final plan no longer has is left out by alignBaseCopy, and W09 no longer fails it."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-plan-check-title-owners.test.mjs",
+      "apps/tracy-web/test/site-writer-base-copy-align.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a brand title slot whose kit names its page instead of its block is still the brand step’s",
+      "brand delegation never excuses a hidden title, dropped block, wrong block or unknown name-slot ID",
+      "an alt of a frame the final plan no longer has is left out, so W09 has nothing to send back"
+    ]
+  }
+}

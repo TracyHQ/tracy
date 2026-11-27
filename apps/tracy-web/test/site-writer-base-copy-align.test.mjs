@@ -74,3 +74,19 @@ test("an entry marked as a plan label on a slot the plan gives no label words is
   assert.equal(entry.text, draft.slots.find((s) => s.slot === 'block-1.1').text)
   assert.equal(w02(out.copy, final).status, 'pass')
 })
+
+test('an alt of a frame the final plan no longer has is left out, so W09 has nothing to send back', () => {
+  // Dev bxr-london-lat38 (27/11/2026): twelve alts of frames the plan's fix rounds dropped stood through both copy rounds.
+  const final = plan()
+  decisionOf(final, 'block-2').pictures = []
+  const w09 = (c) =>
+    checkCopy({ copy: c, plan: final, kit: kit(), brief: brief() }).rules.find((r) => r.id === 'W09')
+  const draft = copy()
+  assert.ok(
+    w09(draft).failures.some((f) => /block-2\.f1: alt text for a frame the plan does not have/.test(f.detail))
+  )
+  const out = align(draft, final)
+  assert.deepEqual(out.left, ['block-2.f1'])
+  assert.deepEqual(out.copy.alts, [])
+  assert.ok(!w09(out.copy).failures.some((f) => /alt text for a frame the plan does not have/.test(f.detail)))
+})

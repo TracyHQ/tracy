@@ -1,5 +1,8 @@
 // R20 follows the kit's measured title and the same exact slot ownership as R01/R07. Brand-owned title slots
 // remain the brand step's responsibility; an undeclared title is a kit gap, never permission to invent a write.
+// A name slot whose `block` is the page itself (a WordPress kit names `page-contact-us` where the slot sits in
+// `body-contact-us`) is judged on that page by the blocks that hold the slot. Dev arabian-tea-wp5 and wp7 (26–27/11/2026): JA Diner
+// WP's contact title is the business name, so no plan could pass R20 and every build ended "failed, best version used".
 import { arr, has, obj } from './rule-set.js'
 
 export function checkR20({
@@ -64,7 +67,9 @@ export function checkR20({
         writable.includes(name.id) &&
         !hidden.has(name.id) &&
         decisions.some(
-          (x) => ownersOf(name.id).includes(x.d.block) && (!has(name.block) || name.block === x.d.block)
+          (x) =>
+            ownersOf(name.id).includes(x.d.block) &&
+            (!has(name.block) || name.block === x.d.block || name.block === pageId)
         )
     )
     if (delegated) {
