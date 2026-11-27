@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-773-kit-wp-size-variants",
+  "kind": "fix",
+  "title": "The template kit tool reads a WordPress-generated picture size as the upload its slot names",
+  "pr": 773,
+  "area": "template-kit",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A -WxH or -scaled size of a slot's upload adds no frame; another file's size, a name ending in digits and a non-WordPress path still do."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-wordpress-sizes.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a generated size of a slot picture is held by the slot, so no frame no slot holds is added",
+      "another picture, a size of another file, or a file whose own name ends in digits is still a frame of its own"
+    ]
+  }
+}

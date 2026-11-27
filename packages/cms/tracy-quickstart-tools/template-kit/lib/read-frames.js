@@ -19,9 +19,13 @@ export async function readFrames({ block, frames, anywhere = false }) {
     ? [document.querySelector(`[data-kit-block="${block}"]`)].filter(Boolean)
     : [...document.querySelectorAll('[data-kit-block]'), ...(anywhere ? [document.body] : [])]
   if (!roots.length) return { found: false, frames: {} }
+  // A size WordPress generated from an upload (`-1536x864`, `-scaled`) is that upload (picture-frames.mjs).
+  const WORDPRESS_SIZE = /^(\/wp-content\/uploads\/.+?)-(?:\d+x\d+|scaled)(\.[a-z0-9]+)$/i
   const fileOf = (u) => {
     try {
-      return decodeURIComponent(new URL(u, location.href).pathname).toLowerCase()
+      const file = decodeURIComponent(new URL(u, location.href).pathname).toLowerCase()
+      const size = WORDPRESS_SIZE.exec(file)
+      return size ? size[1] + size[2] : file
     } catch {
       return ''
     }

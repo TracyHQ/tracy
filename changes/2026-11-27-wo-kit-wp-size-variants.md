@@ -1,0 +1,4 @@
+- **The template kit reads a WordPress-generated picture size as its upload** — David (WO) · #773 · `fix/wo-kit-wp-size-variants` · 2026-11-27
+  **Affects:** the template kit tool (`packages/cms/tracy-quickstart-tools/template-kit/lib/picture-frames.mjs`, `read-frames.js`), for kits cut after this. Kits already released do not change until they are re-cut.
+  - A size WordPress generated from an upload (`item-1-1536x864.jpg`, `-scaled`) is now matched to the image slot that names the upload. Content coverage already read it that way. Before, the frame was kept as a picture no slot holds, `writable: false`.
+  **Why:** dev `arabian-tea-wp8` (27/11): the JA Diner WordPress 1.0.4 kit holds the home page's 11 pictures as unwritable frames (`body-home.picture-N`), so no build replaced them (20 demo-picture blocks) and the plan's picture hides were "no slot of this site". The kit has to be re-cut with this tool to take effect.
