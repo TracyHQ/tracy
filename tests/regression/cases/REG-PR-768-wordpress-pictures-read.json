@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-768-wordpress-pictures-read",
+  "kind": "fix",
+  "title": "WordPress pictures Tracy placed read back as the site holds them, at the path the page prints",
+  "pr": 768,
+  "area": "website-opportunities/write-step",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "A picture slot's current value is the plugin's slots value, with imageSlots kept as the demo sample; a picture line ordered at images/tracy-content/<sha>.<ext> is reported at wp-content/uploads/tracy-content/<sha>.<ext> on WordPress only."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-wordpress-door.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the plugin inspect is read as a list of slots, pictures typed, by the write step and the site check alike",
+      "a picture line is reported at the path WordPress prints it, so the site check finds what was written"
+    ]
+  }
+}
