@@ -102,13 +102,16 @@ export function accentModule({ sheets, colours, darkHook = null }) {
     if (!lines.includes(line)) lines.push(line)
   }
 
-  for (const { rule, decl, family, triple, tone } of routes.literal) {
+  const routeLine = ({ rule, decl, family, triple, tone }) => {
     const variable = tone === 'word' ? WORD : FILL
     const value = triple
       ? tripleOf(accent)
       : swapped(decl.value, family, variable, seed, encodeURIComponent(accent))
-    add(wrap(rule.at, `${rule.selector}{${decl.prop}:${value}${bang(decl.important)}}`))
+    return wrap(rule.at, `${rule.selector}{${decl.prop}:${value}${bang(decl.important)}}`)
   }
+  // A route of the order-keeping tail is written there, in its place among the rivals, and not twice.
+  const inTail = new Set(routes.tail.filter((t) => t.route).map((t) => t.route))
+  for (const route of routes.literal) if (!inTail.has(route)) add(routeLine(route))
   for (const { rule, name } of routes.rescope) add(wrap(rule.at, `${rule.selector}{${name}:var(${WORD})}`))
   const readable = contrastHex(accent, '#ffffff') >= contrastHex(accent, '#000000') ? '#ffffff' : '#000000'
   let wordsMoved = false
@@ -127,9 +130,22 @@ export function accentModule({ sheets, colours, darkHook = null }) {
   // the module of every page's sheets was 121114 bytes and the site kept the template's colour, a final-check block).
   // A page whose own markup writes a dropped shade inline keeps that shade there; the stylesheets still move.
   const markup = routes.colours.map((hex) => markupRules(hex, FILL, WORD))
+  // The template's order, kept (accent-routes.js `laterRivals`): its own later rules of the same weight, verbatim, with the
+  // routes among them, after everything else. They are never joined: a joined rule may move before a shorthand.
+  const tail = routes.tail.map((t) =>
+    t.route
+      ? routeLine(t.route)
+      : wrap(
+          t.restore.rule.at,
+          `${t.restore.rule.selector}{${t.restore.decl.prop}:${t.restore.decl.value}${bang(t.restore.decl.important)}}`
+        )
+  )
   const built = (n) => {
     const html = moduleText({
-      lines: compactRules([...lines, ...markup.slice(0, n).filter((line) => !lines.includes(line))]),
+      lines: [
+        ...compactRules([...lines, ...markup.slice(0, n).filter((line) => !lines.includes(line))]),
+        ...tail
+      ],
       tones,
       opens,
       accent,
@@ -155,6 +171,7 @@ export function accentModule({ sheets, colours, darkHook = null }) {
     routes: {
       written: routes.literal.length,
       words: routes.rescope.length,
+      kept: routes.restore.length,
       sources: [...routes.roles.keys()]
     }
   }
