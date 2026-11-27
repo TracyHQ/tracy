@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-767-printed-form-hints",
+  "kind": "fix",
+  "title": "A form field's placeholder and a template string a body script fills a hint from count as printed",
+  "pr": 767,
+  "area": "website-opportunities/site-check",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "An input or textarea placeholder prints its words; a languageString slot held as a whole string value by an inline body script is printed; an article slot with the same words, a head script and a script loaded by address are not."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-check-written-not-printed.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a form field prints its hint as its placeholder, and a template string a body script fills a hint from is printed"
+    ]
+  }
+}

@@ -259,3 +259,29 @@ test('a slot nested in a list row pair counts on the pages whose blocks print th
   ])
   assert.deepEqual(sitePrints({ onPages: on, pages, slots: [picture] }).notPrinted, [])
 })
+
+test('a form field prints its hint as its placeholder, and a template string a body script fills a hint from is printed', () => {
+  // Dev bxr-london-lat36 (26/11/2026): the contact form's four hints read as written and not printed.
+  const text = (slot, value) => ({ slot, kind: 'text', value })
+  const form = `<form><input type="text" placeholder="Your phone number"><textarea placeholder="Tell us more"></textarea>
+<input id="name"></form><script>window.ja_lang = {"TPL_CONTACT_NAME_PLACEHOLDER":"Your full name","TPL_X":"Book \\u201cnow\\u201d"};</script>`
+  const read = pagePrints(body(form), [
+    text('field-1.1', 'Your phone number'),
+    text('field-2.1', 'Tell us more'),
+    text('languageString-1.0', 'Your full name'),
+    text('languageString-2.0', 'Book “now”'),
+    // A script's words count for a template string only, and only as a whole value.
+    text('article-1.3', 'Your full name'),
+    text('languageString-3.0', 'Your full')
+  ])
+  assert.deepEqual(read.notPrinted, ['article-1.3', 'languageString-3.0'])
+  // A script of the head, or one loaded by address, is not the page's.
+  const elsewhere = pagePrints(
+    body(
+      '<p>x</p><script src="/a.js">"Your full name"</script>',
+      '<script>var t = {"a":"Your full name"}</script>'
+    ),
+    [text('languageString-1.0', 'Your full name')]
+  )
+  assert.deepEqual(elsewhere.notPrinted, ['languageString-1.0'])
+})

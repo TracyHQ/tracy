@@ -2,8 +2,12 @@
 // body only. A picture counts when an <img> or a <source> names its file in `src` or `srcset`, or when an element of the body paints it
 // as its own background (`style="background-image: url(...)"`, how a template's hero band prints its picture). Words count when the
 // body's text holds them, or when an <img> prints them as its `alt`, or any element as its `title` (a gallery prints a picture's
-// description only in its alt, card K). Nothing else counts: the head, scripts (JSON-LD among them), style sheets, comments, <meta>, and `data-*`
-// attributes all name files the visitor may never see printed. One rule, shared by the write step and the site check.
+// description only in its alt, card K), or a form field as its `placeholder` (the hint an empty field shows). A template string
+// (a `languageString-` slot) also counts when an inline script of the body holds it as a whole string value: a template that
+// fills its form hints by script reads them from such an object (JA Boxing's contact form: `window.ja_lang = {"TPL_CONTACT_NAME_
+// PLACEHOLDER": "Your name", …}`; dev bxr-london-lat36, 26/11/2026, four hints read as written and not printed). Nothing else
+// counts: the head, other scripts (JSON-LD among them), style sheets, comments, <meta>, and `data-*` attributes all name files
+// the visitor may never see printed. One rule, shared by the write step and the site check.
 //
 // Several slots may hold the same picture on one page. Each needs its own printed element, so a file printed once covers one slot; the
 // slots it covers are taken in the order given (the kit's order), and the rest are not printed. A template may print one slot on a
@@ -23,6 +27,29 @@ const TAG = /<[a-z][a-z0-9-]*\b[^>]*>/gi
 const PAINTED = /url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s]*))\s*\)/gi
 const NOT_PRINTED = /<(script|style|template|noscript|svg)\b[\s\S]*?<\/\1\s*>|<!--[\s\S]*?-->/gi
 const NAMED = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '’', lsquo: '‘' }
+
+/** A slot of a template's language string (a Joomla override), which a template may print by script. */
+const TEMPLATE_STRING = /^languageString-/
+const INLINE_SCRIPT = /<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script\s*>/gi
+const JSON_STRING = /"((?:[^"\\\n]|\\.)*)"/g
+
+/** Every whole string value of the body's inline scripts, as words are compared (`wordsKey`). */
+function scriptStrings(html) {
+  const out = new Set()
+  const body = /<body\b[\s\S]*$/i.exec(String(html ?? ''))?.[0] ?? ''
+  for (const [, code] of body.matchAll(INLINE_SCRIPT))
+    for (const [literal] of code.matchAll(JSON_STRING)) {
+      let text
+      try {
+        text = JSON.parse(literal)
+      } catch {
+        continue
+      }
+      const key = wordsKey(text)
+      if (key) out.add(key)
+    }
+  return out
+}
 
 /** An attribute of one tag, as written (entities not read); null when the tag has none. */
 export const attr = (tag, name) => {
@@ -122,11 +149,18 @@ function printedPictures(body) {
   return out
 }
 
-/** The words a body prints in attributes a visitor is shown: an image's `alt` and any element's `title`, each on its own. */
+/**
+ * The words a body prints in attributes a visitor is shown: an image's `alt`, a form field's `placeholder` and any element's
+ * `title`, each on its own.
+ */
 function shownAttributes(body) {
   const out = []
   for (const m of body.matchAll(TAG)) {
-    const said = [/^<img\b/i.test(m[0]) ? attr(m[0], 'alt') : null, attr(m[0], 'title')]
+    const said = [
+      /^<img\b/i.test(m[0]) ? attr(m[0], 'alt') : null,
+      /^<(?:input|textarea)\b/i.test(m[0]) ? attr(m[0], 'placeholder') : null,
+      attr(m[0], 'title')
+    ]
     for (const value of said) if (value) out.push(wordsKey(value))
   }
   return out.filter(Boolean)
@@ -144,6 +178,9 @@ export function pagePrints(html, slots, { native = false } = {}) {
   const printed = new Map()
   const words = wordsKey(body.replace(/<[^<>]*>/g, ' '))
   const attributes = shownAttributes(body)
+  const scripted = slots.some((s) => s.kind === 'text' && TEMPLATE_STRING.test(s.slot))
+    ? scriptStrings(html)
+    : new Set()
   // Font icons print their class as a glyph, not as words. Each written icon needs its own body element.
   const icons = [...body.matchAll(TAG)]
     .filter((m) => /^<(?:i|span)\b/i.test(m[0]))
@@ -169,6 +206,7 @@ export function pagePrints(html, slots, { native = false } = {}) {
     const key = s.kind === 'text' ? wordsKey(s.value) : ''
     if (key && (words.includes(key) || attributes.some((a) => a.includes(key))))
       printed.set(s.slot, 'template')
+    else if (key && TEMPLATE_STRING.test(s.slot) && scripted.has(key)) printed.set(s.slot, 'template')
   }
   const pool = new Map()
   for (const p of printedPictures(body)) {
