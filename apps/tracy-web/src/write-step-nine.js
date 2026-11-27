@@ -32,24 +32,26 @@ const realSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /** The brief's values a demo fault may name, from the write's brief file; none when it gives no brief. */
 /**
- * Why 9b cannot leave the site clean, or null when it might: the first check holds a blocking fault of a kind the pass
- * never sends (one a step before it owns: plan items with no slot, the read-back, the brand accent...), so the check stays
- * red whatever its turns do. A chain build (`repairOnlyWhenItCanFinish`) then hands the site over without 9b. Dev,
- * 17/11/2026: in the last three chain builds 9b removed 0, 1 and 0 of 46 to 115 blocking faults and took 2.5 to 3.5
- * minutes of each, every one of them with faults it never sends; with none, it still runs and can finish the site.
+ * Why 9b has nothing to do, or null when it has: the first check holds no blocking fault of a kind the pass sends. A chain
+ * build (`repairOnlyWhatItCanSend`) then hands the site over without 9b. A fault it never sends (one a step before it
+ * owns: plan items with no slot, the read-back, the brand accent...) no longer keeps it from the faults it does send.
+ * Dev, 17/11/2026: with 46 to 115 blocks a first check, 9b removed 0, 1 and 0 in 2.5 to 3.5 minutes, so a chain skipped it
+ * whenever any fault was beyond it. Dev, 27/11/2026: the first checks hold 10 to 23 blocks, a third of them demo words,
+ * demo pictures, demo links and unreadable text, which 9b sends; skipping it left all of them to the customer.
  * @param {object | null} firstCheck
  * @param {{ brief?: Map<string, string[]> | null, altSlots?: object | null, contentMap?: object | null }} pass
  */
-function cannotFinish(firstCheck, pass) {
-  const { skipped } = faultsToSend({
+function nothingToSend(firstCheck, pass) {
+  const { pages, skipped } = faultsToSend({
     firstCheck,
     brief: pass.brief ?? null,
     altSlots: pass.altSlots ?? null,
     contentMap: pass.contentMap ?? null
   })
-  if (!skipped.length) return null
+  if (pages.length) return null
+  if (!skipped.length) return 'the first check holds no blocking fault'
   const groups = [...new Set(skipped.map((s) => s.fault?.group ?? s.fault?.kind ?? s.code))]
-  return `the first check holds ${skipped.length} blocking faults the repair pass never sends (${groups.join(', ')}), so it could not leave the site clean`
+  return `the first check holds ${skipped.length} blocking faults, none of a kind the repair pass sends (${groups.join(', ')})`
 }
 
 async function briefOf(files) {
@@ -183,7 +185,7 @@ async function repairWriterEvidence(agent, ledger, clock) {
  *   pictures?: object | null,
  *   pageHtml?: ((page: string) => Promise<string | null>) | null,
  *   limits?: object | null, timer?: Function, now?: () => number, sleep?: (ms: number) => Promise<void>,
- *   repairOnlyWhenItCanFinish?: boolean,
+ *   repairOnlyWhatItCanSend?: boolean,
  *   log?: { warn: (line: string) => void } }} input `write` is the write step's input (write-step.js); `agent` the site
  *   agent of the pass (repair-pass.js), none to write and check only; `pageHtml` a page as the site serves it, for the
  *   element each comment points at
@@ -192,7 +194,7 @@ async function repairWriterEvidence(agent, ledger, clock) {
 export async function runStepNine(input) {
   const { write, checkSite, baselines, contracts, agent = null, saveFile = null, pictures = null } = input
   const { limits = null, timer, now = Date.now, sleep = realSleep, log = console, pageHtml = null } = input
-  const { repairOnlyWhenItCanFinish = false } = input
+  const { repairOnlyWhatItCanSend = false } = input
   const t0 = now()
   const timeline = []
   const mark = (stage, from, extra = {}) =>
@@ -256,8 +258,7 @@ export async function runStepNine(input) {
     nextRequestId: () => `step9b-${runId}-${++sequence}`
   }
   let outcome
-  const unfinishable =
-    repairOnlyWhenItCanFinish && agent ? cannotFinish(firstCheck, { brief, ...pass }) : null
+  const unfinishable = repairOnlyWhatItCanSend && agent ? nothingToSend(firstCheck, { brief, ...pass }) : null
   if (!agent) outcome = { status: 'not-run', reason: 'no site agent was given', check: firstCheck }
   else if (unfinishable) outcome = { status: 'not-run', reason: unfinishable, check: firstCheck }
   else

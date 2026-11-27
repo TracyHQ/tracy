@@ -2758,7 +2758,7 @@ anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`) or t
 the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
 as the row's brief. The frame picks the step chain engine (`sites/brief-engines/step-chain.js`) for it, with no per-step caps (#478): the
 frame's 25 minute run and apply cuts, the USD budgets of the planner, writer and picture steps, the brand cost cap and the 9b windows do not
-apply to it (its bench runs start with `--no-caps`; step 9 gets `chainRepairLimits`). The ten-minute native repair-turn cap still applies independently. A 2 hour outer deadline bounds the
+apply to it (its bench runs start with `--no-caps`; step 9 gets `chainRepairLimits`). Step 9b runs whenever the first check holds a blocking fault of a kind it sends, beside faults it never sends; with none to send it does not start (`write-step-nine.js` `nothingToSend`). The ten-minute native repair-turn cap still applies independently. A 2 hour outer deadline bounds the
 steps: a step still going then is stopped, its best version used, no new 9b work starts, and the Write step still runs inside a
 15 minute window (a soft failure; the run's hard stop is about 2 h 15 min). Lost-run
 detection (stale lease, the queue's attempt count) is unchanged. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step

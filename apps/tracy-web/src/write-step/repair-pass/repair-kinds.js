@@ -24,7 +24,8 @@ export const CHECK_GROUP_KINDS = Object.freeze({
   'main-heading': 'main-heading',
   'empty-frames': 'empty-frame',
   'demo-pictures': 'demo-picture',
-  'cms-errors': 'cms-error'
+  'cms-errors': 'cms-error',
+  'phone-callable': 'uncallable-phone'
 })
 
 /** Kinds sent to the agent: what the change is, as one sentence. `seen` is what was measured or seen there. */
@@ -55,7 +56,9 @@ export const SENT_KINDS = Object.freeze({
   'demo-picture': () =>
     "This still shows a picture of the template demo: put one of this business's pictures from the site in its place, or hide it.",
   'cms-error': () =>
-    'This shows a CMS error or a placeholder printed as words: remove it, keeping the words around it.'
+    'This shows a CMS error or a placeholder printed as words: remove it, keeping the words around it.',
+  'uncallable-phone': () =>
+    "This phone number is printed as plain text, so a visitor on a phone cannot tap it to call: make it a tel: link to this business's number, keeping its words and look."
 })
 
 /** Kinds never sent, each with why: the site agent's text tool cannot write accent emphasis. */
@@ -93,7 +96,6 @@ export const NOT_SENT_GROUPS = Object.freeze({
   'blank-footer-column': `${OWN_STEP} (the plan's hide decisions)`,
   'list-rows': `${OWN_STEP} (the plan's list rows)`,
   'map-location': `${OWN_STEP} (where the business is, from the brief)`,
-  'phone-callable': `${OWN_STEP} (the write step's phone links)`,
   'empty-video-buttons': `${OWN_STEP} (the template's video buttons)`
 })
 

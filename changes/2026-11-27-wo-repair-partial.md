@@ -1,0 +1,5 @@
+- **A chain build's 9b repairs the faults it can send, even when other faults remain; an uncallable phone is sent** — David (WO) · #770 · `feat/wo-repair-partial` · 2026-11-27
+  **Affects:** step 9b of step chain builds (`write-step-nine.js`, `repair-pass/repair-kinds.js`). The write step bench already ran 9b on every check.
+  - Before, a chain build skipped 9b whenever the first check held any fault 9b never sends (read-back, plan links, brand accent…). Now it runs on the faults it sends (demo words, demo pictures, demo links, unreadable text, layout, empty frames, headings), and skips only when there is none.
+  - A phone number of the brief printed outside a `tel:` link (`phone-callable`) is sent to the site agent: make it a call link, keeping its words and look.
+  **Why:** David 27/11 asked for the write to fix itself. The 17/11 rule came from builds with 46 to 115 blocks, where 9b removed almost nothing. Dev builds now end with 10 to 23 blocks, about a third of them kinds 9b sends, and all of them were left to the customer.

@@ -112,26 +112,37 @@ test('a failed scripted write checkpoint stops before checks or native repair pr
   assert.equal(saved.get('site-write-report.json').cause.reason, 'setup moment did not finish')
 })
 
-test('a chain build hands the site over without 9b when the first check holds a fault 9b never sends, and runs it when every fault is one it sends', async () => {
-  // Dev, 17/11/2026: in the last three chain builds 9b removed 0, 1 and 0 blocking faults in 2.5 to 3.5 minutes, each first
-  // check holding faults 9b never sends (plan items with no slot, the brand accent…), so the site could never end clean.
+test('a chain build runs 9b on the faults it sends beside those it never sends, and hands the site over without it when it has none to send', async () => {
+  // Dev, 27/11/2026: a fault 9b never sends no longer keeps it from those it sends; with none to send it does not run.
   const UNADDRESSABLE = failure('unaddressable-items', null, 'block-9.1', 'Nothing to write it to')
-  const gated = { repairOnlyWhenItCanFinish: true }
+  const gated = { repairOnlyWhatItCanSend: true }
+  const mixed = await stepNine({
+    checks: [checkOf([DEMO, UNADDRESSABLE]), checkOf([UNADDRESSABLE])],
+    agent: fakeAgent(),
+    input: gated
+  })
+  assert.ok(
+    mixed.saved.get('repair-pass.json').timeline.some((s) => s.stage === 'turn'),
+    'the demo words are sent though a plan item has no slot'
+  )
+  assert.equal(
+    mixed.result.report.status,
+    'stopped',
+    'a fault 9b never sends still holds the site for review'
+  )
   const skipped = await stepNine({
-    checks: [checkOf([DEMO, UNADDRESSABLE])],
+    checks: [checkOf([UNADDRESSABLE])],
     agent: fakeAgent(),
     input: gated
   })
   const notRun = skipped.saved.get('repair-pass.json')
   assert.equal(notRun.status, 'not-run')
-  assert.match(notRun.reason, /never sends \(unaddressable-items\), so it could not leave the site clean/)
+  assert.match(notRun.reason, /none of a kind the repair pass sends \(unaddressable-items\)/)
   assert.deepEqual(
     notRun.timeline.map((s) => s.stage),
     ['write', 'first-check']
   )
   assert.equal(skipped.checksRun, 1, 'the first check is the one handed over')
-  assert.equal(skipped.result.report.status, 'stopped', 'the build still says the site needs review')
-  // Every fault one 9b sends: it runs and can finish the site.
   const finishes = await stepNine({
     checks: [checkOf([DEMO]), checkOf([])],
     agent: fakeAgent(),

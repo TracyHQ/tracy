@@ -1,0 +1,1 @@
+{"id":"REG-PR-770-repair-partial","verdict":"PASS","commit":"595abadb20b4fae4c33d733da818e250512ad95e","ran_at":"2026-11-27T03:58:20.108Z","evidence":"tests/regression/.runs/2026-11-27-595abadb2/REG-PR-770-repair-partial.log"}
