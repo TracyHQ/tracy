@@ -4,7 +4,9 @@
  *
  * A demo is a site on the demo host (`config.demoHost`, the DO droplet in production) built from
  * a release exactly the way a customer's site would be, then made public: ingress + DNS for its
- * own hostname and `go-live` so the noindex header comes off. A demo on another host has a tunnel
+ * own hostname and `go-live` so the copy is published. The bar still sends `x-robots-tag: noindex,
+ * nofollow` on every demo page (`bar/site-proxy.js`, 17/11/2026), so search engines leave it out
+ * while every visitor still reaches it. A demo on another host has a tunnel
  * rule straight at its container; one on tracy-web's own host is reached through the zone wildcard
  * and `bar/route.js`, which lets everyone in (`publish = 'published'`) and stamps the "Create with
  * Tracy" pill (`lib/demo-sites.js`'s `advanceDemo`).
