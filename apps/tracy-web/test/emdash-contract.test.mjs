@@ -1,6 +1,7 @@
 // `content.contract` on an EmDash site (src/sites/emdash-contract.js): the JA Diner release's content map read and written
 // over the site's own MCP tools, in the protocol the write step speaks on Joomla — inspect, then one apply, all or nothing,
 // refusals by slot. The site is the release's own seed behind fake tools (_emdash-mcp-site.mjs).
+import { notOnPlatform, siteDoorFor } from '../src/write-step/site-doors/index.js'
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
@@ -221,6 +222,23 @@ test('pictures: the path the run uploaded becomes the library item, found by its
     again.slots.find((s) => s.key === 'slideshow.slideshow.items[0].image').current,
     '/_emdash/api/media/file/k-fresh.jpg'
   )
+  // The answer says where each picture sits, and the write step reports its line there (dev arabian-tea-em5, 27/11/2026).
+  assert.deepEqual(done.body.placed, {
+    [`${sha('a')}.jpg`]: '/_emdash/api/media/file/k-fresh.jpg',
+    [`${sha('b')}.webp`]: '/_emdash/api/media/file/k-older.webp',
+    [`${sha('c')}.jpg`]: '/_emdash/api/media/file/k-seed.jpg'
+  })
+  const emdash = siteDoorFor('emdash')
+  emdash.answerOf({ action: 'content.contract', params: { operation: 'apply' } }, done.body)
+  const line = {
+    slot: 'x',
+    status: 'written',
+    part: 'picture',
+    ordered: `images/tracy-content/${sha('a')}.jpg`
+  }
+  assert.equal(notOnPlatform(line, 'emdash').ordered, '/_emdash/api/media/file/k-fresh.jpg')
+  const unknown = { ...line, ordered: `images/tracy-content/${sha('9')}.jpg` }
+  assert.equal(notOnPlatform(unknown, 'emdash'), unknown)
 })
 
 test('a picture the library does not hold, or words in a picture slot, refuse that slot only', async () => {
