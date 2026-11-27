@@ -7,6 +7,8 @@ import path from 'node:path'
 import { ACCENT_SLOT_STEM, accentModule } from '../lib/brand-accent/accent-module.js'
 import { exportBrandOrders } from './brand-write-orders.js'
 import { dsSlotModule } from '../lib/ds-slot.js'
+import { kitContracts } from '../lib/template-kit-contracts.js'
+import { headerSiteLogoBlockOf } from '../lib/template-kit/flow-reads.js'
 import { brandAsker, picturePath, writeBrand } from './brand-writes.js'
 import { refusalWords } from './contract-write.js'
 import { accentRoutesOf } from './look-guard-css.js'
@@ -19,9 +21,29 @@ const MODULE_MARK = '<style id="tracy-ds-slot"'
 const ENDED = 'the run ended before this item was written'
 
 /** The ways an order reaches the site apart from a word in the one contract call, which the contract call compares itself. */
-const OWN_WRITE = new Set(['identity', 'profile', 'small-logo', 'head', 'module', 'emdash-setting'])
+const OWN_WRITE = new Set([
+  'identity',
+  'profile',
+  'small-logo',
+  'head',
+  'module',
+  'emdash-setting',
+  'wordpress-option'
+])
 
 const PARTS = { name: 'brand-name', logo: 'brand-logo', favicon: 'brand-favicon', accent: 'brand-accent' }
+
+/**
+ * Whether a WordPress kit's theme header prints a Site Logo block, read beside the contract the kit belongs to, as the
+ * Template kit gate reads it (`brandProblemOfOpenedKit`); undefined on any other CMS or when the contract holds no capture.
+ * @param {{ ref?: string, platform?: string }} kit @param {Map<string, any>} [index]
+ */
+export function kitSiteLogoBlock(kit, index) {
+  if (kit?.platform !== 'wordpress') return undefined
+  for (const contract of (index ?? kitContracts()).values())
+    if (contract?.id === kit.ref && contract.dir) return headerSiteLogoBlockOf(contract.dir)
+  return undefined
+}
 
 /**
  * Where the slot contract places its Design system module and how it marks a template's dark side, or null when this
@@ -86,8 +108,10 @@ const stoppedBy = (stop) => ({ ...idle, stop })
 /**
  * @param {{ brand?: object, brandPath?: string, inputs?: { file: string }, kit: object,
  *   accentPlace?: (contract: string) => Promise<object | null>, last?: object,
- *   templateSheets?: () => Promise<string[]> }} input `templateSheets`: the stylesheets the site's template serves. Without
- *   it the brand file's own module must already be accent-only, since a whole design-system style is never written
+ *   templateSheets?: () => Promise<string[]>, siteLogoBlock?: boolean }} input `templateSheets`: the stylesheets the site's
+ *   template serves. Without it the brand file's own module must already be accent-only, since a whole design-system style
+ *   is never written. `siteLogoBlock`: the WordPress theme's header prints a Site Logo block, so its logo spots are written
+ *   through their options (`logoWritePath`)
  * @returns {Promise<object>} the stage; `stop` says why it cannot run
  */
 export async function prepareBrandStage({
@@ -97,10 +121,11 @@ export async function prepareBrandStage({
   kit,
   accentPlace = placeFromLibrary,
   last = NO_LAST,
-  templateSheets
+  templateSheets,
+  siteLogoBlock
 }) {
   if (brand === undefined) return idle
-  const plan = exportBrandOrders({ brand, kit })
+  const plan = exportBrandOrders({ brand, kit, world: { siteLogoBlock } })
   if (plan.problems.length)
     return stoppedBy({
       code: 'BAD_FILE',

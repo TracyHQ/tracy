@@ -64,14 +64,22 @@ export async function writeBrand({ orders, plan, pictures, accent, ask, results,
       const content_b64 = pictures.get(order.file).toString('base64')
       uploaded.set(path, await ask('media.upload', { path, content_b64 }))
     }
+    // A WordPress option names the attachment, which the upload answers (0 when the file was there already).
+    if (order.via === 'wordpress-option' && !refused(uploaded.get(path)))
+      uploaded.set(
+        path,
+        await wordpressAttachment({ answer: uploaded.get(path), order, path, pictures, ask })
+      )
     if (refused(uploaded.get(path))) fail([order], uploaded.get(path))
     else {
       order.path = path
       // An EmDash settings reference names the media item, which the upload answers.
       if (order.via === 'emdash-setting') order.mediaId = uploaded.get(path)?.id
+      if (order.via === 'wordpress-option') order.attachment = uploaded.get(path).attachment
     }
   }
   await writeEmdashSettings({ orders: ready(by('emdash-setting')), ask, done, fail })
+  await writeWordpressOptions({ orders: ready(by('wordpress-option')), ask, done, fail })
   const settings = ready(by('profile'))
   const small = by('small-logo').filter((o) => kept.has(o) || !results.has(o))
   const heads = by('head').filter((o) => o.path)
@@ -164,6 +172,49 @@ async function writeEmdashSettings({ orders, ask, done, fail }) {
         params: { operation: 'read', ...where },
         path: ['mediaId']
       })
+  }
+}
+
+/**
+ * The attachment a WordPress upload made. The plugin answers `attachment: 0` when the file was on the site already (an
+ * upload over a path that holds a file replaces its bytes under the old attachment, Claude Cowork for WordPress
+ * `media.upload`), and nothing tells which attachment that is; the picture goes once more under a name of its own, which
+ * answers a new one.
+ * @returns {Promise<object>} the answer, `attachment` a positive number, or a refusal
+ */
+async function wordpressAttachment({ answer, order, path, pictures, ask }) {
+  const made = (a) => Number.isInteger(Number(a?.attachment)) && Number(a.attachment) > 0
+  if (made(answer)) return { ...answer, attachment: Number(answer.attachment) }
+  const again = path.replace(/(\.[a-z]+)$/, `-${Date.now().toString(36)}$1`)
+  const second = await ask('media.upload', {
+    path: again,
+    content_b64: pictures.get(order.file).toString('base64')
+  })
+  if (made(second)) return { ...second, attachment: Number(second.attachment) }
+  return second?.ok === false ? second : { ok: false, error: 'the site did not make a new picture of it' }
+}
+
+/**
+ * The brand pictures of a WordPress theme (`wordpress-option` orders, `logo-write-path.js`): each option names its
+ * attachment, `content.update {kind: 'option', id: 0, key, fields: {value}}`, the call the Apply popup's WordPress writer
+ * makes (`sites/brief-engines/brand-wordpress.js`). `site_logo` is the Site Logo block's picture, `tracy_logo_dark` the
+ * dark-background one (0: the site name shows there), `site_icon` the tab icon. Each is read back through `content.get`.
+ * An order whose picture did not upload has no attachment and was failed already.
+ */
+async function writeWordpressOptions({ orders, ask, done, fail }) {
+  const refused = (answer) => !answer || answer.ok === false
+  for (const o of orders) {
+    const value = o.file ? o.attachment : Number(o.value ?? 0)
+    if (o.file && !value) continue
+    const answer = await ask('content.update', { kind: 'option', id: 0, key: o.key, fields: { value } })
+    if (refused(answer)) fail([o], answer)
+    else
+      done(
+        o,
+        value,
+        { action: 'content.get', params: { kind: 'option', key: o.key }, path: ['item', 'value'] },
+        o.reason ?? null
+      )
   }
 }
 

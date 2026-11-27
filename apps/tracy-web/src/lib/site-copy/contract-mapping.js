@@ -146,7 +146,8 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
       revision,
       brief,
       contentMap,
-      menuSlots: new Set((mainMenu?.items ?? []).map((i) => i.slot))
+      menuSlots: new Set((mainMenu?.items ?? []).map((i) => i.slot)),
+      kit
     })
     return {
       mapping: out.mapping,

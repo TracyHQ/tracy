@@ -469,7 +469,15 @@ On WordPress the write step writes through the Claude Cowork for WordPress's own
 `apply` of plain-text changes keyed by content map slot, as the seeder does: `write-step/site-doors/wordpress.js`). What
 that plugin does not take yet is refused by slot before anything is sent (a picture taken off). Its pictures go to
 the plugin's own folder (`wp-content/uploads/tracy-content/<sha256>.<ext>`), an address slot takes a link, and an emptied
-text or address slot is written `''`, so the hide stage and the closing rule empty demo words there too. The calls of Joomla stages are answered by the door itself. On every CMS, a line that failed only for
+text or address slot is written `''`, so the hide stage and the closing rule empty demo words there too. The brand
+stage's logo, dark-background logo and tab icon are the options `site_logo`, `tracy_logo_dark` and `site_icon`, each the id
+of an attachment uploaded to `wp-content/uploads/tracy-brand/` (`content.update {kind: "option"}`, as the Apply popup's
+WordPress writer does), when the theme's header prints a Site Logo block; the door and the look guard open no other
+option. The main menu is the header's `wp_navigation` post, read and written whole through `content.list` / `content.get` /
+`content.update {kind: "post"}` under the body revision it was read at (`write-step/site-doors/wordpress-menu.js`): the
+writer's labels are set, the items the plan does not keep are cut out, and a dropdown left empty becomes a plain link. No
+contract entity is that post. The look guard opens a post write only for a navigation read in the same run, for those
+changes alone. The calls of Joomla stages are answered by the door itself. On every CMS, a line that failed only for
 want of a door is `skipped` with the words `not on <CMS> yet: …` (`notOnPlatform`), so the site check never reads it
 as a refusal of the site.
 

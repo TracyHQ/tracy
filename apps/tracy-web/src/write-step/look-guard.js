@@ -7,12 +7,14 @@
 // see is listed in the ADR.
 
 import { createdPageHideOf } from '../lib/created-page-hide.js'
+import { WORDPRESS_LOGO_OPTIONS } from '../lib/template-kit/logo-write-path.js'
 import { emptyVideoButtonsOf } from '../lib/empty-video-buttons.js'
 import { hiddenPageLinksOf } from '../lib/hidden-page-links.js'
 import { selfLinkButtonsOf } from '../lib/self-link-buttons.js'
 import { ownerStep, stepName } from '../lib/site-build-steps.js'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
+import { navigationFaults } from './look-guard-navigation.js'
 import { batchFaults, updateFaults } from './look-guard-rows.js'
 import { SOCIAL_ICONS_REASON, SOCIAL_ICONS_RULE, socialIconsAllowed } from './look-guard-social.js'
 import { MARK } from './page-create-lines.js'
@@ -96,7 +98,7 @@ const PARAMS = {
   'emdash.settings': { set: ['operation', 'fields', 'apply_id'] },
   'emdash.entryField': { set: ['operation', 'collection', 'slug', 'field', 'label', 'media', 'apply_id'] },
   'media.upload': { [undefined]: ['path', 'content_b64', 'apply_id', 'sha256'] },
-  'content.update': { [undefined]: ['apply_id', 'kind', 'id', 'fields'] },
+  'content.update': { [undefined]: ['apply_id', 'kind', 'id', 'key', 'fields', 'expected_body_revision'] },
   'content.batch': { [undefined]: ['apply_id', 'request_id', 'operations'] }
 }
 
@@ -115,6 +117,34 @@ function settingsOf(kit) {
   for (const slot of each(kit?.site?.settingSlots))
     if (slot?.writeTo?.action === 'template.siteSettings' && slot.writeTo.key) pictures.add(slot.writeTo.key)
   return { pictures, words }
+}
+
+/**
+ * The WordPress options this kit names for its brand pictures: a logo spot's `setting` that is an option the Site Logo
+ * block or the theme reads (`site_logo`, `tracy_logo_dark`), and the tab icon's `option site_icon`. Each holds the id of an
+ * attachment (brand-writes.js `writeWordpressOptions`).
+ */
+function wordpressOptionsOf(kit) {
+  const options = new Set(
+    each(kit?.site?.logoSpots)
+      .map((spot) => spot?.setting)
+      .filter((setting) => WORDPRESS_LOGO_OPTIONS.has(setting))
+  )
+  const icon = /^option (site_icon)$/.exec(String(kit?.site?.favicon?.mechanism?.setting ?? ''))?.[1]
+  if (icon) options.add(icon)
+  return options
+}
+
+/** A brand option is one the kit names, written whole as the id of an attachment, or 0 for none. */
+function optionFaults(params, options) {
+  const what = `option ${params.key}`
+  if (!options.has(params.key))
+    return [channelFault(what, `only the brand options the kit names are open, and not ${params.key}`)]
+  const fields = Object.keys(params.fields ?? {})
+  const value = params.fields?.value
+  if (Number(params.id ?? 0) !== 0 || fields.join() !== 'value' || !Number.isInteger(value) || value < 0)
+    return [fault(WRITE, what, `${params.key} holds the id of a picture, as its one value`)]
+  return []
 }
 
 /** The columns of rows this kit names as its setting slots. */
@@ -146,6 +176,7 @@ function settingFaults(params, settings) {
 export function lookGuard({ kit, contentMap = null }) {
   const settings = settingsOf(kit)
   const named = kitColumns(kit)
+  const options = wordpressOptionsOf(kit)
   const map = new Map(each(contentMap?.slots).map((s) => [s?.key, s]))
   const state = {
     rows: new Map(),
@@ -268,7 +299,15 @@ export function lookGuard({ kit, contentMap = null }) {
       UPLOAD.test(String(p.path))
         ? []
         : [fault(WRITE, `upload ${p.path}`, `an upload is a picture under images/, and ${p.path} is not`)],
-    'content.update': (p) => updateFaults(p, state, named),
+    'content.update': (p) => {
+      if (p.kind === 'option') return optionFaults(p, options)
+      // A WordPress navigation post, for its labels and the items the plan takes off (look-guard-navigation.js).
+      if (p.kind === 'post') return navigationFaults(p, state)
+      // `key` names an option only: on a row it would be a way nobody listed.
+      if ('key' in p)
+        return [channelFault(`content.update ${p.kind} key`, 'only an option is named by its key')]
+      return updateFaults(p, state, named)
+    },
     'content.batch': (p) => batchFaults(p, state)
   }
 

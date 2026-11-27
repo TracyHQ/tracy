@@ -10,7 +10,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { openContentMap } from '../src/lib/content-map-source.js'
 import { openKit } from '../src/lib/template-kit-source.js'
-import { WORDPRESS_TAKES } from '../src/write-step/site-doors/wordpress.js'
+import { siteDoorFor } from '../src/write-step/site-doors/index.js'
 import { runWriteStep } from '../src/write-step/write-step.js'
 
 const CONTRACT = 'ja-diner/wp7/1.0.4'
@@ -32,6 +32,12 @@ function planOf(kit) {
       forbidden: [],
       legalPages: []
     },
+    // The main menu keeps three pages: the others leave it.
+    mainMenu: [
+      { page: 'page-home', intent: 'home' },
+      { page: 'page-about-us', intent: 'the story' },
+      { page: 'page-contact-us', intent: 'how to reach us' }
+    ],
     sharedBlocks: [...shared].map((block) => keep(block)),
     pages: kit.pages.map((page) => ({
       id: page.id,
@@ -68,7 +74,10 @@ const copyOf = (kit) => ({
   slots: [
     w('front-page.slideshow.title.1', 'Harbour Kitchen'),
     w('front-page.slideshow.desc.1', ['Fish from the morning boats.', 'Cooked over charcoal.']),
-    w('front-page.slideshow.button1.1', 'Book a table')
+    w('front-page.slideshow.button1.1', 'Book a table'),
+    w('nav.mainmenu.1.label', 'Home'),
+    w('nav.mainmenu.2.label', 'Our story'),
+    w('nav.mainmenu.6.label', 'Find us & book')
   ],
   alts: [],
   seo: [{ page: 'page-home', title: 'Harbour Kitchen', description: 'Fish from the morning boats.' }],
@@ -83,17 +92,51 @@ const brief = {
   missing: []
 }
 
-/** The Apply door on a WordPress site with the Claude Cowork for WordPress: its contract, and `info` with no stage doors. */
+/**
+ * The Apply door on a WordPress site with the Claude Cowork for WordPress: its contract, `info` with no stage doors, and
+ * the posts of its main menu's navigation as the release ships it (`navigation-source.json`).
+ */
 function wordpressDoor(contentMap) {
   const calls = []
   const held = new Map(contentMap.slots.map((s) => [s.key, s.sample]))
+  const navs = new Map(
+    contentMap.navigationSource.navigations.map((n) => [Number(n.id), { ...n, rev: `b-${n.id}-0` }])
+  )
   return {
     calls,
     held,
+    navs,
     door: {
       async apply({ action, params }) {
         calls.push({ action, params: structuredClone(params) })
         if (action === 'info') return { ok: true, info: { platform: 'wordpress', version: '0.18.45' } }
+        if (action === 'content.list' && params.post_type === 'wp_navigation')
+          return {
+            ok: true,
+            items: [...navs.values()]
+              .filter((n) => !params.name || n.slug === params.name)
+              .map((n) => ({
+                id: n.id,
+                slug: n.slug,
+                title: n.title,
+                status: 'publish',
+                type: 'wp_navigation'
+              }))
+          }
+        if (action === 'content.get' && params.kind === 'post' && navs.has(params.id)) {
+          const n = navs.get(params.id)
+          return {
+            ok: true,
+            item: { ID: n.id, post_type: 'wp_navigation', post_content: n.content },
+            body_revision: n.rev
+          }
+        }
+        if (action === 'content.update' && params.kind === 'post' && navs.has(params.id)) {
+          const n = navs.get(params.id)
+          if (params.expected_body_revision !== n.rev) return { ok: false, error: 'conflict' }
+          navs.set(params.id, { ...n, content: params.fields.post_content, rev: `${n.rev}+` })
+          return { ok: true, kind: 'post', id: params.id, verified: true }
+        }
         if (action !== 'content.contract')
           return { ok: false, error: 'bad_action', message: `unknown action ${action}` }
         // The plugin's own shape (dev 26/11/2026): `slots` keyed by slot with the current words, pictures apart.
@@ -178,9 +221,29 @@ test('a WordPress Diner run writes its words as plain text in one apply, and ski
         .length,
       0
     )
-    // 🔒 Only what the Apply door takes on WordPress was sent.
+    // The main menu: the kept items carry the writer's labels, the others left it, and Home lost its dropdown.
+    assert.equal(
+      site.navs.get(93).content,
+      [
+        '<!-- wp:navigation-link {"label":"Home","type":"page","id":63,"url":"https://quickstart.invalid/","kind":"post-type"} /-->',
+        '<!-- wp:navigation-link {"label":"Our story","type":"page","id":67,"url":"https://quickstart.invalid/about-us/","kind":"post-type"} /-->',
+        '<!-- wp:navigation-link {"label":"Find us & book","type":"page","id":65,"url":"https://quickstart.invalid/contact-us/","kind":"post-type"} /-->'
+      ].join('\n')
+    )
+    assert.equal(line('nav.mainmenu.2.label')?.status, 'written')
+    assert.equal(line('nav.mainmenu.6.label')?.ordered, 'Find us & book')
+    assert.equal(line('nav.mainmenu.3.label')?.status, 'hidden')
+    assert.equal(line('nav.mainmenu.1.1.label')?.status, 'hidden')
+    // The label reads back from the post it was written into.
+    assert.ok(site.navs.get(93).content.includes(line('nav.mainmenu.6.label').ordered))
     assert.deepEqual(
-      site.calls.filter((c) => !WORDPRESS_TAKES.has(c.action)),
+      report.guard.findings.filter((f) => f.what.startsWith('post ')),
+      []
+    )
+    // 🔒 Only what the Apply door takes on WordPress was sent.
+    const wp = siteDoorFor('wordpress')
+    assert.deepEqual(
+      site.calls.filter((c) => !wp.takes(c)),
       []
     )
   } finally {

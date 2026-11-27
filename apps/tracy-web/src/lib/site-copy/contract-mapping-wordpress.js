@@ -11,11 +11,14 @@
 // is not text (an image, a url). The main menu labels are not content map slots: they ride in `extras.mainMenu`, for
 // step 9. Pure: no I/O, nothing is written anywhere.
 import { readCopy } from '../site-copy-view.js'
+import { kitSlotIndex } from '../template-kit/kit-slots.js'
 import { visibleText } from './emphasis-markup.js'
+import { withEmphasis } from './inline-emphasis.js'
 
 /**
  * @param {{ copy: object, contract: string, revision: string, brief?: object, contentMap?: object | null,
- *   menuSlots?: Set<string> }} input `menuSlots`: the main menu label slots, which go to step 9 and not to the door
+ *   menuSlots?: Set<string>, kit?: object }} input `menuSlots`: the main menu label slots, which go to step 9 and not to
+ *   the door; `kit`: the template kit, whose slots name the demo's accent emphasis (`inline`)
  * @returns {{ mapping: object, problems: object[] }}
  */
 /** One inline element around all the words of a demo value, in the content map's notation: `((a …))words((/a))`. */
@@ -42,9 +45,11 @@ export function wordpressContractMapping({
   revision,
   brief,
   contentMap,
-  menuSlots = new Set()
+  menuSlots = new Set(),
+  kit
 }) {
   const { view, problems } = readCopy(copy)
+  const kitSlots = kitSlotIndex(kit)
   const slots = new Map((contentMap?.slots ?? []).map((s) => [s?.key, s]))
   const facts = new Map((brief?.facts ?? []).map((f) => [f.id, f.value]))
   const changes = {}
@@ -72,7 +77,12 @@ export function wordpressContractMapping({
     // Table((/a))`) keeps that element around the new words (`wrapperOf`).
     const words = visibleText(s.items.join(' '))
     const wrapper = wrapperOf(slot)
-    const value = wrapper ? `${wrapper.open}${words}${wrapper.close}` : words
+    // The writer's emphasis is wrapped in the demo's accent span where the plugin keeps the slot's markup, as on Joomla
+    // (ADR 0042 section 11): written as plain words, JA Diner's highlighted words lost their accent and the look guard
+    // found the template's class taken off (dev arabian-tea-wp4, 26/11/2026).
+    const marked =
+      slot.markup === 'inline' ? withEmphasis([words], s.emphasis, kitSlots.get(s.slot))[0] : words
+    const value = wrapper ? `${wrapper.open}${marked}${wrapper.close}` : marked
     const max = Number(slot.maxCharacters ?? 0)
     if (max > 0 && words.length > max)
       problems.push({ where: s.slot, detail: `${words.length} characters, over the slot's ${max}` })

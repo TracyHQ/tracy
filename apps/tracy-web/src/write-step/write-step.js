@@ -28,7 +28,7 @@ import { planShapeProblems } from '../lib/plan-shape.js'
 import { contentMapKey, exportContractMapping } from '../lib/site-copy/contract-mapping.js'
 import { indexInputs } from '../lib/site-copy/inputs-index.js'
 import { readCopy } from '../lib/site-copy-view.js'
-import { prepareBrandStage } from './brand-stage.js'
+import { kitSiteLogoBlock, prepareBrandStage } from './brand-stage.js'
 import { closeDemoLeft, withClosing } from './closing-ladder.js'
 import { writeContract } from './contract-write.js'
 import { hideOnCreatedPages } from './created-page-hide-stage.js'
@@ -331,7 +331,8 @@ export async function runWriteStep(input) {
       kit: headKit,
       accentPlace: input.accentPlace,
       last,
-      templateSheets: input.templateSheets && (() => input.templateSheets({ door, siteKey }))
+      templateSheets: input.templateSheets && (() => input.templateSheets({ door, siteKey })),
+      siteLogoBlock: input.siteLogoBlock ?? kitSiteLogoBlock(kit)
     })
     if (brand.stop) return { stop: brand.stop }
     leaveOut(brand.unaddressable ?? [])
@@ -980,6 +981,20 @@ export async function runWriteStep(input) {
   })
   // A heading whose demo value is HTML takes its emphasis as real tags, after the contract call wrote its words (emphasis-stage.js).
   emphasis = await runEmphasisStage({ door, siteKey, contentMap, written: wrote.written, ordered })
+  // On WordPress the main menu is its navigation post, which the site door writes itself (site-doors/wordpress-menu.js):
+  // the writer's labels and the items the plan takes off. The page settings stage, which writes Joomla menu items, gets
+  // none of its hides.
+  let menuWritten = []
+  if (siteDoor.writeMenu && hide.settingsExtras?.mainMenu) {
+    const wrote = await siteDoor.writeMenu({
+      apply: door.apply,
+      siteKey,
+      applyId: `menu-${Date.now().toString(36)}`,
+      mainMenu: hide.settingsExtras.mainMenu
+    })
+    menuWritten = [...wrote]
+    hide.settingsExtras = { ...hide.settingsExtras, mainMenu: { ...hide.settingsExtras.mainMenu, hide: [] } }
+  }
   // Last: the page settings, which the contract door does not take (page-settings-stage.js).
   const settings = await timed('settings', () =>
     runPageSettings({
@@ -1001,6 +1016,7 @@ export async function runWriteStep(input) {
     ...hide.held,
     ...created.results,
     ...strandedLabels,
+    ...menuWritten,
     ...menuGone.map((h) => [
       h.item,
       emptied.includes(h.slot)

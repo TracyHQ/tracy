@@ -47,6 +47,20 @@ test('a link that answers nothing is blocking', async () => {
   )
 })
 
+test('an address Cloudflare hides is a mail link in disguise, never a page that does not answer', async () => {
+  // Dev 26/11/2026 (`arabian-tea-wp4`): Cloudflare prints a footer e-mail address as a link to its own endpoint.
+  const home = page(
+    `${MENU}<h1>Welcome</h1><a href="/cdn-cgi/l/email-protection#7a1b">[email protected]</a>` +
+      '<a href="https://club.example/cdn-cgi/l/email-protection#7a1c">Write to us</a>'
+  )
+  const out = await reachablePagesGroup.run({
+    report: { keptPages: [{ id: 'page-home', path: '/' }] },
+    pageHtml: async (path) => (path === '/' ? home : (SITE[path] ?? null)),
+    baseline
+  })
+  assert.equal(out.failures.filter((f) => /cdn-cgi/.test(`${f.measured ?? ''} ${f.reason}`)).length, 0)
+})
+
 test("a card's name that leads to another card's page is blocking, the page's own card is not", async () => {
   const out = await reachablePagesGroup.run({ report, pageHtml, baseline })
   const cards = out.failures.filter((f) => /The card/.test(f.reason)).map((f) => f.measured)

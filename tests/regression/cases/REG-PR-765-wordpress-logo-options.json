@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-765-wordpress-logo-options",
+  "kind": "feat",
+  "title": "The write step writes a WordPress site's logo, dark logo, tab icon and main menu, keeps highlighted words' accent, and the site check reads a Cloudflare-hidden address as mail",
+  "pr": 765,
+  "area": "website-opportunities/write-step",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "On the JA Diner WordPress 1.0.4 kit, whose header prints a Site Logo block, the logo, the dark logo and the tab icon are ordered as the options site_logo, tracy_logo_dark and site_icon; each picture is uploaded to wp-content/uploads/tracy-brand/ and its option names the attachment, read back through content.get; a dark spot with no picture is set to 0; the look guard and the WordPress door open no other option.",
+    "A WordPress inline-markup slot takes the writer's emphasis inside the demo's accent span; a link to /cdn-cgi/l/email-protection is never walked as a page.",
+    "The JA Diner WordPress main menu (wp_navigation post mainmenu) carries the writer's labels, loses the items the plan does not keep, and Home becomes a plain link once its dropdown is empty; a second run changes nothing; the look guard holds a post write that is not a navigation read in the same run."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-brand-wordpress.test.mjs",
+      "apps/tracy-web/test/contract-mapping-wordpress.test.mjs",
+      "apps/tracy-web/test/site-check-reachable-pages.test.mjs",
+      "apps/tracy-web/test/write-step-wordpress-menu.test.mjs",
+      "apps/tracy-web/test/write-step-wordpress.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "the theme header prints a Site Logo block, so the logo, the dark logo and the tab icon are options",
+      "each picture is uploaded to the brand folder and its option names the attachment; each reads back",
+      "a picture the site holds already goes once more under its own name, so its option names a real attachment",
+      "🔒 the look guard opens only the options the kit names, as the id of a picture",
+      "the writer's emphasis is wrapped in the demo's accent span where the plugin keeps the slot's markup",
+      "an address Cloudflare hides is a mail link in disguise, never a page that does not answer",
+      "labels are set, items cut, and nothing else of the body moves; a second run changes nothing",
+      "a dropdown that loses every item under it becomes a plain link with its own attributes",
+      "🔒 the look guard opens a post write only for a navigation read this run, and only for labels and cuts",
+      "a WordPress Diner run writes its words as plain text in one apply, and skips in words what the plugin does not take"
+    ]
+  }
+}
