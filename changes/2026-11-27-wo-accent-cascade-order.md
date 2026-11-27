@@ -1,4 +1,4 @@
-- **The accent module keeps the template's cascade order** — David (WO) · #PR · `fix/wo-accent-cascade-order` · 2026-11-27
+- **The accent module keeps the template's cascade order** — David (WO) · #769 · `fix/wo-accent-cascade-order` · 2026-11-27
   **Affects:** the accent-only brand module the write step builds from the template's stylesheets (`lib/brand-accent/`), and the look guard's judge of it. Every CMS that wears one.
   - The module repeats each accent route at the end of the page. A later template rule of the same weight that set the same colour won in the template, but lost to the repeated route. Such rules are now repeated after the route, word for word, in source order.
   - A rule only counts as competing when it has the same specificity and importance, sets the same colour channel (ground, a border side, the outline or the words), uses one compound selector on both sides, and could reach the same element.
