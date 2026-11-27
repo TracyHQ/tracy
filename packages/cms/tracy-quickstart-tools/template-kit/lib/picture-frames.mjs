@@ -12,10 +12,21 @@ import { declaredIn } from './page-coverage.mjs'
 export const PAINTED_BEHIND_REASON =
   "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract"
 
-const norm = (f) =>
-  String(f ?? '')
+/**
+ * A size WordPress generated from an upload (`item-1-1536x864.jpg`, a `-scaled` copy) is that upload: a write to the
+ * slot moves the block's attachment, and every size follows it (content-coverage/lib/match.mjs reads it so too). Dev
+ * arabian-tea-wp8 (JA Diner WordPress, 27/11/2026): the home page printed `item-1-1536x864.jpg` where the content map
+ * names `item-1.jpg`, so its eleven frames were kept as pictures no slot holds and no build could replace them.
+ */
+const WORDPRESS_SIZE = /^(wp-content\/uploads\/.+?)-(?:\d+x\d+|scaled)(\.[a-z0-9]+)$/i
+
+const norm = (f) => {
+  const file = String(f ?? '')
     .replace(/^\/+/, '')
     .toLowerCase()
+  const size = WORDPRESS_SIZE.exec(file)
+  return size ? size[1] + size[2] : file
+}
 
 /**
  * Per block, the picture files its frames and declared image slots hold, and the image slots of every entity the
