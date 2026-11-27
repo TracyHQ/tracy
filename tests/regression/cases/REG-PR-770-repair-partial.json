@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-770-repair-partial",
+  "kind": "feat",
+  "title": "A chain build runs step 9b on the faults it sends beside those it never sends, and sends an uncallable phone",
+  "pr": 770,
+  "area": "website-opportunities/write-step",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "9b runs a turn on demo words although a plan item has no slot, and does not run with only unsendable faults; phone-callable is the sent kind uncallable-phone."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/write-step-nine-flow.test.mjs",
+      "apps/tracy-web/test/write-step-repair-phone.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a chain build runs 9b on the faults it sends beside those it never sends, and hands the site over without it when it has none to send",
+      "an uncallable phone is a kind 9b sends, with what should change"
+    ]
+  }
+}
