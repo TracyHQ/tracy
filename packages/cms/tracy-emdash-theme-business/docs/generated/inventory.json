@@ -4825,7 +4825,7 @@
     "src/lib/references.ts": "sha256:cd398e1ce6aa33731db1bbaf696fa68e843a760ad925d2f485d4ab938849b693",
     "src/lib/served-locales.ts": "sha256:78db146d5feba94cfb5462affdb1466b5f5e4020d731b4acd73969a68106f7ca",
     "src/lib/share-image.ts": "sha256:e3bd6e4c3dee664f806625d13e2c167d0ee521961f884e9b020f4a31b04188bb",
-    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/stamps.ts": "sha256:c14b0b31ff4658ff33179fb67f05442470c12bc42aeb2ac2d038c0d33e2e04bb",
     "src/lib/swatch-role.ts": "sha256:3b6349d400873c182bdb01d23ebf92c0e12de8d383e775d0d29273ca68897820",
     "src/lib/toc.ts": "sha256:93cf47c5aaa7e3b7170fb944012e93dd0f58a7fedc9fd517721c4f6a884439ba",
     "src/lib/ui.ts": "sha256:54b708e9b3779e95e6a2236c66e7be1b39307e8f580b3e2cef3d0ec3858b828c",

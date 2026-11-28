@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-777-emdash-kit-port-findings",
+  "kind": "fix",
+  "title": "The EmDash kit tool reads bracketed stamps, pager links, shared labels, term pages, repeater types, kept slot fit and carousel rows",
+  "pr": 777,
+  "area": "template-kit/emdash",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed, run run.cmd.",
+    "S2: Confirm every test named in run.tests reports ok."
+  ],
+  "expect": [
+    "Each kit-tool defect of the four JA ports (B to I) is read as fixed on a synthetic fixture, and Joomla and WordPress queries and sliders read as before."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-port-defects.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "B: an EmDash pager address keeps its page number; page 1 is the list",
+      "B: Joomla and WordPress read every query as before, `?page=N` included",
+      "B: the \"2\" pager link of an EmDash list is a pagination control once its page is a kit page",
+      "C and D: words two slots share name the slot the stamps also place in the link’s own block",
+      "E: a link to the page the map gives a taxonomy term is a term link, whatever its path",
+      "E: a term archive printing its term as h1 is titled by the term slot, via taxonomy-term",
+      "E: a term’s own page is titled by the term slot even when a card of its block prints the same words",
+      "E: a category and a tag both named Business: only the term of the page’s path is its title",
+      "G: two hero slides printing one h1 text: the first slide’s slot is the title",
+      "F: a repeater sub-field named link_title is text, btn_link_2 an address; the field map’s declared source wins",
+      "H: --write carries fit, customize, slotFitVersion and fitGroups over for unchanged slots only",
+      "D: a stamp in several blocks keeps every one of them as the slot’s alsoIn; the owner stays the first",
+      "I: a numbered modifier class does not split the row shape",
+      "I: a carousel’s hidden copies are no rows; hidden rows outside a slider still count",
+      "I: a slider showing a whole multiple of the declared rows matches that list on EmDash only, and only when no set has exactly its rows",
+      "I: keepRows finds the rows the reader counted: numbered modifiers and a slider’s hidden copies"
+    ]
+  }
+}

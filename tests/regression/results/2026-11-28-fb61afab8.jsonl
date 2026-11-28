@@ -1,0 +1,1 @@
+{"id":"REG-PR-777-emdash-kit-port-findings","verdict":"PASS","commit":"fb61afab89691cb041c2d5463fa0308b78296387","ran_at":"2026-11-28T05:33:02.164Z","evidence":"tests/regression/.runs/2026-11-28-fb61afab8/REG-PR-777-emdash-kit-port-findings.log"}

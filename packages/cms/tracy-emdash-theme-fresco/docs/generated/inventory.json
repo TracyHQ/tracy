@@ -1341,7 +1341,7 @@
     "src/lib/posts.ts": "sha256:5c49d77c31b56f0ce5163572d37da6ed0f78a1bf9a51948a1a5261c19f2d753f",
     "src/lib/prose-text.ts": "sha256:56f0adf1e841c5a2196f3fab4135ee9f38ce62a66c1e31924eac4fef9a223bff",
     "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
-    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/stamps.ts": "sha256:c14b0b31ff4658ff33179fb67f05442470c12bc42aeb2ac2d038c0d33e2e04bb",
     "src/lib/tel.ts": "sha256:e4d78945f79f6e0f18ef5e21efe402133d4556fe3030885ca95907d8144c1077",
     "src/lib/ui-words.ts": "sha256:e3e5d1dab8b3b981efd7b180c95e7bfa1ad573dc65252198c8c006814e3eecbf",
     "src/lib/ui.ts": "sha256:f83d530f9d9b2c5107f21e14bb2bac40a9cca39733f2b661003250a2fe1171a9",
