@@ -1,13 +1,14 @@
 // Which slot is a page's title, from what the page prints: the words the page reading found as its main title, among
 // the slots the page's own blocks show. The content map's list a slot sits in, and its role, say nothing about it: a
 // banner block prints one row per page, and a classifier may have put one of those rows in another list. The answer
-// is added beside the slots (`pages[].titleSlot`, `pageTitleOf` on the slot); no slot id, list or role changes, so a
+// is added beside the slots (`pages[].titleSlot`, and `titleVia: 'taxonomy-term'` when a term archive prints its term's name; `pageTitleOf` on the slot); no slot id, list or role changes, so a
 // plan or a copy made on an earlier kit of the same contract still names everything it named.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { UNMATCHED_PART } from './check-accepts.mjs'
 import { accountOfPath, knownAccounts, pathPattern } from './exclude.mjs'
 import { neutralKey } from './ids.mjs'
 import { indexMap, ownerOfPath } from './map-index.mjs'
+import { termPathsOf } from './link-label-reasons.mjs'
 import { gapId } from './template-gaps.mjs'
 
 /** Blocks that print a page's name as a link to it, never as its title. */
@@ -34,8 +35,45 @@ const oneText = (texts) => {
 
 const titledOnPage = (controls, path) => (controls ?? []).some((c) => c.title && c.page === path)
 
+/** A row index of a repeater cell id (`hero.items[1].title` -> 1) and the id with the row cut out, or null. */
+const rowOf = (id) => {
+  const m = /^(.*)\[(\d+)\](.*)$/.exec(id)
+  return m ? { shape: `${m[1]}[]${m[3]}`, row: Number(m[2]) } : null
+}
+
+/**
+ * One of several slots that print the same title words: when they are the same cell of the rows of one list (two hero
+ * slides printing one h1 text), the first row's, the slide the page shows first. Null when that still ties.
+ */
+function firstOf(ids) {
+  const rows = ids.map(rowOf)
+  if (rows.some((r) => !r) || new Set(rows.map((r) => r.shape)).size !== 1) return null
+  const low = Math.min(...rows.map((r) => r.row))
+  const first = ids.filter((_, i) => rows[i].row === low)
+  return first.length === 1 ? first[0] : null
+}
+
+/** The term slot a taxonomy archive page names as its title: the page is a term's own page and prints its name. */
+function termTitle(page, text, { samples, termPaths }) {
+  const base = page.path.split(/[?#]/)[0].replace(/\/$/, '')
+  // `/category/<slug>` or `/tag/<slug>`: the term of that taxonomy and slug, never another taxonomy's term of the same slug.
+  const bySlug = /(?:^|\/)(category|tag)\/([^/]+)$/i.exec(base)
+  const key = termPaths.get(base)
+  const named = [...samples].filter(([, s]) => s.type === 'term' && normText(s.sample) === text)
+  // The term the content map maps to this page's path is the only one that counts; a path pattern is the fallback.
+  const hits = key
+    ? named.filter(([id]) => id === neutralKey(key))
+    : named.filter(
+        ([, s]) =>
+          bySlug &&
+          String(s.target?.term ?? '').toLowerCase() === bySlug[2].toLowerCase() &&
+          String(s.target?.taxonomy ?? '').toLowerCase() === bySlug[1].toLowerCase()
+      )
+  return hits.length === 1 ? hits[0][0] : null
+}
+
 /** The title slot of one page, or null with the slots it could not tell apart. */
-function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, menuItemOf, drives, formats }) {
+function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, menuItemOf, drives, formats, termPaths }) {
   const measured = Object.keys(drives).filter((id) => titledOnPage(drives[id]?.controls, page.path))
   if (measured.length === 1) return { slot: measured[0], from: 'field measurement' }
   // Two fields printed at the title's size (a slide's second line styled as an h1): the title is the one in the h1.
@@ -45,6 +83,10 @@ function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, menuItemOf, d
   if (inH1.length === 1) return { slot: inH1[0], from: 'field measurement' }
   const text = normText(page.h1?.text ?? oneText(page.h1?.texts))
   if (!text) return { slot: null, candidates: measured }
+  // A term's own page names the term, though a card of its block prints the same words (a "Blogs" post title).
+  // A taxonomy archive prints its term's name as its h1: the term slot of the content map, which no block lists.
+  const term = termTitle(page, text, { samples, termPaths })
+  if (term) return { slot: term, from: 'page reading', via: 'taxonomy-term' }
   // An image's text alternative is read aloud, never printed as the page's heading.
   const same = (id) =>
     samples.get(id)?.type === 'text' &&
@@ -72,7 +114,10 @@ function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, menuItemOf, d
   if (page.h1?.block && blocks.has(page.h1.block)) {
     const named = inBlock(page.h1.block)
     if (named.length === 1) return { slot: named[0], from: 'page reading' }
-    if (named.length > 1) return { slot: null, candidates: named }
+    if (named.length > 1) {
+      const tied = firstOf(named)
+      return tied ? { slot: tied, from: 'page reading' } : { slot: null, candidates: named }
+    }
   }
   let own = ownersOf(page)
     .flatMap((e) => slotsOfEntity.get(e) ?? [])
@@ -93,9 +138,15 @@ function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, menuItemOf, d
     for (const twin of slotsOfEntity.get(neutralKey(samples.get(s).entity)) ?? [])
       if (same(twin)) shown.add(twin)
   if (shown.size === 1) return { slot: [...shown][0], from: 'page reading' }
-  if (shown.size > 1) return { slot: null, candidates: [...shown].sort() }
+  if (shown.size > 1) {
+    const tied = firstOf([...shown])
+    return tied ? { slot: tied, from: 'page reading' } : { slot: null, candidates: [...shown].sort() }
+  }
   if (own.length === 1) return { slot: own[0], from: 'the page entity' }
-  if (own.length > 1) return { slot: null, candidates: own }
+  if (own.length > 1) {
+    const tied = firstOf(own)
+    return tied ? { slot: tied, from: 'the page entity' } : { slot: null, candidates: own }
+  }
   // The template may print the page entity's words inside a mark of its own (`#Squads` for a tag): matched so on the
   // page's own entity only, never on another item's words a block shows.
   // Or inside a template string with one blank (`Tagged: %s`), a language string slot of the content map.
@@ -139,6 +190,7 @@ export function settlePageTitles(kit, { map, drives = {} }) {
     const owner = ownerOfPath(idx, page.path).owner
     return [owner, idx.pageByPath.get(base)?.entity].filter(Boolean).map(neutralKey)
   }
+  const termPaths = termPathsOf(map)
   const context = {
     blocks: new Map(kit.blocks.map((b) => [b.id, b])),
     samples,
@@ -146,6 +198,7 @@ export function settlePageTitles(kit, { map, drives = {} }) {
     ownersOf,
     menuItemOf: (page) => idx.pageByPath.get(page.path.split('?')[0])?.entity,
     drives,
+    termPaths,
     formats: [...samples.values()]
       .map((s) => (s.type === 'text' ? String(s.sample ?? '') : ''))
       .filter((f) => f.split('%s').length === 2)
@@ -154,6 +207,8 @@ export function settlePageTitles(kit, { map, drives = {} }) {
   for (const page of kit.pages ?? []) {
     const t = titleOf(page, context)
     page.titleSlot = t.slot
+    delete page.titleVia
+    if (t.via) page.titleVia = t.via
     delete page.titleCandidates
     if (t.candidates?.length) page.titleCandidates = t.candidates
   }

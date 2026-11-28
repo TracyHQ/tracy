@@ -49,13 +49,19 @@ export function layoutCheck(rows, container, tol = 6, context = null) {
   }
 }
 
-/** The repeated set in a block that holds a declared list: the first unused set with exactly `items` rows. */
-export function matchRepeat(repeats, items, used = new Set()) {
+/** The repeated set in a block that holds a declared list: the first unused set with exactly `items` rows (else a slider's clones). */
+export function matchRepeat(repeats, items, used = new Set(), { clones = false } = {}) {
   const key = (r) => r.path.join('.')
   // A set of rows the page shows wins over one it keeps hidden (rows in a closed tab, read since they count too).
   // Rows of a block nested in this one (a sidebar module inside the component area) are never this block's.
-  const free = (repeats ?? []).filter((r) => r.count === items && !r.nested && !used.has(key(r)))
-  const hit = free.find((r) => r.shownCount !== 0) ?? free[0]
+  const open = (repeats ?? []).filter((r) => !r.nested && !used.has(key(r)))
+  const free = open.filter((r) => r.count === items)
+  // A slider that copies its cards for the loop shows a whole multiple of them (6 cards read as 18); only when no set
+  // has exactly `items` rows, and only where `clones` says the platform reads sliders so (EmDash).
+  const cloned = open.filter(
+    (r) => clones && r.inSlider && items > 0 && r.count > items && r.count % items === 0
+  )
+  const hit = free.find((r) => r.shownCount !== 0) ?? free[0] ?? cloned[0]
   if (hit) used.add(key(hit))
   return hit ?? null
 }

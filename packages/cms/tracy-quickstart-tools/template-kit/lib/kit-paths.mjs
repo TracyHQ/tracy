@@ -1,13 +1,16 @@
 // Page addresses of a site (Joomla or WordPress) in one canonical form, so the crawl never captures one page twice.
 // A page is named by its path without the `/index.php` prefix, without a trailing slash, lower case,
-// and with only the list position (`?start=N`) kept from its query: `/`, `/classes`, `/blogs?start=6`.
+// and with only the list position kept from its query (`?start=N`; an EmDash pager prints `?page=N`):
+// `/`, `/classes`, `/blogs?start=6`, `/blog?page=2`.
 
 const NOT_A_PAGE =
   /\.(pdf|jpe?g|png|gif|webp|avif|svg|ico|zip|rar|gz|mp4|webm|mp3|wav|docx?|xlsx?|pptx?|css|js|json|xml|txt)$/i
 const NOT_PUBLIC = /^\/(administrator|component\/(users|mailto|ajax|banners)|api)(\/|$)|logout/i
 // A link with one of these query keys is an action or another format of a page, never a page of its own.
 const ACTION_KEYS = new Set(['task', 'format', 'tmpl', 'print', 'return', 'type', 'filter_tag'])
-const POSITION_KEYS = ['start', 'limitstart']
+// `page` is EmDash's pager (`/blog?page=2`), kept only for the plain url style (`isPagerStyle`); page 1 is the list
+// path itself, like `start=0`. Joomla and WordPress read `?page=N` as they always did: not a position.
+const POSITION_KEYS = ['start', 'limitstart', 'page']
 
 /**
  * The canonical path of a same-site link, or null when the link is not a page of this site.
@@ -42,9 +45,10 @@ export function canonicalPath(href, siteUrl, aliasHosts = []) {
   for (const k of u.searchParams.keys()) if (ACTION_KEYS.has(k.toLowerCase())) return null
   let query = ''
   for (const k of POSITION_KEYS) {
+    if (k === 'page' && !isPagerStyle()) continue
     const v = u.searchParams.get(k)
-    if (v && /^\d+$/.test(v) && Number(v) > 0) {
-      query = `?start=${Number(v)}`
+    if (v && /^\d+$/.test(v) && Number(v) > (k === 'page' ? 1 : 0)) {
+      query = `?${k === 'page' ? 'page' : 'start'}=${Number(v)}`
       break
     }
   }
@@ -124,6 +128,9 @@ export function setUrlStyle(style) {
     throw new Error(`unknown url style ${style}`)
   urlStyle = style
 }
+
+/** Does this run read `?page=N` as a result page? EmDash (url style `plain`) only. */
+export const isPagerStyle = () => urlStyle === 'plain'
 
 /** The address to request for a canonical path, in the site's own spelling (`setUrlStyle`). */
 export function urlOfPath(path, siteUrl) {

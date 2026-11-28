@@ -11,7 +11,8 @@ export function tryRowFix({ block, path, shape, css }) {
         (c) =>
           !STATE.test(c) &&
           !/^[a-z]+-\d+$/.test(c) &&
-          !(c.includes('--') && el.classList.contains(c.split('--')[0]))
+          !(c.includes('--') && el.classList.contains(c.split('--')[0])) &&
+          !(/-\d+$/.test(c) && el.classList.contains(c.replace(/-\d+$/, '')))
       )
       .sort()
       .join('.')}`
@@ -22,7 +23,14 @@ export function tryRowFix({ block, path, shape, css }) {
   else {
     let parent = root
     for (const i of path) parent = parent?.children[i]
-    rows = parent ? [...parent.children].filter((c) => sig(c) === shape) : []
+    const slider = !!parent?.closest(
+      '.owl-carousel, .swiper, .swiper-container, .slick-slider, .carousel, .splide, [data-ride="carousel"]'
+    )
+    rows = parent
+      ? [...parent.children].filter(
+          (c) => sig(c) === shape && !(slider && c.getAttribute('aria-hidden') === 'true')
+        )
+      : []
   }
   const row = rows[0]?.parentElement
   if (!row) return null

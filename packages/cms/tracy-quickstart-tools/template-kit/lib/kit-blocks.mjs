@@ -125,7 +125,8 @@ export function buildBlock({
       ...(rowsOf.length > 1 ? { rows: rowsOf } : {})
     }
     const measured = minEvidence?.[listId]
-    const repeat = matchRepeat(desk?.repeats, max, used)
+    // Only EmDash places slots by stamp (`placedBy`); a Joomla or WordPress slider is matched on exact counts only.
+    const repeat = matchRepeat(desk?.repeats, max, used, { clones: slots.some((s) => s.placedBy) })
     const rule = repeat?.shownCount === 0 ? null : ruleOneMin(repeat, max)
     if (g.min != null) Object.assign(list, { min: g.min, minSource: g.minFrom ?? 'content map' })
     else if (measured?.okCounts?.length) Object.assign(list, measuredMin(measured))
@@ -449,11 +450,13 @@ export function buildBlock({
   )
   // A slot a stamp placed in another block (emdash-map.mjs `placedBy`) is that block's, whatever words this one prints:
   // the stamps name the field each element prints, so equal words here (a footer's "Location." beside a section's
-  // "Location.") are a coincidence, never this block's field.
+  // "Location.") are a coincidence, never this block's field. A block the stamps name the field in too (`alsoIn`: a
+  // chrome label the header and each service page print) shows it as its own; slot-owners.mjs names the one owner.
   for (const t of textsShown) {
     const s = t.source
     if (!s || t.label || ownKeys.has(s.key) || held.has(t.slot)) continue
-    if (s.placedBy) t.foreign = slotOut(s)
+    if (s.placedBy && !(s.alsoIn ?? []).includes(entity)) t.foreign = slotOut(s)
+    else if (s.placedBy) continue
     else if (pageItems.has(entityOfKey(s.key))) continue
     else if (PLACED.test(s.key) || t.how === 'piece') t.foreign = slotOut(s)
   }

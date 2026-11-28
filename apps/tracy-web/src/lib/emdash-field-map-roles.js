@@ -45,7 +45,9 @@ const COPY_TYPES = new Set(['string', 'text', 'image'])
 /** A field whose words or address a visitor meets: version 3 has a role for each (a link, a date, a rich text). */
 const COPY_TYPES_V3 = new Set([...COPY_TYPES, 'portableText', 'datetime'])
 /** A link field (`slide_link`, `button_link`, `footer_map_url`): the content map makes it a `url` slot. */
-export const LINK_FIELD = /(^|_)(url|href|webpage)\d*$|link\d*$|^link(_|$)/
+// `link_title` / `link_label` is the words of a link, not its address; `btn_link_2` is an address (`link_?\d*$`).
+export const LINK_FIELD =
+  /(^|_)(url|href|webpage)\d*$|link_?\d*$|^link$|^link_(?!(?:title|label|text|name|caption)\d*$)/
 
 /**
  * Whether a field of this type needs a role: a picture always does (a name like `img_icon` is no layout setting). In a
@@ -69,7 +71,7 @@ const has = (object, key) => Boolean(object && typeof object === 'object' && Obj
  * `button_icon`, `align`, `number_col`, `position` on its own: a `member_position` is a job title and has a role).
  */
 export function isCopylessField(slug) {
-  return /(^|_)(url|href|alt|id|key|code|anchor|initials|view|path|style|class|color|icon|align|webpage|number_col|number_column)\d*$|link\d*$|^link(_|$)|^(position|collection|entry)$/.test(
+  return /(^|_)(url|href|alt|id|key|code|anchor|initials|view|path|style|class|color|icon|align|webpage|number_col|number_column)\d*$|link_?\d*$|^link$|^link_(?!(?:title|label|text|name|caption)\d*$)|^(position|collection|entry)$/.test(
     String(slug)
   )
 }

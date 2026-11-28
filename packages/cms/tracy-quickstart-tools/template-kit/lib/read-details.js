@@ -37,9 +37,13 @@ export function readDetails() {
       .join('.')}`
   // A row's shape: a modifier of one of its own classes (`plan--featured` beside `plan`, a highlighted card) is a
   // variant of the row, not a shape of its own. Only the row sets use it; the body skeleton keeps every class.
+  // A numbered modifier of a class the row also has (`vg-chip-1` beside `vg-chip`) is a position, not a shape.
+  const modifier = (el, c) =>
+    (c.includes('--') && el.classList.contains(c.split('--')[0])) ||
+    (/-\d+$/.test(c) && el.classList.contains(c.replace(/-\d+$/, '')))
   const rowSig = (el) =>
     `${el.tagName}.${[...el.classList]
-      .filter((c) => !STATE.test(c) && !(c.includes('--') && el.classList.contains(c.split('--')[0])))
+      .filter((c) => !STATE.test(c) && !modifier(el, c))
       .sort()
       .join('.')}`
   const pathFrom = (root, el) => {
@@ -351,6 +355,8 @@ export function readDetails() {
         const r = c.getBoundingClientRect()
         // A row not rendered at all (in a closed tab) still counts; a rendered sliver (a spacer) does not.
         if (c.getClientRects().length && (r.width < 40 || r.height < 20)) continue
+        // A slider's script clones its cards for the loop and hides the copies from assistive technology: a copy is no row.
+        if (c.getAttribute('aria-hidden') === 'true' && parent.closest(SLIDER)) continue
         const k = rowSig(c)
         if (!groups.has(k)) groups.set(k, [])
         groups.get(k).push(c)

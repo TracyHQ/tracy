@@ -1336,7 +1336,7 @@
     "src/lib/parent-gate.ts": "sha256:299a77bee7cb473c869e6e3b9642c99afddf4097f492217a3d9be150bb9ca6bc",
     "src/lib/posts.ts": "sha256:e8dfef908cbb817c9f3f0ceedad628a53037745331b8ed38d9a1a9bdfe5d3360",
     "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
-    "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/stamps.ts": "sha256:c14b0b31ff4658ff33179fb67f05442470c12bc42aeb2ac2d038c0d33e2e04bb",
     "src/lib/tel.ts": "sha256:eeda8f3cb899b02c71d9b148d7e29c16afa681aa0eef83a16f5a4c1c929c6594",
     "src/lib/ui-words.ts": "sha256:f0f7b1a5b6cab6b3591a8c72a3817014d0da26b535e6caa19c616eaee135d5cc",
     "src/lib/ui.ts": "sha256:f83d530f9d9b2c5107f21e14bb2bac40a9cca39733f2b661003250a2fe1171a9",
