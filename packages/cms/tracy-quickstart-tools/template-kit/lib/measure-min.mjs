@@ -16,9 +16,17 @@ export function keepRows({ block, path, shape, css, keep }) {
     /^(active|show|current|selected|in|fade|is-|swiper-slide-|owl-|slick-|aos-)|^[a-z]+-\d+$|(?:^|-)row\d$|^(?:odd|even)$/
   const sig = (el) =>
     `${el.tagName}.${[...el.classList]
-      .filter((c) => !STATE.test(c) && !(c.includes('--') && el.classList.contains(c.split('--')[0])))
+      .filter(
+        (c) =>
+          !STATE.test(c) &&
+          !(c.includes('--') && el.classList.contains(c.split('--')[0])) &&
+          !(/-\d+$/.test(c) && el.classList.contains(c.replace(/-\d+$/, '')))
+      )
       .sort()
       .join('.')}`
+  // A slider's hidden copies of its cards are no rows (read-details.js reads them the same way).
+  const SLIDER =
+    '.owl-carousel, .swiper, .swiper-container, .slick-slider, .carousel, .splide, [data-ride="carousel"]'
   const root = document.querySelector(`[data-kit-block="${block}"]`)
   if (!root) return null
   let rows
@@ -27,7 +35,10 @@ export function keepRows({ block, path, shape, css, keep }) {
     let parent = root
     for (const i of path) parent = parent?.children[i]
     if (!parent) return null
-    rows = [...parent.children].filter((c) => sig(c) === shape)
+    const slider = !!parent.closest(SLIDER)
+    rows = [...parent.children].filter(
+      (c) => sig(c) === shape && !(slider && c.getAttribute('aria-hidden') === 'true')
+    )
   }
   for (const r of rows.slice(keep)) r.remove()
   const box = (el) => {

@@ -136,3 +136,11 @@ test('a stamped answer stays out of shared caches; an ordinary one and the admin
   )
   assert.equal(admin.get('cache-control'), null)
 })
+
+test('a repeater cell keyed `items[0].title` is stamped; a key that could leave the attribute is not', () => {
+  const s = stampFor(picked, 'about', about)
+  assert.equal(s('items[0].title')['data-tracy-src'], `${s.owner} field:items[0].title`)
+  assert.equal(s('items[12].btn_link_2')['data-tracy-src'], `${s.owner} field:items[12].btn_link_2`)
+  for (const bad of ['items[0].a b', 'items["x"]', 'a:b', '', 'x"y'])
+    assert.deepEqual(s(bad), { 'data-tracy-src': s.owner }, bad)
+})

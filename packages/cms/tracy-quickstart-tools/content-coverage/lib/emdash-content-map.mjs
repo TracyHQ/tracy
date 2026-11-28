@@ -18,7 +18,7 @@
 //   page    { entity, route, openAs, title, view }: an entry with a public path of its own.
 //
 // Slot fit (`fit` on a slot, `slotFitVersion`, `fitGroups`) is NOT generated here: the coverage audit measures it on a
-// running site and merges it in, and the check below ignores those keys.
+// running site and merges it in, and the check below ignores those keys. `--write` carries it over (`carryMeasured`).
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -92,14 +92,19 @@ const sampleOf = (type, value) => {
 
 /**
  * Slot type of a collection field, or null when the field is not content a visitor reads (a layout setting, a flag).
+ * `source` is what the field map declares a repeater sub-field to be (`fields["<collection>.<field>.<sub>"].source`): `text`
+ * or `url` decides the slot type whatever the name looks like.
  * A field NAMED like a layout setting (`dish_extra_class`) is exempt only while the field map gives it no role: a role is
  * the theme's declaration that the field is copy (JA Restaurant prints that field as the "Hot" badge beside a dish).
  */
-function slotTypeOf(fieldType, slug, declared = false) {
+function slotTypeOf(fieldType, slug, declared = false, source = null) {
   if (fieldType === 'image') return 'image'
   if (fieldType === 'portableText') return 'richtext'
   if (fieldType === 'datetime') return 'date'
   if (fieldType === 'string' || fieldType === 'text') {
+    // What the field map declares a repeater sub-field to be wins over what its name looks like.
+    if (source === 'text') return 'text'
+    if (source === 'url') return 'url'
     if (LINK_FIELD.test(slug)) return 'url'
     return declared || !isCopylessField(slug) ? 'text' : null
   }
@@ -242,7 +247,8 @@ export function emdashContentMapOf({
               const type = slotTypeOf(
                 sub.type,
                 sub.name,
-                roleSlots.has(`${entityKey}.${field.slug}[${i}].${sub.name}`)
+                roleSlots.has(`${entityKey}.${field.slug}[${i}].${sub.name}`),
+                rawFieldMap?.fields?.[`${collection.slug}.${field.slug}.${sub.name}`]?.source
               )
               if (!type) continue
               push(
@@ -356,6 +362,45 @@ export const asciiJson = (value) =>
 
 /** The map as written to disk. */
 export const serializeMap = (map) => asciiJson(map)
+
+/**
+ * What the audit measured into the committed map, carried onto a freshly generated one: each slot's `fit` and
+ * `customize` by slot key, for a slot whose key, type and sample are unchanged (a slot that changed is measured again);
+ * `slotFitVersion` once any slot carried one; and each `fitGroups` entry whose every slot carried its fit.
+ * @param {any} previous the committed map, or null
+ * @param {any} built the generated map
+ * @returns {any} `built` with the measured keys, and the number of slots that kept theirs
+ */
+export function carryMeasured(previous, built) {
+  const before = new Map((previous?.slots ?? []).map((s) => [s.key, s]))
+  let kept = 0
+  const carried = new Set()
+  const slots = (built.slots ?? []).map((slot) => {
+    const old = before.get(slot.key)
+    if (!old || old.type !== slot.type || old.sample !== slot.sample || !(old.fit || old.customize))
+      return slot
+    kept++
+    carried.add(slot.key)
+    return {
+      ...slot,
+      ...(old.fit ? { fit: old.fit } : {}),
+      ...(old.customize ? { customize: old.customize } : {})
+    }
+  })
+  const out = { ...built, slots }
+  if (kept && previous.slotFitVersion) out.slotFitVersion = previous.slotFitVersion
+  // A group's slots carry the id of their row (`a.row.0`); `fitGroups` is keyed by the list (`a.row`).
+  const inGroup = (id) => slots.filter((s) => String(s.group?.id ?? '').replace(/\.\d+$/, '') === id)
+  // A group is kept only when it still has the rows it was measured with: a row removed leaves stale bounds.
+  const rowsOf = (id) => new Set(inGroup(id).map((s) => s.group.item)).size
+  const whole = (id) =>
+    inGroup(id).length > 0 &&
+    inGroup(id).every((s) => carried.has(s.key)) &&
+    rowsOf(id) === previous.fitGroups[id]?.items
+  const groups = Object.entries(previous?.fitGroups ?? {}).filter(([id]) => whole(id))
+  if (groups.length) out.fitGroups = Object.fromEntries(groups)
+  return { map: out, kept }
+}
 
 /**
  * A committed map without what the audit measured into it, so it compares with the generated one: Slot fit, and the

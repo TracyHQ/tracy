@@ -6,7 +6,7 @@
 //   node packages/cms/tracy-quickstart-tools/content-coverage/emdash-content-map.mjs --theme <theme folder> [--write | --check]
 //
 // --write  writes <theme>/contracts/<version>/content-map.json (the Slot fit the audit measured into the old file is kept
-//          only if the rest of the map is unchanged; otherwise measure again with emdash-audit.mjs --fit)
+//          for every slot whose key, type and sample are unchanged; measure the rest again with emdash-audit.mjs --fit)
 // --check  exit 1 when the committed map differs from what the theme's files generate (Slot fit is ignored)
 // default  prints the label rules (R2 to R9, no crawl) of the generated map
 //
@@ -14,7 +14,12 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
-import { emdashContentMapOfTheme, serializeMap, withoutMeasured } from './lib/emdash-content-map.mjs'
+import {
+  carryMeasured,
+  emdashContentMapOfTheme,
+  serializeMap,
+  withoutMeasured
+} from './lib/emdash-content-map.mjs'
 import { labelRulesOf } from './lib/label-rules.mjs'
 
 const arg = (n) => {
@@ -40,8 +45,15 @@ const file = join(dir, 'content-map.json')
 
 if (flag('--write')) {
   mkdirSync(dir, { recursive: true })
-  writeFileSync(file, serializeMap(built.map))
-  console.log(`wrote ${file}: ${built.map.slots.length} slots, ${built.map.pages.length} pages`)
+  const { map, kept } = carryMeasured(
+    existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null,
+    built.map
+  )
+  writeFileSync(file, serializeMap(map))
+  console.log(
+    `wrote ${file}: ${map.slots.length} slots, ${map.pages.length} pages` +
+      (kept ? `, Slot fit kept on ${kept} unchanged slots` : '')
+  )
 }
 
 if (flag('--check')) {

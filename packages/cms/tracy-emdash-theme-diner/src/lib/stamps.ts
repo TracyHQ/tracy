@@ -81,7 +81,9 @@ export interface Stamp {
   readonly owner: string | null
 }
 
-const KEY = /^[A-Za-z0-9_.-]+$/
+// A repeater cell is named `<repeater>[<row>].<subfield>` (`items[0].title`), the form the kit's reader
+// takes apart (`rootField`); brackets are plain characters in an attribute value, which Astro escapes.
+const KEY = /^[A-Za-z0-9_.[\]-]+$/
 
 /**
  * The stamp helper for one entry on this request. On an ordinary request every call returns an

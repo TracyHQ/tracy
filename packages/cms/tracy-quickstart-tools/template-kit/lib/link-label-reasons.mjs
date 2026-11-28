@@ -126,8 +126,35 @@ function sortLink(l, pagePaths) {
   })
 }
 
-/** The link opens a category or tag archive of the CMS: the path holds a `category` or `tag` segment. */
-const taxonomyLink = (l) => /(?:^|\/)(?:category|tag)\/[^/?#]+/i.test(String(l.target ?? '').split('?')[0])
+/**
+ * The archive path of each taxonomy term the content map gives a page: an `itemPages` entry or a listed page named by
+ * the term's slot key (EmDash `taxonomy.<name>.<term>`), as path -> term slot key. A theme may serve a category at a
+ * path of its own (`/category-blog`), which no `/category/<slug>` segment says.
+ * @param {object|null} map the content map
+ * @returns {Map<string, string>}
+ */
+export function termPathsOf(map) {
+  const terms = new Set((map?.slots ?? []).filter((s) => s.type === 'term').map((s) => s.key))
+  const out = new Map()
+  const add = (path, key) => {
+    const p = String(path ?? '')
+      .split(/[?#]/)[0]
+      .replace(/\/$/, '')
+    if (p && terms.has(key) && !out.has(p)) out.set(p, key)
+  }
+  for (const [key, ip] of Object.entries(map?.itemPages ?? {})) add(ip?.path, key)
+  for (const pg of map?.pages ?? []) add(pg.openAs ?? pg.route, pg.entity)
+  return out
+}
+
+/**
+ * The link opens a category or tag archive of the CMS: the path holds a `category` or `tag` segment, or is the page
+ * the content map gives a taxonomy term (`termPaths`, `termPathsOf`).
+ */
+const taxonomyLink = (l, termPaths = new Map()) => {
+  const path = String(l.target ?? '').split(/[?#]/)[0]
+  return /(?:^|\/)(?:category|tag)\/[^/]+/i.test(path) || termPaths.has(path.replace(/\/$/, ''))
+}
 
 /** The link acts inside the page and opens nothing. */
 const pageControl = (l) =>
@@ -153,8 +180,10 @@ const REASONS = {
  * Sets `fixedLabel: {rule, reason}` on every link that shows words, names no `labelId` and matches a rule above;
  * removes a stale one from a link that now names its slot. Returns how many links carry one.
  * @param {object} kit changed in place
+ * @param {object|null} [map] the content map: a link to a page it gives a taxonomy term is a term link too
  */
-export function fixedLinkLabels(kit) {
+export function fixedLinkLabels(kit, map = null) {
+  const termPaths = termPathsOf(map)
   const pathsOf = new Map(kit.blocks.map((b) => [b.id, []]))
   for (const p of kit.pages ?? []) {
     const ids = Array.isArray(p.blocks) ? p.blocks : Object.values(p.blocks ?? {}).flat()
@@ -182,7 +211,7 @@ export function fixedLinkLabels(kit) {
               ? 'icon-name'
               : texts.length && fixedWords(l.label, texts)
                 ? 'template-words'
-                : taxonomyLink(l)
+                : taxonomyLink(l, termPaths)
                   ? 'taxonomy-term'
                   : pageControl(l)
                     ? 'page-control'
@@ -237,7 +266,7 @@ export function relabelKit(kit, { map, linkLabelSlots, listLabelSlots }) {
   for (const b of kit.blocks) for (const s of b.slots ?? []) delete s.labelOf
   const set = linkLabelSlots(kit, map)
   listLabelSlots?.(kit, map)
-  const fixed = fixedLinkLabels(kit)
+  const fixed = fixedLinkLabels(kit, map)
   kit.errors = (kit.errors ?? []).filter((e) => e.kind !== 'link-label')
   kit.checks = { ...kit.checks, linksWithoutLabel: linkLabelChecks({ kit, errors: kit.errors }) }
   return { set, fixed, wrong: kit.checks.linksWithoutLabel }

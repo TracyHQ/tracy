@@ -7,7 +7,8 @@
 // request carries `X-Tracy-Preview: pick`; those stamps say which block a slot belongs to, never a guess from words.
 // A slot has one block: the section of its own page that prints it, else the first shared part that does. A stamp on
 // one cell of a repeater places every row of that field (rows the page hides or does not print included). A slot no
-// stamp reaches stays with its entry, and the coverage gate names it.
+// stamp reaches stays with its entry, and the coverage gate names it. The other blocks a stamp names the same field
+// in are the slot's `alsoIn`: one owner, every block that shows it.
 // The Joomla-only keys stay absent; `platformGaps` names each one the kit cannot read on EmDash and why.
 import { normText } from '../../../../content-coverage/lib/normalize.mjs'
 import { slugOfPath } from '../../kit-paths.mjs'
@@ -242,6 +243,20 @@ export function withEmdashPages(map, sections = null, media = null) {
         const a = sharedOf(part, where)
         if (a.entity !== 'header') for (const st of part.stamps) claim(st, a.entity)
       }
+  // Every other block a stamp names the field in (a chrome label printed by the header and by each service page): the
+  // slot has one owner above, and these are the blocks that also show it. The header counts here though it claims none.
+  const alsoIn = new Map()
+  const note = (st, entity) => {
+    for (const s of slotsOfStamp(st))
+      if (claims.get(s.key) && claims.get(s.key) !== entity)
+        alsoIn.set(s.key, [...new Set([...(alsoIn.get(s.key) ?? []), entity])])
+  }
+  for (const q of placed.filter((x) => x.s)) {
+    for (const a of partsOf(q)) for (const st of a.part.stamps) note(st, a.entity)
+    for (const where of ['before', 'after'])
+      for (const part of q.s[where].filter((x) => x.shown && sharedKeys.has(keyOfPart(where, x))))
+        for (const st of part.stamps) note(st, sharedOf(part, where).entity)
+  }
   const sharedEntities = [...new Map([...shared.values()].map((a) => [a.entity, a])).values()]
     .filter((a) => a.entity !== 'header')
     .map((a) => ({ key: a.entity, kind: 'template-part', identity: { selector: a.selector } }))
@@ -308,7 +323,12 @@ export function withEmdashPages(map, sections = null, media = null) {
   const slots = (map.slots ?? []).map((s) => ({
     ...s,
     ...(claims.get(s.key)
-      ? { entity: claims.get(s.key), mapEntity: s.entity, placedBy: placedBy.get(s.key) }
+      ? {
+          entity: claims.get(s.key),
+          mapEntity: s.entity,
+          placedBy: placedBy.get(s.key),
+          ...(alsoIn.has(s.key) ? { alsoIn: alsoIn.get(s.key) } : {})
+        }
       : {}),
     ...(s.type === 'image' && media?.[s.key] ? { sample: media[s.key] } : {})
   }))

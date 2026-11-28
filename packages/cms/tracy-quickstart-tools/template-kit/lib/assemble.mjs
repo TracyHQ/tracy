@@ -146,7 +146,7 @@ export async function assembleKit(o, out, tool) {
   // A list mixing a lone row with card rows, where a card row pairs no text slot (row-pairs.mjs).
   rowPairChecks(kit, { accepts })
   // One source for a link's label: its labelId, or the reason its words are fixed (link-label-reasons.mjs).
-  fixedLinkLabels(kit)
+  fixedLinkLabels(kit, map)
   kit.checks.linksWithoutLabel = linkLabelChecks({ kit, errors: kit.errors })
   const unchecked = kit.blocks.flatMap((b) => b.frames.filter((f) => f.faces === null && !f.twinOf))
   if (unchecked.length)

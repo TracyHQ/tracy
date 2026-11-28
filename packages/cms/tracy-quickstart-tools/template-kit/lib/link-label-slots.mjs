@@ -17,6 +17,7 @@
 // a cut excerpt, date) names the title of the item it opens, when that title shows whole among its words.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { neutralKey } from './ids.mjs'
+import { termPathsOf } from './link-label-reasons.mjs'
 import { declaredIn } from './page-coverage.mjs'
 
 const LABEL_ROLE = /(_label|\.title|\.name)$/
@@ -83,6 +84,8 @@ function labelResolver(map) {
     const nearOf = (list) => [
       ...list.filter((s) => declared.has(neutralKey(s.key))),
       ...list.filter((s) => s.entity === b.source?.entity || (b.source?.contains ?? []).includes(s.entity)),
+      // A slot the stamps name in this block too (`alsoIn`, emdash-map.mjs): one owner, every block that prints it.
+      ...list.filter((s) => (s.alsoIn ?? []).includes(b.source?.entity)),
       ...list.filter((s) => owners.has(s.entity))
     ]
     const rich = letters ? nearOf(inLinks.get(n) ?? []) : []
@@ -214,6 +217,8 @@ function openedBy(map) {
     pages.set(clean(p.route), [item, p.entity].filter(Boolean))
   }
   const items = new Map(Object.entries(map.itemPages ?? {}).map(([e, ip]) => [clean(ip.path), e]))
+  // The page of a taxonomy term (a category archive at a path of its own, `/category-blog`) opens that term.
+  for (const [path, key] of termPathsOf(map)) if (!items.has(clean(path))) items.set(clean(path), key)
   const byAlias = new Map()
   // An article names its alias (a WordPress post its slug); a tag or a category its path, whose last segment is its alias; an author (a user) its
   // username.
@@ -227,6 +232,13 @@ function openedBy(map) {
         .pop()
     if (alias) byAlias.set(alias, [...(byAlias.get(alias) ?? []), e])
   }
+  // A term (`taxonomy.category.news`) is named by its slug in `/category/news`, as a category entity is by its alias.
+  for (const s of map.slots ?? [])
+    if (s.type === 'term' && s.target?.term)
+      byAlias.set(s.target.term, [
+        ...(byAlias.get(s.target.term) ?? []),
+        { key: s.key, kind: s.target.taxonomy }
+      ])
   return (target) => {
     const r = clean(target)
     if (!r) return []
@@ -245,7 +257,7 @@ function openedBy(map) {
 
 // A slot belongs to an entity it names as its own, or whose key it starts with: an EmDash page read as sections puts
 // the page's slots under its section blocks (`block-development-body`), and their keys still start `pages.development.`.
-const ofEntity = (s, e) => s.entity === e || neutralKey(s.key).startsWith(`${e}.`)
+const ofEntity = (s, e) => s.entity === e || s.key === e || neutralKey(s.key).startsWith(`${e}.`)
 
 // The slot of the first entity the link opens among slots sharing its words, or null.
 function openedOf(same, entities, used, first) {
